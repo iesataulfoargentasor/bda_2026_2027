@@ -1,5 +1,15 @@
-{"hotel":"Laredo","canal":"web","noches":3,"importe":186.5,"comarca":"Trasmiera","extras":["parking"]}
-{"hotel":"Potes","canal":"ota","noches":2,"importe":124.0,"comarca":"Liebana"}
-{"hotel":"Santander","canal":"recepcion","noches":5,"importe":410.0,"comarca":"Santander","huespedes":[{"nombre":"Ana","tipo":"adulto"}]}
-{"hotel":"Comillas","canal":"web","noches":1,"importe":89.9,"comarca":"Saja-Nansa"}
-{"hotel":"Reinosa","canal":"ota","noches":4,"importe":260.0,"comarca":"Campoo-Los Valles","extras":["desayuno"]}
+{"hotel":"Laredo","canal":"web","noches":3,"importe":186.5,"comarca":"Trasmiera","extras":["parking"],"checkin":{"$date":"2026-04-12T14:00:00.000Z"}}
+{"hotel":"Potes","canal":"ota","noches":2,"importe":124.0,"comarca":"Liebana","checkin":{"$date":"2026-05-01T15:00:00.000Z"}}
+{"hotel":"Santander","canal":"recepcion","noches":5,"importe":410.0,"comarca":"Santander","huespedes":[{"nombre":"Ana","tipo":"adulto"}],"checkin":{"$date":"2026-03-20T16:00:00.000Z"}}
+{"hotel":"Comillas","canal":"web","noches":1,"importe":89.9,"comarca":"Saja-Nansa","checkin":{"$date":"2026-06-02T12:00:00.000Z"}}
+{"hotel":"Reinosa","canal":"ota","noches":4,"importe":260.0,"comarca":"Campoo-Los Valles","extras":["desayuno"],"checkin":{"$date":"2026-01-15T14:00:00.000Z"}}
+{"hotel":"Laredo","canal":"ota","noches":2,"importe":130.0,"comarca":"Trasmiera","extras":["parking","cuna"],"checkin":{"$date":"2026-07-08T14:00:00.000Z"}}
+{"hotel":"Potes","canal":"web","noches":7,"importe":490.0,"comarca":"Liebana","huespedes":[{"nombre":"Luis","tipo":"adulto"},{"nombre":"Eva","tipo":"adulto"}],"checkin":{"$date":"2026-08-10T15:00:00.000Z"}}
+{"hotel":"Noja","canal":"web","noches":3,"importe":210.0,"comarca":"Trasmiera","extras":["parking"],"checkin":{"$date":"2026-04-18T13:00:00.000Z"}}
+{"hotel":"Noja","canal":"recepcion","noches":1,"importe":72.0,"comarca":"Trasmiera","checkin":{"$date":"2026-02-01T11:00:00.000Z"}}
+{"hotel":"Santander","canal":"web","noches":2,"importe":150.0,"comarca":"Santander","cobro":{"medio":"tarjeta","ok":true},"checkin":{"$date":"2026-09-01T14:00:00.000Z"}}
+{"hotel":"Laredo","canal":"recepcion","noches":6,"importe":372.0,"comarca":"Trasmiera","extras":["desayuno","parking"],"checkin":{"$date":"2026-04-22T16:00:00.000Z"}}
+{"hotel":"Comillas","canal":"ota","noches":3,"importe":198.0,"comarca":"Saja-Nansa","checkin":{"$date":"2026-05-20T15:00:00.000Z"}}
+{"hotel":"Reinosa","canal":"web","noches":2,"importe":140.0,"comarca":"Campoo-Los Valles","checkin":{"$date":"2026-12-28T14:00:00.000Z"}}
+{"hotel":"Potes","canal":"recepcion","noches":4,"importe":280.0,"comarca":"Liebana","extras":["chimenea"],"checkin":{"$date":"2026-11-12T15:00:00.000Z"}}
+{"hotel":"Santander","canal":"ota","noches":1,"importe":78.0,"comarca":"Santander","checkin":{"$date":"2026-03-03T10:00:00.000Z"}}

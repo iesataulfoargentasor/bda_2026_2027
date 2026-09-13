@@ -339,6 +339,48 @@
       "explain": "El **cursor** evita tragarse un millón de JSON de golpe."
     },
     {
+      "topic": "2.6 ObjectId",
+      "href": "../mongodb/",
+      "prompt": "Si no pones _id al insertar, ¿quién fabrica el ObjectId?",
+      "code": "",
+      "options": [
+        "El NameNode de HDFS.",
+        "El driver (12 bytes: tiempo, máquina/proceso y contador). Es inmutable.",
+        "Compass obligatorio.",
+        "Siempre es un entero autoincremental de SQL."
+      ],
+      "answer": 1,
+      "explain": "Lo crea el **cliente**. getTimestamp() saca la fecha de esos 4 bytes."
+    },
+    {
+      "topic": "2.6 Upsert",
+      "href": "../mongodb/",
+      "prompt": "updateOne con filtro que no encuentra nada y { upsert: true }…",
+      "code": "",
+      "options": [
+        "No hace nada nunca.",
+        "Inserta un documento nuevo con los $set (update + insert).",
+        "Borra la colección.",
+        "Sustituye siempre a replaceOne."
+      ],
+      "answer": 1,
+      "explain": "**Upsert** = si no está, lo crea. Sin esa flag, el update silencioso no inserta."
+    },
+    {
+      "topic": "2.6 Arrays",
+      "href": "../mongodb/",
+      "prompt": "Queréis un comentario que sea a la vez de Luis y de un email concreto. ¿Operador?",
+      "code": "",
+      "options": [
+        "Dos veces comentarios.autor en el mismo objeto basta siempre.",
+        "$elemMatch: las dos condiciones en el MISMO elemento del array.",
+        "$text obligatorio.",
+        "Solo $size."
+      ],
+      "answer": 1,
+      "explain": "Sin $elemMatch, Mongo puede mezclar autor de un comentario y email de otro."
+    },
+    {
       "topic": "2.7 Modelado",
       "href": "../modelado/",
       "prompt": "Un hotel cambia el teléfono y hay 40 000 reservas. ¿Qué modelado evita el desastre?",
@@ -365,6 +407,48 @@
       ],
       "answer": 0,
       "explain": "1:N **pequeño** y de lectura conjunta → embeber."
+    },
+    {
+      "topic": "2.7 Cubo",
+      "href": "../modelado/",
+      "prompt": "Un sensor de habitación envía temperatura cada minuto. ¿Qué modelado evita un documento por cada minuto?",
+      "code": "",
+      "options": [
+        "Un array infinito en el documento del hotel.",
+        "Un cubo: un documento por hora con medidas[] y un resumen (suma/media).",
+        "Obligar 3FN y un join por medida.",
+        "Guardar cada medida en HDFS NameNode."
+      ],
+      "answer": 1,
+      "explain": "El **cubo** agrupa escrituras e índices; el mes viejo se purga entero."
+    },
+    {
+      "topic": "2.7 Versión de esquema",
+      "href": "../modelado/",
+      "prompt": "En 2024 el teléfono iba plano; en 2026 va dentro de hotel:{}. ¿Qué patrón permite leer ambos?",
+      "code": "",
+      "options": [
+        "Borrar las reservas de 2024.",
+        "Un campo v (o esquema) y la app interpreta según la versión.",
+        "DBRef obligatorio.",
+        "Un shard por año sin más."
+      ],
+      "answer": 1,
+      "explain": "Criterio **d)**: no parar el hotel para migrar todo a las 03:00."
+    },
+    {
+      "topic": "2.7 Logs",
+      "href": "../modelado/",
+      "prompt": "Millones de aperturas de puerta por habitación. ¿Dónde va el array?",
+      "code": "",
+      "options": [
+        "Dentro de habitaciones: un array de millones de eventos.",
+        "Cada evento referencia a la habitación (muchos→uno); la habitación no guarda el histórico.",
+        "Solo en el Secondary NameNode.",
+        "Un documento de 16 MB por evento."
+      ],
+      "answer": 1,
+      "explain": "1 a tropecientos: invertís la flecha para no reventar el BSON."
     },
     {
       "topic": "2.8 Réplicas",
