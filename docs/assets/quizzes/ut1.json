@@ -1,0 +1,286 @@
+{
+  "unit": "UT1",
+  "title": "Autoevaluación de la UT1",
+  "questions": [
+    {
+      "topic": "1.1 Las 5 Vs",
+      "href": "../por-que-big-data/",
+      "prompt": "Una empresa cabe el histórico en disco, pero los eventos de sensores llegan más rápido de lo que el sistema es capaz de integrar. ¿Qué V está fallando sobre todo?",
+      "code": "",
+      "options": [
+        "Volumen: no hay suficientes terabytes.",
+        "Velocidad: el ritmo de llegada (y de integración) no se sostiene.",
+        "Variedad: los sensores no tienen esquema.",
+        "Valor: el negocio aún no ha definido el KPI."
+      ],
+      "answer": 1,
+      "explain": "Si el almacenaje cabe pero no das abasto a capturar e integrar, el cuello es la **velocidad**. El volumen sería “ya no cabe”. Variedad y valor pueden coexistir, pero el enunciado apunta al ritmo."
+    },
+    {
+      "topic": "1.1 Umbral Big Data",
+      "href": "../por-que-big-data/",
+      "prompt": "¿Cuándo consideramos que un problema pide un diseño de Big Data?",
+      "code": "",
+      "options": [
+        "A partir de 1 TB: lo dice el estándar ISO.",
+        "Cuando usamos Hadoop o Spark, da igual el tamaño.",
+        "Cuando el sistema tradicional no escala en volumen, velocidad o variedad (o el coste vertical es inasumible).",
+        "Solo si hay datos no estructurados (vídeo o PDF)."
+      ],
+      "answer": 2,
+      "explain": "No hay un umbral legal en terabytes. Tampoco la marca de la herramienta define el problema. El criterio es de **diseño**: el stack clásico se queda corto en alguna V."
+    },
+    {
+      "topic": "1.1 De eventos a valor",
+      "href": "../por-que-big-data/",
+      "prompt": "Ordena el recorrido que usa la unidad. ¿Cuál es la secuencia correcta?",
+      "code": "",
+      "options": [
+        "Valor → dato → evento → conocimiento.",
+        "Evento → dato → información → conocimiento → sabiduría → valor.",
+        "Información → evento → Big Data → Hadoop.",
+        "Conocimiento → evento → dato (el modelo genera los hechos)."
+      ],
+      "answer": 1,
+      "explain": "Primero ocurre el **evento**, se registra como **dato**, se organiza (**información**), se modela (**conocimiento**), se sabe cuándo aplicarlo (**sabiduría**) y la decisión mejora el resultado (**valor**)."
+    },
+    {
+      "topic": "1.2 Escalado",
+      "href": "../clusters/",
+      "prompt": "Necesitas más capacidad porque el dataset crece cada mes. ¿Qué opción es escalado horizontal?",
+      "code": "",
+      "options": [
+        "Pasar el servidor de 64 GB a 256 GB de RAM.",
+        "Añadir nodos al clúster (scale-out).",
+        "Cambiar el disco HDD por NVMe en la misma máquina.",
+        "Quitar nodos ociosos (eso es scale-out)."
+      ],
+      "answer": 1,
+      "explain": "Horizontal = **más máquinas**. Subir RAM o poner un disco más rápido es **vertical** (scale-up). Quitar nodos es reducir el clúster (*scale-in*), no crecer."
+    },
+    {
+      "topic": "1.2 Clúster",
+      "href": "../clusters/",
+      "prompt": "Un nodo del clúster se apaga. El servicio sigue porque hay réplica en otro nodo. ¿Qué propiedad estás usando?",
+      "code": "",
+      "options": [
+        "Solo alto rendimiento (más núcleos).",
+        "Alta disponibilidad.",
+        "Principio SCV.",
+        "OLTP."
+      ],
+      "answer": 1,
+      "explain": "Que el servicio **siga** tras un fallo es **alta disponibilidad**. El rendimiento es acabar antes; SCV es analítica; OLTP es el tipo de carga transaccional."
+    },
+    {
+      "topic": "1.3 Relacional y NoSQL",
+      "href": "../almacenamiento/",
+      "prompt": "Hay que registrar transferencias bancarias que no pueden verse a medias. ¿Qué encaja?",
+      "code": "",
+      "options": [
+        "Un data lake en bruto, schema-on-read.",
+        "Una base BASE (consistencia eventual) por defecto.",
+        "Un SGBD relacional con garantías ACID (OLTP).",
+        "Solo Parquet en S3: es más barato."
+      ],
+      "answer": 2,
+      "explain": "Una transferencia es **transacción**: o se hace entera o no. Eso pide **ACID**, típico del relacional OLTP. BASE, el lago y Parquet no dan ese aislamiento de negocio."
+    },
+    {
+      "topic": "1.3 Warehouse y lake",
+      "href": "../almacenamiento/",
+      "prompt": "¿Qué distingue un data warehouse de un data lake?",
+      "code": "",
+      "options": [
+        "El warehouse guarda bruto; el lake solo tablas normalizadas.",
+        "El warehouse está modelado para BI (schema-on-write); el lake guarda el original (schema-on-read).",
+        "Son el mismo concepto; cambia solo el proveedor cloud.",
+        "El lake no puede guardar JSON ni logs."
+      ],
+      "answer": 1,
+      "explain": "El **warehouse** espera dato curado y pregunta conocida. El **lake** acepta el formato original y retrasa el esquema. En la práctica conviven."
+    },
+    {
+      "topic": "1.3 ACID",
+      "href": "../almacenamiento/",
+      "prompt": "Una transacción inserta dos filas; la segunda falla y no queda ninguna. ¿Qué propiedad es?",
+      "code": "",
+      "options": [
+        "Durabilidad: el disco no se borra.",
+        "Aislamiento: otra sesión no lee a medias.",
+        "Atomicidad: todo o nada.",
+        "Disponibilidad del teorema CAP."
+      ],
+      "answer": 2,
+      "explain": "**Atomicidad**: la transacción es indivisible. El aislamiento es que otros no vean el intermedio; la durabilidad es que el `COMMIT` sobreviva a un corte; CAP habla de sistemas distribuidos."
+    },
+    {
+      "topic": "1.3 CAP",
+      "href": "../almacenamiento/",
+      "prompt": "En un almacén distribuido hay una partición de red. Según CAP, ¿qué es lo habitual?",
+      "code": "",
+      "options": [
+        "Se pueden garantizar C, A y P a la vez si usas SQL.",
+        "P casi no se puede ignorar: eliges CP (no servir dato dudoso) o AP (responder aunque algún nodo vaya atrasado).",
+        "Siempre se elige CA y se apaga el clúster.",
+        "CAP solo aplica a CSV."
+      ],
+      "answer": 1,
+      "explain": "En un clúster las particiones **ocurren**. La decisión real es **CP** o **AP**. CA describe bien un relacional **no** repartido. SQL no anula el teorema."
+    },
+    {
+      "topic": "1.3 BASE",
+      "href": "../almacenamiento/",
+      "prompt": "Un catálogo replicado puede devolver una versión que aún no ha llegado a todos los nodos, y más tarde sí. ¿Qué modelo es?",
+      "code": "",
+      "options": [
+        "ACID estricto.",
+        "BASE (disponibilidad y consistencia eventual).",
+        "OLTP puro.",
+        "Principio SCV."
+      ],
+      "answer": 1,
+      "explain": "**BASE**: básicamente disponible, estado blando, consistencia **eventual**. No lo uses como TPV. SCV es de analítica, no de réplica de lecturas."
+    },
+    {
+      "topic": "1.4 OLTP y OLAP",
+      "href": "../procesamiento/",
+      "prompt": "El cajero pica ventas; dirección pide ventas por región y mes. ¿Qué par es el de la unidad?",
+      "code": "",
+      "options": [
+        "Las dos cosas en la misma tabla OLTP “para no duplicar”.",
+        "OLTP para la caja; OLAP / warehouse para el análisis (alimentado por ingesta).",
+        "OLAP en el TPV y OLTP en el cuadro de mando.",
+        "Solo streaming: OLTP y OLAP ya no se usan."
+      ],
+      "answer": 1,
+      "explain": "**OLTP** = operación del día. **OLAP** = análisis sobre dato ya integrado. Mezclarlos en el mismo motor suele bloquear la caja o eternizar el informe."
+    },
+    {
+      "topic": "1.4 SCV",
+      "href": "../procesamiento/",
+      "prompt": "Quieres analítica en tiempo real sobre *todos* los petabytes del lago, con la misma precisión que el cierre de mes. El principio SCV dice:",
+      "code": "",
+      "options": [
+        "Es el caso S+C+V y es el diseño habitual.",
+        "No puedes tener velocidad, precisión sobre el 100 % y volumen extremo a la vez; o muestreas o esperas al lote.",
+        "SCV solo afecta a MongoDB.",
+        "Con más RAM se cumplen las tres letras siempre."
+      ],
+      "answer": 1,
+      "explain": "SCV: como máximo **dos** de Speed, Consistency (precisión = todos los datos) y Volume. Tiempo real + 100 % + petabytes no caben juntos."
+    },
+    {
+      "topic": "1.5 Capas",
+      "href": "../arquitectura/",
+      "prompt": "El cliente final abre un cuadro de mando y entiende el KPI. ¿En qué capa estás (criterio e)?",
+      "code": "",
+      "options": [
+        "Solo ingesta.",
+        "Visualización (sobre dato ya analizado).",
+        "CAP.",
+        "Almacenamiento en bruto, sin procesar."
+      ],
+      "answer": 1,
+      "explain": "Presentar de forma interpretable es la capa de **visualización** (e informes). La ingesta solo mete el dato; el bruto no es “fácil de interpretar”."
+    },
+    {
+      "topic": "1.6 ETL y ELT",
+      "href": "../ingesta/",
+      "prompt": "Cargas el JSON crudo al lago y el analista transforma después con SQL. ¿Qué procedimiento es?",
+      "code": "",
+      "options": [
+        "ETL: transformar siempre antes de cargar.",
+        "ELT: extraer, cargar y transformar en el destino.",
+        "OLTP.",
+        "ORC."
+      ],
+      "answer": 1,
+      "explain": "**ELT** cambia el orden: el bruto entra pronto; la T la hace el warehouse, Spark o el analista. ETL limpia *antes* de cargar (Pentaho suele enseñarse así)."
+    },
+    {
+      "topic": "1.6 Mecanismo de ingesta",
+      "href": "../ingesta/",
+      "prompt": "Los logs de un sitio deben verse en el dashboard en pocos segundos. ¿Qué mecanismo encaja mejor?",
+      "code": "",
+      "options": [
+        "Un CSV copiado a mano cada viernes.",
+        "Un lote Sqoop mensual desde el ERP.",
+        "Un flujo (p. ej. Flume/Kafka + consumidor) pensado para streaming.",
+        "Solo ACID en un Access local."
+      ],
+      "answer": 2,
+      "explain": "La **latencia** pide stream o near-real-time, no un lote semanal. Sqoop es típico SQL↔Hadoop en batch. El criterio b) es justificar el mecanismo por el ritmo."
+    },
+    {
+      "topic": "1.6 Herramientas",
+      "href": "../ingesta/",
+      "prompt": "Hay que volcar de noche una tabla Oracle grande hacia HDFS. ¿Qué herramienta del temario encaja?",
+      "code": "",
+      "options": [
+        "Sqoop (estructurado, batch, SQL ↔ Hadoop).",
+        "Solo Power BI.",
+        "ORC como herramienta de ingesta.",
+        "Kitchen sin origen: genera los datos."
+      ],
+      "answer": 0,
+      "explain": "**Sqoop** nació para ese puente. Power BI visualiza. ORC es **formato**. Kitchen ejecuta jobs de Pentaho; no sustituye el conector SQL↔HDFS."
+    },
+    {
+      "topic": "1.7 Filas y columnas",
+      "href": "../formatos/",
+      "prompt": "El informe solo usa 3 columnas de una tabla de 80. ¿Qué almacenamiento reduce escaneo y coste?",
+      "code": "",
+      "options": [
+        "Un CSV orientado a filas (lees la fila entera).",
+        "Un formato columnar (Parquet/ORC): lees esas columnas.",
+        "Avro no se puede comprimir nunca.",
+        "JSON monolítico con un array de 10 millones de objetos (se parte solo)."
+      ],
+      "answer": 1,
+      "explain": "Columnar = lees **solo** las columnas del SELECT. El CSV fila a fila arrastra las 80. Un JSON enorme suele ser **poco partible**."
+    },
+    {
+      "topic": "1.7 Elegir formato",
+      "href": "../formatos/",
+      "prompt": "El dato viaja por Kafka y el esquema cambia (añaden campos). ¿Qué formato cita la unidad como encaje natural?",
+      "code": "",
+      "options": [
+        "ORC porque Hive es Kafka.",
+        "Avro (filas + esquema, evolución, típico en buses).",
+        "Solo CSV sin cabecera.",
+        "Parquet para cada mensaje de 200 bytes en el topic."
+      ],
+      "answer": 1,
+      "explain": "**Avro** + esquema evolutivo es el clásico en ingesta/Kafka. Parquet brilla en **lecturas analíticas** del lago, no como mensaje diminuto. ORC va con Hive."
+    },
+    {
+      "topic": "1.7 JSON",
+      "href": "../formatos/",
+      "prompt": "¿Cuál es un JSON Lines válido para un lote partible?",
+      "code": "{\"nombre\": \"Juan\", \"edad\": None}",
+      "options": [
+        "Esa línea: None es nulo en JSON.",
+        "Un objeto por línea y null (no None) para el vacío.",
+        "Un único array de 2 GB en un solo documento: es lo más partible.",
+        "JSON y JSONL son exactamente lo mismo."
+      ],
+      "answer": 1,
+      "explain": "`None` es **Python**. En JSON se escribe `null`. **JSONL** = un objeto por línea, más fácil de trocear que un array gigante."
+    },
+    {
+      "topic": "1.8 Pentaho",
+      "href": "../pentaho/",
+      "prompt": "Has diseñado el flujo en Spoon. En el servidor (sin escritorio) debes lanzar solo esa transformación. ¿Qué ejecutas?",
+      "code": "",
+      "options": [
+        "Kitchen sobre el .ktr.",
+        "Pan sobre el .ktr (y Kitchen si fuera un job .kjb).",
+        "Sqoop, porque Spoon no exporta.",
+        "Nada: el criterio e) se cumple dejando el .ktr al cliente."
+      ],
+      "answer": 1,
+      "explain": "**Pan** ejecuta `.ktr`. **Kitchen** orquesta `.kjb`. El cliente no interpreta un Spoon: el criterio **e)** es el CSV, JSON, tabla o informe **ya claro**."
+    }
+  ]
+}

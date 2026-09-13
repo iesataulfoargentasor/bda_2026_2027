@@ -1,0 +1,99 @@
+site_name: Big Data Aplicado
+site_description: Apuntes del módulo BDA (curso de especialización en IA y Big Data) — IES Ataúlfo Argenta
+site_url: https://iesataulfoargentasor.github.io/bda_2026_2027/
+repo_url: https://github.com/iesataulfoargentasor/bda_2026_2027
+repo_name: iesataulfoargentasor/bda_2026_2027
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: es
+  logo: assets/branding/logo-ies-ataulfo-argenta.png
+  favicon: assets/branding/logo-ies-ataulfo-argenta.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.path
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+plugins:
+  - search
+  - tags
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+  - stylesheets/quiz.css
+
+extra_javascript:
+  - javascripts/quiz.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/iesataulfoargentasor/bda_2026_2027
+  generator: false
+
+copyright: IES Ataúlfo Argenta · BDA · curso 2026/2027
+
+nav:
+  - Inicio: index.md
+  - UT1 Introducción a Big Data:
+    - La unidad: ut1/index.md
+    - RA1 y criterios de evaluación: ut1/ra1.md
+    - 1.1 Por qué Big Data y las 5 Vs: ut1/por-que-big-data.md
+    - 1.2 Clústeres: ut1/clusters.md
+    - 1.3 Almacenamiento: ut1/almacenamiento.md
+    - 1.4 Procesamiento: ut1/procesamiento.md
+    - 1.5 Arquitectura y ecosistema: ut1/arquitectura.md
+    - 1.6 Ingesta de datos: ut1/ingesta.md
+    - 1.7 Formatos de datos: ut1/formatos.md
+    - 1.8 Pentaho: ut1/pentaho.md
+    - Autoevaluación: ut1/autoevaluacion.md
