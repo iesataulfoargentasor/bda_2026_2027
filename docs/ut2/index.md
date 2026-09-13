@@ -24,7 +24,7 @@ Lee los apartados **en orden**. El hilo es el mismo hotel de Cantabria. Las sigl
 | [2.4 Computación distribuida](computacion-distribuida.md) | **b)** | MapReduce y YARN: el poder de partir el trabajo |
 | [2.5 Familias NoSQL](nosql.md) | **a)** / **c)** / **d)** / **e)** | Familias, esquema dinámico, *shards*, réplica, CAP y BASE |
 | [2.6 MongoDB](mongodb.md) | **a)** / **d)** | BSON, mongosh, consultas, cursores y updates |
-| [2.7 Modelado documental](modelado.md) | **d)** | Embeber o referenciar; decidir el uso *después* |
+| [2.7 Modelado documental](modelado.md) | **d)** | Carga, cardinalidad, patrones y validador (hotel) |
 | [2.8 Réplicas y particiones](replicas-shards.md) | **c)** / **e)** | Caídas, votos y crecer con *shards* |
 | [2.9 MongoDB y Python](pymongo.md) | **b)** / **d)** | PyMongo sobre el mismo hotel |
 | [Autoevaluación](autoevaluacion.md) | — | Preguntas de la unidad (no puntúa en Moodle) |
