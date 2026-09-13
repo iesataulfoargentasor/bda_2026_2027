@@ -43,7 +43,7 @@ Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta
 
 - Usa el **menú lateral** para saltar entre apartados.
 - La **tabla de contenidos** de la derecha recorre los epígrafes de cada página.
-- La **búsqueda** del encabezado localiza un concepto (`Parquet`, `ELT`, `CAP`, `Spoon`…).
+- La **búsqueda** del encabezado localiza un concepto (`Parquet`, `lago`, `Spoon`…).
 
 !!! tip "Cómo estudiar"
     Lee el apartado, haz la [tarea de clase](ut1/tarea-clase.md) (500 GB, un portátil), responde la [autoevaluación](ut1/autoevaluacion.md) y luego practica en Moodle. El test no sustituye a las pruebas del aula.

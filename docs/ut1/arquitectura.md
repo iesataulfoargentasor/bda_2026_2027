@@ -36,7 +36,7 @@ Unificas **formato y semántica**. El mismo cliente no puede llamarse `id_client
 
 ### 3. Almacenamiento
 
-Lago, warehouse, HDFS, objeto en cloud… [distribuido](clusters.md) si el volumen lo pide. Aquí aplicas lo de [1.3](almacenamiento.md): ACID o BASE, lake o warehouse.
+Lago, warehouse, HDFS, objeto en cloud… [distribuido](clusters.md) si el volumen lo pide. Aquí aplicas lo de [1.3](almacenamiento.md): ¿el negocio puede verse a medias o no? ¿lago o almacén de informes?
 
 ### 4. Procesamiento
 
@@ -79,7 +79,7 @@ Los mapas cambian de año (nace una marca, muere otra). **Las capas no.**
 
 ## Big Data y cloud
 
-El BOE cita cloud. Un *bucket* S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, CAP/SCV, ETL o ELT y el formato. Cambia **quién** opera los discos y **cómo pagas**.
+El BOE cita cloud. Un *bucket* S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia **quién** opera los discos y **cómo pagas**.
 
 En varios servicios analíticos de nube pagas por **dato escaneado**, no solo por dato guardado. Por eso en [1.7](formatos.md) Parquet no es “un capricho moderno”: es menos euros y menos minutos.
 

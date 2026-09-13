@@ -62,7 +62,7 @@ No hace falta acertar el tamaño el día 1. Empiezas con lo que puedes pagar y c
 | Qué haces | Más CPU, RAM o disco **en la misma máquina** | **Más máquinas** en el clúster |
 | Analogía | Un camión más grande | Más furgonetas |
 | Límite | El mejor hardware del catálogo (y su precio) | Red, coordinación, presupuesto de nodos |
-| Típico en | Un SGBD relacional en un solo servidor | Hadoop, almacenes distribuidos, muchas NoSQL |
+| Típico en | Una base relacional en un solo servidor | Hadoop, almacenes repartidos, muchas NoSQL |
 
 !!! warning "Cuidado con el nombre *scale-in*"
     En el material antiguo a veces se llamaba *scale-in* al vertical. En la jerga habitual:
@@ -85,7 +85,7 @@ También hay coste de **coordinación**: la red, el maestro que reparte, el mome
 
 ## Relación con el RA1
 
-Diseñar el almacenamiento masivo implica decidir: ¿un servidor ACID o un clúster que replica y reparte? Esa decisión condiciona:
+Diseñar el almacenamiento masivo implica decidir: ¿un servidor que no admite ver una operación a medias, o un clúster que copia y reparte? Esa decisión condiciona:
 
 - cómo **ingieres** (un destino o muchos nodos),
 - qué **formato** usas (que se pueda trocear),

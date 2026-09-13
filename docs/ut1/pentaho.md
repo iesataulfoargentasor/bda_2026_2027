@@ -36,7 +36,7 @@ Spoon es para **clase y diseño**. En producción (o en la entrega “como en em
 ## Qué puedes hacer en Spoon (y cómo se nota el criterio d)
 
 - **Orígenes:** CSV, Excel, XML, JSON, tablas SQL, APIs.
-- **Transformar:** filtrar filas, quitar nulos, *Select values* (renombrar y tipar), *lookup*, *merge join*, agregar, fórmulas.
+- **Transformar:** filtrar filas, quitar nulos, *Select values* (elegir y tipar columnas), *lookup* (buscar un valor en otra tabla), *merge join* (unir dos flujos), agregar, fórmulas.
 - **Destinos:** otro fichero, una tabla, S3, Azure…
 - **Jobs:** si la carga a la nube falla, **abortar** para no dar por bueno un panel mentiroso.
 
@@ -68,7 +68,7 @@ El detalle de cada clic está en el PDF. Aquí va **qué competencia** entrenas.
 | 3 | Airbnb: elegir columnas, nulos, filtro avanzado, salida **JSON** | **d)** y **e)** |
 | 4 | Fórmulas y dejar el resultado en **S3 / Azure** (cloud del BOE) | **d)** |
 | 5 | Un **job** que orquesta, aborta si falla y se lanza con **Kitchen** | Procedimiento completo |
-| 6 | Hablar con una **BD**: cargar, *lookup*, insertar, actualizar, *upsert* | **d)** con SGBD |
+| 6 | Hablar con una **base de datos**: cargar, buscar, insertar, actualizar | **d)** con una BD |
 
 *Upsert* = “si la fila existe, actualiza; si no, inserta”. Es el patrón típico de una carga diaria que no debe duplicar la clave.
 

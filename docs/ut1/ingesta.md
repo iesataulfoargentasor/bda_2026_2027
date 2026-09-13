@@ -28,11 +28,17 @@ Ejemplo: dirección quiere “ocupaciones de hotel por comarca, cada mañana a l
 
 En muchas empresas el primer destino consolidado es un **data lake**; luego se curan copias hacia el warehouse que alimenta el panel. Dos saltos, dos procedimientos, no uno solo “mágico”.
 
-## ETL y ELT: el orden cambia el oficio
+## Extraer, transformar y cargar: el orden cambia el oficio
+
+Tres verbos, siempre los mismos:
+
+1. **Extraer:** leer el origen (una tabla, un CSV, una API).
+2. **Transformar:** limpiar, unir, recodificar, agregar.
+3. **Cargar:** escribir el resultado en el destino.
+
+Las siglas inglesas **ETL** y **ELT** solo cambian **cuándo** haces el paso 2.
 
 ![Esquema ETL](../assets/ut1/etl.png)
-
-Las tres letras son las mismas; **cambia el orden** de la T y la L.
 
 | | **ETL** | **ELT** |
 | --- | --- | --- |
@@ -52,7 +58,7 @@ Una herramienta de este módulo debe ser:
 
 ### Las tres fases (aunque el orden cambie)
 
-**Extracción.** Leer el origen **sin tumbarlo**. No haces un `SELECT *` a la caja en hora punta si puedes leer incrementales (solo lo nuevo), ventanas de tiempo, APIs con cuota o CDC (capturar cambios). La primera carga histórica es un procedimiento **distinto** del día a día.
+**Extracción.** Leer el origen **sin tumbarlo**. No vuelques **toda** la caja en hora punta si puedes leer solo lo nuevo, una ventana de tiempo o una API con cuota. La primera carga histórica es un procedimiento **distinto** del día a día.
 
 **Transformación.** Tipos (`"10"` no es 10), recodificar (`M`/`F` frente a `1`/`2`), unir, agregar, reglas de calidad (nulos, duplicados). En streaming cada milisegundo de T cuenta: a veces dejas la T pesada para un lote posterior.
 
@@ -62,7 +68,7 @@ Una herramienta de este módulo debe ser:
 - ficheros que el destino ingiere,
 - cargadores de HDFS o S3.
 
-Ahí importan los **índices** (¿los desactivas durante la carga masiva?), el **particionado**, el tamaño de transacción y el `COMMIT`. Una carga que reconstruye todos los índices **en cada fila** es un procedimiento mal determinado: funciona en 100 filas de práctica y muere en 10 millones.
+Ahí importan los **índices** (el “índice del libro”: si lo reconstruyes **en cada fila**, la carga masiva se muere), partir el destino en trozos y confirmar por bloques, no fila a fila. Funciona en 100 filas de práctica y revienta en 10 millones.
 
 ## Qué preguntar antes de elegir el mecanismo
 
@@ -73,7 +79,7 @@ Usa esta lista como **guion de práctica o de examen**. No hace falta contestarl
 | Origen y formato | ¿API, IoT, SQL, fichero? ¿Interno o externo? ¿Estructurado? | El conector no es el mismo |
 | Volumen y ritmo | ¿Eventos/s, GB/h? ¿Hay carga inicial histórica? | Batch frente a stream; dimensionar |
 | Latencia | ¿Vale un lote a las 02:00 o tiene que verse en segundos? | Kafka no es “mejor”; es *otra* necesidad |
-| Actualizaciones | ¿Cambian columnas? ¿Hace falta histórico de cambios? | Evolución de esquema; SCD |
+| Actualizaciones | ¿Cambian columnas? ¿Hace falta histórico de cambios? | Cómo evoluciona el modelo |
 | Destinos | ¿Uno o varios? ¿Filas (Avro) o columnas (Parquet)? | Ver [formatos](formatos.md) |
 | Calidad | ¿Duplicados, nulos, relojes desfasados? ¿Linaje? | Veracidad (5 V) |
 | Seguridad | ¿Hay que enmascarar el DNI? ¿Quién no puede ver el campo? | Capa transversal |

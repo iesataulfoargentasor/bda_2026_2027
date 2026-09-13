@@ -8,7 +8,7 @@ tags:
 
 # Autoevaluación de la UT1
 
-Veinte preguntas de **opción múltiple** (una correcta) sobre el hilo de la unidad: 5 Vs, clústeres, almacenes, CAP/BASE, OLTP/OLAP, ingesta, formatos y Pentaho.
+Veinte preguntas de **opción múltiple** (una correcta) sobre el hilo de la unidad: 5 Vs, clústeres, dónde guardar, operar frente a analizar, ingesta, formatos y Pentaho.
 
 Son casos **prácticos** (qué eliges y por qué). No puntúan en Moodle: al pulsar **Corregir test** verás la nota, la opción buena y **por qué**.
 

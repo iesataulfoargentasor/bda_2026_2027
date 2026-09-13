@@ -100,9 +100,9 @@ No todos los datos se parecen a una hoja de cálculo. En el mismo proyecto convi
 | --- | --- | --- | --- |
 | **Estructurado** | Esquema fijo (filas y columnas) | Todas las filas tienen las mismas columnas | Tabla SQL de facturas |
 | **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON, XML, logs |
-| **No estructurado** | No hay esquema tabular útil de entrada | No puedes hacer un `SELECT` directo | PDF, foto, audio, vídeo, texto libre |
+| **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | PDF, foto, audio, vídeo, texto libre |
 
-Un **data warehouse** clásico espera estructurado: decides las columnas **antes** de cargar. Un **data lake** acepta el dato “como llega” y aplica el esquema **al leer** (*schema-on-read*).
+Un **data warehouse** (almacén de informes) espera dato ya en tablas: decides las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. El detalle está en [1.3](almacenamiento.md).
 
 La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que **no todo es tabla**.
 

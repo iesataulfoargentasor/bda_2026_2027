@@ -14,7 +14,7 @@ Una empresa puede empezar con un servidor y una base de datos relacional. Cuando
 
 Esta unidad cubre el **[RA1](ra1.md)** del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.
 
-Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y una pregunta del estilo “¿qué elegirías y por qué?”. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil; la [autoevaluación](autoevaluacion.md) comprueba vocabulario. Ninguna sustituye a Moodle.
+Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y una pregunta del estilo “¿qué elegirías y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil; la [autoevaluación](autoevaluacion.md) comprueba vocabulario. Ninguna sustituye a Moodle.
 
 ## Qué vas a trabajar
 
@@ -22,10 +22,10 @@ Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y u
 | --- | --- | --- |
 | [1.1 Por qué Big Data y las 5 Vs](por-que-big-data.md) | **a)** | Reconocer cuándo un problema es (o no) Big Data |
 | [1.2 Clústeres](clusters.md) | **a)** | Por qué se escala en horizontal y qué ganas (rendimiento, disponibilidad) |
-| [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, data warehouse, data lake, ACID, BASE y CAP |
-| [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, batch, streaming, OLTP/OLAP y SCV |
+| [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, almacén de informes, lago; y, desde cero, ACID, CAP y BASE |
+| [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar |
 | [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Capas (ingesta → visualización) y el “paisaje” de herramientas |
-| [1.6 Ingesta de datos](ingesta.md) | **b)** | Pipeline, ETL/ELT y cómo elegir el mecanismo |
+| [1.6 Ingesta de datos](ingesta.md) | **b)** | Tubería de datos: extraer, transformar, cargar (y el orden ETL/ELT) |
 | [1.7 Formatos de datos](formatos.md) | **c)** | Texto frente a binario, filas frente a columnas, Avro / Parquet / ORC |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | Procesar con PDI y presentar el resultado al cliente |
 | [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |

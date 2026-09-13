@@ -67,7 +67,7 @@ Imagina una tabla `Nombre | Altura | Edad` con un millón de personas.
 | Compresión peor (tipos mezclados en la misma racha) | Mejor compresión (valores del mismo tipo seguidos) |
 | Actualizar una fila, más natural | Actualizar una fila: operación pesada |
 
-Las bases **OLTP** (caja, reserva) guardan en **filas**. La analítica masiva (OLAP, data lake) prefiere **columnar**.
+Las bases del **día a día** (caja, reserva: lo que en [1.4](procesamiento.md) se llama OLTP) guardan en **filas**. El análisis masivo (informes, lago) prefiere **columnas**.
 
 Un orden de magnitud que verás citado: 1 TB en CSV puede quedar en torno a **130 GB** en Parquet. En Athena, BigQuery y similares **pagas por dato escaneado**. Si el informe usa 3 columnas de 80, el columnar no es estética: es la factura.
 
@@ -89,7 +89,7 @@ Tres binarios que debes **saber elegir**, no dibujar de memoria.
 **Parquet** — **columnar**, admite estructuras **anidadas**.
 
 - El default cultural de **Spark** y de muchos lakes.
-- Ideal si casi siempre haces `SELECT col1, col2` sobre ficheros gordos.
+- Ideal si casi siempre lees **solo algunas columnas** de ficheros gordos.
 
 ![ORC: stripes e índices](../assets/ut1/orc.png)
 
@@ -108,7 +108,7 @@ Tres binarios que debes **saber elegir**, no dibujar de memoria.
 | Bus (Kafka), esquema que cambia, escritura continua | **Avro** | Filas + esquema + evolución |
 | Lago + Spark + “solo estas columnas” | **Parquet** | Menos escaneo |
 | Tablas Hive muy grandes, lecturas tipo SQL | **ORC** (o Parquet si ese es el estándar del equipo) | Encaje con Hive |
-| Transacción fila a fila (TPV) | Ni Parquet ni ORC como almacén OLTP | Actualizar una fila es caro |
+| Cobrar o reservar fila a fila | Ni Parquet ni ORC como almacén de la caja | Cambiar una sola fila es caro |
 
 Orden de tamaño del temario original (mismo recorte de ventas; tus cifras cambiarán):
 
