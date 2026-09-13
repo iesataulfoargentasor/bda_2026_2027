@@ -25,13 +25,13 @@ Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y u
 | [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, almacén de informes, lago; y, desde cero, ACID, CAP y BASE |
 | [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar |
 | [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Capas (ingesta → visualización) y el “paisaje” de herramientas |
-| [1.6 Ingesta de datos](ingesta.md) | **b)** | Tubería de datos: extraer, transformar, cargar (y el orden ETL/ELT) |
-| [1.7 Formatos de datos](formatos.md) | **c)** | Texto frente a binario, filas frente a columnas, Avro / Parquet / ORC |
+| [1.6 Ingesta de datos](ingesta.md) | **b)** | Pipeline, wrangling, ETL/ELT, lote o stream y cómo elegir el mecanismo |
+| [1.7 Formatos de datos](formatos.md) | **c)** | Texto/binario, filas/columnas, Avro, Parquet, ORC, Arrow/Feather y DuckDB |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | Procesar con PDI y presentar el resultado al cliente |
 | [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
 | [Autoevaluación](autoevaluacion.md) | — | 20 preguntas de la unidad (no puntúa en Moodle) |
 
 !!! info "Sobre el material original"
-    Se mantiene el hilo pedagógico de los paquetes eXeLearning (*Introducción*, *Ingesta*, *Formatos*) y del PDF *Pentaho*. El texto se ha unificado, se han corregido imprecisiones (escalado vertical, JSON, matices de ciencia de datos) y se ha alineado cada apartado con un criterio del RA1.
+    Se mantiene el hilo pedagógico de los paquetes eXeLearning (*Introducción*, *Ingesta*, *Formatos*), de los apuntes de aula de ingesta y formatos, y del PDF *Pentaho*. El texto se ha unificado, se han corregido imprecisiones (escalado vertical, JSON, matices de ciencia de datos) y se ha alineado cada apartado con un criterio del RA1.
 
     El PDF de prácticas se puede descargar aquí: [Pentaho.pdf](../assets/originales/Pentaho.pdf).
