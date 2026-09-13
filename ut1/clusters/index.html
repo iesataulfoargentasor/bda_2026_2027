@@ -824,6 +824,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../tarea-clase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tarea para practicar en clase
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../autoevaluacion/" class="md-nav__link">
         
   
@@ -1170,7 +1198,7 @@
 <p>El vertical <strong>no te da escalabilidad real</strong> en Big Data: siempre hay un techo (y un precio absurdo cerca de ese techo). El horizontal es el que encaja con un volumen que no para de crecer.</p>
 <h2 id="cuando-un-cluster-no-hace-magia">Cuándo un clúster no hace magia<a class="headerlink" href="#cuando-un-cluster-no-hace-magia" title="Permanent link">&para;</a></h2>
 <p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tienes más máquinas y el mismo cuello.</p>
-<p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir.</p>
+<p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir. En clase lo pones a prueba con la <a href="../tarea-clase/">tarea de los 500 GB</a>: el portátil no es un clúster.</p>
 <p>También hay coste de <strong>coordinación</strong>: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
 <p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor ACID o un clúster que replica y reparte? Esa decisión condiciona:</p>
