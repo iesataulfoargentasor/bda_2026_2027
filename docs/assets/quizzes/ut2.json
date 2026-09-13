@@ -479,6 +479,48 @@
       "explain": "Más shards = más capacidad. La app sigue al **router**."
     },
     {
+      "topic": "2.8 Oplog",
+      "href": "../replicas-shards/",
+      "prompt": "¿Qué es el oplog de un replica set?",
+      "code": "",
+      "options": [
+        "Un dump nocturno que hace el NameNode.",
+        "El diario capped (local.oplog.rs) que los secundarios copian en asíncrono.",
+        "La shard key hasheada.",
+        "El único sitio donde escribe el árbitro."
+      ],
+      "answer": 1,
+      "explain": "Si el secundario se atrasó más de lo que cabe en el diario, hay que resincronizar."
+    },
+    {
+      "topic": "2.8 Write concern",
+      "href": "../replicas-shards/",
+      "prompt": "Un cobro en recepción. ¿Qué writeConcern encaja con «no mentir al huésped» si cae Laredo?",
+      "code": "",
+      "options": [
+        "w: 0 (fire-and-forget).",
+        "w: \"majority\" (la mayoría del set lo tiene).",
+        "Solo j: false sin w.",
+        "Leer siempre del Secondary NameNode."
+      ],
+      "answer": 1,
+      "explain": "w: 1 deja en el aire lo que no llegó a Potes; majority reduce el rollback."
+    },
+    {
+      "topic": "2.8 Shard key",
+      "href": "../replicas-shards/",
+      "prompt": "Partís reservas por { hotel: 1 }. En agosto casi todo es Laredo. ¿Qué ocurre?",
+      "code": "",
+      "options": [
+        "Los writes se reparte solos por hash.",
+        "Hotspot: un shard se fríe; hace falta una clave que reparta (p. ej. hash de id_reserva).",
+        "El árbitro equilibra los chunks.",
+        "mongos guarda la mitad de los documentos."
+      ],
+      "answer": 1,
+      "explain": "Cardinalidad baja + un valor dominante = un solo trozo caliente. mongos enruta; no almacena."
+    },
+    {
       "topic": "2.9 PyMongo",
       "href": "../pymongo/",
       "prompt": "Un pipeline $match → $group por hotel → $sum de noches. ¿Qué oficio es?",
