@@ -255,6 +255,20 @@
       "explain": "Todo ETL es un **pipeline**. No todo pipeline es un ETL: mover mensajes por Kafka sin las tres letras clásicas sigue siendo tubería."
     },
     {
+      "topic": "1.6 Formato de la carga",
+      "href": "../ingesta/",
+      "prompt": "Tras transformar 50 GB de productos Mix, el destino es un lago que Spark/Athena consultará por unas pocas columnas. ¿Qué carga encaja?",
+      "code": "",
+      "options": [
+        "Un JSON único con un array de 50 GB: es lo más partible.",
+        "Parquet (columnar, partible, menos escaneo y menos factura).",
+        "Feather como archivo de años en S3.",
+        "ORC como almacén de la caja (OLTP)."
+      ],
+      "answer": 1,
+      "explain": "La **L** del ETL es una decisión de formato. El lago analítico pide **Parquet** (o ORC en Hive). El JSON monolítico no se parte; Feather es paso intermedio, no archivo; ORC/Parquet no son la caja."
+    },
+    {
       "topic": "1.7 Filas y columnas",
       "href": "../formatos/",
       "prompt": "El informe solo usa 3 columnas de una tabla de 80. ¿Qué almacenamiento reduce escaneo y coste?",

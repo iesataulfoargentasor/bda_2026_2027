@@ -221,6 +221,66 @@ COPY (
 
 Mismas tres letras, otro idioma (SQL). En clase compara **tamaño del código**, **tiempo** y si el JSON te sale legible. Luego haz el mismo flujo en Pentaho y verás que el oficio no cambia: cambia la herramienta.
 
+## El formato también se decide en la ingesta
+
+La **L** de ETL no es “escribir un fichero”. Es escribirlo en un formato que el **siguiente** paso pueda partir, comprimir y consultar sin arruinarte. Conforme el dato viaja por la tubería, hay que **serializarlo** (pasarlo a bytes) y a menudo **convertirlo**. Cada conversión gasta CPU y puede **perder tipos**: no cambies de formato en cada capa “porque sí”.
+
+El detalle de cada formato está en [1.7](formatos.md). Aquí, lo que pide el criterio **b)** es **elegir el de la carga** y saber decir por qué.
+
+### Qué le pides al fichero que dejas
+
+Para que Hadoop, Spark o Athena puedan repartir el trabajo, el fichero tiene que ser **partible** (*splittable*): cortarlo en trozos. Un JSON con diez millones de objetos dentro de un único `[` `]` **no** se parte bien. Un objeto por línea (JSONL), un Avro o un Parquet, sí.
+
+También quieres que sea **independiente del lenguaje** (lo escribe Java, lo lee Python), **expresivo** (nulos y anidados de verdad), **compacto** y, si el origen cambia columnas, que el esquema pueda **evolucionar** sin reescribir el histórico.
+
+| Si la carga es… | Formato razonable | Por qué en la ingesta |
+| --- | --- | --- |
+| Un extracto para un compañero o una API | CSV / JSON | Se abre y se depura |
+| Un *topic* de Kafka, el esquema va a cambiar | **Avro** | Filas + esquema en el mensaje; típico en *push* |
+| El lago / S3 para Spark o Athena (informes) | **Parquet** | Columnas: lees 3 de 80; pagas por lo *escaneado* |
+| Un paso intermedio entre dos scripts del mismo pipeline | **Feather** | Muy rápido de leer/escribir; no es archivo de años |
+| Tablas Hive | **ORC** (o Parquet si el equipo es Spark) | Encaje con Hive |
+| La caja o las reservas | **No** Parquet/ORC como almacén de operación | Actualizar una fila es carísimo |
+
+!!! example "1 TB mal ingerido"
+    1 TB en CSV plano puede quedar en ~**130 GB** en Parquet. En Athena, del orden de **5 $ por TB leído**. Si dejas el bruto en CSV “porque es más simple”, el informe del lunes **escanea y factura** el texto entero. Elegir Parquet **en la carga** no es capricho: es el procedimiento.
+
+### Misma T, otra L (sigue el Hola ETL)
+
+El JSON del ejemplo vale para **ver** el resultado en clase. Si esos productos Mix fueran 50 GB y el destino un lago, la carga cambiaría así:
+
+```python
+# misma transformación; cambia solo la carga
+df_joined.to_parquet("pdi_product_mix.parquet")
+```
+
+O, si el siguiente script del pipeline tiene que recoger el resultado **ahora**:
+
+```python
+import pyarrow.feather as feather
+
+feather.write_feather(df_joined, "pdi_product_mix.feather")
+```
+
+O, si el destino es una cola y el esquema puede ganar un campo el mes que viene, la carga sería **Avro** (el esquema viaja con el dato; el código está en [1.7](formatos.md)).
+
+Un job de ingesta muy habitual: llega **JSONL** (un objeto por línea) y lo **dejas en Parquet** para el análisis. No hace falta pasar por pandas:
+
+```python
+import pyarrow.parquet as pq
+from pyarrow import json as pajson
+
+tabla = pajson.read_json("empleados.json")  # un objeto JSON por línea
+pq.write_table(tabla, "empleados.parquet")
+```
+
+Comprimir en la carga (Snappy, gzip, zstd) ocupa menos disco y viaja menos por la red; a cambio, **cuesta CPU**. En Big Data suele ganar el algoritmo **rápido** (Snappy, zstd), no el que más aprieta. El catálogo está en [1.7](formatos.md).
+
+!!! tip "Tres preguntas al cerrar un procedimiento de ingesta"
+    1. ¿El destino va a **escribir** muchos registros o a **leer** pocas columnas?  
+    2. ¿El clúster puede **partir** ese fichero?  
+    3. ¿Mañana cambia el esquema? → Avro. ¿Mañana solo suman una columna? → Parquet.
+
 ## Lotes, micro-lotes o continuo
 
 El movimiento entre origen y destino no es siempre el mismo reloj:
@@ -328,7 +388,7 @@ Transformaciones que anuncian: simples (tipos, textos), intermedias (agregar, bu
     3. “Un CSV de productos y otro de fabricantes → JSON de la categoría Mix.” → **Pentaho** o el script pandas/DuckDB de esta página.
 
 !!! success "Criterio b) en un examen"
-    No basta con escribir “Kafka”. Debes decir: **origen**, **push/pull/poll**, **ritmo** (lote, micro-lote o stream), **ETL o ELT**, **destino** y **por qué** ese mecanismo y no el de al lado.
+    No basta con escribir “Kafka”. Debes decir: **origen**, **push/pull/poll**, **ritmo** (lote, micro-lote o stream), **ETL o ELT**, **destino**, **formato de la carga** (Avro, Parquet, Feather…) y **por qué** ese mecanismo y no el de al lado.
 
 ## Para practicar
 
@@ -338,4 +398,5 @@ No sustituye a Moodle. Sirve para comprobar que el apartado se sostiene en voz a
 2. Relación entre **pipeline** y **ETL**.  
 3. ¿ETL y ELT son lo mismo? ¿Cuándo usarías cada uno? En Big Data, ¿cuál suele verse más y por qué?  
 4. Repite el “Hola ETL” uniendo **productos + ventas**: CSV de una categoría, nombre del fabricante y **cantidad total vendida** de cada producto (pandas y DuckDB).  
-5. Supuesto: lanzáis un producto y queréis medir reacciones en redes. Contesta **al menos tres preguntas de cada bloque** de la tabla de consideraciones.
+5. Misma transformación, **tres cargas**: JSON (para verlo), Parquet (lago) y Feather (paso intermedio). Anota tamaño y di **cuándo** usarías cada una.  
+6. Supuesto: lanzáis un producto y queréis medir reacciones en redes. Contesta **al menos tres preguntas de cada bloque** de la tabla de consideraciones. Incluye **en qué formato** dejarías el dato en S3 y por qué.

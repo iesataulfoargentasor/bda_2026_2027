@@ -235,7 +235,17 @@ df = df[df["Country"] == "Germany"]
 df.to_parquet("pdi_sales.parquet")
 ```
 
-Con zstd, si el entorno lo trae: `df.to_parquet("pdi_sales.parquet", compression="zstd")`.
+Un job típico de [ingesta](ingesta.md): el origen entrega **JSONL** (un objeto por línea) y tú lo dejas en Parquet para el análisis, sin pasar por pandas:
+
+```python
+import pyarrow.parquet as pq
+from pyarrow import json as pajson
+
+tabla = pajson.read_json("empleados.json")
+pq.write_table(tabla, "empleados.parquet")
+```
+
+`empleados.json` debe ser JSON Lines (`{"nombre": "Carlos", ...}` en cada línea), no un array gigante. Con zstd, si el entorno lo trae: `df.to_parquet("pdi_sales.parquet", compression="zstd")`.
 
 ### Consultar Parquet sin tragárselo: DuckDB
 
@@ -249,7 +259,21 @@ print(duckdb.sql(
 ))
 ```
 
-También entiende varios ficheros a la vez (`'ventas/*.parquet'`), útil si particionas por año. Por dentro usa Arrow: pasar de DuckDB a pandas o a una tabla PyArrow suele ser casi instantáneo.
+También entiende varios ficheros a la vez (`'ventas/*.parquet'`), útil si particionas por año. Y puede hacer SQL **sobre un DataFrame** que ya tienes en memoria:
+
+```python
+import duckdb
+import pandas as pd
+
+df = pd.read_parquet("pdi_sales.parquet")
+print(
+    duckdb.sql(
+        "SELECT Country, SUM(Revenue) AS total FROM df GROUP BY Country ORDER BY total DESC"
+    ).df()
+)
+```
+
+Por dentro usa Arrow: pasar de DuckDB a pandas o a una tabla PyArrow suele ser casi instantáneo.
 
 ## ORC
 
