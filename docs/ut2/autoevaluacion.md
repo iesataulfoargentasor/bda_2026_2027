@@ -8,11 +8,11 @@ tags:
 
 # Autoevaluación de la UT2
 
-Veintitrés preguntas de **opción múltiple** (una correcta) sobre el RA2: por qué un almacén masivo, Hadoop (núcleo, YARN, jobs), HDFS, MapReduce, NoSQL, Mongo, modelado, réplicas y PyMongo.
+Veintiséis preguntas de **opción múltiple** (una correcta) sobre el RA2: por qué un almacén masivo, Hadoop (núcleo, YARN, jobs), HDFS, MapReduce, NoSQL, Mongo, modelado, réplicas y PyMongo.
 
 No puntúan en Moodle. Al **Corregir test** verás la nota, la opción buena y **por qué**.
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2.json"></div>
 
 !!! tip "Cómo usarlo"
-    Responde las veintitrés y corrige. El enlace *Repasar…* te lleva al apartado. Puedes reintentar.
+    Responde las veintiséis y corrige. El enlace *Repasar…* te lleva al apartado. Puedes reintentar.

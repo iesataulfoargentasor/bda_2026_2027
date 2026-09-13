@@ -20,7 +20,7 @@ Lee los apartados **en orden**. El hilo es el mismo hotel de Cantabria. Las sigl
 | --- | --- | --- |
 | [2.1 Por qué un almacén masivo](por-que-almacenamiento.md) | **a)** | Depositar *cualquier* tipo y procesarlo *en el sitio* |
 | [2.2 Ecosistema Hadoop](ecosistema.md) | **a)** / **b)** / **e)** | Núcleo, ecosistema, YARN, instalación, primer job y Streaming |
-| [2.3 HDFS](hdfs.md) | **a)** / **c)** / **d)** / **e)** | Bloques, réplica, NameNode, crecer con *datanodes* |
+| [2.3 HDFS](hdfs.md) | **a)** / **c)** / **d)** / **e)** | Bloques, réplica, lectura/escritura, `fsck`, snapshots y Python |
 | [2.4 Computación distribuida](computacion-distribuida.md) | **b)** | MapReduce y YARN: el poder de partir el trabajo |
 | [2.5 Familias NoSQL](nosql.md) | **a)** / **d)** | Documento, clave-valor, columnas, grafo |
 | [2.6 MongoDB](mongodb.md) | **a)** / **d)** | Documento, consultas y actualizaciones |

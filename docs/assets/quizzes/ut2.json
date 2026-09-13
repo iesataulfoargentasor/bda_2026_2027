@@ -157,6 +157,48 @@
       "explain": "WORM + lago = **guardar** y **interpretar** más tarde."
     },
     {
+      "topic": "2.3 Secondary NameNode",
+      "href": "../hdfs/",
+      "prompt": "¿Qué oficio tiene el Secondary NameNode?",
+      "code": "",
+      "options": [
+        "Es el NameNode de reserva: si el maestro cae, toma el relevo solo.",
+        "Compacta fsimage y edits (checkpoints). No es el standby de HA.",
+        "Guarda los bloques de 128 MB.",
+        "Sustituye a YARN cuando no hay ResourceManager."
+      ],
+      "answer": 1,
+      "explain": "Secondary **fusiona** metadatos. El relevo en caliente es otro NameNode (HA)."
+    },
+    {
+      "topic": "2.3 Escritura HDFS",
+      "href": "../hdfs/",
+      "prompt": "Al escribir con réplica 3, los bytes…",
+      "code": "",
+      "options": [
+        "Pasan tres veces por el NameNode.",
+        "Van en tubería: el cliente al primer DataNode y ese reenvía al segundo y al tercero.",
+        "Solo se guardan en el Secondary.",
+        "Obligan a RAID-5 en cada worker."
+      ],
+      "answer": 1,
+      "explain": "Pipeline de réplicas. El NameNode **elige** nodos; no traga el Parquet."
+    },
+    {
+      "topic": "2.3 Localidad",
+      "href": "../hdfs/",
+      "prompt": "YARN coloca un map en el mismo nodo que el bloque. ¿Qué nivel de localidad es?",
+      "code": "",
+      "options": [
+        "OFF_SWITCH.",
+        "NODE_LOCAL (óptimo: no cruza la red del rack).",
+        "Solo existe RACK_LOCAL.",
+        "El NameNode mueve el bloque al portátil."
+      ],
+      "answer": 1,
+      "explain": "**NODE_LOCAL** es el premio. OFF_SWITCH obliga a copiar el bloque por la red."
+    },
+    {
       "topic": "2.4 MapReduce",
       "href": "../computacion-distribuida/",
       "prompt": "Contar noches por hotel sobre ficheros en HDFS. ¿Qué hace el Map?",
