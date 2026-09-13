@@ -1,0 +1,5 @@
+{"hotel":"Laredo","canal":"web","noches":3,"importe":186.5,"comarca":"Trasmiera","extras":["parking"]}
+{"hotel":"Potes","canal":"ota","noches":2,"importe":124.0,"comarca":"Liebana"}
+{"hotel":"Santander","canal":"recepcion","noches":5,"importe":410.0,"comarca":"Santander","huespedes":[{"nombre":"Ana","tipo":"adulto"}]}
+{"hotel":"Comillas","canal":"web","noches":1,"importe":89.9,"comarca":"Saja-Nansa"}
+{"hotel":"Reinosa","canal":"ota","noches":4,"importe":260.0,"comarca":"Campoo-Los Valles","extras":["desayuno"]}

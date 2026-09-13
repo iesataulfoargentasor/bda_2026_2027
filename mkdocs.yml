@@ -98,3 +98,16 @@ nav:
     - 1.8 Pentaho: ut1/pentaho.md
     - Tarea para practicar en clase: ut1/tarea-clase.md
     - Autoevaluación: ut1/autoevaluacion.md
+  - U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema:
+    - La unidad: ut2/index.md
+    - RA2 y criterios de evaluación: ut2/ra2.md
+    - 2.1 Por qué un almacén masivo: ut2/por-que-almacenamiento.md
+    - 2.2 Ecosistema Hadoop: ut2/ecosistema.md
+    - 2.3 HDFS: ut2/hdfs.md
+    - 2.4 Computación distribuida: ut2/computacion-distribuida.md
+    - 2.5 Familias NoSQL: ut2/nosql.md
+    - 2.6 MongoDB: ut2/mongodb.md
+    - 2.7 Modelado documental: ut2/modelado.md
+    - 2.8 Réplicas y particiones: ut2/replicas-shards.md
+    - 2.9 MongoDB y Python: ut2/pymongo.md
+    - Autoevaluación: ut2/autoevaluacion.md

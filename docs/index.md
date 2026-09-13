@@ -18,7 +18,7 @@ Las **entregas evaluables** y los cuestionarios siguen en el aula Moodle (educan
 
 El Real Decreto [279/2021](https://www.boe.es/eli/es/rd/2021/04/20/279) fija el currículo básico. **Big Data aplicado** dura **75 horas** (8 ECTS) y forma para aplicar soluciones de Big Data, gestionar el almacenamiento y apoyar la toma de decisiones de negocio.
 
-Esta primera entrega cubre la **UT1** y el **[RA1](ut1/ra1.md)**: diseñar soluciones de almacenamiento, ingerir datos, elegir el formato, procesarlos y presentar el resultado de forma que el cliente lo entienda.
+El sitio cubre la **[UT1](ut1/ra1.md)** (diseñar la solución: ingesta, formato, Pentaho) y la **[UT2](ut2/ra2.md)** (gestionar el sistema: HDFS, cómputo distribuido, NoSQL/Mongo, réplicas).
 
 ## Unidades de trabajo
 
@@ -39,14 +39,31 @@ Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta
 - [Tarea para practicar en clase](ut1/tarea-clase.md)
 - [Autoevaluación](ut1/autoevaluacion.md)
 
+### U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
+
+Hadoop/HDFS, MapReduce y YARN, familias NoSQL, MongoDB, modelado, réplicas y PyMongo. El sistema **aguanta** volumen, **fallos** y **crece** añadiendo nodos o módulos.
+
+- [La unidad](ut2/index.md)
+- [RA2 y criterios de evaluación](ut2/ra2.md)
+- [2.1 Por qué un almacén masivo](ut2/por-que-almacenamiento.md)
+- [2.2 Ecosistema Hadoop](ut2/ecosistema.md)
+- [2.3 HDFS](ut2/hdfs.md)
+- [2.4 Computación distribuida](ut2/computacion-distribuida.md)
+- [2.5 Familias NoSQL](ut2/nosql.md)
+- [2.6 MongoDB](ut2/mongodb.md)
+- [2.7 Modelado documental](ut2/modelado.md)
+- [2.8 Réplicas y particiones](ut2/replicas-shards.md)
+- [2.9 MongoDB y Python](ut2/pymongo.md)
+- [Autoevaluación](ut2/autoevaluacion.md)
+
 ## Cómo navegar
 
 - Usa el **menú lateral** para saltar entre apartados.
 - La **tabla de contenidos** de la derecha recorre los epígrafes de cada página.
-- La **búsqueda** del encabezado localiza un concepto (`Parquet`, `lago`, `Spoon`…).
+- La **búsqueda** del encabezado localiza un concepto (`Parquet`, `HDFS`, `Spoon`…).
 
 !!! tip "Cómo estudiar"
-    Lee el apartado, haz la [tarea de clase](ut1/tarea-clase.md) (500 GB, un portátil), responde la [autoevaluación](ut1/autoevaluacion.md) y luego practica en Moodle. El test no sustituye a las pruebas del aula.
+    Lee el apartado, haz la [tarea de clase](ut1/tarea-clase.md) (500 GB, un portátil), responde las autoevaluaciones ([UT1](ut1/autoevaluacion.md), [UT2](ut2/autoevaluacion.md)) y luego practica en Moodle. El test no sustituye a las pruebas del aula.
 
 !!! info "Origen del material"
-    Estos apuntes parten del temario eXeLearning de la UT1 (licencia [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)) y del PDF de prácticas de Pentaho. Se han reorganizado, actualizado y aclarado para el curso **2026/2027**.
+    Estos apuntes parten del temario de aula (eXeLearning UT1, PDF de Pentaho, ecosistema Hadoop/NoSQL del ciclo; licencia de partida [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) en los paquetes eXe). Se han reorganizado para el curso **2026/2027**.

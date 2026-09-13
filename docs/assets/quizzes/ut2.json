@@ -1,0 +1,286 @@
+{
+  "unit": "UT2",
+  "title": "Autoevaluación de la UT2",
+  "questions": [
+    {
+      "topic": "2.1 Almacén masivo",
+      "href": "../por-que-almacenamiento/",
+      "prompt": "El grupo hotelero junta JSON de reservas, fotos y logs de sensores. ¿Qué justifica un almacén masivo (criterio a)?",
+      "code": "",
+      "options": [
+        "Solo sirve si todos los datos caben en una tabla SQL de 20 columnas.",
+        "Deposita cualquier tipo, procesa cerca del dato y aguanta un volumen que un solo servidor no mastica.",
+        "Sustituye siempre a la caja (OLTP) para cobrar.",
+        "Obliga a decidir el informe de 2027 antes de guardar 2024."
+      ],
+      "answer": 1,
+      "explain": "El RA2-a es **depositar y procesar** grandes cantidades de **cualquier** tipo, rápido a escala. La caja sigue en el relacional."
+    },
+    {
+      "topic": "2.1 Cálculo al dato",
+      "href": "../por-que-almacenamiento/",
+      "prompt": "¿Por qué Hadoop insiste en procesar en el mismo clúster donde está el fichero?",
+      "code": "",
+      "options": [
+        "Porque el NameNode debe copiar todos los bytes.",
+        "Mover petabytes por la red suele ser más caro que enviar el cálculo al nodo que ya tiene el bloque.",
+        "Porque MapReduce no puede leer HDFS.",
+        "Para obligar a usar RAID en cada worker."
+      ],
+      "answer": 1,
+      "explain": "**Data-local computing**: el programa viaja; el dato grande se queda."
+    },
+    {
+      "topic": "2.2 Ecosistema",
+      "href": "../ecosistema/",
+      "prompt": "Añadís Hive al clúster que ya tiene HDFS y YARN. ¿Qué criterio ilustra sobre todo?",
+      "code": "",
+      "options": [
+        "El sistema crece añadiendo módulos (e) sin reescribir el núcleo.",
+        "Solo el criterio b: Hive es MapReduce.",
+        "Hive sustituye a HDFS.",
+        "Ya no hace falta tolerancia a fallos."
+      ],
+      "answer": 0,
+      "explain": "El ecosistema **es** el crecimiento por piezas (Hive, Spark, un datanode…)."
+    },
+    {
+      "topic": "2.2 Núcleo Hadoop",
+      "href": "../ecosistema/",
+      "prompt": "¿Qué pieza reparte CPU y RAM entre jobs?",
+      "code": "",
+      "options": [
+        "HDFS.",
+        "YARN.",
+        "ZooKeeper solo.",
+        "Sqoop."
+      ],
+      "answer": 1,
+      "explain": "**YARN** negocia contenedores. HDFS guarda. Sqoop mueve SQL↔HDFS."
+    },
+    {
+      "topic": "2.3 Bloques HDFS",
+      "href": "../hdfs/",
+      "prompt": "Un fichero de 600 MB en HDFS con bloques de 128 MB y réplica 3. ¿Qué es correcto?",
+      "code": "",
+      "options": [
+        "Ocupa un solo bloque de 600 MB en un disco.",
+        "Se parte en 5 bloques y cada uno se copia tres veces (del orden de 15 copias de bloque en el clúster).",
+        "El NameNode guarda los 600 MB.",
+        "Un fichero de 1 MB obliga a reservar 128 MB reales en disco."
+      ],
+      "answer": 1,
+      "explain": "5 bloques × 3 réplicas. El 1 MB ocupa **1 MB** en disco, un bloque lógico."
+    },
+    {
+      "topic": "2.3 NameNode",
+      "href": "../hdfs/",
+      "prompt": "En una lectura, los bytes del Parquet de reservas…",
+      "code": "",
+      "options": [
+        "Pasan siempre por el NameNode.",
+        "Los lee el cliente desde los DataNodes que el NameNode indicó.",
+        "Solo los sirve el Secondary NameNode.",
+        "No se pueden replicar."
+      ],
+      "answer": 1,
+      "explain": "El maestro da el **mapa**; el tráfico va a los DataNodes. Por eso escala."
+    },
+    {
+      "topic": "2.3 Tolerancia HDFS",
+      "href": "../hdfs/",
+      "prompt": "Se funde un DataNode que tenía una réplica de un bloque. ¿Qué se espera?",
+      "code": "",
+      "options": [
+        "Se pierde el fichero entero.",
+        "HDFS re-replica el bloque a partir de las copias vivas (factor de réplica).",
+        "Hay que restaurar desde cinta siempre.",
+        "El Secondary NameNode entrega los bytes."
+      ],
+      "answer": 1,
+      "explain": "Criterio **c)**: la réplica (típicamente 3) es la prueba de que un disco muerto no tumba el lago."
+    },
+    {
+      "topic": "2.3 Esquema al leer",
+      "href": "../hdfs/",
+      "prompt": "Dejáis JSON bruto de 2024 en HDFS y en 2026 Spark lee solo hotel e importe. ¿Qué criterio?",
+      "code": "",
+      "options": [
+        "Obliga a migrar el JSON el día 1.",
+        "d): almacenar ahora y decidir el uso después (esquema al leer).",
+        "Prohibido: HDFS solo admite tablas SQL.",
+        "Solo el criterio b."
+      ],
+      "answer": 1,
+      "explain": "WORM + lago = **guardar** y **interpretar** más tarde."
+    },
+    {
+      "topic": "2.4 MapReduce",
+      "href": "../computacion-distribuida/",
+      "prompt": "Contar noches por hotel sobre ficheros en HDFS. ¿Qué hace el Map?",
+      "code": "",
+      "options": [
+        "Suma ya el total global en el NameNode.",
+        "En cada trozo emite pares hotel → noches; luego el Reduce agrega por hotel.",
+        "Borra los bloques para ahorrar disco.",
+        "Solo funciona con el Quijote."
+      ],
+      "answer": 1,
+      "explain": "Map **parte**; Reduce **agrupa**. Ese es el poder del modelo (b)."
+    },
+    {
+      "topic": "2.4 YARN",
+      "href": "../computacion-distribuida/",
+      "prompt": "¿Qué es un contenedor YARN?",
+      "code": "",
+      "options": [
+        "Un DataNode entero.",
+        "Un trozo de CPU y RAM donde corre una tarea; al terminar se libera.",
+        "El NameNode.",
+        "Un fichero de 128 MB."
+      ],
+      "answer": 1,
+      "explain": "Más *workers* → más contenedores → más tareas a la vez (b + e)."
+    },
+    {
+      "topic": "2.5 NoSQL",
+      "href": "../nosql/",
+      "prompt": "¿Qué significa NoSQL en la unidad?",
+      "code": "",
+      "options": [
+        "Prohibido usar SQL nunca.",
+        "Not only SQL: familias que complementan al relacional (escala, variedad).",
+        "Solo grafos.",
+        "Lo mismo que HDFS."
+      ],
+      "answer": 1,
+      "explain": "No sustituyen la caja; **amplían** el ecosistema."
+    },
+    {
+      "topic": "2.5 Familias",
+      "href": "../nosql/",
+      "prompt": "Caché de disponibilidad por id de habitación. ¿Familia más natural?",
+      "code": "",
+      "options": [
+        "Grafo.",
+        "Clave-valor.",
+        "Solo HDFS sin índice.",
+        "Documento con 16 MB de fotos embebidas."
+      ],
+      "answer": 1,
+      "explain": "Si la pregunta es **por clave**, clave-valor (Redis…)."
+    },
+    {
+      "topic": "2.5 Réplica vs shard",
+      "href": "../nosql/",
+      "prompt": "¿Qué distingue replicar de particionar?",
+      "code": "",
+      "options": [
+        "Son sinónimos.",
+        "Replicar copia el mismo dato; particionar parte el conjunto entre nodos.",
+        "Particionar solo existe en SQL.",
+        "Replicar impide la tolerancia a fallos."
+      ],
+      "answer": 1,
+      "explain": "Lo robusto: **trozo + copias** de cada trozo."
+    },
+    {
+      "topic": "2.6 MongoDB",
+      "href": "../mongodb/",
+      "prompt": "Dos documentos de la colección reservas no tienen las mismas claves. ¿Es válido?",
+      "code": "",
+      "options": [
+        "No: Mongo exige el mismo esquema que SQL.",
+        "Sí: el modelo documental admite esquema flexible (criterio d).",
+        "Solo si usas HBase.",
+        "Solo en el NameNode."
+      ],
+      "answer": 1,
+      "explain": "Puedes **añadir** `mascota` en 2027 sin migrar 2024."
+    },
+    {
+      "topic": "2.6 Consultas",
+      "href": "../mongodb/",
+      "prompt": "¿Qué hace find() de entrada?",
+      "code": "",
+      "options": [
+        "Carga toda la colección en RAM.",
+        "Devuelve un cursor (vas pidiendo documentos).",
+        "Ejecuta MapReduce en YARN.",
+        "Borra la colección."
+      ],
+      "answer": 1,
+      "explain": "El **cursor** evita tragarse un millón de JSON de golpe."
+    },
+    {
+      "topic": "2.7 Modelado",
+      "href": "../modelado/",
+      "prompt": "Un hotel cambia el teléfono y hay 40 000 reservas. ¿Qué modelado evita el desastre?",
+      "code": "",
+      "options": [
+        "Embeber el teléfono completo en cada reserva.",
+        "Referenciar id_hotel y guardar el teléfono en la colección hoteles.",
+        "Un grafo obligatorio.",
+        "Prohibir el cambio."
+      ],
+      "answer": 1,
+      "explain": "Dato **que cambia** y se comparte → referencia, no 40 000 copias."
+    },
+    {
+      "topic": "2.7 Embeber",
+      "href": "../modelado/",
+      "prompt": "Huéspedes (1–4) de una reserva. Suele convenir…",
+      "code": "",
+      "options": [
+        "Un array embebido: se leen siempre juntos.",
+        "Un shard por huésped.",
+        "HDFS bloques de 128 MB por huésped.",
+        "Un JobTracker."
+      ],
+      "answer": 0,
+      "explain": "1:N **pequeño** y de lectura conjunta → embeber."
+    },
+    {
+      "topic": "2.8 Réplicas",
+      "href": "../replicas-shards/",
+      "prompt": "Cae el primario de un replica set de tres nodos. ¿Qué se espera?",
+      "code": "",
+      "options": [
+        "Se pierde la base.",
+        "Los restantes eligen un primario nuevo si hay mayoría (tolerancia a fallos).",
+        "Solo el árbitro guarda los documentos.",
+        "HDFS toma el relevo automático."
+      ],
+      "answer": 1,
+      "explain": "Criterio **c)** en Mongo: **elección** + oplog en secundarios."
+    },
+    {
+      "topic": "2.8 Shards",
+      "href": "../replicas-shards/",
+      "prompt": "Añadís un shard y el equilibrador mueve chunks. ¿Qué criterio se ve?",
+      "code": "",
+      "options": [
+        "El sistema crece añadiendo módulos/nodos (e) sin cambiar la app que habla con mongos.",
+        "Solo el criterio a de la UT1.",
+        "Prohibido: Mongo no escala en horizontal.",
+        "Hay que reescribir todos los _id."
+      ],
+      "answer": 0,
+      "explain": "Más shards = más capacidad. La app sigue al **router**."
+    },
+    {
+      "topic": "2.9 PyMongo",
+      "href": "../pymongo/",
+      "prompt": "Un pipeline $match → $group por hotel → $sum de noches. ¿Qué oficio es?",
+      "code": "",
+      "options": [
+        "Solo sirve para Flask.",
+        "Una agregación (el mismo gesto que un Reduce, dentro de Mongo).",
+        "Un NameNode.",
+        "Prohibido si el documento no tiene esquema SQL."
+      ],
+      "answer": 1,
+      "explain": "aggregate es el **poder de procesamiento** a escala de la colección documental."
+    }
+  ]
+}

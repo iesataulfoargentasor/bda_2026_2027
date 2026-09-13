@@ -32,7 +32,7 @@ Del bloque *Gestión de soluciones con sistemas de almacenamiento y herramientas
 - Analítica de Big Data en los ecosistemas de almacenamiento.
 - Big Data y Cloud (aparece al elegir destinos: S3, Glue, almacenes gestionados).
 
-Más adelante el módulo abre otros RA (ecosistema Hadoop/Spark, integridad, monitorización, BI). Aquí el foco es **entender el problema, diseñar el almacén, ingerir, formatear, procesar y mostrar**.
+El [RA2](../ut2/ra2.md) (UT2) entra en el **sistema** (HDFS, YARN, NoSQL). Aquí el foco es **entender el problema, diseñar el almacén, ingerir, formatear, procesar y mostrar**.
 
 !!! note "Cómo se evalúa"
     Los criterios son el referente. En las prácticas se pide **identificar** la herramienta, **escribir** el flujo (Pentaho u otra), **ejecutarlo** y **comprobar** el resultado. Las entregas formales siguen en Moodle.
