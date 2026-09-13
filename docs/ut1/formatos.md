@@ -8,279 +8,196 @@ tags:
 
 # 1.7. Formatos de datos
 
-El criterio **c)** pide **elegir el formato adecuado para el almacenamiento**. Conforme el dato viaja por los [pipelines](ingesta.md), hay que **serializarlo** (pasarlo a bytes) y a menudo **convertirlo**. El mismo dataset en CSV o en Parquet cambia:
+El criterio **c)** es este: **en qué forma dejas el dato** para que el siguiente paso no se ahogue. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.
 
-- el tiempo de la consulta,
-- el **coste** en cloud (a menudo pagas por lo *escaneado*),
-- si Spark o Hadoop pueden **partir** el fichero entre nodos.
+## Un caso para no perderse
 
-No es “cuál es más moderno”. Es “qué operación voy a hacer mil veces”.
+Un grupo hotelero de Cantabria guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: *ocupación e importe medio por hotel*. Tres números. Si el fichero es un CSV de 80 GB, el motor **lee las doce columnas** para calcular tres. En cloud, a menudo **pagas por lo que escaneas**, no solo por lo que guardas.
 
-!!! info "Ficheros y cuadernos de las prácticas"
-    - Esquema Avro: [empleado.avsc](../assets/practicas/empleado.avsc) (descárgalo al lado de tus scripts).
-    - Ventas (CSV, `;`): [pdi_sales.csv](https://aitor-medrano.github.io/iabd/de/resources/pdi_sales.csv) (es grande; no lo subas al repo).
-    - Colab — Avro (librería oficial): [cuaderno](https://colab.research.google.com/drive/1zxfPwEdHjaYHjkKjPOwXuj9fXGD8Anc1?usp=sharing) (adjunta el `.avsc`).
-    - Colab — Fastavro: [cuaderno](https://colab.research.google.com/drive/1z0ZsCX2Ws-3kSFLQEJS74CDkkot--Y-n?usp=sharing) (adjunta el `.avsc`).
-    - Colab — Fastavro + pandas: [cuaderno](https://colab.research.google.com/drive/1zaM4132cmUIsOWL5rbiCre5dCIyVL1RC?usp=sharing) (adjunta el CSV de ventas).
+Esa es la pregunta del apartado: ¿el dato viaja **fila a fila** (bien para cobrar en recepción) o **campo a campo** (bien para el informe)? ¿Hace falta que un humano lo abra, o que Spark lo **trocee** entre nodos?
 
-## Qué se le pide a un formato
-
-Un formato “bueno” en Big Data suele cumplir ([Apache Avro](https://avro.apache.org/), [Parquet](https://parquet.apache.org/), [ORC](https://orc.apache.org/), [Arrow](https://arrow.apache.org/)):
-
-- **Independiente del lenguaje.** Lo escribe Java y lo lee Python.
-- **Expresivo.** Anidados, nulos, tipos (un entero no es un texto `"10"`).
-- **Eficiente.** Pocos bytes y poca CPU al leer.
-- **Evolucionable / dinámico.** Añadir un campo sin reescribir el histórico entero.
-- **Autónomo** (*standalone*). El fichero lleva lo necesario para interpretarlo.
-- **Partible** (*splittable*) y **comprimible.** Si no se puede cortar, **un** nodo lo lee entero y el clúster no sirve.
-
-“Partible” es la propiedad que más se olvida: un JSON con un array de 10 millones de objetos entre `[` y `]` **no** se trocea bien. Diez millones de **líneas** JSONL, sí.
-
-Elegir bien suele dar: lecturas o escrituras más rápidas, trozos para el clúster, esquemas que pueden cambiar y menos euros de disco y de red (por ejemplo con [Snappy](https://github.com/google/snappy)).
-
-### De un vistazo
-
-| Característica | CSV | XML / JSON | Avro | Parquet | ORC |
-| --- | --- | --- | --- | --- | --- |
-| Independiente del lenguaje | Sí | Sí | Sí | Sí | Sí |
-| Expresivo (anidados, tipos) | No | Sí | Sí | Sí | Sí |
-| Eficiente (tamaño / CPU) | No | No | Sí | Sí | Sí |
-| Esquema que evoluciona bien | A medias | A medias | **Sí** | Regular | Regular |
-| Autónomo (esquema con el dato) | A medias | Sí | Sí | Sí | Sí |
-| Partible en el clúster | A veces | A veces | Sí | Sí | Sí |
-| Orientado a **columnas** | No | No | No | **Sí** | **Sí** |
-| Encaje con Hive | — | — | Regular | Sí | **Sí** |
-
-CSV y JSON ganan en “lo abre un humano”. Avro, Parquet y ORC ganan cuando el volumen duele.
-
-## Texto frente a binario
-
-| | Texto (CSV, JSON, XML) | Binario (Avro, Parquet, ORC) |
-| --- | --- | --- |
-| Abrirlo con el Bloc de notas | Sí | No (hace falta herramienta o librería) |
-| Tamaño | Mayor | Menor, sobre todo con compresión |
-| Esquema | Implícito o a medias | Suele viajar **con** el fichero |
-| Uso típico | Intercambio, APIs, que un humano lo mire | Lago y analítica a escala |
-
-**CSV.** Universal y simple. No tipa bien (`01` ¿texto o número?), se rompe con comas y saltos dentro de un campo, y para sumar *una* columna sueles leer **todas**.
-
-**JSON.** Expresivo (objetos anidados). Un documento único enorme es mala idea en el clúster.
-
-**JSON Lines (JSONL)** — **un objeto por línea**:
-
-```json
-{"nombre": "Carlos", "altura": 180, "edad": 44}
-{"nombre": "Juan", "altura": 175, "edad": null}
-```
-
-`null` es JSON. `None` es **Python**. Si mezclas los dos, el parser revienta.
-
-**XML.** Sigue en administraciones y facturas. Más verboso; las mismas precauciones de “¿se puede partir?”.
-
-## Filas frente a columnas
-
-![Filas frente a columnas](../assets/ut1/filas-columnas.png)
-
-**Por filas** (CSV, JSON, Avro): `Ana, 170, 30` juntos. Leer a Ana entera es barato. Sumar *solo* las edades obliga a saltar. Añadir registros es sencillo.
-
-**Por columnas** (Parquet, ORC): las edades juntas. Sumar edades lee **una** columna. Actualizar *una* fila es caro (descomprimir, tocar, recomprimir). Por eso se parte (particiones, *clustering*). La caja ([OLTP](procesamiento.md)) suele ir en **filas**; el análisis, en **columnas**.
-
-Artículo de costes CSV frente a Parquet (Athena ~5 $/TB escaneado): [How to be a hero with Parquet](https://blog.openbridge.com/how-to-be-a-hero-with-powerful-parquet-google-and-amazon-f2ae0f35ee04). Orden de magnitud: **1 TB** CSV → ~**130 GB** Parquet.
-
-!!! example "Agregar"
-    “Ventas de Alemania” no necesita el nombre de cada cliente. Columnar + particiones = menos bytes leídos.
-
-## Comprimir: menos disco, más CPU
-
-Comprimir busca **repeticiones**. El fichero ocupa menos y viaja menos; **comprimir y descomprimir gastan CPU**. Sobre 100 GB, “media” ≈ 50 GB y “alta” ≈ 40 GB. En Big Data suele ganar el algoritmo **rápido**. Más contexto: [Data Compression in Hadoop](http://comphadoop.weebly.com).
-
-| Algoritmo | Velocidad | Cuánto aprieta | Dónde lo verás |
-| --- | --- | --- | --- |
-| Gzip / deflate | Media | Media | Avro, Parquet |
-| Bzip2 | Lenta | Alta | Archivado en HDFS |
-| [Snappy](https://github.com/google/snappy) | Alta | Media | Avro, Parquet, ORC |
-| [Zstandard (zstd)](https://facebook.github.io/zstd/) | Alta | Alta | Parquet reciente |
-
-Tamaños del recorte de ventas (Alemania) en el temario: CSV ~9,7 MiB → Avro ~6,9 → Avro+gzip ~1,9 → Avro+Snappy ~2,8 → Parquet ~2,3 → Parquet+gzip ~1,6 → ORC sin comprimir ~7.
+Las prácticas de esta página **no dependen de un CSV ajeno**. Generas el dataset en el propio cuaderno (Jupyter o un [Colab](https://colab.research.google.com/) en blanco). Esquema Avro de reserva: [reserva.avsc](../assets/practicas/reserva.avsc).
 
 ```python
-# Parquet + zstd (PyArrow / pandas)
-pq.write_table(tabla, "empleados_zstd.parquet", compression="zstd")
-df.to_parquet("pdi_sales_zstd.parquet", compression="zstd")
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(2026)
+n = 200_000
+hoteles = ["Santander", "Laredo", "Comillas", "Potes", "Noja"]
+df = pd.DataFrame({
+    "id_reserva": np.arange(n, dtype="int32"),
+    "entrada": pd.date_range("2024-01-01", periods=n, freq="min").astype(str),
+    "hotel": rng.choice(hoteles, n),
+    "noches": rng.integers(1, 8, n, dtype="int32"),
+    "importe": rng.uniform(48, 420, n).round(2),
+    "canal": rng.choice(["web", "ota", "recepcion"], n),
+})
+df.to_csv("reservas.csv", index=False)
+```
+
+Con `n = 200_000` ya notas diferencias de tamaño y de tiempo. Sube a un millón si la máquina lo aguanta.
+
+## Qué tiene que cumplir el formato
+
+Para que un clúster (Hadoop, Spark) o un almacén en la nube pueda **repartir** el trabajo, el fichero tiene que dejarse **cortar en trozos**. Un JSON con un array de diez millones de objetos entre `[` y `]` es un solo bloque: **un** nodo se lo come entero.
+
+Además suele pedirse:
+
+| Exigencia | En castellano |
+| --- | --- |
+| Independiente del lenguaje | Lo escribe Java y lo lee Python |
+| Expresivo | Nulos de verdad, anidados, un número no es el texto `"10"` |
+| Compacto | Pocos bytes y poca CPU al leer |
+| Que pueda crecer | Añadir un campo sin reescribir cinco años de histórico |
+| Autónomo | El fichero lleva cómo interpretarlo (el esquema) |
+| Comprimible | Snappy, gzip, zstd… a cambio de CPU |
+
+Dos familias, no dos religiones:
+
+| | Lo abre el Bloc de notas | Lo come el lago |
+| --- | --- | --- |
+| Ejemplos | CSV, JSON, XML | Avro, Parquet, ORC |
+| Tamaño | Grande | Menor |
+| Esquema | A medias o en la cabeza | Suele ir **dentro** del fichero |
+| Uso | API, entrega a un compañero | Analítica a escala |
+
+**CSV.** Universal. `01` ¿texto o número? Una coma dentro del campo lo rompe. Para sumar *importe* sueles arrastrar *canal* y *comentarios*.
+
+**JSON / JSONL.** El JSON “de libro” (un objeto enorme) no se parte bien. **JSON Lines** = **una reserva por línea**:
+
+```json
+{"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5}
+{"id_reserva": 2, "hotel": "Potes", "noches": 2, "importe": null}
+```
+
+`null` es JSON. `None` es **Python**. Mezclarlos tumba el parser.
+
+**XML.** Sigue en facturas y administraciones. Más verboso; misma duda: ¿se puede trocear?
+
+## Una reserva junta o un campo junto
+
+Imagina mil reservas `hotel | noches | importe`.
+
+**Todo el registro junto** (CSV, JSON, Avro): leer la reserva 17 es barato. Sumar *solo* importes obliga a saltar hotel y noches mil veces. **Añadir** reservas al final es natural. Encaja en recepción: picas *esta* reserva.
+
+**Cada campo en su sitio** (Parquet, ORC): los importes van juntos. El informe del lunes lee **una** racha. Reconstruir la reserva 17 cruza trozos. Cambiar *una* fila duele (descomprimir, tocar, volver a pegar). Por eso se **parte** por fecha o por hotel. Encaja en el cuadro de mando; **no** como almacén de la caja ([operar frente a analizar](procesamiento.md)).
+
+!!! example "El lunes no necesita el DNI"
+    Agregar es resumir. “Importe medio en Laredo” no lee comentarios. Columnar + partición `hotel=Laredo` = menos disco, menos factura.
+
+En servicios tipo Athena o BigQuery el orden de magnitud que verás citado es: **1 TB** de texto plano puede quedar cerca de **un octavo** en columnar comprimido. La cifra exacta cambia; la idea no: **elegir mal el formato en la [carga](ingesta.md) se paga cada consulta**.
+
+## Comprimir no es gratis
+
+El algoritmo busca **repeticiones** (`Laredo, Laredo, Laredo…`) y las recodifica. Viaja menos por la red. A cambio, la CPU **aprieta y destapa**. Sobre 100 GB, “media” deja unos 50 GB y “alta” unos 40. En Big Data suele ganar el que es **rápido**, no el que más aprieta.
+
+| Códec | Velocidad | Ahorro | Típico en |
+| --- | --- | --- | --- |
+| Gzip / deflate | Media | Medio | Avro, Parquet |
+| Bzip2 | Lenta | Alto | Archivado |
+| Snappy | Alta | Medio | Avro, Parquet, ORC |
+| Zstandard (zstd) | Alta | Alto | Parquet reciente |
+
+```python
+df.to_parquet("reservas_zstd.parquet", compression="zstd")
 ```
 
 ```bash
-pip install python-snappy
+pip install python-snappy   # si usas Snappy con Avro
 ```
 
-En Fastavro, el codec va al escribir: `writer(f, schemaParseado, records, "deflate")`.
+No memorices megas de un recorte ajeno. **Mide el tuyo** al final del taller.
 
-## Avro
+## Avro: el mensaje que se explica solo
 
-![Cabecera y bloques Avro](../assets/ut1/avro.png)
-
-**[Apache Avro](https://avro.apache.org/)** guarda **por filas**, en binario. El esquema (JSON) va en la **cabecera**. Guía Python: [Getting started](https://avro.apache.org/docs/1.11.1/getting-started-python/). Lectura recomendada: [Handling Avro files in Python](https://www.perfectlyrandom.org/2019/11/29/handling-avro-files-in-python/).
+[Avro](https://avro.apache.org/) guarda **por filas**, en binario. El esquema (JSON) viaja en la **cabecera**. Quien lee sabe cómo se escribió. Encaja cuando **escribes mucho**, el esquema **cambia** y el destino es un bus ([Kafka](ingesta.md)). Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/).
 
 Tipos simples: `null`, `boolean`, `int`, `long`, `float`, `double`, `bytes`, `string`.  
 Compuestos: `record`, `enum`, `array`, `map`, `union`, `fixed`.
 
-**Cuándo brilla:** escritura continua, esquema que cambia, **Kafka**.
-
-El paquete `avro-python3` está **obsoleto** (Avro ≥ 1.11): instala `avro`.
+El paquete viejo `avro-python3` está muerto. Instala `avro` (o **fastavro** si el volumen duele: [GitHub](https://github.com/fastavro/fastavro)).
 
 ```bash
-pip install avro
-# o: conda install -c conda-forge avro
+pip install avro fastavro
 ```
 
-### Práctica A — Librería oficial
+### Taller 1 — Una reserva con hueco
 
-Descarga [empleado.avsc](../assets/practicas/empleado.avsc). Cuaderno: [Colab Avro](https://colab.research.google.com/drive/1zxfPwEdHjaYHjkKjPOwXuj9fXGD8Anc1?usp=sharing).
+Descarga [reserva.avsc](../assets/practicas/reserva.avsc). La segunda reserva no trae importe: el esquema admite nulo.
 
 ```python
 import copy
 import json
 
+import avro.schema
 from avro.datafile import DataFileReader, DataFileWriter
 from avro.io import DatumReader, DatumWriter
-import avro.schema
 
-schema = avro.schema.parse(open("empleado.avsc", "rb").read())
+schema = avro.schema.parse(open("reserva.avsc", "rb").read())
 
-with open("empleados.avro", "wb") as f:
-    writer = DataFileWriter(f, DatumWriter(), schema)
-    writer.append({"nombre": "Carlos", "altura": 180, "edad": 44})
-    writer.append({"nombre": "Juan", "altura": 175})
-    writer.close()
+with open("reservas.avro", "wb") as f:
+    w = DataFileWriter(f, DatumWriter(), schema)
+    w.append({"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5})
+    w.append({"id_reserva": 2, "hotel": "Potes", "noches": 2})
+    w.close()
 
-with open("empleados.avro", "rb") as f:
-    reader = DataFileReader(f, DatumReader())
-    metadata = copy.deepcopy(reader.meta)
-    schema_from_file = json.loads(metadata["avro.schema"])
-    empleados = [empleado for empleado in reader]
-    reader.close()
-
-print("Schema del .avsc:\n", schema)
-print("Schema del fichero:\n", schema_from_file)
-print("Empleados:\n", empleados)
+with open("reservas.avro", "rb") as f:
+    r = DataFileReader(f, DatumReader())
+    meta = copy.deepcopy(r.meta)
+    print(json.loads(meta["avro.schema"]))
+    print(list(r))
+    r.close()
 ```
 
-Juan no trae `edad`: el esquema admite `null`. Verás `edad: None` **en Python** (en el fichero es nulo Avro).
+En pantalla verás `importe: None`: eso es Python. En el fichero el nulo es Avro.
 
-### Práctica B — Fastavro (más rápido)
-
-[fastavro](https://github.com/fastavro/fastavro) (trozos en Cython). Cuaderno: [Colab Fastavro](https://colab.research.google.com/drive/1z0ZsCX2Ws-3kSFLQEJS74CDkkot--Y-n?usp=sharing).
-
-```bash
-pip install fastavro
-# o: conda install -c conda-forge fastavro
-```
+### Taller 2 — Lo mismo, más rápido (fastavro)
 
 ```python
-import copy
 import json
-
 import fastavro
 
-with open("empleado.avsc", "rb") as f:
-    schema_dict = fastavro.parse_schema(json.load(f))
+with open("reserva.avsc", "rb") as f:
+    schema = fastavro.parse_schema(json.load(f))
 
-empleados = [
-    {"nombre": "Carlos", "altura": 180, "edad": 44},
-    {"nombre": "Juan", "altura": 175},
+filas = [
+    {"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5},
+    {"id_reserva": 2, "hotel": "Potes", "noches": 2},
 ]
-
-with open("empleadosf.avro", "wb") as f:
-    fastavro.writer(f, schema_dict, empleados)
-
-with open("empleadosf.avro", "rb") as f:
-    reader = fastavro.reader(f)
-    metadata = copy.deepcopy(reader.metadata)
-    schema_from_file = json.loads(metadata["avro.schema"])
-    leidos = [empleado for empleado in reader]
-
-print(schema_dict)
-print(schema_from_file)
-print(leidos)
+with open("reservas_fa.avro", "wb") as f:
+    fastavro.writer(f, schema, filas)
 ```
 
-### Práctica C — Fastavro + pandas (ventas Alemania)
+### Taller 3 — Del DataFrame al Avro
 
-CSV: [pdi_sales.csv](https://aitor-medrano.github.io/iabd/de/resources/pdi_sales.csv). Cuaderno: [Colab ventas](https://colab.research.google.com/drive/1zaM4132cmUIsOWL5rbiCre5dCIyVL1RC?usp=sharing).
+Usa el `df` del generador (o fíltralo: solo `hotel == "Laredo"`).
 
 ```python
-import pandas as pd
 from fastavro import parse_schema, writer
 
-df = pd.read_csv("pdi_sales.csv", sep=";")
-df["Zip"] = df["Zip"].str.strip()
-df = df[df["Country"] == "Germany"]
-
 schema = parse_schema({
-    "name": "Sales",
+    "name": "Reserva",
     "namespace": "bda.ut1",
     "type": "record",
     "fields": [
-        {"name": "ProductID", "type": "int"},
-        {"name": "Date", "type": "string"},
-        {"name": "Zip", "type": "string"},
-        {"name": "Units", "type": "int"},
-        {"name": "Revenue", "type": "float"},
-        {"name": "Country", "type": "string"},
+        {"name": "id_reserva", "type": "int"},
+        {"name": "hotel", "type": "string"},
+        {"name": "noches", "type": "int"},
+        {"name": "importe", "type": "float"},
+        {"name": "canal", "type": "string"},
     ],
 })
-
-with open("sales.avro", "wb") as f:
-    writer(f, schema, df.to_dict("records"))
+laredo = df[df["hotel"] == "Laredo"][["id_reserva", "hotel", "noches", "importe", "canal"]]
+with open("laredo.avro", "wb") as f:
+    writer(f, schema, laredo.to_dict("records"), codec="deflate")
 ```
 
-En el recorte de Alemania, sin comprimir ~6,9 MiB; gzip ~1,9; Snappy ~2,8.
+Si algún día lo escribes en HDFS, cambia el host por el de **vuestro** lab; el patrón es el de la librería `hdfs` (`InsecureClient` + `AvroWriter`). No copies un nombre de máquina de otro ciclo.
 
-### Avro en HDFS (si tenéis clúster)
+## Arrow: el dato *en la RAM*
 
-Extensiones [hdfs.ext.avro](https://hdfscli.readthedocs.io/en/latest/api.html#module-hdfs.ext.avro) y [hdfs.ext.dataframe](https://hdfscli.readthedocs.io/en/latest/api.html#module-hdfs.ext.dataframe). Sesión de contexto: [HDFS y Python](https://aitor-medrano.github.io/iabd/hadoop/hdfs.html#hdfs-y-python). Cambia el host por el de **vuestro** laboratorio (el ejemplo original usaba `iabd-virtualbox`).
-
-```python
-import pandas as pd
-from fastavro import parse_schema
-from hdfs import InsecureClient
-from hdfs.ext.avro import AvroWriter
-from hdfs.ext.dataframe import write_dataframe
-
-hdfs_client = InsecureClient("http://NOMBRE-DE-TU-NODO:9870")
-
-with hdfs_client.read("/user/iabd/pdi_sales.csv") as reader:
-    df = pd.read_csv(reader, sep=";")
-
-df["Zip"] = df["Zip"].str.strip()
-df = df[df["Country"] == "Germany"]
-
-schema = parse_schema({
-    "name": "Sales",
-    "namespace": "bda.ut1",
-    "type": "record",
-    "fields": [
-        {"name": "ProductID", "type": "int"},
-        {"name": "Date", "type": "string"},
-        {"name": "Zip", "type": "string"},
-        {"name": "Units", "type": "int"},
-        {"name": "Revenue", "type": "float"},
-        {"name": "Country", "type": "string"},
-    ],
-})
-
-with AvroWriter(hdfs_client, "/user/iabd/sales.avro", schema) as writer:
-    for record in df.to_dict("records"):
-        writer.write(record)
-
-write_dataframe(hdfs_client, "/user/iabd/sales2.avro", df)
-write_dataframe(hdfs_client, "/user/iabd/sales3.avro", df, schema=schema)
-# con Snappy: AvroWriter(..., 'snappy')  o  write_dataframe(..., codec='snappy')
-```
-
-## Arrow y Feather
-
-**[Apache Arrow](https://arrow.apache.org/)** es columnar **en RAM** (no en disco): *zero-copy*, vectorización, mismo layout en Python/R/Java. Docs: [PyArrow](https://arrow.apache.org/docs/python/). Recetas: [cookbook](https://arrow.apache.org/cookbook/py/).
+[Avro / Parquet / ORC](https://arrow.apache.org/) viven en **disco**. **Arrow** describe columnas **en memoria** para que Python, R o Java las compartan sin copiarlas (*zero-copy*) y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/).
 
 ```bash
 pip install pyarrow
@@ -290,108 +207,73 @@ pip install pyarrow
 import pyarrow as pa
 
 schema = pa.schema([
-    ("nombre", pa.string()),
-    ("altura", pa.int32()),
-    ("edad", pa.int32()),
+    ("hotel", pa.string()),
+    ("noches", pa.int32()),
+    ("importe", pa.float32()),
 ])
 tabla = pa.Table.from_pydict(
-    {"nombre": ["Carlos", "Juan"], "altura": [180, 175], "edad": [44, None]},
+    {"hotel": ["Laredo", "Potes"], "noches": [3, 2], "importe": [186.5, None]},
     schema=schema,
 )
 print(tabla)
 ```
 
-Backend Arrow en pandas 2 (textos, nulos, fechas):
+pandas 2 puede leer el CSV con motor Arrow (`dtype_backend="pyarrow"`): textos y nulos suelen ir mejor que con NumPy.
+
+**Feather** (Arrow IPC) es el fichero **entre dos celdas** del mismo pipeline: rapidísimo, no es el archivo de 2020–2026.
 
 ```python
-import pandas as pd
-
-df = pd.read_csv("pdi_sales.csv", sep=";", dtype_backend="pyarrow")
-print(df.dtypes)
-```
-
-**Feather** (Arrow IPC): fichero **intermedio** rápido, no archivo de años.
-
-```python
-import pandas as pd
 import pyarrow.feather as feather
 
-df = pd.read_csv("pdi_sales.csv", sep=";")
-feather.write_feather(df, "pdi_sales.feather")
-df2 = feather.read_feather("pdi_sales.feather")
+feather.write_feather(df, "reservas.feather")
+otro = feather.read_feather("reservas.feather")
 ```
 
-!!! tip "¿Feather o Parquet?"
-    **Feather** = entre dos fases del mismo pipeline. **Parquet** = lago / Spark / Athena.
+!!! tip "Dos sitios, dos ficheros"
+    Feather = “se lo paso al script de al lado”. Parquet = “lo dejo en el lago para Spark o Athena”.
 
-## Parquet
+## Parquet: el lago del informe
 
-**[Apache Parquet](https://parquet.apache.org/)** es **columnar**, autodocumentado, pensado para muchas columnas. Snappy suele dejar ~75 %. Metadatos al **final** del fichero; datos en *row groups*.
+[Parquet](https://parquet.apache.org/) es **columnar**, lleva el esquema consigo y parte en *row groups*. El informe que pide `hotel` e `importe` no arrastra `canal`. pandas: `to_parquet` / `read_parquet`.
 
-pandas: [`to_parquet`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_parquet.html) / [`read_parquet`](https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html).
-
-### Práctica D — Diccionario → Parquet
+### Taller 4 — Tabla Arrow → Parquet
 
 ```python
-import pyarrow as pa
 import pyarrow.parquet as pq
 
-schema = pa.schema([
-    ("nombre", pa.string()),
-    ("altura", pa.int32()),
-    ("edad", pa.int32()),
-])
-empleados = {
-    "nombre": ["Carlos", "Juan"],
-    "altura": [180, 175],
-    "edad": [None, 34],
-}
-tabla = pa.Table.from_pydict(empleados, schema)
-pq.write_table(tabla, "empleados.parquet")
-table2 = pq.read_table("empleados.parquet")
-print(table2.schema)
-print(table2)
+pq.write_table(tabla, "reservas.parquet")
+print(pq.read_table("reservas.parquet"))
 ```
 
-### Práctica E — JSONL → Parquet (job de [ingesta](ingesta.md))
+### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md))
 
-Fichero `empleados.json` (un objeto por línea, no un array):
+`reservas.jsonl`:
 
 ```json
-{"nombre": "Carlos", "altura": 180, "edad": 44}
-{"nombre": "Juan", "altura": 175}
+{"hotel": "Laredo", "noches": 3, "importe": 186.5}
+{"hotel": "Potes", "noches": 2}
 ```
 
 ```python
 import pyarrow.parquet as pq
 from pyarrow import json as pajson
 
-tabla = pajson.read_json("empleados.json")
-pq.write_table(tabla, "empleados-json.parquet")
-print(pq.read_table("empleados-json.parquet"))
+pq.write_table(pajson.read_json("reservas.jsonl"), "reservas_desde_json.parquet")
 ```
 
-### Práctica F — CSV de ventas → Parquet
+### Taller 6 — El generador, a Parquet
 
 ```python
-import pandas as pd
-
-df = pd.read_csv("pdi_sales.csv", sep=";")
-df["Zip"] = df["Zip"].str.strip()
-df = df[df["Country"] == "Germany"]
-df.to_parquet("pdi_sales.parquet")
-df_parquet = pd.read_parquet("pdi_sales.parquet")
+df.to_parquet("reservas.parquet")
+solo_laredo = pd.read_parquet("reservas.parquet")
+solo_laredo = solo_laredo[solo_laredo["hotel"] == "Laredo"]
 ```
 
-En HDFS, si `core-site.xml` tiene `fs.defaultFS` (ejemplo de lab: `hdfs://NOMBRE:9000`):
+En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:9000/reservas.parquet")`.
 
-```python
-df.to_parquet("hdfs://NOMBRE-DE-TU-NODO:9000/sales.parquet")
-```
+### Preguntar sin cargarlo: DuckDB
 
-### Consultar sin tragárselo: DuckDB
-
-**[DuckDB](https://duckdb.org/)** es SQL **dentro** de tu programa (como SQLite, para análisis). No cargas el Parquet entero.
+[DuckDB](https://duckdb.org/) es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.
 
 ```bash
 pip install duckdb
@@ -401,149 +283,104 @@ pip install duckdb
 import duckdb
 
 print(duckdb.sql(
-    "SELECT * FROM 'pdi_sales.parquet' WHERE Country = 'Germany' LIMIT 5"
+    "SELECT hotel, AVG(importe) AS media, COUNT(*) AS n "
+    "FROM 'reservas.parquet' GROUP BY hotel ORDER BY media DESC"
 ))
 ```
 
-SQL sobre un DataFrame:
+Sobre el DataFrame que ya tienes:
 
 ```python
-import duckdb
-import pandas as pd
-
-df = pd.read_parquet("pdi_sales.parquet")
-print(
-    duckdb.sql(
-        "SELECT Country, SUM(Revenue) AS total FROM df "
-        "GROUP BY Country ORDER BY total DESC"
-    ).df()
-)
+print(duckdb.sql(
+    "SELECT canal, SUM(importe) AS total FROM df GROUP BY canal"
+).df())
 ```
 
-Varios ficheros particionados:
+Si particionas por año: `FROM 'reservas/*.parquet'`. Por dentro habla Arrow: pasar a pandas es casi sin copia.
+
+## ORC: cuando el ecosistema es Hive
+
+[ORC](https://orc.apache.org/) (*Optimized Row Columnar*) nació para **Hive**. Tiras (*stripes*) con mín/máx para **no leer** lo que no puede cumplir el filtro. Compresión habitual `zlib`. pandas `to_orc` (desde 1.5) sale **sin** comprimir si no lo pides.
 
 ```python
-print(duckdb.sql("SELECT * FROM 'ventas/*.parquet' WHERE año = 2024"))
-```
-
-Por dentro usa Arrow: el paso a pandas o a `pa.Table` es casi sin copia.
-
-## ORC
-
-![ORC: stripes e índices](../assets/ut1/orc.png)
-
-**[Apache ORC](https://orc.apache.org/)** (*Optimized Row Columnar*) nació para **Hive**. Compresión típica **zlib**. Tiras (*stripes*) con índice y estadísticas. pandas: [`read_orc`](https://pandas.pydata.org/docs/reference/api/pandas.read_orc.html) / [`to_orc`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_orc.html) (desde 1.5; por defecto **sin** comprimir).
-
-```python
-df_orc = pd.read_orc("pdi_sales.orc")
-df_orc.to_orc("pdi_sales_pd.orc")
-df_orc.to_orc("pdi_sales_zlib.orc", engine_kwargs={"compression": "zlib"})
+df.to_orc("reservas.orc")
+df.to_orc("reservas_zlib.orc", engine_kwargs={"compression": "zlib"})
 ```
 
 ```python
-import pandas as pd
-import pyarrow as pa
 import pyarrow.orc as orc
 
-df = pd.read_csv("pdi_sales.csv", sep=";")
-df["Zip"] = df["Zip"].str.strip()
-df = df[df["Country"] == "Germany"]
-table = pa.Table.from_pandas(df, preserve_index=False)
-orc.write_table(table, "pdi_sales.orc")
+orc.write_table(pa.Table.from_pandas(df, preserve_index=False), "reservas_pa.orc")
 ```
 
-![Comparativa de propiedades](../assets/ut1/formatos-comparativa.png)
+Si el equipo “es Spark”, verás más Parquet. No es que ORC sea peor: es **dónde vive el SQL**.
 
-## Formatos de tabla (Delta, Iceberg, Hudi)
+## Cuando el lago también tiene que *actualizar*
 
-Avro/Parquet/ORC resuelven el **fichero**. Para actualizar, borrar y versionar hace falta un **diario**: [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/), [Hudi](https://hudi.apache.org/). Sesión posterior (Spark): [Delta Lake](https://aitor-medrano.github.io/iabd/spark/deltalake.html).
+Un `.parquet` suelto no te da “borra esta reserva” ni “cómo estaba el domingo”. [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/) y [Hudi](https://hudi.apache.org/) son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
 
-| Formato | Base | Lo verás sobre todo en |
-| --- | --- | --- |
-| **Delta Lake** | Parquet + registro en JSON | Spark, Databricks |
-| **Apache Iceberg** | Parquet / ORC / Avro + catálogo | Spark, Trino, Athena |
-| **Apache Hudi** | Parquet + índice | Spark, EMR |
-
-No se edita el fichero viejo: se escribe uno **nuevo** y se anota. Eso permite viajar en el tiempo, [ACID](almacenamiento.md) sobre el lago, evolucionar columnas y compactar.
+Eso permite viajar en el tiempo, [ACID](almacenamiento.md) sobre el lago, cambiar columnas y compactar ficheros pequeños. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
 
 ```python
-# PySpark (cuando lleguéis a Spark)
-df.write.format("delta").save("/ruta/ventas_delta")
-df_v0 = spark.read.format("delta").option("versionAsOf", 0).load("/ruta/ventas_delta")
+# Cuando lleguéis a Spark, sobre el mismo df de reservas
+# df.write.format("delta").save("/ruta/reservas_delta")
 ```
 
-Parquet **sigue debajo**. “Tabla Delta” no es un rival: es Parquet con gobierno.
+## Cómo elegir (tarjeta para el examen)
 
-## Cómo decidir (criterio c)
-
-| Situación | Formato razonable | Por qué |
+| Situación | Formato | Por qué |
 | --- | --- | --- |
-| Intercambio con un humano o una API | JSON / CSV | Se lee y se depura |
-| Kafka, esquema que cambia | **Avro** | Filas + esquema + evolución |
-| Paso intermedio del pipeline | **Feather** | Lectura/escritura muy rápidas |
-| Lago + Spark + pocas columnas | **Parquet** | Menos escaneo |
-| Hive | **ORC** (o Parquet si el equipo es Spark) | Encaje Hive |
-| Explorar en el portátil | **DuckDB** (motor, no formato) | SQL sin cargar 500 GB |
-| Caja / reservas | Ni Parquet ni ORC como almacén de operación | Actualizar una fila es caro |
-| Actualizar el lago con historial | Delta / Iceberg / Hudi | Diario encima de Parquet |
+| Te lo tiene que leer un humano o una API | CSV / JSON | Se depura |
+| Kafka, campos nuevos el mes que viene | **Avro** | Fila + esquema que evoluciona |
+| Entre dos celdas del mismo cuaderno | **Feather** | Velocidad |
+| Lago + “solo hotel e importe” | **Parquet** | Menos escaneo |
+| Tablas Hive | **ORC** | Encaje Hive |
+| Explorar en el portátil | **DuckDB** (motor) | SQL sin 500 GB en RAM |
+| Picar la reserva en recepción | Ni Parquet ni ORC como almacén | Una fila se actualiza caro |
+| Borrar/versionar en el lago | Delta / Iceberg / Hudi | Diario encima |
 
-- Escribir muchos registros → **filas** (Avro).
-- Leer un subconjunto de columnas → **columnas**.
-- Cambiar el esquema a menudo → **Avro**.
-- Anidado y subcolumnas → **Parquet**.
-- Hive → ORC; Spark → Parquet; Kafka → Avro.
+- Muchas **escrituras** de registros completos → filas (Avro).
+- **Lecturas** de tres campos de un millón → columnas.
+- Esquema inquieto → Avro. Anidado y subcampos → Parquet.
+- Hive → ORC. Spark → Parquet. Cola → Avro.
 
-| Formato | Escritura | Lectura | Tamaño |
+| | Escribir | Leer | Ocupa |
 | --- | --- | --- | --- |
-| CSV | Lenta | Lenta | Grande |
-| Feather / Arrow | Muy rápida | Muy rápida | Medio |
-| Parquet (Snappy) | Rápida | Rápida | Pequeño |
-| Avro | Rápida | Rápida | Medio |
-| ORC | Media | Media | Pequeño |
+| CSV | Lento | Lento | Mucho |
+| Feather | Muy rápido | Muy rápido | Medio |
+| Parquet + Snappy | Rápido | Rápido | Poco |
+| Avro | Rápido | Rápido | Medio |
+| ORC | Medio | Medio | Poco |
 
-!!! tip "Serializar y deserializar"
-    Serializar = memoria → bytes. Deserializar = lo contrario. Elige formato en la frontera y no conviertas en cada capa.
+!!! tip "Serializar"
+    Memoria → bytes (y al revés). Cada conversión puede **perder el tipo**. Elige formato en la frontera y no traduzcas en cada capa.
 
-## Para practicar (criterio c)
+## Taller medido (lo que se examina)
 
-No sustituye a Moodle. Dataset de vuelos (comas): [Airline delay 2009–2018 (Kaggle)](https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018). Cuenta: [Kaggle](https://www.kaggle.com/) (instancia gratis ~73 GB disco / 30 GB RAM / 12 h).
+Abre un cuaderno **en blanco**. Genera el `df` (`n ≥ 200_000`). Cronometra y anota tamaños (`os.path.getsize`) de:
 
-**1.** Elige un CSV de un año. Genera:
+1. `reservas.csv`
+2. `reservas.parquet` y `reservas_zstd.parquet`
+3. `reservas.orc`
+4. `laredo.avro` (solo un hotel, tres o cuatro columnas)
+5. `reservas.feather` — compara **tiempo de lectura** frente al CSV
 
-- `air<año>.parquet`
-- `air<año>.orc`
-- `air<año>_snappy.orc` (ORC + Snappy)
-- `air<año>_small.avro` y `air<año>_small.parquet` solo con `FL_DATE`, `OP_CARRIER`, `DEP_DELAY`
+Luego, **sin** cargar el Parquet en pandas:
 
-```python
-df_small = df[["FL_DATE", "OP_CARRIER", "DEP_DELAY"]]
-```
-
-Anota **tamaño** y **tiempo** (tabla Markdown). En Kaggle, tamaños en *Output* o:
+- importe medio por `hotel` (DuckDB);
+- recuento por `canal`;
+- misma media **solo con las columnas** `hotel` e `importe` (¿baja el tiempo?).
 
 ```python
 import os
 import time
 
-print(os.path.getsize("/kaggle/working/air20XX.parquet"))
-
-inicio = time.time()
-# operación
-print(time.time() - inicio)
+t0 = time.perf_counter()
+df.to_parquet("reservas.parquet")
+print("escritura s:", round(time.perf_counter() - t0, 3))
+print("bytes:", os.path.getsize("reservas.parquet"))
 ```
 
-**2.** Sin pandas como capa principal, [PyArrow](https://arrow.apache.org/docs/python/): `pyarrow.csv.read_csv()`, esquema inferido, Feather, compara tiempo y tamaño frente al CSV (`time.time()` o `%%time`).
+Lo que tienes que poder decir en voz alta: por qué el Parquet ocupó menos que el CSV, por qué Feather se leyó antes y por qué Avro sigue teniendo sentido si el canal de reservas **añade un campo** en abril.
 
-**3.** Con **DuckDB** sobre el Parquet (sin cargarlo en pandas):
-
-- ¿Cuántos vuelos por `OP_CARRIER`? (mayor a menor)
-- Retraso medio de salida (`DEP_DELAY`) por aerolínea, sin nulos ni adelantos (retraso negativo).
-
-La entrega formal, si la hay, se indica en Moodle (no hace falta compartir el cuaderno con cuentas de otros centros).
-
-## Referencias
-
-- [Introduction to Big Data Formats (PDF)](https://webcdn.nexla.com/n3x_ctx/uploads/2018/05/An-Introduction-to-Big-Data-Formats-Nexla.pdf)
-- [Data serialization in Hadoop](https://www.xenonstack.com/blog/data-serialization-hadoop)
-- [Big Data file formats demystified](https://www.datanami.com/2018/05/16/big-data-file-formats-demystified/)
-- Material de partida de esta práctica: [Formatos de datos (IABD)](https://aitor-medrano.github.io/iabd/de/formatos.html)
+La entrega, si la hay, es Moodle. No hace falta ningún dataset de otro centro ni compartir el cuaderno fuera.

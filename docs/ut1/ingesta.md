@@ -270,8 +270,8 @@ Un job de ingesta muy habitual: llega **JSONL** (un objeto por línea) y lo **de
 import pyarrow.parquet as pq
 from pyarrow import json as pajson
 
-tabla = pajson.read_json("empleados.json")  # un objeto JSON por línea
-pq.write_table(tabla, "empleados.parquet")
+tabla = pajson.read_json("reservas.jsonl")  # una reserva por línea
+pq.write_table(tabla, "reservas.parquet")
 ```
 
 Comprimir en la carga (Snappy, gzip, zstd) ocupa menos disco y viaja menos por la red; a cambio, **cuesta CPU**. En Big Data suele ganar el algoritmo **rápido** (Snappy, zstd), no el que más aprieta. El catálogo está en [1.7](formatos.md).

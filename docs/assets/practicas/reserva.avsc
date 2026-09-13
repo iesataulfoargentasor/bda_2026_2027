@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "namespace": "bda.ut1",
+  "name": "Reserva",
+  "fields": [
+    { "name": "id_reserva", "type": "int" },
+    { "name": "hotel", "type": "string" },
+    { "name": "noches", "type": "int" },
+    { "name": "importe", "type": ["null", "float"], "default": null }
+  ]
+}
