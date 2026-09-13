@@ -227,6 +227,34 @@
       "explain": "**Sqoop** nació para ese puente. Power BI visualiza. ORC es **formato**. Kitchen ejecuta jobs de Pentaho; no sustituye el conector SQL↔HDFS."
     },
     {
+      "topic": "1.6 Push, pull y poll",
+      "href": "../ingesta/",
+      "prompt": "El programa de reservas publica cada alta en un topic Kafka. ¿Qué planteamiento es?",
+      "code": "",
+      "options": [
+        "Pull: el destino va a buscar la tabla cada noche.",
+        "Push: el origen envía el dato al destino.",
+        "Poll: cada 10 minutos listamos el FTP por si hay un CSV nuevo.",
+        "Solo ELT: push y pull ya no se usan."
+      ],
+      "answer": 1,
+      "explain": "**Push** = el origen **empuja**. Pull = tú vas a buscar. Poll = miras de vez en cuando y, si hay cambio, tiras."
+    },
+    {
+      "topic": "1.6 Pipeline y ETL",
+      "href": "../ingesta/",
+      "prompt": "¿Qué relación hay entre un pipeline de datos y un ETL?",
+      "code": "",
+      "options": [
+        "Son exactamente lo mismo.",
+        "El ETL es un caso particular de pipeline (extraer, transformar, cargar); hay pipelines que no son ETL (una cola, un filtro).",
+        "Un pipeline solo existe en streaming; el ETL solo en batch.",
+        "ELT es lo contrario de un pipeline."
+      ],
+      "answer": 1,
+      "explain": "Todo ETL es un **pipeline**. No todo pipeline es un ETL: mover mensajes por Kafka sin las tres letras clásicas sigue siendo tubería."
+    },
+    {
       "topic": "1.7 Filas y columnas",
       "href": "../formatos/",
       "prompt": "El informe solo usa 3 columnas de una tabla de 80. ¿Qué almacenamiento reduce escaneo y coste?",
