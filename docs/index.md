@@ -22,7 +22,7 @@ Esta primera entrega cubre la **UT1** y el **[RA1](ut1/ra1.md)**: diseñar soluc
 
 ## Unidades de trabajo
 
-### UT1 — Gestión de soluciones de almacenamiento
+### U.T. 1. Gestión de soluciones de almacenamiento
 
 Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta, formatos y Pentaho.
 
