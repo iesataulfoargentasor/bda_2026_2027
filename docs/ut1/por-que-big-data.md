@@ -8,90 +8,140 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
-Los sistemas clásicos (un servidor, una base relacional, un lote nocturno) funcionan mientras el dato cabe, llega a un ritmo previsible y tiene un esquema fijo. Cuando eso se rompe, aparecen las metodologías de **macrodatos** / **Big Data**.
+Imagina una empresa que empezó con un servidor, una base de datos relacional y un proceso que, cada noche, genera un informe. Durante años eso basta: el disco no se llena, las ventas se pican en caja sin esperar y todas las facturas tienen las mismas columnas.
 
-No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es: **el sistema tradicional no escala** en volumen, velocidad o variedad (o el coste de hacerlo en vertical es inasumible).
+Un día el volumen de clientes se multiplica, aparecen sensores, la web deja logs cada segundo y marketing quiere cruzar todo eso *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
+
+**Big Data no es “tener muchos Excel”.** Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos que **un sistema de una sola máquina, al estilo clásico, no puede** tratar con garantías de tiempo, coste o variedad.
+
+No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es este: **el sistema tradicional no escala** en volumen, velocidad o variedad (o el coste de agrandar *esa* máquina es inasumible).
+
+!!! tip "Pregunta que debes saber responder"
+    “¿Esto es un problema de Big Data?” no se contesta con el logo de una herramienta. Se contesta mirando si el diseño de siempre (un servidor, un esquema fijo, un lote nocturno) **sigue siendo viable**.
 
 ## De los eventos al valor
 
-Antes de las herramientas, conviene el recorrido que luego verás en las capas de la arquitectura:
+Antes de hablar de Hadoop, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
 
-| Escalón | Qué es | Ejemplo |
+Piensa en un hotel de Cantabria en agosto:
+
+1. **Evento.** Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.
+2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto del DNI, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.
+3. **Información.** Organizas esos datos: reservas del día en una tabla, fotos en carpetas por fecha. Ya puedes *consultar* (“¿cuántas llegadas hay mañana?”).
+4. **Conocimiento.** Encajas patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
+5. **Sabiduría.** Sabes *cuándo* aplicar esa regla. El modelo de cancelaciones del hotel de playa **no** se copia ciego a un albergue de invierno.
+6. **Valor.** Tomas una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
+
+| Escalón | Qué es | Ejemplo del hotel |
 | --- | --- | --- |
-| **Evento** | Algo ocurre en el mundo | Un sensor de una estación, un pago con tarjeta, un clic en la web |
-| **Dato** | El evento queda registrado | Fila en una tabla, JSON, imagen, log |
-| **Información** | Datos organizados | Pagos del día en una tabla; fotos en carpetas por fecha |
-| **Conocimiento** | Modelos o reglas con sentido | “Este patrón de gasto predice impago” |
-| **Sabiduría** | Saber *cuándo* aplicar ese conocimiento | Usar el modelo solo en el contexto para el que se validó |
-| **Valor** | La decisión mejora el resultado | Menos fraude, menos stock parado, un diagnóstico más rápido |
+| **Evento** | Algo ocurre | Se confirma una reserva |
+| **Dato** | Queda registrado | JSON de la reserva en el canal |
+| **Información** | Datos organizados | Tabla “reservas_2026” |
+| **Conocimiento** | Regla o modelo | Patrón de cancelación |
+| **Sabiduría** | Usarlo en su contexto | Solo en temporada alta |
+| **Valor** | Mejor decisión | Menos habitaciones vacías |
 
-Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor (modelos, predicciones) lo hacen la **minería de datos**, la **ciencia de datos** y la **IA**, apoyándose en esa infraestructura. No son sinónimos: la ciencia de datos no “es solo minería en Big Data”; es un oficio más amplio (pregunta, calidad, modelo, comunicación). En este módulo nos quedamos en la **infraestructura y el flujo** que esas disciplinas necesitan.
+Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor (modelos, predicciones, diagnósticos) lo hacen la **minería de datos**, la **ciencia de datos** y la **IA**, apoyándose en esa infraestructura.
 
-## Las 5 Vs
+No son la misma cosa. La ciencia de datos no es “minería pero en Big Data”: es un oficio más amplio (formular la pregunta, cuidar la calidad, modelar y **comunicar**). En **este** módulo nos quedamos en la **infraestructura y el flujo** que esas disciplinas necesitan para trabajar.
 
-Sirven para **diagnosticar** un problema, no para memorizar una lista. Si varias Vs fallan a la vez, casi seguro necesitas un diseño de Big Data.
+## Las 5 Vs: un diagnóstico, no una lista para recitar
+
+Las cinco V sirven para **pasar revista** a un problema. Si varias fallan a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
 
 ### Volumen
 
-Cantidad de bytes. Hoy se habla con naturalidad de **terabytes** y **petabytes**; los centros grandes llegan a **exabytes**.
+Es la cantidad de **bytes**. Hoy se habla con naturalidad de terabytes y petabytes; los centros grandes llegan a exabytes.
 
-| Nombre (SI) | Símbolo | Bytes (aprox.) |
-| --- | --- | --- |
-| Kilobyte | kB | 10³ |
-| Megabyte | MB | 10⁶ |
-| Gigabyte | GB | 10⁹ |
-| Terabyte | TB | 10¹² |
-| Petabyte | PB | 10¹⁵ |
-| Exabyte | EB | 10¹⁸ |
-| Zettabyte | ZB | 10²¹ |
+| Nombre (SI) | Símbolo | Bytes (aprox.) | Para situarte |
+| --- | --- | --- | --- |
+| Kilobyte | kB | 10³ | Una página de texto |
+| Megabyte | MB | 10⁶ | Una foto no enorme |
+| Gigabyte | GB | 10⁹ | Una película comprimida |
+| Terabyte | TB | 10¹² | Un disco de sobremesa |
+| Petabyte | PB | 10¹⁵ | Muchos racks o un lago serio |
+| Exabyte | EB | 10¹⁸ | Escala de un operador o un ministerio |
+| Zettabyte | ZB | 10²¹ | Orden de magnitud de “todo internet” |
 
-En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 bytes). Un fabricante de discos suele anunciar GB en base 10; el sistema operativo a menudo muestra GiB: por eso “el disco de 1 TB no llega a 1000 GB en el explorador”.
+En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 bytes). El fabricante del disco suele anunciar GB en **base 10**; el sistema operativo a menudo muestra GiB. Por eso “el disco de 1 TB no llega a 1000 GB en el explorador”: no está roto, **cuentan distinto**.
 
-**De dónde sale el volumen:** transacciones, logs, redes sociales, sensores e IoT, historiales clínicos, genómica, satélites, Open Data, CCTV, RFID, industria.
+El volumen no nace solo de “la base de clientes”. Sale de transacciones, logs, redes sociales, sensores e IoT, historiales clínicos, genómica, satélites, Open Data, cámaras, RFID, industria.
 
-!!! example "Orden de magnitud"
-    Si guardas 4 bytes al día (un peso) por cada persona del planeta (~8·10⁹) durante un año, ocupas del orden de **12 TB**. Eso es *un* atributo. Multiplica por historiales, imágenes o vídeo y entiendes por qué un único disco (o un único servidor) no es el plan.
+!!! example "Un cálculo para notar la escala"
+    Si guardas **4 bytes al día** (un número: el peso) por cada persona del planeta (~8·10⁹) durante un año:
+
+    `4 × 8×10⁹ × 365 ≈ 12 TB`
+
+    Eso es **un** atributo, sin fotos ni historial. Multiplica por imágenes, vídeo o genomas y ves por qué “un disco más grande en el mismo PC” deja de ser el plan.
+
+**Qué implica en el diseño:** si el dato ya no cabe (o no se lee a tiempo) en **una** máquina, tienes que **repartir** (clúster, lake, formatos que se puedan trocear). Eso es el criterio **a)** empezando a trabajar.
 
 ### Velocidad
 
 No basta con que quepa: los datos **siguen llegando**. El reto es capturarlos, integrarlos con lo que ya tienes y, si el negocio lo pide, reaccionar **antes de que dejen de servir**.
 
-De ahí el procesamiento **en streaming** y las colas (Kafka, etc.). Dimensionar el disco no resuelve un atasco en la ingesta.
+Ejemplos de ritmo (órdenes de magnitud, para hacerse una idea, no para memorizar):
+
+- Publicaciones y vídeos subiendo sin parar.
+- Motores y sensores industriales generando decenas o cientos de GB.
+- Una web de reservas escribiendo un log por cada clic.
+
+Dimensionar el disco **no** arregla un atasco de ingesta. Si llenas un embudo más ancho pero el cuello sigue igual de estrecho, el agua se derrama. De ahí el procesamiento **en streaming** y las colas (Kafka y similares): desacoplan “quien produce” de “quien consume”.
+
+!!! example "Mismo volumen, distinta V"
+    10 TB de facturas históricas que cargas **una vez** al mes → duele sobre todo el **volumen**.  
+    10 TB al día en eventos de sensores que hay que cruzar con el stock **ahora** → duele la **velocidad** (y luego el volumen).
 
 ### Variedad
 
-Tres familias que conviven en el mismo proyecto:
+No todos los datos se parecen a una hoja de cálculo. En el mismo proyecto conviven tres familias:
 
-| Tipo | Qué es | Ejemplo |
-| --- | --- | --- |
-| **Estructurado** | Esquema fijo (filas y columnas) | Tabla SQL de facturas |
-| **Semiestructurado** | Hay marcas o claves, el esquema puede variar | JSON, XML, logs con campos opcionales |
-| **No estructurado** | No hay esquema tabular útil de entrada | PDF, foto, audio, vídeo, texto libre |
+| Tipo | Qué es | Cómo lo reconoces | Ejemplo |
+| --- | --- | --- | --- |
+| **Estructurado** | Esquema fijo (filas y columnas) | Todas las filas tienen las mismas columnas | Tabla SQL de facturas |
+| **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON, XML, logs |
+| **No estructurado** | No hay esquema tabular útil de entrada | No puedes hacer un `SELECT` directo | PDF, foto, audio, vídeo, texto libre |
 
-Un data warehouse clásico espera estructurado. Un **data lake** acepta el dato “como llega” y retrasa el esquema (*schema-on-read*).
+Un **data warehouse** clásico espera estructurado: decides las columnas **antes** de cargar. Un **data lake** acepta el dato “como llega” y aplica el esquema **al leer** (*schema-on-read*).
+
+La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que **no todo es tabla**.
 
 ### Veracidad
 
-¿Te puedes fiar? Duplicados, sensores descalibrados, sesgos, bots, campos vacíos, relojes mal puestos. A más volumen, más basura si no hay **calidad y gobierno** (linaje, metadatos, reglas de limpieza).
+¿Te puedes fiar de lo que hay? Duplicados, sensores descalibrados, encuestas sesgadas, bots, campos vacíos, relojes mal puestos, el mismo cliente con tres NIF.
 
-Un modelo sobre datos sucios toma **peores** decisiones, no más rápidas.
+A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dónde salió esta cifra”), metadatos y reglas de limpieza. Un modelo sobre datos sucios no es “más Big Data”: es una **peor** decisión, más rápida.
+
+!!! failure "La trampa de la veracidad"
+    “Como hay muchos datos, el error se compensa.” A veces el error está **sesgado** (todos los sensores del almacén Norte fallan igual) y el modelo lo aprende como si fuera verdad.
 
 ### Valor
 
-Es la V que justifica el gasto. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (precio, ruta, alerta, diagnóstico) **mejora** respecto a no usar esos datos.
+Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (precio, ruta, alerta, diagnóstico, cupo del hotel) **mejora** respecto a no usar esos datos.
+
+Si no sabes qué decisión vas a mejorar, todavía no tienes un proyecto: tienes un disco.
 
 ## Qué conseguimos (si el diseño es bueno)
 
-- Integrar fuentes que antes vivían en silos.
+Cuando el diseño responde a las V que duelen, puedes:
+
+- Integrar fuentes que antes vivían en silos (caja, web, sensores).
 - Replicar y distribuir para **no parar** si cae un nodo.
 - Procesar en paralelo lo que una máquina no termina a tiempo.
 - Alimentar minería / IA y **cuadros de mando** para quien decide (criterio **e)** del RA1).
 
-!!! failure "Errores frecuentes"
-    - “Tenemos Big Data porque usamos Hadoop” (la herramienta no define el problema).
-    - “Todo a tiempo real” (el principio SCV, en [1.4](procesamiento.md), te dirá por qué no).
-    - Confundir **MB** de marketing con lo que cabe de verdad en RAM.
+!!! failure "Errores frecuentes en clase y en empresas"
+    - “Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.
+    - “Todo tiene que ser en tiempo real.” El [principio SCV](procesamiento.md) te dirá por qué no.
+    - Confundir los **MB de marketing** del disco con lo que cabe de verdad en RAM.
+    - Medir el éxito en terabytes guardados, no en decisiones mejoradas.
 
 ## Para el criterio a)
 
-Antes de elegir Mongo, Parquet o Pentaho, debes **caracterizar** el problema: ¿qué Vs duelen?, ¿el dato es de negocio transaccional o analítico?, ¿hace falta histórico en bruto? Eso es diseñar la solución de almacenamiento, no instalar software.
+Antes de elegir Mongo, Parquet o Pentaho, debes **caracterizar** el problema:
+
+1. ¿Qué Vs duelen de verdad (y cuáles no)?
+2. ¿El dato es de operación (caja, reserva) o de análisis (informe, modelo)?
+3. ¿Hace falta guardar el histórico en bruto por si cambia la pregunta?
+
+Eso es diseñar la solución de almacenamiento. Instalar software viene **después**.

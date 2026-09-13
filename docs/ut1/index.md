@@ -14,6 +14,8 @@ Una empresa puede empezar con un servidor y una base de datos relacional. Cuando
 
 Esta unidad cubre el **[RA1](ra1.md)** del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.
 
+Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y una pregunta del estilo “¿qué elegirías y por qué?”. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [autoevaluación](autoevaluacion.md) comprueba eso; no sustituye a Moodle.
+
 ## Qué vas a trabajar
 
 | Apartado | Criterio | Qué te llevas |
