@@ -831,6 +831,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-formato-tambien-se-decide-en-la-ingesta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El formato también se decide en la ingesta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El formato también se decide en la ingesta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-le-pides-al-fichero-que-dejas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué le pides al fichero que dejas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misma-t-otra-l-sigue-el-hola-etl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Misma T, otra L (sigue el Hola ETL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#lotes-micro-lotes-o-continuo" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1211,6 +1250,45 @@
     <span class="md-ellipsis">
       
         Con DuckDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-formato-tambien-se-decide-en-la-ingesta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El formato también se decide en la ingesta
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El formato también se decide en la ingesta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#que-le-pides-al-fichero-que-dejas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué le pides al fichero que dejas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misma-t-otra-l-sigue-el-hola-etl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Misma T, otra L (sigue el Hola ETL)
       
     </span>
   </a>
@@ -1608,6 +1686,84 @@
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Mismas tres letras, otro idioma (SQL). En clase compara <strong>tamaño del código</strong>, <strong>tiempo</strong> y si el JSON te sale legible. Luego haz el mismo flujo en Pentaho y verás que el oficio no cambia: cambia la herramienta.</p>
+<h2 id="el-formato-tambien-se-decide-en-la-ingesta">El formato también se decide en la ingesta<a class="headerlink" href="#el-formato-tambien-se-decide-en-la-ingesta" title="Permanent link">&para;</a></h2>
+<p>La <strong>L</strong> de ETL no es “escribir un fichero”. Es escribirlo en un formato que el <strong>siguiente</strong> paso pueda partir, comprimir y consultar sin arruinarte. Conforme el dato viaja por la tubería, hay que <strong>serializarlo</strong> (pasarlo a bytes) y a menudo <strong>convertirlo</strong>. Cada conversión gasta CPU y puede <strong>perder tipos</strong>: no cambies de formato en cada capa “porque sí”.</p>
+<p>El detalle de cada formato está en <a href="../formatos/">1.7</a>. Aquí, lo que pide el criterio <strong>b)</strong> es <strong>elegir el de la carga</strong> y saber decir por qué.</p>
+<h3 id="que-le-pides-al-fichero-que-dejas">Qué le pides al fichero que dejas<a class="headerlink" href="#que-le-pides-al-fichero-que-dejas" title="Permanent link">&para;</a></h3>
+<p>Para que Hadoop, Spark o Athena puedan repartir el trabajo, el fichero tiene que ser <strong>partible</strong> (<em>splittable</em>): cortarlo en trozos. Un JSON con diez millones de objetos dentro de un único <code>[</code> <code>]</code> <strong>no</strong> se parte bien. Un objeto por línea (JSONL), un Avro o un Parquet, sí.</p>
+<p>También quieres que sea <strong>independiente del lenguaje</strong> (lo escribe Java, lo lee Python), <strong>expresivo</strong> (nulos y anidados de verdad), <strong>compacto</strong> y, si el origen cambia columnas, que el esquema pueda <strong>evolucionar</strong> sin reescribir el histórico.</p>
+<table>
+<thead>
+<tr>
+<th>Si la carga es…</th>
+<th>Formato razonable</th>
+<th>Por qué en la ingesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Un extracto para un compañero o una API</td>
+<td>CSV / JSON</td>
+<td>Se abre y se depura</td>
+</tr>
+<tr>
+<td>Un <em>topic</em> de Kafka, el esquema va a cambiar</td>
+<td><strong>Avro</strong></td>
+<td>Filas + esquema en el mensaje; típico en <em>push</em></td>
+</tr>
+<tr>
+<td>El lago / S3 para Spark o Athena (informes)</td>
+<td><strong>Parquet</strong></td>
+<td>Columnas: lees 3 de 80; pagas por lo <em>escaneado</em></td>
+</tr>
+<tr>
+<td>Un paso intermedio entre dos scripts del mismo pipeline</td>
+<td><strong>Feather</strong></td>
+<td>Muy rápido de leer/escribir; no es archivo de años</td>
+</tr>
+<tr>
+<td>Tablas Hive</td>
+<td><strong>ORC</strong> (o Parquet si el equipo es Spark)</td>
+<td>Encaje con Hive</td>
+</tr>
+<tr>
+<td>La caja o las reservas</td>
+<td><strong>No</strong> Parquet/ORC como almacén de operación</td>
+<td>Actualizar una fila es carísimo</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition example">
+<p class="admonition-title">1 TB mal ingerido</p>
+<p>1 TB en CSV plano puede quedar en ~<strong>130 GB</strong> en Parquet. En Athena, del orden de <strong>5 $ por TB leído</strong>. Si dejas el bruto en CSV “porque es más simple”, el informe del lunes <strong>escanea y factura</strong> el texto entero. Elegir Parquet <strong>en la carga</strong> no es capricho: es el procedimiento.</p>
+</div>
+<h3 id="misma-t-otra-l-sigue-el-hola-etl">Misma T, otra L (sigue el Hola ETL)<a class="headerlink" href="#misma-t-otra-l-sigue-el-hola-etl" title="Permanent link">&para;</a></h3>
+<p>El JSON del ejemplo vale para <strong>ver</strong> el resultado en clase. Si esos productos Mix fueran 50 GB y el destino un lago, la carga cambiaría así:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># misma transformación; cambia solo la carga</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">df_joined</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;pdi_product_mix.parquet&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>O, si el siguiente script del pipeline tiene que recoger el resultado <strong>ahora</strong>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span> <span class="nn">pyarrow.feather</span> <span class="k">as</span> <span class="nn">feather</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">feather</span><span class="o">.</span><span class="n">write_feather</span><span class="p">(</span><span class="n">df_joined</span><span class="p">,</span> <span class="s2">&quot;pdi_product_mix.feather&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>O, si el destino es una cola y el esquema puede ganar un campo el mes que viene, la carga sería <strong>Avro</strong> (el esquema viaja con el dato; el código está en <a href="../formatos/">1.7</a>).</p>
+<p>Un job de ingesta muy habitual: llega <strong>JSONL</strong> (un objeto por línea) y lo <strong>dejas en Parquet</strong> para el análisis. No hace falta pasar por pandas:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">pyarrow</span> <span class="kn">import</span> <span class="n">json</span> <span class="k">as</span> <span class="n">pajson</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">tabla</span> <span class="o">=</span> <span class="n">pajson</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;empleados.json&quot;</span><span class="p">)</span>  <span class="c1"># un objeto JSON por línea</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="s2">&quot;empleados.parquet&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Comprimir en la carga (Snappy, gzip, zstd) ocupa menos disco y viaja menos por la red; a cambio, <strong>cuesta CPU</strong>. En Big Data suele ganar el algoritmo <strong>rápido</strong> (Snappy, zstd), no el que más aprieta. El catálogo está en <a href="../formatos/">1.7</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tres preguntas al cerrar un procedimiento de ingesta</p>
+<ol>
+<li>¿El destino va a <strong>escribir</strong> muchos registros o a <strong>leer</strong> pocas columnas?  </li>
+<li>¿El clúster puede <strong>partir</strong> ese fichero?  </li>
+<li>¿Mañana cambia el esquema? → Avro. ¿Mañana solo suman una columna? → Parquet.</li>
+</ol>
+</div>
 <h2 id="lotes-micro-lotes-o-continuo">Lotes, micro-lotes o continuo<a class="headerlink" href="#lotes-micro-lotes-o-continuo" title="Permanent link">&para;</a></h2>
 <p>El movimiento entre origen y destino no es siempre el mismo reloj:</p>
 <table>
@@ -1798,7 +1954,7 @@
 </div>
 <div class="admonition success">
 <p class="admonition-title">Criterio b) en un examen</p>
-<p>No basta con escribir “Kafka”. Debes decir: <strong>origen</strong>, <strong>push/pull/poll</strong>, <strong>ritmo</strong> (lote, micro-lote o stream), <strong>ETL o ELT</strong>, <strong>destino</strong> y <strong>por qué</strong> ese mecanismo y no el de al lado.</p>
+<p>No basta con escribir “Kafka”. Debes decir: <strong>origen</strong>, <strong>push/pull/poll</strong>, <strong>ritmo</strong> (lote, micro-lote o stream), <strong>ETL o ELT</strong>, <strong>destino</strong>, <strong>formato de la carga</strong> (Avro, Parquet, Feather…) y <strong>por qué</strong> ese mecanismo y no el de al lado.</p>
 </div>
 <h2 id="para-practicar">Para practicar<a class="headerlink" href="#para-practicar" title="Permanent link">&para;</a></h2>
 <p>No sustituye a Moodle. Sirve para comprobar que el apartado se sostiene en voz alta.</p>
@@ -1807,7 +1963,8 @@
 <li>Relación entre <strong>pipeline</strong> y <strong>ETL</strong>.  </li>
 <li>¿ETL y ELT son lo mismo? ¿Cuándo usarías cada uno? En Big Data, ¿cuál suele verse más y por qué?  </li>
 <li>Repite el “Hola ETL” uniendo <strong>productos + ventas</strong>: CSV de una categoría, nombre del fabricante y <strong>cantidad total vendida</strong> de cada producto (pandas y DuckDB).  </li>
-<li>Supuesto: lanzáis un producto y queréis medir reacciones en redes. Contesta <strong>al menos tres preguntas de cada bloque</strong> de la tabla de consideraciones.</li>
+<li>Misma transformación, <strong>tres cargas</strong>: JSON (para verlo), Parquet (lago) y Feather (paso intermedio). Anota tamaño y di <strong>cuándo</strong> usarías cada una.  </li>
+<li>Supuesto: lanzáis un producto y queréis medir reacciones en redes. Contesta <strong>al menos tres preguntas de cada bloque</strong> de la tabla de consideraciones. Incluye <strong>en qué formato</strong> dejarías el dato en S3 y por qué.</li>
 </ol>
 
 
