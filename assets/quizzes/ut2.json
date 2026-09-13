@@ -59,6 +59,48 @@
       "explain": "**YARN** negocia contenedores. HDFS guarda. Sqoop mueve SQL↔HDFS."
     },
     {
+      "topic": "2.2 ApplicationMaster",
+      "href": "../ecosistema/",
+      "prompt": "¿Qué es cierto del ApplicationMaster?",
+      "code": "",
+      "options": [
+        "Hay uno por clúster y vive siempre, como el ResourceManager.",
+        "Hay uno por aplicación, corre en un worker y muere cuando acaba el job.",
+        "Guarda los bloques de HDFS.",
+        "Sustituye al NameNode si este cae."
+      ],
+      "answer": 1,
+      "explain": "El AM es **por job**. RM y NM siguen encendidos aunque no haya nadie trabajando."
+    },
+    {
+      "topic": "2.2 Carpeta de salida",
+      "href": "../ecosistema/",
+      "prompt": "Lanzas un wordcount y la carpeta /user/bda/salida_wc ya existe. ¿Qué ocurre?",
+      "code": "",
+      "options": [
+        "Hadoop pisa el resultado anterior sin avisar.",
+        "El job falla a propósito: hay que borrar la carpeta (hdfs dfs -rm -r) antes de relanzar.",
+        "Se crea salida_wc_2 automáticamente.",
+        "Solo falla si falta el _SUCCESS."
+      ],
+      "answer": 1,
+      "explain": "Hadoop **no pisa** una salida a medias. Borrar es parte del gesto de aula."
+    },
+    {
+      "topic": "2.2 Hadoop Streaming",
+      "href": "../ecosistema/",
+      "prompt": "¿Qué exige Hadoop Streaming de un mapper en Python?",
+      "code": "",
+      "options": [
+        "Que implemente la clase Java Mapper.",
+        "Que lea stdin y escriba stdout (tubería Unix); Hadoop reparte el crudo y el shuffle.",
+        "Que abra un socket al NameNode.",
+        "Que cargue todo el lago en un dict antes de emitir."
+      ],
+      "answer": 1,
+      "explain": "Streaming es **stdin/stdout**. El dict global revienta en un lago; Hadoop ya agrupa claves."
+    },
+    {
       "topic": "2.3 Bloques HDFS",
       "href": "../hdfs/",
       "prompt": "Un fichero de 600 MB en HDFS con bloques de 128 MB y réplica 3. ¿Qué es correcto?",
