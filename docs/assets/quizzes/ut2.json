@@ -269,6 +269,48 @@
       "explain": "Lo robusto: **trozo + copias** de cada trozo."
     },
     {
+      "topic": "2.5 Auto-sharding",
+      "href": "../nosql/",
+      "prompt": "¿Qué implica el auto-sharding en NoSQL?",
+      "code": "",
+      "options": [
+        "La aplicación reparte a mano cada INSERT entre servidores.",
+        "El motor parte y balancea; la app no conoce el pool de nodos.",
+        "Solo existe en PostgreSQL de un solo servidor.",
+        "Prohibido usar hash: solo se parte por rango."
+      ],
+      "answer": 1,
+      "explain": "Eso es el criterio **e)** sin pegamento en la recepción."
+    },
+    {
+      "topic": "2.5 CAP",
+      "href": "../nosql/",
+      "prompt": "Se corta la red entre Laredo y Potes. Un sistema AP…",
+      "code": "",
+      "options": [
+        "Prefiere no responder a enseñar un dato atrasado.",
+        "Sigue respondiendo; el dato puede no ser el último (consistencia eventual).",
+        "Garantiza las tres letras de CAP a la vez.",
+        "Deja de ser NoSQL."
+      ],
+      "answer": 1,
+      "explain": "AP = disponibilidad + particiones. C se relaja."
+    },
+    {
+      "topic": "2.5 Columnas",
+      "href": "../nosql/",
+      "prompt": "Series de temperatura de 200 habitaciones × un año, leyendo solo temp_c. ¿Familia más natural?",
+      "code": "",
+      "options": [
+        "Grafo (Neo4j) para cada medida.",
+        "Columnas (Cassandra/HBase): scan de una columna en muchas filas.",
+        "Clave-valor opaco sin poder filtrar por fecha.",
+        "Solo ACID en una tabla de 8 columnas fijas."
+      ],
+      "answer": 1,
+      "explain": "El giro columnar brilla en **analítica**, no en el clic de caja."
+    },
+    {
       "topic": "2.6 MongoDB",
       "href": "../mongodb/",
       "prompt": "Dos documentos de la colección reservas no tienen las mismas claves. ¿Es válido?",

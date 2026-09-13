@@ -20,8 +20,8 @@ Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **507
 | **a)** | Se ha determinado la importancia de los sistemas de almacenamiento para depositar y procesar grandes cantidades de cualquier tipo de datos rápidamente. | [2.1](por-que-almacenamiento.md), [2.2](ecosistema.md), [2.3](hdfs.md), [2.5](nosql.md) |
 | **b)** | Se ha comprobado el poder de procesamiento de su modelo de computación distribuida. | [2.2](ecosistema.md) (MapReduce, YARN, primer job) y [2.4](computacion-distribuida.md) (medir el poder) |
 | **c)** | Se ha probado la tolerancia a fallos de los sistemas. | [2.3 HDFS](hdfs.md) (réplica de bloques) y [2.8 Réplicas y shards](replicas-shards.md) |
-| **d)** | Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde. | [2.3](hdfs.md) (WORM, esquema al leer) y [2.7 Modelado](modelado.md) |
-| **e)** | Se ha visualizado que el sistema puede crecer fácilmente añadiendo módulos. | [2.2](ecosistema.md) (piezas Hadoop), [2.3](hdfs.md) (más *datanodes*), [2.8](replicas-shards.md) (más *shards*) |
+| **d)** | Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde. | [2.3](hdfs.md) (WORM, esquema al leer), [2.5](nosql.md) (esquema dinámico) y [2.7](modelado.md) |
+| **e)** | Se ha visualizado que el sistema puede crecer fácilmente añadiendo módulos. | [2.2](ecosistema.md) (piezas Hadoop), [2.3](hdfs.md) (más *datanodes*), [2.5](nosql.md) (*auto-sharding*), [2.8](replicas-shards.md) |
 
 ## Qué cambia respecto a la UT1
 
