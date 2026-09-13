@@ -1,0 +1,5 @@
+id_huesped;tipo;lado;fecha;comentario
+1;retraso;llegada;2026-03-09;vuelo cancelado
+3;queja;habitacion;2026-03-10;ruido
+5;averia;;2026-03-12;calefaccion
+99;otro;;2026-03-15;no existe este huesped
