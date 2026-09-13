@@ -611,6 +611,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Paralelo (dentro de una máquina)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuando-se-puede-paralelizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuándo se puede paralelizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -625,10 +642,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#estrategias" class="md-nav__link">
+  <a href="#estrategias-no-todo-es-tiempo-real" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Estrategias
+        Estrategias: no todo es “tiempo real”
       
     </span>
   </a>
@@ -647,10 +664,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#principio-scv-procesamiento" class="md-nav__link">
+  <a href="#principio-scv-solo-analitica" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Principio SCV (procesamiento)
+        Principio SCV (solo analítica)
       
     </span>
   </a>
@@ -848,6 +865,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Paralelo (dentro de una máquina)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuando-se-puede-paralelizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuándo se puede paralelizar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -862,10 +896,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#estrategias" class="md-nav__link">
+  <a href="#estrategias-no-todo-es-tiempo-real" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Estrategias
+        Estrategias: no todo es “tiempo real”
       
     </span>
   </a>
@@ -884,10 +918,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#principio-scv-procesamiento" class="md-nav__link">
+  <a href="#principio-scv-solo-analitica" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Principio SCV (procesamiento)
+        Principio SCV (solo analítica)
       
     </span>
   </a>
@@ -988,23 +1022,37 @@
 
 
 <h1 id="14-procesamiento-de-datos">1.4. Procesamiento de datos<a class="headerlink" href="#14-procesamiento-de-datos" title="Permanent link">&para;</a></h1>
-<p>Almacenar no basta: el criterio <strong>d)</strong> pide <strong>procesar</strong> lo guardado. Aquí se decide <em>cómo</em> se parte el trabajo y <em>con qué prisa</em> debe salir el resultado.</p>
+<p>Almacenar no basta: el criterio <strong>d)</strong> pide <strong>procesar</strong> lo guardado. Aquí decides <em>cómo</em> se parte el trabajo y <em>con qué prisa</em> debe salir el resultado. Un dato en el lago que nadie transforma no sirve al cliente.</p>
 <h2 id="paralelo-dentro-de-una-maquina">Paralelo (dentro de una máquina)<a class="headerlink" href="#paralelo-dentro-de-una-maquina" title="Permanent link">&para;</a></h2>
-<p>Un sistema operativo <strong>reparte tiempo</strong> entre procesos. Si solo hay un núcleo, la “multitarea” es <strong>simulada</strong>: el procesador salta cada pocos milisegundos.</p>
-<p><strong>Multinúcleo:</strong> varios núcleos físicos, cada uno una CPU.<br />
-<strong>Multihilo (SMT):</strong> un núcleo comparte recursos entre hilos; 4 hilos ≠ 4 núcleos.</p>
-<p>Una tarea es <strong>paralelizable</strong> si puedes trocearla y juntar resultados (sumar mil millones de números por bloques). No lo es si cada paso depende del anterior (el resultado par/impar decide si sumas o restas el siguiente).</p>
+<p>El sistema operativo <strong>reparte el tiempo</strong> entre procesos. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tú tienes la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notas.</p>
+<p><strong>Multinúcleo:</strong> varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.</p>
+<p><strong>Multihilo (SMT):</strong> un núcleo <em>comparte</em> recursos entre hilos. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si <strong>los dos</strong> necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” <strong>no</strong> es lo mismo que 8 núcleos físicos.</p>
+<h3 id="cuando-se-puede-paralelizar">Cuándo se puede paralelizar<a class="headerlink" href="#cuando-se-puede-paralelizar" title="Permanent link">&para;</a></h3>
+<p><strong>Sí (independiente):</strong> sumar mil millones de números. Partes en 8 bloques, cada núcleo suma el suyo, al final sumas 8 parciales. El último paso es barato.</p>
+<p><strong>No (dependiente):</strong> empiezas en 0; si el resultado va <em>par</em> sumas el siguiente número, si va <em>impar</em> lo restas. Cada paso necesita el resultado del anterior. Aunque cortes el vector en trozos, el segundo trozo <strong>no sabe</strong> si debe sumar o restar hasta que acabe el primero.</p>
+<div class="admonition tip">
+<p class="admonition-title">Pregunta para el examen</p>
+<p>“Si solo hay un núcleo y el SO cambia de proceso cada X ms, ¿hace varias tareas al mismo tiempo?”<br />
+<strong>No.</strong> Es multitarea <strong>simulada</strong>. El usuario lo percibe como simultáneo; el silicio no.</p>
+</div>
 <h2 id="distribuido-entre-maquinas">Distribuido (entre máquinas)<a class="headerlink" href="#distribuido-entre-maquinas" title="Permanent link">&para;</a></h2>
-<p>El procesamiento <strong>distribuido</strong> reparte subtareas a <strong>nodos de un clúster</strong>. Es paralelo <em>más</em> red, fallos parciales y datos que no están todos en la misma RAM.</p>
-<p>MapReduce y Spark viven aquí: “lleva el cálculo al dato”, no al revés.</p>
-<h2 id="estrategias">Estrategias<a class="headerlink" href="#estrategias" title="Permanent link">&para;</a></h2>
+<p>El procesamiento <strong>distribuido</strong> reparte subtareas a <strong>nodos de un clúster</strong>. Es paralelo <em>más</em> tres problemas que en un solo PC no tenías:</p>
+<ul>
+<li>Los datos <strong>no</strong> están todos en la misma RAM.</li>
+<li>La <strong>red</strong> tarda y a veces falla.</li>
+<li>Un nodo puede caer <strong>a mitad</strong> del job.</li>
+</ul>
+<p>La consigna de Hadoop/Spark es “<strong>lleva el cálculo al dato</strong>”: copiar 200 GB a tu portátil para sumarlos es absurdo; mandas la función al nodo que <strong>ya</strong> tiene el trozo.</p>
+<p>MapReduce y Spark viven aquí. En este módulo no tienes que programarlos aún; sí debes saber <em>por qué</em> existen.</p>
+<h2 id="estrategias-no-todo-es-tiempo-real">Estrategias: no todo es “tiempo real”<a class="headerlink" href="#estrategias-no-todo-es-tiempo-real" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Estrategia</th>
-<th>Sensible al tiempo</th>
+<th>¿Urge el resultado?</th>
 <th>Volumen típico</th>
 <th>Idea</th>
+<th>Ejemplo</th>
 </tr>
 </thead>
 <tbody>
@@ -1013,32 +1061,40 @@
 <td>No</td>
 <td>Muy alto</td>
 <td>Horas o de noche; todo el histórico</td>
+<td>Cierre mensual de ventas</td>
 </tr>
 <tr>
 <td><strong>Transaccional</strong></td>
-<td>Sí (≪ 1 s)</td>
+<td>Sí (muy por debajo de 1 s)</td>
 <td>Bajo por operación</td>
-<td>Un <code>INSERT</code>/<code>UPDATE</code> de negocio</td>
+<td>Un <code>INSERT</code> / <code>UPDATE</code> de negocio</td>
+<td>Picar una línea en caja</td>
 </tr>
 <tr>
 <td><strong>Tiempo real / interactivo</strong></td>
 <td>Sí</td>
 <td>Medio-alto</td>
 <td>Consulta analítica mientras miras el dashboard</td>
+<td>“¿Qué tal van las reservas <em>hoy</em>?”</td>
 </tr>
 <tr>
 <td><strong>Streaming</strong></td>
-<td>Sí, al ritmo de llegada</td>
-<td>Ventana en memoria</td>
-<td>Cada evento actualiza el estado</td>
+<td>Sí, <strong>al ritmo</strong> en que llegan</td>
+<td>Una ventana en memoria</td>
+<td>Cada evento actualiza un estado</td>
+<td>Contador de personas que entran al recinto</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition tip">
-<p class="admonition-title">Trampa de vocabulario</p>
-<p>Una transacción <em>ocurre</em> en tiempo real, pero un <strong>análisis</strong> en tiempo real <strong>no</strong> es transaccional: no hay <code>COMMIT</code> de negocio, hay una consulta o una agregación.</p>
+<p class="admonition-title">Trampa de vocabulario (muy examinable)</p>
+<p>Una <strong>transacción</strong> ocurre en tiempo real (el cajero no espera).<br />
+Un <strong>análisis</strong> en tiempo real <strong>no</strong> es transaccional: no hay <code>COMMIT</code> de negocio, hay una consulta o una agregación.<br />
+Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>. <em>Online</em> aquí significa “mientras usas el sistema”, no “hay una transacción ACID”.</p>
 </div>
+<p><strong>Streaming</strong> añade otra dificultad: las estructuras se actualizan <strong>conforme llegan</strong> los datos. Suele hacerse en memoria, así que hay un <strong>techo</strong> de cuánto puedes tener “caliente”. No es “batch pero más rápido”: es otro contrato.</p>
 <h2 id="oltp-y-olap">OLTP y OLAP<a class="headerlink" href="#oltp-y-olap" title="Permanent link">&para;</a></h2>
+<p>Suenan parecido y los dos son “online”. No hacen el mismo trabajo.</p>
 <table>
 <thead>
 <tr>
@@ -1050,8 +1106,13 @@
 <tbody>
 <tr>
 <td>Para qué</td>
-<td>Operación del día (caja, reservas)</td>
+<td>Operación del día</td>
 <td>Análisis e inteligencia de negocio</td>
+</tr>
+<tr>
+<td>Pregunta típica</td>
+<td>“Cobra <em>esta</em> línea”</td>
+<td>“Ventas por región y mes”</td>
 </tr>
 <tr>
 <td>Operaciones</td>
@@ -1060,8 +1121,8 @@
 </tr>
 <tr>
 <td>Modelo</td>
-<td>Relacional, normalizado</td>
-<td>Dimensional, a menudo desnormalizado</td>
+<td>Relacional, <strong>normalizado</strong></td>
+<td>Dimensional, a menudo <strong>desnormalizado</strong></td>
 </tr>
 <tr>
 <td>Tiempo</td>
@@ -1070,50 +1131,85 @@
 </tr>
 <tr>
 <td>Usuarios</td>
-<td>Muchos concurrentes</td>
+<td>Muchos a la vez (cajeros, web)</td>
 <td>Analistas, dirección</td>
 </tr>
 <tr>
 <td>Relación</td>
-<td>Produce los hechos</td>
-<td>Lee (sobre todo) esos hechos ya integrados</td>
+<td><strong>Produce</strong> los hechos</td>
+<td><strong>Lee</strong> esos hechos ya integrados</td>
 </tr>
 </tbody>
 </table>
-<p>OLAP no sustituye a OLTP: <strong>se alimenta</strong> de él (vía ingesta). Mezclar ambos en la misma base “para no duplicar” suele acabar con bloqueos en caja o informes eternos.</p>
-<h2 id="principio-scv-procesamiento">Principio SCV (procesamiento)<a class="headerlink" href="#principio-scv-procesamiento" title="Permanent link">&para;</a></h2>
-<p>Parecido a CAP, pero <strong>no habla de lecturas/escrituras</strong>: habla de <strong>analítica distribuida</strong>. Como máximo dos de tres:</p>
+<p>Los cubos OLAP guardan el dato en varias <strong>dimensiones</strong> (tiempo, producto, tienda) para no hacer diez <code>JOIN</code> cada vez que alguien abre el informe. A veces viven en RAM: rapidísimo, con un límite claro de tamaño.</p>
+<p>OLAP <strong>no sustituye</strong> a OLTP: <strong>se alimenta</strong> de él (vía <a href="../ingesta/">ingesta</a>). Mezclar ambos en la misma base “para no duplicar” suele acabar así:</p>
+<ul>
+<li>el cajero espera porque el informe bloquea la tabla, o</li>
+<li>el informe tarda una eternidad porque la tabla está normalizada para la caja.</li>
+</ul>
+<h2 id="principio-scv-solo-analitica">Principio SCV (solo analítica)<a class="headerlink" href="#principio-scv-solo-analitica" title="Permanent link">&para;</a></h2>
+<p>Parece CAP, pero <strong>no habla de lecturas y escrituras</strong> en el almacén. Habla de <strong>procesar</strong> datos en un sistema analítico distribuido. Como máximo <strong>dos</strong> de tres:</p>
 <table>
 <thead>
 <tr>
 <th>Letra</th>
-<th>Significa aquí</th>
+<th>Aquí significa</th>
+<th>No lo confundas con</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>S</strong>peed</td>
-<td>Poco tiempo desde que el dato está en el sistema analítico hasta el resultado</td>
+<td>Poco tiempo desde que el dato está en el sistema analítico hasta el <strong>número</strong> del informe</td>
+<td>La “velocidad” de las 5 V (ritmo de <em>llegada</em>)</td>
 </tr>
 <tr>
 <td><strong>C</strong>onsistency</td>
-<td>Precisión: usas <strong>todos</strong> los datos (no confundir con la C de CAP)</td>
+<td><strong>Precisión</strong>: usas <strong>todos</strong> los datos (sin muestrear)</td>
+<td>La C de CAP (mismo valor en todos los nodos)</td>
 </tr>
 <tr>
 <td><strong>V</strong>olume</td>
 <td>Puedes atacar conjuntos enormes</td>
+<td>El “volumen” de las 5 V es el mismo espíritu, aplicado al <em>job</em></td>
 </tr>
 </tbody>
 </table>
-<p>En Big Data <strong>V casi siempre está</strong>. Entonces:</p>
-<ul>
-<li><strong>C + V</strong> → lote sobre el 100 % de los datos (el informe de cierre).</li>
-<li><strong>S + V</strong> → tiempo real sobre una <strong>muestra</strong> o una ventana (menos preciso).</li>
-<li><strong>S + C</strong> → muy rápido y exacto, pero <strong>no</strong> sobre petabytes enteros.</li>
-</ul>
+<p>En Big Data <strong>V casi siempre está</strong> (si no, no estarías aquí). Entonces el menú real es:</p>
+<table>
+<thead>
+<tr>
+<th>Eliges</th>
+<th>Qué sacrificas</th>
+<th>Cuándo tiene sentido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C + V</strong></td>
+<td>Speed</td>
+<td>Cierre de mes: todos los tickets, el tiempo da igual</td>
+</tr>
+<tr>
+<td><strong>S + V</strong></td>
+<td>Consistency (muestreo o ventana)</td>
+<td>Un widget “en vivo” que no necesita el último céntimo</td>
+</tr>
+<tr>
+<td><strong>S + C</strong></td>
+<td>Volume</td>
+<td>Un cálculo exacto y rápido sobre un conjunto <strong>pequeño</strong></td>
+</tr>
+</tbody>
+</table>
 <div class="admonition example">
 <p class="admonition-title">Pregunta de aula</p>
-<p>¿Analítica en tiempo real con <em>todos</em> los datos del lago? En general <strong>no</strong>: pediría S + C + V. O muestreamos (perdemos C) o esperamos al batch (perdemos S).</p>
+<p>¿Analítica en tiempo real con <em>todos</em> los petabytes del lago y la misma precisión que el cierre de mes?<br />
+En general <strong>no</strong>: sería S + C + V. O muestreas (pierdes C) o esperas al lote (pierdes S).</p>
+</div>
+<div class="admonition success">
+<p class="admonition-title">Para el criterio d)</p>
+<p>Procesar no es “darle a Ejecutar”. Es elegir <strong>lote o stream</strong>, <strong>OLTP u OLAP</strong>, y ser consciente del <strong>SCV</strong>. Luego, en <a href="../pentaho/">Pentaho</a>, lo haces visible con un flujo que cambia el dato.</p>
 </div>
 
 

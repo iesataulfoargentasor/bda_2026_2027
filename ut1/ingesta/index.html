@@ -670,15 +670,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#etl-y-elt" class="md-nav__link">
+  <a href="#etl-y-elt-el-orden-cambia-el-oficio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ETL y ELT
+        ETL y ELT: el orden cambia el oficio
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ETL y ELT">
+    <nav class="md-nav" aria-label="ETL y ELT: el orden cambia el oficio">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -709,10 +709,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#familias-de-herramientas-para-orientar-no-para-certificar-todas" class="md-nav__link">
+  <a href="#familias-de-herramientas-para-orientar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Familias de herramientas (para orientar, no para certificar todas)
+        Familias de herramientas (para orientar)
       
     </span>
   </a>
@@ -857,15 +857,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#etl-y-elt" class="md-nav__link">
+  <a href="#etl-y-elt-el-orden-cambia-el-oficio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ETL y ELT
+        ETL y ELT: el orden cambia el oficio
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ETL y ELT">
+    <nav class="md-nav" aria-label="ETL y ELT: el orden cambia el oficio">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -896,10 +896,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#familias-de-herramientas-para-orientar-no-para-certificar-todas" class="md-nav__link">
+  <a href="#familias-de-herramientas-para-orientar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Familias de herramientas (para orientar, no para certificar todas)
+        Familias de herramientas (para orientar)
       
     </span>
   </a>
@@ -1000,14 +1000,22 @@
 
 
 <h1 id="16-ingesta-de-datos">1.6. Ingesta de datos<a class="headerlink" href="#16-ingesta-de-datos" title="Permanent link">&para;</a></h1>
-<p><strong>Ingesta</strong> es incorporar datos de orígenes distintos (estructura, ritmo, calidad) a un almacén o a un proceso. Es el criterio <strong>b)</strong> del RA1: <em>determinar procedimientos y mecanismos</em>.</p>
-<p>Si la ingesta es frágil, el resto del pipeline (ciencia de datos, cuadro de mando) trabaja sobre arena.</p>
+<p><strong>Ingesta</strong> es incorporar datos de orígenes distintos (estructura, ritmo, calidad) a un almacén o a un proceso. Es el criterio <strong>b)</strong> del RA1: <em>determinar los procedimientos y mecanismos</em>.</p>
+<p>Si la ingesta es frágil, el resto del pipeline (ciencia de datos, cuadro de mando) trabaja sobre arena: el modelo será brillante y la cifra, mentira.</p>
 <p><img alt="Fases de un pipeline de datos" src="../../assets/ut1/pipeline.png" /></p>
 <h2 id="empieza-por-el-problema-no-por-la-herramienta">Empieza por el problema, no por la herramienta<a class="headerlink" href="#empieza-por-el-problema-no-por-la-herramienta" title="Permanent link">&para;</a></h2>
-<p>Un <strong>pipeline</strong> consume de un origen, limpia/transforma y deja el dato en un destino. Se diseña <strong>desde la pregunta de negocio hacia atrás</strong> hasta el origen. “Montar Kafka porque está de moda” no es un procedimiento.</p>
-<p>En muchas empresas el destino de la primera consolidación es un <strong>data lake</strong>; luego se curan copias hacia el warehouse.</p>
-<h2 id="etl-y-elt">ETL y ELT<a class="headerlink" href="#etl-y-elt" title="Permanent link">&para;</a></h2>
+<p>Un <strong>pipeline</strong> (tubería de datos) consume de un origen, limpia o transforma y deja el resultado en un destino. Se diseña <strong>desde la pregunta de negocio hacia atrás</strong> hasta el origen.</p>
+<p>Ejemplo: dirección quiere “ocupaciones de hotel por comarca, cada mañana a las 8”.</p>
+<ol>
+<li>¿Qué tabla o gráfico necesitan ver? (destino / presentación)</li>
+<li>¿Qué hay que agregar y limpiar? (transformación)</li>
+<li>¿De qué PMS, Excel o API salen las reservas? (origen)</li>
+</ol>
+<p>“Montar Kafka porque está de moda” no es un procedimiento. Kafka <em>puede</em> ser el mecanismo <strong>si</strong> el ritmo y el desacoplo lo piden.</p>
+<p>En muchas empresas el primer destino consolidado es un <strong>data lake</strong>; luego se curan copias hacia el warehouse que alimenta el panel. Dos saltos, dos procedimientos, no uno solo “mágico”.</p>
+<h2 id="etl-y-elt-el-orden-cambia-el-oficio">ETL y ELT: el orden cambia el oficio<a class="headerlink" href="#etl-y-elt-el-orden-cambia-el-oficio" title="Permanent link">&para;</a></h2>
 <p><img alt="Esquema ETL" src="../../assets/ut1/etl.png" /></p>
+<p>Las tres letras son las mismas; <strong>cambia el orden</strong> de la T y la L.</p>
 <table>
 <thead>
 <tr>
@@ -1025,92 +1033,121 @@
 <tr>
 <td>Dónde se transforma</td>
 <td>Motor intermedio (Pentaho, Talend…)</td>
-<td>En el destino (SQL en el warehouse, Spark sobre el lago)</td>
+<td>En el destino (SQL del warehouse, Spark sobre el lago)</td>
 </tr>
 <tr>
 <td>Cuándo brilla</td>
-<td>Destino rígido, hay que limpiar <em>antes</em></td>
-<td>Destinos elásticos (lago, cloud) y varios consumidores</td>
+<td>El destino es rígido y no debe tragar basura</td>
+<td>Destinos elásticos y <strong>varios</strong> consumidores del mismo bruto</td>
 </tr>
 <tr>
-<td>Tiempo hasta “ver el bruto”</td>
-<td>Más tarde (espera a la T)</td>
+<td>Tiempo hasta “ver el crudo”</td>
+<td>Más tarde (esperas a la T)</td>
 <td>Antes (el bruto ya está)</td>
+</tr>
+<tr>
+<td>Quién “duele” si cambia la pregunta</td>
+<td>Hay que retocar el flujo de T <strong>antes</strong> de recargar</td>
+<td>A menudo basta una consulta nueva sobre lo ya cargado</td>
 </tr>
 </tbody>
 </table>
-<p>El mercado ha girado hacia <strong>ELT</strong> en cloud, pero <strong>ETL sigue</strong> cuando el destino no puede tragarse basura o no tienes motor potente detrás. Pentaho Data Integration implementa sobre todo el estilo <strong>ETL visual</strong>.</p>
-<p>Una herramienta ETL/ELT de este módulo debe ser <strong>flexible</strong> (CSV, JSON, Parquet…), <strong>escalable y tolerante a fallos</strong>, y <strong>conectada</strong> a muchos orígenes.</p>
-<h3 id="las-tres-fases-aunque-el-orden-cambie">Las tres fases (aunque el orden cambie)<a class="headerlink" href="#las-tres-fases-aunque-el-orden-cambie" title="Permanent link">&para;</a></h3>
-<p><strong>Extracción.</strong> Leer el origen sin tumbarlo: incrementales, ventanas, APIs con cuota, CDC si hay que capturar cambios.</p>
-<p><strong>Transformación.</strong> Tipos, recodificar, unir, agregar, reglas de calidad. En streaming, cada milisegundo de T cuenta.</p>
-<p><strong>Carga.</strong> Escribir en el destino con el método que ese sistema lleva bien:</p>
+<p>El mercado ha girado hacia <strong>ELT</strong> en cloud (el almacén es potente y barato de escalar). <strong>ETL sigue</strong> cuando el destino no puede tragarse basura, no hay motor detrás o trabajas en aula con <a href="../pentaho/">Pentaho</a>: PDI se enseña como <strong>ETL visual</strong>.</p>
+<p>Una herramienta de este módulo debe ser:</p>
 <ul>
-<li>SQL / <em>bulk</em> (PostgreSQL, SQL Server, Redshift…).</li>
-<li>Ficheros que el destino ingiere.</li>
-<li>Cargadores de HDFS o S3.</li>
+<li><strong>flexible</strong> (CSV, JSON, Parquet, SQL…),</li>
+<li><strong>escalable y tolerante a fallos</strong> (si cae a la mitad, no dejes el destino a medias sin saberlo),</li>
+<li><strong>conectada</strong> a muchos orígenes (HTTP, fichero, BD, cola).</li>
 </ul>
-<p>Ahí importan índices, <strong>particionado</strong>, tamaño de transacción y <code>COMMIT</code>. Una carga que reconstruye todos los índices en cada fila es un procedimiento mal determinado.</p>
+<h3 id="las-tres-fases-aunque-el-orden-cambie">Las tres fases (aunque el orden cambie)<a class="headerlink" href="#las-tres-fases-aunque-el-orden-cambie" title="Permanent link">&para;</a></h3>
+<p><strong>Extracción.</strong> Leer el origen <strong>sin tumbarlo</strong>. No haces un <code>SELECT *</code> a la caja en hora punta si puedes leer incrementales (solo lo nuevo), ventanas de tiempo, APIs con cuota o CDC (capturar cambios). La primera carga histórica es un procedimiento <strong>distinto</strong> del día a día.</p>
+<p><strong>Transformación.</strong> Tipos (<code>"10"</code> no es 10), recodificar (<code>M</code>/<code>F</code> frente a <code>1</code>/<code>2</code>), unir, agregar, reglas de calidad (nulos, duplicados). En streaming cada milisegundo de T cuenta: a veces dejas la T pesada para un lote posterior.</p>
+<p><strong>Carga.</strong> Escribir en el destino con el método que <strong>ese</strong> sistema lleva bien:</p>
+<ul>
+<li>SQL o <em>bulk</em> (PostgreSQL, SQL Server, Redshift…),</li>
+<li>ficheros que el destino ingiere,</li>
+<li>cargadores de HDFS o S3.</li>
+</ul>
+<p>Ahí importan los <strong>índices</strong> (¿los desactivas durante la carga masiva?), el <strong>particionado</strong>, el tamaño de transacción y el <code>COMMIT</code>. Una carga que reconstruye todos los índices <strong>en cada fila</strong> es un procedimiento mal determinado: funciona en 100 filas de práctica y muere en 10 millones.</p>
 <h2 id="que-preguntar-antes-de-elegir-el-mecanismo">Qué preguntar antes de elegir el mecanismo<a class="headerlink" href="#que-preguntar-antes-de-elegir-el-mecanismo" title="Permanent link">&para;</a></h2>
+<p>Usa esta lista como <strong>guion de práctica o de examen</strong>. No hace falta contestarlo todo; sí las que duelen en <em>tu</em> caso.</p>
 <table>
 <thead>
 <tr>
 <th>Tema</th>
 <th>Preguntas</th>
+<th>Por qué importa</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Origen y formato</td>
 <td>¿API, IoT, SQL, fichero? ¿Interno o externo? ¿Estructurado?</td>
+<td>El conector no es el mismo</td>
 </tr>
 <tr>
 <td>Volumen y ritmo</td>
-<td>¿Eventos/s, GB/h? ¿Carga inicial histórica?</td>
+<td>¿Eventos/s, GB/h? ¿Hay carga inicial histórica?</td>
+<td>Batch frente a stream; dimensionar</td>
 </tr>
 <tr>
 <td>Latencia</td>
-<td>¿Vale un lote nocturno o tiene que verse en segundos?</td>
+<td>¿Vale un lote a las 02:00 o tiene que verse en segundos?</td>
+<td>Kafka no es “mejor”; es <em>otra</em> necesidad</td>
 </tr>
 <tr>
 <td>Actualizaciones</td>
 <td>¿Cambian columnas? ¿Hace falta histórico de cambios?</td>
+<td>Evolución de esquema; SCD</td>
 </tr>
 <tr>
 <td>Destinos</td>
 <td>¿Uno o varios? ¿Filas (Avro) o columnas (Parquet)?</td>
+<td>Ver <a href="../formatos/">formatos</a></td>
 </tr>
 <tr>
 <td>Calidad</td>
-<td>¿Duplicados, nulos, relojes? ¿Metadatos y linaje?</td>
+<td>¿Duplicados, nulos, relojes desfasados? ¿Linaje?</td>
+<td>Veracidad (5 V)</td>
 </tr>
 <tr>
 <td>Seguridad</td>
-<td>¿Hay que enmascarar? ¿Quién no puede ver el campo?</td>
+<td>¿Hay que enmascarar el DNI? ¿Quién no puede ver el campo?</td>
+<td>Capa transversal</td>
 </tr>
 </tbody>
 </table>
-<h2 id="familias-de-herramientas-para-orientar-no-para-certificar-todas">Familias de herramientas (para orientar, no para certificar todas)<a class="headerlink" href="#familias-de-herramientas-para-orientar-no-para-certificar-todas" title="Permanent link">&para;</a></h2>
-<p><strong>Ingesta / movimiento</strong></p>
+<h2 id="familias-de-herramientas-para-orientar">Familias de herramientas (para orientar)<a class="headerlink" href="#familias-de-herramientas-para-orientar" title="Permanent link">&para;</a></h2>
+<p>No tienes que certificar todas. Sí saber <strong>para qué familia</strong> las citarías.</p>
+<p><strong>Movimiento / ingesta</strong></p>
 <ul>
-<li><strong>Sqoop</strong> — SQL ↔ HDFS/Hive/HBase (estructurado, sobre todo batch). Proyecto en modo mantenimiento: la idea (bulk JDBC ↔ Hadoop) sigue; en cloud verás equivalentes.</li>
-<li><strong>Flume</strong> — flujos (logs) hacia HDFS/HBase.</li>
-<li><strong>NiFi</strong> — pipelines visuales, batch y streaming.</li>
-<li><strong>Logstash</strong> / <strong>OpenSearch</strong> — logs y eventos.</li>
-<li><strong>AWS Glue</strong> — ETL gestionado en AWS.</li>
+<li><strong>Sqoop</strong> — puente <strong>SQL ↔ HDFS/Hive/HBase</strong>, datos estructurados, sobre todo <strong>batch</strong>. El proyecto está en mantenimiento; la <em>idea</em> (volcado masivo JDBC ↔ Hadoop) sigue y en cloud verás equivalentes.</li>
+<li><strong>Flume</strong> — flujos de <strong>logs</strong> hacia HDFS/HBase.</li>
+<li><strong>NiFi</strong> — pipelines <strong>visuales</strong>, batch y streaming (grafos de procesadores).</li>
+<li><strong>Logstash</strong> / ecosistema <strong>OpenSearch</strong> — logs y eventos.</li>
+<li><strong>AWS Glue</strong> — ETL gestionado en AWS (descubrimiento de esquemas incluido).</li>
 </ul>
-<p><strong>Mensajería (desacopla productor y consumidor)</strong></p>
+<p><strong>Mensajería</strong> (el productor no espera al consumidor)</p>
 <ul>
-<li><strong>Kafka</strong>, <strong>RabbitMQ</strong>, <strong>Kinesis</strong>, <strong>Event Hubs</strong>, <strong>Pub/Sub</strong>.</li>
+<li><strong>Kafka</strong>, <strong>RabbitMQ</strong>, <strong>Kinesis</strong>, <strong>Event Hubs</strong>, <strong>Pub/Sub</strong>.<br />
+  Analogía: un tablón donde unos <em>publican</em> y otros <em>se suscriben</em>. Si el consumidor se cae, el mensaje <strong>puede</strong> seguir ahí (según la herramienta y la retención).</li>
 </ul>
 <p><strong>Conectores “de catálogo”</strong></p>
 <ul>
-<li>Fivetran (comercial), <strong>Airbyte</strong> (también open source): menos ingeniería por fuente, más suscripción o operación del servicio.</li>
+<li>Fivetran (comercial), <strong>Airbyte</strong> (también open source): menos ingeniería por cada SaaS nuevo; más suscripción u operación del servicio.</li>
 </ul>
-<p><strong>ETL de aula en este módulo:</strong> <strong>Pentaho Data Integration</strong>, Talend, Informatica, etc. En <a href="../pentaho/">1.8</a> se concreta PDI.</p>
+<p><strong>ETL de aula en este módulo:</strong> <strong>Pentaho Data Integration</strong>, y en el mercado Talend, Informatica, etc. El detalle de PDI está en <a href="../pentaho/">1.8</a>.</p>
+<div class="admonition example">
+<p class="admonition-title">Tres enunciados, tres mecanismos</p>
+<ol>
+<li>“Cada noche, la tabla Oracle de pedidos → HDFS.” → <strong>Sqoop</strong> (o un ETL batch), no un bus de eventos.  </li>
+<li>“Los logs de la web deben verse en el panel en pocos segundos.” → <strong>flujo</strong> (Flume/Kafka + consumidor).  </li>
+<li>“Un CSV de Airbnb que limpiamos en clase y sacamos a JSON.” → <strong>Pentaho</strong> (ETL visual).</li>
+</ol>
+</div>
 <div class="admonition success">
-<p class="admonition-title">Criterio b) en un examen o práctica</p>
-<p>No basta con nombrar Kafka. Debes decir: origen, ritmo, batch o stream, ETL o ELT, destino y <strong>por qué</strong> ese mecanismo y no otro.</p>
+<p class="admonition-title">Criterio b) en un examen</p>
+<p>No basta con escribir “Kafka”. Debes decir: <strong>origen</strong>, <strong>ritmo</strong>, <strong>batch o stream</strong>, <strong>ETL o ELT</strong>, <strong>destino</strong> y <strong>por qué</strong> ese mecanismo y no el de al lado.</p>
 </div>
 
 

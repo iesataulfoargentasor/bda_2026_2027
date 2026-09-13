@@ -547,13 +547,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-ganas" class="md-nav__link">
+  <a href="#que-ganas-y-que-significa-cada-cosa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué ganas
+        Qué ganas (y qué significa cada cosa)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Qué ganas (y qué significa cada cosa)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alto-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alto rendimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alta-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alta disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#equilibrio-de-carga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Equilibrio de carga
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalabilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -829,13 +879,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-ganas" class="md-nav__link">
+  <a href="#que-ganas-y-que-significa-cada-cosa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué ganas
+        Qué ganas (y qué significa cada cosa)
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Qué ganas (y qué significa cada cosa)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alto-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alto rendimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alta-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alta disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#equilibrio-de-carga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Equilibrio de carga
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#escalabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalabilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -966,35 +1066,65 @@
 
 
 <h1 id="12-clusteres-de-computadoras">1.2. Clústeres de computadoras<a class="headerlink" href="#12-clusteres-de-computadoras" title="Permanent link">&para;</a></h1>
-<p>Un <strong>clúster</strong> es un conjunto de ordenadores (<strong>nodos</strong> o servidores) unidos por red que resuelven trabajo <strong>como si fueran uno</strong>. En Big Data es la pieza que permite dejar de depender de “el servidor más gordo que podamos pagar”.</p>
-<p>Hoy se construyen sobre <strong>commodity hardware</strong> (máquinas normales) más un <em>framework</em> de computación distribuida, no solo sobre mainframes caros.</p>
-<h2 id="que-ganas">Qué ganas<a class="headerlink" href="#que-ganas" title="Permanent link">&para;</a></h2>
+<p>Cuando una sola máquina no da más de sí, la tentación es “comprar el servidor más gordo del catálogo”. Eso funciona un tiempo (escalado <strong>vertical</strong>) y luego choca con un techo: precio, enchufe, lo que el fabricante vende.</p>
+<p>Un <strong>clúster</strong> es otro planteamiento: varios ordenadores (<strong>nodos</strong> o servidores) unidos por red que resuelven el trabajo <strong>como si fueran uno</strong>. En Big Data es la pieza que permite crecer <strong>añadiendo máquinas</strong>, no solo agrandando <em>esa</em>.</p>
+<p>Hoy se construyen sobre <strong>commodity hardware</strong> (servidores normales, no necesariamente un mainframe) más un <em>framework</em> de computación distribuida que reparte tareas y datos.</p>
+<div class="admonition example">
+<p class="admonition-title">La metáfora del comedor</p>
+<p>Una cocina con un solo fogón enorme (vertical) cocina un puchero muy grande, pero si se apaga el gas, no hay comida. Varios fogones coordinados (clúster) parten el trabajo; si uno falla, los otros pueden seguir (si habías <strong>replicado</strong> la receta y los ingredientes).</p>
+</div>
+<h2 id="que-ganas-y-que-significa-cada-cosa">Qué ganas (y qué significa cada cosa)<a class="headerlink" href="#que-ganas-y-que-significa-cada-cosa" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Propiedad</th>
 <th>En la práctica</th>
+<th>Cómo lo notas</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Alto rendimiento</strong></td>
-<td>Parte el trabajo en subtareas y las ejecuta a la vez en varios nodos.</td>
+<td>Partes el trabajo en subtareas y las ejecutas a la vez</td>
+<td>El job de 8 horas pasa a 1 hora con 8 nodos <em>si</em> se puede partir</td>
 </tr>
 <tr>
 <td><strong>Alta disponibilidad</strong></td>
-<td>Si un nodo cae (luz, disco, red), otro replica o asume el servicio.</td>
+<td>Si un nodo cae, otro tiene réplica o asume el servicio</td>
+<td>Un disco muerto no tumba el cuadro de mando</td>
 </tr>
 <tr>
 <td><strong>Equilibrio de carga</strong></td>
-<td>No mandas todo al mismo nodo: miras tamaño del trabajo, carga y potencia.</td>
+<td>No mandas todo al mismo nodo</td>
+<td>Miras tamaño del trabajo, carga actual y potencia de cada máquina</td>
 </tr>
 <tr>
 <td><strong>Escalabilidad</strong></td>
-<td>Añades nodos cuando crece el dato; no hace falta acertar el tamaño el día 1.</td>
+<td>Añades nodos cuando crece el dato</td>
+<td>Empiezas con 4 y el año que viene pones 6, sin rediseñar el programa</td>
 </tr>
 </tbody>
 </table>
+<p>Estas cuatro se apoyan entre sí. Un clúster “rápido” pero sin réplica es frágil. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.</p>
+<h3 id="alto-rendimiento">Alto rendimiento<a class="headerlink" href="#alto-rendimiento" title="Permanent link">&para;</a></h3>
+<p>Cada nodo es un ordenador completo (CPU, RAM, disco). Si el trabajo se puede <strong>trocear</strong>, mandas un trozo a cada uno y juntas el resultado. Es la idea de “llevar el cálculo al dato”: mejor mover una función pequeña que mover petabytes por la red hacia una sola CPU.</p>
+<h3 id="alta-disponibilidad">Alta disponibilidad<a class="headerlink" href="#alta-disponibilidad" title="Permanent link">&para;</a></h3>
+<p>Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:</p>
+<ul>
+<li>Rearrancar ese nodo o levantar otro.</li>
+<li>Seguir sirviendo desde una <strong>réplica</strong> que ya tenía los mismos datos.</li>
+</ul>
+<p>Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad.</p>
+<h3 id="equilibrio-de-carga">Equilibrio de carga<a class="headerlink" href="#equilibrio-de-carga" title="Permanent link">&para;</a></h3>
+<p>Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. El algoritmo debería mirar:</p>
+<ul>
+<li>Lo grande que es el trabajo.</li>
+<li>Lo ocupado que está cada nodo.</li>
+<li>Lo potente que es cada nodo (no todos son iguales).</li>
+</ul>
+<p>Si no, creas un <strong>cuello de botella</strong>: la latencia media sube aunque el clúster “tenga máquinas libres”.</p>
+<h3 id="escalabilidad">Escalabilidad<a class="headerlink" href="#escalabilidad" title="Permanent link">&para;</a></h3>
+<p>No hace falta acertar el tamaño el día 1. Empiezas con lo que puedes pagar y creces. Eso es muy deseable en Big Data: el volumen <strong>no</strong> se estima bien a priori; si te pasas de pesimista, has tirado el dinero; si te quedas corto, el sistema se ahoga.</p>
 <h2 id="escalado-vertical-y-horizontal">Escalado vertical y horizontal<a class="headerlink" href="#escalado-vertical-y-horizontal" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1011,9 +1141,14 @@
 <td><strong>Más máquinas</strong> en el clúster</td>
 </tr>
 <tr>
+<td>Analogía</td>
+<td>Un camión más grande</td>
+<td>Más furgonetas</td>
+</tr>
+<tr>
 <td>Límite</td>
 <td>El mejor hardware del catálogo (y su precio)</td>
-<td>Red, coordinación y presupuesto de nodos</td>
+<td>Red, coordinación, presupuesto de nodos</td>
 </tr>
 <tr>
 <td>Típico en</td>
@@ -1023,14 +1158,28 @@
 </tbody>
 </table>
 <div class="admonition warning">
-<p class="admonition-title">No se llama <em>scale-in</em></p>
-<p>El material antiguo llamaba <em>scale-in</em> al vertical. En la jerga habitual, <strong>scale-up</strong> es vertical y <strong>scale-out</strong> es horizontal. <em>Scale-in</em> suele significar <strong>quitar</strong> nodos (reducir el clúster). En clase usamos vertical / horizontal.</p>
+<p class="admonition-title">Cuidado con el nombre <em>scale-in</em></p>
+<p>En el material antiguo a veces se llamaba <em>scale-in</em> al vertical. En la jerga habitual:</p>
+<ul>
+<li><strong>scale-up</strong> = vertical (agrandar <em>una</em> máquina)</li>
+<li><strong>scale-out</strong> = horizontal (añadir máquinas)</li>
+<li><strong>scale-in</strong> = <strong>quitar</strong> nodos (reducir el clúster cuando sobra capacidad)</li>
+</ul>
+<p>En clase decimos <strong>vertical</strong> y <strong>horizontal</strong> y no hay duda.</p>
 </div>
-<p>El vertical <strong>no te da escalabilidad real</strong> en Big Data: siempre hay un techo. El horizontal es el que encaja con volumen creciente.</p>
+<p>El vertical <strong>no te da escalabilidad real</strong> en Big Data: siempre hay un techo (y un precio absurdo cerca de ese techo). El horizontal es el que encaja con un volumen que no para de crecer.</p>
 <h2 id="cuando-un-cluster-no-hace-magia">Cuándo un clúster no hace magia<a class="headerlink" href="#cuando-un-cluster-no-hace-magia" title="Permanent link">&para;</a></h2>
-<p>Si la tarea <strong>no se puede partir</strong> (cada paso depende del resultado del anterior), añadir nodos no acorta el tiempo de forma lineal. Eso se detalla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos (sumar bloques, mapear ficheros, consultas que se reparte el motor).</p>
+<p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tienes más máquinas y el mismo cuello.</p>
+<p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir.</p>
+<p>También hay coste de <strong>coordinación</strong>: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
-<p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor ACID o un clúster que replica y reparte? Esa decisión condiciona ingesta, formato y cómo presentarás el resultado si un nodo falla a mitad de un job.</p>
+<p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor ACID o un clúster que replica y reparte? Esa decisión condiciona:</p>
+<ul>
+<li>cómo <strong>ingieres</strong> (un destino o muchos nodos),</li>
+<li>qué <strong>formato</strong> usas (que se pueda trocear),</li>
+<li>qué pasa si un nodo falla <strong>a mitad</strong> de un job (¿el cliente ve un informe a medias?).</li>
+</ul>
+<p>Caracterizar esa decisión es el criterio <strong>a)</strong>.</p>
 
 
 
