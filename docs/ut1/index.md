@@ -1,12 +1,14 @@
 ---
-title: U.T. 1. Introducción a Big Data
+title: "U.T. 1. Gestión de soluciones de almacenamiento"
 tags:
   - Big Data
   - BDA
   - RA1
 ---
 
-# U.T. 1. Introducción a Big Data
+# U.T. 1. Gestión de soluciones de almacenamiento
+
+El título sigue el **[RA1](ra1.md)**: *gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos*. No es un tour genérico por “qué es Big Data”; es diseñar el almacén, ingerir, formatear, procesar y presentar.
 
 Una empresa puede empezar con un servidor y una base de datos relacional. Cuando los clientes, los sensores o los logs crecen, ese servidor deja de bastar: no cabe el volumen, no llega a tiempo la velocidad y los datos ya no caben en tablas uniformes.
 
