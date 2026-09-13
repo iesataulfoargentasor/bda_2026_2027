@@ -1103,7 +1103,7 @@
 </tr>
 </tbody>
 </table>
-<p>Las bases <strong>OLTP</strong> (caja, reserva) guardan en <strong>filas</strong>. La analítica masiva (OLAP, data lake) prefiere <strong>columnar</strong>.</p>
+<p>Las bases del <strong>día a día</strong> (caja, reserva: lo que en <a href="../procesamiento/">1.4</a> se llama OLTP) guardan en <strong>filas</strong>. El análisis masivo (informes, lago) prefiere <strong>columnas</strong>.</p>
 <p>Un orden de magnitud que verás citado: 1 TB en CSV puede quedar en torno a <strong>130 GB</strong> en Parquet. En Athena, BigQuery y similares <strong>pagas por dato escaneado</strong>. Si el informe usa 3 columnas de 80, el columnar no es estética: es la factura.</p>
 <div class="admonition example">
 <p class="admonition-title">Agregar</p>
@@ -1121,7 +1121,7 @@
 <p><strong>Parquet</strong> — <strong>columnar</strong>, admite estructuras <strong>anidadas</strong>.</p>
 <ul>
 <li>El default cultural de <strong>Spark</strong> y de muchos lakes.</li>
-<li>Ideal si casi siempre haces <code>SELECT col1, col2</code> sobre ficheros gordos.</li>
+<li>Ideal si casi siempre lees <strong>solo algunas columnas</strong> de ficheros gordos.</li>
 </ul>
 <p><img alt="ORC: stripes e índices" src="../../assets/ut1/orc.png" /></p>
 <p><strong>ORC</strong> — <strong>columnar</strong>, nacido en <strong>Hive</strong>.</p>
@@ -1161,9 +1161,9 @@
 <td>Encaje con Hive</td>
 </tr>
 <tr>
-<td>Transacción fila a fila (TPV)</td>
-<td>Ni Parquet ni ORC como almacén OLTP</td>
-<td>Actualizar una fila es caro</td>
+<td>Cobrar o reservar fila a fila</td>
+<td>Ni Parquet ni ORC como almacén de la caja</td>
+<td>Cambiar una sola fila es caro</td>
 </tr>
 </tbody>
 </table>

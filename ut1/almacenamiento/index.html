@@ -630,6 +630,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#que-es-una-transaccion-hace-falta-para-entender-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es una transacción (hace falta para entender ACID)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#acid-cuando-el-negocio-no-puede-verse-a-medias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -967,6 +978,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#que-es-una-transaccion-hace-falta-para-entender-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es una transacción (hace falta para entender ACID)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#acid-cuando-el-negocio-no-puede-verse-a-medias" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1104,21 +1126,26 @@
 
 
 <h1 id="13-conceptos-de-almacenamiento">1.3. Conceptos de almacenamiento<a class="headerlink" href="#13-conceptos-de-almacenamiento" title="Permanent link">&para;</a></h1>
-<p>Diseñar la solución (criterio <strong>a)</strong>) es elegir <strong>dónde vive el dato</strong> y <strong>qué garantías</strong> ofreces: ¿una transacción que no se puede ver a medias, o un sistema que sigue respondiendo aunque se corte la red entre nodos?</p>
-<p>No es una moda (“ahora todo a Mongo”). Es una lista de preguntas. Este apartado te da el vocabulario para responderlas.</p>
+<p>Diseñar la solución (criterio <strong>a)</strong>) es elegir <strong>dónde vive el dato</strong> y <strong>qué garantías</strong> ofreces. No hace falta haber cursado un módulo de bases de datos: cada idea se explica aquí con un ejemplo, y <strong>después</strong> aparece la sigla, si la tiene.</p>
 <p><img alt="Esquema clásico de un data warehouse" src="../../assets/ut1/data-warehouse.jpeg" /></p>
 <h2 id="base-de-datos-relacional">Base de datos relacional<a class="headerlink" href="#base-de-datos-relacional" title="Permanent link">&para;</a></h2>
-<p>Guarda registros en <strong>tablas</strong>: cada <strong>fila</strong> es un hecho (una venta, un alumno) y cada <strong>columna</strong> un atributo (fecha, importe, grupo). Antes de insertar, declaras un <strong>esquema</strong>: tipos, claves, reglas. El lenguaje habitual es <strong>SQL</strong>. Los <strong>índices</strong> son como el índice de un libro: evitan leerse todas las páginas para encontrar un DNI.</p>
-<p>Encajan muy bien en <strong>OLTP</strong>: muchas operaciones cortas (“cobra esta línea”, “reserva esta plaza”) con integridad.</p>
-<p><strong>Por qué cuesta en Big Data:</strong> suelen crecer <strong>en vertical</strong> (un servidor más gordo). Cuando una tabla ya no cabe, o un <code>JOIN</code> de tres tablas enormes no termina, el relacional deja de ser el almacén <em>único</em>. <strong>No desaparece</strong>: sigue siendo el origen típico del que <strong>ingieres</strong> hacia el lago o el almacén analítico. La caja del supermercado seguirá en SQL; el análisis de tres años de tickets, probablemente no.</p>
+<p>Imagina una hoja de cálculo bien hecha, con reglas. Los datos viven en <strong>tablas</strong>:</p>
+<ul>
+<li>cada <strong>fila</strong> es un hecho (una venta, un alumno, una reserva);</li>
+<li>cada <strong>columna</strong> es un dato de ese hecho (fecha, importe, grupo).</li>
+</ul>
+<p>Antes de guardar nada, declaras <strong>cómo es</strong> la tabla: qué columnas hay, de qué tipo (número, texto, fecha) y qué no se puede romper (un DNI no se puede repetir, un importe no puede estar vacío). A ese “contrato” se le llama <strong>esquema</strong>. El lenguaje habitual para preguntar y cambiar esas tablas es <strong>SQL</strong>.</p>
+<p>Un <strong>índice</strong> es como el índice de un libro: evitas leerse todas las páginas para encontrar un DNI.</p>
+<p>Este modelo encaja cuando el trabajo es <strong>muchas operaciones cortas del día a día</strong>: cobrar una línea, reservar una plaza, matricular a alguien. Cada una tiene que quedar <strong>bien hecha</strong>, no a medias.</p>
+<p><strong>Por qué cuesta en Big Data:</strong> estas bases suelen crecer <strong>en vertical</strong> (un servidor más gordo). Cuando la tabla ya no cabe, o cruzar tres tablas enormes no termina, el relacional deja de ser el almacén <em>único</em>. <strong>No desaparece</strong>: sigue siendo el origen típico del que <strong>copias</strong> datos hacia el lago o hacia el almacén de informes. La caja del supermercado seguirá aquí; el análisis de tres años de tickets, probablemente no.</p>
 <div class="admonition tip">
 <p class="admonition-title">La pregunta de aula</p>
 <p>“¿Las relacionales sirven para Big Data?”<br />
 Como <strong>único</strong> almacén del volumen extremo: en general <strong>no</strong>, por el techo vertical.<br />
-Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <strong>sí</strong>, y mucho.</p>
+Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong>sí</strong>, y mucho.</p>
 </div>
 <h2 id="base-de-datos-nosql">Base de datos NoSQL<a class="headerlink" href="#base-de-datos-nosql" title="Permanent link">&para;</a></h2>
-<p>Nacen para <strong>volumen</strong>, <strong>variedad</strong> y <strong>escala horizontal</strong>. “NoSQL” no es un producto: es una familia. Elegir “NoSQL” sin decir cuál es como decir “voy en vehículo” sin decir si es bici o camión.</p>
+<p>Nacen para <strong>volumen</strong>, <strong>variedad</strong> y crecer <strong>añadiendo máquinas</strong>. “NoSQL” no es un producto: es una <strong>familia</strong>. Elegir “NoSQL” sin decir cuál es como decir “voy en vehículo” sin decir si es bici o camión.</p>
 <table>
 <thead>
 <tr>
@@ -1130,39 +1157,39 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 <tbody>
 <tr>
 <td>Documento</td>
-<td>Un JSON/BSON por registro; el esquema puede variar</td>
+<td>Un registro parece un JSON; no todos tienen los mismos campos</td>
 <td>Perfil de usuario, catálogo</td>
 </tr>
 <tr>
 <td>Clave-valor</td>
-<td><code>get</code> / <code>put</code> muy rápidos</td>
+<td>Guardar y recuperar muy rápido con una clave (<code>usuario:17</code>)</td>
 <td>Caché, sesiones</td>
 </tr>
 <tr>
 <td>Columnar / <em>wide-column</em></td>
-<td>Familias de columnas, bien para series</td>
-<td>Logs, IoT</td>
+<td>Familias de columnas, bien para series largas</td>
+<td>Logs, sensores</td>
 </tr>
 <tr>
 <td>Grafo</td>
-<td>Nodos y aristas</td>
+<td>Puntos unidos por relaciones</td>
 <td>Fraude, “quién conoce a quién”</td>
 </tr>
 </tbody>
 </table>
-<p>MongoDB Query Language (MQL) aparece mucho en tutoriales de <strong>documentos</strong>. No es “el SQL de todo NoSQL”: cada familia habla distinto.</p>
-<p><strong>¿Sirven para Big Data?</strong> Sí, cuando el problema es <strong>repartir y crecer</strong>. <strong>No</strong> sustituyen a un relacional si necesitas transacciones ACID estrictas (transferencia, stock con bloqueo). Un carrito de la compra <em>puede</em> vivir en un documento; el asiento contable, no.</p>
+<p>Cada familia habla un idioma distinto. Lo que ves en tutoriales de MongoDB <strong>no</strong> sirve igual en las otras.</p>
+<p><strong>¿Sirven para Big Data?</strong> Sí, cuando el problema es <strong>repartir y crecer</strong>. <strong>No</strong> sustituyen a un relacional si el negocio no puede verse a medias (una transferencia, el stock al cobrar, una nota oficial). Un carrito de la compra <em>puede</em> vivir en un documento; el asiento del banco, no.</p>
 <h2 id="dataset">Dataset<a class="headerlink" href="#dataset" title="Permanent link">&para;</a></h2>
-<p>Un <strong>dataset</strong> (conjunto de datos) es una colección que <strong>tiene sentido tratar junta</strong>: los tweets de una campaña, las lecturas de una estación, las facturas de 2026. Puede vivir en CSV, JSON, una tabla, Parquet o un <em>bucket</em>.</p>
-<p>No es un producto que se instala. Es la <strong>unidad de trabajo</strong> del análisis. Cuando en práctica te dicen “usa el dataset de Airbnb”, te están diciendo <em>qué</em> vas a procesar, no <em>en qué motor</em> está.</p>
+<p>Un <strong>dataset</strong> (conjunto de datos) es una colección que <strong>tiene sentido tratar junta</strong>: los tweets de una campaña, las lecturas de una estación, las facturas de 2026. Puede vivir en CSV, JSON, una tabla, Parquet o una carpeta en la nube.</p>
+<p>No es un programa que se instala. Es la <strong>unidad de trabajo</strong> del análisis. Cuando en práctica te dicen “usa el dataset de Airbnb”, te están diciendo <em>qué</em> vas a procesar, no <em>en qué motor</em> está.</p>
 <h2 id="data-warehouse-almacen-de-datos">Data warehouse (almacén de datos)<a class="headerlink" href="#data-warehouse-almacen-de-datos" title="Permanent link">&para;</a></h2>
-<p>Es un repositorio <strong>centralizado</strong>, pensado para <strong>inteligencia de negocio (BI)</strong> y análisis, con <strong>histórico</strong>. Los datos suelen llegar por <strong>ETL</strong> desde sistemas de operación (ERP, CRM, SCM, la caja). Es una <strong>foto</strong> periódica, no el sitio donde el cajero pica la venta.</p>
-<p>El esquema se decide <strong>antes</strong> de cargar (<em>schema-on-write</em>): si mañana aparece un campo nuevo, hay que <strong>cambiar el modelo</strong>. A cambio, el analista encuentra tablas limpias, con nombres que el negocio entiende, listas para OLAP o para un cuadro de mando.</p>
+<p>Es un sitio <strong>central</strong>, pensado para <strong>informes y decisiones</strong> (lo que en empresa llaman inteligencia de negocio, <em>BI</em>), con <strong>histórico</strong>. Los datos no se pican ahí: <strong>se copian</strong> desde las aplicaciones del día a día (caja, reservas, facturación). Es una <strong>foto</strong> periódica, no el sitio donde el cajero cobra.</p>
+<p>Las columnas se deciden <strong>antes</strong> de guardar: si mañana aparece un campo nuevo, hay que <strong>cambiar el modelo</strong>. A cambio, quien hace el informe encuentra tablas limpias, con nombres que el negocio entiende, listas para un cuadro de mando.</p>
 <p>Piensa en un <strong>almacén de un supermercado</strong>: todo etiquetado, pasillos fijos, pensado para sacar el pedido de siempre. No tiras ahí la caja sin abrir del camión.</p>
 <h2 id="data-lake">Data lake<a class="headerlink" href="#data-lake" title="Permanent link">&para;</a></h2>
 <p><img alt="Idea de data lake: dato en bruto, varios orígenes" src="../../assets/ut1/data-lake.jpeg" /></p>
-<p>El <strong>data lake</strong> guarda el dato <strong>en su formato original</strong> (tabla, JSON, vídeo, log). Encaja con ciencia de datos y ML: no tiras el bruto por si <strong>mañana</strong> cambia la pregunta.</p>
-<p>El esquema se aplica <strong>al leer</strong> (<em>schema-on-read</em>). Cargas desde IoT, APIs, logs, a menudo en continuo. El riesgo clásico es el <strong><em>data swamp</em></strong>: un lago sin catálogo, sin dueño y sin calidad. Entonces “tenemos un lake” significa “tenemos un disco sucio”.</p>
+<p>El <strong>data lake</strong> (lago de datos) guarda el dato <strong>como llegó</strong> (tabla, JSON, vídeo, log). Encaja con ciencia de datos y ML: no tiras el bruto por si <strong>mañana</strong> cambia la pregunta.</p>
+<p>El “cómo se interpreta” se aplica <strong>al leer</strong>, no al guardar. Cargas desde sensores, APIs, logs, a menudo en continuo. El riesgo clásico es el <strong><em>data swamp</em></strong> (ciénaga): un lago sin catálogo, sin dueño y sin calidad. Entonces “tenemos un lake” significa “tenemos un disco sucio”.</p>
 <table>
 <thead>
 <tr>
@@ -1183,13 +1210,13 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 <td>Bruto o poco curado</td>
 </tr>
 <tr>
-<td>Esquema</td>
-<td>Al <strong>escribir</strong></td>
+<td>Cuándo fijas las columnas</td>
+<td>Al <strong>guardar</strong></td>
 <td>Al <strong>leer</strong></td>
 </tr>
 <tr>
 <td>Usuarios típicos</td>
-<td>Negocio, BI</td>
+<td>Negocio, informes</td>
 <td>Ingeniería y ciencia de datos</td>
 </tr>
 <tr>
@@ -1199,9 +1226,13 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 </tr>
 </tbody>
 </table>
-<p>En la práctica muchas organizaciones tienen <strong>los dos</strong> (o un <em>lakehouse</em>): el lago para el bruto y el warehouse para lo que el director ve el lunes. No eliges uno “para siempre”: eliges <strong>para cada pregunta</strong>.</p>
+<p>En la práctica muchas organizaciones tienen <strong>los dos</strong>: el lago para el bruto y el warehouse para lo que el director ve el lunes. No eliges uno “para siempre”: eliges <strong>para cada pregunta</strong>.</p>
+<h2 id="que-es-una-transaccion-hace-falta-para-entender-acid">Qué es una transacción (hace falta para entender ACID)<a class="headerlink" href="#que-es-una-transaccion-hace-falta-para-entender-acid" title="Permanent link">&para;</a></h2>
+<p>En la calle, “transacción” suena a pago. En bases de datos es más concreto: <strong>un paquete de cambios que o se hacen todos o no se hace ninguno</strong>.</p>
+<p>Ejemplo: transferir 50 € de la cuenta A a la B son <strong>dos</strong> cambios (quitar en A, poner en B). Si el sistema se cae a mitad, no puedes dejar a A sin el dinero y a B sin recibirlo. Ese paquete es la <strong>transacción</strong>.</p>
+<p>Cuando el paquete termina bien, el sistema lo <strong>confirma</strong> (queda grabado). Si algo falla, <strong>deshace</strong> todo el paquete y el mundo queda como al principio.</p>
 <h2 id="acid-cuando-el-negocio-no-puede-verse-a-medias">ACID: cuando el negocio no puede verse a medias<a class="headerlink" href="#acid-cuando-el-negocio-no-puede-verse-a-medias" title="Permanent link">&para;</a></h2>
-<p>Son las garantías de las bases <strong>transaccionales</strong> (casi siempre relacionales). El acrónimo se entiende mejor con una transferencia de 50 € de la cuenta A a la B:</p>
+<p>Son las cuatro garantías que se piden a una base usada para esas transacciones (casi siempre, una relacional). El acrónimo se entiende con la misma transferencia de 50 €:</p>
 <table>
 <thead>
 <tr>
@@ -1221,34 +1252,34 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 <tr>
 <td><strong>C</strong></td>
 <td>Consistencia</td>
-<td>Las reglas del esquema se cumplen</td>
-<td>Un saldo negativo “prohibido” queda escrito</td>
+<td>Se cumplen las reglas (un saldo no puede quedar “prohibido”)</td>
+<td>Queda escrito un saldo negativo que el banco no admite</td>
 </tr>
 <tr>
 <td><strong>I</strong></td>
 <td>Aislamiento</td>
-<td>Nadie ve el intermedio</td>
-<td>Otra sesión lee A ya descontada y B aún no ingresada</td>
+<td>Nadie ve el paquete a medias</td>
+<td>Otra persona lee A ya descontada y B aún no ingresada</td>
 </tr>
 <tr>
 <td><strong>D</strong></td>
 <td>Durabilidad</td>
-<td>Lo confirmado no se pierde</td>
-<td>Tras <code>COMMIT</code>, un corte de luz borra el ingreso</td>
+<td>Lo confirmado <strong>no se pierde</strong></td>
+<td>Tras confirmar, un corte de luz borra el ingreso</td>
 </tr>
 </tbody>
 </table>
-<p>ACID usa un control <strong>pesimista</strong> (bloqueos): asume que el fallo <em>puede</em> ocurrir (ley de Murphy) y prefiere ir más despacio a dejar el libro contable roto. Escribir en disco (durabilidad) es más lento que dejarlo solo en RAM.</p>
-<p>No toda base “relacional” es ACID al 100 % si la configuras en modo relajado. Para <strong>transacciones de negocio</strong> (caja, nómina, matrícula oficial) sí debes exigir estas propiedades.</p>
+<p>Para conseguirlo, el sistema suele <strong>bloquear</strong> un momento lo que está tocando (como reservar un asiento en el cine mientras pagas). Escribir en disco (durabilidad) es más lento que dejarlo solo en la memoria RAM: por eso estas bases no son las más rápidas del mundo, son las más <strong>serias</strong> para dinero y notas oficiales.</p>
+<p>No toda base “relacional” cumple esto al 100 % si la configuras en modo relajado. Para <strong>caja, nómina o matrícula oficial</strong> sí debes exigir estas cuatro letras.</p>
 <h2 id="teorema-cap-que-pasa-cuando-se-parte-la-red">Teorema CAP: qué pasa cuando se parte la red<a class="headerlink" href="#teorema-cap-que-pasa-cuando-se-parte-la-red" title="Permanent link">&para;</a></h2>
-<p>En un almacén <strong>distribuido</strong> (varios nodos), el teorema de Brewer dice que, <strong>ante una partición de red</strong>, no puedes tener a la vez las tres:</p>
+<p>Hasta ahora imaginabas <strong>un</strong> servidor. En un <a href="../clusters/">clúster</a> el dato está en <strong>varios</strong> ordenadores. El teorema de Brewer (CAP) dice que, <strong>si se corta la red entre ellos</strong>, no puedes tener a la vez las tres cosas siguientes:</p>
 <ul>
-<li><strong>C</strong>onsistencia: toda lectura ve el <strong>último</strong> escrito (o un error; nunca un dato viejo haciéndose pasar por nuevo).</li>
-<li><strong>A</strong>vailability (disponibilidad): toda petición recibe <strong>alguna</strong> respuesta válida (aunque no sea la última).</li>
-<li><strong>P</strong>artition tolerance: el sistema <strong>sigue</strong> si se corta la red entre nodos.</li>
+<li><strong>C</strong>onsistencia: quien pregunta recibe el dato <strong>más reciente</strong>, o un error. Nunca un valor viejo haciéndose pasar por actual.</li>
+<li><strong>A</strong>vailability (disponibilidad): quien pregunta recibe <strong>alguna</strong> respuesta válida (aunque no sea la última).</li>
+<li><strong>P</strong>artition tolerance: el sistema <strong>sigue funcionando</strong> aunque se corte el enlace entre nodos.</li>
 </ul>
 <p><img alt="Triángulo CAP" src="../../assets/ut1/cap.png" /></p>
-<p>En un clúster real <strong>P no es opcional</strong>: los cables se cortan, un switch se cuelga, un centro de datos pierde enlace. La decisión de diseño suele ser:</p>
+<p>En un clúster real <strong>P no es opcional</strong>: un cable se corta, un <em>switch</em> se cuelga, un centro de datos pierde enlace. La decisión de diseño suele ser:</p>
 <table>
 <thead>
 <tr>
@@ -1271,7 +1302,7 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 <tr>
 <td><strong>CA</strong></td>
 <td>C + A</td>
-<td>Relacional en <strong>un</strong> sitio: no reparte el dato, así que la partición entre nodos <strong>no entra</strong> en el problema</td>
+<td>Un relacional en <strong>un</strong> sitio: el dato no está partido, así que “cortar la red entre nodos” <strong>no entra</strong> en el problema</td>
 </tr>
 </tbody>
 </table>
@@ -1283,27 +1314,28 @@ Como <strong>fuente</strong> y como sitio de las transacciones de negocio: <stro
 <li><strong>AP:</strong> Torrelavega <strong>da un saldo</strong> (quizá el de hace dos minutos). El cliente ve <em>algo</em>; puede no ser lo último.</li>
 </ul>
 </div>
-<p>Muchos productos <strong>se configuran</strong> (¿puedo leer de una réplica secundaria?). No memorices “Mongo es CP” como dogma: pregunta <em>qué hace este sistema si se parte la red</em>.</p>
+<p>Muchos productos <strong>se configuran</strong>. No memorices “Mongo es CP” como dogma: pregunta <em>qué hace este sistema si se parte la red</em>.</p>
 <h2 id="base-el-otro-extremo-de-acid">BASE: el otro extremo de ACID<a class="headerlink" href="#base-el-otro-extremo-de-acid" title="Permanent link">&para;</a></h2>
-<p>Cuando una distribuida elige <strong>A + P</strong>, el diseño típico se llama <strong>BASE</strong>:</p>
+<p>Cuando una base distribuida elige <strong>responder aunque algún nodo vaya atrasado</strong> (A + P), el diseño típico se llama <strong>BASE</strong>. Otra vez, primero la idea y luego las letras:</p>
 <ul>
-<li><strong>B</strong>asically <strong>A</strong>vailable: siempre hay respuesta (éxito o error controlado), no un silencio eterno.</li>
-<li><strong>S</strong>oft state: dos lecturas seguidas pueden diferir <strong>aunque tú no hayas escrito</strong>. Un nodo aún no había recibido la réplica.</li>
-<li><strong>E</strong>ventual consistency: <em>al final</em> (segundos o más) los nodos se ponen de acuerdo.</li>
+<li><strong>B</strong>asically <strong>A</strong>vailable: siempre hay respuesta (éxito o error claro), no un silencio eterno.</li>
+<li><strong>S</strong>oft state (estado blando): dos lecturas seguidas pueden diferir <strong>aunque tú no hayas escrito</strong>. Un nodo aún no había recibido la copia.</li>
+<li><strong>E</strong>ventual consistency (consistencia <strong>eventual</strong>): <em>al rato</em> (segundos o más) todos los nodos dicen lo mismo.</li>
 </ul>
 <div class="admonition failure">
-<p class="admonition-title">¿BASE para el TPV o para la nota oficial?</p>
-<p><strong>No.</strong> Una venta cobrada, un asiento o una calificación que se publica al alumno quieren <strong>ACID</strong>. BASE encaja en un timeline, un catálogo replicado, lecturas de IoT, un carrito que aún no es el cobro.</p>
+<p class="admonition-title">¿BASE para la caja o para la nota oficial?</p>
+<p><strong>No.</strong> Una venta cobrada, un asiento bancario o una calificación publicada quieren <strong>ACID</strong>. BASE encaja en un timeline, un catálogo replicado, lecturas de sensores, un carrito que <strong>aún no</strong> es el cobro.</p>
 </div>
 <h2 id="como-elegir-criterio-a">Cómo elegir (criterio a)<a class="headerlink" href="#como-elegir-criterio-a" title="Permanent link">&para;</a></h2>
 <p>Recorre las preguntas <strong>en este orden</strong>:</p>
 <ol>
-<li>¿Hay una transacción de negocio que no puede verse a medias? → relacional <strong>ACID</strong> (OLTP).</li>
-<li>¿El volumen o la variedad rompen un solo servidor? → <strong>clúster</strong> + NoSQL o ficheros distribuidos.</li>
-<li>¿La pregunta de negocio ya está clara y se repetirá cada lunes? → <strong>warehouse</strong> + modelo dimensional.</li>
-<li>¿Aún no sabes qué preguntarás o el bruto es heterogéneo? → <strong>lake</strong>, y luego curas hacia el warehouse.</li>
+<li>¿Hay un paquete de cambios que no puede verse a medias? → relacional con <strong>ACID</strong>.</li>
+<li>¿El volumen o la variedad rompen un solo servidor? → <strong>clúster</strong> + NoSQL o ficheros repartidos.</li>
+<li>¿La pregunta de negocio ya está clara y se repetirá cada lunes? → <strong>warehouse</strong>.</li>
+<li>¿Aún no sabes qué preguntarás o el bruto es de muchos tipos? → <strong>lake</strong>, y luego curas hacia el warehouse.</li>
 </ol>
-<p>Si puedes justificar esas cuatro frases con un caso (hotel, supermercado, sensores), has caracterizado el proceso de diseño. Eso es lo que pide el RA1, no recitar definiciones.</p>
+<p>En <a href="../procesamiento/">1.4</a> verás otro par de siglas (OLTP y OLAP): no son otro tipo de base, son <strong>dos trabajos distintos</strong> (operar el día a día frente a analizar el histórico).</p>
+<p>Si puedes justificar esas frases con un caso (hotel, supermercado, sensores), has caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.</p>
 
 
 

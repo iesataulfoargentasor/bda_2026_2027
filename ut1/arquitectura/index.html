@@ -1199,7 +1199,7 @@
 <h3 id="2-coleccion-integracion">2. Colección / integración<a class="headerlink" href="#2-coleccion-integracion" title="Permanent link">&para;</a></h3>
 <p>Unificas <strong>formato y semántica</strong>. El mismo cliente no puede llamarse <code>id_cliente</code> en un sitio y <code>customerId</code> en otro sin un criterio. Aquí nace (o se rompe) la calidad.</p>
 <h3 id="3-almacenamiento">3. Almacenamiento<a class="headerlink" href="#3-almacenamiento" title="Permanent link">&para;</a></h3>
-<p>Lago, warehouse, HDFS, objeto en cloud… <a href="../clusters/">distribuido</a> si el volumen lo pide. Aquí aplicas lo de <a href="../almacenamiento/">1.3</a>: ACID o BASE, lake o warehouse.</p>
+<p>Lago, warehouse, HDFS, objeto en cloud… <a href="../clusters/">distribuido</a> si el volumen lo pide. Aquí aplicas lo de <a href="../almacenamiento/">1.3</a>: ¿el negocio puede verse a medias o no? ¿lago o almacén de informes?</p>
 <h3 id="4-procesamiento">4. Procesamiento<a class="headerlink" href="#4-procesamiento" title="Permanent link">&para;</a></h3>
 <p>Infraestructura <strong>batch</strong>, <strong>streaming</strong> o híbrida. <em>No</em> extrae valor ella sola: deja el dato <strong>listo</strong> (agregado, limpio, unido). Spark, un job de Pentaho o un script viven aquí.</p>
 <h3 id="5-consulta-y-analitica">5. Consulta y analítica<a class="headerlink" href="#5-consulta-y-analitica" title="Permanent link">&para;</a></h3>
@@ -1255,7 +1255,7 @@
 <p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming <strong>en memoria</strong> y convive con ese ecosistema. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> y para <strong>mostrar</strong> el resultado sin programar el motor.</p>
 <p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong></p>
 <h2 id="big-data-y-cloud">Big Data y cloud<a class="headerlink" href="#big-data-y-cloud" title="Permanent link">&para;</a></h2>
-<p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, CAP/SCV, ETL o ELT y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagas</strong>.</p>
+<p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagas</strong>.</p>
 <p>En varios servicios analíticos de nube pagas por <strong>dato escaneado</strong>, no solo por dato guardado. Por eso en <a href="../formatos/">1.7</a> Parquet no es “un capricho moderno”: es menos euros y menos minutos.</p>
 <div class="admonition success">
 <p class="admonition-title">Al terminar 1.5</p>

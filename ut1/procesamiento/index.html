@@ -653,21 +653,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#oltp-y-olap" class="md-nav__link">
+  <a href="#dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OLTP y OLAP
+        Dos trabajos: operar el día a día o analizar el histórico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dos trabajos: operar el día a día o analizar el histórico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-se-llaman-en-los-libros-oltp-y-olap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se llaman en los libros: OLTP y OLAP
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#principio-scv-solo-analitica" class="md-nav__link">
+  <a href="#principio-scv-solo-para-analisis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Principio SCV (solo analítica)
+        Principio SCV (solo para análisis)
       
     </span>
   </a>
@@ -935,21 +952,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#oltp-y-olap" class="md-nav__link">
+  <a href="#dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OLTP y OLAP
+        Dos trabajos: operar el día a día o analizar el histórico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dos trabajos: operar el día a día o analizar el histórico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-se-llaman-en-los-libros-oltp-y-olap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se llaman en los libros: OLTP y OLAP
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#principio-scv-solo-analitica" class="md-nav__link">
+  <a href="#principio-scv-solo-para-analisis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Principio SCV (solo analítica)
+        Principio SCV (solo para análisis)
       
     </span>
   </a>
@@ -1053,15 +1087,15 @@
 <p>Almacenar no basta: el criterio <strong>d)</strong> pide <strong>procesar</strong> lo guardado. Aquí decides <em>cómo</em> se parte el trabajo y <em>con qué prisa</em> debe salir el resultado. Un dato en el lago que nadie transforma no sirve al cliente.</p>
 <p>En clase lo aplicas en la <a href="../tarea-clase/">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
 <h2 id="paralelo-dentro-de-una-maquina">Paralelo (dentro de una máquina)<a class="headerlink" href="#paralelo-dentro-de-una-maquina" title="Permanent link">&para;</a></h2>
-<p>El sistema operativo <strong>reparte el tiempo</strong> entre procesos. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tú tienes la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notas.</p>
+<p>El sistema operativo <strong>reparte el tiempo</strong> entre programas. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tú tienes la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notas.</p>
 <p><strong>Multinúcleo:</strong> varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.</p>
-<p><strong>Multihilo (SMT):</strong> un núcleo <em>comparte</em> recursos entre hilos. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si <strong>los dos</strong> necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” <strong>no</strong> es lo mismo que 8 núcleos físicos.</p>
+<p><strong>Multihilo:</strong> un núcleo <em>comparte</em> recursos entre hilos. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si <strong>los dos</strong> necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” <strong>no</strong> es lo mismo que 8 núcleos físicos.</p>
 <h3 id="cuando-se-puede-paralelizar">Cuándo se puede paralelizar<a class="headerlink" href="#cuando-se-puede-paralelizar" title="Permanent link">&para;</a></h3>
 <p><strong>Sí (independiente):</strong> sumar mil millones de números. Partes en 8 bloques, cada núcleo suma el suyo, al final sumas 8 parciales. El último paso es barato.</p>
-<p><strong>No (dependiente):</strong> empiezas en 0; si el resultado va <em>par</em> sumas el siguiente número, si va <em>impar</em> lo restas. Cada paso necesita el resultado del anterior. Aunque cortes el vector en trozos, el segundo trozo <strong>no sabe</strong> si debe sumar o restar hasta que acabe el primero.</p>
+<p><strong>No (dependiente):</strong> empiezas en 0; si el resultado va <em>par</em> sumas el siguiente número, si va <em>impar</em> lo restas. Cada paso necesita el resultado del anterior. Aunque cortes la lista en trozos, el segundo trozo <strong>no sabe</strong> si debe sumar o restar hasta que acabe el primero.</p>
 <div class="admonition tip">
 <p class="admonition-title">Pregunta para el examen</p>
-<p>“Si solo hay un núcleo y el SO cambia de proceso cada X ms, ¿hace varias tareas al mismo tiempo?”<br />
+<p>“Si solo hay un núcleo y el sistema cambia de programa cada X ms, ¿hace varias tareas al mismo tiempo?”<br />
 <strong>No.</strong> Es multitarea <strong>simulada</strong>. El usuario lo percibe como simultáneo; el silicio no.</p>
 </div>
 <h2 id="distribuido-entre-maquinas">Distribuido (entre máquinas)<a class="headerlink" href="#distribuido-entre-maquinas" title="Permanent link">&para;</a></h2>
@@ -1069,7 +1103,7 @@
 <ul>
 <li>Los datos <strong>no</strong> están todos en la misma RAM.</li>
 <li>La <strong>red</strong> tarda y a veces falla.</li>
-<li>Un nodo puede caer <strong>a mitad</strong> del job.</li>
+<li>Un nodo puede caer <strong>a mitad</strong> del trabajo.</li>
 </ul>
 <p>La consigna de Hadoop/Spark es “<strong>lleva el cálculo al dato</strong>”: copiar 200 GB a tu portátil para sumarlos es absurdo; mandas la función al nodo que <strong>ya</strong> tiene el trozo.</p>
 <p>MapReduce y Spark viven aquí. En este módulo no tienes que programarlos aún; sí debes saber <em>por qué</em> existen.</p>
@@ -1086,44 +1120,54 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Por lotes (batch)</strong></td>
+<td><strong>Por lotes</strong> (<em>batch</em>)</td>
 <td>No</td>
 <td>Muy alto</td>
 <td>Horas o de noche; todo el histórico</td>
 <td>Cierre mensual de ventas</td>
 </tr>
 <tr>
-<td><strong>Transaccional</strong></td>
+<td><strong>Por transacciones</strong></td>
 <td>Sí (muy por debajo de 1 s)</td>
 <td>Bajo por operación</td>
-<td>Un <code>INSERT</code> / <code>UPDATE</code> de negocio</td>
+<td>Un cobro, una reserva, un alta</td>
 <td>Picar una línea en caja</td>
 </tr>
 <tr>
 <td><strong>Tiempo real / interactivo</strong></td>
 <td>Sí</td>
 <td>Medio-alto</td>
-<td>Consulta analítica mientras miras el dashboard</td>
+<td>Consulta de análisis mientras miras el panel</td>
 <td>“¿Qué tal van las reservas <em>hoy</em>?”</td>
 </tr>
 <tr>
 <td><strong>Streaming</strong></td>
 <td>Sí, <strong>al ritmo</strong> en que llegan</td>
 <td>Una ventana en memoria</td>
-<td>Cada evento actualiza un estado</td>
+<td>Cada evento actualiza un recuento</td>
 <td>Contador de personas que entran al recinto</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Trampa de vocabulario (muy examinable)</p>
-<p>Una <strong>transacción</strong> ocurre en tiempo real (el cajero no espera).<br />
-Un <strong>análisis</strong> en tiempo real <strong>no</strong> es transaccional: no hay <code>COMMIT</code> de negocio, hay una consulta o una agregación.<br />
-Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>. <em>Online</em> aquí significa “mientras usas el sistema”, no “hay una transacción ACID”.</p>
+<p>Un <strong>cobro</strong> ocurre en tiempo real (el cajero no espera).<br />
+Un <strong>análisis</strong> en tiempo real <strong>no</strong> es lo mismo: no estás confirmando un cobro, estás <strong>consultando o resumiendo</strong>.<br />
+La palabra inglesa <em>online</em> aquí solo significa “mientras usas el sistema”, no “hay una <a href="../almacenamiento/">transacción</a> de dinero”.</p>
 </div>
-<p><strong>Streaming</strong> añade otra dificultad: las estructuras se actualizan <strong>conforme llegan</strong> los datos. Suele hacerse en memoria, así que hay un <strong>techo</strong> de cuánto puedes tener “caliente”. No es “batch pero más rápido”: es otro contrato.</p>
-<h2 id="oltp-y-olap">OLTP y OLAP<a class="headerlink" href="#oltp-y-olap" title="Permanent link">&para;</a></h2>
-<p>Suenan parecido y los dos son “online”. No hacen el mismo trabajo.</p>
+<p><strong>Streaming</strong> añade otra dificultad: las cuentas se actualizan <strong>conforme llegan</strong> los datos. Suele hacerse en memoria, así que hay un <strong>techo</strong> de cuánto puedes tener “caliente”. No es “un lote, pero más rápido”: es otro contrato.</p>
+<h2 id="dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico">Dos trabajos: operar el día a día o analizar el histórico<a class="headerlink" href="#dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico" title="Permanent link">&para;</a></h2>
+<p>En cualquier empresa conviven <strong>dos oficios</strong> que parecen el mismo (“usar el ordenador con datos”) y no lo son.</p>
+<p><strong>Oficio 1 — Operar.</strong> El cajero cobra, el hotel reserva, el alumno se matricula. Muchas personas a la vez, cada una toca <strong>poca</strong> información, y tiene que terminar <strong>en milisegundos</strong>. Si esto se atasca, la cola de la caja no avanza.</p>
+<p><strong>Oficio 2 — Analizar.</strong> Dirección pregunta “ventas por comarca y mes” o “ocupación de agosto frente a julio”. Eso recorre <strong>mucho</strong> histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser <strong>defendible</strong>.</p>
+<p>Mezclar los dos en <strong>la misma</strong> tabla “para no duplicar” suele acabar así:</p>
+<ul>
+<li>el cajero espera porque el informe está recorriendo la tabla, o</li>
+<li>el informe tarda una eternidad porque la tabla está pensada para cobrar, no para resumir.</li>
+</ul>
+<p>Por eso se <strong>copian</strong> los hechos del oficio 1 hacia un almacén del oficio 2 (eso es la <a href="../ingesta/">ingesta</a>). El segundo <strong>no sustituye</strong> al primero: <strong>se alimenta</strong> de él.</p>
+<h3 id="como-se-llaman-en-los-libros-oltp-y-olap">Cómo se llaman en los libros: OLTP y OLAP<a class="headerlink" href="#como-se-llaman-en-los-libros-oltp-y-olap" title="Permanent link">&para;</a></h3>
+<p>Cuando leas documentación o un examen, esos dos oficios aparecen con siglas inglesas. No asumas que las conoces: son solo <strong>nombres</strong> de lo de arriba.</p>
 <table>
 <thead>
 <tr>
@@ -1134,9 +1178,14 @@ Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>
 </thead>
 <tbody>
 <tr>
+<td>Significa</td>
+<td><em>Online Transaction Processing</em>: procesar <strong>operaciones</strong> del día a día</td>
+<td><em>Online Analytical Processing</em>: procesar <strong>consultas de análisis</strong></td>
+</tr>
+<tr>
 <td>Para qué</td>
-<td>Operación del día</td>
-<td>Análisis e inteligencia de negocio</td>
+<td>Cobrar, reservar, matricular</td>
+<td>Informes, tendencias, inteligencia de negocio</td>
 </tr>
 <tr>
 <td>Pregunta típica</td>
@@ -1144,40 +1193,32 @@ Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>
 <td>“Ventas por región y mes”</td>
 </tr>
 <tr>
-<td>Operaciones</td>
-<td>Pocas filas: insertar, actualizar, borrar</td>
-<td>Agregados, cruces, cubos</td>
-</tr>
-<tr>
-<td>Modelo</td>
-<td>Relacional, <strong>normalizado</strong></td>
-<td>Dimensional, a menudo <strong>desnormalizado</strong></td>
+<td>Cuánto toca cada vez</td>
+<td>Pocas filas</td>
+<td>Muchas filas, resúmenes</td>
 </tr>
 <tr>
 <td>Tiempo</td>
 <td>Milisegundos</td>
-<td>Segundos (o menos si cabe en RAM)</td>
+<td>Segundos (o menos si el resumen ya está preparado)</td>
 </tr>
 <tr>
 <td>Usuarios</td>
-<td>Muchos a la vez (cajeros, web)</td>
+<td>Cajeros, web, recepción</td>
 <td>Analistas, dirección</td>
 </tr>
 <tr>
 <td>Relación</td>
 <td><strong>Produce</strong> los hechos</td>
-<td><strong>Lee</strong> esos hechos ya integrados</td>
+<td><strong>Lee</strong> esos hechos ya copiados e integrados</td>
 </tr>
 </tbody>
 </table>
-<p>Los cubos OLAP guardan el dato en varias <strong>dimensiones</strong> (tiempo, producto, tienda) para no hacer diez <code>JOIN</code> cada vez que alguien abre el informe. A veces viven en RAM: rapidísimo, con un límite claro de tamaño.</p>
-<p>OLAP <strong>no sustituye</strong> a OLTP: <strong>se alimenta</strong> de él (vía <a href="../ingesta/">ingesta</a>). Mezclar ambos en la misma base “para no duplicar” suele acabar así:</p>
-<ul>
-<li>el cajero espera porque el informe bloquea la tabla, o</li>
-<li>el informe tarda una eternidad porque la tabla está normalizada para la caja.</li>
-</ul>
-<h2 id="principio-scv-solo-analitica">Principio SCV (solo analítica)<a class="headerlink" href="#principio-scv-solo-analitica" title="Permanent link">&para;</a></h2>
-<p>Parece CAP, pero <strong>no habla de lecturas y escrituras</strong> en el almacén. Habla de <strong>procesar</strong> datos en un sistema analítico distribuido. Como máximo <strong>dos</strong> de tres:</p>
+<p><em>Online</em> vuelve a significar “en el sistema, ahora”, no “pago por internet”.</p>
+<p>A veces el almacén de análisis guarda el dato ya <strong>cortado por ejes</strong> (tiempo, producto, tienda). En los libros eso se llama <strong>cubo</strong>. La idea es simple: el informe del lunes no tiene que cruzar diez tablas cada vez; el cruce <strong>ya está hecho</strong>. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.</p>
+<p>En <a href="../almacenamiento/">1.3</a> el <strong>warehouse</strong> es el sitio típico del oficio 2; la base relacional de la caja es el sitio típico del oficio 1.</p>
+<h2 id="principio-scv-solo-para-analisis">Principio SCV (solo para análisis)<a class="headerlink" href="#principio-scv-solo-para-analisis" title="Permanent link">&para;</a></h2>
+<p>Parece el <a href="../almacenamiento/">CAP</a> de las bases repartidas, pero <strong>no habla de si el saldo se ve igual en todos los nodos</strong>. Habla de <strong>hacer un cálculo</strong> en un sistema de análisis. Como máximo puedes pedirle <strong>dos</strong> de estas tres cosas:</p>
 <table>
 <thead>
 <tr>
@@ -1188,19 +1229,19 @@ Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>
 </thead>
 <tbody>
 <tr>
-<td><strong>S</strong>peed</td>
-<td>Poco tiempo desde que el dato está en el sistema analítico hasta el <strong>número</strong> del informe</td>
-<td>La “velocidad” de las 5 V (ritmo de <em>llegada</em>)</td>
+<td><strong>S</strong>peed (velocidad)</td>
+<td>Poco tiempo desde que el dato está en el sistema de análisis hasta el <strong>número</strong> del informe</td>
+<td>La “velocidad” de las 5 V (ritmo al que <em>llegan</em> los datos)</td>
 </tr>
 <tr>
-<td><strong>C</strong>onsistency</td>
-<td><strong>Precisión</strong>: usas <strong>todos</strong> los datos (sin muestrear)</td>
+<td><strong>C</strong>onsistency (aquí: <strong>precisión</strong>)</td>
+<td>Usas <strong>todos</strong> los datos, sin muestrear</td>
 <td>La C de CAP (mismo valor en todos los nodos)</td>
 </tr>
 <tr>
 <td><strong>V</strong>olume</td>
 <td>Puedes atacar conjuntos enormes</td>
-<td>El “volumen” de las 5 V es el mismo espíritu, aplicado al <em>job</em></td>
+<td>El “volumen” de las 5 V, aplicado al <em>trabajo</em> de cálculo</td>
 </tr>
 </tbody>
 </table>
@@ -1221,8 +1262,8 @@ Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>
 </tr>
 <tr>
 <td><strong>S + V</strong></td>
-<td>Consistency (muestreo o ventana)</td>
-<td>Un widget “en vivo” que no necesita el último céntimo</td>
+<td>Precisión (muestreo o ventana)</td>
+<td>Un recuento “en vivo” que no necesita el último céntimo</td>
 </tr>
 <tr>
 <td><strong>S + C</strong></td>
@@ -1233,12 +1274,12 @@ Decir “el OLAP es transaccional porque es online” está <strong>mal</strong>
 </table>
 <div class="admonition example">
 <p class="admonition-title">Pregunta de aula</p>
-<p>¿Analítica en tiempo real con <em>todos</em> los petabytes del lago y la misma precisión que el cierre de mes?<br />
-En general <strong>no</strong>: sería S + C + V. O muestreas (pierdes C) o esperas al lote (pierdes S).</p>
+<p>¿Análisis en tiempo real con <em>todos</em> los petabytes del lago y la misma precisión que el cierre de mes?<br />
+En general <strong>no</strong>: sería S + C + V. O muestreas (pierdes precisión) o esperas al lote (pierdes velocidad).</p>
 </div>
 <div class="admonition success">
 <p class="admonition-title">Para el criterio d)</p>
-<p>Procesar no es “darle a Ejecutar”. Es elegir <strong>lote o stream</strong>, <strong>OLTP u OLAP</strong>, y ser consciente del <strong>SCV</strong>. Luego, en <a href="../pentaho/">Pentaho</a>, lo haces visible con un flujo que cambia el dato.</p>
+<p>Procesar no es “darle a Ejecutar”. Es elegir <strong>lote o stream</strong>, <strong>operar o analizar</strong> (OLTP u OLAP), y ser consciente del <strong>SCV</strong>. Luego, en <a href="../pentaho/">Pentaho</a>, lo haces visible con un flujo que cambia el dato.</p>
 </div>
 
 

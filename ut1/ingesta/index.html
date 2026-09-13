@@ -670,15 +670,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#etl-y-elt-el-orden-cambia-el-oficio" class="md-nav__link">
+  <a href="#extraer-transformar-y-cargar-el-orden-cambia-el-oficio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ETL y ELT: el orden cambia el oficio
+        Extraer, transformar y cargar: el orden cambia el oficio
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ETL y ELT: el orden cambia el oficio">
+    <nav class="md-nav" aria-label="Extraer, transformar y cargar: el orden cambia el oficio">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -885,15 +885,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#etl-y-elt-el-orden-cambia-el-oficio" class="md-nav__link">
+  <a href="#extraer-transformar-y-cargar-el-orden-cambia-el-oficio" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ETL y ELT: el orden cambia el oficio
+        Extraer, transformar y cargar: el orden cambia el oficio
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ETL y ELT: el orden cambia el oficio">
+    <nav class="md-nav" aria-label="Extraer, transformar y cargar: el orden cambia el oficio">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1041,9 +1041,15 @@
 </ol>
 <p>“Montar Kafka porque está de moda” no es un procedimiento. Kafka <em>puede</em> ser el mecanismo <strong>si</strong> el ritmo y el desacoplo lo piden.</p>
 <p>En muchas empresas el primer destino consolidado es un <strong>data lake</strong>; luego se curan copias hacia el warehouse que alimenta el panel. Dos saltos, dos procedimientos, no uno solo “mágico”.</p>
-<h2 id="etl-y-elt-el-orden-cambia-el-oficio">ETL y ELT: el orden cambia el oficio<a class="headerlink" href="#etl-y-elt-el-orden-cambia-el-oficio" title="Permanent link">&para;</a></h2>
+<h2 id="extraer-transformar-y-cargar-el-orden-cambia-el-oficio">Extraer, transformar y cargar: el orden cambia el oficio<a class="headerlink" href="#extraer-transformar-y-cargar-el-orden-cambia-el-oficio" title="Permanent link">&para;</a></h2>
+<p>Tres verbos, siempre los mismos:</p>
+<ol>
+<li><strong>Extraer:</strong> leer el origen (una tabla, un CSV, una API).</li>
+<li><strong>Transformar:</strong> limpiar, unir, recodificar, agregar.</li>
+<li><strong>Cargar:</strong> escribir el resultado en el destino.</li>
+</ol>
+<p>Las siglas inglesas <strong>ETL</strong> y <strong>ELT</strong> solo cambian <strong>cuándo</strong> haces el paso 2.</p>
 <p><img alt="Esquema ETL" src="../../assets/ut1/etl.png" /></p>
-<p>Las tres letras son las mismas; <strong>cambia el orden</strong> de la T y la L.</p>
 <table>
 <thead>
 <tr>
@@ -1088,7 +1094,7 @@
 <li><strong>conectada</strong> a muchos orígenes (HTTP, fichero, BD, cola).</li>
 </ul>
 <h3 id="las-tres-fases-aunque-el-orden-cambie">Las tres fases (aunque el orden cambie)<a class="headerlink" href="#las-tres-fases-aunque-el-orden-cambie" title="Permanent link">&para;</a></h3>
-<p><strong>Extracción.</strong> Leer el origen <strong>sin tumbarlo</strong>. No haces un <code>SELECT *</code> a la caja en hora punta si puedes leer incrementales (solo lo nuevo), ventanas de tiempo, APIs con cuota o CDC (capturar cambios). La primera carga histórica es un procedimiento <strong>distinto</strong> del día a día.</p>
+<p><strong>Extracción.</strong> Leer el origen <strong>sin tumbarlo</strong>. No vuelques <strong>toda</strong> la caja en hora punta si puedes leer solo lo nuevo, una ventana de tiempo o una API con cuota. La primera carga histórica es un procedimiento <strong>distinto</strong> del día a día.</p>
 <p><strong>Transformación.</strong> Tipos (<code>"10"</code> no es 10), recodificar (<code>M</code>/<code>F</code> frente a <code>1</code>/<code>2</code>), unir, agregar, reglas de calidad (nulos, duplicados). En streaming cada milisegundo de T cuenta: a veces dejas la T pesada para un lote posterior.</p>
 <p><strong>Carga.</strong> Escribir en el destino con el método que <strong>ese</strong> sistema lleva bien:</p>
 <ul>
@@ -1096,7 +1102,7 @@
 <li>ficheros que el destino ingiere,</li>
 <li>cargadores de HDFS o S3.</li>
 </ul>
-<p>Ahí importan los <strong>índices</strong> (¿los desactivas durante la carga masiva?), el <strong>particionado</strong>, el tamaño de transacción y el <code>COMMIT</code>. Una carga que reconstruye todos los índices <strong>en cada fila</strong> es un procedimiento mal determinado: funciona en 100 filas de práctica y muere en 10 millones.</p>
+<p>Ahí importan los <strong>índices</strong> (el “índice del libro”: si lo reconstruyes <strong>en cada fila</strong>, la carga masiva se muere), partir el destino en trozos y confirmar por bloques, no fila a fila. Funciona en 100 filas de práctica y revienta en 10 millones.</p>
 <h2 id="que-preguntar-antes-de-elegir-el-mecanismo">Qué preguntar antes de elegir el mecanismo<a class="headerlink" href="#que-preguntar-antes-de-elegir-el-mecanismo" title="Permanent link">&para;</a></h2>
 <p>Usa esta lista como <strong>guion de práctica o de examen</strong>. No hace falta contestarlo todo; sí las que duelen en <em>tu</em> caso.</p>
 <table>
@@ -1126,7 +1132,7 @@
 <tr>
 <td>Actualizaciones</td>
 <td>¿Cambian columnas? ¿Hace falta histórico de cambios?</td>
-<td>Evolución de esquema; SCD</td>
+<td>Cómo evoluciona el modelo</td>
 </tr>
 <tr>
 <td>Destinos</td>

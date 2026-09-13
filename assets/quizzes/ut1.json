@@ -66,11 +66,11 @@
       "options": [
         "Solo alto rendimiento (más núcleos).",
         "Alta disponibilidad.",
-        "Principio SCV.",
-        "OLTP."
+        "Principio SCV (velocidad, precisión y volumen del análisis).",
+        "Equilibrio de carga (repartir el trabajo entre nodos)."
       ],
       "answer": 1,
-      "explain": "Que el servicio **siga** tras un fallo es **alta disponibilidad**. El rendimiento es acabar antes; SCV es analítica; OLTP es el tipo de carga transaccional."
+      "explain": "Que el servicio **siga** tras un fallo es **alta disponibilidad**. El rendimiento es acabar antes; el SCV habla de análisis; el equilibrio de carga es no saturar un solo nodo."
     },
     {
       "topic": "1.3 Relacional y NoSQL",
@@ -78,13 +78,13 @@
       "prompt": "Hay que registrar transferencias bancarias que no pueden verse a medias. ¿Qué encaja?",
       "code": "",
       "options": [
-        "Un data lake en bruto, schema-on-read.",
-        "Una base BASE (consistencia eventual) por defecto.",
-        "Un SGBD relacional con garantías ACID (OLTP).",
+        "Un lago de datos en bruto: interpretas las columnas al leer.",
+        "Una base que responde aunque algún nodo vaya atrasado (BASE).",
+        "Una base relacional con garantías ACID (todo o nada).",
         "Solo Parquet en S3: es más barato."
       ],
       "answer": 2,
-      "explain": "Una transferencia es **transacción**: o se hace entera o no. Eso pide **ACID**, típico del relacional OLTP. BASE, el lago y Parquet no dan ese aislamiento de negocio."
+      "explain": "Una transferencia es un **paquete**: o se hace entero o no. Eso pide **ACID**, típico del relacional de la caja. BASE, el lago y Parquet no dan esa garantía."
     },
     {
       "topic": "1.3 Warehouse y lake",
@@ -92,18 +92,18 @@
       "prompt": "¿Qué distingue un data warehouse de un data lake?",
       "code": "",
       "options": [
-        "El warehouse guarda bruto; el lake solo tablas normalizadas.",
-        "El warehouse está modelado para BI (schema-on-write); el lake guarda el original (schema-on-read).",
+        "El warehouse guarda bruto; el lake solo tablas limpias.",
+        "El warehouse está modelado para informes (columnas al guardar); el lake guarda el original (columnas al leer).",
         "Son el mismo concepto; cambia solo el proveedor cloud.",
         "El lake no puede guardar JSON ni logs."
       ],
       "answer": 1,
-      "explain": "El **warehouse** espera dato curado y pregunta conocida. El **lake** acepta el formato original y retrasa el esquema. En la práctica conviven."
+      "explain": "El **warehouse** espera dato curado y pregunta conocida. El **lake** acepta el formato original y decide cómo interpretarlo al leer. En la práctica conviven."
     },
     {
       "topic": "1.3 ACID",
       "href": "../almacenamiento/",
-      "prompt": "Una transacción inserta dos filas; la segunda falla y no queda ninguna. ¿Qué propiedad es?",
+      "prompt": "Un paquete de cambios escribe dos filas; la segunda falla y no queda ninguna. ¿Qué propiedad ACID es?",
       "code": "",
       "options": [
         "Durabilidad: el disco no se borra.",
@@ -112,12 +112,12 @@
         "Disponibilidad del teorema CAP."
       ],
       "answer": 2,
-      "explain": "**Atomicidad**: la transacción es indivisible. El aislamiento es que otros no vean el intermedio; la durabilidad es que el `COMMIT` sobreviva a un corte; CAP habla de sistemas distribuidos."
+      "explain": "**Atomicidad**: el paquete es indivisible. El aislamiento es que otros no vean el intermedio; la durabilidad es que lo **confirmado** sobreviva a un corte; CAP habla de sistemas repartidos."
     },
     {
       "topic": "1.3 CAP",
       "href": "../almacenamiento/",
-      "prompt": "En un almacén distribuido hay una partición de red. Según CAP, ¿qué es lo habitual?",
+      "prompt": "En un almacén repartido se corta la red entre nodos. Según CAP, ¿qué es lo habitual?",
       "code": "",
       "options": [
         "Se pueden garantizar C, A y P a la vez si usas SQL.",
@@ -134,13 +134,13 @@
       "prompt": "Un catálogo replicado puede devolver una versión que aún no ha llegado a todos los nodos, y más tarde sí. ¿Qué modelo es?",
       "code": "",
       "options": [
-        "ACID estricto.",
-        "BASE (disponibilidad y consistencia eventual).",
-        "OLTP puro.",
+        "ACID estricto (todo o nada, al momento).",
+        "BASE (responde ya; los nodos se ponen de acuerdo *al rato*).",
+        "Solo el sistema de la caja (operar el día a día).",
         "Principio SCV."
       ],
       "answer": 1,
-      "explain": "**BASE**: básicamente disponible, estado blando, consistencia **eventual**. No lo uses como TPV. SCV es de analítica, no de réplica de lecturas."
+      "explain": "**BASE**: básicamente disponible, estado blando, consistencia **eventual** (al rato todos los nodos coinciden). No lo uses para cobrar. SCV es de análisis, no de réplicas."
     },
     {
       "topic": "1.4 OLTP y OLAP",
@@ -148,13 +148,13 @@
       "prompt": "El cajero pica ventas; dirección pide ventas por región y mes. ¿Qué par es el de la unidad?",
       "code": "",
       "options": [
-        "Las dos cosas en la misma tabla OLTP “para no duplicar”.",
-        "OLTP para la caja; OLAP / warehouse para el análisis (alimentado por ingesta).",
-        "OLAP en el TPV y OLTP en el cuadro de mando.",
-        "Solo streaming: OLTP y OLAP ya no se usan."
+        "Las dos cosas en la misma tabla de la caja, “para no duplicar”.",
+        "OLTP (operar) en la caja; OLAP / warehouse para el análisis, alimentado por ingesta.",
+        "OLAP en la caja y OLTP en el cuadro de mando.",
+        "Solo streaming: operar y analizar ya no se distinguen."
       ],
       "answer": 1,
-      "explain": "**OLTP** = operación del día. **OLAP** = análisis sobre dato ya integrado. Mezclarlos en el mismo motor suele bloquear la caja o eternizar el informe."
+      "explain": "**OLTP** = operación del día (cobrar, reservar). **OLAP** = análisis sobre dato ya copiado. Mezclarlos en el mismo motor suele bloquear la caja o eternizar el informe."
     },
     {
       "topic": "1.4 SCV",
@@ -192,8 +192,8 @@
       "options": [
         "ETL: transformar siempre antes de cargar.",
         "ELT: extraer, cargar y transformar en el destino.",
-        "OLTP.",
-        "ORC."
+        "Operar la caja (OLTP).",
+        "ORC (un formato de fichero)."
       ],
       "answer": 1,
       "explain": "**ELT** cambia el orden: el bruto entra pronto; la T la hace el warehouse, Spark o el analista. ETL limpia *antes* de cargar (Pentaho suele enseñarse así)."
@@ -205,9 +205,9 @@
       "code": "",
       "options": [
         "Un CSV copiado a mano cada viernes.",
-        "Un lote Sqoop mensual desde el ERP.",
+        "Un lote Sqoop mensual desde la facturación.",
         "Un flujo (p. ej. Flume/Kafka + consumidor) pensado para streaming.",
-        "Solo ACID en un Access local."
+        "Una base Access en el portátil, sin más."
       ],
       "answer": 2,
       "explain": "La **latencia** pide stream o near-real-time, no un lote semanal. Sqoop es típico SQL↔Hadoop en batch. El criterio b) es justificar el mecanismo por el ritmo."
@@ -238,7 +238,7 @@
         "JSON monolítico con un array de 10 millones de objetos (se parte solo)."
       ],
       "answer": 1,
-      "explain": "Columnar = lees **solo** las columnas del SELECT. El CSV fila a fila arrastra las 80. Un JSON enorme suele ser **poco partible**."
+      "explain": "Columnar = lees **solo** esas columnas. El CSV fila a fila arrastra las 80. Un JSON enorme suele ser **poco partible**."
     },
     {
       "topic": "1.7 Elegir formato",

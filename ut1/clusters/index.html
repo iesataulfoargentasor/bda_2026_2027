@@ -1180,8 +1180,8 @@
 </tr>
 <tr>
 <td>Típico en</td>
-<td>Un SGBD relacional en un solo servidor</td>
-<td>Hadoop, almacenes distribuidos, muchas NoSQL</td>
+<td>Una base relacional en un solo servidor</td>
+<td>Hadoop, almacenes repartidos, muchas NoSQL</td>
 </tr>
 </tbody>
 </table>
@@ -1201,7 +1201,7 @@
 <p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir. En clase lo pones a prueba con la <a href="../tarea-clase/">tarea de los 500 GB</a>: el portátil no es un clúster.</p>
 <p>También hay coste de <strong>coordinación</strong>: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
-<p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor ACID o un clúster que replica y reparte? Esa decisión condiciona:</p>
+<p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor que no admite ver una operación a medias, o un clúster que copia y reparte? Esa decisión condiciona:</p>
 <ul>
 <li>cómo <strong>ingieres</strong> (un destino o muchos nodos),</li>
 <li>qué <strong>formato</strong> usas (que se pueda trocear),</li>
