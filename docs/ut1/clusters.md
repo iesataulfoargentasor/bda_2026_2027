@@ -79,7 +79,7 @@ El vertical **no te da escalabilidad real** en Big Data: siempre hay un techo (y
 
 Añadir nodos **no** acorta el tiempo de forma lineal si la tarea **no se puede partir**. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tienes más máquinas y el mismo cuello.
 
-Eso se desarrolla en [procesamiento paralelo](procesamiento.md). El clúster brilla cuando hay **independencia** entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir.
+Eso se desarrolla en [procesamiento paralelo](procesamiento.md). El clúster brilla cuando hay **independencia** entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir. En clase lo pones a prueba con la [tarea de los 500 GB](tarea-clase.md): el portátil no es un clúster.
 
 También hay coste de **coordinación**: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.
 

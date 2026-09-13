@@ -14,7 +14,7 @@ Una empresa puede empezar con un servidor y una base de datos relacional. Cuando
 
 Esta unidad cubre el **[RA1](ra1.md)** del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.
 
-Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y una pregunta del estilo “¿qué elegirías y por qué?”. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [autoevaluación](autoevaluacion.md) comprueba eso; no sustituye a Moodle.
+Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y una pregunta del estilo “¿qué elegirías y por qué?”. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil; la [autoevaluación](autoevaluacion.md) comprueba vocabulario. Ninguna sustituye a Moodle.
 
 ## Qué vas a trabajar
 
@@ -28,6 +28,7 @@ Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y u
 | [1.6 Ingesta de datos](ingesta.md) | **b)** | Pipeline, ETL/ELT y cómo elegir el mecanismo |
 | [1.7 Formatos de datos](formatos.md) | **c)** | Texto frente a binario, filas frente a columnas, Avro / Parquet / ORC |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | Procesar con PDI y presentar el resultado al cliente |
+| [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
 | [Autoevaluación](autoevaluacion.md) | — | 20 preguntas de la unidad (no puntúa en Moodle) |
 
 !!! info "Sobre el material original"

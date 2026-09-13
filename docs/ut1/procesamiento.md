@@ -10,6 +10,8 @@ tags:
 
 Almacenar no basta: el criterio **d)** pide **procesar** lo guardado. Aquí decides *cómo* se parte el trabajo y *con qué prisa* debe salir el resultado. Un dato en el lago que nadie transforma no sirve al cliente.
 
+En clase lo aplicas en la [tarea de los 500 GB](tarea-clase.md): concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
+
 ## Paralelo (dentro de una máquina)
 
 El sistema operativo **reparte el tiempo** entre procesos. Si solo hay **un núcleo**, la “multitarea” es **simulada**: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tú tienes la *impresión* de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notas.

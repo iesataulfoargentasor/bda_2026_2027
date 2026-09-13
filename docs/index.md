@@ -36,6 +36,7 @@ Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta
 - [1.6 Ingesta de datos](ut1/ingesta.md)
 - [1.7 Formatos de datos](ut1/formatos.md)
 - [1.8 Pentaho](ut1/pentaho.md)
+- [Tarea para practicar en clase](ut1/tarea-clase.md)
 - [Autoevaluación](ut1/autoevaluacion.md)
 
 ## Cómo navegar
@@ -45,7 +46,7 @@ Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta
 - La **búsqueda** del encabezado localiza un concepto (`Parquet`, `ELT`, `CAP`, `Spoon`…).
 
 !!! tip "Cómo estudiar"
-    Lee el apartado, responde la [autoevaluación](ut1/autoevaluacion.md) y luego practica en Moodle (Pentaho, pipelines). El test no sustituye a las pruebas del aula.
+    Lee el apartado, haz la [tarea de clase](ut1/tarea-clase.md) (500 GB, un portátil), responde la [autoevaluación](ut1/autoevaluacion.md) y luego practica en Moodle. El test no sustituye a las pruebas del aula.
 
 !!! info "Origen del material"
     Estos apuntes parten del temario eXeLearning de la UT1 (licencia [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)) y del PDF de prácticas de Pentaho. Se han reorganizado, actualizado y aclarado para el curso **2026/2027**.

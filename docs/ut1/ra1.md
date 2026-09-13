@@ -37,4 +37,4 @@ Más adelante el módulo abre otros RA (ecosistema Hadoop/Spark, integridad, mon
 !!! note "Cómo se evalúa"
     Los criterios son el referente. En las prácticas se pide **identificar** la herramienta, **escribir** el flujo (Pentaho u otra), **ejecutarlo** y **comprobar** el resultado. Las entregas formales siguen en Moodle.
 
-    Para practicar por tu cuenta: [autoevaluación de la UT1](autoevaluacion.md) (no sustituye a las pruebas del aula).
+    Para practicar por tu cuenta: [autoevaluación de la UT1](autoevaluacion.md) (no sustituye a las pruebas del aula). En clase: [tarea de los 500 GB](tarea-clase.md) (puente hacia el RA2).
