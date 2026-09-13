@@ -88,7 +88,7 @@ La herramienta, en Big Data, tiene que ser **flexible** (CSV, JSON, Parquet, SQL
 
 ## Taller: reservas y cobros (las tres letras en código)
 
-Los CSV de productos de [Pentaho](pentaho.md) se quedan para la 1.8. Aquí generas **dos orígenes** en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/) en blanco), como en [1.7](formatos.md).
+En [Pentaho](pentaho.md) harás el mismo cruce en Spoon, con CSV de reservas y cobros del aula. Aquí generas **dos orígenes** en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/) en blanco), como en [1.7](formatos.md).
 
 - `reservas.csv`: quién reservó, en qué hotel, por qué canal, noches e importe de la estancia.
 - `cobros.csv`: qué reservas **ya** están cobradas y por qué medio. No todas las reservas tienen fila: el *join* a la izquierda deja huecos. Eso es real.
