@@ -1,0 +1,78 @@
+# Dos shards (Trasmiera / Liébana), un config y un mongos (recepción).
+# No es el compose iabd-*: otros nombres, puertos y sets.
+# Uso: docker compose up -d  y luego los mongosh de la página 2.8.
+
+name: hotel-shards
+
+services:
+  recepcion:
+    image: mongo:7
+    hostname: recepcion
+    command:
+      - mongos
+      - --bind_ip_all
+      - --configdb
+      - cfgrs/cfg-santander:27017
+    ports:
+      - "27117:27017"
+    volumes:
+      - ./anadir-shards.js:/scripts/anadir-shards.js:ro
+    depends_on:
+      - cfg-santander
+      - trasmiera-a
+      - liebana-a
+
+  cfg-santander:
+    image: mongo:7
+    hostname: cfg-santander
+    command: ["mongod", "--configsvr", "--replSet", "cfgrs", "--bind_ip_all"]
+    ports:
+      - "27118:27017"
+    volumes:
+      - ./iniciar-cfg.js:/scripts/iniciar-cfg.js:ro
+      - vol_cfg:/data/db
+
+  trasmiera-a:
+    image: mongo:7
+    hostname: trasmiera-a
+    command: ["mongod", "--shardsvr", "--replSet", "trasmiera", "--bind_ip_all"]
+    ports:
+      - "27119:27017"
+    volumes:
+      - ./iniciar-trasmiera.js:/scripts/iniciar-trasmiera.js:ro
+      - vol_tr_a:/data/db
+
+  trasmiera-b:
+    image: mongo:7
+    hostname: trasmiera-b
+    command: ["mongod", "--shardsvr", "--replSet", "trasmiera", "--bind_ip_all"]
+    ports:
+      - "27120:27017"
+    volumes:
+      - vol_tr_b:/data/db
+
+  liebana-a:
+    image: mongo:7
+    hostname: liebana-a
+    command: ["mongod", "--shardsvr", "--replSet", "liebana", "--bind_ip_all"]
+    ports:
+      - "27121:27017"
+    volumes:
+      - ./iniciar-liebana.js:/scripts/iniciar-liebana.js:ro
+      - vol_li_a:/data/db
+
+  liebana-b:
+    image: mongo:7
+    hostname: liebana-b
+    command: ["mongod", "--shardsvr", "--replSet", "liebana", "--bind_ip_all"]
+    ports:
+      - "27122:27017"
+    volumes:
+      - vol_li_b:/data/db
+
+volumes:
+  vol_cfg:
+  vol_tr_a:
+  vol_tr_b:
+  vol_li_a:
+  vol_li_b:

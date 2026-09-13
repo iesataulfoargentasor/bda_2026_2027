@@ -1,0 +1,39 @@
+# Replica set de aula: tres nodos (Laredo, Potes, Noja).
+# No es el compose de otro ciclo: otros nombres, otra red, otro set.
+# Uso: desde esta carpeta → docker compose up -d
+
+name: hotel-rs
+
+services:
+  rs-laredo:
+    image: mongo:7
+    hostname: rs-laredo
+    command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - vol_laredo:/data/db
+      - ./iniciar-rs.js:/scripts/iniciar-rs.js:ro
+
+  rs-potes:
+    image: mongo:7
+    hostname: rs-potes
+    command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
+    ports:
+      - "27018:27017"
+    volumes:
+      - vol_potes:/data/db
+
+  rs-noja:
+    image: mongo:7
+    hostname: rs-noja
+    command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
+    ports:
+      - "27019:27017"
+    volumes:
+      - vol_noja:/data/db
+
+volumes:
+  vol_laredo:
+  vol_potes:
+  vol_noja:
