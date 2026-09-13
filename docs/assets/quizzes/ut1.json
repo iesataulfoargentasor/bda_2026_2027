@@ -201,21 +201,21 @@
     {
       "topic": "1.6 Mecanismo de ingesta",
       "href": "../ingesta/",
-      "prompt": "Los logs de un sitio deben verse en el dashboard en pocos segundos. ¿Qué mecanismo encaja mejor?",
+      "prompt": "El semáforo de habitación libre en recepción debe actualizarse en pocos segundos. ¿Qué mecanismo encaja mejor?",
       "code": "",
       "options": [
         "Un CSV copiado a mano cada viernes.",
         "Un lote Sqoop mensual desde la facturación.",
-        "Un flujo (p. ej. Flume/Kafka + consumidor) pensado para streaming.",
+        "Un flujo (cola + consumidor) pensado para streaming.",
         "Una base Access en el portátil, sin más."
       ],
       "answer": 2,
-      "explain": "La **latencia** pide stream o near-real-time, no un lote semanal. Sqoop es típico SQL↔Hadoop en batch. El criterio b) es justificar el mecanismo por el ritmo."
+      "explain": "La **latencia** del semáforo pide stream, no un lote semanal. Sqoop es típico SQL↔lago en batch. El criterio b) es justificar el mecanismo por el ritmo."
     },
     {
       "topic": "1.6 Herramientas",
       "href": "../ingesta/",
-      "prompt": "Hay que volcar de noche una tabla Oracle grande hacia HDFS. ¿Qué herramienta del temario encaja?",
+      "prompt": "Hay que volcar de noche la tabla PostgreSQL de reservas hacia el lago (HDFS). ¿Qué herramienta del temario encaja?",
       "code": "",
       "options": [
         "Sqoop (estructurado, batch, SQL ↔ Hadoop).",

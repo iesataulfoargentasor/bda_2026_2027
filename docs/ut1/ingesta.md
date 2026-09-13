@@ -8,395 +8,267 @@ tags:
 
 # 1.6. Ingesta de datos
 
-**Ingesta** es incorporar datos de orígenes distintos (estructura, ritmo, calidad) a un almacén o a un proceso. Es el criterio **b)** del RA1: *determinar los procedimientos y mecanismos*.
+El criterio **b)** no pregunta “¿qué logo pones en el diagrama?”. Pregunta **cómo** metes el dato: de dónde sale, quién da el primer paso, a qué ritmo, si lo limpias antes o después de guardarlo, en qué forma lo dejas y **por qué** no el mecanismo de al lado.
 
-Si la ingesta es frágil, el resto de la tubería (ciencia de datos, cuadro de mando) trabaja sobre arena: el modelo será brillante y la cifra, mentira. La productividad del equipo **depende** de que este proceso sea flexible y ágil: cuando funciona, analistas y científicos pueden montar sus propias tuberías hacia la herramienta con la que trabajan.
+Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.
 
-Es el **primer** paso al diseñar una arquitectura Big Data. Hay que tener claros el tipo y la fuente **y** el objetivo de negocio. Sin eso, no hay herramienta que salve el diseño. Unificar muchas fuentes en un solo sitio (hoy, a menudo un **data lake**) es un procedimiento largo, partido en fases.
+## El lunes a las 8, no la herramienta
+
+Dirección de un grupo hotelero quiere, cada mañana a las 8, **ocupación e importe cobrado por hotel**. Recepción sigue picando reservas. Finanzas cierra el día a las 23:00. Hay sensores de ocupación en habitación que publican cada medio minuto.
+
+Antes de abrir Kafka, Pentaho o un script, diseñas **hacia atrás**:
+
+1. ¿Qué tiene que ver gerencia a las 8? (destino / presentación)
+2. ¿Hay que cruzar reservas con cobros, quitar canceladas, recodificar canales? (transformación)
+3. ¿El dato vive en el programa de reservas, en la pasarela de pago, en un FTP o en los sensores? (origen)
+
+Sin esa pregunta de negocio, unificar veinte fuentes en un **lago** es un proyecto largo que no sabes cuándo termina.
 
 ![Fases de un pipeline de datos](../assets/ut1/pipeline.png)
 
-## Empieza por el problema, no por la herramienta
+Un **pipeline** (tubería) es solo eso: fases y tecnologías entre un origen y un destino. En lo mínimo: recoger, guardar, procesar y **dejar algo útil**. No es un producto. No es sinónimo de ETL.
 
-Un **pipeline** (tubería de datos) es una construcción lógica: un proceso partido en fases, con las tecnologías de cada fase. Consume de un origen, limpia o transforma y deja el resultado en un destino. En su forma más simple: recoger, guardar, procesar y **construir algo útil**.
+- Toda **ETL** (extraer → transformar → cargar) es un pipeline.
+- No todo pipeline es una ETL: un sensor que deja un mensaje en una cola y un filtro que tira los duplicados también es tubería.
 
-Se diseña **desde la pregunta de negocio hacia atrás** hasta el origen. Ese análisis es la base para elegir tecnologías.
+El análisis **no** se hace en la recepción. Sumar importes es caro para la máquina; si lo lanzas sobre el programa que cobra, el mostrador espera. Se **copia** el hecho a otro sitio: el oficio de [operar](procesamiento.md) sigue; el de informar trabaja aparte (en los libros, OLTP frente a OLAP). A menudo el primer sitio consolidado es el lago; luego se cura una copia hacia el warehouse del panel. Dos procedimientos, no uno mágico.
 
-Ejemplo: dirección quiere “ocupaciones de hotel por comarca, cada mañana a las 8”.
+La tubería **se itera**. Gerencia pregunta “¿cancelan más los del viernes?”. Si falta el campo, vuelves al origen, ingestes otra vez e integras. No es un acto único el día 1. Por el camino **limpias**: `web` frente a `WEB`, huecos, un número que llega como texto `"10"`. Eso es dejar el dato **listo** (en la jerga, *data wrangling*). No es un software: es el oficio.
 
-1. ¿Qué tabla o gráfico necesitan ver? (destino / presentación)
-2. ¿Qué hay que agregar y limpiar? (transformación)
-3. ¿De qué programa de reservas, Excel o API salen las reservas? (origen)
+## Quién mueve el dato (antes que Sqoop o Kafka)
 
-“Montar Kafka porque está de moda” no es un procedimiento. Kafka *puede* ser el mecanismo **si** el ritmo y el desacoplo lo piden.
+Tres planteamientos. No son tres productos.
 
-### Un recorrido típico (con una cola en medio)
+| | **Push** | **Pull** | **Poll** |
+| --- | --- | --- | --- |
+| Quién inicia | El **origen** empuja | El **destino** va a buscar | El destino **mira** de vez en cuando; si hay cambio, tira |
+| En el hotel | Cada alta se publica en un canal | A las 02:00 lees la tabla de ocupaciones | Cada 15 min listas el FTP; solo bajas si cambió la fecha |
+| Encaja | Evento, sensor, *webhook* | Lote nocturno, conector SQL | Carpetas, buzones, APIs mudas |
+| Riesgo | Te inundan o el origen no sabe adónde empujar | Tiras en hora punta y tumbas la recepción | Preguntas poco = te enteras tarde; preguntas mucho = molestas |
 
-Los datos no siempre van “origen → informe” en un solo salto. Un ejemplo que verás en arquitectura:
+No hay uno “más Big Data”. El *push* encaja con el flujo continuo; *pull* y *poll*, con el lote. En la misma empresa conviven.
 
-1. **Ingesta.** Recoges eventos y los dejas en un *topic* de **Kafka** (un canal con nombre: `reservas`, `logs-web`…).
-2. **Almacenamiento temporal.** Kafka hace de **sala de espera** (*buffer*): el productor ya soltó el mensaje; el que procesa aún no tiene que estar listo.
-3. **Procesamiento.** Un job (lote o continuo) lee esa sala de espera, calcula, filtra, agrupa.
-4. **Análisis y visualización.** Spark (u otra herramienta) deja el resultado en un panel, en MongoDB / DynamoDB o en S3.
+## Tres relojes
 
-Un pipeline sencillo a veces solo filtra un poco y escribe en la cola. Otro, más tarde, hace los cruces pesados para el informe. No tienes que meter **toda** la lógica en el primer salto.
+| | **Lote** | **Micro-lote** | **Continuo** |
+| --- | --- | --- | --- |
+| Cuándo | Cada X horas o al llegar un fichero | Cada pocos minutos, un bloque chico | En cuanto aparece el dato |
+| Retraso | Horas; a menudo da igual | Compromiso | Segundos o menos |
+| Encaja | Cierre de finanzas, volcado SQL → lago | Panel “casi en vivo” | Sensor, clic, log |
+| Familia típica | Job nocturno, Pentaho, script, puente SQL | Spark a trozos | Cola + consumidor |
 
-### Por qué no se analiza en el mismo sitio donde se crea el dato
+**Síncrono:** esperas a que el destino confirme. **Asíncrono:** sueltas el mensaje y sigues. Las colas son lo segundo.
 
-El análisis (resúmenes, cruces, modelos) es **caro** para la máquina. Si lo haces sobre la caja o el programa de reservas, el cajero espera. Por eso se **copia** el dato a otro sitio: el sistema del día a día sigue cobrando; el de informes trabaja aparte. Eso es lo de [operar frente a analizar](procesamiento.md) (en los libros, OLTP frente a OLAP).
+Si el sensor de habitación no puede esperar al informe de las 8, hace falta **mensajería** (Kafka, RabbitMQ, Kinesis…): un **productor** deja el evento; un **consumidor** lo recoge; si el consumidor va lento, la cola **aguanta** el chaparrón (*contrapresión*). En muchas colas clásicas, al recoger el mensaje **desaparece**. Un bus repartido no es “una carpeta”: el orden entre varios canales no está garantizado y hay que contar con nodos que fallan.
 
-En muchas empresas el primer destino consolidado es un **data lake**; luego se curan copias hacia el warehouse que alimenta el panel. Dos saltos, dos procedimientos, no uno solo “mágico”.
+!!! tip "En voz alta"
+    “Desacoplar al que pica la reserva del que pinta el panel” → familia **mensajería**, no un volcado nocturno.
 
-### Pipeline no es lo mismo que ETL
+## Extraer, transformar, cargar (el orden cambia el oficio)
 
-Se usan como sinónimos y **no lo son**.
+Tres verbos, siempre. Las siglas **ETL** y **ELT** solo cambian **cuándo** haces el 2.
 
-- Un **pipeline** es *cualquier* movimiento o procesamiento de datos entre sistemas (incluida una cola, un filtro ligero, un lote nocturno).
-- Un **ETL** es un **caso particular**: extraer, transformar y cargar. Toda ETL es un pipeline; no todo pipeline es una ETL.
-
-### Data wrangling (el dato “en disputa”)
-
-Conforme el dato avanza por la tubería, casi siempre hay que **limpiarlo**: otra fuente usa `M`/`F` en vez de `1`/`2`, hay huecos, hay duplicados, un campo llega como texto `"10"`. A veces rellenas un vacío con un cero o con un valor que *sí* aporta (la media del grupo, un “desconocido”). Ese trabajo de pasar del crudo al dato que ya se puede usar se llama **data wrangling** (manipulación o “disputa” de datos). No es un producto: es el oficio de dejar el dato **listo**.
-
-### El pipeline es iterativo
-
-Negocio lanza una hipótesis (“¿cancelan más los que reservan el viernes?”). Miras lo que hay. Si falta un campo, **vuelves a ingerir** (otra fuente o el mismo origen con más columnas), lo integras con lo anterior y analizas otra vez. Si el número no convence, se itera. La ingesta no es un acto único el día 1.
-
-## Extraer, transformar y cargar: el orden cambia el oficio
-
-Tres verbos, siempre los mismos:
-
-1. **Extraer:** leer el origen (una tabla, un CSV, una API).
-2. **Transformar:** limpiar, unir, recodificar, agregar.
-3. **Cargar:** escribir el resultado en el destino.
-
-Las siglas inglesas **ETL** y **ELT** solo cambian **cuándo** haces el paso 2. Llevar el dato de A a B se puede hacer con un script, con Python o con una suite; en **Big Data** hace falta que la herramienta sea:
-
-- **flexible** (CSV, JSON, Parquet, SQL, Excel, una petición HTTP…),
-- **escalable y tolerante a fallos** (si cae a la mitad, no dejes el destino a medias sin saberlo),
-- **conectada** a muchos orígenes y destinos.
-
-Además conviene que deje **rastro** (qué se ejecutó, qué falló) y que puedas **planificarla**: cada noche, al llegar un fichero, o en continuo.
+1. **Extraer.** Leer el origen (tabla, CSV, API) y llevarlo a una zona de trabajo. Tiene que ser **ligera**: que recepción casi no se entere. **No** se cambia el dato operativo. Si colapsa el programa de reservas, la empresa pierde dinero *cobrando*. La carga histórica (tres años atrás) es **otro** procedimiento que el incremental del martes. Si el lote no trae las columnas esperadas, se **aparta**: no se cuela para que el job “acabe en verde”.
+2. **Transformar.** Dejar formato y contenido que el destino entiende: tildes, duplicados, cruzar reservas con cobros, agregar por hotel, inventar un identificador estable, calcular ocupación %. **Mejora** calidad. **No** inventa hechos ni borra lo que el informe necesita. En continuo, la T pesada a veces espera al lote; si transformas al vuelo, pregunta si pierdes el original.
+3. **Cargar.** Escribir **adaptándote** al destino: *bulk* SQL, carpeta que el warehouse lee, API de S3/HDFS. Reconstruir el **índice** fila a fila mata una carga de diez millones. Parte por fecha o por hotel. Confirma por **bloques**, no por fila. Cien filas de práctica mienten.
 
 ![Esquema ETL](../assets/ut1/etl.png)
 
 | | **ETL** | **ELT** |
 | --- | --- | --- |
 | Orden | Extraer → **transformar** → cargar | Extraer → **cargar** → transformar |
-| Dónde se transforma | Motor intermedio (Pentaho, Talend, un script…) | En el destino (SQL del warehouse, Spark o DuckDB sobre el lago) |
-| Cuándo brilla | El destino es rígido y no debe tragar basura | Destinos elásticos y **varios** consumidores del mismo bruto |
-| Tiempo hasta “ver el crudo” | Más tarde (esperas a la T) | Antes (el bruto ya está) |
-| Quién “duele” si cambia la pregunta | Hay que retocar el flujo de T **antes** de recargar | A menudo basta una consulta nueva sobre lo ya cargado |
-| Oficio | Más trabajo del ingeniero de datos *antes* | El analista o científico puede transformar con SQL o Python |
+| Dónde la T | Motor de en medio (Pentaho, Talend, un script) | El destino (SQL del warehouse, Spark o DuckDB sobre el lago) |
+| Cuándo | El destino es rígido y no debe tragar basura | Destino elástico y **varios** consumidores del mismo bruto |
+| Ver el crudo | Más tarde | Antes |
+| Si gerencia cambia la pregunta | Retocas la T **antes** de recargar | A menudo una consulta nueva sobre lo ya cargado |
 
-Unificar orígenes distintos **gasta** una parte enorme del proyecto. No es “un script de una tarde” cuando hay veinte fuentes y diez años de histórico. La calidad y la veracidad hay que **cuidarlas aquí**: si cuelas basura, el error se multiplica en el informe.
+Unificar veinte fuentes **gasta** el proyecto. La veracidad se cuida **aquí**. El mercado cloud empuja **ELT** (el almacén es potente; el lago se llena pronto). **ETL sigue** cuando el destino no admite basura o cuando en aula usas [Pentaho](pentaho.md) (PDI se enseña como ETL visual). Lo habitual en empresas es **híbrido**: la suite + pandas / PySpark / DuckDB + un orquestador (**Airflow**) que dispara pasos y avisa si uno falla. No montas Airflow en esta UT; sí sabes para qué existe.
 
-El mercado ha girado hacia **ELT** en cloud (el almacén es potente; el lago se llena antes; más departamentos tocan la T). **ETL sigue** cuando el destino no puede tragarse basura, no hay motor detrás o trabajas en aula con [Pentaho](pentaho.md): PDI se enseña como **ETL visual**.
+La herramienta, en Big Data, tiene que ser **flexible** (CSV, JSON, Parquet, SQL, HTTP), **tolerante a fallos** (si cae a mitad, no dejes el destino a medias sin saberlo) y **conectada** a muchos orígenes. Conviene **rastro** (qué corrió, qué falló) y **planificación** (noche, al llegar un fichero, o continuo).
 
-Hoy es habitual un **híbrido**: la suite (Pentaho, Talend…) más scripts Python (pandas, PySpark, DuckDB) y un orquestador (**Airflow**) que dispara los pasos en orden y avisa si uno falla. No tienes que montar Airflow en esta UT; sí saber *para qué existe*.
+## Taller: reservas y cobros (las tres letras en código)
 
-### Tres formas de acercar el dato: push, pull y poll
+Los CSV de productos de [Pentaho](pentaho.md) se quedan para la 1.8. Aquí generas **dos orígenes** en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/) en blanco), como en [1.7](formatos.md).
 
-Antes de elegir Sqoop o Kafka, decide **quién da el primer paso**. Son tres planteamientos, no tres productos.
+- `reservas.csv`: quién reservó, en qué hotel, por qué canal, noches e importe de la estancia.
+- `cobros.csv`: qué reservas **ya** están cobradas y por qué medio. No todas las reservas tienen fila: el *join* a la izquierda deja huecos. Eso es real.
 
-| | **Push** (empujar) | **Pull** (tirar) | **Poll** (preguntar) |
-| --- | --- | --- | --- |
-| Quién inicia | El **origen** envía al destino | El **destino** va a buscar al origen | El destino **mira de vez en cuando** si hay cambios; si los hay, hace un *pull* |
-| Analogía | El hotel te manda un WhatsApp “hay una reserva nueva” | Tú abres el programa de reservas y te copias la tabla | Cada 10 minutos miras la carpeta compartida; si hay un CSV nuevo, te lo llevas |
-| Encaja | Eventos, webhooks, sensores, “en cuanto ocurra” | Lote nocturno, Sqoop, Pentaho leyendo Oracle | Carpetas, buzones, APIs que no avisan solas |
-| Cuidado | El origen tiene que saber *adónde* empujar y no inundarte | Si tiras en hora punta, tumas el origen | Si preguntas poco, te enteras tarde; si preguntas mucho, molestas |
+Objetivo: reservas del canal `web` **con cobro**, y una etiqueta `hotel (web)`.
 
-!!! example "Mismo hotel, tres diseños"
-    - **Push:** el programa de reservas publica cada alta en un *topic* Kafka.  
-    - **Pull:** a las 02:00 Pentaho lee la tabla de ocupaciones.  
-    - **Poll:** cada cuarto de hora un script lista el FTP; solo descarga si el fichero cambió de fecha.
-
-No hay uno “más Big Data”. El *push* encaja con el stream; el *pull* y el *poll*, con el lote. Mezclarlos en la misma empresa es lo normal.
-
-### Extracción
-
-Recopila los datos del sistema original y los lleva a un sitio de trabajo (a menudo un almacén de informes o una zona temporal). Las fuentes van de un CSV a una base relacional, pasando por un mensaje de red social o un sensor.
-
-Dos exigencias, en castellano:
-
-1. **Rápida y ligera.** Que el origen casi no se entere. Transparente para quien opera e independiente de “en qué máquina está”.
-2. **Que no tumbe el origen.** No se puede poner en riesgo la caja ni **cambiar** sus datos. Si colapsa el programa de reservas, la empresa pierde dinero *operando*, no “analizando”.
-
-Por eso no vuelcas **toda** la caja en hora punta si puedes leer solo lo nuevo, una ventana de tiempo o una API con cuota. La primera carga histórica es un procedimiento **distinto** del día a día.
-
-En la extracción también **miras** si el dato es el que esperabas (columnas, tipos, que no venga vacío). Si no, se **rechaza** o se aparta: no lo cuelas “para que el job acabe”.
-
-Al salir de esta fase, el dato ya está en un formato con el que se puede empezar a transformar.
-
-### Transformación
-
-Cambios para que el dato tenga el **formato y el contenido** que el destino espera. Ejemplos de aula:
-
-- Cambiar la codificación (tildes que se rompen).
-- Quitar duplicados.
-- Cruzar dos fuentes (reservas + pagos, productos + fabricantes) para obtener una tercera.
-- Agregar (ventas por día, no cada ticket).
-- Quedarte solo con parte de las columnas.
-- Fabricar un código o un identificador estable.
-- Ordenar mejor la información.
-- Calcular un indicador que el informe ya pide (ocupación %, ticket medio).
-
-Debe **mejorar** calidad, integrar y quitar ambigüedad. **No** debe inventar hechos, duplicar a ciegas, borrar lo relevante ni ser impredecible.
-
-En streaming cada milisegundo de T cuenta: a veces dejas la transformación pesada para un lote posterior. Si transformas *al vuelo*, pregúntate si pierdes el original.
-
-### Carga
-
-Escribe en el destino y **se adapta a él**. Minimiza el tiempo que el destino está “ocupado” escribiendo.
-
-Cada sistema tiene su forma cómoda de recibir datos:
-
-- instrucciones SQL o carga masiva (*bulk*) — PostgreSQL, SQL Server, Redshift…;
-- ficheros que el destino lee de una carpeta;
-- cargadores propios — HDFS, S3.
-
-Ahí importan los **índices** (el “índice del libro”: si lo reconstruyes **en cada fila**, la carga masiva se muere), las **claves de distribución y el particionado** (por fecha, por tienda: el clúster sabe en qué trozo buscar) y confirmar por **bloques**, no fila a fila. Funciona en 100 filas de práctica y revienta en 10 millones.
-
-## Hola ETL: el mismo oficio en Python
-
-En [Pentaho](pentaho.md) harás esto en Spoon. Aquí ves las **tres letras** en código, con los CSV de productos y fabricantes de las prácticas.
-
-Los productos vienen separados por **coma** y traen `ManufacturerID`. Los fabricantes vienen separados por **punto y coma**. El cruce es ese identificador. Objetivo: un JSON con los productos de categoría `Mix` y una columna nueva `ProductAndManufacturer` (`Abbas MA-01 (Abbas)`).
-
-**Extracción** = leer los dos ficheros. **Transformación** = filtrar `Mix`, unir (*join*: “pon al lado el nombre del fabricante”) y crear la columna. **Carga** = escribir el JSON.
-
-### Con pandas
+**E** = leer los dos ficheros. **T** = filtrar, cruzar (`id_reserva`) y crear la etiqueta. **L** = escribir un JSON para verlo en clase.
 
 ```python
+import numpy as np
 import pandas as pd
 
-# E
-df_products = pd.read_csv("pdi_product.csv")
-df_manufacturers = pd.read_csv("pdi_manufacturer.csv", sep=";")
-
-# T
-df_mix = df_products[df_products["Category"] == "Mix"]
-df_joined = df_mix.merge(df_manufacturers, on="ManufacturerID", how="left")
-df_joined["ProductAndManufacturer"] = (
-    df_joined["Product"] + " (" + df_joined["Manufacturer"] + ")"
-)
-
-# L
-df_joined.to_json("pdi_product_mix.json", orient="records", force_ascii=False)
+rng = np.random.default_rng(2026)
+n = 8_000
+hoteles = ["Santander", "Laredo", "Comillas", "Potes"]
+reservas = pd.DataFrame({
+    "id_reserva": np.arange(n, dtype="int32"),
+    "hotel": rng.choice(hoteles, n),
+    "canal": rng.choice(["web", "ota", "recepcion"], n),
+    "noches": rng.integers(1, 8, n, dtype="int32"),
+    "importe": rng.uniform(48, 420, n).round(2),
+})
+# ~70 % de las reservas tienen cobro
+mask = rng.random(n) < 0.7
+cobros = pd.DataFrame({
+    "id_reserva": reservas.loc[mask, "id_reserva"].to_numpy(),
+    "medio": rng.choice(["tarjeta", "efectivo", "bizum"], mask.sum()),
+    "cobrado": reservas.loc[mask, "importe"].to_numpy(),
+})
+reservas.to_csv("reservas.csv", index=False)
+cobros.to_csv("cobros.csv", index=False)
 ```
 
-`how="left"` = “me quedo con todos los productos Mix; si un fabricante no aparece, el nombre queda vacío”. No inventes un fabricante.
+### pandas
 
-### Con DuckDB
+```python
+# E
+df_r = pd.read_csv("reservas.csv")
+df_c = pd.read_csv("cobros.csv")
 
-[DuckDB](formatos.md) es un motor SQL **dentro** de tu programa. Puedes tratar un CSV como si fuera una tabla, sin cargarlo antes en una base “de verdad”:
+# T
+web = df_r[df_r["canal"] == "web"]
+cruce = web.merge(df_c, on="id_reserva", how="inner")
+cruce["etiqueta"] = cruce["hotel"] + " (web)"
+
+# L
+cruce.to_json("web_cobrado.json", orient="records", force_ascii=False)
+```
+
+`how="inner"` = “solo las que **sí** tienen cobro”. Un `left` dejaría reservas web sin `medio`: útil para ver impagados; no es el objetivo de este taller.
+
+### DuckDB
+
+[DuckDB](formatos.md) trata el CSV como tabla. Mismas tres letras, idioma SQL.
 
 ```python
 import duckdb
 
 duckdb.sql("""
-CREATE OR REPLACE VIEW productos AS
-SELECT * FROM read_csv('pdi_product.csv', header=true);
-""")
-duckdb.sql("""
-CREATE OR REPLACE VIEW fabricantes AS
-SELECT * FROM read_csv('pdi_manufacturer.csv', header=true, delim=';');
-""")
-
-duckdb.sql("""
 COPY (
     SELECT
-        p.ProductID,
-        p.Product,
-        p.Category,
-        f.Manufacturer,
-        p.Product || ' (' || f.Manufacturer || ')' AS ProductAndManufacturer
-    FROM productos p
-    LEFT JOIN fabricantes f
-        ON p.ManufacturerID = f.ManufacturerID
-    WHERE p.Category = 'Mix'
-) TO 'pdi_product_mix_ddb.json' (FORMAT JSON)
+        r.id_reserva,
+        r.hotel,
+        r.importe,
+        c.medio,
+        r.hotel || ' (web)' AS etiqueta
+    FROM read_csv('reservas.csv', header=true) AS r
+    INNER JOIN read_csv('cobros.csv', header=true) AS c
+        USING (id_reserva)
+    WHERE r.canal = 'web'
+) TO 'web_cobrado_ddb.json' (FORMAT JSON)
 """)
 ```
 
-Mismas tres letras, otro idioma (SQL). En clase compara **tamaño del código**, **tiempo** y si el JSON te sale legible. Luego haz el mismo flujo en Pentaho y verás que el oficio no cambia: cambia la herramienta.
+Compara en clase **líneas de código**, **tiempo** y si el JSON se abre. En 1.8 verás el **mismo oficio** en Spoon: cambia la herramienta, no las letras.
 
-## El formato también se decide en la ingesta
+## La L también es una decisión de formato
 
-La **L** de ETL no es “escribir un fichero”. Es escribirlo en un formato que el **siguiente** paso pueda partir, comprimir y consultar sin arruinarte. Conforme el dato viaja por la tubería, hay que **serializarlo** (pasarlo a bytes) y a menudo **convertirlo**. Cada conversión gasta CPU y puede **perder tipos**: no cambies de formato en cada capa “porque sí”.
+Escribir “un fichero” no basta. El siguiente paso tiene que **partir**, comprimir y consultar sin arruinarte. Serializar (memoria → bytes) y convertir gasta CPU y puede **perder tipos**. No cambies de formato en cada capa por capricho. El catálogo está en [1.7](formatos.md); aquí eliges **el de la carga**.
 
-El detalle de cada formato está en [1.7](formatos.md). Aquí, lo que pide el criterio **b)** es **elegir el de la carga** y saber decir por qué.
+El fichero tiene que ser **partible**. Un JSON con un array de diez millones de objetos entre `[` y `]` no se trocea. Una reserva por línea (JSONL), Avro o Parquet, sí.
 
-### Qué le pides al fichero que dejas
-
-Para que Hadoop, Spark o Athena puedan repartir el trabajo, el fichero tiene que ser **partible** (*splittable*): cortarlo en trozos. Un JSON con diez millones de objetos dentro de un único `[` `]` **no** se parte bien. Un objeto por línea (JSONL), un Avro o un Parquet, sí.
-
-También quieres que sea **independiente del lenguaje** (lo escribe Java, lo lee Python), **expresivo** (nulos y anidados de verdad), **compacto** y, si el origen cambia columnas, que el esquema pueda **evolucionar** sin reescribir el histórico.
-
-| Si la carga es… | Formato razonable | Por qué en la ingesta |
+| Destino de esta carga | Formato | Por qué |
 | --- | --- | --- |
-| Un extracto para un compañero o una API | CSV / JSON | Se abre y se depura |
-| Un *topic* de Kafka, el esquema va a cambiar | **Avro** | Filas + esquema en el mensaje; típico en *push* |
-| El lago / S3 para Spark o Athena (informes) | **Parquet** | Columnas: lees 3 de 80; pagas por lo *escaneado* |
-| Un paso intermedio entre dos scripts del mismo pipeline | **Feather** | Muy rápido de leer/escribir; no es archivo de años |
-| Tablas Hive | **ORC** (o Parquet si el equipo es Spark) | Encaje con Hive |
-| La caja o las reservas | **No** Parquet/ORC como almacén de operación | Actualizar una fila es carísimo |
+| Que lo abra un compañero | CSV / JSON | Se depura |
+| Cola; el mes que viene añaden un campo | **Avro** | Fila + esquema; típico en *push* |
+| Lago / Spark / Athena (el informe de las 8) | **Parquet** | Lee hotel e importe, no las doce columnas |
+| El script de al lado, ahora | **Feather** | Rápido; no es archivo de años |
+| Tablas Hive | **ORC** (o Parquet si el equipo es Spark) | Encaje |
+| El programa de recepción | Ni Parquet ni ORC como almacén | Actualizar una fila es caro |
 
-!!! example "1 TB mal ingerido"
-    1 TB en CSV plano puede quedar en ~**130 GB** en Parquet. En Athena, del orden de **5 $ por TB leído**. Si dejas el bruto en CSV “porque es más simple”, el informe del lunes **escanea y factura** el texto entero. Elegir Parquet **en la carga** no es capricho: es el procedimiento.
+En servicios que cobran por **dato escaneado**, dejar el bruto en CSV “porque es simple” se paga **cada lunes**. Un orden de magnitud habitual: el texto plano queda en una fracción en columnar comprimido. La cifra exacta cambia; el procedimiento no.
 
-### Misma T, otra L (sigue el Hola ETL)
-
-El JSON del ejemplo vale para **ver** el resultado en clase. Si esos productos Mix fueran 50 GB y el destino un lago, la carga cambiaría así:
+El JSON del taller vale para **ver**. Si el cruce pesara 50 GB y el destino fuera el lago:
 
 ```python
-# misma transformación; cambia solo la carga
-df_joined.to_parquet("pdi_product_mix.parquet")
+cruce.to_parquet("web_cobrado.parquet")
 ```
 
-O, si el siguiente script del pipeline tiene que recoger el resultado **ahora**:
+Si el siguiente script lo necesita ya:
 
 ```python
 import pyarrow.feather as feather
 
-feather.write_feather(df_joined, "pdi_product_mix.feather")
+feather.write_feather(cruce, "web_cobrado.feather")
 ```
 
-O, si el destino es una cola y el esquema puede ganar un campo el mes que viene, la carga sería **Avro** (el esquema viaja con el dato; el código está en [1.7](formatos.md)).
-
-Un job de ingesta muy habitual: llega **JSONL** (un objeto por línea) y lo **dejas en Parquet** para el análisis. No hace falta pasar por pandas:
+Job típico de ingesta: llega JSONL y lo dejas en Parquet, sin pasar por pandas:
 
 ```python
 import pyarrow.parquet as pq
 from pyarrow import json as pajson
 
-tabla = pajson.read_json("reservas.jsonl")  # una reserva por línea
-pq.write_table(tabla, "reservas.parquet")
+pq.write_table(pajson.read_json("reservas.jsonl"), "reservas.parquet")
 ```
 
-Comprimir en la carga (Snappy, gzip, zstd) ocupa menos disco y viaja menos por la red; a cambio, **cuesta CPU**. En Big Data suele ganar el algoritmo **rápido** (Snappy, zstd), no el que más aprieta. El catálogo está en [1.7](formatos.md).
+Comprimir (Snappy, gzip, zstd) ocupa menos y viaja menos; cuesta CPU. En volumen suele ganar el códec **rápido**.
 
-!!! tip "Tres preguntas al cerrar un procedimiento de ingesta"
-    1. ¿El destino va a **escribir** muchos registros o a **leer** pocas columnas?  
-    2. ¿El clúster puede **partir** ese fichero?  
-    3. ¿Mañana cambia el esquema? → Avro. ¿Mañana solo suman una columna? → Parquet.
+!!! tip "Antes de dar el procedimiento por cerrado"
+    ¿El destino **escribe** muchos registros o **lee** tres columnas? ¿Se puede **partir** el fichero? ¿Mañana cambia el esquema (Avro) o solo suman un campo (Parquet)?
 
-## Lotes, micro-lotes o continuo
+## De dónde sale y adónde entra
 
-El movimiento entre origen y destino no es siempre el mismo reloj:
+La ingesta es la **primera** capa de la [arquitectura](arquitectura.md). Suele ser la más pesada: muchas fuentes, ritmos distintos. El día 1 **priorizas** (no todas importan), **validas** cada lote aparte y **enrutas**.
 
-| | **Por lotes** (*batch*) | **Micro-lotes** | **En continuo** (*streaming*) |
-| --- | --- | --- | --- |
-| Cuándo corre | Cada X horas o al llegar un fichero | Cada pocos minutos, un bloque pequeño | En cuanto el dato aparece |
-| Latencia | Horas; a menudo no importa | Compromiso | Crítica (segundos o menos) |
-| Dato | Un bloque que **ya está** | Varios bloques chicos | Un flujo que no para |
-| Encaja | Cierre nocturno, volcado SQL → HDFS | Paneles “casi en vivo” | Logs, sensores, clics |
-| Herramientas típicas | Sqoop, un job Spark, Pentaho de noche, un script Python | Spark (micro-batch) | Kafka, NiFi, Flume, Storm, Spark Structured Streaming |
+Orígenes habituales: una cola que ya recogió IoT; una tabla SQL (enchufe JDBC); una API JSON; una carpeta en HDFS o S3.  
+Destinos habituales: otra cola; SQL o NoSQL; el lago; una plataforma (Snowflake, Databricks…).
 
-La ingesta puede ser **síncrona** (esperas a que el destino confirme) o **asíncrona** (sueltas el mensaje y sigues). Las colas son el caso típico de lo segundo.
+Cuatro preguntas que recuerdan a las [5 V](por-que-big-data.md), aplicadas al *cómo entra*:
 
-## Colas: productor, consumidor y contrapresión
-
-Los sistemas de mensajería (Kafka, RabbitMQ, Kinesis…) **desacoplan** a quien envía de quien recibe. Los verás a fondo más adelante; aquí basta el mecanismo.
-
-- Un **productor** deja un mensaje en una cola o en un bus.
-- Un **consumidor** lo recoge. En muchas colas clásicas, al recogerlo el mensaje **desaparece**.
-- Si el consumidor va lento, la cola **aguanta** el chaparrón: eso es **contrapresión** (*back pressure*). Sin cola, el origen te tumba o tiras eventos.
-
-Kafka (y similares) es **distribuido**: el orden no siempre se respeta entre *varios* canales, hay que pensar en nodos que fallan y en crecer añadiendo máquinas. No es “una carpeta con ficheros”.
-
-!!! tip "Para el examen"
-    Si te piden “desacoplar productor y consumidor” o “que el sensor no espere al informe”, la familia es **mensajería**, no Sqoop.
-
-## La ingesta por dentro
-
-En la práctica extraes de donde el dato **nació** (o ya está guardado) y cargas en un destino o en una **zona temporal**.
-
-**De dónde suele salir**
-
-- una cola (Kafka) que a su vez ya recogió IoT o redes sociales;
-- una base relacional (a menudo por un conector tipo JDBC: un “enchufe” estándar a SQL);
-- un servicio web que responde JSON (REST);
-- un almacén de ficheros (HDFS, S3).
-
-**Adónde suele ir**
-
-- otra cola;
-- otra base relacional o una NoSQL;
-- HDFS / S3;
-- una plataforma (Snowflake, Databricks…).
-
-En la [arquitectura por capas](arquitectura.md) la ingesta es la **primera**. El primer paso suele ser el más pesado: decenas o cientos de fuentes, velocidades distintas, formatos distintos. Hay que:
-
-1. **Priorizar** fuentes (no todas importan el día 1).
-2. **Validar** cada fichero o lote por separado.
-3. **Enrutar** cada pieza a su destino.
-
-Cuatro parámetros en los que centrar el esfuerzo (suenan a las [5 V](por-que-big-data.md), aplicados al *cómo entra*):
-
-| Parámetro | Pregunta |
+| Pregunta | En el hotel |
 | --- | --- |
-| Velocidad | ¿Continuo o a trompicones? ¿Síncrono o asíncrono? ¿Máquinas, personas, redes sociales? |
-| Tamaño | ¿Cuántos GB/día? ¿Crecerá al añadir fuentes? |
-| Frecuencia | ¿Lote, micro-lote o streaming? |
-| Formato | ¿Tabla / Parquet, JSON, imagen, audio? |
+| ¿A qué ritmo llega? | Sensor cada 30 s frente a cierre a las 23:00 |
+| ¿Cuántos GB/día, y si abrís otro hotel? | Tamaño y crecimiento |
+| ¿Lote, trozo o continuo? | Finanzas frente a recepción |
+| ¿Tabla, JSON, imagen del DNI? | Formato (el DNI, a menudo, **no** se ingiere) |
 
-## Qué preguntar antes de elegir el mecanismo
+## Cómo elegir el mecanismo (guion de aula)
 
-Usa esta lista como **guion de práctica o de examen**. No hace falta contestarlo todo; sí las que duelen en *tu* caso. Si te dan un supuesto (por ejemplo, medir reacciones en redes a un producto nuevo), elige **al menos tres preguntas de cada bloque**.
+No rellenes un cuestionario de treinta ítems. En un supuesto, clava **estas** decisiones y justifícalas.
 
-| Tema | Preguntas | Por qué importa |
+1. **Origen.** ¿Tabla, API, carpeta, sensor? ¿Hay que **cruzar** dos sistemas (reservas + cobros) para tener la foto?
+2. **Quién inicia.** Push, pull o poll.
+3. **Reloj.** ¿El dato que llega tarde sigue valiendo? El cierre de ayer sí; el semáforo de habitación libre, no.
+4. **ETL o ELT.** ¿El destino traga bruto? ¿Pierdes el original si transformas al vuelo?
+5. **Destino y [formato](formatos.md).** ¿S3 “tonto” o warehouse con SQL? ¿Uno o varios destinos? ¿Avro o Parquet? ¿Partir por hotel?
+6. **Calidad.** ¿Apartas el lote roto? ¿Linaje (de dónde salió esta cifra)?
+7. **Personas.** ¿El DNI se enmascara o **no entra**? ¿Quién ve el campo, y en qué estado?
+
+## Familias, no un catálogo para memorizar
+
+Citas la **familia**. El nombre concreto cambia de año.
+
+| Necesidad | Familia | Ejemplos que verás escritos |
 | --- | --- | --- |
-| Origen y formato | ¿API, IoT, SQL, fichero? ¿Interno o externo? ¿Estructurado? ¿Eventos/s o GB/h? ¿Carga histórica? ¿Fuentes nuevas? ¿Hay que **cruzar** dos sistemas para tener la foto completa? | El conector y el *join* no son el mismo |
-| Cómo se acerca el dato | ¿Push, pull o poll? | Quién inicia y quién puede tumbarse |
-| Latencia | ¿Lote a las 02:00 o segundos? Si llega **tarde**, ¿hasta cuándo sigue siendo válido? | Kafka no es “mejor”; es *otra* necesidad |
-| Actualizaciones | ¿El origen cambia? ¿Cómo te **avisan** de una columna nueva? ¿Histórico? ¿Reutilizas o vuelves a ingerir la misma versión? ¿Pisas (`UPDATE`) o borras y insertas? | Cómo evoluciona el modelo |
-| Transformaciones | ¿Durante la ingesta o después? ¿Añaden espera al origen? ¿Pierdes el original? ¿En stream hay que transformar al vuelo? | ETL frente a ELT |
-| Destino | ¿Aguanta la velocidad de lectura/escritura? ¿Almacén “tonto” (S3) o con consultas (Snowflake, Databricks)? ¿Uno o varios destinos? ¿Avro o Parquet? ¿Particionar? ¿Búsquedas al azar? ¿Hive / Spark? | Ver [formatos](formatos.md) |
-| Calidad y gobierno | ¿Fallos al leer? ¿Anómalos, duplicados? ¿Metadatos, linaje, evolución del esquema? | Veracidad (5 V) |
-| Seguridad | ¿Enmascarar el DNI o *no ingerirlo*? ¿Quién puede ver el campo, y en qué estado? | Capa transversal |
+| Tabla SQL grande, de noche, hacia el lago | Puente **batch** (*pull*) | Sqoop (la idea; el proyecto está en mantenimiento), job Spark, Pentaho |
+| Logs o clics que tienen que verse ya | **Flujo** (*push*) | Flume, Kafka + consumidor, NiFi |
+| Varias fuentes y un grafo en pantalla | ETL **visual** | NiFi, [Pentaho](pentaho.md) |
+| Logs hacia un buscador | Tubería de logs | Logstash |
+| ETL gestionado en un proveedor | Servicio cloud | Glue (AWS) y equivalentes |
+| El productor no espera al consumidor | **Mensajería** | Kafka, RabbitMQ, Kinesis, Event Hubs, Pub/Sub |
+| Cientos de aplicaciones SaaS hacia el lago | Conectores **ELT** | Airbyte, Fivetran |
 
-## Familias de herramientas (para orientar)
+Las suites (PDI, Talend, Informatica…) venden conectores, planificación, errores y metadatos. Transformar un tipo es simple; agregar o buscar en otra tabla es el día a día; un modelo de IA dentro del flujo se sale de esta UT.
 
-No tienes que certificar todas. Sí saber **para qué familia** las citarías. Varias se profundizan más adelante (Sqoop, Flume, NiFi, Kafka); aquí basta el *para qué*.
-
-**Movimiento / ingesta en el ecosistema Hadoop y cloud**
-
-- **Sqoop** — puente **SQL ↔ HDFS/Hive/HBase**, datos estructurados, sobre todo **batch** (*pull*). El proyecto está en mantenimiento; la *idea* sigue y en cloud verás equivalentes.
-- **Flume** — flujos de **logs** (semi o no estructurados) hacia HDFS/HBase (*push* / stream).
-- **NiFi** — pantalla **visual**: cargas de varias fuentes (lote o stream), las pasas por un grafo de procesos y las vuelcas a otra parte.
-- **Logstash** — nació para logs hacia Elasticsearch; admite muchas entradas y salidas (también AWS).
-- **AWS Glue** — ETL gestionado en AWS (descubrimiento de esquemas incluido). Aparece junto a Athena o Data Pipeline.
-
-**Mensajería** (ingesta **asíncrona**: el productor no espera al consumidor)
-
-- **Kafka** (publicador / suscriptor), **RabbitMQ** (cola clásica), **Kinesis** (AWS), **Event Hubs** (Azure), **Pub/Sub** (Google).
-
-**Suites ETL** (conectores, planificación por lote / evento / stream, errores, metadatos)
-
-En el aula: **Pentaho Data Integration**. En el mercado: Talend, Informatica, Oracle Data Integrator, MuleSoft…
-
-Transformaciones que anuncian: simples (tipos, textos), intermedias (agregar, buscar un valor en otra tabla) y complejas (un modelo, código de terceros). En este módulo nos quedamos en lo que puedes **ver** en Spoon o en el “Hola ETL” de arriba.
-
-**Conectores “de catálogo”** (tendencia ELT)
-
-- **Fivetran** (comercial, muchos conectores), **Airbyte** (open source y también en cloud): menos ingeniería por cada aplicación nueva.
-
-!!! example "Tres enunciados, tres mecanismos"
-    1. “Cada noche, la tabla Oracle de pedidos → HDFS.” → **Sqoop** o ETL batch (*pull*), no un bus de eventos.  
-    2. “Los logs de la web deben verse en el panel en pocos segundos.” → **flujo** (Flume/Kafka + consumidor; a menudo *push*).  
-    3. “Un CSV de productos y otro de fabricantes → JSON de la categoría Mix.” → **Pentaho** o el script pandas/DuckDB de esta página.
+!!! example "Tres supuestos del grupo hotelero"
+    1. “A las 02:00, la tabla PostgreSQL de reservas → el lago.” → lote *pull*, no un bus.  
+    2. “El semáforo de habitación libre en recepción, en pocos segundos.” → flujo + cola.  
+    3. “Reservas web ya cobradas → fichero para gerencia.” → el taller de esta página o el mismo flujo en Spoon.
 
 !!! success "Criterio b) en un examen"
-    No basta con escribir “Kafka”. Debes decir: **origen**, **push/pull/poll**, **ritmo** (lote, micro-lote o stream), **ETL o ELT**, **destino**, **formato de la carga** (Avro, Parquet, Feather…) y **por qué** ese mecanismo y no el de al lado.
+    Origen + push/pull/poll + reloj + ETL o ELT + destino + formato de la carga + **por qué no** el de al lado. “Kafka” solo no puntúa.
 
-## Para practicar
+## Taller medido y supuestos
 
-No sustituye a Moodle. Sirve para comprobar que el apartado se sostiene en voz alta.
+No sustituye a Moodle. Comprueba que lo sostienes en voz alta.
 
-1. ¿Cuál es el **primer** paso al diseñar un pipeline de ingesta?  
-2. Relación entre **pipeline** y **ETL**.  
-3. ¿ETL y ELT son lo mismo? ¿Cuándo usarías cada uno? En Big Data, ¿cuál suele verse más y por qué?  
-4. Repite el “Hola ETL” uniendo **productos + ventas**: CSV de una categoría, nombre del fabricante y **cantidad total vendida** de cada producto (pandas y DuckDB).  
-5. Misma transformación, **tres cargas**: JSON (para verlo), Parquet (lago) y Feather (paso intermedio). Anota tamaño y di **cuándo** usarías cada una.  
-6. Supuesto: lanzáis un producto y queréis medir reacciones en redes. Contesta **al menos tres preguntas de cada bloque** de la tabla de consideraciones. Incluye **en qué formato** dejarías el dato en S3 y por qué.
+1. Gerencia quiere el panel de las 8. ¿Qué decides **primero**: la herramienta o la pregunta de negocio? Di las tres marchas atrás (destino → T → origen).
+2. Un *topic* solo guarda altas de reserva, sin limpiar ni cruzar. ¿Es un pipeline? ¿Es una ETL? ¿Por qué?
+3. El warehouse de finanzas **no** admite filas sucias. El lago de ocupación **sí** guarda el bruto para que ciencia de datos explore. ¿ETL, ELT o los dos? ¿Dónde duele si cambian el KPI?
+4. Con `reservas.csv` y `cobros.csv`: importe **cobrado** por hotel **solo** en canal `recepcion` (pandas y DuckDB). Cuenta también cuántas reservas de ese canal **aún no** tienen cobro.
+5. Misma T del punto 4, **tres L**: JSON (verlo), Parquet (lago) y Feather (el script de al lado). Anota tamaños y di cuándo usarías cada una.
+6. Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job “porque es más simple”.
