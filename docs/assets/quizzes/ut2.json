@@ -533,6 +533,48 @@
       ],
       "answer": 1,
       "explain": "aggregate es el **poder de procesamiento** a escala de la colección documental."
+    },
+    {
+      "topic": "2.9 MongoClient",
+      "href": "../pymongo/",
+      "prompt": "¿Qué es un MongoClient en PyMongo?",
+      "code": "",
+      "options": [
+        "Un socket que se abre y cierra en cada find.",
+        "Un pool de conexiones (se reutilizan); no se crea uno por petición de Flask.",
+        "El NameNode de HDFS.",
+        "Un mongos que guarda documentos."
+      ],
+      "answer": 1,
+      "explain": "El cliente inicializa el **pool**. Abrir uno dentro del bucle es el error clásico."
+    },
+    {
+      "topic": "2.9 Errores",
+      "href": "../pymongo/",
+      "prompt": "insert_one con un _id que ya existe. ¿Qué capturáis?",
+      "code": "",
+      "options": [
+        "ServerSelectionTimeoutError.",
+        "DuplicateKeyError.",
+        "Un fallo del Secondary NameNode.",
+        "Nada: Mongo pisa el documento."
+      ],
+      "answer": 1,
+      "explain": "Índice único o _id repetido → DuplicateKeyError. El timeout es «no hay servidor»."
+    },
+    {
+      "topic": "2.9 Transacciones",
+      "href": "../pymongo/",
+      "prompt": "Reservas y plazas de parking en dos colecciones, atómicas. ¿Qué hace falta?",
+      "code": "",
+      "options": [
+        "Solo insert_many sin sesión.",
+        "Una sesión y with_transaction (en la práctica, replica set); cada op lleva session=.",
+        "Un árbitro que haga de join.",
+        "Prohibido: Mongo nunca es atómico entre documentos."
+      ],
+      "answer": 1,
+      "explain": "Un documento ya es atómico; **dos** colecciones piden transacción. Un mongod suelto suele negarse."
     }
   ]
 }

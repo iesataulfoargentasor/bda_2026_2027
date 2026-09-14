@@ -26,7 +26,7 @@ Lee los apartados **en orden**. El hilo es el mismo hotel de Cantabria. Las sigl
 | [2.6 MongoDB](mongodb.md) | **a)** / **d)** | BSON, mongosh, consultas, cursores y updates |
 | [2.7 Modelado documental](modelado.md) | **d)** | Carga, cardinalidad, patrones y validador (hotel) |
 | [2.8 Réplicas y particiones](replicas-shards.md) | **c)** / **e)** | *Oplog*, votos, `hotelrs` y partir por comarca |
-| [2.9 MongoDB y Python](pymongo.md) | **b)** / **d)** | PyMongo sobre el mismo hotel |
+| [2.9 MongoDB y Python](pymongo.md) | **b)** / **d)** | PyMongo: cursores, agregados, cobros y un extra Flask |
 | [Autoevaluación](autoevaluacion.md) | — | Preguntas de la unidad (no puntúa en Moodle) |
 
 !!! info "Sobre el material"
