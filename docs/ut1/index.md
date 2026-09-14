@@ -31,7 +31,7 @@ Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y u
 | [1.7 Formatos de datos](formatos.md) | **c)** | Elegir formato (reservas de hotel): Avro, Parquet, ORC, Arrow, DuckDB |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | PDI (Spoon/Pan/Kitchen): filtrar, unir, JSON, nube, jobs y BD del hotel |
 | [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
-| [Autoevaluación](autoevaluacion.md) | — | 23 preguntas de la unidad (no puntúa en Moodle) |
+| [Autoevaluación](autoevaluacion.md) | — | 25 preguntas de la unidad (no puntúa en Moodle) |
 
 !!! info "Sobre el material original"
     Se mantiene el hilo pedagógico de los paquetes eXeLearning (*Introducción*, *Ingesta*, *Formatos*), de los apuntes de aula de ingesta y formatos, y del PDF *Pentaho*. El texto se ha unificado, se han corregido imprecisiones (escalado vertical, JSON, matices de ciencia de datos) y se ha alineado cada apartado con un criterio del RA1.

@@ -41,9 +41,93 @@ Piensa en un hotel de Cantabria en agosto:
 | **Sabiduría** | Usarlo en su contexto | Solo en temporada alta |
 | **Valor** | Mejor decisión | Menos habitaciones vacías |
 
-Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor (modelos, predicciones, diagnósticos) lo hacen la **minería de datos**, la **ciencia de datos** y la **IA**, apoyándose en esa infraestructura.
+Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor (modelos, predicciones, diagnósticos, un sistema que actúa) lo hacen tres oficios que se pisan y **no** son lo mismo: **minería de datos**, **ciencia de datos** e **inteligencia artificial** (IA). Las tres **beben** de la infraestructura de este módulo; ninguna **es** Big Data.
 
-No son la misma cosa. La ciencia de datos no es “minería pero en Big Data”: es un oficio más amplio (formular la pregunta, cuidar la calidad, modelar y **comunicar**). En **este** módulo nos quedamos en la **infraestructura y el flujo** que esas disciplinas necesitan para trabajar.
+### Tres oficios sobre el mismo dato (y no son sinónimos)
+
+Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran **el mismo** lago y hacen **trabajos distintos**:
+
+| Oficio | Pregunta que se hace | Qué entrega | Ejemplo del hotel |
+| --- | --- | --- | --- |
+| **Minería de datos** | «¿Qué patrones *ya están* en lo guardado?» | Reglas, grupos, anomalías | «Quien reserva el viernes por la web y pide parking **cancela más**.» |
+| **Ciencia de datos** | «¿Qué hay que preguntar, con qué dato *limpio*, y cómo se lo cuento a quien decide?» | Pregunta bien hecha, análisis, modelo **y** un relato que gerencia entiende | «¿Por qué los martes de noviembre estamos vacíos?» Limpia canal web frente a OTA, elige el KPI, enseña un gráfico y **no** copia el modelo de playa a Potes. |
+| **IA** | «¿Qué *sistema* percibe, decide o genera *sin* que un humano mire cada fila?» | Un producto que **actúa** (o responde) | Al confirmar la reserva, un modelo puntúa el riesgo de cancelación y el canal ofrece tarifa flexible; un *chatbot* responde «¿queda habitación al mar?»; una cámara cuenta coches del parking. |
+
+La minería **descubre**. La ciencia de datos **encuadra, limpia, modela y explica**. La IA **pone un sistema a hacer** una tarea que parece inteligente (percibir, clasificar, dialogar, recomendar). Podéis minar un Excel de 50 MB; podéis hacer ciencia de datos con una encuesta de 200 filas; podéis tener IA con reglas (un motor de ajedrez clásico) **sin** un lago. El clúster ayuda cuando las 5 V de más abajo duelen; **no** define el oficio.
+
+```mermaid
+flowchart TB
+  subgraph bda [Este módulo: Big Data]
+    E[Evento] --> D[Dato guardado]
+    D --> I[Información consultable]
+  end
+  subgraph extraer [Extraer valor]
+    I --> M[Minería: patrones]
+    I --> C[Ciencia de datos: pregunta + calidad + relato]
+    M --> C
+    C --> K[Conocimiento]
+    K --> IA[IA: sistema que actúa]
+    C --> V[Decisión humana]
+    IA --> V
+  end
+  V --> VAL[Valor: menos habitaciones vacías]
+  VAL -.->|el modelo se queda viejo| D
+```
+
+#### En qué se parecen
+
+- Las tres buscan **valor**: una decisión mejor que ir a ciegas.
+- Las tres se hunden si falla la **veracidad** (sensores descalibrados, el mismo huésped con tres NIF).
+- Las tres pueden vivir **sin** Hadoop si el conjunto cabe en una máquina.
+- Ninguna sustituye a capturar, guardar y procesar: sin dato usable, el algoritmo más brillante puntúa basura.
+
+#### En qué se distinguen
+
+**Minería de datos** (*data mining*) viene del descubrimiento de conocimiento en bases de datos (a menudo veréis la sigla **KDD**, *Knowledge Discovery in Databases*). Caja de técnicas: asociación (“esto se compra con aquello”), agrupación (*clustering*: tipos de huésped), clasificación, detección de rarezas. El centro de gravedad es el **algoritmo sobre una tabla ya bastante lista**. No obliga a un *dashboard* ni a un *chatbot*.
+
+**Ciencia de datos** (*data science*) es un oficio **más ancho**. Incluye formular la pregunta de negocio, decidir qué dato hace falta, **cuidar la calidad**, explorar, modelar (estadística clásica o aprendizaje automático) y **comunicar** el resultado a quien no va a leer un *notebook*. La minería es **una** herramienta de esa caja, no el nombre nuevo de la caja. Por eso es falso el atajo «ciencia de datos = minería pero cuando hay Big Data».
+
+**Inteligencia artificial** es el campo de los sistemas que se comportan de forma inteligente en una tarea. Dentro hay muchas familias: búsqueda, sistemas expertos con reglas, robótica, visión, lenguaje… El **aprendizaje automático** (*machine learning*, **ML**: el programa **mejora con ejemplos** en vez de llevar todas las reglas escritas a mano) es hoy el camino más habitual hacia un producto de IA. Un árbol de decisión puede ser “minería” si lo usáis para *entender* una regla, o “ML / IA” si lo **desplegáis** para puntuar cada reserva nueva. No discutáis la etiqueta: mirad **para qué** sirve el artefacto.
+
+!!! failure "Tres frases que estropean el mapa"
+    - «La IA contiene a la ciencia de datos, que contiene a la minería» (no es una matrioska).
+    - «Ciencia de datos = minería + Hadoop» (se puede hacer ciencia de datos con 200 filas; Hadoop no bautiza el oficio).
+    - «IA = el *chatbot*» (visión, reglas, un puntuador de cancelaciones… también son IA).
+
+Mejor pensad en **solapes** y en una **dependencia** de la infraestructura:
+
+```mermaid
+flowchart TB
+  BD[Infraestructura Big Data<br/>capturar · guardar · procesar · presentar]
+  DM[Minería de datos<br/>patrones en lo ya guardado]
+  DS[Ciencia de datos<br/>pregunta · calidad · modelo · comunicar]
+  AI[IA<br/>sistema que percibe o actúa]
+  ML[Aprendizaje automático]
+  BD --> DM
+  BD --> DS
+  BD --> AI
+  DM --> DS
+  ML --> DS
+  ML --> AI
+  ML --> DM
+```
+
+- El **ML** es el puente frecuente: la minería lo usa para descubrir; la ciencia de datos, para un modelo que se explica; la IA, para un servicio en producción.
+- La **IA** no es solo un modelo: es el sistema (datos de entrada, modelo, umbral, acción, supervisión). Un *chatbot* sin el JSON de habitaciones al día **alucina** huecos.
+- La **ciencia de datos** puede terminar en un informe **sin** desplegar IA. Gerencia a veces solo necesita el gráfico del martes vacío.
+
+#### De qué dependen (y de qué depende este módulo)
+
+| Esta pieza… | …necesita | …y alimenta |
+| --- | --- | --- |
+| Minería / ciencia de datos / IA | Dato **accesible y gobernado** (el viaje evento → información) | Conocimiento, modelos, productos |
+| Un modelo en producción | **Reentrenar** cuando el verano no se parece al invierno | Otra vuelta de ingesta y calidad |
+| Este módulo **BDA** | Un problema con Vs que duelen | El **combustible** de los tres oficios |
+
+En el [curso de especialización](../index.md) otros módulos os pondrán a modelar y a evaluar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
+
+!!! tip "Frase para el examen y para el pasillo"
+    Big Data **prepara** el dato. La minería **busca patrones**. La ciencia de datos **hace la pregunta y cuenta el resultado**. La IA **encarna** una tarea en un sistema. Se solapan; no se sustituyen.
 
 ## Las 5 Vs: un diagnóstico, no una lista para recitar
 

@@ -45,6 +45,34 @@
       "explain": "Primero ocurre el **evento**, se registra como **dato**, se organiza (**información**), se modela (**conocimiento**), se sabe cuándo aplicarlo (**sabiduría**) y la decisión mejora el resultado (**valor**)."
     },
     {
+      "topic": "1.1 Minería y ciencia de datos",
+      "href": "../por-que-big-data/",
+      "prompt": "«La ciencia de datos es minería de datos, pero cuando hay Big Data.» ¿Qué hay que responder?",
+      "code": "",
+      "options": [
+        "Es correcto: sin Hadoop no hay ciencia de datos.",
+        "Falso: la ciencia de datos es más ancha (pregunta, calidad, modelo y comunicar); la minería es una herramienta de esa caja.",
+        "Falso porque la ciencia de datos es solo el chatbot.",
+        "Da igual el nombre: minería, ciencia de datos e IA son sinónimos."
+      ],
+      "answer": 1,
+      "explain": "Se pueden hacer ciencia de datos con 200 filas. Big Data es la **infraestructura** cuando las V duelen, no el apellido de la minería."
+    },
+    {
+      "topic": "1.1 Minería, DS e IA",
+      "href": "../por-que-big-data/",
+      "prompt": "En Laredo: (1) una regla «web + viernes → más cancelaciones»; (2) un informe que explica los martes vacíos a gerencia; (3) un modelo que, al reservar, ofrece tarifa flexible. ¿Qué oficio es cada uno?",
+      "code": "",
+      "options": [
+        "Los tres son Big Data porque hay JSON.",
+        "Los tres son IA: hay un algoritmo.",
+        "(1) minería de datos, (2) ciencia de datos, (3) IA (sistema que actúa).",
+        "(1) IA, (2) minería, (3) solo un Excel."
+      ],
+      "answer": 2,
+      "explain": "La minería **descubre** el patrón; la ciencia de datos **encuadra y explica**; la IA **despliega** la acción en el canal."
+    },
+    {
       "topic": "1.2 Escalado",
       "href": "../clusters/",
       "prompt": "Necesitas más capacidad porque el dataset crece cada mes. ¿Qué opción es escalado horizontal?",
