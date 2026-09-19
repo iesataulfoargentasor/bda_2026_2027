@@ -2131,6 +2131,7 @@
 <li>Dirección quiere, cada mañana a las 8, <strong>ocupación e importe cobrado por hotel</strong>.</li>
 </ul>
 <p>Esos datos <strong>ya existen</strong>. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.</p>
+<p><img alt="Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago y el panel" src="../../assets/ut1/ingesta-hotel.png" /></p>
 <p>Hasta que el dato no entra, el resto de la <a href="../arquitectura/">arquitectura</a> está vacía. Un buen proceso de ingesta tiene que ser:</p>
 <ul>
 <li><strong>Flexible:</strong> mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiras el diseño.</li>
@@ -2159,6 +2160,7 @@
 <li>El sistema que analiza e informa (el panel de las 8) se llama <strong>OLAP</strong> (<em>Online Analytical Processing</em>). Ejemplo: el almacén de informes de gerencia.</li>
 </ul>
 <p>No son dos marcas. Son dos oficios. El pipeline los separa para que uno no tumbe al otro.</p>
+<p><img alt="OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia" src="../../assets/ut1/oltp-olap.png" /></p>
 <pre class="mermaid"><code>flowchart LR
   origen[Programa de reservas y pasarela] --&gt; recoger[1 Recoger]
   recoger --&gt; buffer[2 Guardar un colchón]
@@ -2184,6 +2186,7 @@
 </ul>
 <h2 id="quien-mueve-el-dato">Quién mueve el dato<a class="headerlink" href="#quien-mueve-el-dato" title="Permanent link">&para;</a></h2>
 <p>Hay tres formas de iniciar el movimiento. No son tres productos.</p>
+<p><img alt="Push, pull y poll: quién inicia el movimiento del dato" src="../../assets/ut1/push-pull-poll.png" /></p>
 <table>
 <thead>
 <tr>
@@ -2258,6 +2261,7 @@
 <h3 id="colas-de-mensajes-la-idea-no-el-producto">Colas de mensajes (la idea, no el producto)<a class="headerlink" href="#colas-de-mensajes-la-idea-no-el-producto" title="Permanent link">&para;</a></h3>
 <p>Si el sensor de habitación no puede esperar al informe de las 8, hace falta <strong>desacoplar</strong> al que produce el dato del que lo consume: cada uno trabaja a su ritmo.</p>
 <p>Una <strong>cola de mensajes</strong> es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.</p>
+<p><img alt="Productor, cola y consumidor: si el consumidor va lento, la cola aguanta" src="../../assets/ut1/cola-mensajes.png" /></p>
 <ul>
 <li>Un <strong>productor</strong> deja el evento (la habitación se ocupó).</li>
 <li>Un <strong>consumidor</strong> lo recoge cuando puede (el panel, un script).</li>
@@ -2266,9 +2270,9 @@
 <p>En muchas colas clásicas, al recoger el mensaje <strong>desaparece</strong>. En sistemas repartidos en varios ordenadores (varios PCs colaborando) el orden entre canales no está garantizado: hay que contar con que un nodo falle.</p>
 <p>Herramientas de este oficio (las verás con más detalle al final de la página):</p>
 <ul>
-<li><strong>Apache Kafka:</strong> un “bus” de mensajes. Muchos productores publican en un canal (<em>topic</em>, como un tablón con nombre: <code>reservas.altas</code>) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.</li>
-<li><strong>RabbitMQ:</strong> una cola más clásica: el productor deja el recado, el consumidor lo recoge y, en general, se borra.</li>
-<li>En la nube hay equivalentes: <strong>Kinesis</strong> (Amazon), <strong>Event Hubs</strong> (Azure), <strong>Pub/Sub</strong> (Google).</li>
+<li><strong>Apache Kafka:</strong> un “bus” de mensajes. Sitio oficial: <a href="https://kafka.apache.org/">kafka.apache.org</a>. Muchos productores publican en un canal (<em>topic</em>, como un tablón con nombre: <code>reservas.altas</code>) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.</li>
+<li><strong>RabbitMQ:</strong> una cola más clásica (<a href="https://www.rabbitmq.com/">rabbitmq.com</a>): el productor deja el recado, el consumidor lo recoge y, en general, se borra.</li>
+<li>En la nube hay equivalentes: <a href="https://aws.amazon.com/kinesis/"><strong>Kinesis</strong></a> (Amazon), <a href="https://azure.microsoft.com/products/event-hubs/"><strong>Event Hubs</strong></a> (Azure), <a href="https://cloud.google.com/pubsub"><strong>Pub/Sub</strong></a> (Google).</li>
 </ul>
 <p>En voz alta: “desacoplar al que pica la reserva del que pinta el panel” → familia <strong>mensajería</strong>, no un volcado nocturno.</p>
 <h2 id="etl-extraer-transformar-cargar">ETL: extraer, transformar, cargar<a class="headerlink" href="#etl-extraer-transformar-cargar" title="Permanent link">&para;</a></h2>
@@ -2286,7 +2290,7 @@
 <p>Orígenes típicos:</p>
 <ul>
 <li><strong>CSV:</strong> fichero de texto en tabla, columnas separadas por comas (o punto y coma). Excel lo abre.</li>
-<li><strong>Tabla SQL:</strong> datos en filas y columnas dentro de un gestor (PostgreSQL, MySQL, SQL Server…).</li>
+<li><strong>Tabla SQL:</strong> datos en filas y columnas dentro de un gestor (<a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="https://www.mysql.com/">MySQL</a>, <a href="https://www.microsoft.com/sql-server/">SQL Server</a>…).</li>
 <li><strong>API / REST:</strong> pides datos por HTTP (el mismo protocolo del navegador) y sueles recibir <strong>JSON</strong> (texto con llaves <code>{ }</code> que un programa lee fácil).</li>
 <li>Un mensaje de un bus (Kafka u otra cola).</li>
 </ul>
@@ -2339,7 +2343,7 @@
 <p>Cien filas de práctica <strong>no</strong> demuestran la carga.</p>
 <h2 id="elt-el-mismo-trabajo-otro-orden">ELT: el mismo trabajo, otro orden<a class="headerlink" href="#elt-el-mismo-trabajo-otro-orden" title="Permanent link">&para;</a></h2>
 <p><strong>ELT</strong> cambia las letras: extraer → <strong>cargar</strong> → transformar.</p>
-<p>Los datos se dejan primero en el lago o en un <strong>almacén de datos</strong> (<em>data warehouse</em>: base pensada para informes, no para picar reservas), <strong>aún sin limpiar</strong>. La transformación la hace después el destino: SQL, un notebook, o <strong>Apache Spark</strong> (un motor que reparte el cálculo entre varios ordenadores; <strong>PySpark</strong> es Spark usado desde Python).</p>
+<p>Los datos se dejan primero en el lago o en un <strong>almacén de datos</strong> (<em>data warehouse</em>: base pensada para informes, no para picar reservas), <strong>aún sin limpiar</strong>. La transformación la hace después el destino: SQL, un notebook, o <a href="https://spark.apache.org/"><strong>Apache Spark</strong></a> (un motor que reparte el cálculo entre varios ordenadores; <a href="https://spark.apache.org/docs/latest/api/python/"><strong>PySpark</strong></a> es Spark usado desde Python).</p>
 <table>
 <thead>
 <tr>
@@ -2356,7 +2360,7 @@
 </tr>
 <tr>
 <td>Dónde se limpia</td>
-<td>Un motor en medio (script, <a href="../pentaho/">Pentaho</a>, Talend)</td>
+<td>Un motor en medio (script, <a href="../pentaho/">Pentaho</a>, <a href="https://www.talend.com/">Talend</a>)</td>
 <td>El destino (el almacén o el lago)</td>
 </tr>
 <tr>
@@ -2377,6 +2381,7 @@
 </tbody>
 </table>
 <p>ELT no es “ETL al revés para quedar moderno”. Cambia <strong>quién</strong> trabaja y <strong>cuándo</strong> se ve el dato:</p>
+<p><img alt="ETL frente a ELT: cambia cuándo se limpia el dato" src="../../assets/ut1/etl-vs-elt.png" /></p>
 <ul>
 <li>El ingeniero deja el bruto <strong>pronto</strong>. Finanzas y ciencia de datos pueden mirarlo antes del cruce perfecto.</li>
 <li>La limpieza la puede hacer quien conoce el negocio, no solo el equipo de tuberías.</li>
@@ -2397,7 +2402,7 @@
 </li>
 <li><strong>Dejar rastro y gestionar errores:</strong> qué corrió, qué falló, y qué hacer entonces. Sin eso, el job “en verde” es teatro.</li>
 </ul>
-<p>(<em>Hadoop</em> es el ecosistema clásico de Big Data: varios PCs compartiendo disco y cálculo. <em>HDFS</em> es su sistema de ficheros: una carpeta enorme repartida. <em>Hive</em> permite consultar esos ficheros con SQL. <em>S3</em> es el almacén de objetos de Amazon: carpetas en la nube. <em>XML</em> es otro formato de texto etiquetado, más viejo que JSON. Un <em>log</em> es el diario de lo que hace un programa. <em>HTTP</em> / <em>REST</em> son la forma habitual de pedir datos a una API por internet.)</p>
+<p>(<a href="https://hadoop.apache.org/">Hadoop</a> es el ecosistema clásico de Big Data: varios PCs compartiendo disco y cálculo. <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">HDFS</a> es su sistema de ficheros: una carpeta enorme repartida. <a href="https://hive.apache.org/">Hive</a> permite consultar esos ficheros con SQL. <a href="https://aws.amazon.com/s3/">S3</a> es el almacén de objetos de Amazon: carpetas en la nube. XML es otro formato de texto etiquetado, más viejo que JSON. Un <em>log</em> es el diario de lo que hace un programa. HTTP / REST son la forma habitual de pedir datos a una API por internet.)</p>
 <h3 id="suites-que-veras-escritas">Suites que verás escritas<a class="headerlink" href="#suites-que-veras-escritas" title="Permanent link">&para;</a></h3>
 <p>Son programas (muchos con pantalla) para diseñar el flujo sin escribirlo todo a mano:</p>
 <table>
@@ -2410,27 +2415,27 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Pentaho Data Integration (PDI)</strong></td>
-<td>Suite de ETL visual. <strong>Spoon</strong> es el editor; <strong>Pan</strong> y <strong>Kitchen</strong> ejecutan transformaciones y jobs.</td>
+<td><strong><a href="https://www.hitachivantara.com/en-us/products/pentaho-plus-platform.html">Pentaho Data Integration (PDI)</a></strong></td>
+<td>Suite de ETL visual. Código en <a href="https://github.com/pentaho/pentaho-kettle">GitHub</a>. <strong>Spoon</strong> es el editor; <strong>Pan</strong> y <strong>Kitchen</strong> ejecutan transformaciones y jobs.</td>
 <td>La practicáis en <a href="../pentaho/">1.8</a></td>
 </tr>
 <tr>
-<td><strong>Talend Open Studio</strong></td>
+<td><strong><a href="https://www.talend.com/">Talend Open Studio</a></strong></td>
 <td>Otra ETL visual, muy usada en empresas</td>
 <td>La oiréis; no la montamos aquí</td>
 </tr>
 <tr>
-<td><strong>Informatica Data Integration</strong></td>
+<td><strong><a href="https://www.informatica.com/">Informatica Data Integration</a></strong></td>
 <td>Suite comercial grande, típica en corporaciones</td>
 <td>Nombre de catálogo</td>
 </tr>
 <tr>
-<td><strong>Oracle Data Integrator (ODI)</strong></td>
+<td><strong><a href="https://www.oracle.com/integration/data-integrator/">Oracle Data Integrator (ODI)</a></strong></td>
 <td>ETL del ecosistema Oracle</td>
 <td>Nombre de catálogo</td>
 </tr>
 <tr>
-<td><strong>MuleSoft</strong></td>
+<td><strong><a href="https://www.mulesoft.com/">MuleSoft</a></strong></td>
 <td>Más bien integración de aplicaciones (APIs), no solo ficheros</td>
 <td>Nombre de catálogo</td>
 </tr>
@@ -2441,23 +2446,23 @@
 <p>Las empresas no eligen “solo Pentaho” o “solo Python”. Mezclan:</p>
 <ul>
 <li>la <strong>suite visual</strong> para conectores y planificación;</li>
-<li><strong>Python</strong> para lo nuevo, lo no estructurado o lo que la pantalla no cubre:<ul>
-<li><strong>pandas:</strong> librería para trabajar con tablas en memoria (<code>DataFrame</code>). Es el Excel de Python.</li>
-<li><strong>PySpark:</strong> el mismo oficio, pero el cálculo se reparte en un <strong>clúster</strong> (varios ordenadores trabajando como uno).</li>
-<li><strong>DuckDB:</strong> base analítica <em>embebida</em> (no hay servidor que instalar): SQL directo sobre CSV o Parquet en tu disco.</li>
+<li><strong><a href="https://www.python.org/">Python</a></strong> para lo nuevo, lo no estructurado o lo que la pantalla no cubre:<ul>
+<li><strong><a href="https://pandas.pydata.org/">pandas</a>:</strong> librería para trabajar con tablas en memoria (<code>DataFrame</code>). Es el Excel de Python.</li>
+<li><strong><a href="https://spark.apache.org/docs/latest/api/python/">PySpark</a>:</strong> el mismo oficio, pero el cálculo se reparte en un <strong>clúster</strong> (varios ordenadores trabajando como uno).</li>
+<li><strong><a href="https://duckdb.org/">DuckDB</a>:</strong> base analítica <em>embebida</em> (no hay servidor que instalar): SQL directo sobre CSV o Parquet en tu disco. Documentación: <a href="https://duckdb.org/docs/">duckdb.org/docs</a>.</li>
 </ul>
 </li>
-<li><strong>Apache Airflow:</strong> un <strong>orquestador</strong>. No transforma el dato: dispara pasos (“primero extrae, luego cruza, luego carga”) y avisa si uno falla. No lo montáis en esta UT; sí sabéis para qué existe.</li>
+<li><strong><a href="https://airflow.apache.org/">Apache Airflow</a>:</strong> un <strong>orquestador</strong>. No transforma el dato: dispara pasos (“primero extrae, luego cruza, luego carga”) y avisa si uno falla. No lo montáis en esta UT; sí sabéis para qué existe.</li>
 </ul>
 <p>Sin planificación y sin registro de errores, da igual la herramienta.</p>
 <h2 id="taller-reservas-y-cobros">Taller: reservas y cobros<a class="headerlink" href="#taller-reservas-y-cobros" title="Permanent link">&para;</a></h2>
 <p>En <a href="../pentaho/">Pentaho</a> harás un cruce en <strong>Spoon</strong> (la pantalla de PDI). Aquí las <strong>tres letras</strong> se ven en código, con el hotel.</p>
 <p>Necesitas un cuaderno de Python:</p>
 <ul>
-<li><strong>Jupyter:</strong> programa en tu PC que mezcla texto y código, celda a celda.</li>
-<li><strong>Google Colab:</strong> lo mismo, pero en el navegador, sin instalar nada (<a href="https://colab.research.google.com/">colab.research.google.com</a>).</li>
+<li><strong><a href="https://jupyter.org/">Jupyter</a>:</strong> programa en tu PC que mezcla texto y código, celda a celda.</li>
+<li><strong><a href="https://colab.research.google.com/">Google Colab</a>:</strong> lo mismo, pero en el navegador, sin instalar nada.</li>
 </ul>
-<p><strong>pandas</strong> es la librería de Python para tablas. Un <code>DataFrame</code> es una hoja: filas y columnas con nombre. <strong>NumPy</strong> (<code>numpy</code>) genera números al azar para inventar el ejemplo.</p>
+<p><strong><a href="https://pandas.pydata.org/">pandas</a></strong> es la librería de Python para tablas. Un <code>DataFrame</code> es una hoja: filas y columnas con nombre. <strong><a href="https://numpy.org/">NumPy</a></strong> (<code>numpy</code>) genera números al azar para inventar el ejemplo.</p>
 <p>En <a href="../formatos/">1.7</a> volverás a estos ficheros.</p>
 <ul>
 <li><code>reservas.csv</code>: quién reservó, en qué hotel, por qué canal, noches e importe.</li>
@@ -2507,14 +2512,14 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">cruce</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;web_cobrado.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">force_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="duckdb">DuckDB<a class="headerlink" href="#duckdb" title="Permanent link">&para;</a></h3>
-<p><strong>DuckDB</strong> es una base de datos <strong>analítica</strong> y <strong>embebida</strong>:</p>
+<p><strong><a href="https://duckdb.org/">DuckDB</a></strong> es una base de datos <strong>analítica</strong> y <strong>embebida</strong> (sitio oficial: <a href="https://duckdb.org/">duckdb.org</a>; código: <a href="https://github.com/duckdb/duckdb">github.com/duckdb/duckdb</a>):</p>
 <ul>
 <li>Analítica: está pensada para leer mucho y agregar (sumar por hotel), no para que recepción pique una reserva.</li>
 <li>Embebida: no instalas un servidor. Es una librería (<code>pip install duckdb</code>). Corre <strong>dentro</strong> de Python, en tu proceso.</li>
 <li>Habla <strong>SQL</strong> directo sobre ficheros locales (CSV, Parquet, JSON) <strong>sin</strong> cargarlos antes en PostgreSQL. Por dentro es <strong>columnar</strong>: guarda por columnas, así que “importe por hotel” no tiene que leer las doce columnas.</li>
 </ul>
 <p>Para ETL, eso significa: extraes (lees el CSV como tabla), transformas (un <code>SELECT</code> con <code>JOIN</code> y <code>WHERE</code>) y cargas (<code>COPY</code> a otro fichero).</p>
-<p>Instalación: <code>pip install duckdb</code>.</p>
+<p>Instalación: <code>pip install duckdb</code> (guía: <a href="https://duckdb.org/docs/installation/">duckdb.org/docs/installation</a>).</p>
 <p>Mismas tres letras que pandas, idioma SQL:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">duckdb</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
@@ -2539,11 +2544,11 @@
 <p>El catálogo completo está en <a href="../formatos/">1.7</a>. Aquí solo la decisión de la <strong>L</strong>. Qué es cada nombre:</p>
 <ul>
 <li><strong>CSV / JSON:</strong> texto que un humano abre. JSONL es JSON <strong>una reserva por línea</strong> (se puede partir; un único array <code>[...]</code> enorme, no).</li>
-<li><strong>Avro:</strong> cada fila viaja con su <strong>esquema</strong> (de qué tipo es cada campo). Típico en colas: mañana añaden un campo y el consumidor no se rompe del todo.</li>
-<li><strong>Parquet:</strong> formato <strong>columnar</strong> (guarda la columna <code>importe</code> junta). El informe de las 8 lee hotel e importe y <strong>no</strong> carga las doce columnas. Muy usado en lagos y en Spark.</li>
-<li><strong>ORC:</strong> parecido a Parquet; nació en el mundo Hive.</li>
-<li><strong>Feather / Arrow:</strong> pensado para pasar tablas <strong>rápido</strong> entre procesos Python/R. No es el archivo de “guardar tres años”.</li>
-<li><strong>Snappy</strong> (y gzip, zstd): <strong>códecs</strong> de compresión. Ocupan menos y viajan menos; cuestan CPU.</li>
+<li><strong><a href="https://avro.apache.org/">Avro</a>:</strong> cada fila viaja con su <strong>esquema</strong> (de qué tipo es cada campo). Típico en colas: mañana añaden un campo y el consumidor no se rompe del todo.</li>
+<li><strong><a href="https://parquet.apache.org/">Parquet</a>:</strong> formato <strong>columnar</strong> (guarda la columna <code>importe</code> junta). El informe de las 8 lee hotel e importe y <strong>no</strong> carga las doce columnas. Muy usado en lagos y en Spark.</li>
+<li><strong><a href="https://orc.apache.org/">ORC</a>:</strong> parecido a Parquet; nació en el mundo Hive.</li>
+<li><strong><a href="https://arrow.apache.org/">Feather / Arrow</a>:</strong> pensado para pasar tablas <strong>rápido</strong> entre procesos Python/R. No es el archivo de “guardar tres años”.</li>
+<li><strong><a href="https://google.github.io/snappy/">Snappy</a></strong> (y gzip, zstd): <strong>códecs</strong> de compresión. Ocupan menos y viajan menos; cuestan CPU.</li>
 </ul>
 <table>
 <thead>
@@ -2597,6 +2602,7 @@
 </div>
 <h2 id="de-donde-sale-y-adonde-entra">De dónde sale y adónde entra<a class="headerlink" href="#de-donde-sale-y-adonde-entra" title="Permanent link">&para;</a></h2>
 <p>La ingesta es la <strong>primera</strong> capa de la <a href="../arquitectura/">arquitectura</a>. Suele ser la más pesada: muchas fuentes, ritmos distintos. El día 1 <strong>priorizas</strong> (no todas importan), <strong>validas</strong> cada lote aparte y <strong>enrutas</strong>.</p>
+<p><img alt="La ingesta es la capa de abajo: el dato sube hacia el panel" src="../../assets/ut1/capas-ingesta.png" /></p>
 <table>
 <thead>
 <tr>
@@ -2606,20 +2612,20 @@
 </thead>
 <tbody>
 <tr>
-<td>Una cola que ya recogió sensores (p. ej. Kafka)</td>
+<td>Una cola que ya recogió sensores (p. ej. <a href="https://kafka.apache.org/">Kafka</a>)</td>
 <td>Otra cola</td>
 </tr>
 <tr>
-<td>Una tabla <strong>SQL</strong>, a menudo por <strong>JDBC</strong> (el “enchufe” estándar de Java/muchas ETL para hablar con la base)</td>
-<td>SQL o <strong>NoSQL</strong> (bases no solo en tablas: documentos, clave-valor… p. ej. <strong>MongoDB</strong>)</td>
+<td>Una tabla <strong>SQL</strong>, a menudo por <strong><a href="https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html">JDBC</a></strong> (el “enchufe” estándar de Java/muchas ETL para hablar con la base)</td>
+<td>SQL o <strong>NoSQL</strong> (bases no solo en tablas: documentos, clave-valor… p. ej. <strong><a href="https://www.mongodb.com/">MongoDB</a></strong>)</td>
 </tr>
 <tr>
 <td>Una API REST que devuelve JSON</td>
-<td>El lago: carpeta en <strong>HDFS</strong> (Hadoop) o <strong>S3</strong> (Amazon)</td>
+<td>El lago: carpeta en <strong><a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">HDFS</a></strong> (Hadoop) o <strong><a href="https://aws.amazon.com/s3/">S3</a></strong> (Amazon)</td>
 </tr>
 <tr>
 <td>Una carpeta de ficheros</td>
-<td>Una <strong>plataforma de datos</strong>: <strong>Snowflake</strong> o <strong>Databricks</strong> son almacenes/analítica en la nube; no los montáis aquí</td>
+<td>Una <strong>plataforma de datos</strong>: <strong><a href="https://www.snowflake.com/">Snowflake</a></strong> o <strong><a href="https://www.databricks.com/">Databricks</a></strong> son almacenes/analítica en la nube; no los montáis aquí</td>
 </tr>
 </tbody>
 </table>
@@ -2688,24 +2694,24 @@
 <p>Citas la <strong>familia</strong>. El producto concreto cambia de año. No memorices logos; sí debes poder decir <em>para qué sirve</em> cada una si te la nombran.</p>
 <h3 id="por-lotes-y-flujos">Por lotes y flujos<a class="headerlink" href="#por-lotes-y-flujos" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Apache Sqoop:</strong> puente <strong>SQL ↔ Hadoop</strong>. Copia tablas enteras (o incrementales) hacia HDFS/Hive/<strong>HBase</strong> (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por <strong>comandos</strong>. El proyecto está en mantenimiento: la <em>idea</em> (volcado nocturno <em>pull</em>) sigue; el binario concreto, no siempre.</li>
-<li><strong>Apache Flume:</strong> tubería de <strong>logs y eventos</strong> hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.</li>
-<li><strong>Apache NiFi:</strong> pantalla con <strong>cajas y flechas</strong> (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.</li>
-<li><strong>Logstash</strong> (Elastic): nació para meter logs en <strong>Elasticsearch</strong> (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.</li>
-<li><strong>AWS Glue:</strong> ETL <strong>gestionada</strong> en Amazon: no instalas servidor; lo lanzas desde la consola. Descubre esquemas. Lo usan también <strong>Athena</strong> (SQL sobre ficheros en S3) y otros servicios AWS.</li>
+<li><strong><a href="https://sqoop.apache.org/">Apache Sqoop</a>:</strong> puente <strong>SQL ↔ Hadoop</strong>. Copia tablas enteras (o incrementales) hacia HDFS/Hive/<strong><a href="https://hbase.apache.org/">HBase</a></strong> (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por <strong>comandos</strong>. El proyecto está en mantenimiento: la <em>idea</em> (volcado nocturno <em>pull</em>) sigue; el binario concreto, no siempre.</li>
+<li><strong><a href="https://flume.apache.org/">Apache Flume</a>:</strong> tubería de <strong>logs y eventos</strong> hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.</li>
+<li><strong><a href="https://nifi.apache.org/">Apache NiFi</a>:</strong> pantalla con <strong>cajas y flechas</strong> (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.</li>
+<li><strong><a href="https://www.elastic.co/logstash">Logstash</a></strong> (Elastic): nació para meter logs en <strong><a href="https://www.elastic.co/elasticsearch">Elasticsearch</a></strong> (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.</li>
+<li><strong><a href="https://aws.amazon.com/glue/">AWS Glue</a>:</strong> ETL <strong>gestionada</strong> en Amazon: no instalas servidor; lo lanzas desde la consola. Descubre esquemas. Lo usan también <strong><a href="https://aws.amazon.com/athena/">Athena</a></strong> (SQL sobre ficheros en S3) y otros servicios AWS.</li>
 </ul>
 <h3 id="mensajeria-ingesta-asincrona">Mensajería (ingesta asíncrona)<a class="headerlink" href="#mensajeria-ingesta-asincrona" title="Permanent link">&para;</a></h3>
 <p>Ya las vimos como idea. Recapitulación:</p>
 <ul>
-<li><strong>Kafka:</strong> publicador/suscriptor, pensado para mucho volumen.</li>
-<li><strong>RabbitMQ:</strong> cola clásica productor-consumidor.</li>
-<li><strong>Kinesis / Event Hubs / Pub/Sub:</strong> lo mismo en AWS, Azure y Google.</li>
+<li><strong><a href="https://kafka.apache.org/">Kafka</a>:</strong> publicador/suscriptor, pensado para mucho volumen.</li>
+<li><strong><a href="https://www.rabbitmq.com/">RabbitMQ</a>:</strong> cola clásica productor-consumidor.</li>
+<li><strong><a href="https://aws.amazon.com/kinesis/">Kinesis</a> / <a href="https://azure.microsoft.com/products/event-hubs/">Event Hubs</a> / <a href="https://cloud.google.com/pubsub">Pub/Sub</a>:</strong> lo mismo en AWS, Azure y Google.</li>
 </ul>
 <h3 id="conectores-elt-saas-lago">Conectores ELT (SaaS → lago)<a class="headerlink" href="#conectores-elt-saas-lago" title="Permanent link">&para;</a></h3>
 <p><strong>SaaS</strong> = software que usas por internet (el PMS en la nube, el CRM, la pasarela). En vez de programar cada API:</p>
 <ul>
-<li><strong>Fivetran:</strong> plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.</li>
-<li><strong>Airbyte:</strong> la misma idea, con versión <strong>open source</strong> y otra gestionada en cloud.</li>
+<li><strong><a href="https://www.fivetran.com/">Fivetran</a>:</strong> plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.</li>
+<li><strong><a href="https://airbyte.com/">Airbyte</a>:</strong> la misma idea, con versión <strong>open source</strong> (<a href="https://github.com/airbytehq/airbyte">GitHub</a>) y otra gestionada en cloud.</li>
 </ul>
 <h3 id="mapa-rapido">Mapa rápido<a class="headerlink" href="#mapa-rapido" title="Permanent link">&para;</a></h3>
 <table>
