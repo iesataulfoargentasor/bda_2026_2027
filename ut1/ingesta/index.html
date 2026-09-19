@@ -1988,7 +1988,7 @@
 <li>Dirección quiere, cada mañana a las 8, <strong>ocupación e importe cobrado por hotel</strong>.</li>
 </ul>
 <p>Esos datos <strong>ya existen</strong>. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.</p>
-<p><img alt="Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago y el panel" src="../../assets/ut1/ingesta-hotel.png" /></p>
+<p><img alt="Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago; el panel es otro paso" src="../../assets/ut1/ingesta-hotel.png" /></p>
 <p>Hasta que el dato no entra, el resto de la <a href="../arquitectura/">arquitectura</a> está vacía. Un buen proceso de ingesta tiene que ser:</p>
 <ul>
 <li><strong>Flexible:</strong> mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiras el diseño.</li>
@@ -2002,8 +2002,8 @@
 <li>¿Hay que cruzar reservas con cobros, quitar canceladas, unificar el nombre del canal? (transformación)</li>
 <li>¿El dato vive en el programa de reservas, en la pasarela, en una carpeta FTP (un sitio en red donde se dejan ficheros) o en los sensores? (origen)</li>
 </ol>
-<p>Sin esa pregunta de negocio, unificar veinte fuentes en un único almacén es un proyecto largo que no sabes cuándo termina.</p>
-<p>A ese almacén único, cuando guarda datos de muchas fuentes <strong>en bruto</strong> (aún poco limpios), se le llama <strong>lago de datos</strong> (<em>data lake</em>). Lo verás con más detalle en <a href="../almacenamiento/">1.3</a>. Aquí basta: es el “sitio común” al que suele llegar lo ingerido.</p>
+<p>Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabes cuándo termina.</p>
+<p>El sitio típico al que llega lo ingerido <strong>en bruto</strong> es el <strong>lago de datos</strong> (<em>data lake</em>). El <strong>almacén de informes</strong> (<em>data warehouse</em>) es otro sitio: ahí el dato ya va limpio, pensado para el panel. En <a href="../almacenamiento/">1.3</a> se distinguen; aquí basta: la ingesta suele aterrizar primero en el lago.</p>
 <h2 id="pipeline-de-datos">Pipeline de datos<a class="headerlink" href="#pipeline-de-datos" title="Permanent link">&para;</a></h2>
 <p>Un <strong>pipeline</strong> (tubería) es una forma de organizar el trabajo en <strong>fases</strong>. No es un producto que compras. Describe los pasos y, si hace falta, las tecnologías entre un origen y un destino.</p>
 <p>En lo más simple: recoger, guardar, procesar y <strong>dejar algo útil</strong>.</p>
@@ -2064,7 +2064,6 @@
 <li><strong>No</strong> se modifica el dato operativo. Si colapsa el programa de reservas, la empresa pierde dinero <em>cobrando</em>.</li>
 </ol>
 <p>Compruebas que el lote <strong>trae lo que dice traer</strong> (columnas, tipos). Si no, se <strong>aparta</strong>: un job “en verde” con filas cojas envenena el panel.</p>
-<p>La <strong>carga inicial</strong> es un <em>snapshot</em>: una foto de todo (tres años de reservas). El job del martes es <strong>incremental</strong>: solo lo nuevo o lo que cambió. Mezclarlas es un error caro.</p>
 <p>Hay tres formas de iniciar el movimiento. No son tres productos.</p>
 <p><img alt="Push, pull y poll: quién inicia el movimiento del dato" src="../../assets/ut1/push-pull-poll.png" /></p>
 <table>
@@ -2144,7 +2143,9 @@
 </tr>
 </tbody>
 </table>
-<p>Cien filas de práctica <strong>no</strong> demuestran la carga. El <strong>formato</strong> de lo que escribes (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del <a href="#hola-etl">Hola ETL</a>, cuando ya tienes un <code>cruce</code>. El catálogo completo está en <a href="../formatos/">1.7</a>.</p>
+<p>Cien filas de práctica <strong>no</strong> demuestran la carga.</p>
+<p>Tampoco es lo mismo el tamaño el día 1 y el martes. La <strong>primera carga</strong> (<em>snapshot</em>) es una foto de todo: tres años de reservas. El job del martes es <strong>incremental</strong>: solo lo nuevo o lo que cambió. Mezclarlas es un error caro. Eso también cambia cuánto <strong>extraes</strong>: no pides tres años cada noche.</p>
+<p>El <strong>formato</strong> de lo que escribes (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del <a href="#hola-etl">Hola ETL</a>, cuando ya tienes un <code>cruce</code>. El catálogo completo está en <a href="../formatos/">1.7</a>.</p>
 <h2 id="elt">ELT<a class="headerlink" href="#elt" title="Permanent link">&para;</a></h2>
 <p><strong>ELT</strong> cambia las letras: extraer → <strong>cargar</strong> → transformar.</p>
 <p>Los datos se dejan primero <strong>aún sin limpiar</strong>. El sitio típico es el <a href="../almacenamiento/">lago</a>. En la nube a veces es un almacén <strong>elástico</strong> (<a href="https://www.snowflake.com/">Snowflake</a>, BigQuery…), que sí puede tragar bruto y transformar después. El <em>data warehouse</em> clásico de <a href="../almacenamiento/">1.3</a> —pasillos fijos, columnas acordadas— suele querer el dato <strong>ya limpio</strong>: ahí encaja ETL, no ELT.</p>
@@ -2397,8 +2398,19 @@
 </tr>
 </tbody>
 </table>
-<p>Si el cruce pesara y el destino fuera el lago:</p>
+<p>Si el cruce pesara y el destino fuera el lago, usa el <code>cruce</code> del <strong>pandas</strong> de arriba (<code>pip install pyarrow</code>):</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">cruce</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;web_cobrado.parquet&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Si solo corriste DuckDB, no existe <code>cruce</code>. Entonces:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">duckdb</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s2">COPY (</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s2">    SELECT r.id_reserva, r.hotel, r.importe, c.medio</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">    FROM read_csv(&#39;reservas.csv&#39;, header=true) AS r</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">    INNER JOIN read_csv(&#39;cobros.csv&#39;, header=true) AS c</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">        USING (id_reserva)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">    WHERE r.canal = &#39;web&#39;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">) TO &#39;web_cobrado.parquet&#39; (FORMAT PARQUET)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Comprimir ocupa menos y viaja menos; cuesta CPU. En volumen suele ganar un códec <strong>rápido</strong> (por ejemplo Snappy).</p>
 <div class="admonition tip">
@@ -2462,12 +2474,12 @@
 </tbody>
 </table>
 <p>Un CSV de canales y un sensor cada 30 segundos <strong>no</strong> van por el mismo tubo.</p>
-<p>Si el sensor de habitación no puede esperar al informe de las 8, hace falta <strong>desacoplar</strong> al que produce el dato del que lo consume: cada uno trabaja a su ritmo.</p>
+<p>Si el sensor de habitación no puede esperar al informe de las 8, hace falta <strong>desacoplar</strong> al que produce el dato del que lo consume: cada uno trabaja a su ritmo. El <strong>panel de las 8</strong> sigue siendo un lote nocturno. La cola es para el <strong>semáforo</strong> de recepción, no para ese panel.</p>
 <p>Una <strong>cola de mensajes</strong> es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.</p>
-<p><img alt="Productor, cola y consumidor: si el consumidor va lento, la cola aguanta" src="../../assets/ut1/cola-mensajes.png" /></p>
+<p><img alt="Productor, cola y semáforo de recepción: si el semáforo va lento, la cola aguanta" src="../../assets/ut1/cola-mensajes.png" /></p>
 <ul>
 <li>Un <strong>productor</strong> deja el evento (la habitación se ocupó).</li>
-<li>Un <strong>consumidor</strong> lo recoge cuando puede (el panel, un script).</li>
+<li>Un <strong>consumidor</strong> lo recoge cuando puede (el semáforo de recepción, un script).</li>
 <li>Si el consumidor va lento, la cola <strong>aguanta</strong> un rato: es un <strong>búfer</strong>.</li>
 <li>Si además el sistema <strong>frena al productor</strong> para que no siga empujando, eso es <em>contrapresión</em> (<em>back pressure</em>). No son lo mismo: el búfer absorbe; la contrapresión pide que se afloje.</li>
 </ul>
@@ -2478,7 +2490,7 @@
 <li><strong>RabbitMQ:</strong> una cola más clásica (<a href="https://www.rabbitmq.com/">rabbitmq.com</a>): el productor deja el recado, el consumidor lo recoge y, en general, se borra.</li>
 <li>En la nube hay equivalentes: <a href="https://aws.amazon.com/kinesis/"><strong>Kinesis</strong></a> (Amazon), <a href="https://azure.microsoft.com/products/event-hubs/"><strong>Event Hubs</strong></a> (Azure), <a href="https://cloud.google.com/pubsub"><strong>Pub/Sub</strong></a> (Google).</li>
 </ul>
-<p>En voz alta: “desacoplar al que pica la reserva del que pinta el panel” → familia <strong>mensajería</strong>, no un volcado nocturno.</p>
+<p>En voz alta: “desacoplar al sensor del semáforo de recepción” → familia <strong>mensajería</strong>, no el volcado nocturno del panel de las 8.</p>
 <h3 id="batch-vs-streaming">Batch vs Streaming<a class="headerlink" href="#batch-vs-streaming" title="Permanent link">&para;</a></h3>
 <p>El movimiento de datos entre orígenes y destinos puede ser:</p>
 <table>
