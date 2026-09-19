@@ -169,7 +169,7 @@ Parámetros útiles (también en Kitchen): `/level:Basic` (o `Error`, `Debug`, `
 
 Cliente: *“Importe cobrado y número de reservas **por hotel y canal**. Las que aún no tienen cobro no entran.”*
 
-Es el mismo oficio que el [Hola ETL](ingesta.md#hola-etl) de ingesta (reservas + cobros), ahora en Spoon.
+Es el mismo **cruce** que el [Hola ETL](ingesta.md#hola-etl) de ingesta (reservas + cobros). En Spoon el cliente pide un informe **agregado** por hotel y canal, no el JSON del taller.
 
 | Fichero | Separador | Rol |
 | --- | --- | --- |
