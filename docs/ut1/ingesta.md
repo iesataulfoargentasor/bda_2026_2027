@@ -27,7 +27,7 @@ En el grupo hotelero que usamos en esta unidad:
 
 Esos datos **ya existen**. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.
 
-![Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago y el panel](../assets/ut1/ingesta-hotel.png)
+![Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago; el panel es otro paso](../assets/ut1/ingesta-hotel.png)
 
 Hasta que el dato no entra, el resto de la [arquitectura](arquitectura.md) está vacía. Un buen proceso de ingesta tiene que ser:
 
@@ -44,9 +44,9 @@ Antes de elegir un programa, diseñas **hacia atrás**:
 2. ¿Hay que cruzar reservas con cobros, quitar canceladas, unificar el nombre del canal? (transformación)
 3. ¿El dato vive en el programa de reservas, en la pasarela, en una carpeta FTP (un sitio en red donde se dejan ficheros) o en los sensores? (origen)
 
-Sin esa pregunta de negocio, unificar veinte fuentes en un único almacén es un proyecto largo que no sabes cuándo termina.
+Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabes cuándo termina.
 
-A ese almacén único, cuando guarda datos de muchas fuentes **en bruto** (aún poco limpios), se le llama **lago de datos** (*data lake*). Lo verás con más detalle en [1.3](almacenamiento.md). Aquí basta: es el “sitio común” al que suele llegar lo ingerido.
+El sitio típico al que llega lo ingerido **en bruto** es el **lago de datos** (*data lake*). El **almacén de informes** (*data warehouse*) es otro sitio: ahí el dato ya va limpio, pensado para el panel. En [1.3](almacenamiento.md) se distinguen; aquí basta: la ingesta suele aterrizar primero en el lago.
 
 ## Pipeline de datos
 
@@ -131,8 +131,6 @@ Dos reglas:
 
 Compruebas que el lote **trae lo que dice traer** (columnas, tipos). Si no, se **aparta**: un job “en verde” con filas cojas envenena el panel.
 
-La **carga inicial** es un *snapshot*: una foto de todo (tres años de reservas). El job del martes es **incremental**: solo lo nuevo o lo que cambió. Mezclarlas es un error caro.
-
 Hay tres formas de iniciar el movimiento. No son tres productos.
 
 ![Push, pull y poll: quién inicia el movimiento del dato](../assets/ut1/push-pull-poll.png)
@@ -177,7 +175,11 @@ Cada destino tiene su vía rápida. Tres palancas que, si las ignoras, tiran una
 | **Partición** (guardar en “cajones”: por fecha o por hotel) | Si partes mal, el panel barre todo |
 | **Tamaño de la transacción** (cuántas filas confirmas de golpe) | Confirmar diez millones de golpe puede tumbar el destino; confirmar de una en una, eternizar la carga |
 
-Cien filas de práctica **no** demuestran la carga. El **formato** de lo que escribes (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del [Hola ETL](#hola-etl), cuando ya tienes un `cruce`. El catálogo completo está en [1.7](formatos.md).
+Cien filas de práctica **no** demuestran la carga.
+
+Tampoco es lo mismo el tamaño el día 1 y el martes. La **primera carga** (*snapshot*) es una foto de todo: tres años de reservas. El job del martes es **incremental**: solo lo nuevo o lo que cambió. Mezclarlas es un error caro. Eso también cambia cuánto **extraes**: no pides tres años cada noche.
+
+El **formato** de lo que escribes (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del [Hola ETL](#hola-etl), cuando ya tienes un `cruce`. El catálogo completo está en [1.7](formatos.md).
 
 ## ELT
 
@@ -364,10 +366,24 @@ Escribir “un fichero” no basta. El siguiente paso tiene que **partir** el ar
 | Tablas Hive | ORC (o Parquet si el equipo usa Spark) | Encaje con esa pila |
 | El programa de recepción | Ni Parquet ni ORC como almacén | Actualizar una fila es caro |
 
-Si el cruce pesara y el destino fuera el lago:
+Si el cruce pesara y el destino fuera el lago, usa el `cruce` del **pandas** de arriba (`pip install pyarrow`):
 
 ```python
 cruce.to_parquet("web_cobrado.parquet")
+```
+
+Si solo corriste DuckDB, no existe `cruce`. Entonces:
+
+```python
+duckdb.sql("""
+COPY (
+    SELECT r.id_reserva, r.hotel, r.importe, c.medio
+    FROM read_csv('reservas.csv', header=true) AS r
+    INNER JOIN read_csv('cobros.csv', header=true) AS c
+        USING (id_reserva)
+    WHERE r.canal = 'web'
+) TO 'web_cobrado.parquet' (FORMAT PARQUET)
+""")
 ```
 
 Comprimir ocupa menos y viaja menos; cuesta CPU. En volumen suele ganar un códec **rápido** (por ejemplo Snappy).
@@ -399,14 +415,14 @@ Cuatro preguntas que recuerdan a las [5 V](por-que-big-data.md), aplicadas al *c
 
 Un CSV de canales y un sensor cada 30 segundos **no** van por el mismo tubo.
 
-Si el sensor de habitación no puede esperar al informe de las 8, hace falta **desacoplar** al que produce el dato del que lo consume: cada uno trabaja a su ritmo.
+Si el sensor de habitación no puede esperar al informe de las 8, hace falta **desacoplar** al que produce el dato del que lo consume: cada uno trabaja a su ritmo. El **panel de las 8** sigue siendo un lote nocturno. La cola es para el **semáforo** de recepción, no para ese panel.
 
 Una **cola de mensajes** es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.
 
-![Productor, cola y consumidor: si el consumidor va lento, la cola aguanta](../assets/ut1/cola-mensajes.png)
+![Productor, cola y semáforo de recepción: si el semáforo va lento, la cola aguanta](../assets/ut1/cola-mensajes.png)
 
 - Un **productor** deja el evento (la habitación se ocupó).
-- Un **consumidor** lo recoge cuando puede (el panel, un script).
+- Un **consumidor** lo recoge cuando puede (el semáforo de recepción, un script).
 - Si el consumidor va lento, la cola **aguanta** un rato: es un **búfer**.
 - Si además el sistema **frena al productor** para que no siga empujando, eso es *contrapresión* (*back pressure*). No son lo mismo: el búfer absorbe; la contrapresión pide que se afloje.
 
@@ -418,7 +434,7 @@ Herramientas de este oficio (las verás con más detalle en el catálogo de más
 - **RabbitMQ:** una cola más clásica ([rabbitmq.com](https://www.rabbitmq.com/)): el productor deja el recado, el consumidor lo recoge y, en general, se borra.
 - En la nube hay equivalentes: [**Kinesis**](https://aws.amazon.com/kinesis/) (Amazon), [**Event Hubs**](https://azure.microsoft.com/products/event-hubs/) (Azure), [**Pub/Sub**](https://cloud.google.com/pubsub) (Google).
 
-En voz alta: “desacoplar al que pica la reserva del que pinta el panel” → familia **mensajería**, no un volcado nocturno.
+En voz alta: “desacoplar al sensor del semáforo de recepción” → familia **mensajería**, no el volcado nocturno del panel de las 8.
 
 ### Batch vs Streaming
 
