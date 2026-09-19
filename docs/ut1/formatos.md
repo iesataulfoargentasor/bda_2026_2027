@@ -12,7 +12,7 @@ El criterio **c)** es este: **en qué forma dejas el dato** para que el siguient
 
 ## Un caso para no perderse
 
-Un grupo hotelero de Cantabria guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: *ocupación e importe medio por hotel*. Tres números. Si el fichero es un CSV de 80 GB, el motor **lee las doce columnas** para calcular tres. En cloud, a menudo **pagas por lo que escaneas**, no solo por lo que guardas.
+El [grupo hotelero de Cantabria](caso-hotel.md) guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: *ocupación e importe medio por hotel*. Tres números. Si el fichero es un CSV de 80 GB, el motor **lee las doce columnas** para calcular tres. En cloud, a menudo **pagas por lo que escaneas**, no solo por lo que guardas.
 
 Esa es la pregunta del apartado: ¿el dato viaja **fila a fila** (bien para cobrar en recepción) o **campo a campo** (bien para el informe)? ¿Hace falta que un humano lo abra, o que Spark lo **trocee** entre nodos?
 

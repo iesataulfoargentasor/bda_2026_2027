@@ -23,7 +23,7 @@ No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criteri
 
 Antes de hablar de Hadoop, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
 
-Piensa en un hotel de Cantabria en agosto:
+Piensa en el [grupo hotelero de Cantabria](caso-hotel.md) en agosto (empieza por Laredo si te ayuda a imaginar temporada alta):
 
 1. **Evento.** Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.
 2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto del DNI, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.

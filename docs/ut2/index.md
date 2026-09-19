@@ -12,7 +12,7 @@ El título sigue el **[RA2](ra2.md)**: *gestiona sistemas de almacenamiento y el
 
 En la [UT1](../ut1/index.md) elegías almacén, ingesta y formato. Aquí el grupo hotelero **ya tiene** terabytes: logs de reservas, JSON de sensores, fotos de habitación y cobros. Una sola máquina no los deposita **ni** los procesa a tiempo. Hace falta un **sistema** (HDFS, YARN, Mongo…) y el **ecosistema** que lo rodea (Hive, Spark, réplicas, *shards*).
 
-Lee los apartados **en orden**. El hilo es el mismo hotel de Cantabria. Las siglas (HDFS, YARN, BSON, *oplog*…) llegan **después** del ejemplo. Si puedes explicar a un compañero *qué ganas al añadir un nodo* y *qué pasa si se apaga uno*, el apartado está asimilado.
+Lee los apartados **en orden**. El hilo es el mismo **[grupo hotelero de Cantabria](../ut1/caso-hotel.md)**. Las siglas (HDFS, YARN, BSON, *oplog*…) llegan **después** del ejemplo. Si puedes explicar a un compañero *qué ganas al añadir un nodo* y *qué pasa si se apaga uno*, el apartado está asimilado.
 
 ## Qué vas a trabajar
 

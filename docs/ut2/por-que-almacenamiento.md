@@ -12,6 +12,8 @@ El criterio **a)** pide esto: entender **por qué** hace falta un sistema pensad
 
 ## El hotel el martes por la mañana
 
+Sigue el [grupo hotelero de Cantabria](../ut1/caso-hotel.md). El job de la noche tiene que acabar **antes de las 8**.
+
 Recepción pica reservas (JSON). Los sensores de habitación sueltan una línea cada 30 s. Marketing quiere las fotos de las reformas. Finanzas cierra cobros. Todo eso **cabe** en un portátil el día 1. A los seis meses, el CSV de logs ya no abre en Excel y el informe de ocupación tarda la noche.
 
 Tres exigencias del RA2, en castellano:

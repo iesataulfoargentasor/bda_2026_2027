@@ -27,6 +27,7 @@ El sitio cubre la **[UT1](ut1/ra1.md)** (diseñar la solución: ingesta, formato
 Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta, formatos y Pentaho.
 
 - [La unidad](ut1/index.md)
+- [El caso: grupo hotelero](ut1/caso-hotel.md)
 - [RA1 y criterios de evaluación](ut1/ra1.md)
 - [1.1 Por qué Big Data y las 5 Vs](ut1/por-que-big-data.md)
 - [1.2 Clústeres](ut1/clusters.md)

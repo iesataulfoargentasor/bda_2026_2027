@@ -14,6 +14,8 @@ Se parte en **capas** que se hablan entre sí. Cada capa tiene **una** responsab
 
 ## Un caso para no perderse
 
+El hilo del módulo es el [grupo hotelero](caso-hotel.md). En esta página las capas se ven con **otro** negocio, para que no parezcan un invento solo de reservas.
+
 Una comercializadora eléctrica (o un ayuntamiento con contadores) quiere:
 
 - no perder lecturas de los equipos,

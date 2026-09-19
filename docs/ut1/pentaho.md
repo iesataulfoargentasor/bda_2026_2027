@@ -13,7 +13,7 @@ Los criterios **d)** y **e)** del RA1 se cierran aquí: **procesar** el dato ya 
 
 En el aula usamos **Pentaho Data Integration (PDI / Kettle)**, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí te deja **ver** un [ETL](ingesta.md): extraer, filtrar, unir, agregar y cargar **sin programar el motor**.
 
-El PDF de prácticas (capturas y clics): [Pentaho.pdf](../assets/originales/Pentaho.pdf). Esta página cuenta **qué competencia** entrenas en cada taller, con **otros ficheros** (hotel en Cantabria) para que el flujo no sea una receta calcada. Los pasos de Spoon se llaman igual; cambia el caso.
+El PDF de prácticas (capturas y clics): [Pentaho.pdf](../assets/originales/Pentaho.pdf). Esta página cuenta **qué competencia** entrenas en cada taller, con **otros ficheros** del [grupo hotelero de Cantabria](caso-hotel.md) para que el flujo no sea una receta calcada. Los pasos de Spoon se llaman igual; cambia el caso.
 
 Los CSV y el SQL de esta página:
 

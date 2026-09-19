@@ -53,7 +53,7 @@ El índice de la página sigue el mismo hilo que se usa en ingeniería de datos:
 
 **Ingerir datos** es el proceso de coger información que ya existe en varios sitios —un fichero, una base de datos, una web, un sensor— y llevarla a **otro** sistema, donde se podrá guardar o procesar.
 
-En el grupo hotelero que usamos en esta unidad:
+El contexto es el **[caso del grupo hotelero](caso-hotel.md)** (Santander, Laredo, Comillas, Potes). Resumen para no perderse:
 
 - Recepción pica las reservas en el **programa de reservas** del hotel (en la jerga, PMS: *Property Management System*).
 - La pasarela de pago sabe qué estancias se han cobrado.
