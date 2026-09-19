@@ -27,7 +27,7 @@ Lee cada apartado **en orden**. En todos hay un caso (hotel, caja, sensores) y u
 | [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, almacén de informes, lago; y, desde cero, ACID, CAP y BASE |
 | [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar |
 | [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Capas (ingesta → visualización) y el “paisaje” de herramientas |
-| [1.6 Ingesta de datos](ingesta.md) | **b)** | Procedimiento de ingesta (hotel): push/pull/poll, ETL/ELT, reservas+cobros y formato de la carga |
+| [1.6 Ingesta de datos](ingesta.md) | **b)** | Procedimiento de ingesta (hotel): pipeline en cuatro paradas, push/pull/poll, ETL/ELT, carga y formato, reservas+cobros |
 | [1.7 Formatos de datos](formatos.md) | **c)** | Elegir formato (reservas de hotel): Avro, Parquet, ORC, Arrow, DuckDB |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | PDI (Spoon/Pan/Kitchen): filtrar, unir, JSON, nube, jobs y BD del hotel |
 | [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
