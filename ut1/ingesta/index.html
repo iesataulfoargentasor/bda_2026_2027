@@ -690,6 +690,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cuatro-paradas-no-un-unico-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuatro paradas, no un único job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quien-mueve-el-dato-antes-que-sqoop-o-kafka" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -784,6 +795,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-origen-no-se-queda-quieto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El origen no se queda quieto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#como-elegir-el-mecanismo-guion-de-aula" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +832,17 @@
     <span class="md-ellipsis">
       
         Taller medido y supuestos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-ampliar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Para ampliar
       
     </span>
   </a>
@@ -1377,6 +1410,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cuatro-paradas-no-un-unico-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuatro paradas, no un único job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quien-mueve-el-dato-antes-que-sqoop-o-kafka" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1471,6 +1515,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-origen-no-se-queda-quieto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El origen no se queda quieto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#como-elegir-el-mecanismo-guion-de-aula" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1497,6 +1552,17 @@
     <span class="md-ellipsis">
       
         Taller medido y supuestos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-ampliar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Para ampliar
       
     </span>
   </a>
@@ -1599,6 +1665,7 @@
 <h1 id="16-ingesta-de-datos">1.6. Ingesta de datos<a class="headerlink" href="#16-ingesta-de-datos" title="Permanent link">&para;</a></h1>
 <p>El criterio <strong>b)</strong> no pregunta “¿qué logo pones en el diagrama?”. Pregunta <strong>cómo</strong> metes el dato: de dónde sale, quién da el primer paso, a qué ritmo, si lo limpias antes o después de guardarlo, en qué forma lo dejas y <strong>por qué</strong> no el mecanismo de al lado.</p>
 <p>Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.</p>
+<p><strong>Ingerir</strong>, en el RA1, es el procedimiento que saca el dato de donde nace (PMS, pasarela, sensor, CSV, API) y lo deja en un sitio desde el que ya se puede trabajar: una zona bruta, un almacén, una cola. Hasta que no entra, el resto de la <a href="../arquitectura/">arquitectura</a> está vacía. La productividad del equipo no depende del logo de la herramienta: depende de si este procedimiento es <strong>ágil</strong> (cuando gerencia cambia la pregunta, no tiras tres meses) y <strong>flexible</strong> (mañana aparece otra fuente).</p>
 <h2 id="el-lunes-a-las-8-no-la-herramienta">El lunes a las 8, no la herramienta<a class="headerlink" href="#el-lunes-a-las-8-no-la-herramienta" title="Permanent link">&para;</a></h2>
 <p>Dirección de un grupo hotelero quiere, cada mañana a las 8, <strong>ocupación e importe cobrado por hotel</strong>. Recepción sigue picando reservas. Finanzas cierra el día a las 23:00. Hay sensores de ocupación en habitación que publican cada medio minuto.</p>
 <p>Antes de abrir Kafka, Pentaho o un script, diseñas <strong>hacia atrás</strong>:</p>
@@ -1616,6 +1683,20 @@
 </ul>
 <p>El análisis <strong>no</strong> se hace en la recepción. Sumar importes es caro para la máquina; si lo lanzas sobre el programa que cobra, el mostrador espera. Se <strong>copia</strong> el hecho a otro sitio: el oficio de <a href="../procesamiento/">operar</a> sigue; el de informar trabaja aparte (en los libros, OLTP frente a OLAP). A menudo el primer sitio consolidado es el lago; luego se cura una copia hacia el warehouse del panel. Dos procedimientos, no uno mágico.</p>
 <p>La tubería <strong>se itera</strong>. Gerencia pregunta “¿cancelan más los del viernes?”. Si falta el campo, vuelves al origen, ingestes otra vez e integras. No es un acto único el día 1. Por el camino <strong>limpias</strong>: <code>web</code> frente a <code>WEB</code>, huecos, un número que llega como texto <code>"10"</code>. Eso es dejar el dato <strong>listo</strong> (en la jerga, <em>data wrangling</em>). No es un software: es el oficio.</p>
+<h2 id="cuatro-paradas-no-un-unico-job">Cuatro paradas, no un único job<a class="headerlink" href="#cuatro-paradas-no-un-unico-job" title="Permanent link">&para;</a></h2>
+<p>En el hotel, el mismo hecho (una reserva cobrada) pasa por <strong>paradas</strong>. Cada parada puede ser otra tecnología. Eso es el pipeline de verdad, no “un script que hace de todo”.</p>
+<pre class="mermaid"><code>flowchart LR
+  origen[PMS y pasarela] --&gt; recoger[1 Recoger]
+  recoger --&gt; buffer[2 Zona o cola]
+  buffer --&gt; procesar[3 Procesar]
+  procesar --&gt; panel[4 Panel de las 8]</code></pre>
+<ol>
+<li><strong>Recoger.</strong> Copias el hecho fuera de recepción. Un <em>topic</em>, un volcado JDBC, un CSV en S3.</li>
+<li><strong>Aguantar.</strong> Si el panel va lento, el dato no se pierde: cola o zona bruta. Kafka, aquí, no “analiza”: <strong>espera</strong>. Es el colchón entre el que pica y el que calcula.</li>
+<li><strong>Procesar.</strong> Filtras, cruzas, agregas. Lote o continuo. Aquí suele vivir la T pesada.</li>
+<li><strong>Dejar algo útil.</strong> Warehouse del panel, JSON de gerencia, o una colección NoSQL. La visualización es el último metro, no el primero.</li>
+</ol>
+<p>Un pipeline corto puede hacer una T <strong>ligera</strong> al recoger (tirar el evento sin <code>id_habitacion</code>) y dejar el cruce reservas–cobros para más tarde. Si mezclas las cuatro paradas en un único job “porque es más simple”, el martes que el PMS añade una columna rompes el panel, el cruce y la carga a la vez.</p>
 <h2 id="quien-mueve-el-dato-antes-que-sqoop-o-kafka">Quién mueve el dato (antes que Sqoop o Kafka)<a class="headerlink" href="#quien-mueve-el-dato-antes-que-sqoop-o-kafka" title="Permanent link">&para;</a></h2>
 <p>Tres planteamientos. No son tres productos.</p>
 <table>
@@ -1705,6 +1786,33 @@
 <li><strong>Transformar.</strong> Dejar formato y contenido que el destino entiende: tildes, duplicados, cruzar reservas con cobros, agregar por hotel, inventar un identificador estable, calcular ocupación %. <strong>Mejora</strong> calidad. <strong>No</strong> inventa hechos ni borra lo que el informe necesita. En continuo, la T pesada a veces espera al lote; si transformas al vuelo, pregunta si pierdes el original.</li>
 <li><strong>Cargar.</strong> Escribir <strong>adaptándote</strong> al destino: <em>bulk</em> SQL, carpeta que el warehouse lee, API de S3/HDFS. Reconstruir el <strong>índice</strong> fila a fila mata una carga de diez millones. Parte por fecha o por hotel. Confirma por <strong>bloques</strong>, no por fila. Cien filas de práctica mienten.</li>
 </ol>
+<p>Qué se espera de cada letra, sin memorieta:</p>
+<p><strong>E — no molestar al mostrador.</strong> Orígenes reales: tabla SQL, CSV con otro separador, JSON de una API, mensajes de un bus. El proceso tiene que ser <strong>ligero e independiente</strong> de la máquina que cobra. Compruebas que el lote <strong>trae lo que dice traer</strong> (columnas, tipos). Si no, se aparta: un job “en verde” con filas cojas envenena el panel. La <strong>carga inicial</strong> (tres años de reservas) no es el job del martes (solo lo de ayer). Mezclarlas es el error de aula más caro.</p>
+<p><strong>T — mejorar, no inventar.</strong> En el hotel suele ser: unificar <code>web</code>/<code>WEB</code>, quitar duplicados de <code>id_reserva</code>, cruzar reservas con cobros, agregar importe por hotel, generar un código estable (<code>hotel-fecha</code>), calcular ocupación %. <strong>Sí:</strong> calidad, integración, normalizar. <strong>No:</strong> inventar noches que el PMS no picó, borrar el canal porque “estorbaba”, ni una regla que un día sí y otro no. En continuo, una T pesada (el cruce de veinte fuentes) <strong>no</strong> va en el mismo milisegundo que el sensor.</p>
+<p><strong>L — escribir como el destino espera.</strong> Cada destino tiene su vía rápida: <em>bulk</em> SQL, <code>COPY</code> a fichero, API de S3/HDFS. Tres palancas que tumbaron prácticas reales:</p>
+<table>
+<thead>
+<tr>
+<th>Palanca</th>
+<th>Si la ignoras</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Índices</td>
+<td>Reconstruirlos fila a fila en diez millones de reservas tira la carga</td>
+</tr>
+<tr>
+<td>Partición / clave de distribución</td>
+<td>Por fecha o por hotel; por <code>id_reserva</code> aleatorio el panel barre todo el lago</td>
+</tr>
+<tr>
+<td>Tamaño del <em>commit</em></td>
+<td>Una transacción de diez millones o diez mil de una fila: las dos mienten</td>
+</tr>
+</tbody>
+</table>
+<p>Cien filas de Colab <strong>no</strong> demuestran la L.</p>
 <p><img alt="Esquema ETL" src="../../assets/ut1/etl.png" /></p>
 <table>
 <thead>
@@ -1743,7 +1851,42 @@
 </tbody>
 </table>
 <p>Unificar veinte fuentes <strong>gasta</strong> el proyecto. La veracidad se cuida <strong>aquí</strong>. El mercado cloud empuja <strong>ELT</strong> (el almacén es potente; el lago se llena pronto). <strong>ETL sigue</strong> cuando el destino no admite basura o cuando en aula usas <a href="../pentaho/">Pentaho</a> (PDI se enseña como ETL visual). Lo habitual en empresas es <strong>híbrido</strong>: la suite + pandas / PySpark / DuckDB + un orquestador (<strong>Airflow</strong>) que dispara pasos y avisa si uno falla. No montas Airflow en esta UT; sí sabes para qué existe.</p>
+<p>ELT no es “ETL al revés para quedar moderno”. Cambia <strong>quién</strong> trabaja y <strong>cuándo</strong> se ve el dato:</p>
+<ul>
+<li>El ingeniero deja el bruto en el lago <strong>pronto</strong>. Ciencia de datos y finanzas pueden mirar el crudo <strong>antes</strong> de que alguien modele el cruce perfecto.</li>
+<li>La T la puede hacer quien conoce el negocio (SQL del warehouse, un notebook), no solo el equipo de pipelines. Hacen falta menos personas <em>en medio</em> y más criterio <em>en destino</em>.</li>
+<li>El coste baja cuando el destino es elástico. Sube cuando el warehouse <strong>no</strong> debe tragar basura: entonces ETL (o una zona de cuarentena) sigue mandando.</li>
+</ul>
+<p>Por eso en cloud ves ELT; en aula con Spoon practicas ETL visual. En una cadena hotelera real <strong>conviven</strong>: el cierre de facturación es ETL; el lago de ocupación es ELT.</p>
 <p>La herramienta, en Big Data, tiene que ser <strong>flexible</strong> (CSV, JSON, Parquet, SQL, HTTP), <strong>tolerante a fallos</strong> (si cae a mitad, no dejes el destino a medias sin saberlo) y <strong>conectada</strong> a muchos orígenes. Conviene <strong>rastro</strong> (qué corrió, qué falló) y <strong>planificación</strong> (noche, al llegar un fichero, o continuo).</p>
+<p>Una suite (PDI, Talend, Informatica) no es “el botón ETL”. Cubre tres oficios que un script suelto olvida:</p>
+<table>
+<thead>
+<tr>
+<th>Oficio</th>
+<th>En el hotel</th>
+<th>Dificultad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cambiar tipo, recortar cadena, recodificar canal</td>
+<td><code>WEB</code> → <code>web</code></td>
+<td>Baja</td>
+</tr>
+<tr>
+<td>Agregar por hotel, <em>lookup</em> del catálogo de canales</td>
+<td>Importe cobrado / hotel</td>
+<td>Media</td>
+</tr>
+<tr>
+<td>Modelo, código de un tercero, otro lenguaje dentro del flujo</td>
+<td>Se sale de esta UT</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table>
+<p>Sin planificación y sin registro de errores, el job “en verde” es teatro.</p>
 <h2 id="taller-reservas-y-cobros-las-tres-letras-en-codigo">Taller: reservas y cobros (las tres letras en código)<a class="headerlink" href="#taller-reservas-y-cobros-las-tres-letras-en-codigo" title="Permanent link">&para;</a></h2>
 <p>En <a href="../pentaho/">Pentaho</a> harás el mismo cruce en Spoon, con CSV de reservas y cobros del aula. Aquí generas <strong>dos orígenes</strong> en el cuaderno (Jupyter o un <a href="https://colab.research.google.com/">Colab</a> en blanco), como en <a href="../formatos/">1.7</a>.</p>
 <ul>
@@ -1904,6 +2047,16 @@ Destinos habituales: otra cola; SQL o NoSQL; el lago; una plataforma (Snowflake,
 </tr>
 </tbody>
 </table>
+<p>Esos cuatro ejes (ritmo, tamaño, frecuencia, forma) son las <a href="../por-que-big-data/">5 V</a> vistas desde la <strong>puerta de entrada</strong>. El día 1 no ingestas las veinte fuentes: priorizas las que el panel de las 8 necesita, validas <strong>cada</strong> lote aparte y enrutas. Un CSV de canales y un sensor de 2 Hz no van por el mismo tubo.</p>
+<p>La ingesta corta puede filtrar o enriquecer un poco <strong>antes</strong> de escribir. El <em>join</em> gordo, las agregaciones y las ordenaciones para el informe viven en un pipeline <strong>siguiente</strong>. No es pereza: es no bloquear la puerta.</p>
+<h2 id="el-origen-no-se-queda-quieto">El origen no se queda quieto<a class="headerlink" href="#el-origen-no-se-queda-quieto" title="Permanent link">&para;</a></h2>
+<p>El martes el PMS añade <code>motivo_cancelacion</code>. Tres preguntas que no están en el logo de Kafka:</p>
+<ol>
+<li><strong>¿Quién te avisa?</strong> Si nadie, el job sigue “bien” y el campo nuevo se pierde.</li>
+<li><strong>¿Guardas historial o pitas encima?</strong> Un <em>update</em> in-place borra cómo estaba la reserva el lunes. <em>Delete + insert</em> o una zona versionada dejan rastro.</li>
+<li><strong>¿Reprocesas?</strong> Si gerencia cambia el KPI, a veces basta una consulta nueva sobre el bruto (ELT). A veces hay que <strong>volver a ingerir</strong>. Reusar el dataset ya cargado evita tragarte otra vez tres años de SQL.</li>
+</ol>
+<p>Si transformaste al vuelo y tiraste el original, el cambio de KPI te obliga a pedir otra extracción al PMS. Eso duele. Dos destinos a la vez (lago en S3 <strong>y</strong> Mongo del panel) duplican la pregunta: ¿el mismo formato en los dos, o cada uno el suyo?</p>
 <h2 id="como-elegir-el-mecanismo-guion-de-aula">Cómo elegir el mecanismo (guion de aula)<a class="headerlink" href="#como-elegir-el-mecanismo-guion-de-aula" title="Permanent link">&para;</a></h2>
 <p>No rellenes un cuestionario de treinta ítems. En un supuesto, clava <strong>estas</strong> decisiones y justifícalas.</p>
 <ol>
@@ -1912,8 +2065,9 @@ Destinos habituales: otra cola; SQL o NoSQL; el lago; una plataforma (Snowflake,
 <li><strong>Reloj.</strong> ¿El dato que llega tarde sigue valiendo? El cierre de ayer sí; el semáforo de habitación libre, no.</li>
 <li><strong>ETL o ELT.</strong> ¿El destino traga bruto? ¿Pierdes el original si transformas al vuelo?</li>
 <li><strong>Destino y <a href="../formatos/">formato</a>.</strong> ¿S3 “tonto” o warehouse con SQL? ¿Uno o varios destinos? ¿Avro o Parquet? ¿Partir por hotel?</li>
-<li><strong>Calidad.</strong> ¿Apartas el lote roto? ¿Linaje (de dónde salió esta cifra)?</li>
+<li><strong>Calidad.</strong> ¿Apartas el lote roto? ¿Linaje (de dónde salió esta cifra)? ¿Hay duplicados o valores imposibles (<code>noches = -1</code>)?</li>
 <li><strong>Personas.</strong> ¿El DNI se enmascara o <strong>no entra</strong>? ¿Quién ve el campo, y en qué estado?</li>
+<li><strong>Cambio.</strong> Si el PMS añade una columna, ¿te enteras? ¿Pitas encima o versionas? ¿Puedes reprocesar sin volver a pedir tres años al origen?</li>
 </ol>
 <h2 id="familias-no-un-catalogo-para-memorizar">Familias, no un catálogo para memorizar<a class="headerlink" href="#familias-no-un-catalogo-para-memorizar" title="Permanent link">&para;</a></h2>
 <p>Citas la <strong>familia</strong>. El nombre concreto cambia de año.</p>
@@ -1985,7 +2139,12 @@ Destinos habituales: otra cola; SQL o NoSQL; el lago; una plataforma (Snowflake,
 <li>Con <code>reservas.csv</code> y <code>cobros.csv</code>: importe <strong>cobrado</strong> por hotel <strong>solo</strong> en canal <code>recepcion</code> (pandas y DuckDB). Cuenta también cuántas reservas de ese canal <strong>aún no</strong> tienen cobro.</li>
 <li>Misma T del punto 4, <strong>tres L</strong>: JSON (verlo), Parquet (lago) y Feather (el script de al lado). Anota tamaños y di cuándo usarías cada una.</li>
 <li>Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job “porque es más simple”.</li>
+<li>El PMS añade <code>motivo_cancelacion</code>. El job de las 02:00 sigue en verde. ¿Qué falló (aviso, esquema, historial)? ¿ETL o ELT te salva mejor el KPI nuevo “cancelaciones por tarifa no reembolsable”?</li>
+<li>Misma T del punto 4, pero ahora <strong>agrega</strong>: por hotel, número de reservas cobradas y suma de <code>cobrado</code>. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías en la parada 1 (recoger) o en la 3 (procesar)? ¿Por qué?</li>
+<li>La cadena lanza una app de fidelización y quiere <strong>reacción en redes</strong> las primeras 48 h (menciones, idioma, hora). Del guion de esta página, responde <strong>al menos tres</strong> ítems de origen, <strong>tres</strong> de reloj/latencia y <strong>tres</strong> de personas/calidad. No hace falta nombrar un producto: nombra la <strong>familia</strong>.</li>
 </ol>
+<h2 id="para-ampliar">Para ampliar<a class="headerlink" href="#para-ampliar" title="Permanent link">&para;</a></h2>
+<p>El mismo criterio, con otro hilo (productos y fabricantes) y otro taller pandas/DuckDB, está en los apuntes de Aitor Medrano: <a href="https://aitor-medrano.github.io/iabd/de/etl.html">Ingesta de datos. Pipeline y ETL</a>. Aquí el caso es el grupo hotelero; allí, el catálogo. Las letras E–T–L no cambian.</p>
 
 
 
