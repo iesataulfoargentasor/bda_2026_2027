@@ -25,6 +25,8 @@ En el grupo hotelero que usamos en esta unidad:
 
 Esos datos **ya existen**. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.
 
+![Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago y el panel](../assets/ut1/ingesta-hotel.png)
+
 Hasta que el dato no entra, el resto de la [arquitectura](arquitectura.md) está vacía. Un buen proceso de ingesta tiene que ser:
 
 - **Flexible:** mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiras el diseño.
@@ -65,6 +67,8 @@ Por eso se **copia** el hecho a otro sitio:
 
 No son dos marcas. Son dos oficios. El pipeline los separa para que uno no tumbe al otro.
 
+![OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia](../assets/ut1/oltp-olap.png)
+
 ```mermaid
 flowchart LR
   origen[Programa de reservas y pasarela] --> recoger[1 Recoger]
@@ -101,6 +105,8 @@ Más abajo verás **ETL** (extraer → transformar → cargar). Se confunden muc
 
 Hay tres formas de iniciar el movimiento. No son tres productos.
 
+![Push, pull y poll: quién inicia el movimiento del dato](../assets/ut1/push-pull-poll.png)
+
 | | **Push** (empujar) | **Pull** (tirar) | **Poll** (preguntar) |
 | --- | --- | --- | --- |
 | Quién inicia | El **origen** envía | El **destino** va a buscar | El destino **mira** de vez en cuando; si hay cambio, tira |
@@ -130,6 +136,8 @@ Si el sensor de habitación no puede esperar al informe de las 8, hace falta **d
 
 Una **cola de mensajes** es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.
 
+![Productor, cola y consumidor: si el consumidor va lento, la cola aguanta](../assets/ut1/cola-mensajes.png)
+
 - Un **productor** deja el evento (la habitación se ocupó).
 - Un **consumidor** lo recoge cuando puede (el panel, un script).
 - Si el consumidor va lento, la cola **aguanta** el chaparrón. Eso es *contrapresión* (*back pressure*): no tiras el origen porque el destino no da abasto.
@@ -138,9 +146,9 @@ En muchas colas clásicas, al recoger el mensaje **desaparece**. En sistemas rep
 
 Herramientas de este oficio (las verás con más detalle al final de la página):
 
-- **Apache Kafka:** un “bus” de mensajes. Muchos productores publican en un canal (*topic*, como un tablón con nombre: `reservas.altas`) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.
-- **RabbitMQ:** una cola más clásica: el productor deja el recado, el consumidor lo recoge y, en general, se borra.
-- En la nube hay equivalentes: **Kinesis** (Amazon), **Event Hubs** (Azure), **Pub/Sub** (Google).
+- **Apache Kafka:** un “bus” de mensajes. Sitio oficial: [kafka.apache.org](https://kafka.apache.org/). Muchos productores publican en un canal (*topic*, como un tablón con nombre: `reservas.altas`) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.
+- **RabbitMQ:** una cola más clásica ([rabbitmq.com](https://www.rabbitmq.com/)): el productor deja el recado, el consumidor lo recoge y, en general, se borra.
+- En la nube hay equivalentes: [**Kinesis**](https://aws.amazon.com/kinesis/) (Amazon), [**Event Hubs**](https://azure.microsoft.com/products/event-hubs/) (Azure), [**Pub/Sub**](https://cloud.google.com/pubsub) (Google).
 
 En voz alta: “desacoplar al que pica la reserva del que pinta el panel” → familia **mensajería**, no un volcado nocturno.
 
@@ -165,7 +173,7 @@ Recopilas los datos del origen y los llevas a una zona de trabajo, sin cambiar t
 Orígenes típicos:
 
 - **CSV:** fichero de texto en tabla, columnas separadas por comas (o punto y coma). Excel lo abre.
-- **Tabla SQL:** datos en filas y columnas dentro de un gestor (PostgreSQL, MySQL, SQL Server…).
+- **Tabla SQL:** datos en filas y columnas dentro de un gestor ([PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/), [SQL Server](https://www.microsoft.com/sql-server/)…).
 - **API / REST:** pides datos por HTTP (el mismo protocolo del navegador) y sueles recibir **JSON** (texto con llaves `{ }` que un programa lee fácil).
 - Un mensaje de un bus (Kafka u otra cola).
 
@@ -213,17 +221,19 @@ Cien filas de práctica **no** demuestran la carga.
 
 **ELT** cambia las letras: extraer → **cargar** → transformar.
 
-Los datos se dejan primero en el lago o en un **almacén de datos** (*data warehouse*: base pensada para informes, no para picar reservas), **aún sin limpiar**. La transformación la hace después el destino: SQL, un notebook, o **Apache Spark** (un motor que reparte el cálculo entre varios ordenadores; **PySpark** es Spark usado desde Python).
+Los datos se dejan primero en el lago o en un **almacén de datos** (*data warehouse*: base pensada para informes, no para picar reservas), **aún sin limpiar**. La transformación la hace después el destino: SQL, un notebook, o [**Apache Spark**](https://spark.apache.org/) (un motor que reparte el cálculo entre varios ordenadores; [**PySpark**](https://spark.apache.org/docs/latest/api/python/) es Spark usado desde Python).
 
 | | **ETL** | **ELT** |
 | --- | --- | --- |
 | Orden | Extraer → **transformar** → cargar | Extraer → **cargar** → transformar |
-| Dónde se limpia | Un motor en medio (script, [Pentaho](pentaho.md), Talend) | El destino (el almacén o el lago) |
+| Dónde se limpia | Un motor en medio (script, [Pentaho](pentaho.md), [Talend](https://www.talend.com/)) | El destino (el almacén o el lago) |
 | Cuándo | El destino **no** debe tragar basura | El destino es elástico y hay **varios** consumidores del mismo bruto |
 | Ver el crudo | Más tarde | Antes |
 | Si gerencia cambia la pregunta | Retocas la T **antes** de recargar | A menudo una consulta nueva sobre lo ya cargado |
 
 ELT no es “ETL al revés para quedar moderno”. Cambia **quién** trabaja y **cuándo** se ve el dato:
+
+![ETL frente a ELT: cambia cuándo se limpia el dato](../assets/ut1/etl-vs-elt.png)
 
 - El ingeniero deja el bruto **pronto**. Finanzas y ciencia de datos pueden mirarlo antes del cruce perfecto.
 - La limpieza la puede hacer quien conoce el negocio, no solo el equipo de tuberías.
@@ -246,7 +256,7 @@ En Big Data no vale “cualquier copiar y pegar”. Tiene que:
     - complejas: un modelo de IA o código de otro lenguaje (eso se sale de esta UT).
 - **Dejar rastro y gestionar errores:** qué corrió, qué falló, y qué hacer entonces. Sin eso, el job “en verde” es teatro.
 
-(*Hadoop* es el ecosistema clásico de Big Data: varios PCs compartiendo disco y cálculo. *HDFS* es su sistema de ficheros: una carpeta enorme repartida. *Hive* permite consultar esos ficheros con SQL. *S3* es el almacén de objetos de Amazon: carpetas en la nube. *XML* es otro formato de texto etiquetado, más viejo que JSON. Un *log* es el diario de lo que hace un programa. *HTTP* / *REST* son la forma habitual de pedir datos a una API por internet.)
+([Hadoop](https://hadoop.apache.org/) es el ecosistema clásico de Big Data: varios PCs compartiendo disco y cálculo. [HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html) es su sistema de ficheros: una carpeta enorme repartida. [Hive](https://hive.apache.org/) permite consultar esos ficheros con SQL. [S3](https://aws.amazon.com/s3/) es el almacén de objetos de Amazon: carpetas en la nube. XML es otro formato de texto etiquetado, más viejo que JSON. Un *log* es el diario de lo que hace un programa. HTTP / REST son la forma habitual de pedir datos a una API por internet.)
 
 ### Suites que verás escritas
 
@@ -254,11 +264,11 @@ Son programas (muchos con pantalla) para diseñar el flujo sin escribirlo todo a
 
 | Herramienta | Qué es, en una frase | En esta aula |
 | --- | --- | --- |
-| **Pentaho Data Integration (PDI)** | Suite de ETL visual. **Spoon** es el editor; **Pan** y **Kitchen** ejecutan transformaciones y jobs. | La practicáis en [1.8](pentaho.md) |
-| **Talend Open Studio** | Otra ETL visual, muy usada en empresas | La oiréis; no la montamos aquí |
-| **Informatica Data Integration** | Suite comercial grande, típica en corporaciones | Nombre de catálogo |
-| **Oracle Data Integrator (ODI)** | ETL del ecosistema Oracle | Nombre de catálogo |
-| **MuleSoft** | Más bien integración de aplicaciones (APIs), no solo ficheros | Nombre de catálogo |
+| **[Pentaho Data Integration (PDI)](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform.html)** | Suite de ETL visual. Código en [GitHub](https://github.com/pentaho/pentaho-kettle). **Spoon** es el editor; **Pan** y **Kitchen** ejecutan transformaciones y jobs. | La practicáis en [1.8](pentaho.md) |
+| **[Talend Open Studio](https://www.talend.com/)** | Otra ETL visual, muy usada en empresas | La oiréis; no la montamos aquí |
+| **[Informatica Data Integration](https://www.informatica.com/)** | Suite comercial grande, típica en corporaciones | Nombre de catálogo |
+| **[Oracle Data Integrator (ODI)](https://www.oracle.com/integration/data-integrator/)** | ETL del ecosistema Oracle | Nombre de catálogo |
+| **[MuleSoft](https://www.mulesoft.com/)** | Más bien integración de aplicaciones (APIs), no solo ficheros | Nombre de catálogo |
 
 Un *job* es un trabajo programado: “a las 02:00, lanza esta tubería”.
 
@@ -267,11 +277,11 @@ Un *job* es un trabajo programado: “a las 02:00, lanza esta tubería”.
 Las empresas no eligen “solo Pentaho” o “solo Python”. Mezclan:
 
 - la **suite visual** para conectores y planificación;
-- **Python** para lo nuevo, lo no estructurado o lo que la pantalla no cubre:
-    - **pandas:** librería para trabajar con tablas en memoria (`DataFrame`). Es el Excel de Python.
-    - **PySpark:** el mismo oficio, pero el cálculo se reparte en un **clúster** (varios ordenadores trabajando como uno).
-    - **DuckDB:** base analítica *embebida* (no hay servidor que instalar): SQL directo sobre CSV o Parquet en tu disco.
-- **Apache Airflow:** un **orquestador**. No transforma el dato: dispara pasos (“primero extrae, luego cruza, luego carga”) y avisa si uno falla. No lo montáis en esta UT; sí sabéis para qué existe.
+- **[Python](https://www.python.org/)** para lo nuevo, lo no estructurado o lo que la pantalla no cubre:
+    - **[pandas](https://pandas.pydata.org/):** librería para trabajar con tablas en memoria (`DataFrame`). Es el Excel de Python.
+    - **[PySpark](https://spark.apache.org/docs/latest/api/python/):** el mismo oficio, pero el cálculo se reparte en un **clúster** (varios ordenadores trabajando como uno).
+    - **[DuckDB](https://duckdb.org/):** base analítica *embebida* (no hay servidor que instalar): SQL directo sobre CSV o Parquet en tu disco. Documentación: [duckdb.org/docs](https://duckdb.org/docs/).
+- **[Apache Airflow](https://airflow.apache.org/):** un **orquestador**. No transforma el dato: dispara pasos (“primero extrae, luego cruza, luego carga”) y avisa si uno falla. No lo montáis en esta UT; sí sabéis para qué existe.
 
 Sin planificación y sin registro de errores, da igual la herramienta.
 
@@ -281,10 +291,10 @@ En [Pentaho](pentaho.md) harás un cruce en **Spoon** (la pantalla de PDI). Aqu�
 
 Necesitas un cuaderno de Python:
 
-- **Jupyter:** programa en tu PC que mezcla texto y código, celda a celda.
-- **Google Colab:** lo mismo, pero en el navegador, sin instalar nada ([colab.research.google.com](https://colab.research.google.com/)).
+- **[Jupyter](https://jupyter.org/):** programa en tu PC que mezcla texto y código, celda a celda.
+- **[Google Colab](https://colab.research.google.com/):** lo mismo, pero en el navegador, sin instalar nada.
 
-**pandas** es la librería de Python para tablas. Un `DataFrame` es una hoja: filas y columnas con nombre. **NumPy** (`numpy`) genera números al azar para inventar el ejemplo.
+**[pandas](https://pandas.pydata.org/)** es la librería de Python para tablas. Un `DataFrame` es una hoja: filas y columnas con nombre. **[NumPy](https://numpy.org/)** (`numpy`) genera números al azar para inventar el ejemplo.
 
 En [1.7](formatos.md) volverás a estos ficheros.
 
@@ -342,7 +352,7 @@ cruce.to_json("web_cobrado.json", orient="records", force_ascii=False)
 
 ### DuckDB
 
-**DuckDB** es una base de datos **analítica** y **embebida**:
+**[DuckDB](https://duckdb.org/)** es una base de datos **analítica** y **embebida** (sitio oficial: [duckdb.org](https://duckdb.org/); código: [github.com/duckdb/duckdb](https://github.com/duckdb/duckdb)):
 
 - Analítica: está pensada para leer mucho y agregar (sumar por hotel), no para que recepción pique una reserva.
 - Embebida: no instalas un servidor. Es una librería (`pip install duckdb`). Corre **dentro** de Python, en tu proceso.
@@ -350,7 +360,7 @@ cruce.to_json("web_cobrado.json", orient="records", force_ascii=False)
 
 Para ETL, eso significa: extraes (lees el CSV como tabla), transformas (un `SELECT` con `JOIN` y `WHERE`) y cargas (`COPY` a otro fichero).
 
-Instalación: `pip install duckdb`.
+Instalación: `pip install duckdb` (guía: [duckdb.org/docs/installation](https://duckdb.org/docs/installation/)).
 
 Mismas tres letras que pandas, idioma SQL:
 
@@ -382,11 +392,11 @@ Escribir “un fichero” no basta. El siguiente paso tiene que **partir** el ar
 El catálogo completo está en [1.7](formatos.md). Aquí solo la decisión de la **L**. Qué es cada nombre:
 
 - **CSV / JSON:** texto que un humano abre. JSONL es JSON **una reserva por línea** (se puede partir; un único array `[...]` enorme, no).
-- **Avro:** cada fila viaja con su **esquema** (de qué tipo es cada campo). Típico en colas: mañana añaden un campo y el consumidor no se rompe del todo.
-- **Parquet:** formato **columnar** (guarda la columna `importe` junta). El informe de las 8 lee hotel e importe y **no** carga las doce columnas. Muy usado en lagos y en Spark.
-- **ORC:** parecido a Parquet; nació en el mundo Hive.
-- **Feather / Arrow:** pensado para pasar tablas **rápido** entre procesos Python/R. No es el archivo de “guardar tres años”.
-- **Snappy** (y gzip, zstd): **códecs** de compresión. Ocupan menos y viajan menos; cuestan CPU.
+- **[Avro](https://avro.apache.org/):** cada fila viaja con su **esquema** (de qué tipo es cada campo). Típico en colas: mañana añaden un campo y el consumidor no se rompe del todo.
+- **[Parquet](https://parquet.apache.org/):** formato **columnar** (guarda la columna `importe` junta). El informe de las 8 lee hotel e importe y **no** carga las doce columnas. Muy usado en lagos y en Spark.
+- **[ORC](https://orc.apache.org/):** parecido a Parquet; nació en el mundo Hive.
+- **[Feather / Arrow](https://arrow.apache.org/):** pensado para pasar tablas **rápido** entre procesos Python/R. No es el archivo de “guardar tres años”.
+- **[Snappy](https://google.github.io/snappy/)** (y gzip, zstd): **códecs** de compresión. Ocupan menos y viajan menos; cuestan CPU.
 
 | Destino de esta carga | Formato habitual | Por qué, en una frase |
 | --- | --- | --- |
@@ -414,12 +424,14 @@ Comprimir ocupa menos y viaja menos; cuesta CPU. En volumen suele ganar un códe
 
 La ingesta es la **primera** capa de la [arquitectura](arquitectura.md). Suele ser la más pesada: muchas fuentes, ritmos distintos. El día 1 **priorizas** (no todas importan), **validas** cada lote aparte y **enrutas**.
 
+![La ingesta es la capa de abajo: el dato sube hacia el panel](../assets/ut1/capas-ingesta.png)
+
 | Orígenes habituales | Destinos habituales |
 | --- | --- |
-| Una cola que ya recogió sensores (p. ej. Kafka) | Otra cola |
-| Una tabla **SQL**, a menudo por **JDBC** (el “enchufe” estándar de Java/muchas ETL para hablar con la base) | SQL o **NoSQL** (bases no solo en tablas: documentos, clave-valor… p. ej. **MongoDB**) |
-| Una API REST que devuelve JSON | El lago: carpeta en **HDFS** (Hadoop) o **S3** (Amazon) |
-| Una carpeta de ficheros | Una **plataforma de datos**: **Snowflake** o **Databricks** son almacenes/analítica en la nube; no los montáis aquí |
+| Una cola que ya recogió sensores (p. ej. [Kafka](https://kafka.apache.org/)) | Otra cola |
+| Una tabla **SQL**, a menudo por **[JDBC](https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html)** (el “enchufe” estándar de Java/muchas ETL para hablar con la base) | SQL o **NoSQL** (bases no solo en tablas: documentos, clave-valor… p. ej. **[MongoDB](https://www.mongodb.com/)**) |
+| Una API REST que devuelve JSON | El lago: carpeta en **[HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html)** (Hadoop) o **[S3](https://aws.amazon.com/s3/)** (Amazon) |
+| Una carpeta de ficheros | Una **plataforma de datos**: **[Snowflake](https://www.snowflake.com/)** o **[Databricks](https://www.databricks.com/)** son almacenes/analítica en la nube; no los montáis aquí |
 
 Cuatro preguntas que recuerdan a las [5 V](por-que-big-data.md), aplicadas al *cómo entra*:
 
@@ -471,26 +483,26 @@ Citas la **familia**. El producto concreto cambia de año. No memorices logos; s
 
 ### Por lotes y flujos
 
-- **Apache Sqoop:** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**HBase** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. El proyecto está en mantenimiento: la *idea* (volcado nocturno *pull*) sigue; el binario concreto, no siempre.
-- **Apache Flume:** tubería de **logs y eventos** hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.
-- **Apache NiFi:** pantalla con **cajas y flechas** (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.
-- **Logstash** (Elastic): nació para meter logs en **Elasticsearch** (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.
-- **AWS Glue:** ETL **gestionada** en Amazon: no instalas servidor; lo lanzas desde la consola. Descubre esquemas. Lo usan también **Athena** (SQL sobre ficheros en S3) y otros servicios AWS.
+- **[Apache Sqoop](https://sqoop.apache.org/):** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**[HBase](https://hbase.apache.org/)** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. El proyecto está en mantenimiento: la *idea* (volcado nocturno *pull*) sigue; el binario concreto, no siempre.
+- **[Apache Flume](https://flume.apache.org/):** tubería de **logs y eventos** hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.
+- **[Apache NiFi](https://nifi.apache.org/):** pantalla con **cajas y flechas** (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.
+- **[Logstash](https://www.elastic.co/logstash)** (Elastic): nació para meter logs en **[Elasticsearch](https://www.elastic.co/elasticsearch)** (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.
+- **[AWS Glue](https://aws.amazon.com/glue/):** ETL **gestionada** en Amazon: no instalas servidor; lo lanzas desde la consola. Descubre esquemas. Lo usan también **[Athena](https://aws.amazon.com/athena/)** (SQL sobre ficheros en S3) y otros servicios AWS.
 
 ### Mensajería (ingesta asíncrona)
 
 Ya las vimos como idea. Recapitulación:
 
-- **Kafka:** publicador/suscriptor, pensado para mucho volumen.
-- **RabbitMQ:** cola clásica productor-consumidor.
-- **Kinesis / Event Hubs / Pub/Sub:** lo mismo en AWS, Azure y Google.
+- **[Kafka](https://kafka.apache.org/):** publicador/suscriptor, pensado para mucho volumen.
+- **[RabbitMQ](https://www.rabbitmq.com/):** cola clásica productor-consumidor.
+- **[Kinesis](https://aws.amazon.com/kinesis/) / [Event Hubs](https://azure.microsoft.com/products/event-hubs/) / [Pub/Sub](https://cloud.google.com/pubsub):** lo mismo en AWS, Azure y Google.
 
 ### Conectores ELT (SaaS → lago)
 
 **SaaS** = software que usas por internet (el PMS en la nube, el CRM, la pasarela). En vez de programar cada API:
 
-- **Fivetran:** plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.
-- **Airbyte:** la misma idea, con versión **open source** y otra gestionada en cloud.
+- **[Fivetran](https://www.fivetran.com/):** plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.
+- **[Airbyte](https://airbyte.com/):** la misma idea, con versión **open source** ([GitHub](https://github.com/airbytehq/airbyte)) y otra gestionada en cloud.
 
 ### Mapa rápido
 
