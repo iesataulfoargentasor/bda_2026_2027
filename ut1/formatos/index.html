@@ -451,6 +451,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../caso-hotel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El caso: grupo hotelero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ra1/" class="md-nav__link">
         
   
@@ -1743,7 +1771,7 @@
 <h1 id="17-formatos-de-datos">1.7. Formatos de datos<a class="headerlink" href="#17-formatos-de-datos" title="Permanent link">&para;</a></h1>
 <p>El criterio <strong>c)</strong> es este: <strong>en qué forma dejas el dato</strong> para que el siguiente paso no se ahogue. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.</p>
 <h2 id="un-caso-para-no-perderse">Un caso para no perderse<a class="headerlink" href="#un-caso-para-no-perderse" title="Permanent link">&para;</a></h2>
-<p>Un grupo hotelero de Cantabria guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: <em>ocupación e importe medio por hotel</em>. Tres números. Si el fichero es un CSV de 80 GB, el motor <strong>lee las doce columnas</strong> para calcular tres. En cloud, a menudo <strong>pagas por lo que escaneas</strong>, no solo por lo que guardas.</p>
+<p>El <a href="../caso-hotel/">grupo hotelero de Cantabria</a> guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: <em>ocupación e importe medio por hotel</em>. Tres números. Si el fichero es un CSV de 80 GB, el motor <strong>lee las doce columnas</strong> para calcular tres. En cloud, a menudo <strong>pagas por lo que escaneas</strong>, no solo por lo que guardas.</p>
 <p>Esa es la pregunta del apartado: ¿el dato viaja <strong>fila a fila</strong> (bien para cobrar en recepción) o <strong>campo a campo</strong> (bien para el informe)? ¿Hace falta que un humano lo abra, o que Spark lo <strong>trocee</strong> entre nodos?</p>
 <p>Las prácticas de esta página <strong>no dependen de un CSV ajeno</strong>. Generas el dataset en el propio cuaderno (Jupyter o un <a href="https://colab.research.google.com/">Colab</a> en blanco). Esquema Avro de reserva: <a href="../../assets/practicas/reserva.avsc">reserva.avsc</a>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
