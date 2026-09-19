@@ -14,6 +14,41 @@ Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifr
 
 El índice de la página sigue el mismo hilo que se usa en ingeniería de datos: primero qué es ingerir, luego el pipeline, después ETL y ELT, un taller corto y, al final, la ingesta por dentro y cómo elegir.
 
+!!! tip "Vídeo para estudiar (7 min)"
+    Resumen hablado del tema, con las mismas figuras de esta página. **No** sustituye los apuntes ni Moodle.
+
+    <video controls preload="metadata" style="width:100%;max-width:960px;border-radius:4px;">
+      <source src="../assets/ut1/ingesta-estudio.mp4" type="video/mp4">
+    </video>
+
+    Si no se reproduce en el navegador: [descarga el MP4](../assets/ut1/ingesta-estudio.mp4).
+
+??? note "Transcripción"
+    **Qué es ingerir.** Coger datos que ya existen (PMS, pasarela, sensores) y llevarlos a otro sitio. Gerencia quiere a las 8 ocupación e importe cobrado por hotel.
+
+    **Hacia atrás.** Destino → transformación → origen. El lago guarda el bruto; el almacén de informes, el dato limpio.
+
+    **Pipeline.** Recoger, colchón, procesar, panel de las 8. No es un producto. OLTP opera; OLAP informa; se copia el hecho.
+
+    **Pipeline ≠ ETL.** Toda ETL es pipeline; no todo pipeline es ETL.
+
+    **Push / pull / poll.** Quién inicia. Conviven en el mismo hotel.
+
+    **ETL.** Extraer (ligera), transformar (no fabricar noches), cargar (índices, partición, transacción). Snapshot el día 1; incremental el martes.
+
+    **ELT.** Extraer → cargar bruto → transformar. Convive con ETL.
+
+    **Hola ETL.** Taller de las tres letras (web + cobro). No es el panel de las 8. pandas ≠ JSONL de DuckDB. En 1.8, Spoon agrega.
+
+    **Formato de la L.** JSON para ver; Parquet para el lago. `to_parquet` pide pyarrow y el `cruce` de pandas.
+
+    **Cola.** Semáforo de recepción, no el panel de las 8. Búfer ≠ contrapresión.
+
+    **Capas.** Ingesta abajo. Lago y almacén conviven.
+
+    **Examen (b).** Origen, quién inicia, reloj, ETL o ELT, destino, formato, por qué no el de al lado. Un logo solo no puntúa.
+
+
 ## Introducción
 
 **Ingerir datos** es el proceso de coger información que ya existe en varios sitios —un fichero, una base de datos, una web, un sensor— y llevarla a **otro** sistema, donde se podrá guardar o procesar.

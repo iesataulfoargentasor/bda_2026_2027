@@ -8,3 +8,4 @@ __pycache__/
 Thumbs.db
 _fuente/
 docs/assets/practicas/pdi_sales.csv
+scripts/_ingesta_video/
