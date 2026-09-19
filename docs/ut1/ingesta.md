@@ -17,8 +17,8 @@ El índice de la página sigue el mismo hilo que se usa en ingeniería de datos:
 !!! tip "Vídeo para estudiar (7 min)"
     Resumen hablado del tema, con las mismas figuras de esta página. **No** sustituye los apuntes ni Moodle.
 
-    <video controls preload="metadata" style="width:100%;max-width:960px;border-radius:4px;">
-      <source src="../assets/ut1/ingesta-estudio.mp4" type="video/mp4">
+    <video controls preload="metadata" playsinline style="width:100%;max-width:960px;border-radius:4px;">
+      <source src="../../assets/ut1/ingesta-estudio.mp4" type="video/mp4">
     </video>
 
     Si no se reproduce en el navegador: [descarga el MP4](../assets/ut1/ingesta-estudio.mp4).
