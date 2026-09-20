@@ -1,0 +1,217 @@
+{
+  "unit": "el apartado 1.4",
+  "title": "Autoevaluación del 1.4",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Tres palabras",
+      "href": "",
+      "prompt": "El job de Laredo corre en 10 núcleos del mismo PC. El de madrugada parte el histórico en cuatro nodos. ¿Qué es cada uno?",
+      "code": "",
+      "options": [
+        "Los dos son un clúster: hay varios núcleos.",
+        "El primero es paralelo (una máquina). El segundo es distribuido (varias máquinas).",
+        "Los dos son solo concurrentes: el SO se turna.",
+        "Distribuido es el i7 de la tarea de los 500 GB."
+      ],
+      "answer": 1,
+      "explain": "Paralelo = varios núcleos de **una** máquina. Distribuido = **varias** máquinas en red. El i7 no es un clúster."
+    },
+    {
+      "topic": "Concurrente",
+      "href": "",
+      "prompt": "Solo hay un núcleo y el sistema cambia de programa cada X ms (job y antivirus). ¿Hace varias tareas al mismo tiempo?",
+      "code": "",
+      "options": [
+        "Sí: si lo percibís a la vez, el silicio también.",
+        "Sí, porque concurrente y paralelo son sinónimos.",
+        "No. Es multitarea **simulada** (concurrente): el núcleo se turna.",
+        "No, porque un núcleo no puede ejecutar ningún programa."
+      ],
+      "answer": 2,
+      "explain": "La impresión de simultáneo no es paralelismo real. Un núcleo atiende un rato a cada uno."
+    },
+    {
+      "topic": "Núcleos e hilos",
+      "href": "",
+      "prompt": "Un procesador “4 núcleos / 8 hilos”, ¿es lo mismo que 8 núcleos físicos?",
+      "code": "",
+      "options": [
+        "Sí: 8 hilos = 8 CPU de verdad.",
+        "No. Un núcleo **comparte** recursos entre hilos. Si los dos piden la misma unidad, uno espera.",
+        "Sí, si instaláis Hadoop en el portátil.",
+        "No, porque los hilos solo existen en el clúster."
+      ],
+      "answer": 1,
+      "explain": "Multihilo no duplica el silicio. Mientras un hilo espera memoria, el otro puede calcular; no es magia de 8 núcleos."
+    },
+    {
+      "topic": "Cuándo paralelizar",
+      "href": "",
+      "prompt": "Sumar noches por hotel (Santander, Laredo, Comillas, Potes) frente a un acumulado que depende del paso anterior. ¿Cuál se paraleliza?",
+      "code": "",
+      "options": [
+        "Las dos: más núcleos siempre acortan.",
+        "Ninguna: el clúster no hace magia nunca.",
+        "Solo el acumulado dependiente.",
+        "La suma por hotel (trozos independientes). En la dependiente el segundo trozo espera al primero."
+      ],
+      "answer": 3,
+      "explain": "Si cada paso necesita el anterior, más núcleos no acortan el cuello. Es lo mismo que en el 1.2: el clúster no hace magia."
+    },
+    {
+      "topic": "Distribuido",
+      "href": "",
+      "prompt": "Repartís el job a nodos de un clúster. ¿Qué problemas aparecen que en un solo PC no teníais?",
+      "code": "",
+      "options": [
+        "Ninguno: es paralelo con otro nombre.",
+        "Los datos no están todos en la misma RAM, la red falla, un nodo puede caer a mitad (Potes) y no hay que publicar el panel a medias.",
+        "Solo que SQL deja de existir.",
+        "Que el PMS tiene que vivir en los cuatro nodos."
+      ],
+      "answer": 1,
+      "explain": "Distribuido es paralelo **más** red y fallos. El job reintenta o gerencia ve el de ayer; no un panel a medias."
+    },
+    {
+      "topic": "Cálculo y dato",
+      "href": "",
+      "prompt": "Hadoop de libro manda la función al nodo que ya tiene el trozo. En un cubo de objetos el motor lee por red. ¿Qué es cierto?",
+      "code": "",
+      "options": [
+        "Son el mismo diseño con dos logos.",
+        "En la nube ya no hay procesamiento.",
+        "Son **dos diseños**: “cálculo al dato” frente a dato en el cubo y CPU donde haga falta.",
+        "El cubo de objetos cobra en recepción."
+      ],
+      "answer": 2,
+      "explain": "Copiar 200 GB al portátil para sumarlos es absurdo. El cubo invierte el viaje: pagáis red. Las dos frases no se pisan."
+    },
+    {
+      "topic": "Lote",
+      "href": "",
+      "prompt": "Finanzas cierra a las 23:00; de madrugada corre el job; gerencia abre el panel a las 8. ¿Qué estrategia es y es tiempo real?",
+      "code": "",
+      "options": [
+        "Lote (batch). El panel de las 8 es el de **ayer**, no tiempo real.",
+        "Streaming: todo lo que pasa de noche es flujo.",
+        "Interactivo: gerencia filtra mientras mira.",
+        "Transaccional: el panel cobra al huésped."
+      ],
+      "answer": 0,
+      "explain": "El ritmo del lote no urge el número. El semáforo (sensores) es otro reloj. El cobro en el PMS es otro."
+    },
+    {
+      "topic": "Clic y ACID",
+      "href": "",
+      "prompt": "Picar el cobro en el PMS es “por transacciones”. ¿Eso es lo mismo que ACID?",
+      "code": "",
+      "options": [
+        "Sí: transacción y ACID son sinónimos en este apartado.",
+        "No. Aquí es el **ritmo** (muy por debajo de 1 s). ACID es la **garantía** (todo o nada) del 1.3.",
+        "Sí, porque online significa “pago por internet”.",
+        "No, porque el PMS no procesa nada."
+      ],
+      "answer": 1,
+      "explain": "Un cobro ocurre en tiempo real (recepción no espera). ACID no es una estrategia de ritmo; es que el paquete no se ve a medias."
+    },
+    {
+      "topic": "Interactivo",
+      "href": "",
+      "prompt": "A las 11 filtráis Laredo en el almacén: “¿cómo vamos hoy?”. ¿Es el panel de las 8?",
+      "code": "",
+      "options": [
+        "Sí: cualquier consulta a gerencia es el panel de las 8.",
+        "Sí, si usáis streaming.",
+        "No. Es **interactivo** (mientras miráis). El panel de las 8 es el lote de ayer.",
+        "No, porque a las 11 solo existe OLTP."
+      ],
+      "answer": 2,
+      "explain": "Interactivo urge mientras miráis la pantalla. No mezcléis esa consulta con el cierre de madrugada ni con el semáforo."
+    },
+    {
+      "topic": "Streaming",
+      "href": "",
+      "prompt": "Los sensores publican cada ~30 s y alimentan el semáforo de recepción. ¿El streaming es “un lote, pero más rápido”?",
+      "code": "",
+      "options": [
+        "Sí: mismo contrato, menos minutos.",
+        "No. Las cuentas se actualizan **conforme llegan**; suele haber un techo en memoria. Es otro contrato.",
+        "Sí, y por eso el panel de las 8 también es streaming.",
+        "No, porque el streaming solo existe en Lambda (1.5)."
+      ],
+      "answer": 1,
+      "explain": "Flujo = al ritmo en que llegan. Cómo se combinan lote y flujo (Lambda / Kappa) va en el 1.5, no aquí."
+    },
+    {
+      "topic": "Dos oficios",
+      "href": "",
+      "prompt": "Recepción pica el cobro; gerencia pide ocupación de agosto. ¿Por qué no mezclarlos en la misma tabla “para no duplicar”?",
+      "code": "",
+      "options": [
+        "Da igual: un solo disco es más barato y más rápido.",
+        "Porque el análisis sustituye al PMS.",
+        "Porque recepción espera (el informe recorre el PMS) o el informe eterno (la tabla está pensada para cobrar).",
+        "Porque gerencia tiene que picar en recepción."
+      ],
+      "answer": 2,
+      "explain": "Operar toca pocas filas en milisegundos. Analizar recorre mucho histórico. El oficio 2 se **alimenta** del 1 (se copia); no lo sustituye."
+    },
+    {
+      "topic": "OLTP y OLAP",
+      "href": "",
+      "prompt": "Recepción cobra una estancia; gerencia abre ocupación por hotel a las 8. ¿Qué siglas son?",
+      "code": "",
+      "options": [
+        "OLAP en el PMS; OLTP en el panel.",
+        "Las dos son OLTP porque hay una tarjeta.",
+        "Solo streaming: ya no se distinguen.",
+        "OLTP = operar en el PMS. OLAP = analizar el histórico (panel de las 8)."
+      ],
+      "answer": 3,
+      "explain": "OLTP produce los hechos. OLAP lee esos hechos ya copiados. Online = “en el sistema, ahora”, no “pago por internet”."
+    },
+    {
+      "topic": "Dos cubos",
+      "href": "",
+      "prompt": "El almacén guarda ocupación ya cortada por tiempo, hotel y canal (cubo OLAP). ¿Es el cubo de objetos de S3?",
+      "code": "",
+      "options": [
+        "Sí: cubo es cubo.",
+        "No. Cubo OLAP = resumen ya cruzado para el informe. Cubo de objetos = disco en red (un fichero con una clave).",
+        "Sí, si el panel de las 8 vive en S3.",
+        "No, porque OLAP no usa histórico."
+      ],
+      "answer": 1,
+      "explain": "Mismo mote, dos sitios. El cruce ya hecho acelera el panel; tiene un límite de tamaño si cabe en RAM."
+    },
+    {
+      "topic": "SCV no es CAP",
+      "href": "",
+      "prompt": "El principio SCV habla de un **cálculo** de análisis. ¿La C es la de CAP o la de ACID?",
+      "code": "",
+      "options": [
+        "Sí: las tres C son la misma letra.",
+        "Es la C de CAP: el mismo saldo en Santander y Potes.",
+        "No. Aquí C es **precisión** (usar todos los datos, sin muestrear). No es el saldo ni las reglas del cobro.",
+        "Es la velocidad de las 5 V."
+      ],
+      "answer": 2,
+      "explain": "S = poco tiempo hasta el número. V = conjuntos enormes de cálculo. CAP y ACID son otras C. Las 5 V son otra velocidad y otro volumen."
+    },
+    {
+      "topic": "SCV en el hotel",
+      "href": "",
+      "prompt": "El semáforo quiere ir al momento, con todas las filas del lago y la misma precisión que el cierre. Según el SCV, ¿se puede?",
+      "code": "",
+      "options": [
+        "Sí: S+C+V es el diseño habitual si hay Spark.",
+        "No. Como máximo dos letras. El semáforo suelta precisión (S+V) o esperáis al lote del panel (C+V).",
+        "Sí, con más RAM se cumplen las tres.",
+        "No aplica: SCV solo es para MongoDB."
+      ],
+      "answer": 1,
+      "explain": "V casi siempre está. El menú real es C+V (panel de ayer), S+V (semáforo) o S+C (un hotel ahora, poco volumen)."
+    }
+  ]
+}
