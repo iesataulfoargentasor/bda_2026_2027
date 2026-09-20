@@ -12,10 +12,11 @@ Este apartado es el criterio **b)** del [RA1](ra1.md): cómo **entran** los dato
 
 Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.
 
-El índice de la página sigue el mismo hilo que se usa en ingeniería de datos: primero qué es ingerir, luego el pipeline, después ETL y ELT, un taller corto y, al final, la ingesta por dentro y cómo elegir.
+!!! info "Cómo se lee esta página"
+    Primero la **teoría** (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller **Hola ETL** (las tres letras; **no** es el panel de las 8). Después **colas y examen** (semáforo ≠ cuadro de gerencia). Los **logos**, al final: familia, no producto. El [vídeo](#video-para-estudiar-7-min) resume; si una figura y el MP4 no coinciden, **manda el texto**.
 
 !!! tip "Vídeo para estudiar (7 min)"
-    Resumen hablado del tema, con las mismas figuras de esta página. **No** sustituye los apuntes ni Moodle.
+    Resumen hablado del tema. **No** sustituye los apuntes ni Moodle. Si una figura y el MP4 no coinciden, manda **este texto**.
 
     <video controls preload="metadata" playsinline style="width:100%;max-width:960px;border-radius:4px;">
       <source src="../../assets/ut1/ingesta-estudio.mp4" type="video/mp4">
@@ -62,50 +63,45 @@ El contexto es el **[caso del grupo hotelero](caso-hotel.md)** (Santander, Lared
 
 Esos datos **ya existen**. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.
 
-![Ingesta de datos en el hotel: reservas, cobros y sensores hacia el lago; el panel es otro paso](../assets/ut1/ingesta-hotel.png)
+![Dos tubos: lote nocturno (PMS y pasarela) al panel de las 8; sensores al semáforo, no al panel](../assets/ut1/ingesta-hotel.png)
 
 Hasta que el dato no entra, el resto de la [arquitectura](arquitectura.md) está vacía. Un buen proceso de ingesta tiene que ser:
 
-- **Flexible:** mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiras el diseño.
-- **Ágil:** si gerencia cambia la pregunta, no tardas tres meses en volver a meter los datos.
+- **Flexible:** mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiráis el diseño.
+- **Ágil:** si gerencia cambia la pregunta, no tardáis tres meses en volver a meter los datos.
 
 La productividad del equipo depende más de esto que del logo de la herramienta.
 
-Finanzas cierra el día a las 23:00. Los sensores publican cada medio minuto. Recepción no puede parar.
+Finanzas cierra el día a las **23:00**. Los sensores publican cada medio minuto. Recepción no puede parar. **No** son el mismo tubo: el panel de las 8 es el lote; el semáforo es el flujo.
 
-Antes de elegir un programa, diseñas **hacia atrás**:
+Antes de elegir un programa, diseñáis **hacia atrás**:
 
 1. ¿Qué tiene que ver gerencia a las 8? (destino)
 2. ¿Hay que cruzar reservas con cobros, quitar canceladas, unificar el nombre del canal? (transformación)
 3. ¿El dato vive en el programa de reservas, en la pasarela, en una carpeta FTP (un sitio en red donde se dejan ficheros) o en los sensores? (origen)
 
-Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabes cuándo termina.
+Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabéis cuándo termina.
 
 El sitio típico al que llega lo ingerido **en bruto** es el **lago de datos** (*data lake*). El **almacén de informes** (*data warehouse*) es otro sitio: ahí el dato ya va limpio, pensado para el panel. En [1.3](almacenamiento.md) se distinguen; aquí basta: la ingesta suele aterrizar primero en el lago.
 
 ## Pipeline de datos
 
-Un **pipeline** (tubería) es una forma de organizar el trabajo en **fases**. No es un producto que compras. Describe los pasos y, si hace falta, las tecnologías entre un origen y un destino.
+Un **pipeline** (tubería) es una forma de organizar el trabajo en **fases**. No es un producto que compráis. Describe los pasos y, si hace falta, las tecnologías entre un origen y un destino.
 
-En lo más simple: recoger, guardar, procesar y **dejar algo útil**.
+En lo más simple: recoger, guardar, procesar y **dejar algo útil**. El panel de las 8 enseña el cierre de **ayer**, no un pronóstico.
 
-![Fases de un pipeline de datos](../assets/ut1/pipeline.png)
+![Fases del pipeline: recoger, colchón, procesar y panel de las 8 (ocupación e importe de ayer)](../assets/ut1/pipeline.png)
 
 Aunque a menudo se intercambian los términos, **pipeline** y **ETL** no son lo mismo:
 
 - Toda ETL es un pipeline (mueve datos en fases).
-- **No** todo pipeline es una ETL. Un sensor que deja un mensaje en una cola y un filtro que tira duplicados también es tubería, aunque no hagas un cruce ni una carga a un almacén de informes.
+- **No** todo pipeline es una ETL. Un sensor que deja un mensaje en una cola y un filtro que tira duplicados también es tubería, aunque no hagáis un cruce ni una carga a un almacén de informes.
 
 ### Fases del pipeline
 
-Sumar importes de mil reservas es caro para la máquina. Si lanzas ese cálculo **sobre el programa que cobra**, el mostrador espera: el cliente también.
+Sumar importes de mil reservas es caro para la máquina. Si lanzáis ese cálculo **sobre el programa que cobra**, el mostrador espera.
 
-Por eso se **copia** el hecho a otro sitio:
-
-- El sistema que opera el día a día (picar la reserva, cobrar) se llama **OLTP** (*Online Transaction Processing*). Ejemplo: el programa de recepción.
-- El sistema que analiza e informa (el panel de las 8) se llama **OLAP** (*Online Analytical Processing*). Ejemplo: el almacén de informes de gerencia.
-
-No son dos marcas. Son dos oficios. El pipeline los separa para que uno no tumbe al otro.
+Por eso se **copia** el hecho a otro sitio. Operar en recepción frente a informar a gerencia (OLTP / OLAP) ya está en [1.4](procesamiento.md): el pipeline los **separa** para que uno no tumbe al otro.
 
 ![OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia](../assets/ut1/oltp-olap.png)
 
@@ -117,7 +113,7 @@ flowchart LR
   procesar --> panel[4 Panel de las 8]
 ```
 
-1. **Recoger.** Copias el hecho fuera de recepción: un fichero, una consulta a la base de datos, un mensaje.
+1. **Recoger.** Copiáis el hecho fuera de recepción: un fichero, una consulta a la base de datos, un mensaje.
 2. **Guardar un colchón.** Si el panel va lento, el dato no se pierde. Puede ser una carpeta, una zona bruta o una cola de mensajes.
 3. **Procesar.** Filtras, cruzas, sumas. Aquí se limpia de verdad.
 4. **Dejar algo útil.** El panel, un Excel, una base de informes.
@@ -150,7 +146,7 @@ Unificar veinte fuentes **gasta** el proyecto. La veracidad del dato se cuida aq
 
 ### Extracción
 
-Recopilas los datos del origen y los llevas a una zona de trabajo, sin cambiar todavía el programa de recepción.
+Recopiláis los datos del origen y los lleváis a una zona de trabajo, sin cambiar todavía el programa de recepción.
 
 Orígenes típicos:
 
@@ -164,7 +160,7 @@ Dos reglas:
 1. Tiene que ser **ligera**. Recepción casi no se entera.
 2. **No** se modifica el dato operativo. Si colapsa el programa de reservas, la empresa pierde dinero *cobrando*.
 
-Compruebas que el lote **trae lo que dice traer** (columnas, tipos). Si no, se **aparta**: un job “en verde” con filas cojas envenena el panel.
+Comprobáis que el lote **trae lo que dice traer** (columnas, tipos). Si no, se **aparta**: un job “en verde” con filas cojas envenena el panel.
 
 Hay tres formas de iniciar el movimiento. No son tres productos.
 
@@ -179,11 +175,11 @@ Hay tres formas de iniciar el movimiento. No son tres productos.
 
 No hay uno “más Big Data”. En la misma empresa conviven. El *push* encaja con el flujo continuo; *pull* y *poll*, con el trabajo por lotes.
 
-Más adelante hay un catálogo con nombre y para qué sirve cada herramienta. Primero clava **quién da el primer paso**.
+Más adelante hay un catálogo con nombre y para qué sirve cada herramienta. Primero claváis **quién da el primer paso**.
 
 ### Transformación
 
-Dejas formato y contenido que el destino entiende. En el hotel suele ser:
+Dejáis formato y contenido que el destino entiende. En el hotel suele ser:
 
 - Cambiar codificación o mayúsculas (`WEB` → `web`).
 - Quitar duplicados de `id_reserva`.
@@ -200,7 +196,7 @@ En continuo, una transformación pesada (cruzar veinte fuentes) **no** va en el 
 
 ### Carga
 
-Escribes en el destino, **adaptándote** a cómo ese destino espera recibir datos: una sentencia SQL masiva, un fichero que el almacén lee, una carpeta en la nube.
+Escribís en el destino, **adaptándoos** a cómo ese destino espera recibir datos: una sentencia SQL masiva, un fichero que el almacén lee, una carpeta en la nube.
 
 Cada destino tiene su vía rápida. Tres palancas que, si las ignoras, tiran una carga grande:
 
@@ -214,7 +210,7 @@ Cien filas de práctica **no** demuestran la carga.
 
 Tampoco es lo mismo el tamaño el día 1 y el martes. La **primera carga** (*snapshot*) es una foto de todo: tres años de reservas. El job del martes es **incremental**: solo lo nuevo o lo que cambió. Mezclarlas es un error caro. Eso también cambia cuánto **extraes**: no pides tres años cada noche.
 
-El **formato** de lo que escribes (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del [Hola ETL](#hola-etl), cuando ya tienes un `cruce`. El catálogo completo está en [1.7](formatos.md).
+El **formato** de lo que escribís (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del [Hola ETL](#hola-etl), cuando ya tenéis un `cruce`. El catálogo completo está en [1.7](formatos.md).
 
 ## ELT
 
@@ -239,7 +235,7 @@ ELT no es “ETL al revés para quedar moderno”. Cambia **quién** trabaja y *
 - El ingeniero deja el bruto **pronto**. Finanzas y ciencia de datos pueden mirarlo antes del cruce perfecto.
 - La limpieza la puede hacer quien conoce el negocio, no solo el equipo de tuberías.
 
-El mercado en la nube empuja ELT (el almacén es potente). **ETL sigue** cuando el destino es rígido, o cuando en aula usas Pentaho. En una cadena hotelera real **conviven**: el cierre de facturación suele ser ETL; el lago de ocupación, ELT.
+El mercado en la nube empuja ELT (el almacén es potente). **ETL sigue** cuando el destino es rígido, o cuando en aula usáis Pentaho. En una cadena hotelera real **conviven**: el cierre de facturación suele ser ETL; el lago de ocupación, ELT.
 
 ## Herramientas ETL
 
@@ -257,23 +253,21 @@ En Big Data no vale “cualquier copiar y pegar”. Tiene que:
 
 ([Hadoop](https://hadoop.apache.org/) es el ecosistema clásico de Big Data: varios PCs compartiendo disco y cálculo. [HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html) es su sistema de ficheros: una carpeta enorme repartida. [Hive](https://hive.apache.org/) permite consultar esos ficheros con SQL. [S3](https://aws.amazon.com/s3/) es el almacén de objetos de Amazon: carpetas en la nube. XML es otro formato de texto etiquetado, más viejo que JSON. Un *log* es el diario de lo que hace un programa. HTTP / REST son la forma habitual de pedir datos a una API por internet.)
 
-Son programas (muchos con pantalla) para diseñar el flujo sin escribirlo todo a mano:
+Son programas (muchos con pantalla) para diseñar el flujo sin escribirlo todo a mano. En aula montáis **Pentaho**; el resto, si os los nombran, es la misma idea.
 
 | Herramienta | Qué es, en una frase | En esta aula |
 | --- | --- | --- |
-| **[Pentaho Data Integration (PDI)](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform.html)** | Suite de ETL visual. Código en [GitHub](https://github.com/pentaho/pentaho-kettle). **Spoon** es el editor; **Pan** y **Kitchen** ejecutan transformaciones y jobs. | La practicáis en [1.8](pentaho.md) |
-| **[Talend Open Studio](https://www.talend.com/)** | Otra ETL visual, muy usada en empresas | La oiréis; no la montamos aquí |
-| **[Informatica Data Integration](https://www.informatica.com/)** | Suite comercial grande, típica en corporaciones | Nombre de catálogo |
-| **[Oracle Data Integrator (ODI)](https://www.oracle.com/integration/data-integrator/)** | ETL del ecosistema Oracle | Nombre de catálogo |
-| **[MuleSoft](https://www.mulesoft.com/)** | Más bien integración de aplicaciones (APIs), no solo ficheros | Nombre de catálogo |
+| **[Pentaho Data Integration (PDI)](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform.html)** | Suite de ETL visual. **Spoon** edita; **Pan** y **Kitchen** ejecutan. Código: [GitHub](https://github.com/pentaho/pentaho-kettle). | La practicáis en [1.8](pentaho.md) |
+| **[Talend Open Studio](https://www.talend.com/)** | Otra ETL visual | La oiréis; no la montamos |
+| Otras de catálogo | Informatica, ODI, MuleSoft… | Nombre; no las instaláis |
 
 Las empresas no eligen “solo Pentaho” o “solo Python”. Mezclan:
 
 - la **suite visual** para conectores y planificación;
 - **[Python](https://www.python.org/)** para lo nuevo, lo no estructurado o lo que la pantalla no cubre:
     - **[pandas](https://pandas.pydata.org/):** librería para trabajar con tablas en memoria (`DataFrame`). Es el Excel de Python.
-    - **[PySpark](https://spark.apache.org/docs/latest/api/python/):** el mismo oficio, pero el cálculo se reparte en un **clúster** (varios ordenadores trabajando como uno).
-    - **[DuckDB](https://duckdb.org/):** base analítica *embebida* (no hay servidor que instalar): SQL directo sobre CSV o Parquet en tu disco. Documentación: [duckdb.org/docs](https://duckdb.org/docs/).
+    - **[PySpark](https://spark.apache.org/docs/latest/api/python/):** el mismo oficio, pero el cálculo se reparte en un **clúster** (**varias** máquinas; no es un PC con mucha RAM: [1.2](clusters.md)).
+    - **[DuckDB](https://duckdb.org/):** base analítica *embebida* (no hay servidor que instalar): SQL directo sobre CSV o Parquet en vuestro disco. Documentación: [duckdb.org/docs](https://duckdb.org/docs/).
 - **[Apache Airflow](https://airflow.apache.org/):** un **orquestador**. No transforma el dato: dispara pasos (“primero extrae, luego cruza, luego carga”) y avisa si uno falla. No lo montáis en esta UT; sí sabéis para qué existe.
 
 Sin planificación y sin registro de errores, da igual la herramienta.
@@ -282,14 +276,14 @@ Sin planificación y sin registro de errores, da igual la herramienta.
 
 Este taller enseña las **tres letras**, no pinta el panel de ocupación de las 8. El objetivo es más pequeño: reservas del canal `web` **con cobro**, y una etiqueta `hotel (web)`. En [1.8](pentaho.md) el mismo cruce se vuelve informe agregado por hotel y canal.
 
-Necesitas un cuaderno de Python:
+Necesitáis un cuaderno de Python:
 
-- **[Jupyter](https://jupyter.org/):** programa en tu PC que mezcla texto y código, celda a celda.
-- **[Google Colab](https://colab.research.google.com/):** lo mismo, pero en el navegador, sin instalar nada.
+- **[Jupyter](https://jupyter.org/):** en el PC, mezcla texto y código, celda a celda.
+- **[Google Colab](https://colab.research.google.com/):** lo mismo, en el navegador, sin instalar nada.
 
 **[pandas](https://pandas.pydata.org/)** es la librería de Python para tablas. Un `DataFrame` es una hoja: filas y columnas con nombre. **[NumPy](https://numpy.org/)** (`numpy`) genera números al azar para fabricar el ejemplo.
 
-En [1.7](formatos.md) generarás **otro** `reservas.csv` (más filas, campo `entrada`, **sin** cobros). Estos dos ficheros no se reutilizan allí.
+En [1.7](formatos.md) generaréis **otro** `reservas.csv` (más filas, campo `entrada`, **sin** cobros). Estos dos ficheros no se reutilizan allí.
 
 - `reservas.csv`: quién reservó, en qué hotel, por qué canal, noches e importe.
 - `cobros.csv`: qué reservas **ya** están cobradas y por qué medio. No todas las reservas tienen fila. Eso es real.
@@ -346,7 +340,7 @@ cruce.to_json("web_cobrado.json", orient="records", force_ascii=False)
 **[DuckDB](https://duckdb.org/)** es una base de datos **analítica** y **embebida** (sitio oficial: [duckdb.org](https://duckdb.org/); código: [github.com/duckdb/duckdb](https://github.com/duckdb/duckdb)):
 
 - Analítica: está pensada para leer mucho y agregar (sumar por hotel), no para que recepción pique una reserva.
-- Embebida: no instalas un servidor. Es una librería (`pip install duckdb`). Corre **dentro** de Python, en tu proceso.
+- Embebida: no instaláis un servidor. Es una librería (`pip install duckdb`). Corre **dentro** de Python, en vuestro proceso.
 - Habla **SQL** directo sobre ficheros locales (CSV, Parquet, JSON) **sin** cargarlos antes en PostgreSQL. Por dentro es **columnar**: guarda por columnas, así que “importe por hotel” no tiene que leer las doce columnas.
 
 Para ETL, eso significa: extraes (lees el CSV como tabla), transformas (un `SELECT` con `JOIN` y `WHERE`) y cargas (`COPY` a otro fichero).
@@ -374,40 +368,30 @@ COPY (
 """)
 ```
 
-No compares los dos JSON como si fueran el mismo fichero:
+No comparéis los dos JSON como si fueran el mismo fichero:
 
 - pandas (`orient="records"`) escribe un **array** `[ {...}, {...} ]`.
 - DuckDB (`FORMAT JSON`) suele escribir **JSONL**: una reserva por línea.
 
-Para **verlos** en clase valen los dos. Para el lago, el formato de la L no es este JSON: es Parquet (siguiente apartado). En [1.8](pentaho.md) verás el **mismo cruce** en Spoon, pero el cliente pide un informe agregado, no este JSON.
+Para **verlos** en clase valen los dos. Para el lago, el formato de la L no es este JSON: es Parquet (siguiente apartado). En [1.8](pentaho.md) veréis el **mismo cruce** en Spoon, pero el cliente pide un informe agregado, no este JSON.
 
 ### La L: formato de la carga
 
-Escribir “un fichero” no basta. El siguiente paso tiene que **partir** el archivo, comprimirlo y consultarlo sin arruinarte. El catálogo completo está en [1.7](formatos.md). Aquí solo la decisión de la **L**, ahora que ya tienes un `cruce`:
+Escribir “un fichero” no basta. Aquí solo la decisión de la **L**, ahora que ya tenéis un `cruce`. Avro, ORC, Feather y los códecs están en [1.7](formatos.md).
 
-- **CSV / JSON:** texto que un humano abre. JSONL es JSON **una reserva por línea** (se puede partir; un único array `[...]` enorme, no).
-- **[Avro](https://avro.apache.org/):** cada fila viaja con su **esquema** (de qué tipo es cada campo). Típico en colas: mañana añaden un campo y el consumidor no se rompe del todo.
-- **[Parquet](https://parquet.apache.org/):** formato **columnar** (guarda la columna `importe` junta). El informe de las 8 lee hotel e importe y **no** carga las doce columnas. Muy usado en lagos y en Spark.
-- **[ORC](https://orc.apache.org/):** parecido a Parquet; nació en el mundo Hive.
-- **[Feather / Arrow](https://arrow.apache.org/):** pensado para pasar tablas **rápido** entre procesos Python/R. No es el archivo de “guardar tres años”.
-- **[Snappy](https://google.github.io/snappy/)** (y gzip, zstd): **códecs** de compresión. Ocupan menos y viajan menos; cuestan CPU.
-
-| Destino de esta carga | Formato habitual | Por qué, en una frase |
+| Destino de esta carga | Formato | Por qué |
 | --- | --- | --- |
-| Que lo abra un compañero | CSV / JSON | Se depura |
-| Cola de mensajes; mañana añaden un campo | Avro | Cada fila lleva su esquema |
-| Lago / informe de las 8 | Parquet | Lee hotel e importe, no las doce columnas |
-| El script de al lado, ahora | Feather | Rápido; no es archivo de años |
-| Tablas Hive | ORC (o Parquet si el equipo usa Spark) | Encaje con esa pila |
-| El programa de recepción | Ni Parquet ni ORC como almacén | Actualizar una fila es caro |
+| Verlo en clase | CSV / JSON (mejor **JSONL**: una reserva por línea) | Se depura; un array `[...]` enorme no se parte bien |
+| Lago / informe de las 8 | **Parquet** | Lee hotel e importe, no las doce columnas |
+| El PMS de recepción | Ni Parquet ni JSON como almacén del cobro | Actualizar una fila es caro |
 
-Si el cruce pesara y el destino fuera el lago, usa el `cruce` del **pandas** de arriba (`pip install pyarrow`):
+Si el cruce pesara y el destino fuera el lago, usad el `cruce` del **pandas** de arriba (`pip install pyarrow`):
 
 ```python
 cruce.to_parquet("web_cobrado.parquet")
 ```
 
-Si solo corriste DuckDB, no existe `cruce`. Entonces:
+Si solo usasteis DuckDB, no existe `cruce`. Entonces:
 
 ```python
 duckdb.sql("""
@@ -421,16 +405,19 @@ COPY (
 """)
 ```
 
-Comprimir ocupa menos y viaja menos; cuesta CPU. En volumen suele ganar un códec **rápido** (por ejemplo Snappy).
+Comprimir ocupa menos y viaja menos; cuesta CPU. El códec concreto, en [1.7](formatos.md).
 
 !!! tip "Antes de dar el procedimiento por cerrado"
     ¿El destino **escribe** muchos registros o **lee** tres columnas? ¿Se puede **partir** el fichero? El detalle de cada formato, en [1.7](formatos.md).
 
+!!! info "Si ya corristeis el taller"
+    Lo que queda es el **otro tubo**: la cola del semáforo, lote frente a flujo, familias de herramientas y el examen (criterio **b)**). No volvéis a definir qué es ingerir.
+
 ## La ingesta por dentro
 
-La ingesta extrae los datos desde la fuente donde se crean y los carga en un destino o zona temporal. Un pipeline sencillo puede aplicar una transformación ligera (filtrar, enriquecer) **antes** de escribir. El cruce gordo y las sumas para el informe viven en un pipeline **siguiente**. No es pereza: es no bloquear la puerta.
+Un pipeline sencillo puede aplicar una transformación ligera (filtrar, enriquecer) **antes** de escribir. El cruce gordo y las sumas para el informe viven en un pipeline **siguiente**. No es pereza: es no bloquear la puerta.
 
-La ingesta es la **primera** capa de la [arquitectura](arquitectura.md). Suele ser la más pesada: muchas fuentes, ritmos distintos. El día 1 **priorizas** (no todas importan), **validas** cada lote aparte y **enrutas**.
+La ingesta es la **primera** capa de la [arquitectura](arquitectura.md). El día 1 **priorizáis** (no todas las fuentes importan), **validáis** cada lote aparte y **enrutáis**.
 
 | Orígenes habituales | Destinos habituales |
 | --- | --- |
@@ -463,7 +450,7 @@ Una **cola de mensajes** es un buzón intermedio. No es una base de datos de inf
 
 En muchas colas clásicas, al recoger el mensaje **desaparece**. En sistemas repartidos en varios ordenadores (varios PCs colaborando) el orden entre canales no está garantizado: hay que contar con que un nodo falle.
 
-Herramientas de este oficio (las verás con más detalle en el catálogo de más abajo):
+Herramientas de este oficio (el catálogo de familias va más abajo):
 
 - **Apache Kafka:** un “bus” de mensajes. Sitio oficial: [kafka.apache.org](https://kafka.apache.org/). Muchos productores publican en un canal (*topic*, como un tablón con nombre: `reservas.altas`) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.
 - **RabbitMQ:** una cola más clásica ([rabbitmq.com](https://www.rabbitmq.com/)): el productor deja el recado, el consumidor lo recoge y, en general, se borra.
@@ -471,36 +458,35 @@ Herramientas de este oficio (las verás con más detalle en el catálogo de más
 
 En voz alta: “desacoplar al sensor del semáforo de recepción” → familia **mensajería**, no el volcado nocturno del panel de las 8.
 
-### Batch vs Streaming
+### Lote o flujo
 
-El movimiento de datos entre orígenes y destinos puede ser:
+El detalle de ritmos está en [1.4](procesamiento.md). Aquí, aplicados al hotel:
 
 | | **Lote** (*batch*) | **Micro-lote** | **Continuo** (*streaming*) |
 | --- | --- | --- | --- |
 | Cuándo | Cada X horas o al llegar un fichero | Cada pocos minutos, un bloque pequeño | En cuanto aparece el dato |
 | Retraso | Horas; a menudo da igual | Compromiso | Segundos o menos |
-| Encaja | Cierre de finanzas, volcado nocturno | Panel “casi en vivo” | Sensor, clic, log |
+| Encaja | Cierre a las 23:00, **panel de las 8** | Una consulta a las **11**, no el cuadro de gerencia | Sensores → **semáforo** |
 
-**Síncrono:** esperas a que el destino confirme que lo ha recibido. **Asíncrono:** sueltas el mensaje y sigues trabajando.
+**Síncrono:** esperáis a que el destino confirme. **Asíncrono:** soltáis el mensaje y seguís.
 
-- **Batch:** el proceso se ejecuta de forma periódica a partir de datos estáticos. Encaja con grandes volúmenes cuando la latencia (minutos u horas) no es lo más importante. Ejemplos de familia: [Sqoop](https://sqoop.apache.org/), un script Python, un job de Spark o de Pentaho.
-- **Streaming:** los datos se leen, se tocan y se cargan en cuanto llegan. La latencia es crítica. Ejemplos de familia: [Kafka](https://kafka.apache.org/), [NiFi](https://nifi.apache.org/), Spark Streaming.
+Familias: lote (Sqoop, script, Pentaho de noche); flujo (Kafka, NiFi). Spark cubre **los dos** ([1.5](arquitectura.md)); no hace falta “Spark Streaming” como producto aparte.
 
 ### Arquitectura
 
-Si te basas en la arquitectura por capas, la ingesta es la de **abajo**: **lleva** el dato desde las fuentes; las fuentes no *son* la capa. El dibujo de esta página es el **resumen de cuatro pisos**. El edificio completo (ocho capas, con colección, consulta, seguridad y monitorización) está en [1.5](arquitectura.md). Los números de aquí **no** son los de allí: aquí el 4 es el panel; allí el 4 es el job.
+Si os basáis en la arquitectura por capas, la ingesta es la de **abajo**: **lleva** el dato desde las fuentes; las fuentes no *son* la capa. El dibujo de esta página es el **resumen de cuatro pisos**. El edificio completo (ocho capas) está en [1.5](arquitectura.md). Los números de aquí **no** son los de allí: aquí el 4 es el panel; allí el 4 es el job.
 
 ![La ingesta es la capa de abajo: el dato sube hacia el panel](../assets/ut1/capas-ingesta.png)
 
-Es el paso más pesado, por tiempo y por recursos. Es normal ingerir desde decenas de fuentes, a velocidades distintas y en formatos distintos. Por eso, el día 1:
+Es el paso más pesado, por tiempo y por recursos. El día 1:
 
-1. **Priorizas** las fuentes (no todas importan igual).
-2. **Validas** cada lote o fichero por separado.
-3. **Enrutas** cada elemento a su destino correcto.
+1. **Priorizáis** las fuentes (no todas importan igual).
+2. **Validáis** cada lote o fichero por separado.
+3. **Enrutáis** cada elemento a su destino correcto.
 
 ## Herramientas de Ingesta de datos
 
-Citas la **familia**. El producto concreto cambia de año. No memorices logos; sí debes poder decir *para qué sirve* cada una si te la nombran.
+Citas la **familia**. El producto concreto cambia de año. No memoricéis logos; sí debéis poder decir *para qué sirve* cada una si os la nombran.
 
 Las herramientas de ingesta para ecosistemas Big Data se agrupan así:
 
@@ -508,7 +494,7 @@ Las herramientas de ingesta para ecosistemas Big Data se agrupan así:
 - **[Apache Flume](https://flume.apache.org/):** tubería de **logs y eventos** hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.
 - **[Apache NiFi](https://nifi.apache.org/):** pantalla con **cajas y flechas** (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.
 - **[Logstash](https://www.elastic.co/logstash)** (Elastic): nació para meter logs en **[Elasticsearch](https://www.elastic.co/elasticsearch)** (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.
-- **[AWS Glue](https://aws.amazon.com/glue/):** ETL **gestionada** en Amazon: no instalas servidor; lo lanzas desde la consola. Descubre esquemas. **[Athena](https://aws.amazon.com/athena/)** no es Glue: es SQL sobre ficheros en S3; usa el **catálogo** de Glue para saber qué tablas hay.
+- **[AWS Glue](https://aws.amazon.com/glue/):** ETL **gestionada** en Amazon: no instaláis servidor; lo lanzáis desde la consola. Descubre esquemas. **[Athena](https://aws.amazon.com/athena/)** no es Glue: es SQL sobre ficheros en S3; usa el **catálogo** de Glue para saber qué tablas hay.
 
 Por otro lado hay sistemas de mensajería con funciones propias de ingesta **asíncrona**:
 
@@ -516,7 +502,7 @@ Por otro lado hay sistemas de mensajería con funciones propias de ingesta **as�
 - **[RabbitMQ](https://www.rabbitmq.com/):** cola clásica productor-consumidor.
 - **[Kinesis](https://aws.amazon.com/kinesis/) / [Event Hubs](https://azure.microsoft.com/products/event-hubs/) / [Pub/Sub](https://cloud.google.com/pubsub):** lo mismo en AWS, Azure y Google.
 
-Finalmente, hay conectores que facilitan llevar **SaaS** (software que usas por internet: el PMS en la nube, el CRM, la pasarela) hacia el lago, sin programar cada API:
+Finalmente, hay conectores que facilitan llevar **SaaS** (software que usáis por internet: el PMS en la nube, el CRM, la pasarela) hacia el lago, sin programar cada API:
 
 - **[Fivetran](https://www.fivetran.com/):** plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.
 - **[Airbyte](https://airbyte.com/):** la misma idea, con versión **open source** ([GitHub](https://github.com/airbytehq/airbyte)) y otra gestionada en cloud.
@@ -533,7 +519,7 @@ Finalmente, hay conectores que facilitan llevar **SaaS** (software que usas por 
 
 ## Consideraciones
 
-En un supuesto de aula o de examen, clava **estas** decisiones y justifícalas. Las preguntas de cada bloque son las que usa la [actividad 9](#actividades).
+En un supuesto de aula o de examen, claváis **estas** decisiones y las justificáis. Las preguntas de cada bloque son las que usa la [actividad 9](#actividades).
 
 ### Origen y formato
 
@@ -548,7 +534,7 @@ En un supuesto de aula o de examen, clava **estas** decisiones y justifícalas. 
 - ¿Quién inicia: push, pull o poll?
 - ¿El dato que llega tarde sigue valiendo? El cierre de ayer sí; el semáforo de habitación libre, no.
 - ¿Lote, micro-lote o continuo?
-- ¿Síncrono (esperas confirmación) o asíncrono (sueltas y sigues)?
+- ¿Síncrono (esperáis confirmación) o asíncrono (soltáis y seguís)?
 - Si llega tarde, ¿hasta cuándo se considera válido?
 
 ### Actualizaciones
@@ -607,4 +593,4 @@ No sustituye a Moodle. Comprueba que lo sostienes en voz alta.
 6. Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job.
 7. El programa de reservas añade `motivo_cancelacion`. El job de las 02:00 sigue en verde. ¿Qué falló? ¿ETL o ELT te salva mejor un indicador nuevo de cancelaciones?
 8. Misma transformación del punto 4, pero ahora **agrega**: por hotel, número de reservas cobradas y suma de `cobrado`. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías al recoger o al procesar? ¿Por qué?
-9. La cadena lanza una app de fidelización y quiere reacción en redes las primeras 48 h. Del apartado [Consideraciones](#consideraciones), responde **al menos tres preguntas** de [Origen y formato](#origen-y-formato), **tres** de [Reloj / latencia](#reloj-latencia) y **tres** de [Calidad y personas](#calidad-y-personas). Nombra la **familia** de ingesta, no hace falta un producto.
+9. Mañana el canal (OTA) manda un JSON nuevo y los sensores de Potes siguen a 30 s. Del apartado [Consideraciones](#consideraciones), responded **al menos tres preguntas** de [Origen y formato](#origen-y-formato), **tres** de [Reloj / latencia](#reloj-latencia) y **tres** de [Calidad y personas](#calidad-y-personas). Nombrad la **familia** de ingesta, no hace falta un producto. No mezcléis el JSON de la OTA con el semáforo en un solo job.
