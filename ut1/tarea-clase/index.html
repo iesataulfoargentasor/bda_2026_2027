@@ -1654,14 +1654,14 @@
 
 
 <h1 id="tarea-para-practicar-en-clase">Tarea para practicar en clase<a class="headerlink" href="#tarea-para-practicar-en-clase" title="Permanent link">&para;</a></h1>
-<p>Esta sesión une <a href="../clusters/">1.2 Clústeres</a> y <a href="../procesamiento/">1.4 Procesamiento</a> con el <strong>RA2</strong>: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer <strong>añadiendo</strong> recursos. Hoy <strong>no</strong> instaláis Spark ni Dask. Sí tenéis que saber <strong>qué tipo de ejecución</strong> estáis pidiendo y <strong>por qué el portátil no es un clúster</strong>.</p>
+<p>Esta sesión une <a href="../clusters/" rel="noopener" target="_blank">1.2 Clústeres</a> y <a href="../procesamiento/" rel="noopener" target="_blank">1.4 Procesamiento</a> con el <strong>RA2</strong>: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer <strong>añadiendo</strong> recursos. Hoy <strong>no</strong> instaláis Spark ni Dask. Sí tenéis que saber <strong>qué tipo de ejecución</strong> estáis pidiendo y <strong>por qué el portátil no es un clúster</strong>.</p>
 <p>No se entrega en Moodle salvo que el profesor lo indique. Se trabaja <strong>en clase</strong> (individual o por parejas) y se comenta al final.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
-<p>Primero el <strong>caso</strong> (500 GB del <a href="../caso-hotel/">grupo hotelero</a>, un portátil). Luego un <strong>repaso</strong> de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después <strong>siete preguntas</strong>. El número tiene que servir para el <strong>panel de las 8</strong> (cierre de <strong>ayer</strong>).</p>
+<p>Primero el <strong>caso</strong> (500 GB del <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>, un portátil). Luego un <strong>repaso</strong> de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después <strong>siete preguntas</strong>. El número tiene que servir para el <strong>panel de las 8</strong> (cierre de <strong>ayer</strong>).</p>
 </div>
 <h2 id="el-caso-500-gb-y-un-portatil">El caso: 500 GB y un portátil<a class="headerlink" href="#el-caso-500-gb-y-un-portatil" title="Permanent link">&para;</a></h2>
-<p>Sois técnicos de la cadena. Os piden <strong>un número</strong> sobre un fichero de <strong>500 GB</strong> (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el <strong>panel de las 8</strong>. <strong>No</strong> picáis en el <a href="../caso-hotel/">PMS</a>. <strong>No</strong> copiáis los 500 GB al informe.</p>
+<p>Sois técnicos de la cadena. Os piden <strong>un número</strong> sobre un fichero de <strong>500 GB</strong> (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el <strong>panel de las 8</strong>. <strong>No</strong> picáis en el <a href="../caso-hotel/" rel="noopener" target="_blank">PMS</a>. <strong>No</strong> copiáis los 500 GB al informe.</p>
 <p>El fichero está en la <strong>red de la empresa</strong> (una URL interna o una carpeta compartida), no en vuestro disco.</p>
 <p><strong>Operación</strong> (elegid <strong>una</strong>): media, desviación típica, o <em>normalizar</em> un campo (dejarlo en una escala comparable, p. ej. 0–1).</p>
 <p><strong>Destino del resultado</strong> (elegid <strong>uno</strong>, el que diga el profesor): cubo <strong>S3</strong>, <strong>Azure</strong> (Blob / Data Lake) o <strong>carpeta del aula</strong>. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa <strong>casi nada</strong>; no lo confundáis con mover los 500 GB.</p>
@@ -1699,7 +1699,7 @@
 </table>
 <p><img alt="500 GB del histórico no caben en el portátil (300 GB libres, 32 GB de RAM). El panel de las 8 necesita el número, unos bytes" src="../../assets/ut1/tarea-portatil-500gb.png" /></p>
 <h2 id="concurrente-paralelo-y-distribuido-repaso">Concurrente, paralelo y distribuido (repaso)<a class="headerlink" href="#concurrente-paralelo-y-distribuido-repaso" title="Permanent link">&para;</a></h2>
-<p>Tres palabras que en el pasillo se usan como sinónimos. <strong>No</strong> lo son. El detalle está en el <a href="../procesamiento/">1.4</a>; aquí basta para no mezclar el i7 con un clúster.</p>
+<p>Tres palabras que en el pasillo se usan como sinónimos. <strong>No</strong> lo son. El detalle está en el <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>; aquí basta para no mezclar el i7 con un clúster.</p>
 <p><img alt="Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster" src="../../assets/ut1/paralelo-distribuido.png" /></p>
 <table>
 <thead>
@@ -1765,11 +1765,11 @@
 <ol>
 <li><strong>Dónde</strong> dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.</li>
 <li><strong>Cómo</strong> lanzáis el cálculo (un <em>job</em>: trabajo programado; de madrugada, para tener el número <strong>antes de las 8</strong>).</li>
-<li>Por qué encaja: <strong>volumen</strong>, <strong>tiempo</strong>, <strong>tolerancia a fallos</strong> (si se funde un disco, el panel no se cae: <a href="../clusters/">1.2</a>), <strong>crecimiento</strong> (añadir nodos = <a href="../clusters/">escalado horizontal</a>).</li>
+<li>Por qué encaja: <strong>volumen</strong>, <strong>tiempo</strong>, <strong>tolerancia a fallos</strong> (si se funde un disco, el panel no se cae: <a href="../clusters/" rel="noopener" target="_blank">1.2</a>), <strong>crecimiento</strong> (añadir nodos = <a href="../clusters/" rel="noopener" target="_blank">escalado horizontal</a>).</li>
 </ol>
 <h3 id="5-opcion-4-cargar-y-consultar">5. Opción 4 — Cargar y consultar<a class="headerlink" href="#5-opcion-4-cargar-y-consultar" title="Permanent link">&para;</a></h3>
 <p>Valorad cargar el fichero (o <strong>particionarlo</strong>) en un almacén de informes / <em>lakehouse</em> o, si el aula lo usa, MongoDB, y hacer la media con una <strong>consulta</strong>.</p>
-<p>¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: <strong>modelo de datos</strong>, <strong>coste</strong> (¡a menudo pagáis por lo <strong>escaneado</strong>!, <a href="../formatos/">1.7</a>), <strong>curva de aprendizaje</strong>.</p>
+<p>¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: <strong>modelo de datos</strong>, <strong>coste</strong> (¡a menudo pagáis por lo <strong>escaneado</strong>!, <a href="../formatos/" rel="noopener" target="_blank">1.7</a>), <strong>curva de aprendizaje</strong>.</p>
 <h3 id="6-y-la-gpu">6. ¿Y la GPU?<a class="headerlink" href="#6-y-la-gpu" title="Permanent link">&para;</a></h3>
 <p>¿La RTX 4060 <strong>cambia de verdad</strong> este problema (una estadística sobre un campo de un CSV/JSON de reservas)?</p>
 <p>Decid en qué tareas de datos <strong>sí</strong> suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser <strong>leer bytes de red/disco</strong>, no multiplicar matrices.</p>
@@ -1810,14 +1810,14 @@
 <ol>
 <li>10 minutos: leed el caso y el repaso. Aclarad dudas de vocabulario.</li>
 <li>25–35 minutos: responded 1–7 (parejas bienvenidas).</li>
-<li>10 minutos: puesta en común. El profesor puede contrastar con el <a href="https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing">cuaderno Dask de 500 GB</a> o la <a href="https://github.com/josedavidmi/demo_dask_500gb-">demo de GitHub</a>.</li>
+<li>10 minutos: puesta en común. El profesor puede contrastar con el <a href="https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing" rel="noopener" target="_blank">cuaderno Dask de 500 GB</a> o la <a href="https://github.com/josedavidmi/demo_dask_500gb-" rel="noopener" target="_blank">demo de GitHub</a>.</li>
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Qué se espera</p>
 <p>No un clúster montado hoy. Sí una recomendación <strong>argumentada</strong>: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el <strong>número</strong>.</p>
 </div>
 <h2 id="relacion-con-el-modulo">Relación con el módulo<a class="headerlink" href="#relacion-con-el-modulo" title="Permanent link">&para;</a></h2>
-<p>Es el <strong>puente hacia el RA2</strong> (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de <a href="../clusters/">1.2</a> y <a href="../procesamiento/">1.4</a>. Os obliga a <strong>elegir y justificar</strong>. El laboratorio de HDFS y Spark es la UT2.</p>
+<p>Es el <strong>puente hacia el RA2</strong> (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de <a href="../clusters/" rel="noopener" target="_blank">1.2</a> y <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>. Os obliga a <strong>elegir y justificar</strong>. El laboratorio de HDFS y Spark es la UT2.</p>
 <p>La entrega formal, si la hay, se indica en Moodle.</p>
 <h2 id="para-profundizar-si-el-profesor-lo-indica">Para profundizar (si el profesor lo indica)<a class="headerlink" href="#para-profundizar-si-el-profesor-lo-indica" title="Permanent link">&para;</a></h2>
 <p>No es de esta sesión. Si os piden probar código, Dask se parece a Pandas; PySpark es el de libro en clústeres grandes; Ray aparece más en ML. Hoy no hace falta instalarlas.</p>
@@ -1840,17 +1840,17 @@
 <tr>
 <td>Hoy</td>
 <td>Solo si el profesor abre el cuaderno</td>
-<td>No lo programáis aún (<a href="../procesamiento/">1.4</a>)</td>
+<td>No lo programáis aún (<a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>)</td>
 <td>Fuera de esta tarea</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>Tutorial Berkeley (Dask y un poco de Ray): <a href="https://computing.stat.berkeley.edu/tutorial-dask-future/">Flexible parallel processing</a></li>
-<li>Plan ETL con <strong>Dask</strong> (Colab): <a href="https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing">cuaderno</a></li>
-<li>Plan ETL con <strong>Ray</strong> (Colab): <a href="https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing">cuaderno</a></li>
-<li>Estudio del profesor: 500 GB con Dask (Colab): <a href="https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing">cuaderno</a></li>
-<li>Demo en GitHub (Dask, origen remoto → S3, desde un portátil): <a href="https://github.com/josedavidmi/demo_dask_500gb-">josedavidmi/demo_dask_500gb-</a></li>
+<li>Tutorial Berkeley (Dask y un poco de Ray): <a href="https://computing.stat.berkeley.edu/tutorial-dask-future/" rel="noopener" target="_blank">Flexible parallel processing</a></li>
+<li>Plan ETL con <strong>Dask</strong> (Colab): <a href="https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing" rel="noopener" target="_blank">cuaderno</a></li>
+<li>Plan ETL con <strong>Ray</strong> (Colab): <a href="https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing" rel="noopener" target="_blank">cuaderno</a></li>
+<li>Estudio del profesor: 500 GB con Dask (Colab): <a href="https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing" rel="noopener" target="_blank">cuaderno</a></li>
+<li>Demo en GitHub (Dask, origen remoto → S3, desde un portátil): <a href="https://github.com/josedavidmi/demo_dask_500gb-" rel="noopener" target="_blank">josedavidmi/demo_dask_500gb-</a></li>
 </ul>
 
 
