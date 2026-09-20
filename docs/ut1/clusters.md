@@ -62,6 +62,8 @@ Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:
 
 Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho **no publica** el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.
 
+![Si se funde el disco de Potes, una copia en marcha deja el panel de las 8 en pie](../assets/ut1/replica-potes.png)
+
 ### Equilibrio de carga
 
 Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. El algoritmo debería mirar:
@@ -79,6 +81,8 @@ No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y
 Añadir nodos **no** convierte solo un Excel de finanzas en clúster: el programa del job tiene que **saber** partirse. El PMS de recepción puede seguir en **un** servidor.
 
 ## Escalado vertical y horizontal
+
+![Vertical: más RAM en el PMS. Horizontal: más máquinas. En noviembre se apagan nodos](../assets/ut1/vertical-horizontal.png)
 
 | | Vertical (*scale-up*) | Horizontal (*scale-out*) |
 | --- | --- | --- |
