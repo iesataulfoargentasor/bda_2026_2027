@@ -678,6 +678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-calculo-y-el-disco-no-tienen-por-que-ir-juntos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El cálculo y el disco no tienen por qué ir juntos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#relacion-con-el-ra1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1433,6 +1444,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-calculo-y-el-disco-no-tienen-por-que-ir-juntos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El cálculo y el disco no tienen por qué ir juntos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#relacion-con-el-ra1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1643,6 +1665,8 @@
 <p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tienes más máquinas y el mismo cuello.</p>
 <p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir. En clase lo pones a prueba con la <a href="../tarea-clase/">tarea de los 500 GB</a>: el portátil no es un clúster.</p>
 <p>También hay coste de <strong>coordinación</strong>: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.</p>
+<h2 id="el-calculo-y-el-disco-no-tienen-por-que-ir-juntos">El cálculo y el disco no tienen por qué ir juntos<a class="headerlink" href="#el-calculo-y-el-disco-no-tienen-por-que-ir-juntos" title="Permanent link">&para;</a></h2>
+<p>El Hadoop “de libro” <strong>pegaba</strong> el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los objetos viven en un cubo y el clúster de cálculo <strong>crece o se apaga</strong> por su cuenta. Ganas réplica y disco barato; pagas red. El detalle (bloque, objeto, <em>lakehouse</em>) está en <a href="../almacenamiento/">1.3</a>. El mapa de quién ingiere y quién consume, en <a href="../arquitectura/">1.5</a>.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
 <p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor que no admite ver una operación a medias, o un clúster que copia y reparte? Esa decisión condiciona:</p>
 <ul>

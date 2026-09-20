@@ -679,6 +679,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#el-ciclo-generacion-consumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El ciclo (generación → consumo)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El ciclo (generación → consumo)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-quien-sirves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A quién sirves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#un-caso-para-no-perderse" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -795,6 +823,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#gobierno-dataops-y-orquestacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gobierno, DataOps y orquestación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#como-se-lee-un-paisaje-big-data-landscape" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +849,28 @@
     <span class="md-ellipsis">
       
         Big Data y cloud
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#destrezas-del-oficio-no-un-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destrezas del oficio (no un tutorial)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1394,6 +1455,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#el-ciclo-generacion-consumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El ciclo (generación → consumo)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El ciclo (generación → consumo)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-quien-sirves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A quién sirves
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#un-caso-para-no-perderse" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1510,6 +1599,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#gobierno-dataops-y-orquestacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gobierno, DataOps y orquestación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#como-se-lee-un-paisaje-big-data-landscape" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1525,6 +1625,28 @@
     <span class="md-ellipsis">
       
         Big Data y cloud
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#destrezas-del-oficio-no-un-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destrezas del oficio (no un tutorial)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1627,15 +1749,56 @@
 <h1 id="15-arquitectura-por-capas-y-paisaje-de-herramientas">1.5. Arquitectura por capas y paisaje de herramientas<a class="headerlink" href="#15-arquitectura-por-capas-y-paisaje-de-herramientas" title="Permanent link">&para;</a></h1>
 <p>Un sistema Big Data no es “un programa que lo hace todo”. Si metes ingesta, limpieza, modelos y el PDF para gerencia en el mismo script, no puedes probar, ni sustituir una pieza, ni explicar el diseño (criterio <strong>a)</strong>).</p>
 <p>Se parte en <strong>capas</strong> que se hablan entre sí. Cada capa tiene <strong>una</strong> responsabilidad. Así sabes dónde encajan la <a href="../ingesta/">ingesta</a>, el <a href="../formatos/">formato</a>, <a href="../pentaho/">Pentaho</a> y el cuadro de mando.</p>
+<p>Este apartado es también el <strong>mapa del oficio</strong> que en <a href="../por-que-big-data/">1.1</a> llamamos ingeniería de datos: no el gráfico del lunes, sino que ese gráfico <strong>pueda</strong> hacerse.</p>
+<h2 id="el-ciclo-generacion-consumo">El ciclo (generación → consumo)<a class="headerlink" href="#el-ciclo-generacion-consumo" title="Permanent link">&para;</a></h2>
+<p>Antes de los logos, el dato recorre un ciclo. Las tecnologías cambian; <strong>estas fases no</strong>.</p>
+<ol>
+<li><strong>Generación.</strong> Quién, dónde y cuándo nace el dato: PMS, pasarela, sensor, un Excel de Comillas, una API.</li>
+<li><strong>Ingesta.</strong> Moverlo al almacén. El detalle (pipeline, push/pull/poll, ETL/ELT) está en <a href="../ingesta/">1.6</a>.</li>
+<li><strong>Transformación.</strong> Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL.</li>
+<li><strong>Entrega</strong> (<em>serving</em>). El dato <strong>ya es de fiar</strong> y se lo das a un consumidor: panel, modelo, fichero para el científico.</li>
+<li><strong>Consumo.</strong> Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado <strong>antes</strong>.</li>
+</ol>
+<p><img alt="Ciclo del dato en el hotel: de PMS y sensores al panel de las 8" src="../../assets/ut1/ciclo-ingenieria.png" /></p>
+<p>Sobre el almacén (lago, warehouse, <em>lakehouse</em>, cubo de objetos: <a href="../almacenamiento/">1.3</a>) se apoyan ingesta, transformación y entrega. Lo que no es una fase, y atraviesa todas, va más abajo: seguridad, gobierno, orquestación.</p>
+<h3 id="a-quien-sirves">A quién sirves<a class="headerlink" href="#a-quien-sirves" title="Permanent link">&para;</a></h3>
+<p>No es el mismo reloj.</p>
+<table>
+<thead>
+<tr>
+<th>Entrega</th>
+<th>Pregunta</th>
+<th>Reloj en el hotel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Analítica de negocio</strong></td>
+<td>¿Qué pasó / por qué? Decisiones de <strong>días o semanas</strong>.</td>
+<td>El panel de las 8 (lote).</td>
+</tr>
+<tr>
+<td><strong>Analítica operacional</strong></td>
+<td>¿Qué hago <strong>ahora</strong>?</td>
+<td>El semáforo de recepción (sensores).</td>
+</tr>
+<tr>
+<td><strong>Analítica embebida</strong></td>
+<td>El dato vive <strong>dentro</strong> de otra app.</td>
+<td>“¿Queda doble al mar?” en la web de reservas.</td>
+</tr>
+</tbody>
+</table>
+<p>A veces el resultado <strong>vuelve al origen</strong>: el modelo etiqueta bien una cancelación y escribes el hecho otra vez en el PMS. Eso se llama <em>reverse ETL</em>. No lo montáis en este módulo; sí sabéis que el ciclo <strong>no es de un solo sentido</strong>.</p>
 <h2 id="un-caso-para-no-perderse">Un caso para no perderse<a class="headerlink" href="#un-caso-para-no-perderse" title="Permanent link">&para;</a></h2>
-<p>El hilo del módulo es el <a href="../caso-hotel/">grupo hotelero</a>. En esta página las capas se ven con <strong>otro</strong> negocio, para que no parezcan un invento solo de reservas.</p>
+<p>El hilo del módulo es el <a href="../caso-hotel/">grupo hotelero</a>. En <strong>estas</strong> capas se usa <strong>otro</strong> negocio, para que no parezcan un invento solo de reservas.</p>
 <p>Una comercializadora eléctrica (o un ayuntamiento con contadores) quiere:</p>
 <ul>
 <li>no perder lecturas de los equipos,</li>
 <li>detectar un consumo anómalo,</li>
 <li>y que dirección vea un panel el lunes.</li>
 </ul>
-<p>Ese problema <strong>no</strong> se resuelve con una única base Access. Recorre las capas.</p>
+<p>Ese problema <strong>no</strong> se resuelve con una única base Access. Recorre las capas. Son el mismo ciclo de arriba, vistos como <strong>edificio</strong>.</p>
 <h2 id="las-capas-el-dato-entra-abajo-y-el-cliente-mira-arriba">Las capas (el dato entra abajo y el cliente mira arriba)<a class="headerlink" href="#las-capas-el-dato-entra-abajo-y-el-cliente-mira-arriba" title="Permanent link">&para;</a></h2>
 <h3 id="1-ingesta">1. Ingesta<a class="headerlink" href="#1-ingesta" title="Permanent link">&para;</a></h3>
 <p>Entras a las fuentes que <strong>ya existen</strong>: la BD de facturación, una API del fabricante, un CSV que manda un contratista, un topic de sensores. Tú <strong>no eliges</strong> cómo habla el origen: te adaptas (SQL, HTTP, fichero, cola).</p>
@@ -1643,7 +1806,7 @@
 <h3 id="2-coleccion-integracion">2. Colección / integración<a class="headerlink" href="#2-coleccion-integracion" title="Permanent link">&para;</a></h3>
 <p>Unificas <strong>formato y semántica</strong>. El mismo cliente no puede llamarse <code>id_cliente</code> en un sitio y <code>customerId</code> en otro sin un criterio. Aquí nace (o se rompe) la calidad.</p>
 <h3 id="3-almacenamiento">3. Almacenamiento<a class="headerlink" href="#3-almacenamiento" title="Permanent link">&para;</a></h3>
-<p>Lago, warehouse, HDFS, objeto en cloud… <a href="../clusters/">distribuido</a> si el volumen lo pide. Aquí aplicas lo de <a href="../almacenamiento/">1.3</a>: ¿el negocio puede verse a medias o no? ¿lago o almacén de informes?</p>
+<p>Lago, warehouse, <em>lakehouse</em>, HDFS, objeto en cloud… <a href="../clusters/">distribuido</a> si el volumen lo pide. Aquí aplicas lo de <a href="../almacenamiento/">1.3</a>: ¿el negocio puede verse a medias o no? ¿lago, almacén de informes o los dos?</p>
 <h3 id="4-procesamiento">4. Procesamiento<a class="headerlink" href="#4-procesamiento" title="Permanent link">&para;</a></h3>
 <p>Infraestructura <strong>batch</strong>, <strong>streaming</strong> o híbrida. <em>No</em> extrae valor ella sola: deja el dato <strong>listo</strong> (agregado, limpio, unido). Spark, un job de Pentaho o un script viven aquí.</p>
 <h3 id="5-consulta-y-analitica">5. Consulta y analítica<a class="headerlink" href="#5-consulta-y-analitica" title="Permanent link">&para;</a></h3>
@@ -1651,20 +1814,25 @@
 <h3 id="6-visualizacion">6. Visualización<a class="headerlink" href="#6-visualizacion" title="Permanent link">&para;</a></h3>
 <p>Informes y cuadros de mando para el <strong>cliente final</strong>. Es el criterio <strong>e)</strong>: fácil de interpretar. Un <code>.ktr</code> o un Parquet crudo <strong>no</strong> son esta capa.</p>
 <h3 id="7-seguridad-transversal">7. Seguridad (transversal)<a class="headerlink" href="#7-seguridad-transversal" title="Permanent link">&para;</a></h3>
-<p>Atraviesa todas las anteriores: quién lee el NIF, cifrado, copias, amenazas internas (un práctico con más permisos de la cuenta) y externas.</p>
+<p>Atraviesa todas las anteriores: quién lee el NIF, cifrado, copias, amenazas internas (un práctico con más permisos de la cuenta) y externas. Principio de <strong>menor privilegio</strong>: solo el tiempo y las columnas que hacen falta. Enmascarar el DNI del huésped no es un adorno.</p>
 <h3 id="8-monitorizacion-transversal">8. Monitorización (transversal)<a class="headerlink" href="#8-monitorizacion-transversal" title="Permanent link">&para;</a></h3>
 <p>¿El job de anoche acabó? ¿El dato del panel es de hoy o de marzo? Auditoría y gobierno. Sin esto, el prototipo de clase funciona y el de producción <strong>miente</strong> sin que nadie lo sepa.</p>
 <div class="admonition warning">
 <p class="admonition-title">Las dos que se olvidan en el trabajo de clase</p>
 <p>Seguridad y monitorización. El flujo “CSV → filtro → Excel” llega al 10. Las otras seis capas, si el caso es real, también existen aunque sean simples (una carpeta con permisos y un log de Pentaho).</p>
 </div>
+<h2 id="gobierno-dataops-y-orquestacion">Gobierno, DataOps y orquestación<a class="headerlink" href="#gobierno-dataops-y-orquestacion" title="Permanent link">&para;</a></h2>
+<p>No son una novena capa con logo. Son <strong>corrientes</strong> que atraviesan el ciclo.</p>
+<p><strong>Gobierno del dato.</strong> Que se pueda <strong>encontrar</strong>, saber <strong>de dónde salió</strong> (linaje) y qué <strong>significa</strong> <code>canal</code>. Metadatos, catálogo, ética y privacidad (el NIF no se va a un cubo público). Sin esto el lago es ciénaga (<a href="../almacenamiento/">1.3</a>).</p>
+<p><strong>DataOps.</strong> Entregar valor <strong>antes</strong>, con menos error: automatizar el job, <strong>observar</strong> cuando el CSV llega vacío, y tener un plan si Kitchen falla a las 02:10 (repetir, o volver a la versión de ayer). CI/CD aquí es “el flujo se prueba antes de pintar el panel”.</p>
+<p><strong>Orquestación.</strong> Quién dispara qué, en qué orden, y qué pasa si un paso muere. En aula lo veréis como <strong>Kitchen</strong> (<a href="../pentaho/">1.8</a>). En industria oiréis <a href="https://airflow.apache.org/">Apache Airflow</a>: no transforma el dato; <strong>coordina</strong>. Un ingeniero de datos sin orquestación es un cron a ciegas.</p>
 <h2 id="como-se-lee-un-paisaje-big-data-landscape">Cómo se lee un paisaje (<em>Big Data landscape</em>)<a class="headerlink" href="#como-se-lee-un-paisaje-big-data-landscape" title="Permanent link">&para;</a></h2>
-<p>Si buscas esa expresión verás pósters con cientos de logos. <strong>No los memorices.</strong> Sitúa <strong>la capa</strong>:</p>
+<p>Si buscas esa expresión verás pósters con cientos de logos. <strong>No los memorices.</strong> Sitúa <strong>la capa</strong> (o la fase del ciclo):</p>
 <table>
 <thead>
 <tr>
 <th>Capa</th>
-<th>Ejemplos que verás en el ciclo</th>
+<th>Ejemplos que veréis en el ciclo</th>
 <th>Pregunta que responde</th>
 </tr>
 </thead>
@@ -1697,14 +1865,58 @@
 </tbody>
 </table>
 <p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming <strong>en memoria</strong> y convive con ese ecosistema. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> y para <strong>mostrar</strong> el resultado sin programar el motor.</p>
-<p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong></p>
+<p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong> Un mapa reciente que se cita en el ciclo: <a href="https://mad.firstmark.com/">MAD landscape</a> (orientación, no para recitar).</p>
 <h2 id="big-data-y-cloud">Big Data y cloud<a class="headerlink" href="#big-data-y-cloud" title="Permanent link">&para;</a></h2>
-<p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagas</strong>.</p>
+<p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: sigues decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagas</strong>. El cubo es almacén de <strong>objetos</strong>; el clúster de cálculo puede <strong>no</strong> vivir en las mismas máquinas (<a href="../almacenamiento/">1.3</a>).</p>
 <p>En varios servicios analíticos de nube pagas por <strong>dato escaneado</strong>, no solo por dato guardado. Por eso en <a href="../formatos/">1.7</a> Parquet no es “un capricho moderno”: es menos euros y menos minutos.</p>
+<h2 id="destrezas-del-oficio-no-un-tutorial">Destrezas del oficio (no un tutorial)<a class="headerlink" href="#destrezas-del-oficio-no-un-tutorial" title="Permanent link">&para;</a></h2>
+<p>No hace falta dominarlas todas el primer día. Sí conviene saber <strong>que existen</strong> y para qué las usa un ingeniero:</p>
+<ul>
+<li>Linux / consola, SSH y redes (entrar en el nodo).</li>
+<li>APIs REST (traer un origen que no es un CSV).</li>
+<li>Git (el job también es código).</li>
+<li>Contenedores (Docker): levantar una herramienta sin pelearte con el Windows del aula.</li>
+<li>SQL (lingua franca de la transformación) y un lenguaje de scripts (en clase, Python).</li>
+<li>Un cuaderno Jupyter para probar; a producción, el mismo flujo en un orquestador.</li>
+</ul>
+<p>Un ingeniero de datos <strong>no</strong> es un desarrollador de producto. Sí escribe el script que evita el clic manual a las 02:00.</p>
 <div class="admonition success">
 <p class="admonition-title">Al terminar 1.5</p>
 <p>Coge un caso (contadores, reservas, tickets de caja) y dibuja las <strong>ocho</strong> capas. Pon <strong>una</strong> herramienta o responsabilidad en cada una y justifica la de almacenamiento. Si puedes explicarlo en voz alta a un compañero que no ha leído el tema, el apartado está entendido.</p>
 </div>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Sitúa cada herramienta en <strong>una</strong> fase o corriente del ciclo (generación / ingesta / almacén / transformación / entrega / consumo / orquestación). Una línea de por qué. Si una sirve en dos sitios, dilo.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Pista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.microsoft.com/es-es/power-platform/products/power-bi">Power BI</a></td>
+<td>Lo que gerencia <strong>ve</strong></td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>Lingua franca</td>
+</tr>
+<tr>
+<td><a href="https://www.mongodb.com/">MongoDB</a></td>
+<td>Dónde reposa un JSON</td>
+</tr>
+<tr>
+<td><a href="https://airflow.apache.org/">Airflow</a></td>
+<td>Orden de los pasos</td>
+</tr>
+<tr>
+<td><a href="https://aws.amazon.com/s3/">S3</a></td>
+<td>Cubo de objetos</td>
+</tr>
+</tbody>
+</table>
+<p>Comprobación: consumo o visualización / transformación (y consulta) / almacén / orquestación / almacén de objetos. Luego dibuja las ocho capas del hotel <strong>o</strong> de los contadores.</p>
 
 
 

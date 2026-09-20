@@ -678,6 +678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#como-se-guarda-bloque-objeto-lakehouse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se guarda (bloque, objeto, lakehouse)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-es-una-transaccion-hace-falta-para-entender-acid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1421,6 +1432,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#como-se-guarda-bloque-objeto-lakehouse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se guarda (bloque, objeto, lakehouse)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-es-una-transaccion-hace-falta-para-entender-acid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1670,6 +1692,40 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 </tbody>
 </table>
 <p>En la práctica muchas organizaciones tienen <strong>los dos</strong>: el lago para el bruto y el warehouse para lo que el director ve el lunes. No eliges uno “para siempre”: eliges <strong>para cada pregunta</strong>.</p>
+<h2 id="como-se-guarda-bloque-objeto-lakehouse">Cómo se guarda (bloque, objeto, lakehouse)<a class="headerlink" href="#como-se-guarda-bloque-objeto-lakehouse" title="Permanent link">&para;</a></h2>
+<p>No es lo mismo el <strong>disco del PMS</strong> que el sitio donde gerencia lee el histórico.</p>
+<table>
+<thead>
+<tr>
+<th>Forma</th>
+<th>Idea</th>
+<th>En el hotel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bloque</strong></td>
+<td>El sistema operativo parte el disco en bloques y monta un sistema de ficheros. Es el disco de <em>una</em> máquina (o un NAS compartido).</td>
+<td>El volumen donde corre PostgreSQL de recepción.</td>
+</tr>
+<tr>
+<td><strong>Objeto</strong></td>
+<td>Guardas el fichero <strong>entero</strong> (un objeto) con una clave, en un cubo. No “abres el byte 17”: bajas o sustituyes el objeto. Típico en nube (<a href="https://aws.amazon.com/s3/">S3</a>, Azure Blob…).</td>
+<td><code>reservas/2026-08-19.parquet</code> en un cubo; se replica sin que tú mires el disco.</td>
+</tr>
+<tr>
+<td><strong>Lakehouse</strong></td>
+<td>El lago <strong>más</strong> tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) <strong>sin</strong> montar un warehouse aparte. Productos que oiréis: <a href="https://delta.io/">Delta Lake</a>, Snowflake.</td>
+<td>Bruto de sensores <strong>y</strong> la tabla limpia de ocupación, en el mismo sitio.</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas" src="../../assets/ut1/donde-vive-dato.png" /></p>
+<p><strong>Calcular y guardar se pueden separar.</strong> En un clúster Hadoop clásico el dato y la CPU <strong>conviven</strong> en el nodo (lo viste en <a href="../clusters/">1.2</a>). En un lago en cubo, el disco escala solo; el motor (Spark, un job de Pentaho, Athena…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copias un trozo a HDFS <strong>solo para el job</strong> y el resultado vuelve al cubo.</p>
+<div class="admonition tip">
+<p class="admonition-title">RAM frente a disco (orden de magnitud)</p>
+<p>La RAM es <strong>órdenes</strong> más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en <a href="../formatos/">1.7</a>.</p>
+</div>
 <h2 id="que-es-una-transaccion-hace-falta-para-entender-acid">Qué es una transacción (hace falta para entender ACID)<a class="headerlink" href="#que-es-una-transaccion-hace-falta-para-entender-acid" title="Permanent link">&para;</a></h2>
 <p>En la calle, “transacción” suena a pago. En bases de datos es más concreto: <strong>un paquete de cambios que o se hacen todos o no se hace ninguno</strong>.</p>
 <p>Ejemplo: transferir 50 € de la cuenta A a la B son <strong>dos</strong> cambios (quitar en A, poner en B). Si el sistema se cae a mitad, no puedes dejar a A sin el dinero y a B sin recibirlo. Ese paquete es la <strong>transacción</strong>.</p>
@@ -1776,6 +1832,7 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 <li>¿El volumen o la variedad rompen un solo servidor? → <strong>clúster</strong> + NoSQL o ficheros repartidos.</li>
 <li>¿La pregunta de negocio ya está clara y se repetirá cada lunes? → <strong>warehouse</strong>.</li>
 <li>¿Aún no sabes qué preguntarás o el bruto es de muchos tipos? → <strong>lake</strong>, y luego curas hacia el warehouse.</li>
+<li>¿Necesitas el bruto <strong>y</strong> tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → <strong>lakehouse</strong>, o lago + warehouse a la vez.</li>
 </ol>
 <p>En <a href="../procesamiento/">1.4</a> verás otro par de siglas (OLTP y OLAP): no son otro tipo de base, son <strong>dos trabajos distintos</strong> (operar el día a día frente a analizar el histórico).</p>
 <p>Si puedes justificar esas frases con un caso (hotel, supermercado, sensores), has caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.</p>
