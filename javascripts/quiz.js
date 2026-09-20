@@ -49,22 +49,27 @@
     return `Mejor recorred de nuevo ${donde} y reintentad el test. No puntúa en Moodle: es para practicar.`;
   }
 
-  function feedbackHtml(q, picked) {
-    const letter = LETTERS[q.answer];
+  function feedbackHtml(q, picked, brief) {
     const href = q.href
       ? `<p class="dwec-quiz__more"><a href="${escapeHtml(q.href)}">Repasar ${escapeHtml(q.topic)}</a></p>`
       : "";
     const correct = picked === q.answer;
-    const yours =
-      picked === null
-        ? "<p>No habéis marcado ninguna opción.</p>"
-        : correct
-          ? "<p><strong>Correcta.</strong></p>"
-          : `<p><strong>Incorrecta.</strong> Habéis marcado la ${LETTERS[picked]}.</p>`;
-    return `${yours}<p>La respuesta correcta es la <strong>${letter}</strong>.</p><p>${formatExplain(q.explain)}</p>${href}`;
+    if (picked === null) {
+      return "<p>No habéis marcado ninguna opción.</p>";
+    }
+    if (brief) {
+      const head = correct
+        ? "<p><strong>Correcta.</strong></p>"
+        : "<p><strong>Incorrecta.</strong></p>";
+      return `${head}<p>${formatExplain(q.explain)}</p>`;
+    }
+    const yours = correct
+      ? "<p><strong>Correcta.</strong></p>"
+      : `<p><strong>Incorrecta.</strong> Habéis marcado la ${LETTERS[picked]}.</p>`;
+    return `${yours}<p>La respuesta correcta es la <strong>${LETTERS[q.answer]}</strong>.</p><p>${formatExplain(q.explain)}</p>${href}`;
   }
 
-  function paintQuestion(fieldset, q, picked) {
+  function paintQuestion(fieldset, q, picked, brief) {
     const correct = picked === q.answer;
     fieldset.classList.toggle("dwec-quiz__question--ok", correct);
     fieldset.classList.toggle("dwec-quiz__question--ko", !correct);
@@ -74,7 +79,7 @@
     });
     const box = fieldset.querySelector(".dwec-quiz__feedback");
     box.hidden = false;
-    box.innerHTML = feedbackHtml(q, picked);
+    box.innerHTML = feedbackHtml(q, picked, brief);
     fieldset.querySelectorAll("input[type=radio]").forEach((input) => {
       input.disabled = true;
     });
@@ -157,7 +162,7 @@
     data.questions.forEach((q, qIndex) => {
       const fieldset = form.querySelector(`fieldset[data-index="${qIndex}"]`);
       const picked = selectedIndex(form, qIndex);
-      if (paintQuestion(fieldset, q, picked)) {
+      if (paintQuestion(fieldset, q, picked, false)) {
         ok += 1;
       }
     });
@@ -185,7 +190,7 @@
       return;
     }
     fieldset.dataset.checked = "1";
-    paintQuestion(fieldset, q, picked);
+    paintQuestion(fieldset, q, picked, true);
     form.querySelector(".dwec-quiz__reset").hidden = false;
     updateProgress(form, total, true);
     if (form.querySelectorAll("fieldset[data-checked='1']").length === total) {
