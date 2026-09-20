@@ -595,15 +595,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-ganas-y-que-significa-cada-cosa" class="md-nav__link">
+  <a href="#que-ganais-y-que-significa-cada-cosa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué ganas (y qué significa cada cosa)
+        Qué ganáis (y qué significa cada cosa)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Qué ganas (y qué significa cada cosa)">
+    <nav class="md-nav" aria-label="Qué ganáis (y qué significa cada cosa)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -693,6 +693,17 @@
     <span class="md-ellipsis">
       
         Relación con el RA1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1361,15 +1372,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-ganas-y-que-significa-cada-cosa" class="md-nav__link">
+  <a href="#que-ganais-y-que-significa-cada-cosa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué ganas (y qué significa cada cosa)
+        Qué ganáis (y qué significa cada cosa)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Qué ganas (y qué significa cada cosa)">
+    <nav class="md-nav" aria-label="Qué ganáis (y qué significa cada cosa)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1459,6 +1470,17 @@
     <span class="md-ellipsis">
       
         Relación con el RA1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1560,54 +1582,68 @@
 
 <h1 id="12-clusteres-de-computadoras">1.2. Clústeres de computadoras<a class="headerlink" href="#12-clusteres-de-computadoras" title="Permanent link">&para;</a></h1>
 <p>Cuando una sola máquina no da más de sí, la tentación es “comprar el servidor más gordo del catálogo”. Eso funciona un tiempo (escalado <strong>vertical</strong>) y luego choca con un techo: precio, enchufe, lo que el fabricante vende.</p>
-<p>Un <strong>clúster</strong> es otro planteamiento: varios ordenadores (<strong>nodos</strong> o servidores) unidos por red que resuelven el trabajo <strong>como si fueran uno</strong>. En Big Data es la pieza que permite crecer <strong>añadiendo máquinas</strong>, no solo agrandando <em>esa</em>.</p>
-<p>Hoy se construyen sobre <strong>commodity hardware</strong> (servidores normales, no necesariamente un mainframe) más un <em>framework</em> de computación distribuida que reparte tareas y datos.</p>
-<div class="admonition example">
-<p class="admonition-title">La metáfora del comedor</p>
-<p>Una cocina con un solo fogón enorme (vertical) cocina un puchero muy grande, pero si se apaga el gas, no hay comida. Varios fogones coordinados (clúster) parten el trabajo; si uno falla, los otros pueden seguir (si habías <strong>replicado</strong> la receta y los ingredientes).</p>
-</div>
-<h2 id="que-ganas-y-que-significa-cada-cosa">Qué ganas (y qué significa cada cosa)<a class="headerlink" href="#que-ganas-y-que-significa-cada-cosa" title="Permanent link">&para;</a></h2>
+<p>Un <strong>clúster</strong> es otro planteamiento: varios ordenadores (<strong>nodos</strong>) unidos por <strong>red</strong> que se coordinan para un mismo trabajo. <strong>No</strong> son un único PC con mucha RAM: cada nodo tiene su CPU, su disco y su memoria. En Big Data es la pieza que permite crecer <strong>añadiendo máquinas</strong>, no solo agrandando <em>esa</em>.</p>
+<p>Hoy se montan sobre <strong>servidores normales</strong> (no hace falta un <em>mainframe</em>) más un programa que <strong>reparte</strong> tareas y datos.</p>
+<p>No lo confundáis con varios núcleos <strong>dentro</strong> de un portátil. Eso es paralelo en <strong>una</strong> máquina (<a href="../procesamiento/">1.4</a>). El clúster son <strong>varias</strong> máquinas. Lo pondréis a prueba en la <a href="../tarea-clase/">tarea de los 500 GB</a>: el i7 no es un clúster.</p>
+<p>En el <a href="../caso-hotel/">grupo hotelero</a>: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que <strong>acabar antes de las 8</strong>. Si solo hincháis <em>esa</em> máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta <strong>réplica</strong> para que el panel no se caiga.</p>
+<pre class="mermaid"><code>flowchart LR
+  subgraph cluster [Clúster]
+    S[Nodo Santander]
+    L[Nodo Laredo]
+    C[Nodo Comillas]
+    P[Nodo Potes]
+  end
+  J[Job de madrugada] --&gt; S
+  J --&gt; L
+  J --&gt; C
+  J --&gt; P
+  S --&gt; P8[Panel a las 8]
+  L --&gt; P8
+  C --&gt; P8
+  P --&gt; P8</code></pre>
+<h2 id="que-ganais-y-que-significa-cada-cosa">Qué ganáis (y qué significa cada cosa)<a class="headerlink" href="#que-ganais-y-que-significa-cada-cosa" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Propiedad</th>
 <th>En la práctica</th>
-<th>Cómo lo notas</th>
+<th>En el hotel</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Alto rendimiento</strong></td>
-<td>Partes el trabajo en subtareas y las ejecutas a la vez</td>
-<td>El job de 8 horas pasa a 1 hora con 8 nodos <em>si</em> se puede partir</td>
+<td>Partís el trabajo y lo ejecutáis a la vez</td>
+<td>El job de la noche termina <strong>antes de las 8</strong> <em>si</em> se puede trocear</td>
 </tr>
 <tr>
 <td><strong>Alta disponibilidad</strong></td>
 <td>Si un nodo cae, otro tiene réplica o asume el servicio</td>
-<td>Un disco muerto no tumba el cuadro de mando</td>
+<td>Se funde un disco en Potes: el panel <strong>sigue</strong></td>
 </tr>
 <tr>
 <td><strong>Equilibrio de carga</strong></td>
-<td>No mandas todo al mismo nodo</td>
-<td>Miras tamaño del trabajo, carga actual y potencia de cada máquina</td>
+<td>No mandáis todo al mismo nodo</td>
+<td>Laredo en agosto no se come el 100 % y Potes vacío</td>
 </tr>
 <tr>
 <td><strong>Escalabilidad</strong></td>
-<td>Añades nodos cuando crece el dato</td>
-<td>Empiezas con 4 y el año que viene pones 6, sin rediseñar el programa</td>
+<td>Añadís nodos cuando crece el dato</td>
+<td>Abrís otro hotel sin reescribir el PMS</td>
 </tr>
 </tbody>
 </table>
 <p>Estas cuatro se apoyan entre sí. Un clúster “rápido” pero sin réplica es frágil. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.</p>
 <h3 id="alto-rendimiento">Alto rendimiento<a class="headerlink" href="#alto-rendimiento" title="Permanent link">&para;</a></h3>
-<p>Cada nodo es un ordenador completo (CPU, RAM, disco). Si el trabajo se puede <strong>trocear</strong>, mandas un trozo a cada uno y juntas el resultado. Es la idea de “llevar el cálculo al dato”: mejor mover una función pequeña que mover petabytes por la red hacia una sola CPU.</p>
+<p>Cada nodo es un ordenador completo (CPU, RAM, disco). Si el trabajo se puede <strong>trocear</strong>, mandáis un trozo a cada uno y juntáis el resultado. Ocho nodos <strong>no</strong> convierten 8 horas en 1 hora por arte de magia: la red, el reparto y el trozo que no se puede partir se comen tiempo. A veces rinde como 6 o 7; a veces casi como 1.</p>
+<p>La idea clásica es “llevar el cálculo al dato”: mejor mover una función pequeña que mover petabytes hacia una sola CPU. En Hadoop de libro el fichero <strong>ya está</strong> en el nodo que calcula. En la nube a menudo <strong>no</strong> (más abajo).</p>
 <h3 id="alta-disponibilidad">Alta disponibilidad<a class="headerlink" href="#alta-disponibilidad" title="Permanent link">&para;</a></h3>
 <p>Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:</p>
 <ul>
 <li>Rearrancar ese nodo o levantar otro.</li>
-<li>Seguir sirviendo desde una <strong>réplica</strong> que ya tenía los mismos datos.</li>
+<li>Seguir sirviendo desde una <strong>réplica</strong> (una copia <strong>en marcha</strong>, no un ZIP en un cajón).</li>
 </ul>
-<p>Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad.</p>
+<p>Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho <strong>no publica</strong> el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.</p>
 <h3 id="equilibrio-de-carga">Equilibrio de carga<a class="headerlink" href="#equilibrio-de-carga" title="Permanent link">&para;</a></h3>
 <p>Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. El algoritmo debería mirar:</p>
 <ul>
@@ -1615,9 +1651,10 @@
 <li>Lo ocupado que está cada nodo.</li>
 <li>Lo potente que es cada nodo (no todos son iguales).</li>
 </ul>
-<p>Si no, creas un <strong>cuello de botella</strong>: la latencia media sube aunque el clúster “tenga máquinas libres”.</p>
+<p>Si no, creáis un <strong>cuello de botella</strong>: la latencia media sube aunque el clúster “tenga máquinas libres”.</p>
 <h3 id="escalabilidad">Escalabilidad<a class="headerlink" href="#escalabilidad" title="Permanent link">&para;</a></h3>
-<p>No hace falta acertar el tamaño el día 1. Empiezas con lo que puedes pagar y creces. Eso es muy deseable en Big Data: el volumen <strong>no</strong> se estima bien a priori; si te pasas de pesimista, has tirado el dinero; si te quedas corto, el sistema se ahoga.</p>
+<p>No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y crecéis. El volumen del hotel <strong>no</strong> se estima bien a priori: si os pasáis de pesimistas, habéis tirado el dinero; si os quedáis cortos, el job no llega a las 8.</p>
+<p>Añadir nodos <strong>no</strong> convierte solo un Excel de finanzas en clúster: el programa del job tiene que <strong>saber</strong> partirse. El PMS de recepción puede seguir en <strong>un</strong> servidor.</p>
 <h2 id="escalado-vertical-y-horizontal">Escalado vertical y horizontal<a class="headerlink" href="#escalado-vertical-y-horizontal" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1629,14 +1666,14 @@
 </thead>
 <tbody>
 <tr>
-<td>Qué haces</td>
+<td>Qué hacéis</td>
 <td>Más CPU, RAM o disco <strong>en la misma máquina</strong></td>
 <td><strong>Más máquinas</strong> en el clúster</td>
 </tr>
 <tr>
 <td>Analogía</td>
 <td>Un camión más grande</td>
-<td>Más furgonetas</td>
+<td>Más furgonetas (o más nodos-hotel)</td>
 </tr>
 <tr>
 <td>Límite</td>
@@ -1645,7 +1682,7 @@
 </tr>
 <tr>
 <td>Típico en</td>
-<td>Una base relacional en un solo servidor</td>
+<td>El PMS o una base relacional en un solo servidor</td>
 <td>Hadoop, almacenes repartidos, muchas NoSQL</td>
 </tr>
 </tbody>
@@ -1656,25 +1693,38 @@
 <ul>
 <li><strong>scale-up</strong> = vertical (agrandar <em>una</em> máquina)</li>
 <li><strong>scale-out</strong> = horizontal (añadir máquinas)</li>
-<li><strong>scale-in</strong> = <strong>quitar</strong> nodos (reducir el clúster cuando sobra capacidad)</li>
+<li><strong>scale-in</strong> = <strong>quitar</strong> nodos (reducir el clúster cuando sobra capacidad: noviembre en Laredo)</li>
 </ul>
 <p>En clase decimos <strong>vertical</strong> y <strong>horizontal</strong> y no hay duda.</p>
 </div>
-<p>El vertical <strong>no te da escalabilidad real</strong> en Big Data: siempre hay un techo (y un precio absurdo cerca de ese techo). El horizontal es el que encaja con un volumen que no para de crecer.</p>
+<p>El vertical <strong>sigue existiendo</strong> (un nodo de informes más gordo, un PMS más RAM). En Big Data <strong>no basta solo</strong> con eso: hay un techo de catálogo y un precio absurdo cerca de ese techo. El horizontal es el que encaja cuando el volumen no para de crecer.</p>
 <h2 id="cuando-un-cluster-no-hace-magia">Cuándo un clúster no hace magia<a class="headerlink" href="#cuando-un-cluster-no-hace-magia" title="Permanent link">&para;</a></h2>
-<p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tienes más máquinas y el mismo cuello.</p>
-<p>Eso se desarrolla en <a href="../procesamiento/">procesamiento paralelo</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar bloques de números, procesar ficheros distintos, consultas que el motor puede repartir. En clase lo pones a prueba con la <a href="../tarea-clase/">tarea de los 500 GB</a>: el portátil no es un clúster.</p>
-<p>También hay coste de <strong>coordinación</strong>: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.</p>
+<p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tenéis más máquinas y el mismo cuello.</p>
+<p>Eso se desarrolla en <a href="../procesamiento/">1.4</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar noches por hotel, procesar ficheros distintos, consultas que el motor puede repartir.</p>
+<p>También hay coste de <strong>coordinación</strong>: la red, quien reparte, el momento de juntar resultados.</p>
 <h2 id="el-calculo-y-el-disco-no-tienen-por-que-ir-juntos">El cálculo y el disco no tienen por qué ir juntos<a class="headerlink" href="#el-calculo-y-el-disco-no-tienen-por-que-ir-juntos" title="Permanent link">&para;</a></h2>
-<p>El Hadoop “de libro” <strong>pegaba</strong> el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los objetos viven en un cubo y el clúster de cálculo <strong>crece o se apaga</strong> por su cuenta. Ganas réplica y disco barato; pagas red. El detalle (bloque, objeto, <em>lakehouse</em>) está en <a href="../almacenamiento/">1.3</a>. El mapa de quién ingiere y quién consume, en <a href="../arquitectura/">1.5</a>.</p>
+<p>El Hadoop “de libro” <strong>pegaba</strong> el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un <strong>cubo de objetos</strong> (un almacén de ficheros en red; el detalle en <a href="../almacenamiento/">1.3</a>) y el clúster de cálculo <strong>crece o se apaga</strong> por su cuenta. Ganáis réplica y disco barato; pagáis red.</p>
+<p>Las dos frases no se pisan: son <strong>dos diseños</strong>. Clúster clásico = dato y CPU en el mismo nodo. Nube = dato en el cubo, CPU donde haga falta.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
-<p>Diseñar el almacenamiento masivo implica decidir: ¿un servidor que no admite ver una operación a medias, o un clúster que copia y reparte? Esa decisión condiciona:</p>
+<p>Diseñar el almacenamiento masivo implica <strong>varias</strong> decisiones, no una sola:</p>
 <ul>
-<li>cómo <strong>ingieres</strong> (un destino o muchos nodos),</li>
-<li>qué <strong>formato</strong> usas (que se pueda trocear),</li>
-<li>qué pasa si un nodo falla <strong>a mitad</strong> de un job (¿el cliente ve un informe a medias?).</li>
+<li>¿Hace falta un <strong>clúster</strong> (el dato ya no cabe o no llega a tiempo en una máquina)?</li>
+<li>Eso <strong>no</strong> sustituye a “el cobro no puede verse a medias”: esa garantía (ACID) es de <a href="../almacenamiento/">1.3</a>. El PMS puede seguir en un servidor; el histórico, en el clúster.</li>
+<li>Cómo <strong>ingieres</strong> (un destino o muchos nodos) y qué <strong>formato</strong> usas (que se pueda trocear) vienen después.</li>
 </ul>
-<p>Caracterizar esa decisión es el criterio <strong>a)</strong>.</p>
+<p>Caracterizar <em>si</em> hace falta repartir, y <em>qué</em> pasa si un nodo cae a mitad del job, es el criterio <strong>a)</strong>.</p>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Una línea de por qué.</p>
+<ol>
+<li>Finanzas pide <strong>más RAM</strong> en el servidor del PMS porque agosto se atasca al picar. ¿Vertical u horizontal?</li>
+<li>El job de ocupación no llega a las 8. Añadís <strong>dos máquinas</strong> que ya tienen copia del histórico. ¿Vertical u horizontal?</li>
+<li>En noviembre apagáis dos nodos porque sobran. ¿Eso es <em>scale-out</em> o <em>scale-in</em>?</li>
+<li>Se funde el disco de Potes y el panel de las 8 <strong>sigue</strong>. ¿Rendimiento, disponibilidad, equilibrio o escalabilidad?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Comprobación</p>
+<p>Vertical / horizontal / <em>scale-in</em> (quitar, no crecer) / alta disponibilidad (réplica).</p>
+</div>
 
 
 
