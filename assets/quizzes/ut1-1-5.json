@@ -1,0 +1,217 @@
+{
+  "unit": "el apartado 1.5",
+  "title": "Autoevaluación del 1.5",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Por qué capas",
+      "href": "",
+      "prompt": "¿Por qué un sistema Big Data no es “un programa que lo hace todo” (ingesta, limpieza, modelos y el PDF en el mismo script)?",
+      "code": "",
+      "options": [
+        "Porque el BOE obliga a ocho logos.",
+        "Porque si va todo junto no podéis probar, ni sustituir una pieza, ni explicar el diseño (criterio a).",
+        "Porque el PMS no puede hablar SQL.",
+        "Porque gerencia tiene que picar el panel."
+      ],
+      "answer": 1,
+      "explain": "Cada capa tiene **una** responsabilidad. Este apartado es el mapa para que el gráfico de las 8 **pueda** hacerse, no el gráfico en sí."
+    },
+    {
+      "topic": "Tres numeraciones",
+      "href": "",
+      "prompt": "En el ciclo el 4 es la entrega; en el edificio el 4 es el job. En el 1.6 el 4 será el panel. ¿Qué hay que hacer?",
+      "code": "",
+      "options": [
+        "Usar siempre el 4 como “el panel”.",
+        "Memorizar que capa 4 = unificar `web` y `WEB`.",
+        "No mezclar los números: ciclo = fases; edificio = ocho capas; el 1.6 aún no hace falta.",
+        "Son el mismo 4 con tres nombres."
+      ],
+      "answer": 2,
+      "explain": "Unificar nombres es la **capa 2** del edificio. El cruce reservas ⋈ cobros es la **capa 4** (procesamiento). La entrega del ciclo no es esa capa."
+    },
+    {
+      "topic": "Ciclo y lago",
+      "href": "",
+      "prompt": "En la transformación cruzáis reserva con cobro. Un huésped pide borrar el NIF. ¿Editáis el Parquet a mano?",
+      "code": "",
+      "options": [
+        "Sí: el lago se pisa como un Excel.",
+        "No. El resultado suele **añadirse** al lago. Borrar un NIF no es editar el fichero a mano.",
+        "Sí, si usáis Spark.",
+        "No hace falta transformar: gerencia lee el JSON bruto."
+      ],
+      "answer": 1,
+      "explain": "Las tecnologías cambian; las fases del ciclo no. El detalle del formato (y cómo se retira un NIF) está en el 1.7."
+    },
+    {
+      "topic": "A quién servís",
+      "href": "",
+      "prompt": "Panel de las 8, semáforo de recepción y “¿queda doble al mar?” en la web. ¿Qué entregas son?",
+      "code": "",
+      "options": [
+        "Las tres son el panel de las 8.",
+        "Negocio (lote de ayer), operacional (ahora), embebida (dentro de otra app).",
+        "Las tres son Lambda lento.",
+        "Solo la web es OLTP; el resto no es arquitectura."
+      ],
+      "answer": 1,
+      "explain": "No es el mismo reloj. El ciclo no es de un solo sentido: a veces el resultado vuelve al PMS (reverse ETL); en este módulo no lo montáis."
+    },
+    {
+      "topic": "Capa 2 frente a capa 4",
+      "href": "",
+      "prompt": "`web` en Laredo y `WEB` en Potes; el cruce reservas ⋈ cobros. ¿Dónde va cada uno en el edificio?",
+      "code": "",
+      "options": [
+        "Los dos son ingesta (capa 1).",
+        "Unificar nombres = capa 2 (integración). El cruce = capa 4 (procesamiento).",
+        "Los dos son visualización (capa 6).",
+        "El cruce es capa 2; unificar nombres es el panel."
+      ],
+      "answer": 1,
+      "explain": "La capa 2 pone el mismo nombre a la misma cosa (calidad). Transformar (agregar, unir) es el job, no “poner WEB = web”."
+    },
+    {
+      "topic": "Visualización (e)",
+      "href": "",
+      "prompt": "Un `.ktr` de Spoon y un Parquet crudo, ¿son la capa 6?",
+      "code": "",
+      "options": [
+        "Sí: si sale de Pentaho ya es el criterio e).",
+        "Sí, porque Hadoop visualiza.",
+        "No. La capa 6 es lo que gerencia **entiende** (el panel de las 8). El e) no es Report Designer ni Pentaho Server.",
+        "No, porque la capa 6 es solo MongoDB."
+      ],
+      "answer": 2,
+      "explain": "Pentaho en este módulo es **ETL visual** (Spoon). El criterio e) es un fichero o un panel interpretable, no abrir el motor."
+    },
+    {
+      "topic": "Las que se olvidan",
+      "href": "",
+      "prompt": "El flujo de clase “CSV → filtro → Excel” llega al 10. ¿Qué dos capas se olvidan casi siempre?",
+      "code": "",
+      "options": [
+        "Ingesta y almacén.",
+        "Seguridad y monitorización (transversales): quién lee el NIF y si el job acabó antes de las 8.",
+        "Lambda y Kappa.",
+        "Spark y Hadoop."
+      ],
+      "answer": 1,
+      "explain": "En un caso real existen aunque sean simples: una carpeta con permisos y un log de Pentaho. Sin monitorización el prototipo **miente** en producción."
+    },
+    {
+      "topic": "Sobreingeniería",
+      "href": "",
+      "prompt": "El Excel de Comillas cabe en un PC. ¿Montáis Kafka + Spark + tres nubes “porque es Big Data”?",
+      "code": "",
+      "options": [
+        "Sí: el paisaje de logos lo pide.",
+        "Sí, si el BOE cita cloud.",
+        "No. Primero la pregunta de gerencia; luego el edificio.",
+        "No, porque Kafka no existe en hoteles."
+      ],
+      "answer": 2,
+      "explain": "Escala, aguantar fallos y dato repartido importan cuando el volumen duele. Un USB con “el histórico” es un SPOF; Kafka por moda no es arquitectura."
+    },
+    {
+      "topic": "RTO y RPO",
+      "href": "",
+      "prompt": "El job muere a las 02:10. ¿Llegáis al panel de las 8? Un fallo a las 22:00, ¿se pierde el día o solo la última hora?",
+      "code": "",
+      "options": [
+        "Lo primero es RPO; lo segundo es RTO.",
+        "RTO = cuánto tardáis en recuperar el panel. RPO = hasta qué hora de reservas aceptáis **perder**.",
+        "Son la C de CAP.",
+        "RTO y RPO solo existen en Snowflake."
+      ],
+      "answer": 1,
+      "explain": "Todo falla. Elástico también hacia abajo (noviembre: apagáis nodos). El cobro en recepción sigue siendo el PMS, no el clúster."
+    },
+    {
+      "topic": "Lote y flujo",
+      "href": "",
+      "prompt": "Cierre de las 23:00 frente a sensores cada 30 s. ¿Qué camino es cada uno, y el panel de las 8 es tiempo real?",
+      "code": "",
+      "options": [
+        "Los dos son tiempo real si hay Spark.",
+        "Lote = panel de las 8 (ayer). Flujo = semáforo. Tiempo real = plazo finito y útil; el panel no hace falta que lo sea.",
+        "Flujo = panel; lote = semáforo.",
+        "Tiempo real = instantáneo; si tarda 1 s ya no vale."
+      ],
+      "answer": 1,
+      "explain": "Lote: principio y fin, preciso, tarda. Flujo: no acaba, a menudo menos preciso (una ventana). El 1.4 ya lo dijo; aquí es cómo se combinan."
+    },
+    {
+      "topic": "Lambda en el hotel",
+      "href": "",
+      "prompt": "En este hotel, ¿Lambda significa que reserva, cobro y sensor van todos por dos caminos?",
+      "code": "",
+      "options": [
+        "Sí: cada hecho entra siempre por lote y por flujo.",
+        "No. Hay **dos tubos y dos destinos**: PMS/pasarela → panel de las 8; sensores → semáforo.",
+        "Sí, y el cobro alimenta el semáforo.",
+        "No, porque Lambda no existe sin Kafka."
+      ],
+      "answer": 1,
+      "explain": "En los libros un hecho *puede* duplicarse. Aquí el cobro del panel **no** pinta el semáforo y el sensor **no** pinta el importe de gerencia."
+    },
+    {
+      "topic": "Panel de las 8",
+      "href": "",
+      "prompt": "En Lambda, gerencia a las 8 mira el cierre. ¿Mezcláis vista lenta y vista rápida en ese panel?",
+      "code": "",
+      "options": [
+        "Sí: así es más “tiempo real”.",
+        "Sí, es la capa de consulta: siempre se suman las dos.",
+        "No. El panel de las 8 mira **solo** la vista lenta (ayer). La mezcla es otra pregunta (p. ej. a las 11, importe de hoy hasta ahora).",
+        "No, porque Lambda no tiene capa lenta."
+      ],
+      "answer": 2,
+      "explain": "Capa lenta = recorrer todo, preciso, horas. Capa rápida = incremento, semáforo. Pagáis precisión o histórico a cambio de ir más rápido en el semáforo."
+    },
+    {
+      "topic": "Kappa",
+      "href": "",
+      "prompt": "El cálculo del panel y el del semáforo son casi el mismo, y podéis releer la cola. Un modelo de cancelación necesita tres años de Parquet. ¿Qué os inclináis?",
+      "code": "",
+      "options": [
+        "Kappa para el primero; Lambda (camino lento) para el modelo. Si solo hay panel de las 8, un lote basta.",
+        "Siempre Lambda: más caminos es más Big Data.",
+        "Siempre Kappa: el lote ya no existe.",
+        "Storm para los dos (no está en este apartado)."
+      ],
+      "answer": 0,
+      "explain": "Kappa = una cola, un código, replay. Si el algoritmo del panel **no** es el del semáforo, Kappa se queda corto. No montéis flujo “por si acaso”."
+    },
+    {
+      "topic": "Temperatura",
+      "href": "",
+      "prompt": "Semáforo de ahora, cierre del mes, fotos de la reforma de 2019. ¿Caliente, templado o frío, y qué no hay que hacer?",
+      "code": "",
+      "options": [
+        "Todo en SSD: así es más Big Data.",
+        "Caliente / templado / frío. Pagar SSD por las fotos de 2019 es mal diseño.",
+        "Frío / caliente / templado.",
+        "La temperatura es la C de ACID."
+      ],
+      "answer": 1,
+      "explain": "El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Sacar de frío es **lento**."
+    },
+    {
+      "topic": "Corrientes y paisaje",
+      "href": "",
+      "prompt": "Airflow o Kitchen, y un póster con cientos de logos. ¿Qué es cierto?",
+      "code": "",
+      "options": [
+        "Kitchen transforma el dato; hay que recitar los logos.",
+        "Gobierno, DataOps y orquestación son una novena capa con logo.",
+        "Orquestación **coordina** (quién dispara qué). No memoricéis logos: situad **la capa**. Hadoop = lotes; Spark cubre lote y flujo.",
+        "Pentaho Server es el criterio e) de este módulo."
+      ],
+      "answer": 2,
+      "explain": "Sin gobierno el lago es ciénaga. DataOps: si Kitchen falla a las 02:10, repetir o volver a ayer. Las capas no cambian de año; las marcas sí."
+    }
+  ]
+}
