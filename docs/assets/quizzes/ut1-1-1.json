@@ -1,0 +1,217 @@
+{
+  "unit": "el apartado 1.1",
+  "title": "Autoevaluación del 1.1",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Qué es Big Data",
+      "href": "",
+      "prompt": "En el grupo hotelero, ¿cuándo hablamos de Big Data?",
+      "code": "",
+      "options": [
+        "Cuando hay más de un Excel de reservas.",
+        "Cuando instalamos Hadoop, da igual el tamaño.",
+        "Cuando un sistema de una sola máquina, al estilo clásico, ya no puede capturar, guardar, procesar y presentar con garantías de tiempo, coste o variedad.",
+        "A partir de 1 TB: lo dice la norma."
+      ],
+      "answer": 2,
+      "explain": "Big Data no es “muchos Excel” ni el logo de una herramienta. Es un **diseño** para datos que el sistema tradicional no trata con garantías. No hay un umbral legal en terabytes."
+    },
+    {
+      "topic": "Umbral de diseño",
+      "href": "",
+      "prompt": "Laredo lleva años con un servidor, el PMS y un informe nocturno. ¿Qué criterio usáis para decir “esto ya pide un diseño de Big Data”?",
+      "code": "",
+      "options": [
+        "El disco del servidor supera 1 TB.",
+        "El diseño de siempre (un servidor, un esquema fijo, un lote nocturno) deja de ser viable en volumen, velocidad o variedad.",
+        "Marketing ha dicho “somos una empresa data-driven”.",
+        "Aparece un JSON en el canal web."
+      ],
+      "answer": 1,
+      "explain": "La pregunta “¿es Big Data?” se responde mirando si el diseño de siempre **sigue siendo viable**. Un JSON suelto o un eslogan no cambian el umbral."
+    },
+    {
+      "topic": "Small Data",
+      "href": "",
+      "prompt": "El día 1, recepción de Laredo pica reservas en el PMS y finanzas saca el Excel del mes. ¿Qué es?",
+      "code": "",
+      "options": [
+        "Small Data: cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) también sirven ahí.",
+        "Big Data, porque hay un hotel de verdad.",
+        "Un lago, porque el Excel es “bruto”.",
+        "IA, porque el Excel tiene fórmulas."
+      ],
+      "answer": 0,
+      "explain": "El **día 1** es Small Data. Big Data aparece cuando un servidor **ya no es el diseño** (cuatro hoteles, sensores, logs…). El Excel del mes no es un lago."
+    },
+    {
+      "topic": "Evento → valor",
+      "href": "",
+      "prompt": "Un huésped confirma una reserva en Laredo. ¿Cuál es el orden correcto del viaje del dato?",
+      "code": "",
+      "options": [
+        "Valor → dato → evento → conocimiento.",
+        "Información → Hadoop → valor.",
+        "El modelo genera el evento; luego se guarda el dato.",
+        "Evento (la reserva ocurre) → dato (JSON) → información (tabla) → conocimiento (patrón) → sabiduría (cuándo aplicarlo) → valor (mejor decisión)."
+      ],
+      "answer": 3,
+      "explain": "Primero **ocurre** el hecho, luego se registra, se organiza, se modela, se sabe cuándo usarlo y la decisión **mejora** el resultado. El valor no es el primer peldaño."
+    },
+    {
+      "topic": "Minería de datos",
+      "href": "",
+      "prompt": "En el lago de Laredo aparece la regla «quien reserva el viernes por la web y pide parking cancela más». Todavía no hay un sistema que actúe al reservar. ¿Qué oficio es?",
+      "code": "",
+      "options": [
+        "Minería de datos: descubrir un patrón en lo ya guardado.",
+        "IA: hay un algoritmo, luego es un producto que actúa.",
+        "Ingeniería de datos: esa regla es el job de las 23:00.",
+        "BI descriptiva: «¿cuántas noches cobramos en agosto?»."
+      ],
+      "answer": 0,
+      "explain": "La minería **descubre** el patrón. La IA **despliega** una acción (p. ej. ofrecer tarifa flexible). El ingeniero construye las tuberías; el BI descriptivo cuenta lo que ya pasó."
+    },
+    {
+      "topic": "Minería, ciencia de datos e IA",
+      "href": "",
+      "prompt": "«La IA contiene a la ciencia de datos, que contiene a la minería.» ¿Qué respondéis?",
+      "code": "",
+      "options": [
+        "Correcto: es una matrioska.",
+        "Correcto solo si hay un clúster.",
+        "Falso: se solapan; no son una escalera. Podéis minar un Excel, hacer ciencia de datos con 200 filas e IA con reglas sin lago.",
+        "Falso porque minería, ciencia de datos e IA son el mismo oficio con tres nombres."
+      ],
+      "answer": 2,
+      "explain": "No es una matrioska ni tres sinónimos. El clúster **no** bautiza el oficio. Big Data **prepara** el dato; los tres oficios lo usan y se pisan."
+    },
+    {
+      "topic": "Volumen (TB y GB)",
+      "href": "",
+      "prompt": "Compráis un disco de 1 TB. El fabricante anuncia 1000 GB y el explorador muestra cerca de 931 GB. ¿Qué pasa?",
+      "code": "",
+      "options": [
+        "El disco está defectuoso: faltan casi 70 GB.",
+        "Cuentan distinto: el fabricante usa base 10 (1 TB = 10¹² bytes); el explorador suele contar GiB (2³⁰) y a veces los llama “GB”.",
+        "Es la V de veracidad: el explorador miente a propósito.",
+        "1 TB nunca llega a 1000 GB; por eso hay que pasar ya a Big Data."
+      ],
+      "answer": 1,
+      "explain": "El disco no está roto: **cuentan distinto** (SI frente a potencias de 2). Eso no es un umbral de Big Data ni un problema de veracidad."
+    },
+    {
+      "topic": "Velocidad",
+      "href": "",
+      "prompt": "Los sensores de Potes publican cada 30 s. El semáforo de recepción no puede esperar al lote de las 23:00. El panel de las 8 es de ayer. ¿Qué V duele para el semáforo?",
+      "code": "",
+      "options": [
+        "Velocidad: el ritmo de llegada (y de reacción) no se sostiene con el lote nocturno.",
+        "Volumen: 30 s son muchos terabytes sí o sí.",
+        "Valor: gerencia aún no tiene un KPI.",
+        "Visualización: el panel de las 8 no es bonito."
+      ],
+      "answer": 0,
+      "explain": "El semáforo pide **reaccionar a tiempo**. El panel de las 8 es otro reloj (lote de **ayer**). Dimensionar el disco no arregla un atasco de ingesta."
+    },
+    {
+      "topic": "Variedad",
+      "href": "",
+      "prompt": "En el mismo hotel convivís: tabla SQL del PMS, JSON del canal web y foto del DNI. ¿Qué tipos son, en ese orden?",
+      "code": "",
+      "options": [
+        "Los tres estructurados: todo es un “dato”.",
+        "No estructurado, estructurado, semiestructurado.",
+        "Los tres piden un data warehouse porque gerencia quiere tablas.",
+        "Estructurado, semiestructurado, no estructurado."
+      ],
+      "answer": 3,
+      "explain": "La tabla del PMS tiene columnas fijas (**estructurado**). El JSON tiene claves, pero el esquema puede variar (**semiestructurado**). La foto no se filtra como una tabla (**no estructurado**). Un warehouse espera tablas; el lago acepta el dato como llega."
+    },
+    {
+      "topic": "Data mart",
+      "href": "",
+      "prompt": "En este apartado, un data mart es…",
+      "code": "",
+      "options": [
+        "Otro nombre del data lake.",
+        "Un recorte del almacén de informes (finanzas, marketing, solo Laredo), no otro lago.",
+        "Un clúster de cuatro nodos, uno por hotel.",
+        "El PMS de recepción."
+      ],
+      "answer": 1,
+      "explain": "El warehouse espera dato ya en tablas. El **mart** es un recorte de ese almacén (un departamento o un hotel). El lago acepta el bruto. El detalle está en el 1.3."
+    },
+    {
+      "topic": "Veracidad",
+      "href": "",
+      "prompt": "«Como hay muchos datos, el error se compensa.» ¿Por qué es una trampa?",
+      "code": "",
+      "options": [
+        "Porque el volumen nunca miente.",
+        "Porque más filas siempre mejoran el modelo.",
+        "Porque a veces el error está sesgado (todos los sensores de Potes fallan igual en invierno) y el modelo lo aprende como si fuera verdad.",
+        "Porque la veracidad solo importa en Small Data."
+      ],
+      "answer": 2,
+      "explain": "A más volumen, más basura **si no hay calidad**. Un error sesgado no se “diluye”: el modelo lo toma por realidad. Veracidad duele en Small Data y en Big Data."
+    },
+    {
+      "topic": "Valor",
+      "href": "",
+      "prompt": "Dirección pide guardar *todo* “por si acaso”, pero no sabe qué decisión va a mejorar. ¿Qué V está fallando y qué tenéis?",
+      "code": "",
+      "options": [
+        "Valor: todavía no tenéis un proyecto; tenéis un disco.",
+        "Volumen: faltan terabytes.",
+        "Velocidad: hay que pasar todo a tiempo real.",
+        "Variedad: falta un PDF."
+      ],
+      "answer": 0,
+      "explain": "Almacenar por almacenar no es Big Data: es un archivo caro. El **valor** aparece cuando una decisión (cupo, tarifa, overbooking) mejora respecto a no usar esos datos."
+    },
+    {
+      "topic": "Cuatro analíticas",
+      "href": "",
+      "prompt": "«¿Cuántos no-show habrá el viernes en Santander?» ¿Qué analítica es?",
+      "code": "",
+      "options": [
+        "Descriptiva: cuenta lo que ya pasó.",
+        "Diagnóstica: explica por qué Comillas se vacía los martes.",
+        "Predictiva: estima lo que pasará.",
+        "Prescriptiva: decide si subís el overbooking un 4 %."
+      ],
+      "answer": 2,
+      "explain": "«¿Qué pasará?» es **predictiva**. Descriptiva = ¿qué pasó?; diagnóstica = ¿por qué?; prescriptiva = ¿qué hacemos? (overbooking, tarifa flexible)."
+    },
+    {
+      "topic": "Roles",
+      "href": "",
+      "prompt": "El panel de las 8 llega a las 11 y las cifras no cuadran con recepción. ¿Quién lo arregla sobre todo?",
+      "code": "",
+      "options": [
+        "El analista, que pinta otro gráfico más bonito.",
+        "El ingeniero de datos: la ingesta y la calidad van antes del gráfico.",
+        "El científico, que cambia el nombre del algoritmo.",
+        "El arquitecto, que elige el color del panel."
+      ],
+      "answer": 1,
+      "explain": "Si el dato llega tarde o sucio, el gráfico no se arregla con más color ni con otro modelo. El **ingeniero** construye las tuberías. El analista cuenta a las 8 lo ya usable."
+    },
+    {
+      "topic": "Relojes del hotel",
+      "href": "",
+      "prompt": "Finanzas cierra a las 23:00; de madrugada corre el job; gerencia abre el panel a las 8. ¿Qué es cierto?",
+      "code": "",
+      "options": [
+        "El panel de las 8 es tiempo real: enseña lo que está pasando ahora en recepción.",
+        "Si hay sensores, todo el sistema tiene que ser streaming, incluido el importe cobrado.",
+        "Las 8 son el cierre de finanzas; las 23:00 son el panel.",
+        "El panel de las 8 es el lote de ayer. El semáforo de recepción es otro reloj; no hace falta pedir las dos cosas al mismo diseño."
+      ],
+      "answer": 3,
+      "explain": "Las 8 **no** son tiempo real: gerencia ve el cierre de **ayer**. El semáforo sí va casi al momento (sensores). “Todo en tiempo real” es un error frecuente de este apartado."
+    }
+  ]
+}

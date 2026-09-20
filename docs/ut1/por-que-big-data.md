@@ -304,3 +304,9 @@ No puntúan en Moodle. Sirven para comprobar si podéis **caracterizar** (criter
 
 !!! tip "Comprobación rápida"
     Si en (1) habéis puesto velocidad / veracidad / valor, en (2) descriptiva → prescriptiva en ese orden, y en (3) ingeniero (ingesta y calidad **antes** del gráfico), el apartado está asimilado.
+
+## Autoevaluación del 1.1
+
+Quince preguntas (A–D, **una** correcta) sobre lo que este apartado necesita que retengáis: umbral de Big Data, viaje evento → valor, oficios, V, analíticas, roles y los relojes 23:00 / 8:00. No puntúan en Moodle. Tras **cada** pregunta, **Comprobar respuesta** enseña si acertasteis y por qué. Podéis repetir el test.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-1.json"></div>
