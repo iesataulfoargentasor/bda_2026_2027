@@ -99,8 +99,13 @@
   font-weight: 600;
 }
 
+.dwec-quiz__q-actions {
+  margin-top: 0.75rem;
+}
+
 .dwec-quiz__reset[hidden],
 .dwec-quiz__submit[hidden],
+.dwec-quiz__check[hidden],
 .dwec-quiz__result[hidden],
 .dwec-quiz__feedback[hidden] {
   display: none !important;
