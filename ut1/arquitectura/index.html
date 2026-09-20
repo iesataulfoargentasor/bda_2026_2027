@@ -2088,7 +2088,7 @@
 </tbody>
 </table>
 <p>El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Pagar SSD por las fotos de la reforma de 2019 es mal diseño.</p>
-<p>El <a href="../procesamiento/#principio-scv-solo-para-análisis">principio SCV</a> (velocidad / precisión / volumen del <strong>cálculo</strong>) explica el trueque: el semáforo (S + V) <strong>no</strong> usa todas las filas; el panel de las 8 (C + V) <strong>no</strong> es instantáneo. No lo confundas con CAP (<a href="../almacenamiento/">1.3</a>).</p>
+<p>El <a href="../procesamiento/#scv">principio SCV</a> (velocidad / precisión / volumen del <strong>cálculo</strong>) explica el trueque: el semáforo (S + V) <strong>no</strong> usa todas las filas; el panel de las 8 (C + V) <strong>no</strong> es instantáneo. No lo confundas con CAP (<a href="../almacenamiento/">1.3</a>).</p>
 <h2 id="gobierno-dataops-y-orquestacion">Gobierno, DataOps y orquestación<a class="headerlink" href="#gobierno-dataops-y-orquestacion" title="Permanent link">&para;</a></h2>
 <p>No son una novena capa con logo. Son <strong>corrientes</strong> que atraviesan el ciclo.</p>
 <p><strong>Gobierno del dato.</strong> Que se pueda <strong>encontrar</strong>, saber <strong>de dónde salió</strong> (linaje) y qué <strong>significa</strong> <code>canal</code>. Metadatos, catálogo, ética y privacidad (el NIF no se va a un cubo público). Sin esto el lago es ciénaga (<a href="../almacenamiento/">1.3</a>).</p>
@@ -2193,7 +2193,7 @@
 </li>
 <li>Lote frente a flujo: una frase de <strong>volumen</strong> y otra de <strong>reloj</strong>, con el cierre de las 23:00 y los sensores.</li>
 <li>¿Por qué oiréis tanto Spark en este dibujo, y no “un programa para el lote y otro para el flujo”?</li>
-<li>Los sensores de Potes disparan a saco. Según el <a href="../procesamiento/#principio-scv-solo-para-análisis">SCV</a>, si quieres <strong>velocidad y volumen</strong>, ¿qué sueltas?</li>
+<li>Los sensores de Potes disparan a saco. Según el <a href="../procesamiento/#scv">SCV</a>, si quieres <strong>velocidad y volumen</strong>, ¿qué sueltas?</li>
 </ol>
 <p>Comprobación (1): consumo / transformación / almacén / orquestación / objetos. (2) Camino rápido = incremento o muestra, no todo el lago. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo). Luego dibuja las ocho capas del hotel <strong>o</strong> de los contadores y marca Lambda o Kappa.</p>
 
