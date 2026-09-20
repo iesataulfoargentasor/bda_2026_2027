@@ -99,7 +99,7 @@
             return `<label class="dwec-quiz__option" for="${id}">
               <input type="radio" name="${quizId}-q${qIndex}" id="${id}" value="${oIndex}">
               <span class="dwec-quiz__letter">${LETTERS[oIndex]}</span>
-              <span class="dwec-quiz__option-text">${escapeHtml(opt)}</span>
+              <span class="dwec-quiz__option-text">${formatExplain(opt)}</span>
             </label>`;
           })
           .join("");
@@ -113,7 +113,7 @@
             <span class="dwec-quiz__num">${qIndex + 1} / ${data.questions.length}</span>
             <span class="dwec-quiz__topic">${escapeHtml(q.topic)}</span>
           </legend>
-          <p class="dwec-quiz__prompt">${escapeHtml(q.prompt)}</p>
+          <p class="dwec-quiz__prompt">${formatExplain(q.prompt)}</p>
           ${renderCode(q.code)}
           <div class="dwec-quiz__options">${opts}</div>
           ${checkBtn}
