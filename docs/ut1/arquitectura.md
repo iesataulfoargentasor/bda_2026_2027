@@ -174,7 +174,7 @@ Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en La
 
 El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Pagar SSD por las fotos de la reforma de 2019 es mal diseño.
 
-El [principio SCV](procesamiento.md#principio-scv-solo-para-análisis) (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundas con CAP ([1.3](almacenamiento.md)).
+El [principio SCV](procesamiento.md#scv) (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundas con CAP ([1.3](almacenamiento.md)).
 
 ## Gobierno, DataOps y orquestación
 
@@ -241,6 +241,6 @@ No puntúa en Moodle.
 2. En Lambda, ¿cómo va más rápido el semáforo que el panel de las 8? ¿Qué **pagas** a cambio? (Precisión / ventana / histórico.)
 3. Lote frente a flujo: una frase de **volumen** y otra de **reloj**, con el cierre de las 23:00 y los sensores.
 4. ¿Por qué oiréis tanto Spark en este dibujo, y no “un programa para el lote y otro para el flujo”?
-5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#principio-scv-solo-para-análisis), si quieres **velocidad y volumen**, ¿qué sueltas?
+5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#scv), si quieres **velocidad y volumen**, ¿qué sueltas?
 
 Comprobación (1): consumo / transformación / almacén / orquestación / objetos. (2) Camino rápido = incremento o muestra, no todo el lago. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo). Luego dibuja las ocho capas del hotel **o** de los contadores y marca Lambda o Kappa.

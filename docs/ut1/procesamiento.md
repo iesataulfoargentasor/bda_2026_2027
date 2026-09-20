@@ -93,7 +93,7 @@ A veces el almacén de análisis guarda el dato ya **cortado por ejes** (tiempo,
 
 En [1.3](almacenamiento.md) el **warehouse** es el sitio típico del oficio 2; la base relacional de la caja es el sitio típico del oficio 1.
 
-## Principio SCV (solo para análisis)
+## Principio SCV (solo para análisis) { #scv }
 
 Parece el [CAP](almacenamiento.md) de las bases repartidas, pero **no habla de si el saldo se ve igual en todos los nodos**. Habla de **hacer un cálculo** en un sistema de análisis. Como máximo puedes pedirle **dos** de estas tres cosas:
 
