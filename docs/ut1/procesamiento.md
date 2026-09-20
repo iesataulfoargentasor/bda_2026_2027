@@ -175,3 +175,9 @@ No puntúa en Moodle. Una línea de por qué.
 
 !!! tip "Comprobación"
     Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / no: S+C+V no cabe; el semáforo suelta precisión (S+V) o esperáis al lote (C+V).
+
+## Autoevaluación del 1.4
+
+Quince preguntas (A–D, **una** correcta) sobre lo esencial del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-4.json"></div>
