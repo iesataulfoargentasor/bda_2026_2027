@@ -483,10 +483,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-vas-a-trabajar" class="md-nav__link">
+  <a href="#que-vais-a-trabajar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué vas a trabajar
+        Qué vais a trabajar
       
     </span>
   </a>
@@ -1267,10 +1267,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#que-vas-a-trabajar" class="md-nav__link">
+  <a href="#que-vais-a-trabajar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué vas a trabajar
+        Qué vais a trabajar
       
     </span>
   </a>
@@ -1371,19 +1371,17 @@
 
 
 <h1 id="ut-1-gestion-de-soluciones-de-almacenamiento">U.T. 1. Gestión de soluciones de almacenamiento<a class="headerlink" href="#ut-1-gestion-de-soluciones-de-almacenamiento" title="Permanent link">&para;</a></h1>
-<p>El título sigue el <strong><a href="ra1/">RA1</a></strong>: <em>gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos</em>. No es un tour genérico por “qué es Big Data”; es diseñar el almacén, ingerir, formatear, procesar y presentar.</p>
-<p>Una empresa puede empezar con un servidor y una base de datos relacional. Cuando los clientes, los sensores o los logs crecen, ese servidor deja de bastar: no cabe el volumen, no llega a tiempo la velocidad y los datos ya no caben en tablas uniformes.</p>
-<p><strong>Big Data</strong> no es “muchos Excel”. Es un conjunto de <strong>métodos y tecnologías</strong> para capturar, almacenar, procesar y presentar datos que <strong>un sistema monomáquina tradicional no puede</strong> tratar con garantías de tiempo, coste o variedad.</p>
-<p>Esta unidad cubre el <strong><a href="ra1/">RA1</a></strong> del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.</p>
-<p>Antes de 1.1, lee <strong><a href="caso-hotel/">el caso: grupo hotelero de Cantabria</a></strong> (Santander, Laredo, Comillas, Potes; recepción frente a gerencia; las 23:00 y las 8:00). El resto de la unidad —incluido <a href="arquitectura/">1.5</a>— y la UT2 reutilizan esa cadena.</p>
-<p>Lee cada apartado <strong>en orden</strong>. En todos hay un ejemplo y una pregunta del estilo “¿qué elegirías y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen <strong>después</strong> del ejemplo, no se dan por sabidas. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La <a href="tarea-clase/">tarea de clase</a> aplica eso a 500 GB con un portátil; la <a href="autoevaluacion/">autoevaluación</a> comprueba vocabulario. Ninguna sustituye a Moodle.</p>
-<h2 id="que-vas-a-trabajar">Qué vas a trabajar<a class="headerlink" href="#que-vas-a-trabajar" title="Permanent link">&para;</a></h2>
+<p>El título sigue el <strong><a href="ra1/">RA1</a></strong>: <em>gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos</em>. No es un tour genérico por “qué es Big Data”: diseñáis el almacén, ingerís, formateáis, procesáis y presentáis.</p>
+<p>Antes de 1.1, leed <strong><a href="caso-hotel/">el caso: grupo hotelero de Cantabria</a></strong> (Santander, Laredo, Comillas, Potes). Recepción <strong>opera</strong> ahora; gerencia <strong>informa</strong> a las <strong>8:00</strong> con el cierre de <strong>ayer</strong> (finanzas cierra a las <strong>23:00</strong>). Toda la unidad y la UT2 reutilizan esa cadena.</p>
+<p>Leed cada apartado <strong>en orden</strong>. En todos hay un ejemplo y una pregunta del estilo “¿qué elegiríais y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen <strong>después</strong> del ejemplo, no se dan por sabidas. Si podéis explicárselo a un compañero sin mirar la tabla, el apartado está asimilado.</p>
+<p>La <a href="tarea-clase/">tarea de clase</a> aplica eso a 500 GB con un portátil. Al final de <strong>cada</strong> 1.1–1.8 hay <strong>15</strong> preguntas (Comprobar respuesta); al cierre, <a href="autoevaluacion/">25 de toda la UT1</a> (un solo Corregir test). Ninguna sustituye a Moodle.</p>
+<h2 id="que-vais-a-trabajar">Qué vais a trabajar<a class="headerlink" href="#que-vais-a-trabajar" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Apartado</th>
 <th>Criterio</th>
-<th>Qué te llevas</th>
+<th>Qué os lleváis</th>
 </tr>
 </thead>
 <tbody>
@@ -1395,42 +1393,42 @@
 <tr>
 <td><a href="por-que-big-data/">1.1 Por qué Big Data y las 5 Vs</a></td>
 <td><strong>a)</strong></td>
-<td>Small Data frente a Big Data, las V, analíticas, roles y el viaje evento → valor</td>
+<td>Un evento (reserva, sensor, cobro) tiene que acabar en una decisión. Un hotel de playa no es un albergue de montaña.</td>
 </tr>
 <tr>
 <td><a href="clusters/">1.2 Clústeres</a></td>
 <td><strong>a)</strong></td>
-<td>Escalado horizontal y por qué cálculo y disco pueden separarse</td>
+<td>El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro, no. Si se funde un disco, el panel de las 8 no puede caerse.</td>
 </tr>
 <tr>
 <td><a href="almacenamiento/">1.3 Almacenamiento</a></td>
 <td><strong>a)</strong></td>
-<td>Relacional, NoSQL, lago, warehouse, data mart, objeto, lakehouse; ACID, CAP y BASE</td>
+<td>El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart). JSON y fotos, al lago.</td>
 </tr>
 <tr>
 <td><a href="procesamiento/">1.4 Procesamiento</a></td>
 <td><strong>a)</strong> / <strong>d)</strong></td>
-<td>Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar</td>
+<td>Recepción <strong>opera</strong> (OLTP). Gerencia <strong>informa</strong> (lote de las 8). El semáforo es otro reloj.</td>
 </tr>
 <tr>
 <td><a href="arquitectura/">1.5 Arquitectura y ecosistema</a></td>
-<td><strong>a)</strong></td>
-<td>Ciclo, capas, Lambda/Kappa, gobierno y el paisaje de herramientas</td>
+<td><strong>a)</strong> / <strong>e)</strong></td>
+<td>Panel de las 8 y semáforo: <strong>dos tubos</strong> (Lambda) o <strong>una cola</strong> (Kappa). El cuadro de mando es una capa; aquí no se pinta.</td>
 </tr>
 <tr>
 <td><a href="ingesta/">1.6 Ingesta de datos</a></td>
 <td><strong>b)</strong></td>
-<td>Introducción, pipeline, ETL/ELT, Hola ETL (pandas/DuckDB), herramientas y consideraciones</td>
+<td>Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el <strong>destino</strong>; no se pinta en Hola ETL.</td>
 </tr>
 <tr>
 <td><a href="formatos/">1.7 Formatos de datos</a></td>
 <td><strong>c)</strong></td>
-<td>Elegir formato (reservas de hotel): Avro, Parquet, ORC, Arrow, DuckDB</td>
+<td>Dirección solo mira tres números; el CSV gordo arrastra doce columnas.</td>
 </tr>
 <tr>
 <td><a href="pentaho/">1.8 Pentaho</a></td>
 <td><strong>d)</strong> / <strong>e)</strong></td>
-<td>PDI (Spoon/Pan/Kitchen): filtrar, unir, JSON, nube, jobs y BD del hotel</td>
+<td>El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el <strong>CSV</strong>, no Spoon.</td>
 </tr>
 <tr>
 <td><a href="tarea-clase/">Tarea para practicar en clase</a></td>
@@ -1440,15 +1438,10 @@
 <tr>
 <td><a href="autoevaluacion/">Autoevaluación</a></td>
 <td>—</td>
-<td>25 preguntas de la unidad (no puntúa en Moodle)</td>
+<td>25 de <strong>toda</strong> la unidad (Corregir test). Las 15 de cada apartado están al final de 1.1–1.8. No puntúa en Moodle.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition info">
-<p class="admonition-title">Sobre el material original</p>
-<p>Se mantiene el hilo pedagógico de los paquetes eXeLearning (<em>Introducción</em>, <em>Ingesta</em>, <em>Formatos</em>), de los apuntes de aula de ingesta y formatos, y del PDF <em>Pentaho</em>. El texto se ha unificado, se han corregido imprecisiones (escalado vertical, JSON, matices de ciencia de datos) y se ha alineado cada apartado con un criterio del RA1.</p>
-<p>El PDF de prácticas se puede descargar aquí: <a href="../assets/originales/Pentaho.pdf">Pentaho.pdf</a>.</p>
-</div>
 
 
 
