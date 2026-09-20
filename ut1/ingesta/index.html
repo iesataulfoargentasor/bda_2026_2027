@@ -2580,7 +2580,7 @@
 <li><strong>Streaming:</strong> los datos se leen, se tocan y se cargan en cuanto llegan. La latencia es crítica. Ejemplos de familia: <a href="https://kafka.apache.org/">Kafka</a>, <a href="https://nifi.apache.org/">NiFi</a>, Spark Streaming.</li>
 </ul>
 <h3 id="arquitectura">Arquitectura<a class="headerlink" href="#arquitectura" title="Permanent link">&para;</a></h3>
-<p>Si te basas en la arquitectura por capas, la ingesta es la de <strong>abajo</strong>: <strong>lleva</strong> el dato desde las fuentes; las fuentes no <em>son</em> la capa. El dibujo de esta página resume cuatro pisos. En <a href="../arquitectura/">1.5</a> hay más (colección, consulta, seguridad, monitorización).</p>
+<p>Si te basas en la arquitectura por capas, la ingesta es la de <strong>abajo</strong>: <strong>lleva</strong> el dato desde las fuentes; las fuentes no <em>son</em> la capa. El dibujo de esta página es el <strong>resumen de cuatro pisos</strong>. El edificio completo (ocho capas, con colección, consulta, seguridad y monitorización) está en <a href="../arquitectura/">1.5</a>. Los números de aquí <strong>no</strong> son los de allí: aquí el 4 es el panel; allí el 4 es el job.</p>
 <p><img alt="La ingesta es la capa de abajo: el dato sube hacia el panel" src="../../assets/ut1/capas-ingesta.png" /></p>
 <p>Es el paso más pesado, por tiempo y por recursos. Es normal ingerir desde decenas de fuentes, a velocidades distintas y en formatos distintos. Por eso, el día 1:</p>
 <ol>
