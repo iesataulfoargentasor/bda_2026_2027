@@ -59,7 +59,7 @@ Hadoop 1 tenía *JobTracker* + *TaskTracker*. Si sale en un texto viejo: eso **e
 
 No hace falta un clúster de 80 nodos. Con la VM o el laboratorio:
 
-1. Sube a HDFS un CSV de reservas (el de [1.8](../ut1/pentaho.md) o uno generado como en [1.7](../ut1/formatos.md)).
+1. Sube a HDFS un CSV de reservas **con columna `hotel`** (el generado en [1.7](../ut1/formatos.md); el `reservas_pdi.csv` del [1.8](../ut1/pentaho.md) lleva `id_hotel`, no el nombre).
 2. Lanza un job que **cuente noches por hotel** (streaming en Python o el ejemplo que dé el profesor).
 3. Mira el historial: **cuántos *maps***, tiempo, y que la salida en HDFS coincide con un `GROUP BY` en DuckDB sobre el mismo CSV.
 

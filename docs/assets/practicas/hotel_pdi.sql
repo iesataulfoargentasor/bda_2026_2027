@@ -1,5 +1,6 @@
 -- Esquema mínimo para el taller 6 (PostgreSQL o MariaDB/MySQL).
--- No subas contraseñas ni hosts reales al .ktr.
+-- No subáis contraseñas ni hosts reales al .ktr.
+-- Si reejecutáis este script, los INSERT de huéspedes chocan con la PK: no hace falta repetirlos.
 
 CREATE TABLE IF NOT EXISTS huespedes (
     id_huesped INTEGER PRIMARY KEY,
