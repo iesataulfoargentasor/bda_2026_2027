@@ -19,6 +19,16 @@ No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criteri
 !!! tip "Pregunta que debes saber responder"
     “¿Esto es un problema de Big Data?” no se contesta con el logo de una herramienta. Se contesta mirando si el diseño de siempre (un servidor, un esquema fijo, un lote nocturno) **sigue siendo viable**.
 
+## Un PC no basta (y a veces sí)
+
+No todo proyecto con datos es Big Data. En el [grupo hotelero](caso-hotel.md), el **día 1** recepción de Laredo pica reservas en un programa y finanzas saca el Excel del mes: eso es **Small Data**. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) **también** sirven ahí.
+
+A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Un servidor **ya no es el diseño**. Ahí sí hablamos de Big Data: hay que **repartir** el trabajo.
+
+Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el crudo sin refinar no mueve el coche. Guardar por guardar, en la década de 2020, **no** basta. Hay que **conocer** el dato y **cuidarlo** (calidad, linaje, permiso). Si no, gerencia decide con un número bonito y falso.
+
+![Un PC en recepción de Laredo frente a la cadena completa, que ya no cabe en un servidor](../assets/ut1/small-vs-big.png)
+
 ## De los eventos al valor
 
 Antes de hablar de Hadoop, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
@@ -31,6 +41,8 @@ Piensa en el [grupo hotelero de Cantabria](caso-hotel.md) en agosto (empieza por
 4. **Conocimiento.** Encajas patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
 5. **Sabiduría.** Sabes *cuándo* aplicar esa regla. El modelo de cancelaciones del hotel de playa **no** se copia ciego a un albergue de invierno.
 6. **Valor.** Tomas una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
+
+![Escalera del dato en Laredo: del evento al valor](../assets/ut1/evento-valor.png)
 
 | Escalón | Qué es | Ejemplo del hotel |
 | --- | --- | --- |
@@ -116,6 +128,17 @@ flowchart TB
 - La **IA** no es solo un modelo: es el sistema (datos de entrada, modelo, umbral, acción, supervisión). Un *chatbot* sin el JSON de habitaciones al día **alucina** huecos.
 - La **ciencia de datos** puede terminar en un informe **sin** desplegar IA. Gerencia a veces solo necesita el gráfico del martes vacío.
 
+#### Seis pasos de un estudio (en el hotel)
+
+No hay una receta única, pero un trabajo de ciencia de datos casi siempre recorre este bucle. El **ingeniero** de este módulo alimenta sobre todo los pasos 2 y 3; si fallan, el modelo del 5 puntúa basura.
+
+1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes. Todas las partes entienden el *qué* y el *por qué*.
+2. **Recuperación.** Se buscan los datos: PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
+3. **Preparación.** Unificas `web` y `WEB`, quitas canceladas, cruzas reserva con cobro.
+4. **Exploración.** Miras patrones y rarezas (el viernes por la web cancela más).
+5. **Modelado.** Un modelo (a veces de IA) estima el riesgo de no-show o el cupo.
+6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **vuelves al paso 2** con dato nuevo y, si vale, **automatizas**.
+
 #### De qué dependen (y de qué depende este módulo)
 
 | Esta pieza… | …necesita | …y alimenta |
@@ -129,9 +152,11 @@ En el [curso de especialización](../index.md) otros módulos os pondrán a mode
 !!! tip "Frase para el examen y para el pasillo"
     Big Data **prepara** el dato. La minería **busca patrones**. La ciencia de datos **hace la pregunta y cuenta el resultado**. La IA **encarna** una tarea en un sistema. Se solapan; no se sustituyen.
 
-## Las 5 Vs: un diagnóstico, no una lista para recitar
+## Las V: un diagnóstico, no una lista para recitar
 
-Las cinco V sirven para **pasar revista** a un problema. Si varias fallan a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
+Al principio se usaban **tres V** para decidir si el problema era Big Data: **volumen**, **velocidad** y **variedad**. Luego se añadieron **valor** y **veracidad** (cinco). En algunos textos aparecen dos más (**viabilidad** y **visualización**) hasta siete. No memorices el recuento: **pasa revista** al hotel. Si varias duelen a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
+
+![Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden](../assets/ut1/cinco-vs-hotel.png)
 
 ### Volumen
 
@@ -205,6 +230,60 @@ Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es u
 
 Si no sabes qué decisión vas a mejorar, todavía no tienes un proyecto: tienes un disco.
 
+### Viabilidad y visualización (cuando se habla de 7)
+
+No entran en el recuento clásico. Sirven para no diseñar un sistema que **nadie puede usar**.
+
+| V extra | Pregunta | En el hotel |
+| --- | --- | --- |
+| **Viabilidad** | ¿La empresa puede **usar** de verdad esos datos? ¿Cuántos hacen falta para la predicción que importa? | Montar sensores en las 80 habitaciones de Potes y no tener a nadie que limpie el JSON **no** es viable. |
+| **Visualización** | ¿Gerencia **ve** el número a tiempo, en un gráfico o un KPI? | El panel de las 8. Un lago de 8 TB sin cuadro de mando no decide nada. |
+
+La visualización no es “hacerlo bonito”. Es el criterio **e)** visto desde la puerta: presentar para que alguien que no abre el *notebook* pueda decidir.
+
+## Qué pregunta haces (cuatro analíticas)
+
+La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guardado y responde sobre el **pasado**: qué ocurrió y por qué. Con más dato y, a veces, IA, puedes mirar **adelante**: qué pasará y qué conviene hacer.
+
+| Analítica | Pregunta | En el hotel | Suele vivir en |
+| --- | --- | --- | --- |
+| **Descriptiva** | ¿Qué pasó? | Ocupación de agosto en Laredo | BI, panel, SQL |
+| **Diagnóstica** | ¿Por qué pasó? | Los martes de noviembre, vacíos | BI + exploración |
+| **Predictiva** | ¿Qué pasará? | Cancelaciones del viernes | Ciencia de datos / IA |
+| **Prescriptiva** | ¿Qué hacemos? | Overbooking y tarifa flexible | IA + una regla de negocio |
+
+El BI **no** desaparece cuando llega el lago. Gerencia sigue necesitando el “qué pasó”. Big Data **no** es un sinónimo de predicción: a veces el valor es un informe de ayer que llega **a las 8**, no un modelo.
+
+![Cuatro preguntas de gerencia y quién las sostiene](../assets/ut1/analiticas-roles.png)
+
+## Quién hace qué (roles)
+
+En un equipo de datos conviven varios oficios. **Este módulo** forma sobre todo al **ingeniero**: que el dato entre, se guarde y se pueda leer.
+
+| Rol | Encargo | En el hotel |
+| --- | --- | --- |
+| **Analista de datos** | Convierte dato en información (SQL, gráficos). Conoce el negocio. | El informe de ocupación por canal. |
+| **Científico de datos** | Pregunta, calidad, modelo (a menudo IA) y el relato a gerencia. | El riesgo de cancelación; no copia playa a Potes. |
+| **Ingeniero de datos** | Diseño y mantenimiento de extraer, cargar, guardar y procesar (ETL). | El job de la noche **antes de las 8**. **Aquí.** |
+| **Arquitecto de datos** | Estrategia: qué crece, quién accede, linaje, seguridad. | Si abrís Noja, el diseño **aguanta**. |
+
+El arquitecto **elige** el plano. El ingeniero **construye** tuberías sobre ese plano. El científico **pregunta** con el dato que ya es usable. El analista **cuenta** el lunes lo que gerencia puede leer.
+
+## Fuera de este apartado (y no lo copies aquí)
+
+OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md). Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md). El paisaje de herramientas (S3, Kafka, Power BI…) en [1.5](arquitectura.md). La ingesta, en [1.6](ingesta.md).
+
+## El mismo oficio, otros sitios
+
+El hotel es el hilo. El oficio se parece fuera:
+
+- **Industria:** sensores que no pueden perder lecturas (como los de habitación).
+- **Vídeo bajo demanda:** cada clic y cada pausa, para recomendar (como el canal web del hotel).
+- **Mapas:** tráfico de muchos conductores a la vez (velocidad + volumen).
+- **Redes sociales:** texto libre, sentimiento, publicidad (variedad + veracidad dudosa).
+
+Si puedes decir *qué V duele* en cada uno, el 1.1 está asimilado.
+
 ## Qué conseguimos (si el diseño es bueno)
 
 Cuando el diseño responde a las V que duelen, puedes:
@@ -229,3 +308,21 @@ Antes de elegir Mongo, Parquet o Pentaho, debes **caracterizar** el problema:
 3. ¿Hace falta guardar el histórico en bruto por si cambia la pregunta?
 
 Eso es diseñar la solución de almacenamiento. Instalar software viene **después**.
+
+## Actividades
+
+No puntúan en Moodle. Sirven para comprobar si puedes **caracterizar** (criterio **a)**) sin recitar la lista.
+
+1. **¿Qué V duele?** Para cada frase, elige la V principal y justifica en una línea.
+    1. Los sensores de Potes publican cada 30 s y el semáforo de recepción no puede esperar al lote de las 23:00.
+    2. El mismo huésped aparece como `García`, `GARCIA` y `Garcìa` en tres canales.
+    3. Dirección pide guardar *todo* “por si acaso”, pero no sabe qué decisión va a mejorar.
+2. **Cuatro preguntas.** Clasifica cada una en descriptiva, diagnóstica, predictiva o prescriptiva.
+    1. «¿Cuántas noches cobramos en Laredo en agosto?»
+    2. «¿Por qué Comillas se vacía los martes de noviembre?»
+    3. «¿Cuántos no-show habrá el viernes en Santander?»
+    4. «¿Subimos el overbooking un 4 % o mandamos tarifa flexible?»
+3. **Un rol.** El panel de las 8 llega a las 11 y las cifras no cuadran con recepción. ¿Lo arregla sobre todo el analista, el científico o el ingeniero? ¿Por qué?
+
+!!! tip "Comprobación rápida"
+    Si en (1) has puesto velocidad / veracidad / valor, en (2) descriptiva → prescriptiva en ese orden, y en (3) ingeniero (ingesta y calidad **antes** del gráfico), el apartado está asimilado.
