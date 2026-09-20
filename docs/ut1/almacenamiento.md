@@ -18,7 +18,7 @@ En el [grupo hotelero](caso-hotel.md) eso ya está partido en dos relojes:
 JSON del canal, sensores y fotos de habitación **no** caben en las tablas del PMS. El histórico de los cuatro hoteles **tampoco** es el disco de Laredo.
 
 !!! info "Cómo se lee esta página"
-    Primero **dónde** guardáis (PMS, lago, almacén de informes). Luego **cómo** (bloque, cubo, *lakehouse*). Al final **qué pasa si se cae o se parte la red** (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.
+    Primero **dónde** guardáis (PMS, lago, almacén de informes, *data mart*). Luego **cómo** (bloque, cubo, *lakehouse*). Al final **qué pasa si se cae o se parte la red** (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.
 
 ```mermaid
 flowchart LR
@@ -85,6 +85,32 @@ Las columnas se deciden **antes** de guardar: si mañana el canal añade un camp
 
 En la nube oiréis [Snowflake](https://www.snowflake.com/) o BigQuery: es **este** oficio (informes), no el lago.
 
+## Data mart (un recorte, no otro lago)
+
+El almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Un **data mart** es el **mismo oficio** (tablas limpias, pregunta ya conocida, se copia, no se pica), pero **más estrecho**: un departamento o un hotel.
+
+No es el PMS. No es el [lago](#data-lake). Es un trozo del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
+
+![El almacén de la cadena alimenta tres marts; un Excel suelto en Comillas no cuadra con gerencia](../assets/ut1/data-mart-hotel.png)
+
+En el hotel:
+
+| Recorte | Quién lo usa | Qué hay | Qué **no** hay |
+| --- | --- | --- | --- |
+| Mart de **finanzas** | Cierre y fiscalidad | Importe cobrado, canal, hotel | Fotos de habitación, JSON bruto |
+| Mart de **marketing** | Campañas | Canal, ocupación, temporada | NIF, fianza |
+| Mart de **Laredo** | Dirección de ese hotel | Solo Laredo | Los números de Potes |
+
+Tres maneras de alimentarlo (el nombre es de libro; el criterio es de diseño):
+
+| Tipo | De dónde sale | En el hotel |
+| --- | --- | --- |
+| **Dependiente** | Del warehouse de la cadena | El panel de Laredo lee **los mismos** cobros que gerencia a las 8 |
+| **Independiente** | ETL propio, sin pasar por el almacén del grupo | Comillas monta un Excel “porque mañana abre otro”. Los importes **no cuadran** con el cierre |
+| **Híbrido** | Del warehouse **y** de un fichero extra | Campañas de la OTA + ocupación ya curada |
+
+El independiente parece más rápido el día 1. El martes, finanzas y Laredo discuten **dos** ocupaciones. Por eso el recorte **dependiente** es el diseño sano: un origen de verdad, varias vistas.
+
 ## Data lake
 
 El **data lake** (lago de datos) guarda el dato **como llegó**: JSON del canal, log de la web, foto de habitación, CSV de Comillas, serie del sensor. Encaja cuando **aún no** sabéis qué preguntaréis mañana, o cuando el bruto es de muchos tipos.
@@ -101,7 +127,7 @@ El “cómo se interpreta” se aplica **al leer**, no al guardar. El riesgo cl�
 | Quién lo usa | Gerencia, informes | Ingeniería y ciencia de datos |
 | Pregunta | Ya la conocéis (ocupación / importe) | Puede aparecer después |
 
-En la práctica el grupo suele tener **los dos**: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. No elegís uno “para siempre”: elegís **para cada pregunta**.
+En la práctica el grupo suele tener **los dos**: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. El *data mart* es un **recorte** de ese warehouse, no un tercer sitio para el JSON. No elegís uno “para siempre”: elegís **para cada pregunta**.
 
 ## Cómo se guarda (bloque, objeto, lakehouse)
 
@@ -204,8 +230,9 @@ Recorred las preguntas **en este orden**, con el hotel:
 1. ¿Hay un paquete que no puede verse a medias (cobro, fianza)? → relacional con **ACID** (el PMS).
 2. ¿El volumen o la variedad rompen un solo servidor (cuatro hoteles, JSON, fotos, sensores)? → **clúster** + NoSQL o ficheros repartidos.
 3. ¿La pregunta ya está clara y se repetirá cada mañana a las 8 (ocupación e importe)? → **warehouse**.
-4. ¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → **lake**, y luego curáis hacia el warehouse.
-5. ¿Necesitáis el bruto **y** tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → **lakehouse**, o lago + warehouse a la vez.
+4. ¿Solo un departamento o un hotel necesita ese recorte (marketing, Laredo) y no toda gerencia? → **data mart**, alimentado del warehouse. No montéis un segundo almacén a escondidas.
+5. ¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → **lake**, y luego curáis hacia el warehouse.
+6. ¿Necesitáis el bruto **y** tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → **lakehouse**, o lago + warehouse a la vez.
 
 En [1.4](procesamiento.md) veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar en recepción frente a informar a gerencia).
 
@@ -217,8 +244,9 @@ No puntúa en Moodle. Una línea de por qué.
 
 1. Recepción cobra una estancia (fianza + pasarela). ¿Relacional con ACID, lago en bruto o BASE?
 2. El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Warehouse (columnas al guardar) o lago (columnas al leer)?
-3. Gerencia quiere ocupación e importe **cada lunes**, siempre las mismas columnas. ¿Warehouse o lago?
-4. Se corta la red Santander–Potes. Potes **niega** el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?
+3. Gerencia quiere ocupación e importe **a las 8**, siempre las mismas columnas. ¿Warehouse o lago?
+4. Marketing quiere campañas **sin** NIF, y finanzas no tiene que ver ese recorte. ¿Lago, warehouse entero o data mart?
+5. Se corta la red Santander–Potes. Potes **niega** el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?
 
 !!! tip "Comprobación"
-    ACID (cobro) / lago / warehouse / CP (no servir dato dudoso).
+    ACID (cobro) / lago / warehouse / mart (recorte del almacén) / CP (no servir dato dudoso).

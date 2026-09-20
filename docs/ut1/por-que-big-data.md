@@ -187,7 +187,7 @@ No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven
 | **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON del canal web, logs |
 | **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | Foto del DNI, PDF de incidencia, vídeo del hall |
 
-Un **data warehouse** (almacén de informes) espera dato ya en tablas: decides las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. El detalle está en [1.3](almacenamiento.md).
+Un **data warehouse** (almacén de informes) espera dato ya en tablas: decidís las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. Un **data mart** es un **recorte** de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en [1.3](almacenamiento.md).
 
 La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que **no todo es tabla**.
 
