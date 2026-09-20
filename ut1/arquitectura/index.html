@@ -1871,7 +1871,7 @@
 <h1 id="15-arquitectura-por-capas-y-paisaje-de-herramientas">1.5. Arquitectura por capas y paisaje de herramientas<a class="headerlink" href="#15-arquitectura-por-capas-y-paisaje-de-herramientas" title="Permanent link">&para;</a></h1>
 <p>Un sistema Big Data no es “un programa que lo hace todo”. Si metéis ingesta, limpieza, modelos y el PDF para gerencia en el mismo script, no podéis probar, ni sustituir una pieza, ni explicar el diseño (criterio <strong>a)</strong>).</p>
 <p>Se parte en <strong>capas</strong> que se hablan entre sí. Cada capa tiene <strong>una</strong> responsabilidad. Así sabéis dónde encajan la <a href="../ingesta/">ingesta</a>, el <a href="../formatos/">formato</a>, <a href="../pentaho/">Pentaho</a> y el cuadro de mando.</p>
-<p>Este apartado es el <strong>mapa del oficio</strong> que en <a href="../por-que-big-data/">1.1</a> llamamos ingeniería de datos: no el gráfico del lunes, sino que ese gráfico <strong>pueda</strong> hacerse. El hilo es el <a href="../caso-hotel/">grupo hotelero</a>.</p>
+<p>Este apartado es el <strong>mapa del oficio</strong> que en <a href="../por-que-big-data/">1.1</a> llamamos ingeniería de datos: no el gráfico de las 8, sino que ese gráfico <strong>pueda</strong> hacerse. El hilo es el <a href="../caso-hotel/">grupo hotelero</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
 <p>Primero el <strong>ciclo</strong> (fases: de que nace el dato hasta que gerencia lo usa). Luego el <strong>edificio</strong> (ocho capas: el dato entra abajo y gerencia mira arriba). Después <strong>cómo se combinan</strong> lote y flujo (Lambda / Kappa) con los relojes 23:00 / 8:00 / semáforo. Los logos van al final: se sitúan en una capa; no se recitan.</p>
@@ -1917,7 +1917,15 @@
 </table>
 <p>A veces el resultado <strong>vuelve al origen</strong>: el modelo etiqueta bien una cancelación y escribís el hecho otra vez en el PMS. Eso se llama <em>reverse ETL</em>. No lo montáis en este módulo; sí sabéis que el ciclo <strong>no es de un solo sentido</strong>.</p>
 <h2 id="las-capas-el-dato-entra-abajo-y-gerencia-mira-arriba">Las capas (el dato entra abajo y gerencia mira arriba)<a class="headerlink" href="#las-capas-el-dato-entra-abajo-y-gerencia-mira-arriba" title="Permanent link">&para;</a></h2>
-<p>El ciclo son <strong>fases</strong> (qué le pasa al dato). Las ocho capas son el <strong>edificio</strong> (dónde vive cada responsabilidad). En <a href="../ingesta/">1.6</a> veréis un resumen de <strong>cuatro</strong> pisos: allí el 4 es el panel; <strong>aquí el 4 es el job</strong>. No mezcléis los números.</p>
+<p>El ciclo son <strong>fases</strong> (qué le pasa al dato). Las ocho capas son el <strong>edificio</strong> (dónde vive cada responsabilidad).</p>
+<div class="admonition warning">
+<p class="admonition-title">Tres numeraciones (no las mezcléis)</p>
+<ul>
+<li>El <strong>ciclo</strong> tiene cinco fases. El <strong>4</strong> es la entrega (<em>serving</em>: el dato ya de fiar, listo para el panel o el modelo).</li>
+<li>El <strong>edificio</strong> tiene ocho capas. El <strong>4</strong> es el procesamiento (el job). Unificar <code>web</code> / <code>WEB</code> es la <strong>capa 2</strong>; el cruce reservas ⋈ cobros es la <strong>capa 4</strong>.</li>
+<li>En <a href="../ingesta/">1.6</a> hay un resumen de <strong>cuatro pisos</strong>. Allí el <strong>4</strong> es el panel. Todavía no hace falta leerlo; cuando lleguéis, <strong>no</strong> reutilicéis estos números.</li>
+</ul>
+</div>
 <p><img alt="Ocho capas en el hotel: el dato entra por la ingesta y gerencia mira el panel" src="../../assets/ut1/capas-hotel.png" /></p>
 <h3 id="1-ingesta">1. Ingesta<a class="headerlink" href="#1-ingesta" title="Permanent link">&para;</a></h3>
 <p>Entráis a las fuentes que <strong>ya existen</strong>: el PMS, la pasarela, el JSON del canal, los sensores, un CSV de Comillas. <strong>No</strong> elegís cómo habla el origen: os adaptáis (SQL, HTTP, fichero, cola).</p>
@@ -2001,7 +2009,14 @@
 </ul>
 <p>“Tiempo real” <strong>no</strong> es instantáneo: es responder en un plazo <strong>finito</strong> y útil. El semáforo de recepción sí; el panel de las 8 no hace falta.</p>
 <h3 id="lambda-los-dos-a-la-vez">Lambda: los dos a la vez<a class="headerlink" href="#lambda-los-dos-a-la-vez" title="Permanent link">&para;</a></h3>
-<p>Cada hecho nuevo (reserva, cobro, sensor) puede entrar por <strong>dos</strong> caminos. Luego se consulta <strong>el que toca</strong>:</p>
+<p>En los libros, <strong>Lambda</strong> es: cada hecho puede entrar a la vez por un camino <strong>lento</strong> (lote, histórico) y uno <strong>rápido</strong> (flujo), y luego se consulta <strong>el que toca</strong>.</p>
+<p>En <strong>este hotel</strong> no mezcléis eso con “todo por dos caminos”. Hay <strong>dos tubos y dos destinos</strong>:</p>
+<ul>
+<li>PMS y pasarela → lote de madrugada → <strong>panel de las 8</strong> (cierre de <strong>ayer</strong>).</li>
+<li>Sensores → flujo → <strong>semáforo de recepción</strong>.</li>
+</ul>
+<p>El cobro del panel <strong>no</strong> alimenta el semáforo. El sensor <strong>no</strong> pinta el importe de gerencia. En <a href="../ingesta/">1.6</a> esos dos tubos se verán otra vez.</p>
+<p>Las tres capas de Lambda, aplicadas al hotel:</p>
 <ol>
 <li><strong>Capa lenta (lote).</strong> El lago <strong>inmutable</strong>: se <strong>añade</strong>, no se pisa. Por la noche recorréis <strong>todo</strong> y calculáis la vista del panel (ocupación e importe <strong>cerrados</strong>). Precisión alta; latencia de horas. Gerencia a las <strong>8</strong> mira <strong>solo</strong> esta vista: es <strong>ayer</strong>, no el semáforo.</li>
 <li><strong>Capa rápida (flujo).</strong> Solo el <strong>incremento</strong> desde el último lote: el semáforo, la ocupación “de ahora”. Baja latencia; podéis muestrear o mirar diez segundos de cada minuto.</li>
@@ -2125,12 +2140,12 @@
 </tr>
 <tr>
 <td>6 Visualización</td>
-<td>Power BI, Tableau, informes Pentaho</td>
+<td>Power BI, Tableau, el <strong>e)</strong> de este módulo (CSV/JSON o un panel)</td>
 <td>¿Qué ve gerencia?</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming <strong>en memoria</strong> y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> y para <strong>mostrar</strong> el resultado sin programar el motor. La cola de Kappa suele ser Kafka; el detalle de ingesta está en <a href="../ingesta/">1.6</a>.</p>
+<p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming <strong>en memoria</strong> y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> (Spoon). El criterio <strong>e)</strong> es un fichero o un panel que gerencia entiende: <strong>no</strong> es abrir Report Designer ni Pentaho Server. La cola de Kappa suele ser Kafka; el detalle de ingesta está en <a href="../ingesta/">1.6</a>.</p>
 <p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong> Un mapa reciente que se cita en el ciclo: <a href="https://mad.firstmark.com/">MAD landscape</a> (orientación, no para recitar).</p>
 <h2 id="big-data-y-cloud">Big Data y cloud<a class="headerlink" href="#big-data-y-cloud" title="Permanent link">&para;</a></h2>
 <p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: seguís decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagáis</strong>. El cubo es almacén de <strong>objetos</strong>; el clúster de cálculo puede <strong>no</strong> vivir en las mismas máquinas (<a href="../almacenamiento/">1.3</a>).</p>
@@ -2147,7 +2162,7 @@
 </ul>
 <p>Un ingeniero de datos <strong>no</strong> es un desarrollador de producto. Sí escribe el script que evita el clic manual a las 02:00.</p>
 <h2 id="el-mismo-oficio-otro-sitio">El mismo oficio, otro sitio<a class="headerlink" href="#el-mismo-oficio-otro-sitio" title="Permanent link">&para;</a></h2>
-<p>El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel el lunes. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.</p>
+<p>El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las <strong>8</strong>. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.</p>
 <div class="admonition success">
 <p class="admonition-title">Al terminar 1.5</p>
 <p>Dibujad las <strong>ocho</strong> capas del <a href="../caso-hotel/">hotel</a>. Ponéd <strong>una</strong> herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide <strong>Lambda, Kappa o solo lote</strong>. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.</p>
