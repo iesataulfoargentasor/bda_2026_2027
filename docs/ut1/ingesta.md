@@ -13,7 +13,7 @@ Este apartado es el criterio **b)** del [RA1](ra1.md): cómo **entran** los dato
 Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.
 
 !!! info "Cómo se lee esta página"
-    Primero la **teoría** (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller **Hola ETL** (las tres letras; **no** es el panel de las 8). Después **colas y examen** (semáforo ≠ cuadro de gerencia). Los **logos**, al final: familia, no producto. El [vídeo](#video-para-estudiar-7-min) resume; si una figura y el MP4 no coinciden, **manda el texto**.
+    Primero la **teoría** (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller **Hola ETL** (las tres letras; **no** es el panel de las 8). Después **colas y examen** (semáforo ≠ cuadro de gerencia). Los **logos**, al final: familia, no producto. El vídeo de abajo resume; si una figura y el MP4 no coinciden, **manda el texto**.
 
 !!! tip "Vídeo para estudiar (7 min)"
     Resumen hablado del tema. **No** sustituye los apuntes ni Moodle. Si una figura y el MP4 no coinciden, manda **este texto**.
