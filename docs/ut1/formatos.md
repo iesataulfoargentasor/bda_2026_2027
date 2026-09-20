@@ -337,7 +337,7 @@ Si el equipo “es Spark”, veréis más Parquet. No es que ORC sea peor: es **
 
 ## Cuando el lago también tiene que *actualizar*
 
-Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/) y [Hudi](https://hudi.apache.org/) son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
+Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. El lago es **append**: se **añade**; no abrís el fichero y tacháis una fila (un NIF que hay que retirar). [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/) y [Hudi](https://hudi.apache.org/) son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
 
 Eso permite viajar en el tiempo, un [ACID](almacenamiento.md) de **tabla** (un `MERGE` no deja la ocupación a medias) y compactar ficheros pequeños. **Eso no cobra en recepción:** el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
 
