@@ -307,6 +307,6 @@ No puntúan en Moodle. Sirven para comprobar si podéis **caracterizar** (criter
 
 ## Autoevaluación del 1.1
 
-Quince preguntas (A–D, **una** correcta) sobre lo que este apartado necesita que retengáis: umbral de Big Data, viaje evento → valor, oficios, V, analíticas, roles y los relojes 23:00 / 8:00. No puntúan en Moodle. Tras **cada** pregunta, **Comprobar respuesta** enseña si acertasteis y por qué. Podéis repetir el test.
+Quince preguntas (A–D, **una** correcta) sobre lo esencial del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-1.json"></div>
