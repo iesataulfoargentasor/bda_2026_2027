@@ -8,75 +8,81 @@ tags:
 
 # El caso: grupo hotelero de Cantabria
 
-Este es el **hilo de las dos unidades**: una cadena pequeña, inventada, con sede en Cantabria. No es una empresa real. Sirve para que reservas, cobros, sensores y el panel de gerencia salgan **siempre del mismo sitio**.
+Este es el **hilo de las dos unidades**: una cadena pequeña, **inventada**, con sede en Cantabria. No es una empresa real. Reservas, cobros, sensores y el panel de gerencia salen **siempre de aquí**, para que no cambiéis de historia en cada apartado.
 
-Si entráis directo a [ingesta](ingesta.md) o a la [UT2](../ut2/index.md), empezad por aquí.
+Si entráis directo a [ingesta](ingesta.md) o a la [UT2](../ut2/index.md), empezad por esta página.
 
 ## Quiénes son
 
-Cuatro establecimientos. Mismo dueño, mismo PMS, **estacionalidades distintas** (playa, ciudad, interior). Por eso un modelo de agosto en Laredo **no** se copia ciego a Potes en noviembre.
+Cuatro hoteles. Mismo dueño. **Estacionalidades distintas** (playa, ciudad, interior). Por eso un modelo de agosto en Laredo **no** se copia a ciegas a Potes en noviembre.
 
 | Hotel | Dónde encaja | Para qué lo usamos en clase |
 | --- | --- | --- |
 | **Santander** | Ciudad, todo el año | Volumen estable; a menudo el “hotel grande” |
-| **Laredo** | Costa, pico en agosto | Temporada alta, cancelaciones, *hotspot* si partes mal |
+| **Laredo** | Costa, pico en agosto | Temporada alta y cancelaciones |
 | **Comillas** | Costa oeste | Otro ritmo que Laredo; no es el mismo perfil de huésped |
 | **Potes** | Interior (Liébana) | Invierno / puente; el contraejemplo de la playa |
 
-En [1.7](formatos.md) y [1.8](pentaho.md) pueden aparecer **más filas** (Noja, Santoña, un Excel de un hotel nuevo). Eso no cambia la cadena: es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.
+![Gerencia y los cuatro hoteles: mismo dueño, mismo programa de reservas, estacionalidades distintas](../assets/ut1/caso-cuatro-hoteles.png)
 
-```mermaid
-flowchart LR
-  G[Gerencia] --- S[Santander]
-  G --- L[Laredo]
-  G --- C[Comillas]
-  G --- P[Potes]
-```
+En [1.7](formatos.md) y [1.8](pentaho.md) pueden salir **más filas** (Noja, Santoña, un Excel de un hotel nuevo). Eso es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.
 
-## Dos relojes (no los mezcles)
+## El programa de reservas (PMS)
 
-El dato **ya existe** en tres sitios. El problema del módulo es llevarlo a **otro** sitio, a tiempo, sin mentir.
+En recepción **no** pican el Excel de gerencia. Usan un **programa de hotel**: alta de reserva, check-in, extras, habitación ocupada. En la jerga se llama **PMS** (*Property Management System*: sistema de gestión del establecimiento). En clase diréis «el programa de reservas» o «el PMS»: es **lo mismo**.
 
-| Quién | Qué hace | Reloj |
-| --- | --- | --- |
-| **Recepción** | Pica reservas y check-in en el PMS (*Property Management System*: el programa de reservas). No puede parar. | Ahora |
-| **Pasarela de pago** | Sabe qué estancias se han cobrado. | Cada cobro |
-| **Sensores de habitación** | Publican ocupación. | Cada ~30 s |
-| **Finanzas** | Cierra el día. Hasta entonces el importe del martes **no** está cerrado. | **23:00** |
-| **Dirección / gerencia** | Quiere **ocupación e importe cobrado por hotel**. | Cada mañana a las **8:00** |
+No es un servidor. El PMS es el **programa**. Suele vivir en un ordenador que está siempre encendido (un **servidor**). Si ese programa se cae, recepción no puede hacer check-in: **no puede parar**.
 
-Las 8:00 **no** son tiempo real. Finanzas cierra a las 23:00; por la noche corre un **lote**; a las 8 gerencia abre el panel. Si pides el dato a las 8:05 del mismo día, o no está o es de ayer.
+Los cuatro hoteles usan **el mismo** PMS (mismo dueño). Eso no significa que Laredo en agosto y Potes en noviembre se comporten igual.
 
-Los sensores **sí** van casi al momento. Eso alimenta el **semáforo de recepción** (“¿queda habitación?”), no el cuadro de mando de las 8. En [ingesta](ingesta.md) verás por qué una cola de mensajes y un volcado nocturno **no** son el mismo diseño.
+Gerencia **no** abre el PMS a las 8 para sumar a mano. Quiere **un panel**: ocupación e importe cobrado **por hotel**.
 
-```mermaid
-flowchart TB
-  subgraph operacion [Operar: no puede esperar]
-    R[Recepción pica ahora]
-    SEN[Sensores cada 30 s]
-  end
-  subgraph informe [Informar: lote]
-    F[Finanzas cierra a las 23:00]
-    N[Job de la noche]
-    P8[Panel de gerencia a las 8]
-    F --> N --> P8
-  end
-  R --> PMS[PMS y pasarela]
-  SEN --> SEM[Semáforo de recepción]
-  PMS --> N
-```
+![Recepción pica ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa](../assets/ut1/caso-pms-y-panel.png)
 
-## Qué os van a pedir (el hilo)
+## Qué hacéis vosotros (punto de partida)
 
-1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión** (menos habitaciones vacías). Un hotel de playa no es un albergue de montaña.
-2. **[1.2](clusters.md)** — El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.
-3. **[1.3](almacenamiento.md)** — El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart más estrecho). El JSON y las fotos, al lago.
-4. **[1.4](procesamiento.md)** — Recepción **opera** (OLTP). Gerencia **informa** (OLAP, lote de las 8). El semáforo es otro reloj.
-5. **[1.5](arquitectura.md)** — El ciclo del ingeniero, las capas, y si el panel de las 8 y el semáforo van por **dos caminos** (Lambda) o por **una cola** (Kappa).
-6. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
-7. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
-8. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
-9. **[UT2](../ut2/index.md)** — El martes por la mañana el CSV ya no abre en Excel. Hay que **depositar** y **procesar** en el sitio, y acabar el job **antes de las 8**.
+El dato **ya está** en los programas del día a día. Vosotros **no lo inventáis** y **no picáis reservas**. El oficio de este módulo es **copiarlo** a un sitio pensado para informes, **a tiempo**, y **sin falsear** el número.
+
+De dónde sale (tres orígenes):
+
+1. **Programa de reservas (PMS).** Quién tiene habitación y para qué noches.
+2. **Pasarela de pago.** El cobro de la tarjeta. Reservar **no** es cobrar: por eso luego hay que **cruzar** reservas y cobros.
+3. **Sensores de habitación.** ¿Hay alguien dentro? Publican cada ~30 s.
+
+A dónde lo lleváis (un destino para gerencia):
+
+- Cada mañana a las **8:00**, **ocupación e importe cobrado por hotel**. Eso es el **cierre de ayer**, no el directo de ahora.
+
+**Sin falsear** quiere decir: no coléis como cobrado lo que no se ha cobrado; no presentéis a las 8:05 del martes el martes como si ya hubiera cerrado; no mezcléis el semáforo de recepción con el cuadro de mando.
+
+![Dos tubos: lote nocturno al panel de las 8; sensores al semáforo de recepción, no al panel](../assets/ut1/caso-que-haceis.png)
+
+## Dos relojes (no los mezcléis)
+
+| Reloj | Qué pasa |
+| --- | --- |
+| **Ahora** | Recepción pica en el PMS. No espera al informe. |
+| Cada cobro | La pasarela anota si se ha cobrado. |
+| Cada ~**30 s** | Los sensores alimentan el **semáforo** (“¿queda habitación?”). **No** es el panel de las 8. |
+| **23:00** | Finanzas **cierra el día**. Hasta entonces el importe del martes no está cerrado. |
+| De madrugada | Corre la **copia** (el *job*): cruza reservas y cobros y deja el informe. |
+| **8:00** | Gerencia abre el panel. Si pedís el dato a las 8:05 **del mismo día**, o no está o es de **ayer**. |
+
+Las 8:00 **no** son tiempo real. El semáforo **sí** va casi al momento. En [1.6](ingesta.md) veréis por qué eso son **dos tubos**, no uno.
+
+## El hilo de la unidad
+
+Con este caso en la cabeza, cada apartado pregunta una cosa:
+
+1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión**. Un hotel de playa no es un albergue de montaña.
+2. **[1.2](clusters.md)** — El programa de reservas de Laredo cabe en **un** servidor. El trabajo de madrugada de los **cuatro** hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.
+3. **[1.3](almacenamiento.md)** — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a **otro** sitio. Fotos y JSON, a un lago.
+4. **[1.4](procesamiento.md)** — Recepción **opera** ahora. Gerencia **informa** (lote de las 8). El semáforo es **otro** reloj.
+5. **[1.5](arquitectura.md)** — Panel de las 8 y semáforo: **dos caminos** o **una cola**.
+6. **[1.6](ingesta.md)** — Cómo se **copian** PMS, cobros y sensores. El panel de las 8 es el **destino**; no se pinta en el primer taller.
+7. **[1.7](formatos.md)** — Dirección solo mira tres números; el fichero gordo arrastra doce columnas.
+8. **[1.8](pentaho.md)** — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el **CSV**, no Spoon.
+9. **[UT2](../ut2/index.md)** — El martes el CSV ya no abre en Excel. Hay que depositar y procesar **en el sitio**, y acabar **antes de las 8**.
 
 !!! tip "Frase para no perderos"
-    Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**.
+    Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**. Vosotros **copiáis**; no picáis.
