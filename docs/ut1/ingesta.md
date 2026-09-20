@@ -594,3 +594,9 @@ No sustituye a Moodle. Comprueba que lo sostienes en voz alta.
 7. El programa de reservas añade `motivo_cancelacion`. El job de las 02:00 sigue en verde. ¿Qué falló? ¿ETL o ELT te salva mejor un indicador nuevo de cancelaciones?
 8. Misma transformación del punto 4, pero ahora **agrega**: por hotel, número de reservas cobradas y suma de `cobrado`. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías al recoger o al procesar? ¿Por qué?
 9. Mañana el canal (OTA) manda un JSON nuevo y los sensores de Potes siguen a 30 s. Del apartado [Consideraciones](#consideraciones), responded **al menos tres preguntas** de [Origen y formato](#origen-y-formato), **tres** de [Reloj / latencia](#reloj-latencia) y **tres** de [Calidad y personas](#calidad-y-personas). Nombrad la **familia** de ingesta, no hace falta un producto. No mezcléis el JSON de la OTA con el semáforo en un solo job.
+
+## Autoevaluación del 1.6
+
+Quince preguntas (A–D, **una** correcta) sobre lo esencial del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-6.json"></div>
