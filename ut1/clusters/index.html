@@ -1606,8 +1606,8 @@
 <p>Cuando una sola máquina no da más de sí, la tentación es “comprar el servidor más gordo del catálogo”. Eso funciona un tiempo (escalado <strong>vertical</strong>) y luego choca con un techo: precio, enchufe, lo que el fabricante vende.</p>
 <p>Un <strong>clúster</strong> es otro planteamiento: varios ordenadores (<strong>nodos</strong>) unidos por <strong>red</strong> que se coordinan para un mismo trabajo. <strong>No</strong> son un único PC con mucha RAM: cada nodo tiene su CPU, su disco y su memoria. En Big Data es la pieza que permite crecer <strong>añadiendo máquinas</strong>, no solo agrandando <em>esa</em>.</p>
 <p>Hoy se montan sobre <strong>servidores normales</strong> (no hace falta un <em>mainframe</em>) más un programa que <strong>reparte</strong> tareas y datos.</p>
-<p>No lo confundáis con varios núcleos <strong>dentro</strong> de un portátil. Eso es paralelo en <strong>una</strong> máquina (<a href="../procesamiento/">1.4</a>). El clúster son <strong>varias</strong> máquinas. Lo pondréis a prueba en la <a href="../tarea-clase/">tarea de los 500 GB</a>: el i7 no es un clúster.</p>
-<p>En el <a href="../caso-hotel/">grupo hotelero</a>: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que <strong>acabar antes de las 8</strong>. Si solo hincháis <em>esa</em> máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta <strong>réplica</strong> para que el panel no se caiga.</p>
+<p>No lo confundáis con varios núcleos <strong>dentro</strong> de un portátil. Eso es paralelo en <strong>una</strong> máquina (<a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>). El clúster son <strong>varias</strong> máquinas. Lo pondréis a prueba en la <a href="../tarea-clase/" rel="noopener" target="_blank">tarea de los 500 GB</a>: el i7 no es un clúster.</p>
+<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que <strong>acabar antes de las 8</strong>. Si solo hincháis <em>esa</em> máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta <strong>réplica</strong> para que el panel no se caiga.</p>
 <pre class="mermaid"><code>flowchart LR
   subgraph cluster [Clúster]
     S[Nodo Santander]
@@ -1725,16 +1725,16 @@
 <p>El vertical <strong>sigue existiendo</strong> (un nodo de informes más gordo, un PMS más RAM). En Big Data <strong>no basta solo</strong> con eso: hay un techo de catálogo y un precio absurdo cerca de ese techo. El horizontal es el que encaja cuando el volumen no para de crecer.</p>
 <h2 id="cuando-un-cluster-no-hace-magia">Cuándo un clúster no hace magia<a class="headerlink" href="#cuando-un-cluster-no-hace-magia" title="Permanent link">&para;</a></h2>
 <p>Añadir nodos <strong>no</strong> acorta el tiempo de forma lineal si la tarea <strong>no se puede partir</strong>. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tenéis más máquinas y el mismo cuello.</p>
-<p>Eso se desarrolla en <a href="../procesamiento/">1.4</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar noches por hotel, procesar ficheros distintos, consultas que el motor puede repartir.</p>
+<p>Eso se desarrolla en <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>. El clúster brilla cuando hay <strong>independencia</strong> entre trozos: sumar noches por hotel, procesar ficheros distintos, consultas que el motor puede repartir.</p>
 <p>También hay coste de <strong>coordinación</strong>: la red, quien reparte, el momento de juntar resultados.</p>
 <h2 id="el-calculo-y-el-disco-no-tienen-por-que-ir-juntos">El cálculo y el disco no tienen por qué ir juntos<a class="headerlink" href="#el-calculo-y-el-disco-no-tienen-por-que-ir-juntos" title="Permanent link">&para;</a></h2>
-<p>El Hadoop “de libro” <strong>pegaba</strong> el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un <strong>cubo de objetos</strong> (un almacén de ficheros en red; el detalle en <a href="../almacenamiento/">1.3</a>) y el clúster de cálculo <strong>crece o se apaga</strong> por su cuenta. Ganáis réplica y disco barato; pagáis red.</p>
+<p>El Hadoop “de libro” <strong>pegaba</strong> el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un <strong>cubo de objetos</strong> (un almacén de ficheros en red; el detalle en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>) y el clúster de cálculo <strong>crece o se apaga</strong> por su cuenta. Ganáis réplica y disco barato; pagáis red.</p>
 <p>Las dos frases no se pisan: son <strong>dos diseños</strong>. Clúster clásico = dato y CPU en el mismo nodo. Nube = dato en el cubo, CPU donde haga falta.</p>
 <h2 id="relacion-con-el-ra1">Relación con el RA1<a class="headerlink" href="#relacion-con-el-ra1" title="Permanent link">&para;</a></h2>
 <p>Diseñar el almacenamiento masivo implica <strong>varias</strong> decisiones, no una sola:</p>
 <ul>
 <li>¿Hace falta un <strong>clúster</strong> (el dato ya no cabe o no llega a tiempo en una máquina)?</li>
-<li>Eso <strong>no</strong> sustituye a “el cobro no puede verse a medias”: esa garantía (ACID) es de <a href="../almacenamiento/">1.3</a>. El PMS puede seguir en un servidor; el histórico, en el clúster.</li>
+<li>Eso <strong>no</strong> sustituye a “el cobro no puede verse a medias”: esa garantía (ACID) es de <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>. El PMS puede seguir en un servidor; el histórico, en el clúster.</li>
 <li>Cómo <strong>ingieres</strong> (un destino o muchos nodos) y qué <strong>formato</strong> usas (que se pueda trocear) vienen después.</li>
 </ul>
 <p>Caracterizar <em>si</em> hace falta repartir, y <em>qué</em> pasa si un nodo cae a mitad del job, es el criterio <strong>a)</strong>.</p>

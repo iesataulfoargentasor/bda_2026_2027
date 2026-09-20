@@ -2109,12 +2109,12 @@
 
 <h1 id="18-pentaho-procesar-y-presentar">1.8. Pentaho: procesar y presentar<a class="headerlink" href="#18-pentaho-procesar-y-presentar" title="Permanent link">&para;</a></h1>
 <p>Los criterios <strong>d)</strong> y <strong>e)</strong> del RA1 se cierran aquí: <strong>procesar</strong> el dato ya almacenado y <strong>enseñárselo</strong> a alguien que no abre Spoon.</p>
-<p>En el aula usáis <strong>Pentaho Data Integration (PDI / Kettle)</strong>, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja <strong>ver</strong> un <a href="../ingesta/">ETL</a>: extraer, filtrar, unir, agregar y cargar <strong>sin programar el motor</strong>.</p>
+<p>En el aula usáis <strong>Pentaho Data Integration (PDI / Kettle)</strong>, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja <strong>ver</strong> un <a href="../ingesta/" rel="noopener" target="_blank">ETL</a>: extraer, filtrar, unir, agregar y cargar <strong>sin programar el motor</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
 <p><strong>0</strong> es el entorno. <strong>1–3</strong> se hacen en clase (filtro, cruce, JSON). <strong>4–5</strong> son nube y el job de <strong>madrugada</strong>: si el aula no tiene cubo, el CSV acaba en una carpeta. <strong>6</strong> solo si hay PostgreSQL o MariaDB. Los relojes: finanzas cierra a las <strong>23:00</strong>; Kitchen corre de noche; gerencia a las <strong>8</strong> ve el cierre de <strong>ayer</strong>. El <strong>e)</strong> es el fichero o la tabla, no un informe de Pentaho Server.</p>
 </div>
-<p>El PDF de prácticas (<a href="../../assets/originales/Pentaho.pdf">Pentaho.pdf</a>) sirve para <strong>reconocer menús</strong> (dónde está <em>Filter rows</em>, <em>Minimal width</em>…). <strong>No</strong> copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el <a href="../caso-hotel/">grupo hotelero de Cantabria</a>. Tampoco copiéis credenciales que aparezcan en capturas.</p>
+<p>El PDF de prácticas (<a href="../../assets/originales/Pentaho.pdf" rel="noopener" target="_blank">Pentaho.pdf</a>) sirve para <strong>reconocer menús</strong> (dónde está <em>Filter rows</em>, <em>Minimal width</em>…). <strong>No</strong> copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero de Cantabria</a>. Tampoco copiéis credenciales que aparezcan en capturas.</p>
 <p>Los CSV y el SQL de esta página:</p>
 <table>
 <thead>
@@ -2125,37 +2125,37 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../../assets/practicas/alojamientos_cp.csv">alojamientos_cp.csv</a></td>
+<td><a href="../../assets/practicas/alojamientos_cp.csv" rel="noopener" target="_blank">alojamientos_cp.csv</a></td>
 <td>1</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/reservas_pdi.csv">reservas_pdi.csv</a>, <a href="../../assets/practicas/cobros_pdi.csv">cobros_pdi.csv</a>, <a href="../../assets/practicas/hoteles_pdi.csv">hoteles_pdi.csv</a></td>
+<td><a href="../../assets/practicas/reservas_pdi.csv" rel="noopener" target="_blank">reservas_pdi.csv</a>, <a href="../../assets/practicas/cobros_pdi.csv" rel="noopener" target="_blank">cobros_pdi.csv</a>, <a href="../../assets/practicas/hoteles_pdi.csv" rel="noopener" target="_blank">hoteles_pdi.csv</a></td>
 <td>2</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/cadenas_pdi.csv">cadenas_pdi.csv</a></td>
+<td><a href="../../assets/practicas/cadenas_pdi.csv" rel="noopener" target="_blank">cadenas_pdi.csv</a></td>
 <td>4</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/alojamientos_opiniones.csv">alojamientos_opiniones.csv</a></td>
+<td><a href="../../assets/practicas/alojamientos_opiniones.csv" rel="noopener" target="_blank">alojamientos_opiniones.csv</a></td>
 <td>3</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/incidencias.csv">incidencias.csv</a>, <a href="../../assets/practicas/incidencias2.csv">incidencias2.csv</a>, <a href="../../assets/practicas/hotel_pdi.sql">hotel_pdi.sql</a></td>
+<td><a href="../../assets/practicas/incidencias.csv" rel="noopener" target="_blank">incidencias.csv</a>, <a href="../../assets/practicas/incidencias2.csv" rel="noopener" target="_blank">incidencias2.csv</a>, <a href="../../assets/practicas/hotel_pdi.sql" rel="noopener" target="_blank">hotel_pdi.sql</a></td>
 <td>6</td>
 </tr>
 </tbody>
 </table>
-<p>Estos <code>reservas_pdi.csv</code> / <code>cobros_pdi.csv</code> <strong>no</strong> son los que generáis en <a href="../ingesta/#hola-etl">Hola ETL</a> ni el <code>reservas.csv</code> de <a href="../formatos/">1.7</a>. Misma <strong>idea</strong> (reservas ⋈ cobros); otras columnas (<code>id_hotel</code>, no el nombre) y otro grano (informe, no JSON fila a fila).</p>
+<p>Estos <code>reservas_pdi.csv</code> / <code>cobros_pdi.csv</code> <strong>no</strong> son los que generáis en <a href="../ingesta/#hola-etl" rel="noopener" target="_blank">Hola ETL</a> ni el <code>reservas.csv</code> de <a href="../formatos/" rel="noopener" target="_blank">1.7</a>. Misma <strong>idea</strong> (reservas ⋈ cobros); otras columnas (<code>id_hotel</code>, no el nombre) y otro grano (informe, no JSON fila a fila).</p>
 <h2 id="que-es-pdi-y-que-no">Qué es PDI (y qué no)<a class="headerlink" href="#que-es-pdi-y-que-no" title="Permanent link">&para;</a></h2>
 <p>Pentaho es una plataforma de integración y análisis. <strong>PDI</strong> es la pieza ETL: un lienzo donde arrastráis pasos y el motor mueve las filas. En esta UT no montáis el servidor de informes: el criterio <strong>e)</strong> es el CSV, el JSON o la tabla que gerencia ya entiende.</p>
-<p>En jerga de Kettle se dice herramienta de <strong>metadatos</strong> porque vosotros declaráis <em>qué</em> tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el <em>cómo</em> (buffers, tipos) lo resuelve el motor. Ese XML (<code>.ktr</code> / <code>.kjb</code>) <strong>no</strong> es el catálogo de negocio del <a href="../arquitectura/">1.5</a> (qué significa <code>canal</code>). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.</p>
+<p>En jerga de Kettle se dice herramienta de <strong>metadatos</strong> porque vosotros declaráis <em>qué</em> tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el <em>cómo</em> (buffers, tipos) lo resuelve el motor. Ese XML (<code>.ktr</code> / <code>.kjb</code>) <strong>no</strong> es el catálogo de negocio del <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a> (qué significa <code>canal</code>). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.</p>
 <p>Con Spoon, sin escribir el motor:</p>
 <ul>
 <li>conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);</li>
 <li>filtrar, limpiar, tipar, <em>lookup</em>, <em>merge join</em>, agregar, fórmulas;</li>
 <li>cargar a fichero, tabla o nube;</li>
-<li><strong>esbozar</strong> hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en <a href="../procesamiento/">estrella</a>, no un almacén entero.</li>
+<li><strong>esbozar</strong> hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en <a href="../procesamiento/" rel="noopener" target="_blank">estrella</a>, no un almacén entero.</li>
 </ul>
 <p><strong>No</strong> es el programa de recepción: no picáis la reserva en PDI. Procesáis una <strong>copia</strong>.</p>
 <table>
@@ -2279,7 +2279,7 @@
 <hr />
 <h2 id="taller-1-filtrar-ordenar-persistir-y-pan">Taller 1 — Filtrar, ordenar, persistir y Pan<a class="headerlink" href="#taller-1-filtrar-ordenar-persistir-y-pan" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Listado de alojamientos de la comarca </em><em>Trasmiera</em><em>, ordenados por código postal, en un CSV limpio.”</em></p>
-<p>Fichero: <a href="../../assets/practicas/alojamientos_cp.csv">alojamientos_cp.csv</a> (<code>hotel</code>, <code>comarca</code>, <code>codigo_postal</code>). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.</p>
+<p>Fichero: <a href="../../assets/practicas/alojamientos_cp.csv" rel="noopener" target="_blank">alojamientos_cp.csv</a> (<code>hotel</code>, <code>comarca</code>, <code>codigo_postal</code>). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.</p>
 <h3 id="leer">Leer<a class="headerlink" href="#leer" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Nueva transformación.</li>
@@ -2304,7 +2304,7 @@
 <hr />
 <h2 id="taller-2-unir-dos-origenes-y-agregar">Taller 2 — Unir dos orígenes y agregar<a class="headerlink" href="#taller-2-unir-dos-origenes-y-agregar" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Importe cobrado y número de reservas </em><em>por hotel y canal</em><em>. Las que aún no tienen cobro no entran.”</em></p>
-<p>Es la <strong>misma idea</strong> que el <a href="../ingesta/#hola-etl">Hola ETL</a> (reservas ⋈ cobros, solo cobradas). <strong>No</strong> reutilicéis aquellos CSV: aquí el hotel va por <code>id_hotel</code>, el cobro va con <strong>punto y coma</strong>, y gerencia quiere un <strong>agregado</strong>, no el JSON de una fila.</p>
+<p>Es la <strong>misma idea</strong> que el <a href="../ingesta/#hola-etl" rel="noopener" target="_blank">Hola ETL</a> (reservas ⋈ cobros, solo cobradas). <strong>No</strong> reutilicéis aquellos CSV: aquí el hotel va por <code>id_hotel</code>, el cobro va con <strong>punto y coma</strong>, y gerencia quiere un <strong>agregado</strong>, no el JSON de una fila.</p>
 <p><img alt="Reservas y cobros se cruzan; sin cobro no entra; gerencia a las 8 ve el cierre de ayer" src="../../assets/ut1/pdi-cruce-hotel.png" /></p>
 <table>
 <thead>
@@ -2316,17 +2316,17 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../../assets/practicas/reservas_pdi.csv">reservas_pdi.csv</a></td>
+<td><a href="../../assets/practicas/reservas_pdi.csv" rel="noopener" target="_blank">reservas_pdi.csv</a></td>
 <td>coma</td>
 <td>Hecho (estancia)</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/cobros_pdi.csv">cobros_pdi.csv</a></td>
+<td><a href="../../assets/practicas/cobros_pdi.csv" rel="noopener" target="_blank">cobros_pdi.csv</a></td>
 <td><strong>punto y coma</strong></td>
 <td>Cobro</td>
 </tr>
 <tr>
-<td><a href="../../assets/practicas/hoteles_pdi.csv">hoteles_pdi.csv</a></td>
+<td><a href="../../assets/practicas/hoteles_pdi.csv" rel="noopener" target="_blank">hoteles_pdi.csv</a></td>
 <td>punto y coma</td>
 <td>Dimensión (Laredo, Santander, Potes, Comillas; Noja es extra)</td>
 </tr>
@@ -2348,7 +2348,7 @@
 <hr />
 <h2 id="taller-3-limpiar-filtrar-en-serio-y-json">Taller 3 — Limpiar, filtrar en serio y JSON<a class="headerlink" href="#taller-3-limpiar-filtrar-en-serio-y-json" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Alojamientos para un </em><em>escaparate web</em><em> (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”</em></p>
-<p>Fichero: <a href="../../assets/practicas/alojamientos_opiniones.csv">alojamientos_opiniones.csv</a>. Hay <strong>nulos</strong> a propósito (<code>puntuacion</code>, <code>estancia_min</code>) y un precio <code>-1</code>.</p>
+<p>Fichero: <a href="../../assets/practicas/alojamientos_opiniones.csv" rel="noopener" target="_blank">alojamientos_opiniones.csv</a>. Hay <strong>nulos</strong> a propósito (<code>puntuacion</code>, <code>estancia_min</code>) y un precio <code>-1</code>.</p>
 <h3 id="leer-y-elegir-columnas">Leer y elegir columnas<a class="headerlink" href="#leer-y-elegir-columnas" title="Permanent link">&para;</a></h3>
 <p><strong>CSV file input</strong>, separador <code>,</code>. <em>Get fields</em>: <code>precio</code> y <code>puntuacion</code> como <strong>Number</strong>; <code>id</code>, <code>dormitorios</code>, <code>huespedes</code> como Integer.</p>
 <p><strong>Transform → Select values:</strong> quedaos con <code>id</code>, <code>tipo</code>, <code>comarca</code>, <code>dormitorios</code>, <code>puntuacion</code>, <code>huespedes</code>, <code>precio</code>, <code>estancia_min</code> y renombrad, por ejemplo:</p>
@@ -2402,7 +2402,7 @@
 <hr />
 <h2 id="taller-4-formula-y-dejar-el-informe-en-la-nube">Taller 4 — Fórmula y dejar el informe en la nube<a class="headerlink" href="#taller-4-formula-y-dejar-el-informe-en-la-nube" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Por </em><em>costa / ciudad / interior</em><em>: noches cobradas, importe cobrado y </em><em>precio medio por noche</em><em>. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”</em></p>
-<p>Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís <a href="../../assets/practicas/cadenas_pdi.csv">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
+<p>Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís <a href="../../assets/practicas/cadenas_pdi.csv" rel="noopener" target="_blank">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
 <ol>
 <li>CSV de cadenas (<code>;</code>) → <em>Sort</em> por <code>id_cadena</code>.</li>
 <li><em>Sort</em> del flujo de hoteles por <code>id_cadena</code>.</li>
@@ -2455,12 +2455,12 @@
 <p>En el PDF el ejemplo es RDS y deporte. Aquí el esquema es el <strong>hotel</strong>, en <strong>local</strong> (PostgreSQL o MariaDB). RDS vale si el profesor lo monta; el oficio no cambia.</p>
 <h3 id="preparar">Preparar<a class="headerlink" href="#preparar" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Cread una base <code>hotel_pdi</code> y ejecutad <a href="../../assets/practicas/hotel_pdi.sql">hotel_pdi.sql</a> (tabla <code>huespedes</code> + <code>fases_incidencia</code>). Si lo ejecutáis <strong>dos</strong> veces, los <code>INSERT</code> de huéspedes chocan con la clave; no hace falta repetirlos.</li>
+<li>Cread una base <code>hotel_pdi</code> y ejecutad <a href="../../assets/practicas/hotel_pdi.sql" rel="noopener" target="_blank">hotel_pdi.sql</a> (tabla <code>huespedes</code> + <code>fases_incidencia</code>). Si lo ejecutáis <strong>dos</strong> veces, los <code>INSERT</code> de huéspedes chocan con la clave; no hace falta repetirlos.</li>
 <li>PDI trae driver de <strong>PostgreSQL</strong>. Para MySQL/MariaDB: copiad un conector JDBC <strong>compatible con vuestra 9.4</strong> en la carpeta <code>lib</code> de PDI y <strong>reiniciad Spoon</strong>. El “último jar del universo” a veces no carga.</li>
 <li><em>File → New → Database connection.</em> Host <code>localhost</code>, base, usuario de <strong>aula</strong>. Probad la conexión.</li>
 </ol>
 <h3 id="lookup-enriquecer-el-csv">Lookup (enriquecer el CSV)<a class="headerlink" href="#lookup-enriquecer-el-csv" title="Permanent link">&para;</a></h3>
-<p>Leed <a href="../../assets/practicas/incidencias.csv">incidencias.csv</a> (<code>id_huesped;tipo;fecha</code>).</p>
+<p>Leed <a href="../../assets/practicas/incidencias.csv" rel="noopener" target="_blank">incidencias.csv</a> (<code>id_huesped;tipo;fecha</code>).</p>
 <p>La tabla <code>huespedes</code> tiene siempre <code>tipo = huesped</code>. El segundo campo está para practicar una <strong>clave de dos columnas</strong> (en otros oficios no basta el id):</p>
 <ol>
 <li><strong>Transform → Add constants:</strong> <code>tipo_entidad</code> = <code>huesped</code>.</li>
@@ -2474,7 +2474,7 @@
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fases_incidencia</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">fecha_fin</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </span></code></pre></div>
 <h3 id="actualizar-y-ver-el-error">Actualizar y ver el error<a class="headerlink" href="#actualizar-y-ver-el-error" title="Permanent link">&para;</a></h3>
-<p>Leed <a href="../../assets/practicas/incidencias2.csv">incidencias2.csv</a>. <strong>Output → Update:</strong> claves de búsqueda <code>id_huesped</code> y <code>fecha</code> del flujo, mapeadas a <strong><code>id_huesped</code></strong> y <strong><code>fecha_inicio</code></strong> de la tabla; campos a pintar (<code>tipo</code>, <code>lado</code>, <code>comentario</code>). El <em>Update</em> mira <code>fases_incidencia</code>, <strong>no</strong> la tabla de huéspedes.</p>
+<p>Leed <a href="../../assets/practicas/incidencias2.csv" rel="noopener" target="_blank">incidencias2.csv</a>. <strong>Output → Update:</strong> claves de búsqueda <code>id_huesped</code> y <code>fecha</code> del flujo, mapeadas a <strong><code>id_huesped</code></strong> y <strong><code>fecha_inicio</code></strong> de la tabla; campos a pintar (<code>tipo</code>, <code>lado</code>, <code>comentario</code>). El <em>Update</em> mira <code>fases_incidencia</code>, <strong>no</strong> la tabla de huéspedes.</p>
 <p>Tras el insert del CSV 1 (ids 1–4), este segundo fichero trae 1, 3, <strong>5</strong> y <strong>99</strong>:</p>
 <ul>
 <li>1 y 3: hay fase → actualizan.</li>

@@ -1371,10 +1371,10 @@
 
 
 <h1 id="ut-1-gestion-de-soluciones-de-almacenamiento">U.T. 1. Gestión de soluciones de almacenamiento<a class="headerlink" href="#ut-1-gestion-de-soluciones-de-almacenamiento" title="Permanent link">&para;</a></h1>
-<p>El título sigue el <strong><a href="ra1/">RA1</a></strong>: <em>gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos</em>. No es un tour genérico por “qué es Big Data”: diseñáis el almacén, ingerís, formateáis, procesáis y presentáis.</p>
-<p>Antes de 1.1, leed <strong><a href="caso-hotel/">el caso: grupo hotelero de Cantabria</a></strong> (Santander, Laredo, Comillas, Potes). Recepción <strong>opera</strong> ahora; gerencia <strong>informa</strong> a las <strong>8:00</strong> con el cierre de <strong>ayer</strong> (finanzas cierra a las <strong>23:00</strong>). Toda la unidad y la UT2 reutilizan esa cadena.</p>
+<p>El título sigue el <strong><a href="ra1/" rel="noopener" target="_blank">RA1</a></strong>: <em>gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos</em>. No es un tour genérico por “qué es Big Data”: diseñáis el almacén, ingerís, formateáis, procesáis y presentáis.</p>
+<p>Antes de 1.1, leed <strong><a href="caso-hotel/" rel="noopener" target="_blank">el caso: grupo hotelero de Cantabria</a></strong> (Santander, Laredo, Comillas, Potes). Recepción <strong>opera</strong> ahora; gerencia <strong>informa</strong> a las <strong>8:00</strong> con el cierre de <strong>ayer</strong> (finanzas cierra a las <strong>23:00</strong>). Toda la unidad y la UT2 reutilizan esa cadena.</p>
 <p>Leed cada apartado <strong>en orden</strong>. En todos hay un ejemplo y una pregunta del estilo “¿qué elegiríais y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen <strong>después</strong> del ejemplo, no se dan por sabidas. Si podéis explicárselo a un compañero sin mirar la tabla, el apartado está asimilado.</p>
-<p>La <a href="tarea-clase/">tarea de clase</a> aplica eso a 500 GB con un portátil. Al final de <strong>cada</strong> 1.1–1.8 hay <strong>15</strong> preguntas (Comprobar respuesta); al cierre, <a href="autoevaluacion/">25 de toda la UT1</a> (un solo Corregir test). Ninguna sustituye a Moodle.</p>
+<p>La <a href="tarea-clase/" rel="noopener" target="_blank">tarea de clase</a> aplica eso a 500 GB con un portátil. Al final de <strong>cada</strong> 1.1–1.8 hay <strong>15</strong> preguntas (Comprobar respuesta); al cierre, <a href="autoevaluacion/" rel="noopener" target="_blank">25 de toda la UT1</a> (un solo Corregir test). Ninguna sustituye a Moodle.</p>
 <h2 id="que-vais-a-trabajar">Qué vais a trabajar<a class="headerlink" href="#que-vais-a-trabajar" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1386,57 +1386,57 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="caso-hotel/">El caso: grupo hotelero</a></td>
+<td><a href="caso-hotel/" rel="noopener" target="_blank">El caso: grupo hotelero</a></td>
 <td>—</td>
 <td>La cadena, los cuatro hoteles y los dos relojes (23:00 / 8:00)</td>
 </tr>
 <tr>
-<td><a href="por-que-big-data/">1.1 Por qué Big Data y las 5 Vs</a></td>
+<td><a href="por-que-big-data/" rel="noopener" target="_blank">1.1 Por qué Big Data y las 5 Vs</a></td>
 <td><strong>a)</strong></td>
 <td>Un evento (reserva, sensor, cobro) tiene que acabar en una decisión. Un hotel de playa no es un albergue de montaña.</td>
 </tr>
 <tr>
-<td><a href="clusters/">1.2 Clústeres</a></td>
+<td><a href="clusters/" rel="noopener" target="_blank">1.2 Clústeres</a></td>
 <td><strong>a)</strong></td>
 <td>El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro, no. Si se funde un disco, el panel de las 8 no puede caerse.</td>
 </tr>
 <tr>
-<td><a href="almacenamiento/">1.3 Almacenamiento</a></td>
+<td><a href="almacenamiento/" rel="noopener" target="_blank">1.3 Almacenamiento</a></td>
 <td><strong>a)</strong></td>
 <td>El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart). JSON y fotos, al lago.</td>
 </tr>
 <tr>
-<td><a href="procesamiento/">1.4 Procesamiento</a></td>
+<td><a href="procesamiento/" rel="noopener" target="_blank">1.4 Procesamiento</a></td>
 <td><strong>a)</strong> / <strong>d)</strong></td>
 <td>Recepción <strong>opera</strong> (OLTP). Gerencia <strong>informa</strong> (lote de las 8). El semáforo es otro reloj.</td>
 </tr>
 <tr>
-<td><a href="arquitectura/">1.5 Arquitectura y ecosistema</a></td>
+<td><a href="arquitectura/" rel="noopener" target="_blank">1.5 Arquitectura y ecosistema</a></td>
 <td><strong>a)</strong> / <strong>e)</strong></td>
 <td>Panel de las 8 y semáforo: <strong>dos tubos</strong> (Lambda) o <strong>una cola</strong> (Kappa). El cuadro de mando es una capa; aquí no se pinta.</td>
 </tr>
 <tr>
-<td><a href="ingesta/">1.6 Ingesta de datos</a></td>
+<td><a href="ingesta/" rel="noopener" target="_blank">1.6 Ingesta de datos</a></td>
 <td><strong>b)</strong></td>
 <td>Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el <strong>destino</strong>; no se pinta en Hola ETL.</td>
 </tr>
 <tr>
-<td><a href="formatos/">1.7 Formatos de datos</a></td>
+<td><a href="formatos/" rel="noopener" target="_blank">1.7 Formatos de datos</a></td>
 <td><strong>c)</strong></td>
 <td>Dirección solo mira tres números; el CSV gordo arrastra doce columnas.</td>
 </tr>
 <tr>
-<td><a href="pentaho/">1.8 Pentaho</a></td>
+<td><a href="pentaho/" rel="noopener" target="_blank">1.8 Pentaho</a></td>
 <td><strong>d)</strong> / <strong>e)</strong></td>
 <td>El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el <strong>CSV</strong>, no Spoon.</td>
 </tr>
 <tr>
-<td><a href="tarea-clase/">Tarea para practicar en clase</a></td>
+<td><a href="tarea-clase/" rel="noopener" target="_blank">Tarea para practicar en clase</a></td>
 <td>RA1 + <strong>RA2</strong></td>
 <td>500 GB del histórico del hotel: concurrente, paralelo, distribuido</td>
 </tr>
 <tr>
-<td><a href="autoevaluacion/">Autoevaluación</a></td>
+<td><a href="autoevaluacion/" rel="noopener" target="_blank">Autoevaluación</a></td>
 <td>—</td>
 <td>25 de <strong>toda</strong> la unidad (Corregir test). Las 15 de cada apartado están al final de 1.1–1.8. No puntúa en Moodle.</td>
 </tr>

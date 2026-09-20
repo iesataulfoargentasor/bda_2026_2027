@@ -1847,7 +1847,7 @@
 
 
 <h1 id="11-por-que-big-data-y-las-5-vs">1.1. Por qué Big Data y las 5 Vs<a class="headerlink" href="#11-por-que-big-data-y-las-5-vs" title="Permanent link">&para;</a></h1>
-<p>En el <a href="../caso-hotel/">grupo hotelero</a> esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.</p>
+<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a> esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.</p>
 <p>Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo <em>ahora</em>. El servidor no “se pone un poco lento”: <strong>deja de ser el diseño adecuado</strong>. Ahí entran las metodologías de <strong>macrodatos</strong> / <strong>Big Data</strong>.</p>
 <p><strong>Big Data no es “tener muchos Excel”.</strong> Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos que <strong>un sistema de una sola máquina, al estilo clásico, no puede</strong> tratar con garantías de tiempo, coste o variedad.</p>
 <p>No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es este: <strong>el sistema tradicional no escala</strong> en volumen, velocidad o variedad (o el coste de agrandar <em>esa</em> máquina es inasumible).</p>
@@ -1857,7 +1857,7 @@
 </div>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
-<p>Tres bloques, <strong>en este orden</strong>: (1) el <strong>viaje</strong> del evento al valor; (2) los <strong>oficios</strong> que extraen ese valor (minería, ciencia de datos, IA) — van <strong>antes</strong> de las V, no las sustituyen; (3) las <strong>V</strong> para pasar revista al hotel. Los relojes del <a href="../caso-hotel/">caso</a>: finanzas cierra a las <strong>23:00</strong>; de madrugada corre el job; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>. Eso no es tiempo real.</p>
+<p>Tres bloques, <strong>en este orden</strong>: (1) el <strong>viaje</strong> del evento al valor; (2) los <strong>oficios</strong> que extraen ese valor (minería, ciencia de datos, IA) — van <strong>antes</strong> de las V, no las sustituyen; (3) las <strong>V</strong> para pasar revista al hotel. Los relojes del <a href="../caso-hotel/" rel="noopener" target="_blank">caso</a>: finanzas cierra a las <strong>23:00</strong>; de madrugada corre el job; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>. Eso no es tiempo real.</p>
 </div>
 <h2 id="un-pc-no-basta-y-a-veces-si">Un PC no basta (y a veces sí)<a class="headerlink" href="#un-pc-no-basta-y-a-veces-si" title="Permanent link">&para;</a></h2>
 <p>No todo proyecto con datos es Big Data. El <strong>día 1</strong>, recepción de Laredo pica reservas en el programa del hotel (PMS: <em>Property Management System</em>) y finanzas saca el Excel del mes: eso es <strong>Small Data</strong>. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) <strong>también</strong> sirven ahí.</p>
@@ -1865,7 +1865,7 @@
 <p>Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el crudo sin refinar no mueve el coche. Guardar por guardar, en la década de 2020, <strong>no</strong> basta. Hay que <strong>conocer</strong> el dato y <strong>cuidarlo</strong> (calidad, linaje, permiso). Si no, gerencia decide con un número bonito y falso.</p>
 <p><img alt="Un PC en recepción de Laredo frente a la cadena completa, que ya no cabe en un servidor" src="../../assets/ut1/small-vs-big.png" /></p>
 <h2 id="de-los-eventos-al-valor">De los eventos al valor<a class="headerlink" href="#de-los-eventos-al-valor" title="Permanent link">&para;</a></h2>
-<p>Antes de hablar de clústeres, Parquet o Pentaho, hay que ver <strong>el viaje del dato</strong>. Es el mismo viaje que luego recorreréis en las <a href="../arquitectura/">capas de la arquitectura</a>.</p>
+<p>Antes de hablar de clústeres, Parquet o Pentaho, hay que ver <strong>el viaje del dato</strong>. Es el mismo viaje que luego recorreréis en las <a href="../arquitectura/" rel="noopener" target="_blank">capas de la arquitectura</a>.</p>
 <p>Pensad en el grupo en agosto (Laredo ayuda a imaginar temporada alta):</p>
 <ol>
 <li><strong>Evento.</strong> Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.</li>
@@ -1919,7 +1919,7 @@
 </table>
 <p>Las tecnologías de Big Data <strong>capturan, integran, almacenan y procesan</strong>. Extraer valor lo hacen tres oficios que se pisan y <strong>no</strong> son lo mismo: <strong>minería de datos</strong>, <strong>ciencia de datos</strong> e <strong>inteligencia artificial</strong> (IA). Las tres <strong>beben</strong> de la infraestructura de este módulo; ninguna <strong>es</strong> Big Data. Quién <em>construye</em> esa infraestructura (el ingeniero) está al final de la página.</p>
 <h3 id="tres-oficios-sobre-el-mismo-dato-y-no-son-sinonimos">Tres oficios sobre el mismo dato (y no son sinónimos)<a class="headerlink" href="#tres-oficios-sobre-el-mismo-dato-y-no-son-sinonimos" title="Permanent link">&para;</a></h3>
-<p>Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran <strong>el mismo</strong> sitio donde está el bruto (el <strong>lago</strong>; el detalle en <a href="../almacenamiento/">1.3</a>) y hacen <strong>trabajos distintos</strong>:</p>
+<p>Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran <strong>el mismo</strong> sitio donde está el bruto (el <strong>lago</strong>; el detalle en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>) y hacen <strong>trabajos distintos</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -1994,12 +1994,12 @@
 <ol>
 <li><strong>Objetivo.</strong> Gerencia quiere menos habitaciones vacías los martes.</li>
 <li><strong>Recuperación.</strong> PMS, pasarela, sensores, un Excel de Comillas. Sale <strong>bruto</strong>.</li>
-<li><strong>Preparación.</strong> Unificáis <code>web</code> y <code>WEB</code>, quitáis canceladas, cruzáis reserva con cobro (eso, en <a href="../ingesta/">1.6</a>, es la T de un ETL: extraer, transformar, cargar).</li>
+<li><strong>Preparación.</strong> Unificáis <code>web</code> y <code>WEB</code>, quitáis canceladas, cruzáis reserva con cobro (eso, en <a href="../ingesta/" rel="noopener" target="_blank">1.6</a>, es la T de un ETL: extraer, transformar, cargar).</li>
 <li><strong>Exploración.</strong> El viernes por la web cancela más.</li>
 <li><strong>Modelado.</strong> Estima el riesgo de que no se presente (<em>no-show</em>) o el cupo.</li>
 <li><strong>Presentación y vuelta.</strong> El gráfico o el panel de las 8. Si no cuadra, <strong>volvéis al paso 2</strong>.</li>
 </ol>
-<p>En el <a href="../../">curso de especialización</a> otros módulos os pondrán a modelar. <strong>Aquí</strong> diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.</p>
+<p>En el <a href="../../" rel="noopener" target="_blank">curso de especialización</a> otros módulos os pondrán a modelar. <strong>Aquí</strong> diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.</p>
 <div class="admonition tip">
 <p class="admonition-title">Frase para el examen y para el pasillo</p>
 <p>Big Data <strong>prepara</strong> el dato. La minería <strong>busca patrones</strong>. La ciencia de datos <strong>hace la pregunta y cuenta el resultado</strong>. La IA <strong>encarna</strong> una tarea en un sistema. Se solapan; no se sustituyen.</p>
@@ -2080,7 +2080,7 @@
 <li>Los sensores publican cada ~30 s (el semáforo de recepción no puede esperar al lote de las 23:00).</li>
 <li>Finanzas cierra a las 23:00; el panel de las 8 es el lote de <strong>ayer</strong>.</li>
 </ul>
-<p>Dimensionar el disco <strong>no</strong> arregla un atasco de ingesta. Si el embudo es más ancho pero el cuello sigue igual, el agua se derrama. De ahí el flujo continuo y las <a href="../ingesta/">colas</a> (desacoplan “quien produce” de “quien consume”).</p>
+<p>Dimensionar el disco <strong>no</strong> arregla un atasco de ingesta. Si el embudo es más ancho pero el cuello sigue igual, el agua se derrama. De ahí el flujo continuo y las <a href="../ingesta/" rel="noopener" target="_blank">colas</a> (desacoplan “quien produce” de “quien consume”).</p>
 <div class="admonition example">
 <p class="admonition-title">Mismo volumen, distinta V</p>
 <p>10 TB de cobros históricos que cargas <strong>una vez</strong> al mes → duele sobre todo el <strong>volumen</strong>.<br />
@@ -2118,7 +2118,7 @@
 </tr>
 </tbody>
 </table>
-<p>Un <strong>data warehouse</strong> (almacén de informes) espera dato ya en tablas: decidís las columnas <strong>antes</strong> de guardar. Un <strong>data lake</strong> (lago) acepta el dato “como llega” y decide cómo interpretarlo <strong>al leer</strong>. Un <strong>data mart</strong> es un <strong>recorte</strong> de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en <a href="../almacenamiento/">1.3</a>.</p>
+<p>Un <strong>data warehouse</strong> (almacén de informes) espera dato ya en tablas: decidís las columnas <strong>antes</strong> de guardar. Un <strong>data lake</strong> (lago) acepta el dato “como llega” y decide cómo interpretarlo <strong>al leer</strong>. Un <strong>data mart</strong> es un <strong>recorte</strong> de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>.</p>
 <p>La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que <strong>no todo es tabla</strong>.</p>
 <h3 id="veracidad">Veracidad<a class="headerlink" href="#veracidad" title="Permanent link">&para;</a></h3>
 <p>¿Os podéis fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.</p>
@@ -2153,7 +2153,7 @@
 </tr>
 </tbody>
 </table>
-<p>La visualización no es “hacerlo bonito”. En <a href="../pentaho/">1.8</a> y en el criterio <strong>e)</strong> del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.</p>
+<p>La visualización no es “hacerlo bonito”. En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> y en el criterio <strong>e)</strong> del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.</p>
 <h2 id="que-pregunta-haceis-cuatro-analiticas">Qué pregunta hacéis (cuatro analíticas)<a class="headerlink" href="#que-pregunta-haceis-cuatro-analiticas" title="Permanent link">&para;</a></h2>
 <p>La <strong>inteligencia de negocio</strong> (<em>business intelligence</em>, <strong>BI</strong>) coge lo ya guardado y responde sobre el <strong>pasado</strong>: qué ocurrió y por qué. Con más dato y, a veces, IA, podéis mirar <strong>adelante</strong>: qué pasará y qué conviene hacer.</p>
 <table>
@@ -2228,9 +2228,9 @@
 </tbody>
 </table>
 <p>El arquitecto <strong>elige</strong> el plano. El ingeniero <strong>construye</strong> las tuberías. El científico <strong>pregunta</strong> con el dato ya usable. El analista <strong>cuenta a las 8</strong> lo que gerencia puede leer. Minería e IA no son “otros nombres del ingeniero”: usan lo que el ingeniero deja listo.</p>
-<p>El ciclo generación → ingesta → transformación → entrega → consumo está en <a href="../arquitectura/">1.5</a>.</p>
+<p>El ciclo generación → ingesta → transformación → entrega → consumo está en <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a>.</p>
 <h2 id="fuera-de-este-apartado-y-no-lo-copies-aqui">Fuera de este apartado (y no lo copies aquí)<a class="headerlink" href="#fuera-de-este-apartado-y-no-lo-copies-aqui" title="Permanent link">&para;</a></h2>
-<p>OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en <a href="../procesamiento/">1.4</a>. Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en <a href="../almacenamiento/">1.3</a>. El paisaje de herramientas y Lambda/Kappa, en <a href="../arquitectura/">1.5</a>. La ingesta, en <a href="../ingesta/">1.6</a>.</p>
+<p>OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>. Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>. El paisaje de herramientas y Lambda/Kappa, en <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a>. La ingesta, en <a href="../ingesta/" rel="noopener" target="_blank">1.6</a>.</p>
 <h2 id="el-mismo-oficio-otros-sitios">El mismo oficio, otros sitios<a class="headerlink" href="#el-mismo-oficio-otros-sitios" title="Permanent link">&para;</a></h2>
 <p>El hotel es el hilo. El oficio se parece fuera:</p>
 <ul>
@@ -2252,7 +2252,7 @@
 <p class="admonition-title">Errores frecuentes en clase y en empresas</p>
 <ul>
 <li>“Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.</li>
-<li>“Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el <a href="../procesamiento/#scv">SCV</a> os dirá por qué no pedís las tres cosas a la vez.</li>
+<li>“Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el <a href="../procesamiento/#scv" rel="noopener" target="_blank">SCV</a> os dirá por qué no pedís las tres cosas a la vez.</li>
 <li>Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).</li>
 <li>Medir el éxito en terabytes guardados, no en decisiones mejoradas.</li>
 </ul>
