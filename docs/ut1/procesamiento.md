@@ -131,7 +131,7 @@ Cuando leáis documentación o un examen, esos dos oficios aparecen con siglas i
 
 *Online* vuelve a significar “en el sistema, ahora”, no “pago por internet”.
 
-A veces el almacén de análisis guarda el dato ya **cortado por ejes** (tiempo, hotel, canal). En los libros eso se llama **cubo OLAP**. La idea es simple: el informe del lunes no tiene que cruzar diez tablas cada vez; el cruce **ya está hecho**. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.
+A veces el almacén de análisis guarda el dato ya **cortado por ejes** (tiempo, hotel, canal). En los libros eso se llama **cubo OLAP**. La idea es simple: el panel de las 8 no tiene que cruzar diez tablas cada vez; el cruce **ya está hecho**. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.
 
 **No es el cubo de objetos** de [1.3](almacenamiento.md) (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es **disco en red**; el otro es un **resumen ya cortado** para el informe.
 

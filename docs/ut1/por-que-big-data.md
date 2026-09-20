@@ -16,11 +16,11 @@ Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing qu
 
 No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es este: **el sistema tradicional no escala** en volumen, velocidad o variedad (o el coste de agrandar *esa* máquina es inasumible).
 
-!!! tip "Pregunta que debes saber responder"
+!!! tip "Pregunta que debéis saber responder"
     “¿Esto es un problema de Big Data?” no se contesta con el logo de una herramienta. Se contesta mirando si el diseño de siempre (un servidor, un esquema fijo, un lote nocturno) **sigue siendo viable**.
 
 !!! info "Cómo se lee esta página"
-    Primero el **viaje del dato** (qué pasa desde que alguien reserva hasta que gerencia decide) y **quién extrae valor**. Después, las **V** para pasar revista al hotel. Los relojes del [caso](caso-hotel.md): finanzas cierra a las **23:00**; de madrugada corre el job; a las **8** gerencia abre el panel de **ayer**. Eso no es tiempo real.
+    Tres bloques, **en este orden**: (1) el **viaje** del evento al valor; (2) los **oficios** que extraen ese valor (minería, ciencia de datos, IA) — van **antes** de las V, no las sustituyen; (3) las **V** para pasar revista al hotel. Los relojes del [caso](caso-hotel.md): finanzas cierra a las **23:00**; de madrugada corre el job; a las **8** gerencia abre el panel de **ayer**. Eso no es tiempo real.
 
 ## Un PC no basta (y a veces sí)
 
@@ -34,16 +34,16 @@ Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el
 
 ## De los eventos al valor
 
-Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
+Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorreréis en las [capas de la arquitectura](arquitectura.md).
 
-Piensa en el grupo en agosto (Laredo ayuda a imaginar temporada alta):
+Pensad en el grupo en agosto (Laredo ayuda a imaginar temporada alta):
 
 1. **Evento.** Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.
 2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto del DNI, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.
-3. **Información.** Organizas esos datos: reservas del día en una tabla, fotos en carpetas por fecha. Ya puedes *consultar* (“¿cuántas llegadas hay mañana?”).
-4. **Conocimiento.** Encajas patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
-5. **Sabiduría.** Sabes *cuándo* aplicar esa regla. El modelo de cancelaciones de Laredo en agosto **no** se copia ciego a Potes en noviembre.
-6. **Valor.** Tomas una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
+3. **Información.** Organizáis esos datos: reservas del día en una tabla, fotos en carpetas por fecha. Ya podéis *consultar* (“¿cuántas llegadas hay mañana?”).
+4. **Conocimiento.** Encajáis patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
+5. **Sabiduría.** Sabéis *cuándo* aplicar esa regla. El modelo de cancelaciones de Laredo en agosto **no** se copia ciego a Potes en noviembre.
+6. **Valor.** Tomáis una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
 
 ![Escalera del dato en Laredo: del evento al valor](../assets/ut1/evento-valor.png)
 
@@ -118,10 +118,10 @@ No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre es
 
 1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes.
 2. **Recuperación.** PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
-3. **Preparación.** Unificas `web` y `WEB`, quitas canceladas, cruzas reserva con cobro (eso, en [1.6](ingesta.md), es la T de un ETL: extraer, transformar, cargar).
+3. **Preparación.** Unificáis `web` y `WEB`, quitáis canceladas, cruzáis reserva con cobro (eso, en [1.6](ingesta.md), es la T de un ETL: extraer, transformar, cargar).
 4. **Exploración.** El viernes por la web cancela más.
 5. **Modelado.** Estima el riesgo de que no se presente (*no-show*) o el cupo.
-6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **vuelves al paso 2**.
+6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **volvéis al paso 2**.
 
 En el [curso de especialización](../index.md) otros módulos os pondrán a modelar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
 
@@ -130,7 +130,7 @@ En el [curso de especialización](../index.md) otros módulos os pondrán a mode
 
 ## Las V: un diagnóstico, no una lista para recitar
 
-Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Luego **valor** y **veracidad** (cinco). En algunos textos, **viabilidad** y **visualización** (siete). No memorices el recuento: **pasa revista** al hotel. Si varias duelen a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
+Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Luego **valor** y **veracidad** (cinco). En algunos textos, **viabilidad** y **visualización** (siete). No memoricéis el recuento: **pasad revista** al hotel. Si varias duelen a la vez, casi seguro necesitáis un diseño de Big Data. Si solo os duele una y el resto cabe en el sistema de siempre, a lo mejor no.
 
 ![Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden](../assets/ut1/cinco-vs-hotel.png)
 
@@ -138,7 +138,7 @@ Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Lu
 
 Es la cantidad de **bytes**. Hoy se habla con naturalidad de terabytes y petabytes; los centros grandes llegan a exabytes.
 
-| Nombre (SI) | Símbolo | Bytes (aprox.) | Para situarte |
+| Nombre (SI) | Símbolo | Bytes (aprox.) | Para situaros |
 | --- | --- | --- | --- |
 | Kilobyte | kB | 10³ | Una página de texto |
 | Megabyte | MB | 10⁶ | Una foto no enorme |
@@ -153,7 +153,7 @@ En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 byt
 En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habitación y del DNI. Fuera veréis lo mismo a otra escala: redes, genómica, satélites.
 
 !!! example "Un cálculo para notar la escala"
-    Si guardas **4 bytes al día** (un número: el peso) por cada persona del planeta (~8·10⁹) durante un año:
+    Si guardáis **4 bytes al día** (un número: el peso) por cada persona del planeta (~8·10⁹) durante un año:
 
     `4 × 8×10⁹ × 365 ≈ 12 TB`
 
@@ -193,7 +193,7 @@ La variedad es la V que más sorprende al que solo ha visto SQL: el problema no 
 
 ### Veracidad
 
-¿Te puedes fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.
+¿Os podéis fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.
 
 A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dónde salió esta cifra”), metadatos y reglas de limpieza. Un modelo sobre datos sucios no es “más Big Data”: es una **peor** decisión, más rápida.
 
@@ -204,7 +204,7 @@ A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dón
 
 Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (cupo, tarifa, overbooking, una oferta a tiempo) **mejora** respecto a no usar esos datos.
 
-Si no sabes qué decisión vas a mejorar, todavía no tienes un proyecto: tienes un disco.
+Si no sabéis qué decisión vais a mejorar, todavía no tenéis un proyecto: tenéis un disco.
 
 ### Viabilidad y visualización (cuando se habla de 7)
 
@@ -217,9 +217,9 @@ No entran en el recuento clásico. Sirven para no diseñar un sistema que **nadi
 
 La visualización no es “hacerlo bonito”. En [1.8](pentaho.md) y en el criterio **e)** del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.
 
-## Qué pregunta haces (cuatro analíticas)
+## Qué pregunta hacéis (cuatro analíticas)
 
-La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guardado y responde sobre el **pasado**: qué ocurrió y por qué. Con más dato y, a veces, IA, puedes mirar **adelante**: qué pasará y qué conviene hacer.
+La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guardado y responde sobre el **pasado**: qué ocurrió y por qué. Con más dato y, a veces, IA, podéis mirar **adelante**: qué pasará y qué conviene hacer.
 
 | Analítica | Pregunta | En el hotel | Suele vivir en |
 | --- | --- | --- | --- |
@@ -243,7 +243,7 @@ Los tres oficios de arriba **beben** del dato. Este módulo forma sobre todo a q
 | **Ingeniero de datos** | Extraer, transformar, cargar y guardar (ETL). **Aquí.** | El job de madrugada, **antes de las 8**. |
 | **Arquitecto de datos** | Estrategia: qué crece, quién accede, linaje, seguridad. | Si mañana abre otro hotel, el diseño **aguanta**. |
 
-El arquitecto **elige** el plano. El ingeniero **construye** las tuberías. El científico **pregunta** con el dato ya usable. El analista **cuenta** el lunes lo que gerencia puede leer. Minería e IA no son “otros nombres del ingeniero”: usan lo que el ingeniero deja listo.
+El arquitecto **elige** el plano. El ingeniero **construye** las tuberías. El científico **pregunta** con el dato ya usable. El analista **cuenta a las 8** lo que gerencia puede leer. Minería e IA no son “otros nombres del ingeniero”: usan lo que el ingeniero deja listo.
 
 El ciclo generación → ingesta → transformación → entrega → consumo está en [1.5](arquitectura.md).
 
@@ -260,11 +260,11 @@ El hotel es el hilo. El oficio se parece fuera:
 - **Mapas:** tráfico de muchos conductores a la vez (velocidad + volumen).
 - **Redes sociales:** texto libre, sentimiento, publicidad (variedad + veracidad dudosa).
 
-Si puedes decir *qué V duele* en cada uno, el 1.1 está asimilado.
+Si podéis decir *qué V duele* en cada uno, el 1.1 está asimilado.
 
 ## Qué conseguimos (si el diseño es bueno)
 
-Cuando el diseño responde a las V que duelen, puedes:
+Cuando el diseño responde a las V que duelen, podéis:
 
 - Integrar fuentes que antes vivían en silos (PMS, web, sensores).
 - Replicar y distribuir para **no parar** si cae un nodo.
@@ -273,7 +273,7 @@ Cuando el diseño responde a las V que duelen, puedes:
 
 !!! failure "Errores frecuentes en clase y en empresas"
     - “Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.
-    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv) te dirá por qué no pedís las tres cosas a la vez.
+    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv) os dirá por qué no pedís las tres cosas a la vez.
     - Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).
     - Medir el éxito en terabytes guardados, no en decisiones mejoradas.
 
@@ -303,4 +303,4 @@ No puntúan en Moodle. Sirven para comprobar si podéis **caracterizar** (criter
 3. **Un rol.** El panel de las 8 llega a las 11 y las cifras no cuadran con recepción. ¿Lo arregla sobre todo el analista, el científico o el ingeniero? ¿Por qué?
 
 !!! tip "Comprobación rápida"
-    Si en (1) has puesto velocidad / veracidad / valor, en (2) descriptiva → prescriptiva en ese orden, y en (3) ingeniero (ingesta y calidad **antes** del gráfico), el apartado está asimilado.
+    Si en (1) habéis puesto velocidad / veracidad / valor, en (2) descriptiva → prescriptiva en ese orden, y en (3) ingeniero (ingesta y calidad **antes** del gráfico), el apartado está asimilado.

@@ -12,7 +12,7 @@ Un sistema Big Data no es “un programa que lo hace todo”. Si metéis ingesta
 
 Se parte en **capas** que se hablan entre sí. Cada capa tiene **una** responsabilidad. Así sabéis dónde encajan la [ingesta](ingesta.md), el [formato](formatos.md), [Pentaho](pentaho.md) y el cuadro de mando.
 
-Este apartado es el **mapa del oficio** que en [1.1](por-que-big-data.md) llamamos ingeniería de datos: no el gráfico del lunes, sino que ese gráfico **pueda** hacerse. El hilo es el [grupo hotelero](caso-hotel.md).
+Este apartado es el **mapa del oficio** que en [1.1](por-que-big-data.md) llamamos ingeniería de datos: no el gráfico de las 8, sino que ese gráfico **pueda** hacerse. El hilo es el [grupo hotelero](caso-hotel.md).
 
 !!! info "Cómo se lee esta página"
     Primero el **ciclo** (fases: de que nace el dato hasta que gerencia lo usa). Luego el **edificio** (ocho capas: el dato entra abajo y gerencia mira arriba). Después **cómo se combinan** lote y flujo (Lambda / Kappa) con los relojes 23:00 / 8:00 / semáforo. Los logos van al final: se sitúan en una capa; no se recitan.
@@ -45,7 +45,12 @@ A veces el resultado **vuelve al origen**: el modelo etiqueta bien una cancelaci
 
 ## Las capas (el dato entra abajo y gerencia mira arriba)
 
-El ciclo son **fases** (qué le pasa al dato). Las ocho capas son el **edificio** (dónde vive cada responsabilidad). En [1.6](ingesta.md) veréis un resumen de **cuatro** pisos: allí el 4 es el panel; **aquí el 4 es el job**. No mezcléis los números.
+El ciclo son **fases** (qué le pasa al dato). Las ocho capas son el **edificio** (dónde vive cada responsabilidad).
+
+!!! warning "Tres numeraciones (no las mezcléis)"
+    - El **ciclo** tiene cinco fases. El **4** es la entrega (*serving*: el dato ya de fiar, listo para el panel o el modelo).
+    - El **edificio** tiene ocho capas. El **4** es el procesamiento (el job). Unificar `web` / `WEB` es la **capa 2**; el cruce reservas ⋈ cobros es la **capa 4**.
+    - En [1.6](ingesta.md) hay un resumen de **cuatro pisos**. Allí el **4** es el panel. Todavía no hace falta leerlo; cuando lleguéis, **no** reutilicéis estos números.
 
 ![Ocho capas en el hotel: el dato entra por la ingesta y gerencia mira el panel](../assets/ut1/capas-hotel.png)
 
@@ -124,7 +129,16 @@ Lote y *streaming* ya están en [1.4](procesamiento.md). Aquí es **cómo se com
 
 ### Lambda: los dos a la vez
 
-Cada hecho nuevo (reserva, cobro, sensor) puede entrar por **dos** caminos. Luego se consulta **el que toca**:
+En los libros, **Lambda** es: cada hecho puede entrar a la vez por un camino **lento** (lote, histórico) y uno **rápido** (flujo), y luego se consulta **el que toca**.
+
+En **este hotel** no mezcléis eso con “todo por dos caminos”. Hay **dos tubos y dos destinos**:
+
+- PMS y pasarela → lote de madrugada → **panel de las 8** (cierre de **ayer**).
+- Sensores → flujo → **semáforo de recepción**.
+
+El cobro del panel **no** alimenta el semáforo. El sensor **no** pinta el importe de gerencia. En [1.6](ingesta.md) esos dos tubos se verán otra vez.
+
+Las tres capas de Lambda, aplicadas al hotel:
 
 1. **Capa lenta (lote).** El lago **inmutable**: se **añade**, no se pisa. Por la noche recorréis **todo** y calculáis la vista del panel (ocupación e importe **cerrados**). Precisión alta; latencia de horas. Gerencia a las **8** mira **solo** esta vista: es **ayer**, no el semáforo.
 2. **Capa rápida (flujo).** Solo el **incremento** desde el último lote: el semáforo, la ocupación “de ahora”. Baja latencia; podéis muestrear o mirar diez segundos de cada minuto.
@@ -193,9 +207,9 @@ Si buscáis esa expresión veréis pósters con cientos de logos. **No los memor
 | 3 Almacén | HDFS, S3, warehouses cloud, MongoDB, HBase | ¿Dónde reposa? |
 | 4 Proceso | MapReduce, Spark, Hive, Pig | ¿Quién transforma a escala? |
 | Orquestación (corriente) | Oozie, Airflow, **Kitchen** (Pentaho) | ¿En qué orden y qué pasa si falla? |
-| 6 Visualización | Power BI, Tableau, informes Pentaho | ¿Qué ve gerencia? |
+| 6 Visualización | Power BI, Tableau, el **e)** de este módulo (CSV/JSON o un panel) | ¿Qué ve gerencia? |
 
-**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. **Pentaho** se usa en este módulo para **ETL visual** y para **mostrar** el resultado sin programar el motor. La cola de Kappa suele ser Kafka; el detalle de ingesta está en [1.6](ingesta.md).
+**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. **Pentaho** se usa en este módulo para **ETL visual** (Spoon). El criterio **e)** es un fichero o un panel que gerencia entiende: **no** es abrir Report Designer ni Pentaho Server. La cola de Kappa suele ser Kafka; el detalle de ingesta está en [1.6](ingesta.md).
 
 Los mapas cambian de año (nace una marca, muere otra). **Las capas no.** Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/) (orientación, no para recitar).
 
@@ -220,7 +234,7 @@ Un ingeniero de datos **no** es un desarrollador de producto. Sí escribe el scr
 
 ## El mismo oficio, otro sitio
 
-El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel el lunes. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.
+El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las **8**. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.
 
 !!! success "Al terminar 1.5"
     Dibujad las **ocho** capas del [hotel](caso-hotel.md). Ponéd **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.

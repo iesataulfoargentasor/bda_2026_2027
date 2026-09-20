@@ -36,6 +36,8 @@ flowchart LR
   P --> P8
 ```
 
+Los nombres de nodo son **cómputo del histórico**, no la recepción de cada hotel. El PMS de Potes puede seguir en **un** servidor; el job de madrugada sí se parte.
+
 ## Qué ganáis (y qué significa cada cosa)
 
 | Propiedad | En la práctica | En el hotel |

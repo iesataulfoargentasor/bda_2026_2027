@@ -221,7 +221,7 @@ Cuando una base distribuida elige **responder aunque algún nodo vaya atrasado**
 - **E**ventual consistency (consistencia **eventual**): *al rato* (segundos o más) todos los nodos dicen lo mismo.
 
 !!! failure "¿BASE para el cobro en recepción?"
-    **No.** Una estancia cobrada o una calificación publicada quieren **ACID**. BASE encaja en el catálogo de extras replicado, lecturas de sensores o un carrito que **aún no** es el cobro.
+    **No.** Una estancia cobrada o una reseña ya publicada quieren **ACID**. BASE encaja en el catálogo de extras replicado, lecturas de sensores o un carrito que **aún no** es el cobro.
 
 ## Cómo elegir (criterio a)
 

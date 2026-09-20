@@ -10,7 +10,7 @@ tags:
 
 Este es el **hilo de las dos unidades**: una cadena pequeña, inventada, con sede en Cantabria. No es una empresa real. Sirve para que reservas, cobros, sensores y el panel de gerencia salgan **siempre del mismo sitio**.
 
-Si entras directo a [ingesta](ingesta.md) o a la [UT2](../ut2/index.md), empieza por aquí.
+Si entráis directo a [ingesta](ingesta.md) o a la [UT2](../ut2/index.md), empezad por aquí.
 
 ## Quiénes son
 
@@ -66,14 +66,17 @@ flowchart TB
   PMS --> N
 ```
 
-## Qué te van a pedir (el hilo)
+## Qué os van a pedir (el hilo)
 
 1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión** (menos habitaciones vacías). Un hotel de playa no es un albergue de montaña.
-2. **[1.5](arquitectura.md)** — El ciclo del ingeniero, las capas, y si el panel de las 8 y el semáforo van por **dos caminos** (Lambda) o por **una cola** (Kappa).
-3. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
-4. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
-5. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
-6. **[UT2](../ut2/index.md)** — El martes por la mañana el CSV ya no abre en Excel. Hay que **depositar** y **procesar** en el sitio, y acabar el job **antes de las 8**.
+2. **[1.2](clusters.md)** — El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.
+3. **[1.3](almacenamiento.md)** — El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart más estrecho). El JSON y las fotos, al lago.
+4. **[1.4](procesamiento.md)** — Recepción **opera** (OLTP). Gerencia **informa** (OLAP, lote de las 8). El semáforo es otro reloj.
+5. **[1.5](arquitectura.md)** — El ciclo del ingeniero, las capas, y si el panel de las 8 y el semáforo van por **dos caminos** (Lambda) o por **una cola** (Kappa).
+6. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
+7. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
+8. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
+9. **[UT2](../ut2/index.md)** — El martes por la mañana el CSV ya no abre en Excel. Hay que **depositar** y **procesar** en el sitio, y acabar el job **antes de las 8**.
 
-!!! tip "Frase para no perderte"
+!!! tip "Frase para no perderos"
     Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**.
