@@ -488,7 +488,7 @@ El movimiento de datos entre orígenes y destinos puede ser:
 
 ### Arquitectura
 
-Si te basas en la arquitectura por capas, la ingesta es la de **abajo**: **lleva** el dato desde las fuentes; las fuentes no *son* la capa. El dibujo de esta página resume cuatro pisos. En [1.5](arquitectura.md) hay más (colección, consulta, seguridad, monitorización).
+Si te basas en la arquitectura por capas, la ingesta es la de **abajo**: **lleva** el dato desde las fuentes; las fuentes no *son* la capa. El dibujo de esta página es el **resumen de cuatro pisos**. El edificio completo (ocho capas, con colección, consulta, seguridad y monitorización) está en [1.5](arquitectura.md). Los números de aquí **no** son los de allí: aquí el 4 es el panel; allí el 4 es el job.
 
 ![La ingesta es la capa de abajo: el dato sube hacia el panel](../assets/ut1/capas-ingesta.png)
 

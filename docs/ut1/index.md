@@ -16,7 +16,7 @@ Una empresa puede empezar con un servidor y una base de datos relacional. Cuando
 
 Esta unidad cubre el **[RA1](ra1.md)** del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.
 
-Antes de 1.1, lee **[el caso: grupo hotelero de Cantabria](caso-hotel.md)** (Santander, Laredo, Comillas, Potes; recepción frente a gerencia; las 23:00 y las 8:00). El resto de la unidad —y la UT2— reutiliza esa cadena. [1.5](arquitectura.md) es la excepción: las capas se ven con una comercializadora eléctrica.
+Antes de 1.1, lee **[el caso: grupo hotelero de Cantabria](caso-hotel.md)** (Santander, Laredo, Comillas, Potes; recepción frente a gerencia; las 23:00 y las 8:00). El resto de la unidad —incluido [1.5](arquitectura.md)— y la UT2 reutilizan esa cadena.
 
 Lee cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estilo “¿qué elegirías y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil; la [autoevaluación](autoevaluacion.md) comprueba vocabulario. Ninguna sustituye a Moodle.
 
