@@ -9,64 +9,24 @@ tags:
 
 # Tarea para practicar en clase
 
-Antes de abrir Spark o Dask, hay que **saber qué tipo de ejecución** estás pidiendo y **por qué el portátil no es un clúster**. Esta sesión une lo de [1.2 Clústeres](clusters.md) y [1.4 Procesamiento](procesamiento.md) con los criterios del **RA2** (almacenamiento masivo, cómputo distribuido, tolerancia a fallos, crecer añadiendo recursos).
+Esta sesión une [1.2 Clústeres](clusters.md) y [1.4 Procesamiento](procesamiento.md) con el **RA2**: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer **añadiendo** recursos. Hoy **no** instaláis Spark ni Dask. Sí tenéis que saber **qué tipo de ejecución** estáis pidiendo y **por qué el portátil no es un clúster**.
 
 No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase** (individual o por parejas) y se comenta al final.
 
-## Parte 0. Concurrente, paralela y distribuida
+!!! info "Cómo se lee esta página"
+    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md), un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
 
-Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezclas, luego no sabrás si te basta el i7 del portátil o hace falta un clúster.
+## El caso: 500 GB y un portátil
 
-| Tipo | Dónde se ejecuta | ¿Al mismo tiempo de verdad? | Ejemplo mental |
-| --- | --- | --- | --- |
-| **Paralela** | Varios **núcleos** de **una** máquina | Sí: varios fogones a la vez | Varios cocineros en **la misma** cocina |
-| **Distribuida** | **Varias máquinas** en red | Sí, en general (más red y fallos) | Varios **restaurantes** coordinados |
-| **Concurrente** | Una o varias máquinas | **No necesariamente** | Un cocinero que **cambia rápido** de sartén |
+Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md). **No** copiáis los 500 GB al informe.
 
-- **Concurrente:** el sistema *entremezcla* tareas. Con un solo núcleo es el cambio de contexto de [1.4](procesamiento.md): parece simultáneo, el silicio se turna.
-- **Paralela:** dos núcleos (o más) trabajan **a la vez** sobre trozos independientes. En el portátil: 10 núcleos / 20 hilos.
-- **Distribuida:** el dato y el cálculo **no caben o no deben** vivir en un solo chasis. Aparecen red, réplicas y nodos que se caen.
+El fichero está en la **red de la empresa** (una URL interna o una carpeta compartida), no en vuestro disco.
 
-!!! tip "Para la tarea de los 500 GB"
-    Leer el fichero **por trozos en un solo proceso** es secuencial (a veces concurrente con la red).  
-    Repartir trozos entre los 10 núcleos es **paralelo local**.  
-    Mandar el job a Hadoop/Spark/Databricks es **distribuido**.  
-    Las tres pueden aparecer en la misma recomendación a la empresa; no elijas “la palabra más moderna”.
+**Operación** (elegid **una**): media, desviación típica, o *normalizar* un campo (dejarlo en una escala comparable, p. ej. 0–1).
 
-### Herramientas Python que verás (no hace falta instalarlas hoy)
+**Destino del resultado** (elegid **uno**, el que diga el profesor): cubo **S3**, **Azure** (Blob / Data Lake) o **carpeta del aula**. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa **casi nada**; no lo confundáis con mover los 500 GB.
 
-| | **Ray** | **Dask** | **PySpark** |
-| --- | --- | --- | --- |
-| Enfoque | Cómputo distribuido genérico, ML, RL | Paralelo y distribuido “estilo Pandas” | Big Data y análisis en el ecosistema Spark |
-| Escala | Del portátil al clúster, muy flexible | Del portátil al clúster | Clústeres grandes |
-| Facilidad | API relativamente sencilla; muy usada en ML | Cómoda si vienes de Pandas/NumPy | Más curva: hay que pensar en Spark |
-| Encaja con | TensorFlow, PyTorch | Pandas, scikit-learn | Hadoop, Hive, Spark |
-| Tolerancia a fallos | Alta (modelo de actores) | Alta | Muy alta (RDD/DataFrame resilientes) |
-| Ideal para | ML distribuido, simulaciones | ETL, análisis, pipelines de ML | Volumen masivo “de libro” |
-| Pega | Menos “clásico” que Spark en Big Data de empresa | No siempre es lo más eficiente al *muy* gran escala | Infraestructura más pesada |
-
-Para profundizar (cuando el profesor lo indique):
-
-- Tutorial Berkeley (Dask, *future* en R y un poco de Ray): [Flexible parallel processing](https://computing.stat.berkeley.edu/tutorial-dask-future/)
-- Plan ETL con **Ray** (Colab): [cuaderno](https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing)
-- Plan ETL con **Dask** (Colab): [cuaderno](https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing)
-- Estudio del profesor: 500 GB con Dask (Colab): [cuaderno](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing)
-- Demo en GitHub (Dask, origen remoto → S3, desde un portátil): [josedavidmi/demo_dask_500gb-](https://github.com/josedavidmi/demo_dask_500gb-)
-
-## El caso: 500 GB y solo un portátil
-
-Eres técnico de datos. Te piden **procesar un fichero de 500 GB** (JSON, CSV o log) que está:
-
-- en un **repositorio interno** (URL de la empresa), o
-- en una **carpeta compartida** de la red corporativa.
-
-El fichero viene de una **exportación de base de datos** o de **logs de una tienda online**.
-
-**Operación** (elige **una**): media, desviación típica, o normalizar un campo numérico.
-
-**Destino del resultado** (elige **uno**): *bucket* **S3**, **MongoDB Atlas**, o **Azure** (Blob / Data Lake). El resultado de una media ocupa **casi nada**; no lo confundas con copiar los 500 GB.
-
-**Tu única máquina (el portátil):**
+**Vuestra única máquina (el portátil):**
 
 | Recurso | Dato | Qué implica |
 | --- | --- | --- |
@@ -75,18 +35,39 @@ El fichero viene de una **exportación de base de datos** o de **logs de una tie
 | CPU | i7, **10 núcleos / 20 hilos** | Hay paralelismo *local*, no un clúster |
 | GPU | RTX 4060, 6 GB | ¿Ayuda a *esta* media o no? |
 
-## Qué tienes que entregar (en clase)
+![500 GB del histórico no caben en el portátil (300 GB libres, 32 GB de RAM). El panel de las 8 necesita el número, unos bytes](../assets/ut1/tarea-portatil-500gb.png)
 
-Responde por escrito (o en un pad compartido) a **todas** las preguntas. No hace falta código que compile; sí un razonamiento que se pueda defender en voz alta.
+## Concurrente, paralelo y distribuido (repaso)
+
+Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detalle está en el [1.4](procesamiento.md); aquí basta para no mezclar el i7 con un clúster.
+
+![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster](../assets/ut1/paralelo-distribuido.png)
+
+| Tipo | Dónde corre | En esta tarea |
+| --- | --- | --- |
+| **Secuencial / concurrente** | Un proceso (un núcleo se puede *turnar*) | Leéis el fichero **por trozos** y actualizáis suma y recuento |
+| **Paralelo local** | Varios **núcleos** de **una** máquina | Los **10 núcleos** del portátil; si se apaga, muere el job |
+| **Distribuido** | **Varias máquinas** en red | El cálculo va **al dato**; réplicas si se funde un disco; acabar **antes de las 8** |
+
+**Spark en modo local sigue siendo el portátil:** varios núcleos, **una** máquina. No lo presentéis como la opción 3.
+
+![Secuencial por trozos, paralelo en el i7, distribuido en los cuatro nodos-hotel](../assets/ut1/tarea-tres-modos.png)
+
+!!! tip "Las tres pueden convivir"
+    Un plan honesto suele mezclarlas: no bajar el fichero; si exploráis, paralelo **local** sobre una muestra; el histórico de verdad, **distribuido**. No elijáis “la palabra más moderna”.
+
+## Qué tenéis que entregar (en clase)
+
+Responded por escrito (o en un pad) a **todas** las preguntas. No hace falta código que compile; sí un razonamiento que se pueda defender en voz alta.
 
 ### 1. Limitaciones del portátil
 
-Explica por qué **no** es buena idea:
+Explicad por qué **no** es buena idea:
 
 1. Descargar los 500 GB al disco local, y
 2. Cargar **todo** en memoria (por ejemplo, un DataFrame de Pandas).
 
-Habla al menos de: **espacio en disco**, **RAM**, **E/S de disco** y **red** (bajar 500 GB por la wifi del aula no es “un rato”).
+Hablad al menos de: **espacio en disco**, **RAM**, **entrada/salida de disco** (leer y escribir es lento) y **red** (bajar 500 GB por la wifi del aula no es “un rato”).
 
 !!! example "Pista, no la respuesta"
     Libres ≈ 300 GB < 500 GB. Pandas quiere el dataset **entero** (y suele ocupar *más* RAM que el fichero en disco). Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la RTX.
@@ -95,69 +76,84 @@ Habla al menos de: **espacio en disco**, **RAM**, **E/S de disco** y **red** (ba
 
 ¿Se puede calcular la media / desviación / normalización **sin** guardar el fichero entero ni cargarlo en RAM?
 
-Describe, a alto nivel, un plan en Python:
+Describid, a alto nivel, un plan en Python:
 
-- Lectura **línea a línea** o por **bloques** (*chunks*, *streaming*).
-- Cálculo **incremental** (una pasada: vas actualizando suma y recuento; la media es `suma/n` al final).
-- Escribes **solo** el resultado (unos bytes) hacia S3 / Atlas / Azure.
+- Lectura **línea a línea** o por **bloques** (*chunks*: trozos que caben en RAM).
+- Cálculo **incremental** (una pasada: vais actualizando suma y recuento; la media es `suma/n` al final).
+- Escribís **solo** el resultado (unos bytes) hacia el destino elegido.
 
-Relaciónalo con **concurrente / secuencial**: un solo proceso que lee y actualiza contadores.
+Relacionadlo con **secuencial**: un solo proceso que lee y actualiza contadores.
 
 ### 3. Opción 2 — Local **paralela**
 
-¿Cómo aprovechas los **10 núcleos / 20 hilos**?
+¿Cómo aprovecháis los **10 núcleos / 20 hilos**?
 
-Comenta una vía: Spark **en modo local**, **Dask**, `multiprocessing`…
+Comentad una vía: Spark **en modo local**, **Dask** o `multiprocessing`. Hoy no hace falta instalarlas: el oficio es el diseño.
 
-Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo tuya, si se apaga el portátil el job muere).
+Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). El panel de las 8 **no** puede depender de ese portátil.
 
-### 4. Opción 3 — Distribuido / nube
+### 4. Opción 3 — Distribuido
 
-La empresa tiene o puede contratar un clúster Hadoop/Spark (propio o en nube) o un servicio gestionado (Databricks, EMR, Synapse, BigQuery…).
+La empresa puede usar un clúster (Hadoop/Spark, propio o en nube) o el servicio que indique el profesor.
 
-Explica, en general:
+Explicad, en general:
 
-1. **Dónde** dejas el fichero (HDFS, S3, Blob, Data Lake…) — “llevar el cálculo al dato”, no el dato al portátil.
-2. **Cómo** lanzas el cálculo (job Spark, SQL sobre el almacén…).
-3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos**, **crecimiento** (añadir nodos = [escalado horizontal](clusters.md)).
+1. **Dónde** dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.
+2. **Cómo** lanzáis el cálculo (un *job*: trabajo programado; de madrugada, para tener el número **antes de las 8**).
+3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se funde un disco, el panel no se cae: [1.2](clusters.md)), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md)).
 
 ### 5. Opción 4 — Cargar y consultar
 
-Valora cargar el fichero (o **particionarlo**) en MongoDB Atlas o en un warehouse / *lakehouse* (Athena, BigQuery, Snowflake…) y hacer la media con una **consulta**.
+Valorad cargar el fichero (o **particionarlo**) en un almacén de informes / *lakehouse* o, si el aula lo usa, MongoDB, y hacer la media con una **consulta**.
 
-¿Cuándo tiene sentido frente a Spark/Hadoop? Ventajas e inconvenientes: **modelo de datos**, **coste** (¡dato escaneado!), **curva de aprendizaje**.
+¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: **modelo de datos**, **coste** (¡a menudo pagáis por lo **escaneado**!, [1.7](formatos.md)), **curva de aprendizaje**.
 
 ### 6. ¿Y la GPU?
 
-¿La RTX 4060 **cambia de verdad** este problema (una estadística sobre un campo de un log/CSV)?
+¿La RTX 4060 **cambia de verdad** este problema (una estadística sobre un campo de un CSV/JSON de reservas)?
 
-Di en qué tareas de datos **sí** suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser **leer bytes de red/disco**, no multiplicar matrices.
+Decid en qué tareas de datos **sí** suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser **leer bytes de red/disco**, no multiplicar matrices.
 
 ### 7. Elección final
 
-Recomienda **una opción o una combinación** a la empresa.
+Recomendad **una opción o una combinación** a gerencia.
 
-Justifícala con los criterios del **RA2**:
+Justificadla con los criterios del **RA2**:
 
-| Criterio RA2 (idea) | Cómo se nota en tu respuesta |
+| Criterio RA2 (idea) | Cómo se nota en vuestra respuesta |
 | --- | --- |
 | Importancia del **almacenamiento** | ¿Dónde vive el fichero? ¿Por qué no en el portátil? |
-| Modelo de **computación distribuida** | ¿Quién ejecuta el cálculo? |
+| Modelo de **computación distribuida** | ¿Quién ejecuta el cálculo? ¿Acaba antes de las 8? |
 | **Tolerancia a fallos** | ¿Qué pasa si se cuelga una máquina a mitad? |
-| Guardar **mucho** y decidir después | ¿El bruto sigue accesible o lo tiraste? |
-| **Crecer** añadiendo recursos | ¿Mañana son 5 TB? ¿Escala en vertical o en horizontal? |
+| Guardar **mucho** y decidir después | ¿El bruto sigue accesible o lo tirasteis? |
+| **Crecer** añadiendo recursos | ¿Mañana son 5 TB? ¿Una máquina más gorda o más nodos? |
 
 ## Cómo lo hacemos en el aula
 
-1. 10 minutos: lee la Parte 0 y el enunciado. Aclara dudas de vocabulario.
-2. 25–35 minutos: responde 1–7 (parejas bienvenidas).
+1. 10 minutos: leed el caso y el repaso. Aclarad dudas de vocabulario.
+2. 25–35 minutos: responded 1–7 (parejas bienvenidas).
 3. 10 minutos: puesta en común. El profesor puede contrastar con el [cuaderno Dask de 500 GB](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing) o la [demo de GitHub](https://github.com/josedavidmi/demo_dask_500gb-).
 
 !!! success "Qué se espera"
-    No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido y dónde acaba el resultado (S3, Atlas o Azure).
+    No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el **número**.
 
 ## Relación con el módulo
 
-Es una **actividad inicial del RA2** (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tienes el vocabulario de [1.2](clusters.md) y [1.4](procesamiento.md). No abre temas que no hayáis visto: solo te obliga a **elegir y justificar**.
+Es el **puente hacia el RA2** (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de [1.2](clusters.md) y [1.4](procesamiento.md). Os obliga a **elegir y justificar**. El laboratorio de HDFS y Spark es la UT2.
 
 La entrega formal, si la hay, se indica en Moodle.
+
+## Para profundizar (si el profesor lo indica)
+
+No es de esta sesión. Si os piden probar código, Dask se parece a Pandas; PySpark es el de libro en clústeres grandes; Ray aparece más en ML. Hoy no hace falta instalarlas.
+
+| | **Dask** | **PySpark** | **Ray** |
+| --- | --- | --- | --- |
+| Encaje | Paralelo y distribuido “estilo Pandas” | Volumen masivo en el ecosistema Spark | Cómputo distribuido genérico |
+| Hoy | Solo si el profesor abre el cuaderno | No lo programáis aún ([1.4](procesamiento.md)) | Fuera de esta tarea |
+
+- Tutorial Berkeley (Dask y un poco de Ray): [Flexible parallel processing](https://computing.stat.berkeley.edu/tutorial-dask-future/)
+- Plan ETL con **Dask** (Colab): [cuaderno](https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing)
+- Plan ETL con **Ray** (Colab): [cuaderno](https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing)
+- Estudio del profesor: 500 GB con Dask (Colab): [cuaderno](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing)
+- Demo en GitHub (Dask, origen remoto → S3, desde un portátil): [josedavidmi/demo_dask_500gb-](https://github.com/josedavidmi/demo_dask_500gb-)

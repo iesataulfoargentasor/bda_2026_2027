@@ -29,5 +29,5 @@ La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil. Al fin
 | [1.6 Ingesta de datos](ingesta.md) | **b)** | Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en Hola ETL. |
 | [1.7 Formatos de datos](formatos.md) | **c)** | Dirección solo mira tres números; el CSV gordo arrastra doce columnas. |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el **CSV**, no Spoon. |
-| [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
+| [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB del histórico del hotel: concurrente, paralelo, distribuido |
 | [Autoevaluación](autoevaluacion.md) | — | 25 de **toda** la unidad (Corregir test). Las 15 de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |
