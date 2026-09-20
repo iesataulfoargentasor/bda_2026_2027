@@ -1644,6 +1644,7 @@
 <li>Seguir sirviendo desde una <strong>réplica</strong> (una copia <strong>en marcha</strong>, no un ZIP en un cajón).</li>
 </ul>
 <p>Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho <strong>no publica</strong> el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.</p>
+<p><img alt="Si se funde el disco de Potes, una copia en marcha deja el panel de las 8 en pie" src="../../assets/ut1/replica-potes.png" /></p>
 <h3 id="equilibrio-de-carga">Equilibrio de carga<a class="headerlink" href="#equilibrio-de-carga" title="Permanent link">&para;</a></h3>
 <p>Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. El algoritmo debería mirar:</p>
 <ul>
@@ -1656,6 +1657,7 @@
 <p>No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y crecéis. El volumen del hotel <strong>no</strong> se estima bien a priori: si os pasáis de pesimistas, habéis tirado el dinero; si os quedáis cortos, el job no llega a las 8.</p>
 <p>Añadir nodos <strong>no</strong> convierte solo un Excel de finanzas en clúster: el programa del job tiene que <strong>saber</strong> partirse. El PMS de recepción puede seguir en <strong>un</strong> servidor.</p>
 <h2 id="escalado-vertical-y-horizontal">Escalado vertical y horizontal<a class="headerlink" href="#escalado-vertical-y-horizontal" title="Permanent link">&para;</a></h2>
+<p><img alt="Vertical: más RAM en el PMS. Horizontal: más máquinas. En noviembre se apagan nodos" src="../../assets/ut1/vertical-horizontal.png" /></p>
 <table>
 <thead>
 <tr>
