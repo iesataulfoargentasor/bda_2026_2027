@@ -1881,7 +1881,7 @@
 <ol>
 <li><strong>Generación.</strong> Quién, dónde y cuándo nace el dato: PMS, pasarela, sensor, un Excel de Comillas, una API.</li>
 <li><strong>Ingesta.</strong> Moverlo al almacén. El detalle (pipeline, push/pull/poll, ETL/ELT) está en <a href="../ingesta/">1.6</a>.</li>
-<li><strong>Transformación.</strong> Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. No es lo mismo que unificar nombres (eso es la capa 2, más abajo).</li>
+<li><strong>Transformación.</strong> Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. No es lo mismo que unificar nombres (eso es la capa 2, más abajo). El resultado suele <strong>añadirse</strong> al lago, no pisar el fichero: si un huésped pide borrar el NIF, no editáis el Parquet a mano (<a href="../formatos/">1.7</a>).</li>
 <li><strong>Entrega</strong> (<em>serving</em>). El dato <strong>ya es de fiar</strong> y se lo dais a un consumidor: panel, modelo, fichero para el científico.</li>
 <li><strong>Consumo.</strong> Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado <strong>antes</strong>.</li>
 </ol>
