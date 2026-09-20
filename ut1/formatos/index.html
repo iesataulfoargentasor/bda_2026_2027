@@ -874,10 +874,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#taller-6-el-generador-a-parquet" class="md-nav__link">
+  <a href="#taller-6-filtrar-al-leer-no-tragarse-el-parquet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Taller 6 — El generador, a Parquet
+        Taller 6 — Filtrar al leer (no tragarse el Parquet)
       
     </span>
   </a>
@@ -938,6 +938,17 @@
     <span class="md-ellipsis">
       
         Taller medido (lo que se examina)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1605,10 +1616,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#taller-6-el-generador-a-parquet" class="md-nav__link">
+  <a href="#taller-6-filtrar-al-leer-no-tragarse-el-parquet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Taller 6 — El generador, a Parquet
+        Taller 6 — Filtrar al leer (no tragarse el Parquet)
       
     </span>
   </a>
@@ -1669,6 +1680,17 @@
     <span class="md-ellipsis">
       
         Taller medido (lo que se examina)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1769,11 +1791,15 @@
 
 
 <h1 id="17-formatos-de-datos">1.7. Formatos de datos<a class="headerlink" href="#17-formatos-de-datos" title="Permanent link">&para;</a></h1>
-<p>El criterio <strong>c)</strong> es este: <strong>en qué forma dejas el dato</strong> para que el siguiente paso no se ahogue. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.</p>
+<p>El criterio <strong>c)</strong> es este: <strong>en qué forma dejáis el dato</strong> para que el siguiente paso no se ahogue. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.</p>
+<div class="admonition info">
+<p class="admonition-title">Cómo se lee esta página</p>
+<p>Primero el <strong>caso</strong> y la tarjeta (fila frente a columna). Luego <strong>Avro</strong> (talleres 1–2: el mensaje). Después <strong>Parquet + DuckDB</strong> (el lago del panel). El <strong>taller medido</strong> va al final. ORC y Delta son una idea, no un segundo curso. Los relojes: gerencia a las <strong>8</strong> ve el cierre de <strong>ayer</strong>.</p>
+</div>
 <h2 id="un-caso-para-no-perderse">Un caso para no perderse<a class="headerlink" href="#un-caso-para-no-perderse" title="Permanent link">&para;</a></h2>
-<p>El <a href="../caso-hotel/">grupo hotelero de Cantabria</a> guarda cada reserva con doce campos (canal, régimen, comentarios, DNI cifrado…). Dirección solo pregunta, cada lunes: <em>ocupación e importe medio por hotel</em>. Tres números. Si el fichero es un CSV de 80 GB, el motor <strong>lee las doce columnas</strong> para calcular tres. En cloud, a menudo <strong>pagas por lo que escaneas</strong>, no solo por lo que guardas.</p>
-<p>Esa es la pregunta del apartado: ¿el dato viaja <strong>fila a fila</strong> (bien para cobrar en recepción) o <strong>campo a campo</strong> (bien para el informe)? ¿Hace falta que un humano lo abra, o que Spark lo <strong>trocee</strong> entre nodos?</p>
-<p>Las prácticas de esta página <strong>no dependen de un CSV ajeno</strong>. Generas el dataset en el propio cuaderno (Jupyter o un <a href="https://colab.research.google.com/">Colab</a> en blanco). Esquema Avro de reserva: <a href="../../assets/practicas/reserva.avsc">reserva.avsc</a>.</p>
+<p>El <a href="../caso-hotel/">grupo hotelero de Cantabria</a> (Santander, Laredo, Comillas, Potes) guarda cada reserva con <strong>muchas</strong> columnas en el PMS. Gerencia, a las <strong>8</strong>, solo quiere <em>ocupación e importe por hotel</em>. Si el fichero es un CSV gordo, el motor <strong>lee todas las columnas</strong> para calcular tres números. En cloud, a menudo <strong>pagáis por lo que escaneáis</strong>, no solo por lo que guardáis.</p>
+<p>Esa es la pregunta del apartado: ¿el dato viaja <strong>fila a fila</strong> (bien para <em>esta</em> reserva en un mensaje o en el PMS) o <strong>campo a campo</strong> (bien para el panel)? ¿Hace falta que un humano lo abra, o que Spark lo <strong>trocee</strong> entre nodos?</p>
+<p>Las prácticas <strong>no dependen de un CSV ajeno</strong>. Generáis el dataset en el cuaderno (Jupyter o un <a href="https://colab.research.google.com/">Colab</a> en blanco). Esquema Avro: <a href="../../assets/practicas/reserva.avsc">reserva.avsc</a>. <strong>Noja</strong> es el “mañana abre otro”, no un quinto hotel del esqueleto. Este <code>reservas.csv</code> <strong>no</strong> es el de <a href="../ingesta/">Hola ETL</a> (allí había cobros).</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -1787,10 +1813,12 @@
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="s2">&quot;noches&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">),</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="s2">&quot;importe&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">420</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="s2">&quot;canal&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;ota&quot;</span><span class="p">,</span> <span class="s2">&quot;recepcion&quot;</span><span class="p">],</span> <span class="n">n</span><span class="p">),</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">})</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;reservas.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="s2">&quot;regimen&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;SA&quot;</span><span class="p">,</span> <span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;MP&quot;</span><span class="p">],</span> <span class="n">n</span><span class="p">),</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="s2">&quot;comentarios&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;vista mar&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="n">n</span><span class="p">),</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">})</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;reservas.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Con <code>n = 200_000</code> ya notas diferencias de tamaño y de tiempo. Sube a un millón si la máquina lo aguanta.</p>
+<p>Con <code>n = 200_000</code> ya notáis tamaño y tiempo. Subid a un millón si la máquina lo aguanta. <code>regimen</code> y <code>comentarios</code> están para que veáis <strong>lo que el informe no debe leer</strong>.</p>
 <h2 id="que-tiene-que-cumplir-el-formato">Qué tiene que cumplir el formato<a class="headerlink" href="#que-tiene-que-cumplir-el-formato" title="Permanent link">&para;</a></h2>
 <p>Para que un clúster (Hadoop, Spark) o un almacén en la nube pueda <strong>repartir</strong> el trabajo, el fichero tiene que dejarse <strong>cortar en trozos</strong>. Un JSON con un array de diez millones de objetos entre <code>[</code> y <code>]</code> es un solo bloque: <strong>un</strong> nodo se lo come entero.</p>
 <p>Además suele pedirse:</p>
@@ -1860,22 +1888,25 @@
 </tr>
 </tbody>
 </table>
-<p><strong>CSV.</strong> Universal. <code>01</code> ¿texto o número? Una coma dentro del campo lo rompe. Para sumar <em>importe</em> sueles arrastrar <em>canal</em> y <em>comentarios</em>.</p>
+<p><strong>CSV.</strong> Universal. <code>01</code> ¿texto o número? Una coma dentro del campo lo rompe. Para sumar <em>importe</em> soléis arrastrar <em>canal</em> y <em>comentarios</em>.</p>
 <p><strong>JSON / JSONL.</strong> El JSON “de libro” (un objeto enorme) no se parte bien. <strong>JSON Lines</strong> = <strong>una reserva por línea</strong>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;id_reserva&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;hotel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Laredo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;noches&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importe&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">186.5</span><span class="p">}</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span><span class="nt">&quot;id_reserva&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;hotel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Potes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;noches&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importe&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span>
 </span></code></pre></div>
 <p><code>null</code> es JSON. <code>None</code> es <strong>Python</strong>. Mezclarlos tumba el parser.</p>
+<p><img alt="JSON en un solo array: un nodo se lo come. JSONL: una reserva por línea, se trocea" src="../../assets/ut1/json-jsonl.png" /></p>
 <p><strong>XML.</strong> Sigue en facturas y administraciones. Más verboso; misma duda: ¿se puede trocear?</p>
 <h2 id="una-reserva-junta-o-un-campo-junto">Una reserva junta o un campo junto<a class="headerlink" href="#una-reserva-junta-o-un-campo-junto" title="Permanent link">&para;</a></h2>
-<p>Imagina mil reservas <code>hotel | noches | importe</code>.</p>
-<p><strong>Todo el registro junto</strong> (CSV, JSON, Avro): leer la reserva 17 es barato. Sumar <em>solo</em> importes obliga a saltar hotel y noches mil veces. <strong>Añadir</strong> reservas al final es natural. Encaja en recepción: picas <em>esta</em> reserva.</p>
-<p><strong>Cada campo en su sitio</strong> (Parquet, ORC): los importes van juntos. El informe del lunes lee <strong>una</strong> racha. Reconstruir la reserva 17 cruza trozos. Cambiar <em>una</em> fila duele (descomprimir, tocar, volver a pegar). Por eso se <strong>parte</strong> por fecha o por hotel. Encaja en el cuadro de mando; <strong>no</strong> como almacén de la caja (<a href="../procesamiento/">operar frente a analizar</a>).</p>
+<p><img alt="Por filas: esta reserva (PMS o un mensaje Avro). Por columnas: el panel lee importe (Parquet)" src="../../assets/ut1/filas-columnas.png" /></p>
+<p>Pensad en mil reservas <code>hotel | noches | importe | comentarios</code>.</p>
+<p><strong>Todo el registro junto</strong> (CSV, JSON; <strong>Avro</strong> en un bus): leer la reserva 17 es barato. Sumar <em>solo</em> importes obliga a saltar el resto mil veces. <strong>Añadir</strong> reservas al final es natural.</p>
+<p>Eso <strong>no</strong> convierte Avro en el PMS. Recibir el cobro en recepción es la tabla del <a href="../almacenamiento/">1.3</a> (ACID). Avro es el <strong>mensaje</strong> (Kafka): también va por filas, con esquema.</p>
+<p><strong>Cada campo en su sitio</strong> (Parquet, ORC): los importes van juntos. El panel de las <strong>8</strong> lee <strong>una</strong> racha. Reconstruir la reserva 17 cruza trozos. Cambiar <em>una</em> fila duele. Por eso se <strong>parte</strong> por fecha o por hotel. Encaja en el cuadro de mando; <strong>no</strong> como almacén de la caja (<a href="../procesamiento/">operar frente a analizar</a>).</p>
 <div class="admonition example">
-<p class="admonition-title">El lunes no necesita el DNI</p>
-<p>Agregar es resumir. “Importe medio en Laredo” no lee comentarios. Columnar + partición <code>hotel=Laredo</code> = menos disco, menos factura.</p>
+<p class="admonition-title">A las 8 no hace falta el comentario</p>
+<p>Agregar es resumir. “Importe medio en Laredo” no lee <code>comentarios</code>. Columnar + partición <code>hotel=Laredo</code> = menos disco, menos factura.</p>
 </div>
-<p>En servicios tipo Athena o BigQuery el orden de magnitud que verás citado es: <strong>1 TB</strong> de texto plano puede quedar cerca de <strong>un octavo</strong> en columnar comprimido. La cifra exacta cambia; la idea no: <strong>elegir mal el formato en la <a href="../ingesta/">carga</a> se paga cada consulta</strong>.</p>
+<p>En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: <strong>1 TB</strong> de texto plano puede quedar cerca de <strong>un octavo</strong> en columnar comprimido. La cifra exacta cambia; la idea no: <strong>elegir mal el formato en la <a href="../ingesta/">carga</a> se paga cada consulta</strong>.</p>
 <h2 id="comprimir-no-es-gratis">Comprimir no es gratis<a class="headerlink" href="#comprimir-no-es-gratis" title="Permanent link">&para;</a></h2>
 <p>El algoritmo busca <strong>repeticiones</strong> (<code>Laredo, Laredo, Laredo…</code>) y las recodifica. Viaja menos por la red. A cambio, la CPU <strong>aprieta y destapa</strong>. Sobre 100 GB, “media” deja unos 50 GB y “alta” unos 40. En Big Data suele ganar el que es <strong>rápido</strong>, no el que más aprieta.</p>
 <table>
@@ -1916,18 +1947,22 @@
 </table>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;reservas_zstd.parquet&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>python-snappy<span class="w">   </span><span class="c1"># si usas Snappy con Avro</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>python-snappy<span class="w">   </span><span class="c1"># si usáis Snappy con Avro</span>
 </span></code></pre></div>
-<p>No memorices megas de un recorte ajeno. <strong>Mide el tuyo</strong> al final del taller.</p>
+<p>No memoricéis megas de un recorte ajeno. <strong>Medid el vuestro</strong> al final del taller.</p>
 <h2 id="avro-el-mensaje-que-se-explica-solo">Avro: el mensaje que se explica solo<a class="headerlink" href="#avro-el-mensaje-que-se-explica-solo" title="Permanent link">&para;</a></h2>
-<p><a href="https://avro.apache.org/">Avro</a> guarda <strong>por filas</strong>, en binario. El esquema (JSON) viaja en la <strong>cabecera</strong>. Quien lee sabe cómo se escribió. Encaja cuando <strong>escribes mucho</strong>, el esquema <strong>cambia</strong> y el destino es un bus (<a href="../ingesta/">Kafka</a>). Guía: <a href="https://avro.apache.org/docs/1.11.1/getting-started-python/">Getting started (Python)</a>.</p>
+<p><a href="https://avro.apache.org/">Avro</a> guarda <strong>por filas</strong>, en binario. El esquema (JSON) viaja en la <strong>cabecera</strong>. Quien lee sabe cómo se escribió. Encaja cuando <strong>escribís mucho</strong>, el esquema <strong>cambia</strong> y el destino es un bus (<a href="../ingesta/">Kafka</a>), no el PMS. Guía: <a href="https://avro.apache.org/docs/1.11.1/getting-started-python/">Getting started (Python)</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Orden de los talleres</p>
+<p>1–2: Avro con nulos. 3: del <code>df</code> a Avro (opcional). 4–6: Parquet; el 6 filtra <strong>al leer</strong>. DuckDB: preguntar sin tragarse el fichero. Luego el <a href="#taller-medido-lo-que-se-examina">taller medido</a>.</p>
+</div>
 <p>Tipos simples: <code>null</code>, <code>boolean</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>bytes</code>, <code>string</code>.<br />
 Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>map</code>, <code>union</code>, <code>fixed</code>.</p>
-<p>El paquete viejo <code>avro-python3</code> está muerto. Instala <code>avro</code> (o <strong>fastavro</strong> si el volumen duele: <a href="https://github.com/fastavro/fastavro">GitHub</a>).</p>
+<p>El paquete viejo <code>avro-python3</code> está muerto. Instalad <code>avro</code> (o <strong>fastavro</strong> si el volumen duele: <a href="https://github.com/fastavro/fastavro">GitHub</a>).</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span>avro<span class="w"> </span>fastavro
 </span></code></pre></div>
 <h3 id="taller-1-una-reserva-con-hueco">Taller 1 — Una reserva con hueco<a class="headerlink" href="#taller-1-una-reserva-con-hueco" title="Permanent link">&para;</a></h3>
-<p>Descarga <a href="../../assets/practicas/reserva.avsc">reserva.avsc</a>. La segunda reserva no trae importe: el esquema admite nulo.</p>
+<p>Descargad <a href="../../assets/practicas/reserva.avsc">reserva.avsc</a>. La segunda reserva no trae importe: el esquema admite nulo.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span> <span class="nn">copy</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">import</span> <span class="nn">json</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
@@ -1950,7 +1985,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
 </span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="n">r</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </span></code></pre></div>
-<p>En pantalla verás <code>importe: None</code>: eso es Python. En el fichero el nulo es Avro.</p>
+<p>En pantalla veréis <code>importe: None</code>: eso es Python. En el fichero el nulo es Avro.</p>
 <h3 id="taller-2-lo-mismo-mas-rapido-fastavro">Taller 2 — Lo mismo, más rápido (fastavro)<a class="headerlink" href="#taller-2-lo-mismo-mas-rapido-fastavro" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span> <span class="nn">json</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span> <span class="nn">fastavro</span>
@@ -1966,7 +2001,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">fastavro</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">filas</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="taller-3-del-dataframe-al-avro">Taller 3 — Del DataFrame al Avro<a class="headerlink" href="#taller-3-del-dataframe-al-avro" title="Permanent link">&para;</a></h3>
-<p>Usa el <code>df</code> del generador (o fíltralo: solo <code>hotel == "Laredo"</code>).</p>
+<p>Usad el <code>df</code> del generador (o filtrarlo: solo <code>hotel == "Laredo"</code>).</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">fastavro</span> <span class="kn">import</span> <span class="n">parse_schema</span><span class="p">,</span> <span class="n">writer</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">schema</span> <span class="o">=</span> <span class="n">parse_schema</span><span class="p">({</span>
@@ -1985,9 +2020,9 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;laredo.avro&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">laredo</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">),</span> <span class="n">codec</span><span class="o">=</span><span class="s2">&quot;deflate&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Si algún día lo escribes en HDFS, cambia el host por el de <strong>vuestro</strong> lab; el patrón es el de la librería <code>hdfs</code> (<code>InsecureClient</code> + <code>AvroWriter</code>). No copies un nombre de máquina de otro ciclo.</p>
+<p>Si algún día lo escribís en HDFS, cambiad el host por el de <strong>vuestro</strong> lab; el patrón es el de la librería <code>hdfs</code> (<code>InsecureClient</code> + <code>AvroWriter</code>). No copiéis un nombre de máquina de otro ciclo.</p>
 <h2 id="arrow-el-dato-en-la-ram">Arrow: el dato <em>en la RAM</em><a class="headerlink" href="#arrow-el-dato-en-la-ram" title="Permanent link">&para;</a></h2>
-<p><a href="https://arrow.apache.org/">Avro / Parquet / ORC</a> viven en <strong>disco</strong>. <strong>Arrow</strong> describe columnas <strong>en memoria</strong> para que Python, R o Java las compartan sin copiarlas (<em>zero-copy</em>) y el procesador calcule en bloque. Docs: <a href="https://arrow.apache.org/docs/python/">PyArrow</a>.</p>
+<p><a href="https://parquet.apache.org/">Parquet</a>, <a href="https://avro.apache.org/">Avro</a> y <a href="https://orc.apache.org/">ORC</a> viven en <strong>disco</strong>. <strong><a href="https://arrow.apache.org/">Arrow</a></strong> describe columnas <strong>en memoria</strong> para que Python, R o Java las compartan sin copiarlas (<em>zero-copy</em>) y el procesador calcule en bloque. Docs: <a href="https://arrow.apache.org/docs/python/">PyArrow</a>. Arrow <strong>no</strong> es Avro.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pyarrow
 </span></code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
@@ -2032,12 +2067,17 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">pajson</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;reservas.jsonl&quot;</span><span class="p">),</span> <span class="s2">&quot;reservas_desde_json.parquet&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="taller-6-el-generador-a-parquet">Taller 6 — El generador, a Parquet<a class="headerlink" href="#taller-6-el-generador-a-parquet" title="Permanent link">&para;</a></h3>
+<h3 id="taller-6-filtrar-al-leer-no-tragarse-el-parquet">Taller 6 — Filtrar <em>al leer</em> (no tragarse el Parquet)<a class="headerlink" href="#taller-6-filtrar-al-leer-no-tragarse-el-parquet" title="Permanent link">&para;</a></h3>
+<p>Escribir Parquet y luego hacer <code>read_parquet</code> <strong>entero</strong> + un filtro en pandas es usar el lago <strong>como un CSV</strong>. El formato sirve si recortáis <strong>en la lectura</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;reservas.parquet&quot;</span><span class="p">)</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">solo_laredo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s2">&quot;reservas.parquet&quot;</span><span class="p">)</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">solo_laredo</span> <span class="o">=</span> <span class="n">solo_laredo</span><span class="p">[</span><span class="n">solo_laredo</span><span class="p">[</span><span class="s2">&quot;hotel&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Laredo&quot;</span><span class="p">]</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Solo Laredo, solo las columnas del panel</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">solo_laredo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="s2">&quot;reservas.parquet&quot;</span><span class="p">,</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hotel&quot;</span><span class="p">,</span> <span class="s2">&quot;importe&quot;</span><span class="p">],</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;hotel&quot;</span><span class="p">,</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="s2">&quot;Laredo&quot;</span><span class="p">)],</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>En HDFS, si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:9000/reservas.parquet")</code>.</p>
+<p>En HDFS, si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:9000/reservas.parquet")</code>. DuckDB, en el apartado siguiente, hace lo mismo con SQL y <strong>sin</strong> cargar el fichero a RAM.</p>
 <h3 id="preguntar-sin-cargarlo-duckdb">Preguntar sin cargarlo: DuckDB<a class="headerlink" href="#preguntar-sin-cargarlo-duckdb" title="Permanent link">&para;</a></h3>
 <p><a href="https://duckdb.org/">DuckDB</a> es SQL <strong>dentro</strong> del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip<span class="w"> </span>install<span class="w"> </span>duckdb
@@ -2049,12 +2089,12 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="s2">&quot;FROM &#39;reservas.parquet&#39; GROUP BY hotel ORDER BY media DESC&quot;</span>
 </span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">))</span>
 </span></code></pre></div>
-<p>Sobre el DataFrame que ya tienes:</p>
+<p>Sobre el DataFrame que ya tenéis:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">duckdb</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="s2">&quot;SELECT canal, SUM(importe) AS total FROM df GROUP BY canal&quot;</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">())</span>
 </span></code></pre></div>
-<p>Si particionas por año: <code>FROM 'reservas/*.parquet'</code>. Por dentro habla Arrow: pasar a pandas es casi sin copia.</p>
+<p>Si particionáis por año: <code>FROM 'reservas/*.parquet'</code>. Por dentro habla Arrow: pasar a pandas es casi sin copia.</p>
 <h2 id="orc-cuando-el-ecosistema-es-hive">ORC: cuando el ecosistema es Hive<a class="headerlink" href="#orc-cuando-el-ecosistema-es-hive" title="Permanent link">&para;</a></h2>
 <p><a href="https://orc.apache.org/">ORC</a> (<em>Optimized Row Columnar</em>) nació para <strong>Hive</strong>. Tiras (<em>stripes</em>) con mín/máx para <strong>no leer</strong> lo que no puede cumplir el filtro. Compresión habitual <code>zlib</code>. pandas <code>to_orc</code> (desde 1.5) sale <strong>sin</strong> comprimir si no lo pides.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">df</span><span class="o">.</span><span class="n">to_orc</span><span class="p">(</span><span class="s2">&quot;reservas.orc&quot;</span><span class="p">)</span>
@@ -2064,10 +2104,10 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">orc</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="s2">&quot;reservas_pa.orc&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Si el equipo “es Spark”, verás más Parquet. No es que ORC sea peor: es <strong>dónde vive el SQL</strong>.</p>
+<p>Si el equipo “es Spark”, veréis más Parquet. No es que ORC sea peor: es <strong>dónde vive el SQL</strong>.</p>
 <h2 id="cuando-el-lago-tambien-tiene-que-actualizar">Cuando el lago también tiene que <em>actualizar</em><a class="headerlink" href="#cuando-el-lago-tambien-tiene-que-actualizar" title="Permanent link">&para;</a></h2>
-<p>Un <code>.parquet</code> suelto no te da “borra esta reserva” ni “cómo estaba el domingo”. <a href="https://delta.io/">Delta Lake</a>, <a href="https://iceberg.apache.org/">Iceberg</a> y <a href="https://hudi.apache.org/">Hudi</a> son <strong>Parquet (u ORC) + un diario</strong>: no se edita el fichero viejo; se escribe uno nuevo y se anota.</p>
-<p>Eso permite viajar en el tiempo, <a href="../almacenamiento/">ACID</a> sobre el lago, cambiar columnas y compactar ficheros pequeños. En esta UT basta la idea. En Spark lo veréis como <code>format("delta")</code>.</p>
+<p>Un <code>.parquet</code> suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. <a href="https://delta.io/">Delta Lake</a>, <a href="https://iceberg.apache.org/">Iceberg</a> y <a href="https://hudi.apache.org/">Hudi</a> son <strong>Parquet (u ORC) + un diario</strong>: no se edita el fichero viejo; se escribe uno nuevo y se anota.</p>
+<p>Eso permite viajar en el tiempo, un <a href="../almacenamiento/">ACID</a> de <strong>tabla</strong> (un <code>MERGE</code> no deja la ocupación a medias) y compactar ficheros pequeños. <strong>Eso no cobra en recepción:</strong> el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como <code>format("delta")</code>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Cuando lleguéis a Spark, sobre el mismo df de reservas</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># df.write.format(&quot;delta&quot;).save(&quot;/ruta/reservas_delta&quot;)</span>
 </span></code></pre></div>
@@ -2082,7 +2122,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </thead>
 <tbody>
 <tr>
-<td>Te lo tiene que leer un humano o una API</td>
+<td>Lo tiene que leer un humano o una API</td>
 <td>CSV / JSON</td>
 <td>Se depura</td>
 </tr>
@@ -2173,18 +2213,18 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Serializar</p>
-<p>Memoria → bytes (y al revés). Cada conversión puede <strong>perder el tipo</strong>. Elige formato en la frontera y no traduzcas en cada capa.</p>
+<p>Memoria → bytes (y al revés). Cada conversión puede <strong>perder el tipo</strong>. Elegid formato en la frontera y no traduzcáis en cada capa.</p>
 </div>
 <h2 id="taller-medido-lo-que-se-examina">Taller medido (lo que se examina)<a class="headerlink" href="#taller-medido-lo-que-se-examina" title="Permanent link">&para;</a></h2>
-<p>Abre un cuaderno <strong>en blanco</strong>. Genera el <code>df</code> (<code>n ≥ 200_000</code>). Cronometra y anota tamaños (<code>os.path.getsize</code>) de:</p>
+<p>Abrid un cuaderno <strong>en blanco</strong>. Generad el <code>df</code> (<code>n ≥ 200_000</code>). Cronometrad y anotad tamaños (<code>os.path.getsize</code>) de:</p>
 <ol>
 <li><code>reservas.csv</code></li>
 <li><code>reservas.parquet</code> y <code>reservas_zstd.parquet</code></li>
 <li><code>reservas.orc</code></li>
 <li><code>laredo.avro</code> (solo un hotel, tres o cuatro columnas)</li>
-<li><code>reservas.feather</code> — compara <strong>tiempo de lectura</strong> frente al CSV</li>
+<li><code>reservas.feather</code> — comparad <strong>tiempo de lectura</strong> frente al CSV</li>
 </ol>
-<p>Luego, <strong>sin</strong> cargar el Parquet en pandas:</p>
+<p>Luego, <strong>sin</strong> cargar el Parquet entero en pandas (como el taller 6):</p>
 <ul>
 <li>importe medio por <code>hotel</code> (DuckDB);</li>
 <li>recuento por <code>canal</code>;</li>
@@ -2198,8 +2238,20 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;escritura s:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bytes:&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="s2">&quot;reservas.parquet&quot;</span><span class="p">))</span>
 </span></code></pre></div>
-<p>Lo que tienes que poder decir en voz alta: por qué el Parquet ocupó menos que el CSV, por qué Feather se leyó antes y por qué Avro sigue teniendo sentido si el canal de reservas <strong>añade un campo</strong> en abril.</p>
+<p>Lo que tenéis que poder decir en voz alta: por qué el Parquet ocupó menos que el CSV, por qué Feather se leyó antes y por qué Avro sigue teniendo sentido si el canal de reservas <strong>añade un campo</strong> en abril.</p>
 <p>La entrega, si la hay, es Moodle. No hace falta ningún dataset de otro centro ni compartir el cuaderno fuera.</p>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Una línea de por qué.</p>
+<ol>
+<li>El panel de las 8 solo usa <code>hotel</code> e <code>importe</code>. ¿CSV o Parquet para el lago?</li>
+<li>El JSON del canal viaja por Kafka y el mes que viene añaden un campo. ¿Avro, Parquet o Feather?</li>
+<li><code>{"hotel": "Laredo", "importe": None}</code> ¿es JSON válido?</li>
+<li>¿Dejáis tres años de histórico en <strong>Feather</strong> en el cubo? ¿Por qué?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Comprobación</p>
+<p>Parquet / Avro / no (<code>None</code> es Python; en JSON es <code>null</code>) / no (Feather es entre celdas, no el archivo del lago).</p>
+</div>
 
 
 
