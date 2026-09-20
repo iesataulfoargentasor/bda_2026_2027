@@ -79,6 +79,23 @@ El “cómo se interpreta” se aplica **al leer**, no al guardar. Cargas desde 
 
 En la práctica muchas organizaciones tienen **los dos**: el lago para el bruto y el warehouse para lo que el director ve el lunes. No eliges uno “para siempre”: eliges **para cada pregunta**.
 
+## Cómo se guarda (bloque, objeto, lakehouse)
+
+No es lo mismo el **disco del PMS** que el sitio donde gerencia lee el histórico.
+
+| Forma | Idea | En el hotel |
+| --- | --- | --- |
+| **Bloque** | El sistema operativo parte el disco en bloques y monta un sistema de ficheros. Es el disco de *una* máquina (o un NAS compartido). | El volumen donde corre PostgreSQL de recepción. |
+| **Objeto** | Guardas el fichero **entero** (un objeto) con una clave, en un cubo. No “abres el byte 17”: bajas o sustituyes el objeto. Típico en nube ([S3](https://aws.amazon.com/s3/), Azure Blob…). | `reservas/2026-08-19.parquet` en un cubo; se replica sin que tú mires el disco. |
+| **Lakehouse** | El lago **más** tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) **sin** montar un warehouse aparte. Productos que oiréis: [Delta Lake](https://delta.io/), Snowflake. | Bruto de sensores **y** la tabla limpia de ocupación, en el mismo sitio. |
+
+![Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas](../assets/ut1/donde-vive-dato.png)
+
+**Calcular y guardar se pueden separar.** En un clúster Hadoop clásico el dato y la CPU **conviven** en el nodo (lo viste en [1.2](clusters.md)). En un lago en cubo, el disco escala solo; el motor (Spark, un job de Pentaho, Athena…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copias un trozo a HDFS **solo para el job** y el resultado vuelve al cubo.
+
+!!! tip "RAM frente a disco (orden de magnitud)"
+    La RAM es **órdenes** más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en [1.7](formatos.md).
+
 ## Qué es una transacción (hace falta para entender ACID)
 
 En la calle, “transacción” suena a pago. En bases de datos es más concreto: **un paquete de cambios que o se hacen todos o no se hace ninguno**.
@@ -147,6 +164,7 @@ Recorre las preguntas **en este orden**:
 2. ¿El volumen o la variedad rompen un solo servidor? → **clúster** + NoSQL o ficheros repartidos.
 3. ¿La pregunta de negocio ya está clara y se repetirá cada lunes? → **warehouse**.
 4. ¿Aún no sabes qué preguntarás o el bruto es de muchos tipos? → **lake**, y luego curas hacia el warehouse.
+5. ¿Necesitas el bruto **y** tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → **lakehouse**, o lago + warehouse a la vez.
 
 En [1.4](procesamiento.md) verás otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar el día a día frente a analizar el histórico).
 

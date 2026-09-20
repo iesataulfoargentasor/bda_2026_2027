@@ -269,6 +269,16 @@ En un equipo de datos conviven varios oficios. **Este módulo** forma sobre todo
 
 El arquitecto **elige** el plano. El ingeniero **construye** tuberías sobre ese plano. El científico **pregunta** con el dato que ya es usable. El analista **cuenta** el lunes lo que gerencia puede leer.
 
+Eso es **ingeniería de datos**: recuperar el bruto (PMS, pasarela, sensores), dejarlo **consistente y de calidad**, y **servirlo** a quien lo consume (gerencia, un modelo, un cuadro de mando). No es “hacer el gráfico del lunes”; es que ese gráfico **pueda** hacerse. El mapa del oficio (generación → ingesta → transformación → entrega → consumo) está en [1.5](arquitectura.md).
+
+Dentro del ingeniero a veces se especializa:
+
+| Especialidad | Encargo | En el hotel |
+| --- | --- | --- |
+| **De tubería** | El flujo diario (Python, SQL, lago) | El job de las 02:00 |
+| **De BI** | SQL y el panel | Ocupación e importe a las 8 |
+| **De producto** | Instalar y mantener Kafka, Airflow, Spark… | Que Kitchen arranque; no lo montáis aún |
+
 ## Fuera de este apartado (y no lo copies aquí)
 
 OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md). Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md). El paisaje de herramientas (S3, Kafka, Power BI…) en [1.5](arquitectura.md). La ingesta, en [1.6](ingesta.md).

@@ -83,6 +83,10 @@ Eso se desarrolla en [procesamiento paralelo](procesamiento.md). El clúster bri
 
 También hay coste de **coordinación**: la red, el maestro que reparte, el momento de juntar resultados. Diez nodos no son “diez veces más rápido” en todos los problemas; a veces son 6 o 7, y a veces casi 1.
 
+## El cálculo y el disco no tienen por qué ir juntos
+
+El Hadoop “de libro” **pegaba** el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los objetos viven en un cubo y el clúster de cálculo **crece o se apaga** por su cuenta. Ganas réplica y disco barato; pagas red. El detalle (bloque, objeto, *lakehouse*) está en [1.3](almacenamiento.md). El mapa de quién ingiere y quién consume, en [1.5](arquitectura.md).
+
 ## Relación con el RA1
 
 Diseñar el almacenamiento masivo implica decidir: ¿un servidor que no admite ver una operación a medias, o un clúster que copia y reparte? Esa decisión condiciona:

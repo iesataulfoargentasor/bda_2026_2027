@@ -69,13 +69,11 @@ flowchart TB
 ## Qué te van a pedir (el hilo)
 
 1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión** (menos habitaciones vacías). Un hotel de playa no es un albergue de montaña.
-2. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
-3. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
-4. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
-5. **[UT2](../ut2/index.md)** — El martes por la mañana el CSV ya no abre en Excel. Hay que **depositar** y **procesar** en el sitio, y acabar el job **antes de las 8**.
-
-!!! note "La página 1.5 usa otro ejemplo"
-    [Arquitectura](arquitectura.md) recorre las capas con una comercializadora eléctrica (o un ayuntamiento). El oficio es el mismo: ingesta abajo, panel arriba. El hotel vuelve en 1.6.
+2. **[1.5](arquitectura.md)** — El ciclo del ingeniero (generación → panel). Las **capas** se ven también con una comercializadora, para que no parezcan un invento solo de reservas.
+3. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
+4. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
+5. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
+6. **[UT2](../ut2/index.md)** — El martes por la mañana el CSV ya no abre en Excel. Hay que **depositar** y **procesar** en el sitio, y acabar el job **antes de las 8**.
 
 !!! tip "Frase para no perderte"
     Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**.

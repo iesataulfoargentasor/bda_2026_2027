@@ -26,10 +26,10 @@ Lee cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estil
 | --- | --- | --- |
 | [El caso: grupo hotelero](caso-hotel.md) | — | La cadena, los cuatro hoteles y los dos relojes (23:00 / 8:00) |
 | [1.1 Por qué Big Data y las 5 Vs](por-que-big-data.md) | **a)** | Small Data frente a Big Data, las V, analíticas, roles y el viaje evento → valor |
-| [1.2 Clústeres](clusters.md) | **a)** | Por qué se escala en horizontal y qué ganas (rendimiento, disponibilidad) |
-| [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, almacén de informes, lago; y, desde cero, ACID, CAP y BASE |
+| [1.2 Clústeres](clusters.md) | **a)** | Escalado horizontal y por qué cálculo y disco pueden separarse |
+| [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, lago, warehouse, objeto, lakehouse; ACID, CAP y BASE |
 | [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar |
-| [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Capas (ingesta → visualización) y el “paisaje” de herramientas |
+| [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Ciclo del ingeniero, capas, gobierno/DataOps y el paisaje de herramientas |
 | [1.6 Ingesta de datos](ingesta.md) | **b)** | Introducción, pipeline, ETL/ELT, Hola ETL (pandas/DuckDB), herramientas y consideraciones |
 | [1.7 Formatos de datos](formatos.md) | **c)** | Elegir formato (reservas de hotel): Avro, Parquet, ORC, Arrow, DuckDB |
 | [1.8 Pentaho](pentaho.md) | **d)** / **e)** | PDI (Spoon/Pan/Kitchen): filtrar, unir, JSON, nube, jobs y BD del hotel |
