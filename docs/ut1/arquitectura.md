@@ -260,3 +260,9 @@ No puntúa en Moodle. Una línea de por qué.
 
 !!! tip "Comprobación"
     (1) Visualización (6) / consulta (5) / almacén (3) / orquestación / almacén (3). (2) Precisión o histórico; el panel de las 8 **no** mezcla. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo).
+
+## Autoevaluación del 1.5
+
+Quince preguntas (A–D, **una** correcta) sobre lo esencial del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-5.json"></div>
