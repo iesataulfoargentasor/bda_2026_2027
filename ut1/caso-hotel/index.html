@@ -522,10 +522,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dos-relojes-no-los-mezcles" class="md-nav__link">
+  <a href="#el-programa-de-reservas-pms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dos relojes (no los mezcles)
+        El programa de reservas (PMS)
       
     </span>
   </a>
@@ -533,10 +533,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#que-os-van-a-pedir-el-hilo" class="md-nav__link">
+  <a href="#que-haceis-vosotros-punto-de-partida" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué os van a pedir (el hilo)
+        Qué hacéis vosotros (punto de partida)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dos-relojes-no-los-mezcleis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dos relojes (no los mezcléis)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-hilo-de-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El hilo de la unidad
       
     </span>
   </a>
@@ -1300,10 +1322,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dos-relojes-no-los-mezcles" class="md-nav__link">
+  <a href="#el-programa-de-reservas-pms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dos relojes (no los mezcles)
+        El programa de reservas (PMS)
       
     </span>
   </a>
@@ -1311,10 +1333,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#que-os-van-a-pedir-el-hilo" class="md-nav__link">
+  <a href="#que-haceis-vosotros-punto-de-partida" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Qué os van a pedir (el hilo)
+        Qué hacéis vosotros (punto de partida)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dos-relojes-no-los-mezcleis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dos relojes (no los mezcléis)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-hilo-de-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El hilo de la unidad
       
     </span>
   </a>
@@ -1415,10 +1459,10 @@
 
 
 <h1 id="el-caso-grupo-hotelero-de-cantabria">El caso: grupo hotelero de Cantabria<a class="headerlink" href="#el-caso-grupo-hotelero-de-cantabria" title="Permanent link">&para;</a></h1>
-<p>Este es el <strong>hilo de las dos unidades</strong>: una cadena pequeña, inventada, con sede en Cantabria. No es una empresa real. Sirve para que reservas, cobros, sensores y el panel de gerencia salgan <strong>siempre del mismo sitio</strong>.</p>
-<p>Si entráis directo a <a href="../ingesta/">ingesta</a> o a la <a href="../../ut2/">UT2</a>, empezad por aquí.</p>
+<p>Este es el <strong>hilo de las dos unidades</strong>: una cadena pequeña, <strong>inventada</strong>, con sede en Cantabria. No es una empresa real. Reservas, cobros, sensores y el panel de gerencia salen <strong>siempre de aquí</strong>, para que no cambiéis de historia en cada apartado.</p>
+<p>Si entráis directo a <a href="../ingesta/">ingesta</a> o a la <a href="../../ut2/">UT2</a>, empezad por esta página.</p>
 <h2 id="quienes-son">Quiénes son<a class="headerlink" href="#quienes-son" title="Permanent link">&para;</a></h2>
-<p>Cuatro establecimientos. Mismo dueño, mismo PMS, <strong>estacionalidades distintas</strong> (playa, ciudad, interior). Por eso un modelo de agosto en Laredo <strong>no</strong> se copia ciego a Potes en noviembre.</p>
+<p>Cuatro hoteles. Mismo dueño. <strong>Estacionalidades distintas</strong> (playa, ciudad, interior). Por eso un modelo de agosto en Laredo <strong>no</strong> se copia a ciegas a Potes en noviembre.</p>
 <table>
 <thead>
 <tr>
@@ -1436,7 +1480,7 @@
 <tr>
 <td><strong>Laredo</strong></td>
 <td>Costa, pico en agosto</td>
-<td>Temporada alta, cancelaciones, <em>hotspot</em> si partes mal</td>
+<td>Temporada alta y cancelaciones</td>
 </tr>
 <tr>
 <td><strong>Comillas</strong></td>
@@ -1450,81 +1494,80 @@
 </tr>
 </tbody>
 </table>
-<p>En <a href="../formatos/">1.7</a> y <a href="../pentaho/">1.8</a> pueden aparecer <strong>más filas</strong> (Noja, Santoña, un Excel de un hotel nuevo). Eso no cambia la cadena: es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.</p>
-<pre class="mermaid"><code>flowchart LR
-  G[Gerencia] --- S[Santander]
-  G --- L[Laredo]
-  G --- C[Comillas]
-  G --- P[Potes]</code></pre>
-<h2 id="dos-relojes-no-los-mezcles">Dos relojes (no los mezcles)<a class="headerlink" href="#dos-relojes-no-los-mezcles" title="Permanent link">&para;</a></h2>
-<p>El dato <strong>ya existe</strong> en tres sitios. El problema del módulo es llevarlo a <strong>otro</strong> sitio, a tiempo, sin mentir.</p>
+<p><img alt="Gerencia y los cuatro hoteles: mismo dueño, mismo programa de reservas, estacionalidades distintas" src="../../assets/ut1/caso-cuatro-hoteles.png" /></p>
+<p>En <a href="../formatos/">1.7</a> y <a href="../pentaho/">1.8</a> pueden salir <strong>más filas</strong> (Noja, Santoña, un Excel de un hotel nuevo). Eso es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.</p>
+<h2 id="el-programa-de-reservas-pms">El programa de reservas (PMS)<a class="headerlink" href="#el-programa-de-reservas-pms" title="Permanent link">&para;</a></h2>
+<p>En recepción <strong>no</strong> pican el Excel de gerencia. Usan un <strong>programa de hotel</strong>: alta de reserva, check-in, extras, habitación ocupada. En la jerga se llama <strong>PMS</strong> (<em>Property Management System</em>: sistema de gestión del establecimiento). En clase diréis «el programa de reservas» o «el PMS»: es <strong>lo mismo</strong>.</p>
+<p>No es un servidor. El PMS es el <strong>programa</strong>. Suele vivir en un ordenador que está siempre encendido (un <strong>servidor</strong>). Si ese programa se cae, recepción no puede hacer check-in: <strong>no puede parar</strong>.</p>
+<p>Los cuatro hoteles usan <strong>el mismo</strong> PMS (mismo dueño). Eso no significa que Laredo en agosto y Potes en noviembre se comporten igual.</p>
+<p>Gerencia <strong>no</strong> abre el PMS a las 8 para sumar a mano. Quiere <strong>un panel</strong>: ocupación e importe cobrado <strong>por hotel</strong>.</p>
+<p><img alt="Recepción pica ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa" src="../../assets/ut1/caso-pms-y-panel.png" /></p>
+<h2 id="que-haceis-vosotros-punto-de-partida">Qué hacéis vosotros (punto de partida)<a class="headerlink" href="#que-haceis-vosotros-punto-de-partida" title="Permanent link">&para;</a></h2>
+<p>El dato <strong>ya está</strong> en los programas del día a día. Vosotros <strong>no lo inventáis</strong> y <strong>no picáis reservas</strong>. El oficio de este módulo es <strong>copiarlo</strong> a un sitio pensado para informes, <strong>a tiempo</strong>, y <strong>sin falsear</strong> el número.</p>
+<p>De dónde sale (tres orígenes):</p>
+<ol>
+<li><strong>Programa de reservas (PMS).</strong> Quién tiene habitación y para qué noches.</li>
+<li><strong>Pasarela de pago.</strong> El cobro de la tarjeta. Reservar <strong>no</strong> es cobrar: por eso luego hay que <strong>cruzar</strong> reservas y cobros.</li>
+<li><strong>Sensores de habitación.</strong> ¿Hay alguien dentro? Publican cada ~30 s.</li>
+</ol>
+<p>A dónde lo lleváis (un destino para gerencia):</p>
+<ul>
+<li>Cada mañana a las <strong>8:00</strong>, <strong>ocupación e importe cobrado por hotel</strong>. Eso es el <strong>cierre de ayer</strong>, no el directo de ahora.</li>
+</ul>
+<p><strong>Sin falsear</strong> quiere decir: no coléis como cobrado lo que no se ha cobrado; no presentéis a las 8:05 del martes el martes como si ya hubiera cerrado; no mezcléis el semáforo de recepción con el cuadro de mando.</p>
+<p><img alt="Dos tubos: lote nocturno al panel de las 8; sensores al semáforo de recepción, no al panel" src="../../assets/ut1/caso-que-haceis.png" /></p>
+<h2 id="dos-relojes-no-los-mezcleis">Dos relojes (no los mezcléis)<a class="headerlink" href="#dos-relojes-no-los-mezcleis" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Quién</th>
-<th>Qué hace</th>
 <th>Reloj</th>
+<th>Qué pasa</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Recepción</strong></td>
-<td>Pica reservas y check-in en el PMS (<em>Property Management System</em>: el programa de reservas). No puede parar.</td>
-<td>Ahora</td>
+<td><strong>Ahora</strong></td>
+<td>Recepción pica en el PMS. No espera al informe.</td>
 </tr>
 <tr>
-<td><strong>Pasarela de pago</strong></td>
-<td>Sabe qué estancias se han cobrado.</td>
 <td>Cada cobro</td>
+<td>La pasarela anota si se ha cobrado.</td>
 </tr>
 <tr>
-<td><strong>Sensores de habitación</strong></td>
-<td>Publican ocupación.</td>
-<td>Cada ~30 s</td>
+<td>Cada ~<strong>30 s</strong></td>
+<td>Los sensores alimentan el <strong>semáforo</strong> (“¿queda habitación?”). <strong>No</strong> es el panel de las 8.</td>
 </tr>
 <tr>
-<td><strong>Finanzas</strong></td>
-<td>Cierra el día. Hasta entonces el importe del martes <strong>no</strong> está cerrado.</td>
 <td><strong>23:00</strong></td>
+<td>Finanzas <strong>cierra el día</strong>. Hasta entonces el importe del martes no está cerrado.</td>
 </tr>
 <tr>
-<td><strong>Dirección / gerencia</strong></td>
-<td>Quiere <strong>ocupación e importe cobrado por hotel</strong>.</td>
-<td>Cada mañana a las <strong>8:00</strong></td>
+<td>De madrugada</td>
+<td>Corre la <strong>copia</strong> (el <em>job</em>): cruza reservas y cobros y deja el informe.</td>
+</tr>
+<tr>
+<td><strong>8:00</strong></td>
+<td>Gerencia abre el panel. Si pedís el dato a las 8:05 <strong>del mismo día</strong>, o no está o es de <strong>ayer</strong>.</td>
 </tr>
 </tbody>
 </table>
-<p>Las 8:00 <strong>no</strong> son tiempo real. Finanzas cierra a las 23:00; por la noche corre un <strong>lote</strong>; a las 8 gerencia abre el panel. Si pides el dato a las 8:05 del mismo día, o no está o es de ayer.</p>
-<p>Los sensores <strong>sí</strong> van casi al momento. Eso alimenta el <strong>semáforo de recepción</strong> (“¿queda habitación?”), no el cuadro de mando de las 8. En <a href="../ingesta/">ingesta</a> verás por qué una cola de mensajes y un volcado nocturno <strong>no</strong> son el mismo diseño.</p>
-<pre class="mermaid"><code>flowchart TB
-  subgraph operacion [Operar: no puede esperar]
-    R[Recepción pica ahora]
-    SEN[Sensores cada 30 s]
-  end
-  subgraph informe [Informar: lote]
-    F[Finanzas cierra a las 23:00]
-    N[Job de la noche]
-    P8[Panel de gerencia a las 8]
-    F --&gt; N --&gt; P8
-  end
-  R --&gt; PMS[PMS y pasarela]
-  SEN --&gt; SEM[Semáforo de recepción]
-  PMS --&gt; N</code></pre>
-<h2 id="que-os-van-a-pedir-el-hilo">Qué os van a pedir (el hilo)<a class="headerlink" href="#que-os-van-a-pedir-el-hilo" title="Permanent link">&para;</a></h2>
+<p>Las 8:00 <strong>no</strong> son tiempo real. El semáforo <strong>sí</strong> va casi al momento. En <a href="../ingesta/">1.6</a> veréis por qué eso son <strong>dos tubos</strong>, no uno.</p>
+<h2 id="el-hilo-de-la-unidad">El hilo de la unidad<a class="headerlink" href="#el-hilo-de-la-unidad" title="Permanent link">&para;</a></h2>
+<p>Con este caso en la cabeza, cada apartado pregunta una cosa:</p>
 <ol>
-<li><strong><a href="../por-que-big-data/">1.1</a></strong> — Un evento (reserva, sensor, cobro) tiene que acabar en una <strong>decisión</strong> (menos habitaciones vacías). Un hotel de playa no es un albergue de montaña.</li>
-<li><strong><a href="../clusters/">1.2</a></strong> — El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.</li>
-<li><strong><a href="../almacenamiento/">1.3</a></strong> — El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart más estrecho). El JSON y las fotos, al lago.</li>
-<li><strong><a href="../procesamiento/">1.4</a></strong> — Recepción <strong>opera</strong> (OLTP). Gerencia <strong>informa</strong> (OLAP, lote de las 8). El semáforo es otro reloj.</li>
-<li><strong><a href="../arquitectura/">1.5</a></strong> — El ciclo del ingeniero, las capas, y si el panel de las 8 y el semáforo van por <strong>dos caminos</strong> (Lambda) o por <strong>una cola</strong> (Kappa).</li>
-<li><strong><a href="../ingesta/">1.6</a></strong> — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el <strong>destino</strong>; no se pinta en el taller <em>Hola ETL</em>.</li>
-<li><strong><a href="../formatos/">1.7</a></strong> — Dirección solo mira tres números; el CSV arrastra doce columnas.</li>
-<li><strong><a href="../pentaho/">1.8</a></strong> — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.</li>
-<li><strong><a href="../../ut2/">UT2</a></strong> — El martes por la mañana el CSV ya no abre en Excel. Hay que <strong>depositar</strong> y <strong>procesar</strong> en el sitio, y acabar el job <strong>antes de las 8</strong>.</li>
+<li><strong><a href="../por-que-big-data/">1.1</a></strong> — Un evento (reserva, sensor, cobro) tiene que acabar en una <strong>decisión</strong>. Un hotel de playa no es un albergue de montaña.</li>
+<li><strong><a href="../clusters/">1.2</a></strong> — El programa de reservas de Laredo cabe en <strong>un</strong> servidor. El trabajo de madrugada de los <strong>cuatro</strong> hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.</li>
+<li><strong><a href="../almacenamiento/">1.3</a></strong> — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a <strong>otro</strong> sitio. Fotos y JSON, a un lago.</li>
+<li><strong><a href="../procesamiento/">1.4</a></strong> — Recepción <strong>opera</strong> ahora. Gerencia <strong>informa</strong> (lote de las 8). El semáforo es <strong>otro</strong> reloj.</li>
+<li><strong><a href="../arquitectura/">1.5</a></strong> — Panel de las 8 y semáforo: <strong>dos caminos</strong> o <strong>una cola</strong>.</li>
+<li><strong><a href="../ingesta/">1.6</a></strong> — Cómo se <strong>copian</strong> PMS, cobros y sensores. El panel de las 8 es el <strong>destino</strong>; no se pinta en el primer taller.</li>
+<li><strong><a href="../formatos/">1.7</a></strong> — Dirección solo mira tres números; el fichero gordo arrastra doce columnas.</li>
+<li><strong><a href="../pentaho/">1.8</a></strong> — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el <strong>CSV</strong>, no Spoon.</li>
+<li><strong><a href="../../ut2/">UT2</a></strong> — El martes el CSV ya no abre en Excel. Hay que depositar y procesar <strong>en el sitio</strong>, y acabar <strong>antes de las 8</strong>.</li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Frase para no perderos</p>
-<p>Recepción <strong>opera</strong>. Gerencia <strong>informa</strong>. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de <strong>ayer</strong>.</p>
+<p>Recepción <strong>opera</strong>. Gerencia <strong>informa</strong>. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de <strong>ayer</strong>. Vosotros <strong>copiáis</strong>; no picáis.</p>
 </div>
 
 
