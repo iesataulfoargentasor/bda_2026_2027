@@ -651,15 +651,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#paralelo-dentro-de-una-maquina" class="md-nav__link">
+  <a href="#concurrente-paralelo-y-distribuido" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Paralelo (dentro de una máquina)
+        Concurrente, paralelo y distribuido
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Paralelo (dentro de una máquina)">
+    <nav class="md-nav" aria-label="Concurrente, paralelo y distribuido">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -733,6 +733,17 @@
     <span class="md-ellipsis">
       
         Principio SCV (solo para análisis)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1345,15 +1356,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#paralelo-dentro-de-una-maquina" class="md-nav__link">
+  <a href="#concurrente-paralelo-y-distribuido" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Paralelo (dentro de una máquina)
+        Concurrente, paralelo y distribuido
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Paralelo (dentro de una máquina)">
+    <nav class="md-nav" aria-label="Concurrente, paralelo y distribuido">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1427,6 +1438,17 @@
     <span class="md-ellipsis">
       
         Principio SCV (solo para análisis)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1527,90 +1549,140 @@
 
 
 <h1 id="14-procesamiento-de-datos">1.4. Procesamiento de datos<a class="headerlink" href="#14-procesamiento-de-datos" title="Permanent link">&para;</a></h1>
-<p>Almacenar no basta: el criterio <strong>d)</strong> pide <strong>procesar</strong> lo guardado. Aquí decides <em>cómo</em> se parte el trabajo y <em>con qué prisa</em> debe salir el resultado. Un dato en el lago que nadie transforma no sirve al cliente.</p>
-<p>En clase lo aplicas en la <a href="../tarea-clase/">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
-<h2 id="paralelo-dentro-de-una-maquina">Paralelo (dentro de una máquina)<a class="headerlink" href="#paralelo-dentro-de-una-maquina" title="Permanent link">&para;</a></h2>
-<p>El sistema operativo <strong>reparte el tiempo</strong> entre programas. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tú tienes la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notas.</p>
-<p><strong>Multinúcleo:</strong> varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.</p>
+<p>Almacenar no basta: el criterio <strong>d)</strong> pide <strong>procesar</strong> lo guardado. El <strong>a)</strong> también entra: hay que caracterizar <em>cómo</em> se parte el trabajo y <em>con qué prisa</em> tiene que salir el número. Un dato en el lago que nadie transforma no sirve a gerencia.</p>
+<p>En el <a href="../caso-hotel/">grupo hotelero</a> eso ya está partido en dos relojes:</p>
+<ul>
+<li><strong>Recepción</strong> opera ahora (PMS, cobro). No puede esperar.</li>
+<li><strong>Finanzas</strong> cierra a las <strong>23:00</strong>; de madrugada corre el <strong>lote</strong>; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>.</li>
+<li>Los sensores (~30 s) alimentan el <strong>semáforo</strong> (“¿queda habitación?”), no el cuadro de las 8.</li>
+</ul>
+<p>En clase lo aplicáis en la <a href="../tarea-clase/">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
+<div class="admonition info">
+<p class="admonition-title">Cómo se lee esta página</p>
+<p>Primero <strong>dónde</strong> corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el <strong>ritmo</strong> (lote, clic, consulta, flujo). Después los <strong>dos oficios</strong> (operar / informar) y el <strong>SCV</strong> (no podéis pedir las tres letras a un análisis). Cómo se combinan lote y flujo en el edificio va en <a href="../arquitectura/">1.5</a>, no aquí.</p>
+</div>
+<h2 id="concurrente-paralelo-y-distribuido">Concurrente, paralelo y distribuido<a class="headerlink" href="#concurrente-paralelo-y-distribuido" title="Permanent link">&para;</a></h2>
+<p>Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcláis, no sabréis si os basta el portátil o hace falta un <a href="../clusters/">clúster</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Dónde corre</th>
+<th>¿A la vez de verdad?</th>
+<th>En el hotel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Concurrente</strong></td>
+<td>Una o varias máquinas</td>
+<td><strong>No necesariamente</strong></td>
+<td>Un núcleo que se <strong>turna</strong>: el job y el antivirus</td>
+</tr>
+<tr>
+<td><strong>Paralelo</strong></td>
+<td>Varios <strong>núcleos</strong> de <strong>una</strong> máquina</td>
+<td>Sí</td>
+<td>Diez núcleos suman noches de <strong>Laredo</strong></td>
+</tr>
+<tr>
+<td><strong>Distribuido</strong></td>
+<td><strong>Varias máquinas</strong> en red</td>
+<td>Sí, en general (más red y fallos)</td>
+<td>Un nodo por hotel: Santander, Laredo, Comillas, Potes</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos-hotel" src="../../assets/ut1/paralelo-distribuido.png" /></p>
+<p><strong>Concurrente.</strong> El sistema operativo <strong>reparte el tiempo</strong> entre programas. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tenéis la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notáis.</p>
+<p><strong>Paralelo (multinúcleo).</strong> Varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.</p>
 <p><strong>Multihilo:</strong> un núcleo <em>comparte</em> recursos entre hilos. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si <strong>los dos</strong> necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” <strong>no</strong> es lo mismo que 8 núcleos físicos.</p>
 <h3 id="cuando-se-puede-paralelizar">Cuándo se puede paralelizar<a class="headerlink" href="#cuando-se-puede-paralelizar" title="Permanent link">&para;</a></h3>
-<p><strong>Sí (independiente):</strong> sumar mil millones de números. Partes en 8 bloques, cada núcleo suma el suyo, al final sumas 8 parciales. El último paso es barato.</p>
-<p><strong>No (dependiente):</strong> empiezas en 0; si el resultado va <em>par</em> sumas el siguiente número, si va <em>impar</em> lo restas. Cada paso necesita el resultado del anterior. Aunque cortes la lista en trozos, el segundo trozo <strong>no sabe</strong> si debe sumar o restar hasta que acabe el primero.</p>
+<p><strong>Sí (independiente):</strong> sumar noches por hotel. Partís en cuatro trozos (Santander, Laredo, Comillas, Potes), cada núcleo (o cada nodo) suma el suyo, al final sumáis cuatro parciales. El último paso es barato.</p>
+<p><strong>No (dependiente):</strong> cada paso necesita el resultado del anterior (si el acumulado va <em>par</em> sumáis, si va <em>impar</em> restáis). Aunque cortéis la lista, el segundo trozo <strong>no sabe</strong> qué hacer hasta que acabe el primero. Más núcleos no acortan ese cuello: es lo que <a href="../clusters/">1.2</a> llamaba “el clúster no hace magia”.</p>
 <div class="admonition tip">
 <p class="admonition-title">Pregunta para el examen</p>
 <p>“Si solo hay un núcleo y el sistema cambia de programa cada X ms, ¿hace varias tareas al mismo tiempo?”<br />
-<strong>No.</strong> Es multitarea <strong>simulada</strong>. El usuario lo percibe como simultáneo; el silicio no.</p>
+<strong>No.</strong> Es multitarea <strong>simulada</strong> (concurrente). El usuario lo percibe como simultáneo; el silicio no.</p>
 </div>
 <h2 id="distribuido-entre-maquinas">Distribuido (entre máquinas)<a class="headerlink" href="#distribuido-entre-maquinas" title="Permanent link">&para;</a></h2>
-<p>El procesamiento <strong>distribuido</strong> reparte subtareas a <strong>nodos de un clúster</strong>. Es paralelo <em>más</em> tres problemas que en un solo PC no tenías:</p>
+<p>El procesamiento <strong>distribuido</strong> reparte subtareas a <strong>nodos de un clúster</strong>. Es paralelo <em>más</em> tres problemas que en un solo PC no teníais:</p>
 <ul>
 <li>Los datos <strong>no</strong> están todos en la misma RAM.</li>
 <li>La <strong>red</strong> tarda y a veces falla.</li>
-<li>Un nodo puede caer <strong>a mitad</strong> del trabajo.</li>
+<li>Un nodo puede caer <strong>a mitad</strong> del trabajo (si se funde el disco de Potes, el job tiene que <strong>reintentar</strong>, no publicar el panel a medias).</li>
 </ul>
-<p>La consigna de Hadoop/Spark es “<strong>lleva el cálculo al dato</strong>”: copiar 200 GB a tu portátil para sumarlos es absurdo; mandas la función al nodo que <strong>ya</strong> tiene el trozo.</p>
-<p>MapReduce y Spark viven aquí. En este módulo no tienes que programarlos aún; sí debes saber <em>por qué</em> existen.</p>
+<p>En Hadoop de libro la consigna es “<strong>lleva el cálculo al dato</strong>”: copiar 200 GB al portátil para sumarlos es absurdo; mandáis la función al nodo que <strong>ya</strong> tiene el trozo. En un <a href="../almacenamiento/">cubo de objetos</a> a menudo es al revés: el dato vive en el cubo y el motor <strong>lee por red</strong> (<a href="../clusters/">1.2</a>). Las dos frases no se pisan: son <strong>dos diseños</strong>.</p>
+<p>MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber <em>por qué</em> existen. El i7 de la <a href="../tarea-clase/">tarea</a> <strong>no</strong> es un clúster.</p>
 <h2 id="estrategias-no-todo-es-tiempo-real">Estrategias: no todo es “tiempo real”<a class="headerlink" href="#estrategias-no-todo-es-tiempo-real" title="Permanent link">&para;</a></h2>
+<p>El <strong>ritmo</strong> del trabajo no es la <a href="../almacenamiento/">transacción ACID</a> del cobro. ACID es la garantía (todo o nada). Aquí es <strong>cuánto podéis esperar</strong> el número.</p>
 <table>
 <thead>
 <tr>
 <th>Estrategia</th>
 <th>¿Urge el resultado?</th>
-<th>Volumen típico</th>
-<th>Idea</th>
-<th>Ejemplo</th>
+<th>En el hotel</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Por lotes</strong> (<em>batch</em>)</td>
 <td>No</td>
-<td>Muy alto</td>
-<td>Horas o de noche; todo el histórico</td>
-<td>Cierre mensual de ventas</td>
+<td>Finanzas cierra a las 23:00; el job de madrugada; el <strong>panel de las 8</strong> (ayer)</td>
 </tr>
 <tr>
 <td><strong>Por transacciones</strong></td>
 <td>Sí (muy por debajo de 1 s)</td>
-<td>Bajo por operación</td>
-<td>Un cobro, una reserva, un alta</td>
-<td>Picar una línea en caja</td>
+<td>Picar el cobro en el <strong>PMS</strong>. Es el reloj del clic, no “ACID”</td>
 </tr>
 <tr>
-<td><strong>Tiempo real / interactivo</strong></td>
-<td>Sí</td>
-<td>Medio-alto</td>
-<td>Consulta de análisis mientras miras el panel</td>
-<td>“¿Qué tal van las reservas <em>hoy</em>?”</td>
+<td><strong>Interactivo</strong></td>
+<td>Sí, mientras miráis</td>
+<td>A las 11 filtráis Laredo en el almacén: “¿cómo vamos <em>hoy</em>?”. <strong>No</strong> es el panel de las 8</td>
 </tr>
 <tr>
-<td><strong>Streaming</strong></td>
+<td><strong>Flujo</strong> (<em>streaming</em>)</td>
 <td>Sí, <strong>al ritmo</strong> en que llegan</td>
-<td>Una ventana en memoria</td>
-<td>Cada evento actualiza un recuento</td>
-<td>Contador de personas que entran al recinto</td>
+<td>Sensores cada ~30 s → <strong>semáforo</strong> de recepción</td>
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TB
+  subgraph lote [Lote: no es tiempo real]
+    F[Finanzas cierra a las 23:00]
+    N[Job de la noche]
+    P8[Panel de gerencia a las 8]
+    F --&gt; N --&gt; P8
+  end
+  subgraph flujo [Flujo]
+    SEN[Sensores cada 30 s]
+    SEM[Semáforo: ¿queda habitación?]
+    SEN --&gt; SEM
+  end
+  subgraph clic [Clic en recepción]
+    PMS[PMS: cobrar ahora]
+  end</code></pre>
 <div class="admonition tip">
 <p class="admonition-title">Trampa de vocabulario (muy examinable)</p>
-<p>Un <strong>cobro</strong> ocurre en tiempo real (el cajero no espera).<br />
-Un <strong>análisis</strong> en tiempo real <strong>no</strong> es lo mismo: no estás confirmando un cobro, estás <strong>consultando o resumiendo</strong>.<br />
-La palabra inglesa <em>online</em> aquí solo significa “mientras usas el sistema”, no “hay una <a href="../almacenamiento/">transacción</a> de dinero”.</p>
+<p>Un <strong>cobro</strong> ocurre en tiempo real (recepción no espera).<br />
+Un <strong>análisis</strong> en tiempo real <strong>no</strong> es lo mismo: no estáis confirmando un cobro, estáis <strong>consultando o resumiendo</strong>.<br />
+El panel de las 8 <strong>no</strong> es tiempo real: es el lote de <strong>ayer</strong>.<br />
+La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el sistema”, no “hay una transacción de dinero”.</p>
 </div>
-<p><strong>Streaming</strong> añade otra dificultad: las cuentas se actualizan <strong>conforme llegan</strong> los datos. Suele hacerse en memoria, así que hay un <strong>techo</strong> de cuánto puedes tener “caliente”. No es “un lote, pero más rápido”: es otro contrato.</p>
+<p><strong>Streaming</strong> añade otra dificultad: las cuentas se actualizan <strong>conforme llegan</strong> los datos. Suele hacerse en memoria, así que hay un <strong>techo</strong> de cuánto podéis tener “caliente”. No es “un lote, pero más rápido”: es otro contrato. Cómo se <strong>combinan</strong> lote y flujo (Lambda / Kappa) está en <a href="../arquitectura/">1.5</a>.</p>
 <h2 id="dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico">Dos trabajos: operar el día a día o analizar el histórico<a class="headerlink" href="#dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico" title="Permanent link">&para;</a></h2>
-<p>En cualquier empresa conviven <strong>dos oficios</strong> que parecen el mismo (“usar el ordenador con datos”) y no lo son.</p>
-<p><strong>Oficio 1 — Operar.</strong> El cajero cobra, el hotel reserva, el alumno se matricula. Muchas personas a la vez, cada una toca <strong>poca</strong> información, y tiene que terminar <strong>en milisegundos</strong>. Si esto se atasca, la cola de la caja no avanza.</p>
-<p><strong>Oficio 2 — Analizar.</strong> Dirección pregunta “ventas por comarca y mes” o “ocupación de agosto frente a julio”. Eso recorre <strong>mucho</strong> histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser <strong>defendible</strong>.</p>
+<p>En el hotel conviven <strong>dos oficios</strong> que parecen el mismo (“usar el ordenador con datos”) y no lo son.</p>
+<p><strong>Oficio 1 — Operar.</strong> Recepción pica la reserva y el cobro. Muchas personas a la vez, cada una toca <strong>poca</strong> información, y tiene que terminar <strong>en milisegundos</strong>. Si esto se atasca, hay cola en el mostrador.</p>
+<p><strong>Oficio 2 — Analizar.</strong> Gerencia pregunta “ocupación de agosto en Laredo frente a julio” o “importe cobrado por hotel”. Eso recorre <strong>mucho</strong> histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser <strong>defendible</strong>.</p>
 <p>Mezclar los dos en <strong>la misma</strong> tabla “para no duplicar” suele acabar así:</p>
 <ul>
-<li>el cajero espera porque el informe está recorriendo la tabla, o</li>
+<li>recepción espera porque el informe está recorriendo el PMS, o</li>
 <li>el informe tarda una eternidad porque la tabla está pensada para cobrar, no para resumir.</li>
 </ul>
 <p>Por eso se <strong>copian</strong> los hechos del oficio 1 hacia un almacén del oficio 2 (eso es la <a href="../ingesta/">ingesta</a>). El segundo <strong>no sustituye</strong> al primero: <strong>se alimenta</strong> de él.</p>
 <h3 id="como-se-llaman-en-los-libros-oltp-y-olap">Cómo se llaman en los libros: OLTP y OLAP<a class="headerlink" href="#como-se-llaman-en-los-libros-oltp-y-olap" title="Permanent link">&para;</a></h3>
-<p>Cuando leas documentación o un examen, esos dos oficios aparecen con siglas inglesas. No asumas que las conoces: son solo <strong>nombres</strong> de lo de arriba.</p>
+<p>Cuando leáis documentación o un examen, esos dos oficios aparecen con siglas inglesas. No asumáis que las conocéis: son solo <strong>nombres</strong> de lo de arriba.</p>
+<p><img alt="OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia" src="../../assets/ut1/oltp-olap.png" /></p>
 <table>
 <thead>
 <tr>
@@ -1626,14 +1698,14 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usas el sist
 <td><em>Online Analytical Processing</em>: procesar <strong>consultas de análisis</strong></td>
 </tr>
 <tr>
-<td>Para qué</td>
-<td>Cobrar, reservar, matricular</td>
-<td>Informes, tendencias, inteligencia de negocio</td>
+<td>En el hotel</td>
+<td>PMS: cobrar, reservar, check-in</td>
+<td>Panel de las 8, ocupación por hotel</td>
 </tr>
 <tr>
 <td>Pregunta típica</td>
-<td>“Cobra <em>esta</em> línea”</td>
-<td>“Ventas por región y mes”</td>
+<td>“Cobra <em>esta</em> estancia”</td>
+<td>“Ocupación e importe por hotel”</td>
 </tr>
 <tr>
 <td>Cuánto toca cada vez</td>
@@ -1643,12 +1715,12 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usas el sist
 <tr>
 <td>Tiempo</td>
 <td>Milisegundos</td>
-<td>Segundos (o menos si el resumen ya está preparado)</td>
+<td>Segundos (o el lote de la noche)</td>
 </tr>
 <tr>
 <td>Usuarios</td>
-<td>Cajeros, web, recepción</td>
-<td>Analistas, dirección</td>
+<td>Recepción, web</td>
+<td>Gerencia, analistas</td>
 </tr>
 <tr>
 <td>Relación</td>
@@ -1658,71 +1730,85 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usas el sist
 </tbody>
 </table>
 <p><em>Online</em> vuelve a significar “en el sistema, ahora”, no “pago por internet”.</p>
-<p>A veces el almacén de análisis guarda el dato ya <strong>cortado por ejes</strong> (tiempo, producto, tienda). En los libros eso se llama <strong>cubo</strong>. La idea es simple: el informe del lunes no tiene que cruzar diez tablas cada vez; el cruce <strong>ya está hecho</strong>. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.</p>
-<p>En <a href="../almacenamiento/">1.3</a> el <strong>warehouse</strong> es el sitio típico del oficio 2; la base relacional de la caja es el sitio típico del oficio 1.</p>
+<p>A veces el almacén de análisis guarda el dato ya <strong>cortado por ejes</strong> (tiempo, hotel, canal). En los libros eso se llama <strong>cubo OLAP</strong>. La idea es simple: el informe del lunes no tiene que cruzar diez tablas cada vez; el cruce <strong>ya está hecho</strong>. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.</p>
+<p><strong>No es el cubo de objetos</strong> de <a href="../almacenamiento/">1.3</a> (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es <strong>disco en red</strong>; el otro es un <strong>resumen ya cortado</strong> para el informe.</p>
+<p>En <a href="../almacenamiento/">1.3</a> el <strong>warehouse</strong> es el sitio típico del oficio 2; el PMS relacional es el sitio típico del oficio 1.</p>
 <h2 id="scv">Principio SCV (solo para análisis)<a class="headerlink" href="#scv" title="Permanent link">&para;</a></h2>
-<p>Parece el <a href="../almacenamiento/">CAP</a> de las bases repartidas, pero <strong>no habla de si el saldo se ve igual en todos los nodos</strong>. Habla de <strong>hacer un cálculo</strong> en un sistema de análisis. Como máximo puedes pedirle <strong>dos</strong> de estas tres cosas:</p>
+<p>Parece el <a href="../almacenamiento/">CAP</a> de las bases repartidas, pero <strong>no habla de si el saldo se ve igual en todos los nodos</strong>. Habla de <strong>hacer un cálculo</strong> en un sistema de análisis. Como máximo podéis pedirle <strong>dos</strong> de estas tres cosas:</p>
+<p><img alt="SCV en el hotel: panel de las 8, semáforo y un hotel ahora. Las tres a la vez, no" src="../../assets/ut1/scv-hotel.png" /></p>
 <table>
 <thead>
 <tr>
 <th>Letra</th>
 <th>Aquí significa</th>
-<th>No lo confundas con</th>
+<th>No lo confundáis con</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>S</strong>peed (velocidad)</td>
-<td>Poco tiempo desde que el dato está en el sistema de análisis hasta el <strong>número</strong> del informe</td>
+<td>Poco tiempo desde que el dato está en el sistema de análisis hasta el <strong>número</strong></td>
 <td>La “velocidad” de las 5 V (ritmo al que <em>llegan</em> los datos)</td>
 </tr>
 <tr>
 <td><strong>C</strong>onsistency (aquí: <strong>precisión</strong>)</td>
-<td>Usas <strong>todos</strong> los datos, sin muestrear</td>
-<td>La C de CAP (mismo valor en todos los nodos)</td>
+<td>Usáis <strong>todos</strong> los datos, sin muestrear</td>
+<td>La C de CAP (mismo valor en todos los nodos) ni la C de ACID (reglas del cobro)</td>
 </tr>
 <tr>
 <td><strong>V</strong>olume</td>
-<td>Puedes atacar conjuntos enormes</td>
+<td>Podéis atacar conjuntos enormes</td>
 <td>El “volumen” de las 5 V, aplicado al <em>trabajo</em> de cálculo</td>
 </tr>
 </tbody>
 </table>
-<p>En Big Data <strong>V casi siempre está</strong> (si no, no estarías aquí). Entonces el menú real es:</p>
+<p>En Big Data <strong>V casi siempre está</strong> (si no, no estaríais aquí). Entonces el menú real es:</p>
 <table>
 <thead>
 <tr>
 <th>Eliges</th>
-<th>Qué sacrificas</th>
-<th>Cuándo tiene sentido</th>
+<th>Qué sacrificáis</th>
+<th>En el hotel</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>C + V</strong></td>
 <td>Speed</td>
-<td>Cierre de mes: todos los tickets, el tiempo da igual</td>
+<td><strong>Panel de las 8</strong>: todos los cobros de ayer; no es instantáneo</td>
 </tr>
 <tr>
 <td><strong>S + V</strong></td>
 <td>Precisión (muestreo o ventana)</td>
-<td>Un recuento “en vivo” que no necesita el último céntimo</td>
+<td><strong>Semáforo</strong>: rápido; no usa todas las filas del lago</td>
 </tr>
 <tr>
 <td><strong>S + C</strong></td>
 <td>Volume</td>
-<td>Un cálculo exacto y rápido sobre un conjunto <strong>pequeño</strong></td>
+<td>Consulta <strong>un</strong> hotel ahora (Laredo): exacto y rápido; poco volumen</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition example">
 <p class="admonition-title">Pregunta de aula</p>
-<p>¿Análisis en tiempo real con <em>todos</em> los petabytes del lago y la misma precisión que el cierre de mes?<br />
-En general <strong>no</strong>: sería S + C + V. O muestreas (pierdes precisión) o esperas al lote (pierdes velocidad).</p>
+<p>¿Análisis en tiempo real con <em>todos</em> los petabytes del lago y la misma precisión que el cierre de las 23:00?<br />
+En general <strong>no</strong>: sería S + C + V. O muestreamos (pierde precisión el semáforo) o esperáis al lote (pierde velocidad el panel).</p>
 </div>
 <div class="admonition success">
 <p class="admonition-title">Para el criterio d)</p>
-<p>Procesar no es “darle a Ejecutar”. Es elegir <strong>lote o stream</strong>, <strong>operar o analizar</strong> (OLTP u OLAP), y ser consciente del <strong>SCV</strong>. Luego, en <a href="../pentaho/">Pentaho</a>, lo haces visible con un flujo que cambia el dato.</p>
+<p>Procesar no es “darle a Ejecutar”. Es elegir <strong>lote o flujo</strong>, <strong>operar o analizar</strong> (OLTP u OLAP), y ser conscientes del <strong>SCV</strong>. Luego, en <a href="../pentaho/">Pentaho</a>, lo hacéis visible con un flujo que cambia el dato.</p>
+</div>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Una línea de por qué.</p>
+<ol>
+<li>El portátil tiene 10 núcleos y sumáis noches de Laredo <strong>en esa máquina</strong>. ¿Paralelo o distribuido?</li>
+<li>El job de madrugada parte el histórico en <strong>cuatro nodos</strong> (un hotel cada uno). ¿Paralelo o distribuido?</li>
+<li>Recepción cobra una estancia; gerencia abre ocupación por hotel a las 8. ¿OLTP u OLAP en cada caso?</li>
+<li>El semáforo quiere ir <strong>al momento</strong>, con <strong>todas</strong> las filas del lago y la misma precisión que el cierre. Según el SCV, ¿se puede? ¿Qué suelta?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Comprobación</p>
+<p>Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / no: S+C+V no cabe; el semáforo suelta precisión (S+V) o esperáis al lote (C+V).</p>
 </div>
 
 
