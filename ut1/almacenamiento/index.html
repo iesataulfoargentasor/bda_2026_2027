@@ -645,21 +645,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dataset" class="md-nav__link">
+  <a href="#data-warehouse-almacen-de-informes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dataset
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-warehouse-almacen-de-datos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data warehouse (almacén de datos)
+        Data warehouse (almacén de informes)
       
     </span>
   </a>
@@ -737,6 +726,17 @@
     <span class="md-ellipsis">
       
         Cómo elegir (criterio a)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1399,21 +1399,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dataset" class="md-nav__link">
+  <a href="#data-warehouse-almacen-de-informes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dataset
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-warehouse-almacen-de-datos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data warehouse (almacén de datos)
+        Data warehouse (almacén de informes)
       
     </span>
   </a>
@@ -1491,6 +1480,17 @@
     <span class="md-ellipsis">
       
         Cómo elegir (criterio a)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1591,18 +1591,44 @@
 
 
 <h1 id="13-conceptos-de-almacenamiento">1.3. Conceptos de almacenamiento<a class="headerlink" href="#13-conceptos-de-almacenamiento" title="Permanent link">&para;</a></h1>
-<p>Diseñar la solución (criterio <strong>a)</strong>) es elegir <strong>dónde vive el dato</strong> y <strong>qué garantías</strong> ofreces. No hace falta haber cursado un módulo de bases de datos: cada idea se explica aquí con un ejemplo, y <strong>después</strong> aparece la sigla, si la tiene.</p>
-<p><img alt="Esquema clásico de un data warehouse" src="../../assets/ut1/data-warehouse.jpeg" /></p>
-<h2 id="base-de-datos-relacional">Base de datos relacional<a class="headerlink" href="#base-de-datos-relacional" title="Permanent link">&para;</a></h2>
-<p>Imagina una hoja de cálculo bien hecha, con reglas. Los datos viven en <strong>tablas</strong>:</p>
+<p>Diseñar la solución (criterio <strong>a)</strong>) es elegir <strong>dónde vive el dato</strong> y <strong>qué garantías</strong> ofrecéis. No hace falta haber cursado un módulo de bases de datos: cada idea se explica aquí con un ejemplo, y <strong>después</strong> aparece la sigla, si la tiene.</p>
+<p>En el <a href="../caso-hotel/">grupo hotelero</a> eso ya está partido en dos relojes:</p>
 <ul>
-<li>cada <strong>fila</strong> es un hecho (una venta, un alumno, una reserva);</li>
-<li>cada <strong>columna</strong> es un dato de ese hecho (fecha, importe, grupo).</li>
+<li><strong>Recepción</strong> pica ahora en el PMS. Un cobro <strong>no</strong> puede verse a medias.</li>
+<li><strong>Gerencia</strong> abre a las <strong>8</strong> el panel de <strong>ayer</strong>. Finanzas cerró a las <strong>23:00</strong>; de madrugada corre el job que <strong>copia</strong> (no pica) ocupación e importe.</li>
 </ul>
-<p>Antes de guardar nada, declaras <strong>cómo es</strong> la tabla: qué columnas hay, de qué tipo (número, texto, fecha) y qué no se puede romper (un DNI no se puede repetir, un importe no puede estar vacío). A ese “contrato” se le llama <strong>esquema</strong>. El lenguaje habitual para preguntar y cambiar esas tablas es <strong>SQL</strong>.</p>
-<p>Un <strong>índice</strong> es como el índice de un libro: evitas leerse todas las páginas para encontrar un DNI.</p>
-<p>Este modelo encaja cuando el trabajo es <strong>muchas operaciones cortas del día a día</strong>: cobrar una línea, reservar una plaza, matricular a alguien. Cada una tiene que quedar <strong>bien hecha</strong>, no a medias.</p>
-<p><strong>Por qué cuesta en Big Data:</strong> estas bases suelen crecer <strong>en vertical</strong> (un servidor más gordo). Cuando la tabla ya no cabe, o cruzar tres tablas enormes no termina, el relacional deja de ser el almacén <em>único</em>. <strong>No desaparece</strong>: sigue siendo el origen típico del que <strong>copias</strong> datos hacia el lago o hacia el almacén de informes. La caja del supermercado seguirá aquí; el análisis de tres años de tickets, probablemente no.</p>
+<p>JSON del canal, sensores y fotos de habitación <strong>no</strong> caben en las tablas del PMS. El histórico de los cuatro hoteles <strong>tampoco</strong> es el disco de Laredo.</p>
+<div class="admonition info">
+<p class="admonition-title">Cómo se lee esta página</p>
+<p>Primero <strong>dónde</strong> guardáis (PMS, lago, almacén de informes). Luego <strong>cómo</strong> (bloque, cubo, <em>lakehouse</em>). Al final <strong>qué pasa si se cae o se parte la red</strong> (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.</p>
+</div>
+<pre class="mermaid"><code>flowchart LR
+  subgraph ahora [Operar ahora]
+    PMS[PMS de recepción]
+    SEN[Sensores y canal web]
+  end
+  subgraph noche [Lote de madrugada]
+    JOB[Copia y cura]
+  end
+  subgraph dest [Dónde acaba]
+    LAKE[Lago: JSON, fotos, logs]
+    WH[Almacén de informes]
+  end
+  PMS --&gt; JOB
+  JOB --&gt; WH
+  PMS --&gt; LAKE
+  SEN --&gt; LAKE
+  WH --&gt; P8[Panel a las 8]</code></pre>
+<h2 id="base-de-datos-relacional">Base de datos relacional<a class="headerlink" href="#base-de-datos-relacional" title="Permanent link">&para;</a></h2>
+<p>Pensad en una hoja de cálculo bien hecha, con reglas. Los datos viven en <strong>tablas</strong>:</p>
+<ul>
+<li>cada <strong>fila</strong> es un hecho (una reserva, un cobro, un check-in);</li>
+<li>cada <strong>columna</strong> es un dato de ese hecho (fecha, importe, hotel).</li>
+</ul>
+<p>Antes de guardar nada, declaráis <strong>cómo es</strong> la tabla: qué columnas hay, de qué tipo (número, texto, fecha) y qué no se puede romper (un localizador no se puede repetir, un importe no puede estar vacío). A ese “contrato” se le llama <strong>esquema</strong>. El lenguaje habitual para preguntar y cambiar esas tablas es <strong>SQL</strong>.</p>
+<p>Un <strong>índice</strong> es como el índice de un libro: evitáis leerse todas las páginas para encontrar un NIF.</p>
+<p>Este modelo encaja cuando el trabajo es <strong>muchas operaciones cortas del día a día</strong>: cobrar una estancia, reservar una doble, picar un extra. Cada una tiene que quedar <strong>bien hecha</strong>, no a medias. En el hotel, ese sitio es el <strong>PMS</strong>.</p>
+<p><strong>Por qué cuesta en Big Data:</strong> estas bases suelen crecer <strong>en vertical</strong> (un servidor más gordo). Cuando la tabla ya no cabe, o cruzar tres tablas enormes no termina a tiempo, el relacional deja de ser el almacén <em>único</em>. <strong>No desaparece</strong>: sigue siendo el origen típico del que <strong>copiáis</strong> datos hacia el lago o hacia el almacén de informes. El PMS de Laredo seguirá aquí; el análisis de tres años de los cuatro hoteles, probablemente no.</p>
 <div class="admonition tip">
 <p class="admonition-title">La pregunta de aula</p>
 <p>“¿Las relacionales sirven para Big Data?”<br />
@@ -1616,45 +1642,43 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 <tr>
 <th>Familia</th>
 <th>Idea</th>
-<th>Ejemplo de uso</th>
+<th>En el hotel</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Documento</td>
 <td>Un registro parece un JSON; no todos tienen los mismos campos</td>
-<td>Perfil de usuario, catálogo</td>
+<td>Reserva del canal web (un extra que otro no trae)</td>
 </tr>
 <tr>
 <td>Clave-valor</td>
-<td>Guardar y recuperar muy rápido con una clave (<code>usuario:17</code>)</td>
-<td>Caché, sesiones</td>
+<td>Guardar y recuperar muy rápido con una clave (<code>sesion:17</code>)</td>
+<td>Sesión de la web de reservas</td>
 </tr>
 <tr>
-<td>Columnar / <em>wide-column</em></td>
-<td>Familias de columnas, bien para series largas</td>
-<td>Logs, sensores</td>
+<td><em>Wide-column</em></td>
+<td>Filas con <strong>muchas</strong> columnas, a menudo vacías; bien para series</td>
+<td>Lecturas de sensores cada 30 s</td>
 </tr>
 <tr>
 <td>Grafo</td>
 <td>Puntos unidos por relaciones</td>
-<td>Fraude, “quién conoce a quién”</td>
+<td>La misma tarjeta en dos hoteles (fraude)</td>
 </tr>
 </tbody>
 </table>
-<p>Cada familia habla un idioma distinto. Lo que ves en tutoriales de MongoDB <strong>no</strong> sirve igual en las otras.</p>
-<p><strong>¿Sirven para Big Data?</strong> Sí, cuando el problema es <strong>repartir y crecer</strong>. <strong>No</strong> sustituyen a un relacional si el negocio no puede verse a medias (una transferencia, el stock al cobrar, una nota oficial). Un carrito de la compra <em>puede</em> vivir en un documento; el asiento del banco, no.</p>
-<h2 id="dataset">Dataset<a class="headerlink" href="#dataset" title="Permanent link">&para;</a></h2>
-<p>Un <strong>dataset</strong> (conjunto de datos) es una colección que <strong>tiene sentido tratar junta</strong>: los tweets de una campaña, las lecturas de una estación, las facturas de 2026. Puede vivir en CSV, JSON, una tabla, Parquet o una carpeta en la nube.</p>
-<p>No es un programa que se instala. Es la <strong>unidad de trabajo</strong> del análisis. Cuando en práctica te dicen “usa el dataset de Airbnb”, te están diciendo <em>qué</em> vas a procesar, no <em>en qué motor</em> está.</p>
-<h2 id="data-warehouse-almacen-de-datos">Data warehouse (almacén de datos)<a class="headerlink" href="#data-warehouse-almacen-de-datos" title="Permanent link">&para;</a></h2>
-<p>Es un sitio <strong>central</strong>, pensado para <strong>informes y decisiones</strong> (lo que en empresa llaman inteligencia de negocio, <em>BI</em>), con <strong>histórico</strong>. Los datos no se pican ahí: <strong>se copian</strong> desde las aplicaciones del día a día (caja, reservas, facturación). Es una <strong>foto</strong> periódica, no el sitio donde el cajero cobra.</p>
-<p>Las columnas se deciden <strong>antes</strong> de guardar: si mañana aparece un campo nuevo, hay que <strong>cambiar el modelo</strong>. A cambio, quien hace el informe encuentra tablas limpias, con nombres que el negocio entiende, listas para un cuadro de mando.</p>
-<p>Piensa en un <strong>almacén de un supermercado</strong>: todo etiquetado, pasillos fijos, pensado para sacar el pedido de siempre. No tiras ahí la caja sin abrir del camión.</p>
+<p><strong><em>Wide-column</em> no es Parquet.</strong> Cassandra o HBase guardan <strong>filas</strong> con familias de columnas. Un fichero <strong>columnar</strong> (Parquet) es otra cosa: guarda <em>columnas</em> juntas para el informe. Eso va en <a href="../formatos/">1.7</a>.</p>
+<p>Cada familia habla un idioma distinto. Lo que veis en tutoriales de MongoDB <strong>no</strong> sirve igual en las otras.</p>
+<p><strong>¿Sirven para Big Data?</strong> Sí, cuando el problema es <strong>repartir y crecer</strong>. <strong>No</strong> sustituyen al PMS si el cobro no puede verse a medias. Un JSON de reserva <em>puede</em> vivir en un documento; el asiento del cobro, no.</p>
+<h2 id="data-warehouse-almacen-de-informes">Data warehouse (almacén de informes)<a class="headerlink" href="#data-warehouse-almacen-de-informes" title="Permanent link">&para;</a></h2>
+<p>Es un sitio <strong>central</strong>, pensado para <strong>informes y decisiones</strong> (inteligencia de negocio, <em>BI</em>), con <strong>histórico</strong>. Los datos <strong>no se pican</strong> ahí: <strong>se copian</strong> desde el PMS, la pasarela y, si hace falta, el lago. Es una <strong>foto</strong> periódica, no el sitio donde recepción cobra.</p>
+<p>Las columnas se deciden <strong>antes</strong> de guardar: si mañana el canal añade un campo, hay que <strong>cambiar el modelo</strong>. A cambio, gerencia encuentra tablas limpias (ocupación, importe, hotel), listas para el panel de las <strong>8</strong>.</p>
+<p>En la nube oiréis <a href="https://www.snowflake.com/">Snowflake</a> o BigQuery: es <strong>este</strong> oficio (informes), no el lago.</p>
 <h2 id="data-lake">Data lake<a class="headerlink" href="#data-lake" title="Permanent link">&para;</a></h2>
-<p><img alt="Idea de data lake: dato en bruto, varios orígenes" src="../../assets/ut1/data-lake.jpeg" /></p>
-<p>El <strong>data lake</strong> (lago de datos) guarda el dato <strong>como llegó</strong> (tabla, JSON, vídeo, log). Encaja con ciencia de datos y ML: no tiras el bruto por si <strong>mañana</strong> cambia la pregunta.</p>
-<p>El “cómo se interpreta” se aplica <strong>al leer</strong>, no al guardar. Cargas desde sensores, APIs, logs, a menudo en continuo. El riesgo clásico es el <strong><em>data swamp</em></strong> (ciénaga): un lago sin catálogo, sin dueño y sin calidad. Entonces “tenemos un lake” significa “tenemos un disco sucio”.</p>
+<p>El <strong>data lake</strong> (lago de datos) guarda el dato <strong>como llegó</strong>: JSON del canal, log de la web, foto de habitación, CSV de Comillas, serie del sensor. Encaja cuando <strong>aún no</strong> sabéis qué preguntaréis mañana, o cuando el bruto es de muchos tipos.</p>
+<p>Esa colección que tiene sentido tratar junta (reservas de agosto, lecturas de Potes) es un <strong>dataset</strong>: es <em>qué</em> vais a procesar, no <em>en qué motor</em> está.</p>
+<p>El “cómo se interpreta” se aplica <strong>al leer</strong>, no al guardar. El riesgo clásico es el <strong><em>data swamp</em></strong> (ciénaga): un lago sin catálogo, sin dueño y sin calidad. Entonces “tenemos un lake” significa “tenemos un disco sucio”.</p>
 <table>
 <thead>
 <tr>
@@ -1665,9 +1689,9 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 </thead>
 <tbody>
 <tr>
-<td>Imagen</td>
-<td>Almacén etiquetado</td>
-<td>Embalse: el agua llega como llega</td>
+<td>Oficio</td>
+<td>El panel de las 8</td>
+<td>Guardar el original</td>
 </tr>
 <tr>
 <td>Dato</td>
@@ -1675,23 +1699,23 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 <td>Bruto o poco curado</td>
 </tr>
 <tr>
-<td>Cuándo fijas las columnas</td>
+<td>Cuándo fijáis las columnas</td>
 <td>Al <strong>guardar</strong></td>
 <td>Al <strong>leer</strong></td>
 </tr>
 <tr>
-<td>Usuarios típicos</td>
-<td>Negocio, informes</td>
+<td>Quién lo usa</td>
+<td>Gerencia, informes</td>
 <td>Ingeniería y ciencia de datos</td>
 </tr>
 <tr>
 <td>Pregunta</td>
-<td>Ya la conoces</td>
+<td>Ya la conocéis (ocupación / importe)</td>
 <td>Puede aparecer después</td>
 </tr>
 </tbody>
 </table>
-<p>En la práctica muchas organizaciones tienen <strong>los dos</strong>: el lago para el bruto y el warehouse para lo que el director ve el lunes. No eliges uno “para siempre”: eliges <strong>para cada pregunta</strong>.</p>
+<p>En la práctica el grupo suele tener <strong>los dos</strong>: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. No elegís uno “para siempre”: elegís <strong>para cada pregunta</strong>.</p>
 <h2 id="como-se-guarda-bloque-objeto-lakehouse">Cómo se guarda (bloque, objeto, lakehouse)<a class="headerlink" href="#como-se-guarda-bloque-objeto-lakehouse" title="Permanent link">&para;</a></h2>
 <p>No es lo mismo el <strong>disco del PMS</strong> que el sitio donde gerencia lee el histórico.</p>
 <table>
@@ -1710,25 +1734,28 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 </tr>
 <tr>
 <td><strong>Objeto</strong></td>
-<td>Guardas el fichero <strong>entero</strong> (un objeto) con una clave, en un cubo. No “abres el byte 17”: bajas o sustituyes el objeto. Típico en nube (<a href="https://aws.amazon.com/s3/">S3</a>, Azure Blob…).</td>
-<td><code>reservas/2026-08-19.parquet</code> en un cubo; se replica sin que tú mires el disco.</td>
+<td>Guardáis el fichero <strong>entero</strong> (un objeto) con una clave, en un cubo. No “abrís el byte 17”: bajáis o sustituís el objeto. Típico en nube (<a href="https://aws.amazon.com/s3/">S3</a>, Azure Blob…).</td>
+<td>El volcado de reservas del martes en un cubo; se replica sin que miréis el disco. El formato (Parquet…) está en <a href="../formatos/">1.7</a>.</td>
 </tr>
 <tr>
 <td><strong>Lakehouse</strong></td>
-<td>El lago <strong>más</strong> tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) <strong>sin</strong> montar un warehouse aparte. Productos que oiréis: <a href="https://delta.io/">Delta Lake</a>, Snowflake.</td>
+<td>El lago <strong>más</strong> tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) <strong>sin</strong> montar un warehouse aparte. Productos que oiréis: <a href="https://delta.io/">Delta Lake</a>, <a href="https://iceberg.apache.org/">Iceberg</a>.</td>
 <td>Bruto de sensores <strong>y</strong> la tabla limpia de ocupación, en el mismo sitio.</td>
 </tr>
 </tbody>
 </table>
 <p><img alt="Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas" src="../../assets/ut1/donde-vive-dato.png" /></p>
-<p><strong>Calcular y guardar se pueden separar.</strong> En un clúster Hadoop clásico el dato y la CPU <strong>conviven</strong> en el nodo (lo viste en <a href="../clusters/">1.2</a>). En un lago en cubo, el disco escala solo; el motor (Spark, un job de Pentaho, Athena…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copias un trozo a HDFS <strong>solo para el job</strong> y el resultado vuelve al cubo.</p>
+<p>Snowflake <strong>no</strong> es un lakehouse: es el warehouse en nube del apartado anterior. El <em>lakehouse</em> es <strong>lago + tablas</strong>.</p>
+<p>El diario de Delta o Iceberg puede dar un <strong>ACID de tabla</strong> (un <code>MERGE</code> no deja la ocupación a medias; podéis borrar un NIF). <strong>Eso no cobra en recepción.</strong> El cobro sigue en el PMS. El detalle del formato está en <a href="../formatos/">1.7</a>.</p>
+<p><strong>Calcular y guardar se pueden separar.</strong> En un clúster Hadoop clásico el dato y la CPU <strong>conviven</strong> en el nodo (lo visteis en <a href="../clusters/">1.2</a>). En un lago en cubo, el disco escala solo; el motor (Spark, Athena, un job que lee el cubo…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copiáis un trozo a HDFS (el disco repartido de Hadoop) <strong>solo para el job</strong> y el resultado vuelve al cubo.</p>
 <div class="admonition tip">
 <p class="admonition-title">RAM frente a disco (orden de magnitud)</p>
 <p>La RAM es <strong>órdenes</strong> más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en <a href="../formatos/">1.7</a>.</p>
 </div>
 <h2 id="que-es-una-transaccion-hace-falta-para-entender-acid">Qué es una transacción (hace falta para entender ACID)<a class="headerlink" href="#que-es-una-transaccion-hace-falta-para-entender-acid" title="Permanent link">&para;</a></h2>
 <p>En la calle, “transacción” suena a pago. En bases de datos es más concreto: <strong>un paquete de cambios que o se hacen todos o no se hace ninguno</strong>.</p>
-<p>Ejemplo: transferir 50 € de la cuenta A a la B son <strong>dos</strong> cambios (quitar en A, poner en B). Si el sistema se cae a mitad, no puedes dejar a A sin el dinero y a B sin recibirlo. Ese paquete es la <strong>transacción</strong>.</p>
+<p>Ejemplo: transferir 50 € de la cuenta A a la B son <strong>dos</strong> cambios (quitar en A, poner en B). Si el sistema se cae a mitad, no podéis dejar a A sin el dinero y a B sin recibirlo. Ese paquete es la <strong>transacción</strong>.</p>
+<p>En el hotel: descontar la fianza <strong>y</strong> registrar el cobro. Si solo ocurre uno de los dos, recepción está mintiendo.</p>
 <p>Cuando el paquete termina bien, el sistema lo <strong>confirma</strong> (queda grabado). Si algo falla, <strong>deshace</strong> todo el paquete y el mundo queda como al principio.</p>
 <h2 id="acid-cuando-el-negocio-no-puede-verse-a-medias">ACID: cuando el negocio no puede verse a medias<a class="headerlink" href="#acid-cuando-el-negocio-no-puede-verse-a-medias" title="Permanent link">&para;</a></h2>
 <p>Son las cuatro garantías que se piden a una base usada para esas transacciones (casi siempre, una relacional). El acrónimo se entiende con la misma transferencia de 50 €:</p>
@@ -1768,17 +1795,17 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 </tr>
 </tbody>
 </table>
-<p>Para conseguirlo, el sistema suele <strong>bloquear</strong> un momento lo que está tocando (como reservar un asiento en el cine mientras pagas). Escribir en disco (durabilidad) es más lento que dejarlo solo en la memoria RAM: por eso estas bases no son las más rápidas del mundo, son las más <strong>serias</strong> para dinero y notas oficiales.</p>
-<p>No toda base “relacional” cumple esto al 100 % si la configuras en modo relajado. Para <strong>caja, nómina o matrícula oficial</strong> sí debes exigir estas cuatro letras.</p>
+<p>Para conseguirlo, el sistema suele <strong>bloquear</strong> un momento lo que está tocando (como reservar un asiento en el cine mientras pagáis). Escribir en disco (durabilidad) es más lento que dejarlo solo en la memoria RAM: por eso estas bases no son las más rápidas del mundo, son las más <strong>serias</strong> para dinero y para el cobro en recepción.</p>
+<p>No toda base “relacional” cumple esto al 100 % si la configuráis en modo relajado. Para <strong>caja, cobro o una nota que ya no se puede retractar</strong> sí debéis exigir estas cuatro letras.</p>
 <h2 id="teorema-cap-que-pasa-cuando-se-parte-la-red">Teorema CAP: qué pasa cuando se parte la red<a class="headerlink" href="#teorema-cap-que-pasa-cuando-se-parte-la-red" title="Permanent link">&para;</a></h2>
-<p>Hasta ahora imaginabas <strong>un</strong> servidor. En un <a href="../clusters/">clúster</a> el dato está en <strong>varios</strong> ordenadores. El teorema de Brewer (CAP) dice que, <strong>si se corta la red entre ellos</strong>, no puedes tener a la vez las tres cosas siguientes:</p>
+<p>Hasta ahora imaginabais <strong>un</strong> servidor. En un <a href="../clusters/">clúster</a> el dato está en <strong>varios</strong> ordenadores. El teorema de Brewer (CAP) dice que, <strong>si se corta la red entre ellos</strong>, no podéis tener a la vez las tres cosas siguientes:</p>
 <ul>
 <li><strong>C</strong>onsistencia: quien pregunta recibe el dato <strong>más reciente</strong>, o un error. Nunca un valor viejo haciéndose pasar por actual.</li>
-<li><strong>A</strong>vailability (disponibilidad): quien pregunta recibe <strong>alguna</strong> respuesta válida (aunque no sea la última).</li>
+<li><strong>A</strong>vailability (disponibilidad): quien pregunta recibe <strong>alguna</strong> respuesta (un valor; aunque no sea el último).</li>
 <li><strong>P</strong>artition tolerance: el sistema <strong>sigue funcionando</strong> aunque se corte el enlace entre nodos.</li>
 </ul>
-<p><img alt="Triángulo CAP" src="../../assets/ut1/cap.png" /></p>
-<p>En un clúster real <strong>P no es opcional</strong>: un cable se corta, un <em>switch</em> se cuelga, un centro de datos pierde enlace. La decisión de diseño suele ser:</p>
+<p>Esta <strong>C no es la C de ACID</strong>. ACID-C son las <strong>reglas</strong> (un saldo no queda prohibido). CAP-C es <strong>el mismo valor reciente en los nodos</strong>, no uno viejo. En <a href="../procesamiento/#scv">1.4</a> hay una tercera C (precisión del análisis): tampoco es esta.</p>
+<p>En un clúster real <strong>P no es opcional</strong>: un cable se corta, un <em>switch</em> se cuelga, Potes pierde enlace con Santander. La decisión de diseño suele ser:</p>
 <table>
 <thead>
 <tr>
@@ -1805,37 +1832,57 @@ Como <strong>fuente</strong> y como sitio de las operaciones de negocio: <strong
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TB
+  S[Nodo Santander: cobro recién escrito]
+  P[Nodo Potes]
+  S -.-&gt;|red cortada| P
+  CP[CP: Potes no enseña el saldo]
+  AP[AP: Potes da el de hace dos minutos]
+  P --&gt; CP
+  P --&gt; AP</code></pre>
 <div class="admonition example">
-<p class="admonition-title">Dos sedes</p>
-<p>El nodo de Santander acaba de registrar un pago. Se corta la red con el de Torrelavega.</p>
+<p class="admonition-title">Santander y Potes</p>
+<p>El nodo de Santander acaba de registrar un pago. Se corta la red con Potes.</p>
 <ul>
-<li><strong>CP:</strong> Torrelavega puede <strong>negar</strong> la lectura del saldo hasta recuperar el enlace.</li>
-<li><strong>AP:</strong> Torrelavega <strong>da un saldo</strong> (quizá el de hace dos minutos). El cliente ve <em>algo</em>; puede no ser lo último.</li>
+<li><strong>CP:</strong> Potes puede <strong>negar</strong> la lectura del saldo hasta recuperar el enlace.</li>
+<li><strong>AP:</strong> Potes <strong>da un saldo</strong> (quizá el de hace dos minutos). El cliente ve <em>algo</em>; puede no ser lo último.</li>
 </ul>
 </div>
-<p>Muchos productos <strong>se configuran</strong>. No memorices “Mongo es CP” como dogma: pregunta <em>qué hace este sistema si se parte la red</em>.</p>
+<p>Muchos productos <strong>se configuran</strong>. No memoricéis “Mongo es CP” como dogma: preguntad <em>qué hace este sistema si se parte la red</em>.</p>
 <h2 id="base-el-otro-extremo-de-acid">BASE: el otro extremo de ACID<a class="headerlink" href="#base-el-otro-extremo-de-acid" title="Permanent link">&para;</a></h2>
 <p>Cuando una base distribuida elige <strong>responder aunque algún nodo vaya atrasado</strong> (A + P), el diseño típico se llama <strong>BASE</strong>. Otra vez, primero la idea y luego las letras:</p>
 <ul>
-<li><strong>B</strong>asically <strong>A</strong>vailable: siempre hay respuesta (éxito o error claro), no un silencio eterno.</li>
-<li><strong>S</strong>oft state (estado blando): dos lecturas seguidas pueden diferir <strong>aunque tú no hayas escrito</strong>. Un nodo aún no había recibido la copia.</li>
+<li><strong>B</strong>asically <strong>A</strong>vailable: hay <strong>un valor</strong> de respuesta, no un silencio. Un “no puedo, la red está partida” es más bien <strong>CP</strong>, no BASE.</li>
+<li><strong>S</strong>oft state (estado blando): dos lecturas seguidas pueden diferir <strong>aunque vosotros no hayáis escrito</strong>. Un nodo aún no había recibido la copia.</li>
 <li><strong>E</strong>ventual consistency (consistencia <strong>eventual</strong>): <em>al rato</em> (segundos o más) todos los nodos dicen lo mismo.</li>
 </ul>
 <div class="admonition failure">
-<p class="admonition-title">¿BASE para la caja o para la nota oficial?</p>
-<p><strong>No.</strong> Una venta cobrada, un asiento bancario o una calificación publicada quieren <strong>ACID</strong>. BASE encaja en un timeline, un catálogo replicado, lecturas de sensores, un carrito que <strong>aún no</strong> es el cobro.</p>
+<p class="admonition-title">¿BASE para el cobro en recepción?</p>
+<p><strong>No.</strong> Una estancia cobrada o una calificación publicada quieren <strong>ACID</strong>. BASE encaja en el catálogo de extras replicado, lecturas de sensores o un carrito que <strong>aún no</strong> es el cobro.</p>
 </div>
 <h2 id="como-elegir-criterio-a">Cómo elegir (criterio a)<a class="headerlink" href="#como-elegir-criterio-a" title="Permanent link">&para;</a></h2>
-<p>Recorre las preguntas <strong>en este orden</strong>:</p>
+<p>Recorred las preguntas <strong>en este orden</strong>, con el hotel:</p>
 <ol>
-<li>¿Hay un paquete de cambios que no puede verse a medias? → relacional con <strong>ACID</strong>.</li>
-<li>¿El volumen o la variedad rompen un solo servidor? → <strong>clúster</strong> + NoSQL o ficheros repartidos.</li>
-<li>¿La pregunta de negocio ya está clara y se repetirá cada lunes? → <strong>warehouse</strong>.</li>
-<li>¿Aún no sabes qué preguntarás o el bruto es de muchos tipos? → <strong>lake</strong>, y luego curas hacia el warehouse.</li>
-<li>¿Necesitas el bruto <strong>y</strong> tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → <strong>lakehouse</strong>, o lago + warehouse a la vez.</li>
+<li>¿Hay un paquete que no puede verse a medias (cobro, fianza)? → relacional con <strong>ACID</strong> (el PMS).</li>
+<li>¿El volumen o la variedad rompen un solo servidor (cuatro hoteles, JSON, fotos, sensores)? → <strong>clúster</strong> + NoSQL o ficheros repartidos.</li>
+<li>¿La pregunta ya está clara y se repetirá cada mañana a las 8 (ocupación e importe)? → <strong>warehouse</strong>.</li>
+<li>¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → <strong>lake</strong>, y luego curáis hacia el warehouse.</li>
+<li>¿Necesitáis el bruto <strong>y</strong> tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → <strong>lakehouse</strong>, o lago + warehouse a la vez.</li>
 </ol>
-<p>En <a href="../procesamiento/">1.4</a> verás otro par de siglas (OLTP y OLAP): no son otro tipo de base, son <strong>dos trabajos distintos</strong> (operar el día a día frente a analizar el histórico).</p>
-<p>Si puedes justificar esas frases con un caso (hotel, supermercado, sensores), has caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.</p>
+<p>En <a href="../procesamiento/">1.4</a> veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son <strong>dos trabajos distintos</strong> (operar en recepción frente a informar a gerencia).</p>
+<p>Si podéis justificar esas frases con el <a href="../caso-hotel/">caso</a>, habéis caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.</p>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Una línea de por qué.</p>
+<ol>
+<li>Recepción cobra una estancia (fianza + pasarela). ¿Relacional con ACID, lago en bruto o BASE?</li>
+<li>El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Warehouse (columnas al guardar) o lago (columnas al leer)?</li>
+<li>Gerencia quiere ocupación e importe <strong>cada lunes</strong>, siempre las mismas columnas. ¿Warehouse o lago?</li>
+<li>Se corta la red Santander–Potes. Potes <strong>niega</strong> el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Comprobación</p>
+<p>ACID (cobro) / lago / warehouse / CP (no servir dato dudoso).</p>
+</div>
 
 
 
