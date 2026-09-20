@@ -9,16 +9,16 @@ tags:
 
 # Tarea para practicar en clase
 
-Esta sesión une [1.2 Clústeres](clusters.md) y [1.4 Procesamiento](procesamiento.md) con el **RA2**: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer **añadiendo** recursos. Hoy **no** instaláis Spark ni Dask. Sí tenéis que saber **qué tipo de ejecución** estáis pidiendo y **por qué el portátil no es un clúster**.
+Esta sesión une [1.2 Clústeres](clusters.md){target="_blank" rel="noopener"} y [1.4 Procesamiento](procesamiento.md){target="_blank" rel="noopener"} con el **RA2**: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer **añadiendo** recursos. Hoy **no** instaláis Spark ni Dask. Sí tenéis que saber **qué tipo de ejecución** estáis pidiendo y **por qué el portátil no es un clúster**.
 
 No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase** (individual o por parejas) y se comenta al final.
 
 !!! info "Cómo se lee esta página"
-    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md), un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
+    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}, un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
 
 ## El caso: 500 GB y un portátil
 
-Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md). **No** copiáis los 500 GB al informe.
+Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md){target="_blank" rel="noopener"}. **No** copiáis los 500 GB al informe.
 
 El fichero está en la **red de la empresa** (una URL interna o una carpeta compartida), no en vuestro disco.
 
@@ -39,7 +39,7 @@ El fichero está en la **red de la empresa** (una URL interna o una carpeta comp
 
 ## Concurrente, paralelo y distribuido (repaso)
 
-Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detalle está en el [1.4](procesamiento.md); aquí basta para no mezclar el i7 con un clúster.
+Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detalle está en el [1.4](procesamiento.md){target="_blank" rel="noopener"}; aquí basta para no mezclar el i7 con un clúster.
 
 ![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster](../assets/ut1/paralelo-distribuido.png)
 
@@ -100,13 +100,13 @@ Explicad, en general:
 
 1. **Dónde** dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.
 2. **Cómo** lanzáis el cálculo (un *job*: trabajo programado; de madrugada, para tener el número **antes de las 8**).
-3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se funde un disco, el panel no se cae: [1.2](clusters.md)), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md)).
+3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se funde un disco, el panel no se cae: [1.2](clusters.md){target="_blank" rel="noopener"}), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md){target="_blank" rel="noopener"}).
 
 ### 5. Opción 4 — Cargar y consultar
 
 Valorad cargar el fichero (o **particionarlo**) en un almacén de informes / *lakehouse* o, si el aula lo usa, MongoDB, y hacer la media con una **consulta**.
 
-¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: **modelo de datos**, **coste** (¡a menudo pagáis por lo **escaneado**!, [1.7](formatos.md)), **curva de aprendizaje**.
+¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: **modelo de datos**, **coste** (¡a menudo pagáis por lo **escaneado**!, [1.7](formatos.md){target="_blank" rel="noopener"}), **curva de aprendizaje**.
 
 ### 6. ¿Y la GPU?
 
@@ -132,14 +132,14 @@ Justificadla con los criterios del **RA2**:
 
 1. 10 minutos: leed el caso y el repaso. Aclarad dudas de vocabulario.
 2. 25–35 minutos: responded 1–7 (parejas bienvenidas).
-3. 10 minutos: puesta en común. El profesor puede contrastar con el [cuaderno Dask de 500 GB](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing) o la [demo de GitHub](https://github.com/josedavidmi/demo_dask_500gb-).
+3. 10 minutos: puesta en común. El profesor puede contrastar con el [cuaderno Dask de 500 GB](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing){target="_blank" rel="noopener"} o la [demo de GitHub](https://github.com/josedavidmi/demo_dask_500gb-){target="_blank" rel="noopener"}.
 
 !!! success "Qué se espera"
     No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el **número**.
 
 ## Relación con el módulo
 
-Es el **puente hacia el RA2** (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de [1.2](clusters.md) y [1.4](procesamiento.md). Os obliga a **elegir y justificar**. El laboratorio de HDFS y Spark es la UT2.
+Es el **puente hacia el RA2** (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de [1.2](clusters.md){target="_blank" rel="noopener"} y [1.4](procesamiento.md){target="_blank" rel="noopener"}. Os obliga a **elegir y justificar**. El laboratorio de HDFS y Spark es la UT2.
 
 La entrega formal, si la hay, se indica en Moodle.
 
@@ -150,10 +150,10 @@ No es de esta sesión. Si os piden probar código, Dask se parece a Pandas; PySp
 | | **Dask** | **PySpark** | **Ray** |
 | --- | --- | --- | --- |
 | Encaje | Paralelo y distribuido “estilo Pandas” | Volumen masivo en el ecosistema Spark | Cómputo distribuido genérico |
-| Hoy | Solo si el profesor abre el cuaderno | No lo programáis aún ([1.4](procesamiento.md)) | Fuera de esta tarea |
+| Hoy | Solo si el profesor abre el cuaderno | No lo programáis aún ([1.4](procesamiento.md){target="_blank" rel="noopener"}) | Fuera de esta tarea |
 
-- Tutorial Berkeley (Dask y un poco de Ray): [Flexible parallel processing](https://computing.stat.berkeley.edu/tutorial-dask-future/)
-- Plan ETL con **Dask** (Colab): [cuaderno](https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing)
-- Plan ETL con **Ray** (Colab): [cuaderno](https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing)
-- Estudio del profesor: 500 GB con Dask (Colab): [cuaderno](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing)
-- Demo en GitHub (Dask, origen remoto → S3, desde un portátil): [josedavidmi/demo_dask_500gb-](https://github.com/josedavidmi/demo_dask_500gb-)
+- Tutorial Berkeley (Dask y un poco de Ray): [Flexible parallel processing](https://computing.stat.berkeley.edu/tutorial-dask-future/){target="_blank" rel="noopener"}
+- Plan ETL con **Dask** (Colab): [cuaderno](https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing){target="_blank" rel="noopener"}
+- Plan ETL con **Ray** (Colab): [cuaderno](https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing){target="_blank" rel="noopener"}
+- Estudio del profesor: 500 GB con Dask (Colab): [cuaderno](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing){target="_blank" rel="noopener"}
+- Demo en GitHub (Dask, origen remoto → S3, desde un portátil): [josedavidmi/demo_dask_500gb-](https://github.com/josedavidmi/demo_dask_500gb-){target="_blank" rel="noopener"}
