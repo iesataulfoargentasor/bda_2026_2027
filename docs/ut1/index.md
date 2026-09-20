@@ -8,35 +8,26 @@ tags:
 
 # U.T. 1. Gestión de soluciones de almacenamiento
 
-El título sigue el **[RA1](ra1.md)**: *gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos*. No es un tour genérico por “qué es Big Data”; es diseñar el almacén, ingerir, formatear, procesar y presentar.
+El título sigue el **[RA1](ra1.md)**: *gestiona soluciones a problemas propuestos, utilizando sistemas de almacenamiento y herramientas asociadas al centro de datos*. No es un tour genérico por “qué es Big Data”: diseñáis el almacén, ingerís, formateáis, procesáis y presentáis.
 
-Una empresa puede empezar con un servidor y una base de datos relacional. Cuando los clientes, los sensores o los logs crecen, ese servidor deja de bastar: no cabe el volumen, no llega a tiempo la velocidad y los datos ya no caben en tablas uniformes.
+Antes de 1.1, leed **[el caso: grupo hotelero de Cantabria](caso-hotel.md)** (Santander, Laredo, Comillas, Potes). Recepción **opera** ahora; gerencia **informa** a las **8:00** con el cierre de **ayer** (finanzas cierra a las **23:00**). Toda la unidad y la UT2 reutilizan esa cadena.
 
-**Big Data** no es “muchos Excel”. Es un conjunto de **métodos y tecnologías** para capturar, almacenar, procesar y presentar datos que **un sistema monomáquina tradicional no puede** tratar con garantías de tiempo, coste o variedad.
+Leed cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estilo “¿qué elegiríais y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si podéis explicárselo a un compañero sin mirar la tabla, el apartado está asimilado.
 
-Esta unidad cubre el **[RA1](ra1.md)** del módulo: gestionar soluciones a problemas propuestos con sistemas de almacenamiento y herramientas del centro de datos.
+La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil. Al final de **cada** 1.1–1.8 hay **15** preguntas (Comprobar respuesta); al cierre, [25 de toda la UT1](autoevaluacion.md) (un solo Corregir test). Ninguna sustituye a Moodle.
 
-Antes de 1.1, lee **[el caso: grupo hotelero de Cantabria](caso-hotel.md)** (Santander, Laredo, Comillas, Potes; recepción frente a gerencia; las 23:00 y las 8:00). El resto de la unidad —incluido [1.5](arquitectura.md)— y la UT2 reutilizan esa cadena.
+## Qué vais a trabajar
 
-Lee cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estilo “¿qué elegirías y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si puedes explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. La [tarea de clase](tarea-clase.md) aplica eso a 500 GB con un portátil; la [autoevaluación](autoevaluacion.md) comprueba vocabulario. Ninguna sustituye a Moodle.
-
-## Qué vas a trabajar
-
-| Apartado | Criterio | Qué te llevas |
+| Apartado | Criterio | Qué os lleváis |
 | --- | --- | --- |
 | [El caso: grupo hotelero](caso-hotel.md) | — | La cadena, los cuatro hoteles y los dos relojes (23:00 / 8:00) |
-| [1.1 Por qué Big Data y las 5 Vs](por-que-big-data.md) | **a)** | Small Data frente a Big Data, las V, analíticas, roles y el viaje evento → valor |
-| [1.2 Clústeres](clusters.md) | **a)** | Escalado horizontal y por qué cálculo y disco pueden separarse |
-| [1.3 Almacenamiento](almacenamiento.md) | **a)** | Relacional, NoSQL, lago, warehouse, data mart, objeto, lakehouse; ACID, CAP y BASE |
-| [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Paralelo frente a distribuido, lotes, stream; operar el día a día frente a analizar |
-| [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** | Ciclo, capas, Lambda/Kappa, gobierno y el paisaje de herramientas |
-| [1.6 Ingesta de datos](ingesta.md) | **b)** | Introducción, pipeline, ETL/ELT, Hola ETL (pandas/DuckDB), herramientas y consideraciones |
-| [1.7 Formatos de datos](formatos.md) | **c)** | Elegir formato (reservas de hotel): Avro, Parquet, ORC, Arrow, DuckDB |
-| [1.8 Pentaho](pentaho.md) | **d)** / **e)** | PDI (Spoon/Pan/Kitchen): filtrar, unir, JSON, nube, jobs y BD del hotel |
+| [1.1 Por qué Big Data y las 5 Vs](por-que-big-data.md) | **a)** | Un evento (reserva, sensor, cobro) tiene que acabar en una decisión. Un hotel de playa no es un albergue de montaña. |
+| [1.2 Clústeres](clusters.md) | **a)** | El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro, no. Si se funde un disco, el panel de las 8 no puede caerse. |
+| [1.3 Almacenamiento](almacenamiento.md) | **a)** | El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart). JSON y fotos, al lago. |
+| [1.4 Procesamiento](procesamiento.md) | **a)** / **d)** | Recepción **opera** (OLTP). Gerencia **informa** (lote de las 8). El semáforo es otro reloj. |
+| [1.5 Arquitectura y ecosistema](arquitectura.md) | **a)** / **e)** | Panel de las 8 y semáforo: **dos tubos** (Lambda) o **una cola** (Kappa). El cuadro de mando es una capa; aquí no se pinta. |
+| [1.6 Ingesta de datos](ingesta.md) | **b)** | Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en Hola ETL. |
+| [1.7 Formatos de datos](formatos.md) | **c)** | Dirección solo mira tres números; el CSV gordo arrastra doce columnas. |
+| [1.8 Pentaho](pentaho.md) | **d)** / **e)** | El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el **CSV**, no Spoon. |
 | [Tarea para practicar en clase](tarea-clase.md) | RA1 + **RA2** | 500 GB con un portátil: concurrente, paralelo, distribuido |
-| [Autoevaluación](autoevaluacion.md) | — | 25 preguntas de la unidad (no puntúa en Moodle) |
-
-!!! info "Sobre el material original"
-    Se mantiene el hilo pedagógico de los paquetes eXeLearning (*Introducción*, *Ingesta*, *Formatos*), de los apuntes de aula de ingesta y formatos, y del PDF *Pentaho*. El texto se ha unificado, se han corregido imprecisiones (escalado vertical, JSON, matices de ciencia de datos) y se ha alineado cada apartado con un criterio del RA1.
-
-    El PDF de prácticas se puede descargar aquí: [Pentaho.pdf](../assets/originales/Pentaho.pdf).
+| [Autoevaluación](autoevaluacion.md) | — | 25 de **toda** la unidad (Corregir test). Las 15 de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |
