@@ -985,10 +985,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#destino-azure-cuenta-de-estudiante" class="md-nav__link">
+  <a href="#destino-azure-si-el-aula-usa-cuenta-de-estudiante" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Destino Azure (cuenta de estudiante)
+        Destino Azure (si el aula usa cuenta de estudiante)
       
     </span>
   </a>
@@ -1099,6 +1099,17 @@
     <span class="md-ellipsis">
       
         Errores que se repiten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -1832,10 +1843,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#destino-azure-cuenta-de-estudiante" class="md-nav__link">
+  <a href="#destino-azure-si-el-aula-usa-cuenta-de-estudiante" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Destino Azure (cuenta de estudiante)
+        Destino Azure (si el aula usa cuenta de estudiante)
       
     </span>
   </a>
@@ -1946,6 +1957,17 @@
     <span class="md-ellipsis">
       
         Errores que se repiten
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividad
       
     </span>
   </a>
@@ -2065,8 +2087,12 @@
 
 <h1 id="18-pentaho-procesar-y-presentar">1.8. Pentaho: procesar y presentar<a class="headerlink" href="#18-pentaho-procesar-y-presentar" title="Permanent link">&para;</a></h1>
 <p>Los criterios <strong>d)</strong> y <strong>e)</strong> del RA1 se cierran aquí: <strong>procesar</strong> el dato ya almacenado y <strong>enseñárselo</strong> a alguien que no abre Spoon.</p>
-<p>En el aula usamos <strong>Pentaho Data Integration (PDI / Kettle)</strong>, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí te deja <strong>ver</strong> un <a href="../ingesta/">ETL</a>: extraer, filtrar, unir, agregar y cargar <strong>sin programar el motor</strong>.</p>
-<p>El PDF de prácticas (capturas y clics): <a href="../../assets/originales/Pentaho.pdf">Pentaho.pdf</a>. Esta página cuenta <strong>qué competencia</strong> entrenas en cada taller, con <strong>otros ficheros</strong> del <a href="../caso-hotel/">grupo hotelero de Cantabria</a> para que el flujo no sea una receta calcada. Los pasos de Spoon se llaman igual; cambia el caso.</p>
+<p>En el aula usáis <strong>Pentaho Data Integration (PDI / Kettle)</strong>, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja <strong>ver</strong> un <a href="../ingesta/">ETL</a>: extraer, filtrar, unir, agregar y cargar <strong>sin programar el motor</strong>.</p>
+<div class="admonition info">
+<p class="admonition-title">Cómo se lee esta página</p>
+<p><strong>0</strong> es el entorno. <strong>1–3</strong> se hacen en clase (filtro, cruce, JSON). <strong>4–5</strong> son nube y el job de <strong>madrugada</strong>: si el aula no tiene cubo, el CSV acaba en una carpeta. <strong>6</strong> solo si hay PostgreSQL o MariaDB. Los relojes: finanzas cierra a las <strong>23:00</strong>; Kitchen corre de noche; gerencia a las <strong>8</strong> ve el cierre de <strong>ayer</strong>. El <strong>e)</strong> es el fichero o la tabla, no un informe de Pentaho Server.</p>
+</div>
+<p>El PDF de prácticas (<a href="../../assets/originales/Pentaho.pdf">Pentaho.pdf</a>) sirve para <strong>reconocer menús</strong> (dónde está <em>Filter rows</em>, <em>Minimal width</em>…). <strong>No</strong> copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el <a href="../caso-hotel/">grupo hotelero de Cantabria</a>. Tampoco copiéis credenciales que aparezcan en capturas.</p>
 <p>Los CSV y el SQL de esta página:</p>
 <table>
 <thead>
@@ -2098,17 +2124,18 @@
 </tr>
 </tbody>
 </table>
+<p>Estos <code>reservas_pdi.csv</code> / <code>cobros_pdi.csv</code> <strong>no</strong> son los que generáis en <a href="../ingesta/#hola-etl">Hola ETL</a> ni el <code>reservas.csv</code> de <a href="../formatos/">1.7</a>. Misma <strong>idea</strong> (reservas ⋈ cobros); otras columnas (<code>id_hotel</code>, no el nombre) y otro grano (informe, no JSON fila a fila).</p>
 <h2 id="que-es-pdi-y-que-no">Qué es PDI (y qué no)<a class="headerlink" href="#que-es-pdi-y-que-no" title="Permanent link">&para;</a></h2>
-<p>Pentaho es una plataforma de integración y análisis. <strong>PDI</strong> es la pieza ETL: un lienzo donde arrastras pasos y el motor mueve las filas.</p>
-<p>Se llama herramienta de <strong>metadatos</strong> porque tú declaras <em>qué</em> tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí). El <em>cómo</em> (buffers, tipos, paralelismo interno) lo resuelve Kettle. Por eso el flujo se guarda en XML (<code>.ktr</code> / <code>.kjb</code>) y se puede ejecutar igual en tu Windows y en un servidor sin pantalla.</p>
+<p>Pentaho es una plataforma de integración y análisis. <strong>PDI</strong> es la pieza ETL: un lienzo donde arrastráis pasos y el motor mueve las filas. En esta UT no montáis el servidor de informes: el criterio <strong>e)</strong> es el CSV, el JSON o la tabla que gerencia ya entiende.</p>
+<p>En jerga de Kettle se dice herramienta de <strong>metadatos</strong> porque vosotros declaráis <em>qué</em> tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el <em>cómo</em> (buffers, tipos) lo resuelve el motor. Ese XML (<code>.ktr</code> / <code>.kjb</code>) <strong>no</strong> es el catálogo de negocio del <a href="../arquitectura/">1.5</a> (qué significa <code>canal</code>). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.</p>
 <p>Con Spoon, sin escribir el motor:</p>
 <ul>
 <li>conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);</li>
 <li>filtrar, limpiar, tipar, <em>lookup</em>, <em>merge join</em>, agregar, fórmulas;</li>
 <li>cargar a fichero, tabla o nube;</li>
-<li>esbozar un almacén en <strong>estrella</strong> (hechos / dimensiones) para informes <a href="../procesamiento/">OLAP</a>.</li>
+<li><strong>esbozar</strong> hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en <a href="../procesamiento/">estrella</a>, no un almacén entero.</li>
 </ul>
-<p><strong>No</strong> es el programa de recepción: no picas la reserva en PDI. Procesas una <strong>copia</strong>.</p>
+<p><strong>No</strong> es el programa de recepción: no picáis la reserva en PDI. Procesáis una <strong>copia</strong>.</p>
 <table>
 <thead>
 <tr>
@@ -2137,10 +2164,11 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Versión y Java</p>
-<p>Usa la versión de PDI que indique el aula (en los apuntes de prácticas se trabaja con la <strong>9.4</strong> Community). PDI 9.x espera <strong>Java 8</strong>. Si Spoon no arranca, lo primero es <code>java -version</code>, no “reinstalar Windows”. En Windows: descomprime el zip y lanza <code>spoon.bat</code>. En Linux: <code>spoon.sh</code> (puede hacer falta un JDK 8 y, en algunas distros antiguas, una librería WebKit; el profesor te dirá el paquete de vuestro lab).</p>
+<p>Usad la versión de PDI que indique el aula (en las prácticas, <strong>9.4</strong> Community). PDI 9.x espera <strong>Java 8</strong>. Si Spoon no arranca, lo primero es <code>java -version</code>, no “reinstalar Windows”. En Windows: descomprimid el zip y lanzad <code>spoon.bat</code>. En Linux: <code>spoon.sh</code> (puede hacer falta un JDK 8 y, en algunas distros antiguas, una librería WebKit; el profesor os dirá el paquete del lab).</p>
 </div>
-<p>Descarga Community (Hitachi / espejos que indique el aula): el zip típico se llama <code>pdi-ce-9.4.0.0-343.zip</code> o <code>pme-ce-…</code>. No hace falta registrarse en todos los espejos.</p>
+<p>Descarga Community (Hitachi / el espejo que indique el aula): el zip es <code>pdi-ce-9.4.0.0-343.zip</code> (carpeta <code>data-integration</code>, con <code>spoon.bat</code>). <strong>No</strong> bajéis <code>pme-ce-…</code>: eso es otro programa (editor de metadatos), no Spoon.</p>
 <h2 id="tres-ejecutables-que-se-confunden">Tres ejecutables que se confunden<a class="headerlink" href="#tres-ejecutables-que-se-confunden" title="Permanent link">&para;</a></h2>
+<p><img alt="Spoon diseña; Pan lanza una transformación; Kitchen orquesta el job de las 23:00 al panel de las 8" src="../../assets/ut1/spoon-pan-kitchen.png" /></p>
 <table>
 <thead>
 <tr>
@@ -2171,11 +2199,11 @@
 </tr>
 </tbody>
 </table>
-<p>Spoon es para <strong>clase y diseño</strong>. En producción (o en la entrega “como en empresa”) lanzas <strong>Pan</strong> o <strong>Kitchen</strong>. Si solo funciona cuando pulsas Play, el procedimiento no está cerrado.</p>
+<p>Spoon es para <strong>clase y diseño</strong>. En producción (o en la entrega “como en empresa”) lanzáis <strong>Pan</strong> o <strong>Kitchen</strong>. Si solo funciona cuando pulsáis Play, el procedimiento no está cerrado.</p>
 <div class="admonition example">
 <p class="admonition-title">Regla</p>
 <p>¿Un solo flujo leer → filtrar → escribir? → transformación → <strong>Pan</strong>.<br />
-¿“Si no está el CSV, aborta; si está, borra el informe viejo y lanza dos transformaciones”? → job → <strong>Kitchen</strong>.</p>
+¿“Si no está el CSV, aborta; si está, borra el informe viejo y lanza dos transformaciones”? → job → <strong>Kitchen</strong>. Eso es el lote de <strong>después de las 23:00</strong>.</p>
 </div>
 <p>En PDI hay <strong>dos</strong> tipos de diseño:</p>
 <ul>
@@ -2184,68 +2212,69 @@
 </ul>
 <p>Al conectar dos pasos, Spoon pregunta a menudo:</p>
 <ul>
-<li><strong>Main output of step:</strong> el camino bueno.</li>
-<li><strong>Error handling of step:</strong> qué haces si <em>este</em> paso revienta.</li>
+<li><strong>Main output of step:</strong> el camino bueno (en <em>Filter rows</em>, la rama que <strong>cumple</strong>).</li>
+<li><strong>Error handling of step:</strong> qué hacéis si <em>este</em> paso revienta.</li>
 </ul>
-<p>El lienzo (árbol de categorías a la izquierda, zona de trabajo, panel de <em>Logging</em> / métricas abajo) es el mismo en todos los talleres. El menú emergente sobre un paso (editar, previsualizar, conectar salida) lo usarás hasta el cansancio.</p>
+<p><em>Filter rows</em> tiene <strong>dos</strong> salidas: la que cumple y la que no. Unid el <em>Sort</em> a la que cumple. El <em>Dummy</em> cierra la otra.</p>
+<p>El lienzo (árbol de categorías a la izquierda, zona de trabajo, panel de <em>Logging</em> / métricas abajo) es el mismo en todos los talleres. El menú emergente sobre un paso (editar, previsualizar, conectar salida) lo usaréis hasta el cansancio.</p>
 <h2 id="criterio-d-y-criterio-e">Criterio d) y criterio e)<a class="headerlink" href="#criterio-d-y-criterio-e" title="Permanent link">&para;</a></h2>
-<p>Has <strong>procesado</strong> (d) cuando la salida <strong>no es</strong> la entrada: menos filas, columnas con nombre de negocio, un agregado, un JSON que otra app entiende.</p>
+<p>Habéis <strong>procesado</strong> (d) cuando la salida <strong>no es</strong> la entrada: menos filas, columnas con nombre de negocio, un agregado, un JSON que otra app entiende.</p>
 <p>El cliente <strong>no</strong> abre Spoon. “Fácil de interpretar” (e) es:</p>
 <ul>
 <li>un CSV con <strong>cabeceras claras</strong> y solo las columnas pedidas,</li>
 <li>un JSON coherente,</li>
 <li>una <strong>tabla</strong> que Power BI o un informe ya entienden,</li>
-<li>un <strong>agregado</strong> (importe por comarca) en lugar de veinte mil reservas crudas.</li>
+<li>un <strong>agregado</strong> (importe por hotel y canal) en lugar de veinte mil reservas crudas.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Prueba del cliente</p>
-<p>Cierra Spoon. Abre el fichero como lo abriría alguien de empresa: Excel, un visor JSON, una consulta SQL. Si tiene que preguntarte “¿qué es <code>id_cadena</code>?”, el <strong>e)</strong> no está cerrado.</p>
+<p>Cerrad Spoon. Abrid el fichero como lo abriría alguien de empresa: Excel, un visor JSON, una consulta SQL. Si tiene que preguntaros “¿qué es <code>id_cadena</code>?”, el <strong>e)</strong> no está cerrado.</p>
 </div>
 <h2 id="como-atacar-cada-taller">Cómo atacar cada taller<a class="headerlink" href="#como-atacar-cada-taller" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Escribe en una <strong>nota</strong> del lienzo (botón derecho → <em>New Note</em>) la pregunta del cliente y <strong>tu nombre</strong>.</li>
-<li>Marca origen, la T <strong>mínima</strong> y el destino. Si no cabe en una frase, el flujo está sobrado o incompleto.</li>
-<li><strong>Preview</strong> (ojo de la barra o clic derecho): 1000 filas por defecto. Ahí cazas el nulo y el tipo raro. <em>Stop</em> para cortar.</li>
-<li>Mira las métricas. En el log verás letras del estilo <code>I</code> (input), <code>O</code> (output), <code>R</code> (read), <code>W</code> (written), <code>U</code> (updated), <code>E</code> (errors). <code>E=1</code> no es un detalle: es una fila que no hizo lo que pediste.</li>
-<li>Vuelve a ejecutar con <strong>Pan</strong> o <strong>Kitchen</strong>.</li>
-<li>Abre el artefacto <strong>sin Spoon</strong>.</li>
+<li>Escribid en una <strong>nota</strong> del lienzo (botón derecho → <em>New Note</em>) la pregunta del cliente y <strong>vuestro nombre</strong>.</li>
+<li>Marcad origen, la T <strong>mínima</strong> y el destino. Si no cabe en una frase, el flujo está sobrado o incompleto.</li>
+<li><strong>Preview</strong> (ojo de la barra o clic derecho): 1000 filas por defecto. Ahí cazáis el nulo y el tipo raro. <em>Stop</em> para cortar.</li>
+<li>Mirad las métricas. En el log veréis letras del estilo <code>I</code> (input), <code>O</code> (output), <code>R</code> (read), <code>W</code> (written), <code>U</code> (updated), <code>E</code> (errors). <code>E=1</code> no es un detalle: es una fila que no hizo lo que pedisteis.</li>
+<li>Volved a ejecutar con <strong>Pan</strong> o <strong>Kitchen</strong>.</li>
+<li>Abrid el artefacto <strong>sin Spoon</strong>.</li>
 </ol>
-<p>Rutas: no dejes <code>C:\Users\tú\...</code> tapadas si el <code>.ktr</code> tiene que correr en el aula. Usa una carpeta de trabajo acordada o variables.</p>
+<p>Rutas: no dejéis <code>C:\Users\tu-cuenta\...</code> tapadas si el <code>.ktr</code> tiene que correr en el aula. Usad una carpeta de trabajo acordada o variables.</p>
 <div class="admonition warning">
 <p class="admonition-title">Nube y secretos</p>
-<p>Credenciales de AWS o Azure <strong>nunca</strong> van en el <code>.ktr</code> que subes a Moodle ni en un repo. Variables de entorno, no capturas del <code>appId</code> / <code>password</code>. Un <em>bucket</em> público con <code>s3:*</code> y <code>Principal: *</code> es un ejemplo de <strong>qué no</strong> dejar en producción.</p>
+<p>Credenciales de AWS o Azure <strong>nunca</strong> van en el <code>.ktr</code> que subís a Moodle ni en un repo. Variables de entorno, no capturas del <code>appId</code> / <code>password</code>. Un <em>bucket</em> público con <code>s3:*</code> y <code>Principal: *</code> es un ejemplo de <strong>qué no</strong> dejar en producción.</p>
 </div>
 <hr />
 <h2 id="taller-0-que-spoon-hable">Taller 0 — Que Spoon hable<a class="headerlink" href="#taller-0-que-spoon-hable" title="Permanent link">&para;</a></h2>
-<p>Objetivo: una transformación que <strong>no</strong> lee un CSV. Compruebas que PDI arranca y ves la versión.</p>
+<p>Objetivo: una transformación que <strong>no</strong> lee un CSV. Comprobáis que PDI arranca y veis la versión.</p>
 <ol>
 <li><em>File → New → Transformation</em> (o <code>Ctrl+N</code>).</li>
 <li>Categoría <strong>Input</strong> → <strong>Get system info</strong> (<em>Información del sistema</em>). Doble clic: un campo <code>Version_PDI</code> alimentado de <em>Kettle Version</em>.</li>
-<li>Categoría <strong>Utility</strong> → <strong>Write to log</strong>. Conecta la salida del primero al segundo (cuarta opción del menú emergente: nueva conexión).</li>
+<li>Categoría <strong>Utility</strong> → <strong>Write to log</strong>. Arrastrad un hop del primero al segundo (<em>New hop</em> / nueva conexión).</li>
 <li><em>Run</em> o <code>F9</code>. El panel <em>Logging</em> debe mostrar la versión.</li>
 </ol>
-<p>Si esto falla, no pases al taller 1: el entorno no está listo.</p>
+<p>Si esto falla, no paséis al taller 1: el entorno no está listo.</p>
 <hr />
 <h2 id="taller-1-filtrar-ordenar-persistir-y-pan">Taller 1 — Filtrar, ordenar, persistir y Pan<a class="headerlink" href="#taller-1-filtrar-ordenar-persistir-y-pan" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Listado de alojamientos de la comarca </em><em>Trasmiera</em><em>, ordenados por código postal, en un CSV limpio.”</em></p>
-<p>Fichero: <a href="../../assets/practicas/alojamientos_cp.csv">alojamientos_cp.csv</a> (<code>hotel</code>, <code>comarca</code>, <code>codigo_postal</code>).</p>
+<p>Fichero: <a href="../../assets/practicas/alojamientos_cp.csv">alojamientos_cp.csv</a> (<code>hotel</code>, <code>comarca</code>, <code>codigo_postal</code>). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.</p>
 <h3 id="leer">Leer<a class="headerlink" href="#leer" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Nueva transformación.</li>
-<li><strong>CSV file input</strong>. Ruta al CSV. <em>Get fields</em> / <em>Traer campos</em>: comprueba nombres y tipos.</li>
-<li><em>Preview</em>: deben salir filas de Santander, Liébana, Trasmiera…</li>
+<li><strong>CSV file input</strong>. Ruta al CSV. <em>Get fields</em> / <em>Traer campos</em>: comprobad nombres y tipos.</li>
+<li><em>Preview</em>: deben salir filas de Santander, <code>Liebana</code> (<strong>sin tilde</strong>, así está el CSV) y Trasmiera.</li>
 </ol>
 <h3 id="filtrar">Filtrar<a class="headerlink" href="#filtrar" title="Permanent link">&para;</a></h3>
-<p><strong>Flow → Filter rows.</strong> Al soltar el hop elige <em>Main output of step</em>. Condición: <code>comarca = Trasmiera</code> (el texto tiene que coincidir; <code>trasmiera</code> no vale).</p>
-<p>Preview sobre el filtro: solo Laredo, Noja, Santoña, Isla… <em>Stop</em> cuando valgas.</p>
+<p><strong>Flow → Filter rows.</strong> Condición: <code>comarca = Trasmiera</code> (el texto tiene que coincidir; <code>trasmiera</code> no vale). Conectad la rama que <strong>cumple</strong> hacia el <em>Sort</em>.</p>
+<p>Preview sobre el filtro: Laredo, Noja, Santoña, Isla… <em>Stop</em> cuando os baste.</p>
 <h3 id="ordenar-y-un-error-a-proposito">Ordenar y un error a propósito<a class="headerlink" href="#ordenar-y-un-error-a-proposito" title="Permanent link">&para;</a></h3>
 <p><strong>Transform → Sort rows.</strong> Campo <code>codigo_postal</code>.</p>
-<p>Para ver cómo avisa Spoon: escribe <code>CP</code> en vez de <code>codigo_postal</code>. Preview: icono de prohibido, log y métricas con el campo inexistente. Corrige. Así dejas de “adivinar” el nombre.</p>
+<p>Para ver cómo avisa Spoon: escribid <code>CP</code> en vez de <code>codigo_postal</code>. Preview: icono de prohibido, log y métricas con el campo inexistente. Corregid. Así dejáis de “adivinar” el nombre.</p>
 <h3 id="escribir">Escribir<a class="headerlink" href="#escribir" title="Permanent link">&para;</a></h3>
-<p><strong>Output → Text file output.</strong> Conecta desde el <em>Sort</em>. Primera ejecución: a menudo <strong>rellena con espacios</strong> (anchura fija). Pestaña <em>Fields</em> → <strong>Minimal width</strong>. Segunda ejecución: <code>Mirador Laredo;Trasmiera;39770</code> sin cola de blancos.</p>
-<p>Has <strong>procesado</strong> (menos filas, ordenadas) y <strong>presentado</strong> (CSV que se abre en Excel).</p>
+<p><strong>Output → Text file output.</strong> Conectad desde el <em>Sort</em>. Primera ejecución: a menudo <strong>rellena con espacios</strong> (anchura fija). Pestaña <em>Fields</em> → <strong>Minimal width</strong>. Segunda ejecución: <code>Mirador Laredo;Trasmiera;39770</code> sin cola de blancos.</p>
+<p>Habéis <strong>procesado</strong> (menos filas, ordenadas) y <strong>presentado</strong> (CSV que se abre en Excel).</p>
 <h3 id="pan-sin-spoon">Pan (sin Spoon)<a class="headerlink" href="#pan-sin-spoon" title="Permanent link">&para;</a></h3>
-<p>Guarda <code>taller1_trasmiera.ktr</code>. Borra el CSV de salida. En la carpeta de PDI:</p>
+<p>Guardad <code>taller1_trasmiera.ktr</code>. Borrad el CSV de salida. En la carpeta de PDI:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file=&quot;C:\ruta\taller1_trasmiera.ktr&quot;
 </span></code></pre></div>
 <p>En Linux/macOS: <code>pan.sh /file=...</code>. El log debe terminar en <em>Finished</em> y el fichero debe <strong>reaparecer</strong>. Eso es el procedimiento de madrugada.</p>
@@ -2253,7 +2282,8 @@
 <hr />
 <h2 id="taller-2-unir-dos-origenes-y-agregar">Taller 2 — Unir dos orígenes y agregar<a class="headerlink" href="#taller-2-unir-dos-origenes-y-agregar" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Importe cobrado y número de reservas </em><em>por hotel y canal</em><em>. Las que aún no tienen cobro no entran.”</em></p>
-<p>Es el mismo <strong>cruce</strong> que el <a href="../ingesta/#hola-etl">Hola ETL</a> de ingesta (reservas + cobros). En Spoon el cliente pide un informe <strong>agregado</strong> por hotel y canal, no el JSON del taller.</p>
+<p>Es la <strong>misma idea</strong> que el <a href="../ingesta/#hola-etl">Hola ETL</a> (reservas ⋈ cobros, solo cobradas). <strong>No</strong> reutilicéis aquellos CSV: aquí el hotel va por <code>id_hotel</code>, el cobro va con <strong>punto y coma</strong>, y gerencia quiere un <strong>agregado</strong>, no el JSON de una fila.</p>
+<p><img alt="Reservas y cobros se cruzan; sin cobro no entra; gerencia a las 8 ve el cierre de ayer" src="../../assets/ut1/pdi-cruce-hotel.png" /></p>
 <table>
 <thead>
 <tr>
@@ -2276,30 +2306,30 @@
 <tr>
 <td><a href="../../assets/practicas/hoteles_pdi.csv">hoteles_pdi.csv</a></td>
 <td>punto y coma</td>
-<td>Dimensión (nombre y comarca)</td>
+<td>Dimensión (Laredo, Santander, Potes, Comillas; Noja es extra)</td>
 </tr>
 </tbody>
 </table>
 <ol>
 <li>Dos (o tres) <strong>CSV file input</strong>. En cobros y hoteles, <code>Delimiter = ;</code>.</li>
-<li>En reservas, si algún código se interpreta como número y se come ceros, fuerza <strong>String</strong> en ese campo (<em>Get fields</em> y corrige el tipo).</li>
-<li><strong>Join → Merge join.</strong> Enlaza desde el <em>Merge</em> hacia cada origen: uno <em>left</em>, otro <em>right</em>. Clave: <code>id_reserva</code> (reservas ⋈ cobros). Tipo <em>INNER</em> si solo quieres cobradas.</li>
+<li>En reservas, <em>Get fields</em> y dejad <code>id_reserva</code> / <code>id_hotel</code> como <strong>Integer</strong> (o String si Spoon se come un código con ceros; aquí no hace falta).</li>
+<li><strong>Join → Merge join.</strong> En Spoon, el hop se tira <strong>desde el Merge hacia cada origen</strong> (así nombra <em>left</em> y <em>right</em>). Clave: <code>id_reserva</code> (reservas ⋈ cobros). Tipo <em>INNER</em>: las reservas <strong>sin</strong> fila en cobros no entran.</li>
 </ol>
-<p>Spoon <strong>avisa</strong>: si los flujos no están <strong>ordenados por la clave</strong>, el join miente. Añade <strong>Sort rows</strong> por <code>id_reserva</code> <strong>en cada rama</strong> <em>antes</em> del merge. Preview del merge: deben aparecer <code>hotel</code> aún no (si no has unido la dimensión) y <code>cobrado</code>.</p>
+<p>Spoon <strong>avisa</strong>: si los flujos no están <strong>ordenados por la clave</strong>, el join miente. Añadid <strong>Sort rows</strong> por <code>id_reserva</code> <strong>en cada rama</strong> <em>antes</em> del merge. Preview del merge: aún <strong>no</strong> está el nombre del hotel (falta la dimensión); sí debe estar <code>cobrado</code>.</p>
 <ol>
-<li>Tercer origen <code>hoteles_pdi.csv</code> + otro <em>Merge join</em> por <code>id_hotel</code> (otra vez: <strong>ordenar ambas entradas</strong> por <code>id_hotel</code>).</li>
-<li><strong>Statistics → Group by.</strong> Agrupa por <code>hotel</code> y <code>canal</code>. Agregados: <code>SUM(cobrado)</code>, <code>COUNT</code> de <code>id_reserva</code> (o <code>SUM(noches)</code> si el cliente pide noches).</li>
+<li>Tercer origen <code>hoteles_pdi.csv</code> + otro <em>Merge join</em> por <code>id_hotel</code> (otra vez: <strong>ordenar ambas entradas</strong> por <code>id_hotel</code>). Ahí aparecen Laredo, Santander, Comillas, Potes.</li>
+<li><strong>Statistics → Group by.</strong> Agrupad por <code>hotel</code> y <code>canal</code>. Agregados: <code>SUM(cobrado)</code> con nombre <strong><code>cobrado_total</code></strong>, <code>COUNT</code> de <code>id_reserva</code> con nombre <strong><code>n_reservas</code></strong>. Esos nombres los ponéis vosotros en la columna <em>Name</em>; Spoon no los inventa.</li>
 <li>El <em>Group by</em> también quiere el flujo <strong>ordenado</strong> por las columnas de agrupación. <em>Sort</em> por <code>hotel</code>, <code>canal</code> entre el merge y el grupo.</li>
 <li><strong>Text file output</strong> → <code>informe_hotel_canal.csv</code>.</li>
 </ol>
 <p>Criterio <strong>e):</strong> gerencia lee <strong>unas pocas filas</strong> (hotel × canal), no el cruce fila a fila.</p>
 <hr />
 <h2 id="taller-3-limpiar-filtrar-en-serio-y-json">Taller 3 — Limpiar, filtrar en serio y JSON<a class="headerlink" href="#taller-3-limpiar-filtrar-en-serio-y-json" title="Permanent link">&para;</a></h2>
-<p>Cliente: <em>“Alojamientos para un escaparate web: no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”</em></p>
+<p>Cliente: <em>“Alojamientos para un </em><em>escaparate web</em><em> (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”</em></p>
 <p>Fichero: <a href="../../assets/practicas/alojamientos_opiniones.csv">alojamientos_opiniones.csv</a>. Hay <strong>nulos</strong> a propósito (<code>puntuacion</code>, <code>estancia_min</code>) y un precio <code>-1</code>.</p>
 <h3 id="leer-y-elegir-columnas">Leer y elegir columnas<a class="headerlink" href="#leer-y-elegir-columnas" title="Permanent link">&para;</a></h3>
 <p><strong>CSV file input</strong>, separador <code>,</code>. <em>Get fields</em>: <code>precio</code> y <code>puntuacion</code> como <strong>Number</strong>; <code>id</code>, <code>dormitorios</code>, <code>huespedes</code> como Integer.</p>
-<p><strong>Transform → Select values:</strong> quédate con <code>id</code>, <code>tipo</code>, <code>comarca</code>, <code>dormitorios</code>, <code>puntuacion</code>, <code>huespedes</code>, <code>precio</code>, <code>estancia_min</code> y renombra, por ejemplo:</p>
+<p><strong>Transform → Select values:</strong> quedaos con <code>id</code>, <code>tipo</code>, <code>comarca</code>, <code>dormitorios</code>, <code>puntuacion</code>, <code>huespedes</code>, <code>precio</code>, <code>estancia_min</code> y renombrad, por ejemplo:</p>
 <table>
 <thead>
 <tr>
@@ -2331,106 +2361,114 @@
 </tbody>
 </table>
 <h3 id="nulos">Nulos<a class="headerlink" href="#nulos" title="Permanent link">&para;</a></h3>
-<p>Un <strong>Java Filter</strong> que compare <code>noches_min &lt; 4</code> <strong>revienta</strong> si el campo es nulo (el PDF de prácticas lo deja claro con otro dataset).</p>
-<p><strong>Utility → If field value is null.</strong> Sustituye nulos de <code>precio</code> y <code>noches_min</code> por <code>-1</code>. Luego el filtro <strong>debe</strong> excluir esos <code>-1</code>: no los cueles como “baratos”.</p>
+<p>Un <strong>Java Filter</strong> sobre <code>noches_min</code> <strong>revienta o miente</strong> si el campo es nulo. No copiéis un <code>&lt; 4</code>: el cliente pide <strong>4 o menos</strong> (<code>&lt;= 4</code>).</p>
+<p><strong>Utility → If field value is null.</strong> Sustituid nulos de <code>precio</code> y <code>noches_min</code> por <code>-1</code>. Luego el filtro <strong>debe</strong> excluir esos <code>-1</code>: no los coléis como “baratos”.</p>
 <h3 id="filtro-simple-y-filtro-java">Filtro simple y filtro Java<a class="headerlink" href="#filtro-simple-y-filtro-java" title="Permanent link">&para;</a></h3>
-<p><strong>Filter rows</strong> basta para <code>precio &lt; 200</code>. Condiciones con <code>&amp;&amp;</code> / <code>||</code> y texto se leen mejor en <strong>Flow → Java Filter</strong>. Ejemplo (ajústalo a <em>tus</em> nombres de campo):</p>
+<p><strong>Filter rows</strong> basta para <code>precio &lt; 200</code>. Condiciones con <code>&amp;&amp;</code> / <code>||</code> y texto se leen mejor en <strong>Flow → Java Filter</strong>. Ejemplo (ajustadlo a <strong>vuestros</strong> nombres de campo):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(precio &gt;= 0 &amp;&amp; precio &lt; 200) &amp;&amp; (noches_min &gt;= 0 &amp;&amp; noches_min &lt;= 4) &amp;&amp; !alojamiento_tipo.equals(&quot;Habitacion privada&quot;)
 </span></code></pre></div>
-<p>Puedes poner <strong>Dummy</strong> en la rama que no cumple (no hace nada; cierra el camino) y la salida JSON en la que sí.</p>
+<p>Podéis poner <strong>Dummy</strong> en la rama que no cumple (no hace nada; cierra el camino) y la salida JSON en la que sí.</p>
 <h3 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
 <p><strong>Output → JSON output.</strong></p>
 <ul>
 <li><em>Filename:</em> ruta de <code>escaprate_cantabria.json</code>.</li>
 <li><em>Json bloc name:</em> p. ej. <code>alojamientos</code>.</li>
-<li><em>Nr rows in a bloc:</em> <code>0</code> = un solo documento con todos; <code>1</code> = un fichero por fila (casi nunca lo quieres aquí).</li>
+<li><em>Nr rows in a bloc:</em> <code>0</code> = un solo documento con todos; <code>1</code> = un fichero por fila (casi nunca lo queréis aquí).</li>
 <li>Pestaña <em>Fields</em> → <strong>Get fields</strong>. Si no, el JSON sale con objetos vacíos.</li>
 </ul>
-<p>Ejecuta. Abre el JSON <strong>sin Spoon</strong>. Si un compañero de DAW entiende las claves, el <strong>e)</strong> va bien.</p>
+<p>Ejecutad. Abrid el JSON <strong>sin Spoon</strong>. Si un compañero de DAW entiende las claves, el <strong>e)</strong> va bien.</p>
 <hr />
 <h2 id="taller-4-formula-y-dejar-el-informe-en-la-nube">Taller 4 — Fórmula y dejar el informe en la nube<a class="headerlink" href="#taller-4-formula-y-dejar-el-informe-en-la-nube" title="Permanent link">&para;</a></h2>
-<p>Cliente: <em>“Por </em><em>cadena</em><em> hotelera: noches cobradas, importe cobrado y </em><em>precio medio por noche</em><em>. El CSV tiene que acabar en el almacenamiento del centro (S3 o Azure).”</em></p>
-<p>Partes del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añades <a href="../../assets/practicas/cadenas_pdi.csv">cadenas_pdi.csv</a>:</p>
+<p>Cliente: <em>“Por </em><em>costa / ciudad / interior</em><em>: noches cobradas, importe cobrado y </em><em>precio medio por noche</em><em>. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”</em></p>
+<p>Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís <a href="../../assets/practicas/cadenas_pdi.csv">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
 <ol>
 <li>CSV de cadenas (<code>;</code>) → <em>Sort</em> por <code>id_cadena</code>.</li>
 <li><em>Sort</em> del flujo de hoteles por <code>id_cadena</code>.</li>
 <li><strong>Merge join</strong> <code>id_cadena</code>.</li>
-<li><em>Sort</em> por <code>cadena</code> → <strong>Group by:</strong> <code>id_cadena</code>, <code>cadena</code>; <code>SUM(noches)</code>, <code>SUM(cobrado)</code>.</li>
-<li><strong>Transform → Calculator.</strong> Operación <em>A/B</em> (o la equivalente en tu versión): <code>importe_total / noches_total</code> → <code>precio_medio_noche</code>. Recorre el desplegable: hay texto, fechas y números; no memorices la lista.</li>
+<li><em>Sort</em> por <code>cadena</code> → <strong>Group by:</strong> <code>id_cadena</code>, <code>cadena</code>. En <em>Name</em> del agregado: <code>SUM(noches)</code> → <strong><code>noches_total</code></strong>, <code>SUM(cobrado)</code> → <strong><code>importe_total</code></strong>.</li>
+<li><strong>Transform → Calculator.</strong> Operación <em>A/B</em> (o la equivalente en vuestra versión): <code>importe_total / noches_total</code> → <code>precio_medio_noche</code>. Recorred el desplegable: hay texto, fechas y números; no memoricéis la lista.</li>
 </ol>
+<p>Si el aula <strong>no</strong> tiene cubo, <em>Text file output</em> a <code>informe_cadenas.csv</code> en la carpeta de trabajo y listo: el oficio de d) y e) ya está.</p>
 <h3 id="destino-s3-si-el-aula-usa-aws">Destino S3 (si el aula usa AWS)<a class="headerlink" href="#destino-s3-si-el-aula-usa-aws" title="Permanent link">&para;</a></h3>
 <ol>
-<li><em>Bucket</em> del <strong>centro</strong> (el nombre lo da el profesor; no copies el de otro ciclo).</li>
+<li><em>Bucket</em> del <strong>centro</strong> (el nombre lo da el profesor; no copiéis el de otro ciclo).</li>
 <li>Credenciales por <strong>variables de entorno</strong> (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, y si aplica <code>AWS_SESSION_TOKEN</code>) o el perfil <code>~/.aws/credentials</code>.</li>
-<li>Paso <strong>S3 file output</strong>. La URI suele ir en la forma <code>s3n://s3n/NOMBRE-BUCKET/informeCadenas</code> y extensión <code>csv</code>.</li>
+<li>Paso <strong>S3 file output</strong>. URI: <code>s3n://NOMBRE-BUCKET/informe_cadenas</code> y extensión <code>csv</code>. <strong>No</strong> pongáis <code>s3n://s3n/…</code> (ese doble <code>s3n</code> es un error conocido de PDI).</li>
 </ol>
 <p>Una política <code>Principal: *</code> + <code>s3:*</code> deja el cubo abierto al mundo. En clase, si os la muestran, es para que el paso <em>funcione</em>; <strong>no</strong> es el diseño de una empresa.</p>
-<h3 id="destino-azure-cuenta-de-estudiante">Destino Azure (cuenta de estudiante)<a class="headerlink" href="#destino-azure-cuenta-de-estudiante" title="Permanent link">&para;</a></h3>
-<p>El PDF de prácticas desarrolla este camino (cuenta de almacenamiento → contenedor → subida). En resumen:</p>
+<h3 id="destino-azure-si-el-aula-usa-cuenta-de-estudiante">Destino Azure (si el aula usa cuenta de estudiante)<a class="headerlink" href="#destino-azure-si-el-aula-usa-cuenta-de-estudiante" title="Permanent link">&para;</a></h3>
+<p>El PDF detalla clics de Azure; aquí basta el oficio:</p>
 <ol>
 <li>En Azure: grupo de recursos → <strong>cuenta de almacenamiento</strong> → <strong>contenedor</strong>.</li>
-<li>En el PC: Azure CLI (<code>winget install -e --id Microsoft.AzureCLI</code>), cierras y abres PowerShell, <code>az version</code>.</li>
-<li>Para automatizar: un <em>service principal</em> con rol <strong>Storage Blob Data Contributor</strong> <em>sobre vuestro</em> ámbito; <code>az login --service-principal</code> con <code>CLIENT_ID</code>, <code>CLIENT_SECRET</code>, <code>TENANT_ID</code> en variables de entorno. <strong>No</strong> pegues esos valores en el apunte ni en Git.</li>
+<li>En el PC: Azure CLI (<code>winget install -e --id Microsoft.AzureCLI</code>), cerráis y abrís PowerShell, <code>az version</code>.</li>
+<li>Para automatizar: un <em>service principal</em> con rol <strong>Storage Blob Data Contributor</strong> <em>sobre vuestro</em> ámbito; <code>az login --service-principal</code> con <code>CLIENT_ID</code>, <code>CLIENT_SECRET</code>, <code>TENANT_ID</code> en variables de entorno. <strong>No</strong> peguéis esos valores en el apunte, en el PDF ni en Git.</li>
 <li>Subida idempotente:</li>
 </ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>create<span class="w"> </span>--account-name<span class="w"> </span>TU_CUENTA<span class="w"> </span>--name<span class="w"> </span>practicas-bda<span class="w"> </span>--auth-mode<span class="w"> </span>login<span class="w"> </span>--only-show-errors
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>upload<span class="w"> </span>--account-name<span class="w"> </span>TU_CUENTA<span class="w"> </span>--container-name<span class="w"> </span>practicas-bda<span class="w"> </span>--file<span class="w"> </span>informe_cadenas.csv<span class="w"> </span>--name<span class="w"> </span>informe_cadenas.csv<span class="w"> </span>--overwrite<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--auth-mode<span class="w"> </span>login
 </span></code></pre></div>
-<p>Alternativa: token <strong>SAS</strong> (sin <code>az login</code>). Caduca; no lo subas a un repo.</p>
-<p>En Spoon, si vuestra versión trae paso de Azure Blob, úsalo con las mismas precauciones. Si no, el job (taller 5) puede llamar a un script <em>después</em> de generar el CSV local.</p>
-<p>Has procesado (d: agregas y calculas) y presentado (e: tres números por cadena, en un sitio que gerencia ya usa).</p>
+<p>Alternativa: token <strong>SAS</strong> (sin <code>az login</code>). Caduca; no lo subáis a un repo.</p>
+<p>En Spoon, si vuestra versión trae paso de Azure Blob, usadlo con las mismas precauciones. Si no, el job (taller 5) puede llamar a un script <em>después</em> de generar el CSV local.</p>
+<p>Habéis procesado (d: agregáis y calculáis) y presentado (e: tres números por costa/ciudad/interior, en un sitio que gerencia ya usa).</p>
 <hr />
 <h2 id="taller-5-un-job-que-no-se-miente">Taller 5 — Un job que no se miente<a class="headerlink" href="#taller-5-un-job-que-no-se-miente" title="Permanent link">&para;</a></h2>
-<p>Cliente: <em>“De madrugada: si ya existe el informe del taller 2, bórralo; regenera 2; si ese CSV </em><em>no</em><em> apareció, </em><em>para</em><em>; luego el 4 (nube).”</em></p>
+<p>Cliente: <em>“A las 23:00 cierra el día. De madrugada: si ya existe el informe del taller 2, bórralo; regenera 2; si ese CSV </em><em>no</em><em> apareció, </em><em>para</em><em> (no pintéis el panel de las 8 con un hueco); luego el 4.”</em></p>
+<p>El taller 4 <strong>vuelve a leer</strong> los CSV de reservas; no consume <code>informe_hotel_canal.csv</code>. El <em>File exists</em> del 2 es la <strong>compuerta</strong>: si el cruce falló, no seguís.</p>
 <ol>
 <li><em>File → New → Job.</em></li>
 <li><strong>General → Start.</strong></li>
 <li><strong>Conditions → File exists</strong> sobre <code>informe_hotel_canal.csv</code>.</li>
-<li>Si existe: <strong>Delete files</strong> + (opcional en clase) <strong>Display msgbox info</strong> “He borrado el informe viejo”. En un servidor <strong>sin ventana</strong>, el <em>msgbox</em> estorba: en la entrega “empresa” quítalo.</li>
-<li><strong>General → Transformation:</strong> el <code>.ktr</code> del taller 2. Une tanto la rama “no existía” como la de “ya lo borré” a esta transformación.</li>
-<li>Otro <strong>File exists</strong> sobre el CSV que <strong>debe</strong> haber dejado el 2. Si no está: <strong>Utility → Abort job</strong>. Así no das por bueno un panel vacío.</li>
-<li>Segunda <strong>Transformation</strong> (taller 4). Si comprobáis objeto en S3/Azure, el mismo <em>File exists</em> admite esquema S3 (URL del <em>bucket</em>) en muchas versiones; si no, un paso <em>Shell</em> / script del aula.</li>
+<li>Si existe: <strong>Delete files</strong> + (opcional en clase) <strong>Display msgbox info</strong> “He borrado el informe viejo”. En un servidor <strong>sin ventana</strong>, el <em>msgbox</em> estorba: en la entrega “empresa” quitadlo.</li>
+<li><strong>General → Transformation:</strong> el <code>.ktr</code> del taller 2. Unid tanto la rama “no existía” como la de “ya lo borré” a esta transformación.</li>
+<li>Otro <strong>File exists</strong> sobre el CSV que <strong>debe</strong> haber dejado el 2. Si no está: <strong>Utility → Abort job</strong>. Así no dais por bueno un panel vacío.</li>
+<li>Segunda <strong>Transformation</strong> (taller 4). Si comprobáis objeto en S3/Azure, el mismo <em>File exists</em> admite esquema S3 (URL del <em>bucket</em>) en muchas versiones; si no, un paso <em>Shell</em> / script del aula. Sin cubo: comprobad el CSV local.</li>
 </ol>
-<p>Guarda <code>taller5_noche.kjb</code>.</p>
+<p>Guardad <code>taller5_noche.kjb</code>.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kitchen.bat /file=&quot;C:\ruta\taller5_noche.kjb&quot; /level:Basic
 </span></code></pre></div>
 <p>Linux: <code>kitchen.sh /file=taller5_noche.kjb</code>.</p>
 <hr />
 <h2 id="taller-6-hablar-con-una-base-de-datos">Taller 6 — Hablar con una base de datos<a class="headerlink" href="#taller-6-hablar-con-una-base-de-datos" title="Permanent link">&para;</a></h2>
-<p>Cliente: <em>“Las incidencias del mostrador llegan en CSV; los nombres están en la tabla de huéspedes. Inserta el cierre, actualiza si ya existía, y si el id no está, que se vea </em><em>por qué</em><em> falló.”</em></p>
-<p>En el PDF aparece un ejemplo con RDS y un esquema deportivo. Aquí el esquema es el <strong>hotel</strong>, en <strong>local</strong> (PostgreSQL o MariaDB). RDS vale si el profesor lo monta; el oficio no cambia.</p>
+<p>Cliente: <em>“Las incidencias del mostrador llegan en CSV; los nombres están en la tabla de huéspedes. Inserta el cierre, actualiza si ya existía, y si el id no encaja, que se vea </em><em>por qué</em><em> falló.”</em></p>
+<p>En el PDF el ejemplo es RDS y deporte. Aquí el esquema es el <strong>hotel</strong>, en <strong>local</strong> (PostgreSQL o MariaDB). RDS vale si el profesor lo monta; el oficio no cambia.</p>
 <h3 id="preparar">Preparar<a class="headerlink" href="#preparar" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Crea una base <code>hotel_pdi</code> y ejecuta <a href="../../assets/practicas/hotel_pdi.sql">hotel_pdi.sql</a> (tabla <code>huespedes</code> + <code>fases_incidencia</code>).</li>
-<li>PDI trae driver de <strong>PostgreSQL</strong>. Para MySQL/MariaDB: copia un conector JDBC <strong>compatible con vuestra 9.4</strong> en la carpeta <code>lib</code> de PDI y <strong>reinicia Spoon</strong>. El “último jar del universo” a veces no carga.</li>
-<li><em>File → New → Database connection.</em> Host <code>localhost</code>, base, usuario de <strong>aula</strong>. Prueba la conexión.</li>
+<li>Cread una base <code>hotel_pdi</code> y ejecutad <a href="../../assets/practicas/hotel_pdi.sql">hotel_pdi.sql</a> (tabla <code>huespedes</code> + <code>fases_incidencia</code>). Si lo ejecutáis <strong>dos</strong> veces, los <code>INSERT</code> de huéspedes chocan con la clave; no hace falta repetirlos.</li>
+<li>PDI trae driver de <strong>PostgreSQL</strong>. Para MySQL/MariaDB: copiad un conector JDBC <strong>compatible con vuestra 9.4</strong> en la carpeta <code>lib</code> de PDI y <strong>reiniciad Spoon</strong>. El “último jar del universo” a veces no carga.</li>
+<li><em>File → New → Database connection.</em> Host <code>localhost</code>, base, usuario de <strong>aula</strong>. Probad la conexión.</li>
 </ol>
 <h3 id="lookup-enriquecer-el-csv">Lookup (enriquecer el CSV)<a class="headerlink" href="#lookup-enriquecer-el-csv" title="Permanent link">&para;</a></h3>
-<p>Lee <a href="../../assets/practicas/incidencias.csv">incidencias.csv</a> (<code>id_huesped;tipo;fecha</code>).</p>
-<p>La tabla <code>huespedes</code> tiene <code>tipo = huesped</code>. Si el lookup necesita las dos columnas:</p>
+<p>Leed <a href="../../assets/practicas/incidencias.csv">incidencias.csv</a> (<code>id_huesped;tipo;fecha</code>).</p>
+<p>La tabla <code>huespedes</code> tiene siempre <code>tipo = huesped</code>. El segundo campo está para practicar una <strong>clave de dos columnas</strong> (en otros oficios no basta el id):</p>
 <ol>
 <li><strong>Transform → Add constants:</strong> <code>tipo_entidad</code> = <code>huesped</code>.</li>
-<li><strong>Lookup → Database lookup:</strong> claves <code>id_huesped</code> + <code>tipo_entidad</code> → <code>nombre</code> (y lo que pidas).</li>
+<li><strong>Lookup → Database lookup:</strong> claves <code>id_huesped</code> + <code>tipo_entidad</code> → <code>nombre</code> (y lo que pidáis).</li>
 </ol>
-<p>Preview: nombres de Ana, Luis… Si un id no existe, los campos salen <strong>nulos</strong>. Marca <em>Do not pass the row if the lookup fails</em> si no quieres esa fila en el flujo bueno.</p>
+<p>Preview: nombres de Ana, Luis… Si un id no existe, los campos salen <strong>nulos</strong>. Marcad <em>Do not pass the row if the lookup fails</em> si no queréis esa fila en el flujo bueno.</p>
 <h3 id="insertar">Insertar<a class="headerlink" href="#insertar" title="Permanent link">&para;</a></h3>
 <p>Misma lectura. <strong>Get system info:</strong> campo <code>sysdate</code> = fecha/hora del sistema (el cierre “termina ahora”).</p>
-<p><strong>Output → Table output</strong> → <code>fases_incidencia</code>. <em>Get fields</em> y mapea <code>id_huesped</code>, <code>tipo</code>, <code>fecha</code> → <code>fecha_inicio</code>, <code>sysdate</code> → <code>fecha_fin</code>.</p>
-<p>Comprueba en SQL:</p>
+<p><strong>Output → Table output</strong> → <code>fases_incidencia</code>. <em>Get fields</em> y mapead <code>id_huesped</code>, <code>tipo</code>, <code>fecha</code> del CSV → columna <strong><code>fecha_inicio</code></strong>, <code>sysdate</code> → <strong><code>fecha_fin</code></strong>.</p>
+<p>Comprobad en SQL:</p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">fases_incidencia</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">fecha_fin</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </span></code></pre></div>
 <h3 id="actualizar-y-ver-el-error">Actualizar y ver el error<a class="headerlink" href="#actualizar-y-ver-el-error" title="Permanent link">&para;</a></h3>
-<p>Lee <a href="../../assets/practicas/incidencias2.csv">incidencias2.csv</a>. <strong>Output → Update:</strong> claves de búsqueda (<code>id_huesped</code>, <code>fecha</code>); campos a pintar (<code>tipo</code>, <code>lado</code>, <code>comentario</code>).</p>
-<p>La fila <code>id_huesped = 99</code> <strong>no está</strong> en <code>huespedes</code> / no hay fase previa. El log dirá algo como <code>E=1</code>. Clic derecho en el <em>Update</em> → <strong>Error handling…</strong>: rellena <em>Error description fieldname</em> y <em>Error fields fieldname</em>. Conecta esa salida a <strong>Write to log</strong>. Al repetir verás <em>qué</em> clave falló, no solo “ha habido un error”.</p>
+<p>Leed <a href="../../assets/practicas/incidencias2.csv">incidencias2.csv</a>. <strong>Output → Update:</strong> claves de búsqueda <code>id_huesped</code> y <code>fecha</code> del flujo, mapeadas a <strong><code>id_huesped</code></strong> y <strong><code>fecha_inicio</code></strong> de la tabla; campos a pintar (<code>tipo</code>, <code>lado</code>, <code>comentario</code>). El <em>Update</em> mira <code>fases_incidencia</code>, <strong>no</strong> la tabla de huéspedes.</p>
+<p>Tras el insert del CSV 1 (ids 1–4), este segundo fichero trae 1, 3, <strong>5</strong> y <strong>99</strong>:</p>
+<ul>
+<li>1 y 3: hay fase → actualizan.</li>
+<li><strong>5</strong> (Eva): está en huéspedes, <strong>no</strong> hay fase previa → el <em>Update</em> falla.</li>
+<li><strong>99</strong>: no hay huésped ni fase → también falla.</li>
+</ul>
+<p>Esperad <strong><code>E=2</code></strong>, no <code>E=1</code>. Clic derecho en el <em>Update</em> → <strong>Error handling…</strong>: rellenad <em>Error description fieldname</em> y <em>Error fields fieldname</em>. Conectad esa salida a <strong>Write to log</strong>. Al repetir veréis <em>qué</em> clave falló, no solo “ha habido un error”.</p>
 <h3 id="upsert">Upsert<a class="headerlink" href="#upsert" title="Permanent link">&para;</a></h3>
-<p>Si en vez de fallar quieres <strong>insertar</strong> lo que no exista: <strong>Insert / Update</strong> (no es el mismo paso que <em>Update</em>). Eso es la carga diaria que no duplica la clave.</p>
+<p>Si en vez de fallar queréis <strong>insertar</strong> lo que no exista: <strong>Insert / Update</strong> (no es el mismo paso que <em>Update</em>). Eso es la carga diaria que no duplica la clave. En este esquema no hay PK en <code>fases_incidencia</code>: las claves de búsqueda las definís vosotros en el paso.</p>
 <hr />
 <h2 id="mapa-de-pasos-criterios">Mapa de pasos ↔ criterios<a class="headerlink" href="#mapa-de-pasos-criterios" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Taller</th>
-<th>Pasos que tienes que saber nombrar</th>
+<th>Pasos que tenéis que saber nombrar</th>
 <th>d / e</th>
 </tr>
 </thead>
@@ -2448,7 +2486,7 @@
 <tr>
 <td>2</td>
 <td>Merge join, Sort (obligatorio), Group by</td>
-<td>d + e (agregado)</td>
+<td>d + e (agregado hotel × canal)</td>
 </tr>
 <tr>
 <td>3</td>
@@ -2457,13 +2495,13 @@
 </tr>
 <tr>
 <td>4</td>
-<td>Merge extra, Calculator, S3 o Azure</td>
-<td>d + e (nube del BOE)</td>
+<td>Merge extra, Calculator, S3 / Azure / carpeta</td>
+<td>d + e (nube o carpeta del aula)</td>
 </tr>
 <tr>
 <td>5</td>
 <td>Start, File exists, Delete, Abort, Transformation, <strong>Kitchen</strong></td>
-<td>Procedimiento</td>
+<td>Procedimiento (23:00 → 8:00)</td>
 </tr>
 <tr>
 <td>6</td>
@@ -2481,18 +2519,31 @@
 <li>Java Filter + nulos sin <em>If field value is null</em>.</li>
 <li>JSON output sin <em>Get fields</em>.</li>
 <li>Cumplir d) (el fichero se genera) y olvidar e) (nadie entiende las claves).</li>
-<li>Rutas absolutas de tu usuario en casa.</li>
+<li>Rutas absolutas de vuestra cuenta de casa.</li>
+<li>Seguir el PDF con <code>listings.csv</code> de Madrid o un <code>sports</code> de RDS.</li>
 </ul>
 <div class="admonition success">
 <p class="admonition-title">Al terminar la UT1</p>
 <p>Ante un problema propuesto: almacén (a), ingesta (b), formato (c), <strong>procesar</strong> con PDI u otra herramienta del centro (d) y <strong>enseñar</strong> un resultado que no requiera ser ingeniero (e).</p>
 </div>
-<h2 id="para-practicar-moodle-manda">Para practicar (Moodle manda)<a class="headerlink" href="#para-practicar-moodle-manda" title="Permanent link">&para;</a></h2>
-<p>No sustituye a la entrega. Comprueba que lo sostienes en voz alta.</p>
+<h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
+<p>No puntúa en Moodle. Una línea de por qué.</p>
 <ol>
-<li>Talleres <strong>0 a 3</strong>: <code>.ktr</code> + captura del lienzo <strong>con nota</strong> (nombre completo + pregunta del cliente). Abre el CSV/JSON <strong>fuera</strong> de Spoon.</li>
-<li>Talleres <strong>4 y 5</strong>: el informe de cadenas en el destino que indique el profesor (S3, Azure o carpeta del aula) y el <code>.kjb</code> lanzado con Kitchen.</li>
-<li>Taller <strong>6</strong> (si el aula tiene BD): lookup + insert + update con el error de la fila 99 <strong>explicado</strong> (captura del log).</li>
+<li>Habéis diseñado un solo flujo leer → filtrar → CSV. En el servidor sin ventana, ¿<strong>Pan</strong> o <strong>Kitchen</strong>?</li>
+<li>La reserva 4 de Santander no tiene fila en <code>cobros_pdi.csv</code>. ¿Sale en el informe del taller 2?</li>
+<li>Java Filter con <code>noches_min</code> nulo, sin <em>If field value is null</em>. ¿Qué pasa?</li>
+<li>Gerencia pide el cierre de ayer. ¿Les dejáis el <code>.ktr</code> o <code>informe_hotel_canal.csv</code>?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Comprobación</p>
+<p>Pan / no (inner: sin cobro no entra) / el filtro revienta o miente / el CSV (el criterio e no es Spoon).</p>
+</div>
+<h2 id="para-practicar-moodle-manda">Para practicar (Moodle manda)<a class="headerlink" href="#para-practicar-moodle-manda" title="Permanent link">&para;</a></h2>
+<p>No sustituye a la entrega. Comprobad que lo sostenéis en voz alta.</p>
+<ol>
+<li>Talleres <strong>0 a 3</strong>: <code>.ktr</code> + captura del lienzo <strong>con nota</strong> (nombre completo + pregunta del cliente). Abrid el CSV/JSON <strong>fuera</strong> de Spoon.</li>
+<li>Talleres <strong>4 y 5</strong>: el informe costa/ciudad/interior en el destino que indique el profesor (S3, Azure o carpeta del aula) y el <code>.kjb</code> lanzado con Kitchen.</li>
+<li>Taller <strong>6</strong> (si el aula tiene BD): lookup + insert + update con el error de las filas <strong>5 y 99</strong> <strong>explicado</strong> (captura del log, <code>E=2</code>).</li>
 <li>Opcional: el tutorial Community de Hitachi Vantara (lista de correo: limpiar, tipar y cargar un CSV a una tabla). Mismo oficio, otro enunciado.</li>
 </ol>
 <p>La entrega, si la hay, es Moodle. No hace falta compartir el <code>.ktr</code> fuera del centro.</p>

@@ -1476,7 +1476,7 @@
 <h2 id="comprobar-el-poder-que-hacer-en-el-lab">Comprobar el poder (qué hacer en el lab)<a class="headerlink" href="#comprobar-el-poder-que-hacer-en-el-lab" title="Permanent link">&para;</a></h2>
 <p>No hace falta un clúster de 80 nodos. Con la VM o el laboratorio:</p>
 <ol>
-<li>Sube a HDFS un CSV de reservas (el de <a href="../../ut1/pentaho/">1.8</a> o uno generado como en <a href="../../ut1/formatos/">1.7</a>).</li>
+<li>Sube a HDFS un CSV de reservas <strong>con columna <code>hotel</code></strong> (el generado en <a href="../../ut1/formatos/">1.7</a>; el <code>reservas_pdi.csv</code> del <a href="../../ut1/pentaho/">1.8</a> lleva <code>id_hotel</code>, no el nombre).</li>
 <li>Lanza un job que <strong>cuente noches por hotel</strong> (streaming en Python o el ejemplo que dé el profesor).</li>
 <li>Mira el historial: <strong>cuántos <em>maps</em></strong>, tiempo, y que la salida en HDFS coincide con un <code>GROUP BY</code> en DuckDB sobre el mismo CSV.</li>
 </ol>

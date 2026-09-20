@@ -1,6 +1,6 @@
 id_hotel;hotel;comarca;id_cadena
-1;Mirador Laredo;Trasmiera;10
-2;Hotel Real;Santander;20
-3;Posada Potes;Liebana;10
-4;Parador Santillana;Saja-Nansa;30
-5;Albergue Reinosa;Campoo-Los Valles;10
+1;Laredo;Trasmiera;10
+2;Santander;Santander;20
+3;Potes;Liebana;30
+4;Comillas;Saja-Nansa;10
+5;Noja;Trasmiera;10
