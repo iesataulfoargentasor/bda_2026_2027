@@ -14,9 +14,9 @@ Un **clúster** es otro planteamiento: varios ordenadores (**nodos**) unidos por
 
 Hoy se montan sobre **servidores normales** (no hace falta un *mainframe*) más un programa que **reparte** tareas y datos.
 
-No lo confundáis con varios núcleos **dentro** de un portátil. Eso es paralelo en **una** máquina ([1.4](procesamiento.md)). El clúster son **varias** máquinas. Lo pondréis a prueba en la [tarea de los 500 GB](tarea-clase.md): el i7 no es un clúster.
+No lo confundáis con varios núcleos **dentro** de un portátil. Eso es paralelo en **una** máquina ([1.4](procesamiento.md){target="_blank" rel="noopener"}). El clúster son **varias** máquinas. Lo pondréis a prueba en la [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"}: el i7 no es un clúster.
 
-En el [grupo hotelero](caso-hotel.md): el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que **acabar antes de las 8**. Si solo hincháis *esa* máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta **réplica** para que el panel no se caiga.
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que **acabar antes de las 8**. Si solo hincháis *esa* máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta **réplica** para que el panel no se caiga.
 
 ```mermaid
 flowchart LR
@@ -108,13 +108,13 @@ El vertical **sigue existiendo** (un nodo de informes más gordo, un PMS más RA
 
 Añadir nodos **no** acorta el tiempo de forma lineal si la tarea **no se puede partir**. Si cada paso depende del resultado del anterior, el segundo nodo está esperando al primero: tenéis más máquinas y el mismo cuello.
 
-Eso se desarrolla en [1.4](procesamiento.md). El clúster brilla cuando hay **independencia** entre trozos: sumar noches por hotel, procesar ficheros distintos, consultas que el motor puede repartir.
+Eso se desarrolla en [1.4](procesamiento.md){target="_blank" rel="noopener"}. El clúster brilla cuando hay **independencia** entre trozos: sumar noches por hotel, procesar ficheros distintos, consultas que el motor puede repartir.
 
 También hay coste de **coordinación**: la red, quien reparte, el momento de juntar resultados.
 
 ## El cálculo y el disco no tienen por qué ir juntos
 
-El Hadoop “de libro” **pegaba** el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un **cubo de objetos** (un almacén de ficheros en red; el detalle en [1.3](almacenamiento.md)) y el clúster de cálculo **crece o se apaga** por su cuenta. Ganáis réplica y disco barato; pagáis red.
+El Hadoop “de libro” **pegaba** el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un **cubo de objetos** (un almacén de ficheros en red; el detalle en [1.3](almacenamiento.md){target="_blank" rel="noopener"}) y el clúster de cálculo **crece o se apaga** por su cuenta. Ganáis réplica y disco barato; pagáis red.
 
 Las dos frases no se pisan: son **dos diseños**. Clúster clásico = dato y CPU en el mismo nodo. Nube = dato en el cubo, CPU donde haga falta.
 
@@ -123,7 +123,7 @@ Las dos frases no se pisan: son **dos diseños**. Clúster clásico = dato y CPU
 Diseñar el almacenamiento masivo implica **varias** decisiones, no una sola:
 
 - ¿Hace falta un **clúster** (el dato ya no cabe o no llega a tiempo en una máquina)?
-- Eso **no** sustituye a “el cobro no puede verse a medias”: esa garantía (ACID) es de [1.3](almacenamiento.md). El PMS puede seguir en un servidor; el histórico, en el clúster.
+- Eso **no** sustituye a “el cobro no puede verse a medias”: esa garantía (ACID) es de [1.3](almacenamiento.md){target="_blank" rel="noopener"}. El PMS puede seguir en un servidor; el histórico, en el clúster.
 - Cómo **ingieres** (un destino o muchos nodos) y qué **formato** usas (que se pueda trocear) vienen después.
 
 Caracterizar *si* hace falta repartir, y *qué* pasa si un nodo cae a mitad del job, es el criterio **a)**.

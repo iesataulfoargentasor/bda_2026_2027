@@ -10,9 +10,9 @@ tags:
 
 Un sistema Big Data no es “un programa que lo hace todo”. Si metéis ingesta, limpieza, modelos y el PDF para gerencia en el mismo script, no podéis probar, ni sustituir una pieza, ni explicar el diseño (criterio **a)**).
 
-Se parte en **capas** que se hablan entre sí. Cada capa tiene **una** responsabilidad. Así sabéis dónde encajan la [ingesta](ingesta.md), el [formato](formatos.md), [Pentaho](pentaho.md) y el cuadro de mando.
+Se parte en **capas** que se hablan entre sí. Cada capa tiene **una** responsabilidad. Así sabéis dónde encajan la [ingesta](ingesta.md){target="_blank" rel="noopener"}, el [formato](formatos.md){target="_blank" rel="noopener"}, [Pentaho](pentaho.md){target="_blank" rel="noopener"} y el cuadro de mando.
 
-Este apartado es el **mapa del oficio** que en [1.1](por-que-big-data.md) llamamos ingeniería de datos: no el gráfico de las 8, sino que ese gráfico **pueda** hacerse. El hilo es el [grupo hotelero](caso-hotel.md).
+Este apartado es el **mapa del oficio** que en [1.1](por-que-big-data.md){target="_blank" rel="noopener"} llamamos ingeniería de datos: no el gráfico de las 8, sino que ese gráfico **pueda** hacerse. El hilo es el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}.
 
 !!! info "Cómo se lee esta página"
     Primero el **ciclo** (fases: de que nace el dato hasta que gerencia lo usa). Luego el **edificio** (ocho capas: el dato entra abajo y gerencia mira arriba). Después **cómo se combinan** lote y flujo (Lambda / Kappa) con los relojes 23:00 / 8:00 / semáforo. Los logos van al final: se sitúan en una capa; no se recitan.
@@ -22,14 +22,14 @@ Este apartado es el **mapa del oficio** que en [1.1](por-que-big-data.md) llamam
 Antes de los logos, el dato recorre un ciclo. Las tecnologías cambian; **estas fases no**.
 
 1. **Generación.** Quién, dónde y cuándo nace el dato: PMS, pasarela, sensor, un Excel de Comillas, una API.
-2. **Ingesta.** Moverlo al almacén. El detalle (pipeline, push/pull/poll, ETL/ELT) está en [1.6](ingesta.md).
-3. **Transformación.** Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. No es lo mismo que unificar nombres (eso es la capa 2, más abajo). El resultado suele **añadirse** al lago, no pisar el fichero: si un huésped pide borrar el NIF, no editáis el Parquet a mano ([1.7](formatos.md)).
+2. **Ingesta.** Moverlo al almacén. El detalle (pipeline, push/pull/poll, ETL/ELT) está en [1.6](ingesta.md){target="_blank" rel="noopener"}.
+3. **Transformación.** Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. No es lo mismo que unificar nombres (eso es la capa 2, más abajo). El resultado suele **añadirse** al lago, no pisar el fichero: si un huésped pide borrar el NIF, no editáis el Parquet a mano ([1.7](formatos.md){target="_blank" rel="noopener"}).
 4. **Entrega** (*serving*). El dato **ya es de fiar** y se lo dais a un consumidor: panel, modelo, fichero para el científico.
 5. **Consumo.** Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado **antes**.
 
 ![Ciclo del dato en el hotel: de PMS y sensores al panel de las 8](../assets/ut1/ciclo-ingenieria.png)
 
-Sobre el almacén (lago, warehouse, *lakehouse*, cubo de objetos: [1.3](almacenamiento.md)) se apoyan ingesta, transformación y entrega. Seguridad y monitorización son **capas** que atraviesan el edificio. Gobierno, DataOps y orquestación son **corrientes** (no una novena capa): van más abajo.
+Sobre el almacén (lago, warehouse, *lakehouse*, cubo de objetos: [1.3](almacenamiento.md){target="_blank" rel="noopener"}) se apoyan ingesta, transformación y entrega. Seguridad y monitorización son **capas** que atraviesan el edificio. Gobierno, DataOps y orquestación son **corrientes** (no una novena capa): van más abajo.
 
 ### A quién servís
 
@@ -50,7 +50,7 @@ El ciclo son **fases** (qué le pasa al dato). Las ocho capas son el **edificio*
 !!! warning "Tres numeraciones (no las mezcléis)"
     - El **ciclo** tiene cinco fases. El **4** es la entrega (*serving*: el dato ya de fiar, listo para el panel o el modelo).
     - El **edificio** tiene ocho capas. El **4** es el procesamiento (el job). Unificar `web` / `WEB` es la **capa 2**; el cruce reservas ⋈ cobros es la **capa 4**.
-    - En [1.6](ingesta.md) hay un resumen de **cuatro pisos**. Allí el **4** es el panel. Todavía no hace falta leerlo; cuando lleguéis, **no** reutilicéis estos números.
+    - En [1.6](ingesta.md){target="_blank" rel="noopener"} hay un resumen de **cuatro pisos**. Allí el **4** es el panel. Todavía no hace falta leerlo; cuando lleguéis, **no** reutilicéis estos números.
 
 ![Ocho capas en el hotel: el dato entra por la ingesta y gerencia mira el panel](../assets/ut1/capas-hotel.png)
 
@@ -58,7 +58,7 @@ El ciclo son **fases** (qué le pasa al dato). Las ocho capas son el **edificio*
 
 Entráis a las fuentes que **ya existen**: el PMS, la pasarela, el JSON del canal, los sensores, un CSV de Comillas. **No** elegís cómo habla el origen: os adaptáis (SQL, HTTP, fichero, cola).
 
-Si esta capa falla, el resto analiza el vacío. El detalle está en [1.6](ingesta.md).
+Si esta capa falla, el resto analiza el vacío. El detalle está en [1.6](ingesta.md){target="_blank" rel="noopener"}.
 
 ### 2. Colección / integración
 
@@ -68,11 +68,11 @@ Esto **no** es el cruce reservas ⋈ cobros: eso es transformar (capa 4). Aquí 
 
 ### 3. Almacenamiento
 
-Lago, warehouse, *lakehouse*, HDFS, objeto en cloud… [distribuido](clusters.md) si el volumen lo pide. Aquí aplicáis lo de [1.3](almacenamiento.md): ¿el cobro puede verse a medias o no? ¿lago, almacén de informes o los dos?
+Lago, warehouse, *lakehouse*, HDFS, objeto en cloud… [distribuido](clusters.md){target="_blank" rel="noopener"} si el volumen lo pide. Aquí aplicáis lo de [1.3](almacenamiento.md){target="_blank" rel="noopener"}: ¿el cobro puede verse a medias o no? ¿lago, almacén de informes o los dos?
 
 ### 4. Procesamiento
 
-Infraestructura **batch**, **streaming** o híbrida. *No* extrae valor ella sola: deja el dato **listo** (agregado, limpio, unido). El job de madrugada, Spark o un script viven aquí. Lote o flujo, en [1.4](procesamiento.md).
+Infraestructura **batch**, **streaming** o híbrida. *No* extrae valor ella sola: deja el dato **listo** (agregado, limpio, unido). El job de madrugada, Spark o un script viven aquí. Lote o flujo, en [1.4](procesamiento.md){target="_blank" rel="noopener"}.
 
 ### 5. Consulta y analítica
 
@@ -100,10 +100,10 @@ Las capas de arriba son el **edificio**. Una arquitectura Big Data, además, tie
 | Exigencia | En castellano | En el hotel |
 | --- | --- | --- |
 | **Escala** | Añadís disco o CPU sin rediseñar | Abrís Noja y el panel de las 8 sigue saliendo |
-| **Aguanta fallos** | Un nodo muerto no tumba el **histórico** | Se funde un disco en Potes; el **panel** sigue ([1.2](clusters.md)). El cobro en recepción es el PMS, no el clúster |
+| **Aguanta fallos** | Un nodo muerto no tumba el **histórico** | Se funde un disco en Potes; el **panel** sigue ([1.2](clusters.md){target="_blank" rel="noopener"}). El cobro en recepción es el PMS, no el clúster |
 | **Dato repartido** | Nada de un único SPOF (un solo punto que, si cae, cae todo) | No un USB con “el histórico” |
 | **Proceso repartido** | El cálculo también se parte | El job de ocupación no corre en un portátil |
-| **Dato cerca del cálculo** | Menos red, menos espera | Hadoop clásico; en nube a veces se **separa** ([1.2](clusters.md), [1.3](almacenamiento.md)) |
+| **Dato cerca del cálculo** | Menos red, menos espera | Hadoop clásico; en nube a veces se **separa** ([1.2](clusters.md){target="_blank" rel="noopener"}, [1.3](almacenamiento.md){target="_blank" rel="noopener"}) |
 
 !!! failure "Sobreingeniería"
     Montar Kafka + Spark + tres nubes “porque es Big Data” cuando el Excel de Comillas cabe en un PC. Primero la pregunta de gerencia; luego el edificio. Los proveedores publican listas (p. ej. *Well-Architected*): la idea es la misma, no hace falta recitar la guía.
@@ -112,15 +112,15 @@ Principios que evitan el zoo:
 
 1. **Componentes comunes** pocos y bien elegidos: cubo de objetos, Git, orquestador, un motor de proceso.
 2. **Todo falla.** **RTO:** cuánto podéis tardar en recuperar el panel (si el job muere a las 02:10, ¿llegáis a las 8?). **RPO:** hasta qué hora de reservas aceptáis **perder** (un fallo a las 22:00, ¿se pierde el día o solo la última hora?).
-3. **Elástico**, también hacia abajo (noviembre: apagáis nodos; [1.2](clusters.md)).
+3. **Elástico**, también hacia abajo (noviembre: apagáis nodos; [1.2](clusters.md){target="_blank" rel="noopener"}).
 4. **Viva:** el negocio cambia; la arquitectura también.
 5. **Poco acoplada:** cola o API; cambiáis NiFi por un script sin reescribir el PMS.
 6. **Reversible:** una decisión mala se deshace (versión del job, no “ya está en producción para siempre”).
-7. **Menos privilegio:** el práctico no lee el DNI ([seguridad](#7-seguridad-transversal)).
+7. **Menos privilegio:** el práctico no lee el DNI ([seguridad](#7-seguridad-transversal){target="_blank" rel="noopener"}).
 
 ## Dos caminos: lote y flujo (Lambda y Kappa)
 
-Lote y *streaming* ya están en [1.4](procesamiento.md). Aquí es **cómo se combinan** en el edificio.
+Lote y *streaming* ya están en [1.4](procesamiento.md){target="_blank" rel="noopener"}. Aquí es **cómo se combinan** en el edificio.
 
 - **Lote:** tiene principio y fin. El cierre de las 23:00. Preciso; tarda. **Eso es el panel de las 8.**
 - **Flujo:** no acaba. Cada evento de sensor. Rápido; a menudo **menos** preciso (una ventana, no todo el histórico). **Eso es el semáforo.**
@@ -136,7 +136,7 @@ En **este hotel** no mezcléis eso con “todo por dos caminos”. Hay **dos tub
 - PMS y pasarela → lote de madrugada → **panel de las 8** (cierre de **ayer**).
 - Sensores → flujo → **semáforo de recepción**.
 
-El cobro del panel **no** alimenta el semáforo. El sensor **no** pinta el importe de gerencia. En [1.6](ingesta.md) esos dos tubos se verán otra vez.
+El cobro del panel **no** alimenta el semáforo. El sensor **no** pinta el importe de gerencia. En [1.6](ingesta.md){target="_blank" rel="noopener"} esos dos tubos se verán otra vez.
 
 Las tres capas de Lambda, aplicadas al hotel:
 
@@ -150,7 +150,7 @@ En el hotel eso es natural: **no** es el mismo algoritmo pintar el panel de las 
 
 ### Kappa: un solo flujo
 
-Si el lote no es más que “un flujo que se puede **releer**”, tiréis la capa lenta. Todo pasa por una **cola de mensajes** ([Kafka](https://kafka.apache.org/) y similares). El bruto no se muta; si cambiáis la transformación, **reprocesáis** desde un punto (el *replay*).
+Si el lote no es más que “un flujo que se puede **releer**”, tiréis la capa lenta. Todo pasa por una **cola de mensajes** ([Kafka](https://kafka.apache.org/){target="_blank" rel="noopener"} y similares). El bruto no se muta; si cambiáis la transformación, **reprocesáis** desde un punto (el *replay*).
 
 Cuatro ideas:
 
@@ -170,7 +170,7 @@ Hace falta que los eventos se guarden **en orden**. Si el algoritmo del panel **
 | ¿Solo el panel de las 8, sin semáforo? | Un lote. No montéis flujo “por si acaso” |
 | ¿Solo el semáforo, y el 8 se puede **rehacer** releyendo la cola? | **Kappa** |
 
-Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en Lambda reduce el doble mantenimiento. El detalle del motor, en la [UT2](../ut2/ecosistema.md).
+Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en Lambda reduce el doble mantenimiento. El detalle del motor, en la [UT2](../ut2/ecosistema.md){target="_blank" rel="noopener"}.
 
 ### Temperatura: no todo el dato se toca igual
 
@@ -185,17 +185,17 @@ Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en La
 
 El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Pagar SSD por las fotos de la reforma de 2019 es mal diseño.
 
-El [principio SCV](procesamiento.md#scv) (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundáis con CAP ([1.3](almacenamiento.md)).
+El [principio SCV](procesamiento.md#scv){target="_blank" rel="noopener"} (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundáis con CAP ([1.3](almacenamiento.md){target="_blank" rel="noopener"}).
 
 ## Gobierno, DataOps y orquestación
 
 No son una novena capa con logo. Son **corrientes** que atraviesan el ciclo.
 
-**Gobierno del dato.** Que se pueda **encontrar**, saber **de dónde salió** (linaje) y qué **significa** `canal`. Metadatos, catálogo, ética y privacidad (el NIF no se va a un cubo público). Sin esto el lago es ciénaga ([1.3](almacenamiento.md)).
+**Gobierno del dato.** Que se pueda **encontrar**, saber **de dónde salió** (linaje) y qué **significa** `canal`. Metadatos, catálogo, ética y privacidad (el NIF no se va a un cubo público). Sin esto el lago es ciénaga ([1.3](almacenamiento.md){target="_blank" rel="noopener"}).
 
 **DataOps.** Entregar valor **antes**, con menos error: automatizar el job, **observar** cuando el CSV llega vacío, y tener un plan si Kitchen falla a las 02:10 (repetir, o volver a la versión de ayer). CI/CD aquí es “el flujo se prueba antes de pintar el panel”.
 
-**Orquestación.** Quién dispara qué, en qué orden, y qué pasa si un paso muere. En aula lo veréis como **Kitchen** ([1.8](pentaho.md)). En industria oiréis [Apache Airflow](https://airflow.apache.org/): no transforma el dato; **coordina**. Un ingeniero de datos sin orquestación es un cron a ciegas.
+**Orquestación.** Quién dispara qué, en qué orden, y qué pasa si un paso muere. En aula lo veréis como **Kitchen** ([1.8](pentaho.md){target="_blank" rel="noopener"}). En industria oiréis [Apache Airflow](https://airflow.apache.org/){target="_blank" rel="noopener"}: no transforma el dato; **coordina**. Un ingeniero de datos sin orquestación es un cron a ciegas.
 
 ## Cómo se lee un paisaje (*Big Data landscape*)
 
@@ -209,15 +209,15 @@ Si buscáis esa expresión veréis pósters con cientos de logos. **No los memor
 | Orquestación (corriente) | Oozie, Airflow, **Kitchen** (Pentaho) | ¿En qué orden y qué pasa si falla? |
 | 6 Visualización | Power BI, Tableau, el **e)** de este módulo (CSV/JSON o un panel) | ¿Qué ve gerencia? |
 
-**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. **Pentaho** se usa en este módulo para **ETL visual** (Spoon). El criterio **e)** es un fichero o un panel que gerencia entiende: **no** es abrir Report Designer ni Pentaho Server. La cola de Kappa suele ser Kafka; el detalle de ingesta está en [1.6](ingesta.md).
+**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. **Pentaho** se usa en este módulo para **ETL visual** (Spoon). El criterio **e)** es un fichero o un panel que gerencia entiende: **no** es abrir Report Designer ni Pentaho Server. La cola de Kappa suele ser Kafka; el detalle de ingesta está en [1.6](ingesta.md){target="_blank" rel="noopener"}.
 
-Los mapas cambian de año (nace una marca, muere otra). **Las capas no.** Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/) (orientación, no para recitar).
+Los mapas cambian de año (nace una marca, muere otra). **Las capas no.** Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/){target="_blank" rel="noopener"} (orientación, no para recitar).
 
 ## Big Data y cloud
 
-El BOE cita cloud. Un *bucket* S3 o un Glue no cambian el razonamiento: seguís decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia **quién** opera los discos y **cómo pagáis**. El cubo es almacén de **objetos**; el clúster de cálculo puede **no** vivir en las mismas máquinas ([1.3](almacenamiento.md)).
+El BOE cita cloud. Un *bucket* S3 o un Glue no cambian el razonamiento: seguís decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia **quién** opera los discos y **cómo pagáis**. El cubo es almacén de **objetos**; el clúster de cálculo puede **no** vivir en las mismas máquinas ([1.3](almacenamiento.md){target="_blank" rel="noopener"}).
 
-En varios servicios analíticos de nube pagáis por **dato escaneado**, no solo por dato guardado. Por eso en [1.7](formatos.md) Parquet no es “un capricho moderno”: es menos euros y menos minutos.
+En varios servicios analíticos de nube pagáis por **dato escaneado**, no solo por dato guardado. Por eso en [1.7](formatos.md){target="_blank" rel="noopener"} Parquet no es “un capricho moderno”: es menos euros y menos minutos.
 
 ## Destrezas del oficio (no un tutorial)
 
@@ -237,7 +237,7 @@ Un ingeniero de datos **no** es un desarrollador de producto. Sí escribe el scr
 El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las **8**. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.
 
 !!! success "Al terminar 1.5"
-    Dibujad las **ocho** capas del [hotel](caso-hotel.md). Ponéd **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
+    Dibujad las **ocho** capas del [hotel](caso-hotel.md){target="_blank" rel="noopener"}. Ponéd **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
 
 ## Actividad
 
@@ -247,16 +247,16 @@ No puntúa en Moodle. Una línea de por qué.
 
     | Herramienta | Pista |
     | --- | --- |
-    | [Power BI](https://www.microsoft.com/es-es/power-platform/products/power-bi) | Lo que gerencia **ve** |
+    | [Power BI](https://www.microsoft.com/es-es/power-platform/products/power-bi){target="_blank" rel="noopener"} | Lo que gerencia **ve** |
     | SQL | Preguntar ocupación ya curada |
-    | [MongoDB](https://www.mongodb.com/) | Dónde reposa un JSON |
-    | [Airflow](https://airflow.apache.org/) | Orden de los pasos |
-    | [S3](https://aws.amazon.com/s3/) | Cubo de objetos |
+    | [MongoDB](https://www.mongodb.com/){target="_blank" rel="noopener"} | Dónde reposa un JSON |
+    | [Airflow](https://airflow.apache.org/){target="_blank" rel="noopener"} | Orden de los pasos |
+    | [S3](https://aws.amazon.com/s3/){target="_blank" rel="noopener"} | Cubo de objetos |
 
 2. En Lambda, el semáforo va más rápido que el panel de las 8. ¿Qué **pagáis** a cambio? El panel de las 8, ¿mezcla los dos caminos?
 3. Lote frente a flujo: una frase de **volumen** y otra de **reloj**, con el cierre de las 23:00 y los sensores.
 4. ¿Por qué oiréis tanto Spark en este dibujo, y no “un programa para el lote y otro para el flujo”?
-5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#scv), si queréis **velocidad y volumen**, ¿qué soltáis?
+5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#scv){target="_blank" rel="noopener"}, si queréis **velocidad y volumen**, ¿qué soltáis?
 
 !!! tip "Comprobación"
     (1) Visualización (6) / consulta (5) / almacén (3) / orquestación / almacén (3). (2) Precisión o histórico; el panel de las 8 **no** mezcla. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo).

@@ -15,11 +15,11 @@ El criterio **c)** es este: **en qué forma dejáis el dato** para que el siguie
 
 ## Un caso para no perderse
 
-El [grupo hotelero de Cantabria](caso-hotel.md) (Santander, Laredo, Comillas, Potes) guarda cada reserva con **muchas** columnas en el PMS. Gerencia, a las **8**, solo quiere *ocupación e importe por hotel*. Si el fichero es un CSV gordo, el motor **lee todas las columnas** para calcular tres números. En cloud, a menudo **pagáis por lo que escaneáis**, no solo por lo que guardáis.
+El [grupo hotelero de Cantabria](caso-hotel.md){target="_blank" rel="noopener"} (Santander, Laredo, Comillas, Potes) guarda cada reserva con **muchas** columnas en el PMS. Gerencia, a las **8**, solo quiere *ocupación e importe por hotel*. Si el fichero es un CSV gordo, el motor **lee todas las columnas** para calcular tres números. En cloud, a menudo **pagáis por lo que escaneáis**, no solo por lo que guardáis.
 
 Esa es la pregunta del apartado: ¿el dato viaja **fila a fila** (bien para *esta* reserva en un mensaje o en el PMS) o **campo a campo** (bien para el panel)? ¿Hace falta que un humano lo abra, o que Spark lo **trocee** entre nodos?
 
-Las prácticas **no dependen de un CSV ajeno**. Generáis el dataset en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/) en blanco). Esquema Avro: [reserva.avsc](../assets/practicas/reserva.avsc). **Noja** es el “mañana abre otro”, no un quinto hotel del esqueleto. Este `reservas.csv` **no** es el de [Hola ETL](ingesta.md) (allí había cobros).
+Las prácticas **no dependen de un CSV ajeno**. Generáis el dataset en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/){target="_blank" rel="noopener"} en blanco). Esquema Avro: [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. **Noja** es el “mañana abre otro”, no un quinto hotel del esqueleto. Este `reservas.csv` **no** es el de [Hola ETL](ingesta.md){target="_blank" rel="noopener"} (allí había cobros).
 
 ```python
 import numpy as np
@@ -90,14 +90,14 @@ Pensad en mil reservas `hotel | noches | importe | comentarios`.
 
 **Todo el registro junto** (CSV, JSON; **Avro** en un bus): leer la reserva 17 es barato. Sumar *solo* importes obliga a saltar el resto mil veces. **Añadir** reservas al final es natural.
 
-Eso **no** convierte Avro en el PMS. Recibir el cobro en recepción es la tabla del [1.3](almacenamiento.md) (ACID). Avro es el **mensaje** (Kafka): también va por filas, con esquema.
+Eso **no** convierte Avro en el PMS. Recibir el cobro en recepción es la tabla del [1.3](almacenamiento.md){target="_blank" rel="noopener"} (ACID). Avro es el **mensaje** (Kafka): también va por filas, con esquema.
 
-**Cada campo en su sitio** (Parquet, ORC): los importes van juntos. El panel de las **8** lee **una** racha. Reconstruir la reserva 17 cruza trozos. Cambiar *una* fila duele. Por eso se **parte** por fecha o por hotel. Encaja en el cuadro de mando; **no** como almacén de la caja ([operar frente a analizar](procesamiento.md)).
+**Cada campo en su sitio** (Parquet, ORC): los importes van juntos. El panel de las **8** lee **una** racha. Reconstruir la reserva 17 cruza trozos. Cambiar *una* fila duele. Por eso se **parte** por fecha o por hotel. Encaja en el cuadro de mando; **no** como almacén de la caja ([operar frente a analizar](procesamiento.md){target="_blank" rel="noopener"}).
 
 !!! example "A las 8 no hace falta el comentario"
     Agregar es resumir. “Importe medio en Laredo” no lee `comentarios`. Columnar + partición `hotel=Laredo` = menos disco, menos factura.
 
-En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: **1 TB** de texto plano puede quedar cerca de **un octavo** en columnar comprimido. La cifra exacta cambia; la idea no: **elegir mal el formato en la [carga](ingesta.md) se paga cada consulta**.
+En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: **1 TB** de texto plano puede quedar cerca de **un octavo** en columnar comprimido. La cifra exacta cambia; la idea no: **elegir mal el formato en la [carga](ingesta.md){target="_blank" rel="noopener"} se paga cada consulta**.
 
 ## Comprimir no es gratis
 
@@ -122,15 +122,15 @@ No memoricéis megas de un recorte ajeno. **Medid el vuestro** al final del tall
 
 ## Avro: el mensaje que se explica solo
 
-[Avro](https://avro.apache.org/) guarda **por filas**, en binario. El esquema (JSON) viaja en la **cabecera**. Quien lee sabe cómo se escribió. Encaja cuando **escribís mucho**, el esquema **cambia** y el destino es un bus ([Kafka](ingesta.md)), no el PMS. Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/).
+[Avro](https://avro.apache.org/){target="_blank" rel="noopener"} guarda **por filas**, en binario. El esquema (JSON) viaja en la **cabecera**. Quien lee sabe cómo se escribió. Encaja cuando **escribís mucho**, el esquema **cambia** y el destino es un bus ([Kafka](ingesta.md){target="_blank" rel="noopener"}), no el PMS. Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/){target="_blank" rel="noopener"}.
 
 !!! tip "Orden de los talleres"
-    1–2: Avro con nulos. 3: del `df` a Avro (opcional). 4–6: Parquet; el 6 filtra **al leer**. DuckDB: preguntar sin tragarse el fichero. Luego el [taller medido](#taller-medido-lo-que-se-examina).
+    1–2: Avro con nulos. 3: del `df` a Avro (opcional). 4–6: Parquet; el 6 filtra **al leer**. DuckDB: preguntar sin tragarse el fichero. Luego el [taller medido](#taller-medido-lo-que-se-examina){target="_blank" rel="noopener"}.
 
 Tipos simples: `null`, `boolean`, `int`, `long`, `float`, `double`, `bytes`, `string`.  
 Compuestos: `record`, `enum`, `array`, `map`, `union`, `fixed`.
 
-El paquete viejo `avro-python3` está muerto. Instalad `avro` (o **fastavro** si el volumen duele: [GitHub](https://github.com/fastavro/fastavro)).
+El paquete viejo `avro-python3` está muerto. Instalad `avro` (o **fastavro** si el volumen duele: [GitHub](https://github.com/fastavro/fastavro){target="_blank" rel="noopener"}).
 
 ```bash
 pip install avro fastavro
@@ -138,7 +138,7 @@ pip install avro fastavro
 
 ### Taller 1 — Una reserva con hueco
 
-Descargad [reserva.avsc](../assets/practicas/reserva.avsc). La segunda reserva no trae importe: el esquema admite nulo.
+Descargad [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. La segunda reserva no trae importe: el esquema admite nulo.
 
 ```python
 import copy
@@ -211,7 +211,7 @@ Si algún día lo escribís en HDFS, cambiad el host por el de **vuestro** lab; 
 
 ## Arrow: el dato *en la RAM*
 
-[Parquet](https://parquet.apache.org/), [Avro](https://avro.apache.org/) y [ORC](https://orc.apache.org/) viven en **disco**. **[Arrow](https://arrow.apache.org/)** describe columnas **en memoria** para que Python, R o Java las compartan sin copiarlas (*zero-copy*) y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/). Arrow **no** es Avro.
+[Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"}, [Avro](https://avro.apache.org/){target="_blank" rel="noopener"} y [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} viven en **disco**. **[Arrow](https://arrow.apache.org/){target="_blank" rel="noopener"}** describe columnas **en memoria** para que Python, R o Java las compartan sin copiarlas (*zero-copy*) y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/){target="_blank" rel="noopener"}. Arrow **no** es Avro.
 
 ```bash
 pip install pyarrow
@@ -248,7 +248,7 @@ otro = feather.read_feather("reservas.feather")
 
 ## Parquet: el lago del informe
 
-[Parquet](https://parquet.apache.org/) es **columnar**, lleva el esquema consigo y parte en *row groups*. El informe que pide `hotel` e `importe` no arrastra `canal`. pandas: `to_parquet` / `read_parquet`.
+[Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"} es **columnar**, lleva el esquema consigo y parte en *row groups*. El informe que pide `hotel` e `importe` no arrastra `canal`. pandas: `to_parquet` / `read_parquet`.
 
 ### Taller 4 — Tabla Arrow → Parquet
 
@@ -259,7 +259,7 @@ pq.write_table(tabla, "reservas.parquet")
 print(pq.read_table("reservas.parquet"))
 ```
 
-### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md))
+### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md){target="_blank" rel="noopener"})
 
 `reservas.jsonl`:
 
@@ -293,7 +293,7 @@ En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:90
 
 ### Preguntar sin cargarlo: DuckDB
 
-[DuckDB](https://duckdb.org/) es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.
+[DuckDB](https://duckdb.org/){target="_blank" rel="noopener"} es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.
 
 ```bash
 pip install duckdb
@@ -320,7 +320,7 @@ Si particionáis por año: `FROM 'reservas/*.parquet'`. Por dentro habla Arrow: 
 
 ## ORC: cuando el ecosistema es Hive
 
-[ORC](https://orc.apache.org/) (*Optimized Row Columnar*) nació para **Hive**. Tiras (*stripes*) con mín/máx para **no leer** lo que no puede cumplir el filtro. Compresión habitual `zlib`. pandas `to_orc` (desde 1.5) sale **sin** comprimir si no lo pides.
+[ORC](https://orc.apache.org/){target="_blank" rel="noopener"} (*Optimized Row Columnar*) nació para **Hive**. Tiras (*stripes*) con mín/máx para **no leer** lo que no puede cumplir el filtro. Compresión habitual `zlib`. pandas `to_orc` (desde 1.5) sale **sin** comprimir si no lo pides.
 
 ```python
 df.to_orc("reservas.orc")
@@ -337,9 +337,9 @@ Si el equipo “es Spark”, veréis más Parquet. No es que ORC sea peor: es **
 
 ## Cuando el lago también tiene que *actualizar*
 
-Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. El lago es **append**: se **añade**; no abrís el fichero y tacháis una fila (un NIF que hay que retirar). [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/) y [Hudi](https://hudi.apache.org/) son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
+Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. El lago es **append**: se **añade**; no abrís el fichero y tacháis una fila (un NIF que hay que retirar). [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"} y [Hudi](https://hudi.apache.org/){target="_blank" rel="noopener"} son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
 
-Eso permite viajar en el tiempo, un [ACID](almacenamiento.md) de **tabla** (un `MERGE` no deja la ocupación a medias) y compactar ficheros pequeños. **Eso no cobra en recepción:** el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
+Eso permite viajar en el tiempo, un [ACID](almacenamiento.md){target="_blank" rel="noopener"} de **tabla** (un `MERGE` no deja la ocupación a medias) y compactar ficheros pequeños. **Eso no cobra en recepción:** el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
 
 ```python
 # Cuando lleguéis a Spark, sobre el mismo df de reservas

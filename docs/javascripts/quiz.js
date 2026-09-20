@@ -51,7 +51,7 @@
 
   function feedbackHtml(q, picked, brief) {
     const href = q.href
-      ? `<p class="dwec-quiz__more"><a href="${escapeHtml(q.href)}">Repasar ${escapeHtml(q.topic)}</a></p>`
+      ? `<p class="dwec-quiz__more"><a href="${escapeHtml(q.href)}" target="_blank" rel="noopener">Repasar ${escapeHtml(q.topic)}</a></p>`
       : "";
     const correct = picked === q.answer;
     if (picked === null) {

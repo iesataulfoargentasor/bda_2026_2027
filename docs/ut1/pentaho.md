@@ -11,37 +11,37 @@ tags:
 
 Los criterios **d)** y **e)** del RA1 se cierran aquí: **procesar** el dato ya almacenado y **enseñárselo** a alguien que no abre Spoon.
 
-En el aula usáis **Pentaho Data Integration (PDI / Kettle)**, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja **ver** un [ETL](ingesta.md): extraer, filtrar, unir, agregar y cargar **sin programar el motor**.
+En el aula usáis **Pentaho Data Integration (PDI / Kettle)**, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja **ver** un [ETL](ingesta.md){target="_blank" rel="noopener"}: extraer, filtrar, unir, agregar y cargar **sin programar el motor**.
 
 !!! info "Cómo se lee esta página"
     **0** es el entorno. **1–3** se hacen en clase (filtro, cruce, JSON). **4–5** son nube y el job de **madrugada**: si el aula no tiene cubo, el CSV acaba en una carpeta. **6** solo si hay PostgreSQL o MariaDB. Los relojes: finanzas cierra a las **23:00**; Kitchen corre de noche; gerencia a las **8** ve el cierre de **ayer**. El **e)** es el fichero o la tabla, no un informe de Pentaho Server.
 
-El PDF de prácticas ([Pentaho.pdf](../assets/originales/Pentaho.pdf)) sirve para **reconocer menús** (dónde está *Filter rows*, *Minimal width*…). **No** copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el [grupo hotelero de Cantabria](caso-hotel.md). Tampoco copiéis credenciales que aparezcan en capturas.
+El PDF de prácticas ([Pentaho.pdf](../assets/originales/Pentaho.pdf){target="_blank" rel="noopener"}) sirve para **reconocer menús** (dónde está *Filter rows*, *Minimal width*…). **No** copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el [grupo hotelero de Cantabria](caso-hotel.md){target="_blank" rel="noopener"}. Tampoco copiéis credenciales que aparezcan en capturas.
 
 Los CSV y el SQL de esta página:
 
 | Fichero | Taller |
 | --- | --- |
-| [alojamientos_cp.csv](../assets/practicas/alojamientos_cp.csv) | 1 |
-| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv), [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv), [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv) | 2 |
-| [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv) | 4 |
-| [alojamientos_opiniones.csv](../assets/practicas/alojamientos_opiniones.csv) | 3 |
-| [incidencias.csv](../assets/practicas/incidencias.csv), [incidencias2.csv](../assets/practicas/incidencias2.csv), [hotel_pdi.sql](../assets/practicas/hotel_pdi.sql) | 6 |
+| [alojamientos_cp.csv](../assets/practicas/alojamientos_cp.csv){target="_blank" rel="noopener"} | 1 |
+| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv){target="_blank" rel="noopener"}, [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv){target="_blank" rel="noopener"}, [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv){target="_blank" rel="noopener"} | 2 |
+| [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" rel="noopener"} | 4 |
+| [alojamientos_opiniones.csv](../assets/practicas/alojamientos_opiniones.csv){target="_blank" rel="noopener"} | 3 |
+| [incidencias.csv](../assets/practicas/incidencias.csv){target="_blank" rel="noopener"}, [incidencias2.csv](../assets/practicas/incidencias2.csv){target="_blank" rel="noopener"}, [hotel_pdi.sql](../assets/practicas/hotel_pdi.sql){target="_blank" rel="noopener"} | 6 |
 
-Estos `reservas_pdi.csv` / `cobros_pdi.csv` **no** son los que generáis en [Hola ETL](ingesta.md#hola-etl) ni el `reservas.csv` de [1.7](formatos.md). Misma **idea** (reservas ⋈ cobros); otras columnas (`id_hotel`, no el nombre) y otro grano (informe, no JSON fila a fila).
+Estos `reservas_pdi.csv` / `cobros_pdi.csv` **no** son los que generáis en [Hola ETL](ingesta.md#hola-etl){target="_blank" rel="noopener"} ni el `reservas.csv` de [1.7](formatos.md){target="_blank" rel="noopener"}. Misma **idea** (reservas ⋈ cobros); otras columnas (`id_hotel`, no el nombre) y otro grano (informe, no JSON fila a fila).
 
 ## Qué es PDI (y qué no)
 
 Pentaho es una plataforma de integración y análisis. **PDI** es la pieza ETL: un lienzo donde arrastráis pasos y el motor mueve las filas. En esta UT no montáis el servidor de informes: el criterio **e)** es el CSV, el JSON o la tabla que gerencia ya entiende.
 
-En jerga de Kettle se dice herramienta de **metadatos** porque vosotros declaráis *qué* tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el *cómo* (buffers, tipos) lo resuelve el motor. Ese XML (`.ktr` / `.kjb`) **no** es el catálogo de negocio del [1.5](arquitectura.md) (qué significa `canal`). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.
+En jerga de Kettle se dice herramienta de **metadatos** porque vosotros declaráis *qué* tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el *cómo* (buffers, tipos) lo resuelve el motor. Ese XML (`.ktr` / `.kjb`) **no** es el catálogo de negocio del [1.5](arquitectura.md){target="_blank" rel="noopener"} (qué significa `canal`). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.
 
 Con Spoon, sin escribir el motor:
 
 - conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);
 - filtrar, limpiar, tipar, *lookup*, *merge join*, agregar, fórmulas;
 - cargar a fichero, tabla o nube;
-- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en [estrella](procesamiento.md), no un almacén entero.
+- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en [estrella](procesamiento.md){target="_blank" rel="noopener"}, no un almacén entero.
 
 **No** es el programa de recepción: no picáis la reserva en PDI. Procesáis una **copia**.
 
@@ -134,7 +134,7 @@ Si esto falla, no paséis al taller 1: el entorno no está listo.
 
 Cliente: *“Listado de alojamientos de la comarca **Trasmiera**, ordenados por código postal, en un CSV limpio.”*
 
-Fichero: [alojamientos_cp.csv](../assets/practicas/alojamientos_cp.csv) (`hotel`, `comarca`, `codigo_postal`). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.
+Fichero: [alojamientos_cp.csv](../assets/practicas/alojamientos_cp.csv){target="_blank" rel="noopener"} (`hotel`, `comarca`, `codigo_postal`). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.
 
 ### Leer
 
@@ -178,15 +178,15 @@ Parámetros útiles (también en Kitchen): `/level:Basic` (o `Error`, `Debug`, `
 
 Cliente: *“Importe cobrado y número de reservas **por hotel y canal**. Las que aún no tienen cobro no entran.”*
 
-Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl) (reservas ⋈ cobros, solo cobradas). **No** reutilicéis aquellos CSV: aquí el hotel va por `id_hotel`, el cobro va con **punto y coma**, y gerencia quiere un **agregado**, no el JSON de una fila.
+Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl){target="_blank" rel="noopener"} (reservas ⋈ cobros, solo cobradas). **No** reutilicéis aquellos CSV: aquí el hotel va por `id_hotel`, el cobro va con **punto y coma**, y gerencia quiere un **agregado**, no el JSON de una fila.
 
 ![Reservas y cobros se cruzan; sin cobro no entra; gerencia a las 8 ve el cierre de ayer](../assets/ut1/pdi-cruce-hotel.png)
 
 | Fichero | Separador | Rol |
 | --- | --- | --- |
-| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv) | coma | Hecho (estancia) |
-| [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv) | **punto y coma** | Cobro |
-| [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv) | punto y coma | Dimensión (Laredo, Santander, Potes, Comillas; Noja es extra) |
+| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv){target="_blank" rel="noopener"} | coma | Hecho (estancia) |
+| [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv){target="_blank" rel="noopener"} | **punto y coma** | Cobro |
+| [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv){target="_blank" rel="noopener"} | punto y coma | Dimensión (Laredo, Santander, Potes, Comillas; Noja es extra) |
 
 1. Dos (o tres) **CSV file input**. En cobros y hoteles, `Delimiter = ;`.
 2. En reservas, *Get fields* y dejad `id_reserva` / `id_hotel` como **Integer** (o String si Spoon se come un código con ceros; aquí no hace falta).
@@ -207,7 +207,7 @@ Criterio **e):** gerencia lee **unas pocas filas** (hotel × canal), no el cruce
 
 Cliente: *“Alojamientos para un **escaparate web** (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”*
 
-Fichero: [alojamientos_opiniones.csv](../assets/practicas/alojamientos_opiniones.csv). Hay **nulos** a propósito (`puntuacion`, `estancia_min`) y un precio `-1`.
+Fichero: [alojamientos_opiniones.csv](../assets/practicas/alojamientos_opiniones.csv){target="_blank" rel="noopener"}. Hay **nulos** a propósito (`puntuacion`, `estancia_min`) y un precio `-1`.
 
 ### Leer y elegir columnas
 
@@ -256,7 +256,7 @@ Ejecutad. Abrid el JSON **sin Spoon**. Si un compañero de DAW entiende las clav
 
 Cliente: *“Por **costa / ciudad / interior**: noches cobradas, importe cobrado y **precio medio por noche**. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”*
 
-Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv) (`Costa`, `Ciudad`, `Interior`):
+Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" rel="noopener"} (`Costa`, `Ciudad`, `Interior`):
 
 1. CSV de cadenas (`;`) → *Sort* por `id_cadena`.
 2. *Sort* del flujo de hoteles por `id_cadena`.
@@ -328,13 +328,13 @@ En el PDF el ejemplo es RDS y deporte. Aquí el esquema es el **hotel**, en **lo
 
 ### Preparar
 
-1. Cread una base `hotel_pdi` y ejecutad [hotel_pdi.sql](../assets/practicas/hotel_pdi.sql) (tabla `huespedes` + `fases_incidencia`). Si lo ejecutáis **dos** veces, los `INSERT` de huéspedes chocan con la clave; no hace falta repetirlos.
+1. Cread una base `hotel_pdi` y ejecutad [hotel_pdi.sql](../assets/practicas/hotel_pdi.sql){target="_blank" rel="noopener"} (tabla `huespedes` + `fases_incidencia`). Si lo ejecutáis **dos** veces, los `INSERT` de huéspedes chocan con la clave; no hace falta repetirlos.
 2. PDI trae driver de **PostgreSQL**. Para MySQL/MariaDB: copiad un conector JDBC **compatible con vuestra 9.4** en la carpeta `lib` de PDI y **reiniciad Spoon**. El “último jar del universo” a veces no carga.
 3. *File → New → Database connection.* Host `localhost`, base, usuario de **aula**. Probad la conexión.
 
 ### Lookup (enriquecer el CSV)
 
-Leed [incidencias.csv](../assets/practicas/incidencias.csv) (`id_huesped;tipo;fecha`).
+Leed [incidencias.csv](../assets/practicas/incidencias.csv){target="_blank" rel="noopener"} (`id_huesped;tipo;fecha`).
 
 La tabla `huespedes` tiene siempre `tipo = huesped`. El segundo campo está para practicar una **clave de dos columnas** (en otros oficios no basta el id):
 
@@ -357,7 +357,7 @@ SELECT * FROM fases_incidencia ORDER BY fecha_fin DESC;
 
 ### Actualizar y ver el error
 
-Leed [incidencias2.csv](../assets/practicas/incidencias2.csv). **Output → Update:** claves de búsqueda `id_huesped` y `fecha` del flujo, mapeadas a **`id_huesped`** y **`fecha_inicio`** de la tabla; campos a pintar (`tipo`, `lado`, `comentario`). El *Update* mira `fases_incidencia`, **no** la tabla de huéspedes.
+Leed [incidencias2.csv](../assets/practicas/incidencias2.csv){target="_blank" rel="noopener"}. **Output → Update:** claves de búsqueda `id_huesped` y `fecha` del flujo, mapeadas a **`id_huesped`** y **`fecha_inicio`** de la tabla; campos a pintar (`tipo`, `lado`, `comentario`). El *Update* mira `fases_incidencia`, **no** la tabla de huéspedes.
 
 Tras el insert del CSV 1 (ids 1–4), este segundo fichero trae 1, 3, **5** y **99**:
 

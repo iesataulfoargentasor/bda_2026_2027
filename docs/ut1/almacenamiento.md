@@ -10,7 +10,7 @@ tags:
 
 Diseñar la solución (criterio **a)**) es elegir **dónde vive el dato** y **qué garantías** ofrecéis. No hace falta haber cursado un módulo de bases de datos: cada idea se explica aquí con un ejemplo, y **después** aparece la sigla, si la tiene.
 
-En el [grupo hotelero](caso-hotel.md) eso ya está partido en dos relojes:
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya está partido en dos relojes:
 
 - **Recepción** pica ahora en el PMS. Un cobro **no** puede verse a medias.
 - **Gerencia** abre a las **8** el panel de **ayer**. Finanzas cerró a las **23:00**; de madrugada corre el job que **copia** (no pica) ocupación e importe.
@@ -71,7 +71,7 @@ Nacen para **volumen**, **variedad** y crecer **añadiendo máquinas**. “NoSQL
 | *Wide-column* | Filas con **muchas** columnas, a menudo vacías; bien para series | Lecturas de sensores cada 30 s |
 | Grafo | Puntos unidos por relaciones | La misma tarjeta en dos hoteles (fraude) |
 
-***Wide-column* no es Parquet.** Cassandra o HBase guardan **filas** con familias de columnas. Un fichero **columnar** (Parquet) es otra cosa: guarda *columnas* juntas para el informe. Eso va en [1.7](formatos.md).
+***Wide-column* no es Parquet.** Cassandra o HBase guardan **filas** con familias de columnas. Un fichero **columnar** (Parquet) es otra cosa: guarda *columnas* juntas para el informe. Eso va en [1.7](formatos.md){target="_blank" rel="noopener"}.
 
 Cada familia habla un idioma distinto. Lo que veis en tutoriales de MongoDB **no** sirve igual en las otras.
 
@@ -83,13 +83,13 @@ Es un sitio **central**, pensado para **informes y decisiones** (inteligencia de
 
 Las columnas se deciden **antes** de guardar: si mañana el canal añade un campo, hay que **cambiar el modelo**. A cambio, gerencia encuentra tablas limpias (ocupación, importe, hotel), listas para el panel de las **8**.
 
-En la nube oiréis [Snowflake](https://www.snowflake.com/) o BigQuery: es **este** oficio (informes), no el lago.
+En la nube oiréis [Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"} o BigQuery: es **este** oficio (informes), no el lago.
 
 ## Data mart (un recorte, no otro lago)
 
 El almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Un **data mart** es el **mismo oficio** (tablas limpias, pregunta ya conocida, se copia, no se pica), pero **más estrecho**: un departamento o un hotel.
 
-No es el PMS. No es el [lago](#data-lake). Es un trozo del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
+No es el PMS. No es el [lago](#data-lake){target="_blank" rel="noopener"}. Es un trozo del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
 
 ![El almacén de la cadena alimenta tres marts; un Excel suelto en Comillas no cuadra con gerencia](../assets/ut1/data-mart-hotel.png)
 
@@ -136,19 +136,19 @@ No es lo mismo el **disco del PMS** que el sitio donde gerencia lee el históric
 | Forma | Idea | En el hotel |
 | --- | --- | --- |
 | **Bloque** | El sistema operativo parte el disco en bloques y monta un sistema de ficheros. Es el disco de *una* máquina (o un NAS compartido). | El volumen donde corre PostgreSQL de recepción. |
-| **Objeto** | Guardáis el fichero **entero** (un objeto) con una clave, en un cubo. No “abrís el byte 17”: bajáis o sustituís el objeto. Típico en nube ([S3](https://aws.amazon.com/s3/), Azure Blob…). | El volcado de reservas del martes en un cubo; se replica sin que miréis el disco. El formato (Parquet…) está en [1.7](formatos.md). |
-| **Lakehouse** | El lago **más** tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) **sin** montar un warehouse aparte. Productos que oiréis: [Delta Lake](https://delta.io/), [Iceberg](https://iceberg.apache.org/). | Bruto de sensores **y** la tabla limpia de ocupación, en el mismo sitio. |
+| **Objeto** | Guardáis el fichero **entero** (un objeto) con una clave, en un cubo. No “abrís el byte 17”: bajáis o sustituís el objeto. Típico en nube ([S3](https://aws.amazon.com/s3/){target="_blank" rel="noopener"}, Azure Blob…). | El volcado de reservas del martes en un cubo; se replica sin que miréis el disco. El formato (Parquet…) está en [1.7](formatos.md){target="_blank" rel="noopener"}. |
+| **Lakehouse** | El lago **más** tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) **sin** montar un warehouse aparte. Productos que oiréis: [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"}. | Bruto de sensores **y** la tabla limpia de ocupación, en el mismo sitio. |
 
 ![Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas](../assets/ut1/donde-vive-dato.png)
 
 Snowflake **no** es un lakehouse: es el warehouse en nube del apartado anterior. El *lakehouse* es **lago + tablas**.
 
-El diario de Delta o Iceberg puede dar un **ACID de tabla** (un `MERGE` no deja la ocupación a medias; podéis borrar un NIF). **Eso no cobra en recepción.** El cobro sigue en el PMS. El detalle del formato está en [1.7](formatos.md).
+El diario de Delta o Iceberg puede dar un **ACID de tabla** (un `MERGE` no deja la ocupación a medias; podéis borrar un NIF). **Eso no cobra en recepción.** El cobro sigue en el PMS. El detalle del formato está en [1.7](formatos.md){target="_blank" rel="noopener"}.
 
-**Calcular y guardar se pueden separar.** En un clúster Hadoop clásico el dato y la CPU **conviven** en el nodo (lo visteis en [1.2](clusters.md)). En un lago en cubo, el disco escala solo; el motor (Spark, Athena, un job que lee el cubo…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copiáis un trozo a HDFS (el disco repartido de Hadoop) **solo para el job** y el resultado vuelve al cubo.
+**Calcular y guardar se pueden separar.** En un clúster Hadoop clásico el dato y la CPU **conviven** en el nodo (lo visteis en [1.2](clusters.md){target="_blank" rel="noopener"}). En un lago en cubo, el disco escala solo; el motor (Spark, Athena, un job que lee el cubo…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copiáis un trozo a HDFS (el disco repartido de Hadoop) **solo para el job** y el resultado vuelve al cubo.
 
 !!! tip "RAM frente a disco (orden de magnitud)"
-    La RAM es **órdenes** más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en [1.7](formatos.md).
+    La RAM es **órdenes** más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en [1.7](formatos.md){target="_blank" rel="noopener"}.
 
 ## Qué es una transacción (hace falta para entender ACID)
 
@@ -177,13 +177,13 @@ No toda base “relacional” cumple esto al 100 % si la configuráis en modo re
 
 ## Teorema CAP: qué pasa cuando se parte la red
 
-Hasta ahora imaginabais **un** servidor. En un [clúster](clusters.md) el dato está en **varios** ordenadores. El teorema de Brewer (CAP) dice que, **si se corta la red entre ellos**, no podéis tener a la vez las tres cosas siguientes:
+Hasta ahora imaginabais **un** servidor. En un [clúster](clusters.md){target="_blank" rel="noopener"} el dato está en **varios** ordenadores. El teorema de Brewer (CAP) dice que, **si se corta la red entre ellos**, no podéis tener a la vez las tres cosas siguientes:
 
 - **C**onsistencia: quien pregunta recibe el dato **más reciente**, o un error. Nunca un valor viejo haciéndose pasar por actual.
 - **A**vailability (disponibilidad): quien pregunta recibe **alguna** respuesta (un valor; aunque no sea el último).
 - **P**artition tolerance: el sistema **sigue funcionando** aunque se corte el enlace entre nodos.
 
-Esta **C no es la C de ACID**. ACID-C son las **reglas** (un saldo no queda prohibido). CAP-C es **el mismo valor reciente en los nodos**, no uno viejo. En [1.4](procesamiento.md#scv) hay una tercera C (precisión del análisis): tampoco es esta.
+Esta **C no es la C de ACID**. ACID-C son las **reglas** (un saldo no queda prohibido). CAP-C es **el mismo valor reciente en los nodos**, no uno viejo. En [1.4](procesamiento.md#scv){target="_blank" rel="noopener"} hay una tercera C (precisión del análisis): tampoco es esta.
 
 En un clúster real **P no es opcional**: un cable se corta, un *switch* se cuelga, Potes pierde enlace con Santander. La decisión de diseño suele ser:
 
@@ -234,9 +234,9 @@ Recorred las preguntas **en este orden**, con el hotel:
 5. ¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → **lake**, y luego curáis hacia el warehouse.
 6. ¿Necesitáis el bruto **y** tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → **lakehouse**, o lago + warehouse a la vez.
 
-En [1.4](procesamiento.md) veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar en recepción frente a informar a gerencia).
+En [1.4](procesamiento.md){target="_blank" rel="noopener"} veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar en recepción frente a informar a gerencia).
 
-Si podéis justificar esas frases con el [caso](caso-hotel.md), habéis caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.
+Si podéis justificar esas frases con el [caso](caso-hotel.md){target="_blank" rel="noopener"}, habéis caracterizado el diseño. Eso es lo que pide el RA1, no recitar definiciones.
 
 ## Actividad
 

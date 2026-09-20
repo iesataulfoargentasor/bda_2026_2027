@@ -8,7 +8,7 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
-En el [grupo hotelero](caso-hotel.md) esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.
 
 Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
 
@@ -20,7 +20,7 @@ No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criteri
     “¿Esto es un problema de Big Data?” no se contesta con el logo de una herramienta. Se contesta mirando si el diseño de siempre (un servidor, un esquema fijo, un lote nocturno) **sigue siendo viable**.
 
 !!! info "Cómo se lee esta página"
-    Tres bloques, **en este orden**: (1) el **viaje** del evento al valor; (2) los **oficios** que extraen ese valor (minería, ciencia de datos, IA) — van **antes** de las V, no las sustituyen; (3) las **V** para pasar revista al hotel. Los relojes del [caso](caso-hotel.md): finanzas cierra a las **23:00**; de madrugada corre el job; a las **8** gerencia abre el panel de **ayer**. Eso no es tiempo real.
+    Tres bloques, **en este orden**: (1) el **viaje** del evento al valor; (2) los **oficios** que extraen ese valor (minería, ciencia de datos, IA) — van **antes** de las V, no las sustituyen; (3) las **V** para pasar revista al hotel. Los relojes del [caso](caso-hotel.md){target="_blank" rel="noopener"}: finanzas cierra a las **23:00**; de madrugada corre el job; a las **8** gerencia abre el panel de **ayer**. Eso no es tiempo real.
 
 ## Un PC no basta (y a veces sí)
 
@@ -34,7 +34,7 @@ Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el
 
 ## De los eventos al valor
 
-Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorreréis en las [capas de la arquitectura](arquitectura.md).
+Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorreréis en las [capas de la arquitectura](arquitectura.md){target="_blank" rel="noopener"}.
 
 Pensad en el grupo en agosto (Laredo ayuda a imaginar temporada alta):
 
@@ -60,7 +60,7 @@ Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extra
 
 ### Tres oficios sobre el mismo dato (y no son sinónimos)
 
-Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran **el mismo** sitio donde está el bruto (el **lago**; el detalle en [1.3](almacenamiento.md)) y hacen **trabajos distintos**:
+Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran **el mismo** sitio donde está el bruto (el **lago**; el detalle en [1.3](almacenamiento.md){target="_blank" rel="noopener"}) y hacen **trabajos distintos**:
 
 | Oficio | Pregunta que se hace | Qué entrega | Ejemplo del hotel |
 | --- | --- | --- | --- |
@@ -118,12 +118,12 @@ No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre es
 
 1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes.
 2. **Recuperación.** PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
-3. **Preparación.** Unificáis `web` y `WEB`, quitáis canceladas, cruzáis reserva con cobro (eso, en [1.6](ingesta.md), es la T de un ETL: extraer, transformar, cargar).
+3. **Preparación.** Unificáis `web` y `WEB`, quitáis canceladas, cruzáis reserva con cobro (eso, en [1.6](ingesta.md){target="_blank" rel="noopener"}, es la T de un ETL: extraer, transformar, cargar).
 4. **Exploración.** El viernes por la web cancela más.
 5. **Modelado.** Estima el riesgo de que no se presente (*no-show*) o el cupo.
 6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **volvéis al paso 2**.
 
-En el [curso de especialización](../index.md) otros módulos os pondrán a modelar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
+En el [curso de especialización](../index.md){target="_blank" rel="noopener"} otros módulos os pondrán a modelar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
 
 !!! tip "Frase para el examen y para el pasillo"
     Big Data **prepara** el dato. La minería **busca patrones**. La ciencia de datos **hace la pregunta y cuenta el resultado**. La IA **encarna** una tarea en un sistema. Se solapan; no se sustituyen.
@@ -171,7 +171,7 @@ En el hotel:
 - Los sensores publican cada ~30 s (el semáforo de recepción no puede esperar al lote de las 23:00).
 - Finanzas cierra a las 23:00; el panel de las 8 es el lote de **ayer**.
 
-Dimensionar el disco **no** arregla un atasco de ingesta. Si el embudo es más ancho pero el cuello sigue igual, el agua se derrama. De ahí el flujo continuo y las [colas](ingesta.md) (desacoplan “quien produce” de “quien consume”).
+Dimensionar el disco **no** arregla un atasco de ingesta. Si el embudo es más ancho pero el cuello sigue igual, el agua se derrama. De ahí el flujo continuo y las [colas](ingesta.md){target="_blank" rel="noopener"} (desacoplan “quien produce” de “quien consume”).
 
 !!! example "Mismo volumen, distinta V"
     10 TB de cobros históricos que cargas **una vez** al mes → duele sobre todo el **volumen**.  
@@ -187,7 +187,7 @@ No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven
 | **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON del canal web, logs |
 | **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | Foto del DNI, PDF de incidencia, vídeo del hall |
 
-Un **data warehouse** (almacén de informes) espera dato ya en tablas: decidís las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. Un **data mart** es un **recorte** de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en [1.3](almacenamiento.md).
+Un **data warehouse** (almacén de informes) espera dato ya en tablas: decidís las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. Un **data mart** es un **recorte** de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en [1.3](almacenamiento.md){target="_blank" rel="noopener"}.
 
 La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que **no todo es tabla**.
 
@@ -215,7 +215,7 @@ No entran en el recuento clásico. Sirven para no diseñar un sistema que **nadi
 | **Viabilidad** | ¿La empresa puede **usar** de verdad esos datos? ¿Cuántos hacen falta para la predicción que importa? | Poner sensores en Potes y no tener a nadie que limpie el JSON **no** es viable. |
 | **Visualización** | ¿Gerencia **ve** el número a tiempo, en un gráfico o un indicador? | El panel de las 8. Un lago de 8 TB sin cuadro de mando no decide nada. |
 
-La visualización no es “hacerlo bonito”. En [1.8](pentaho.md) y en el criterio **e)** del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.
+La visualización no es “hacerlo bonito”. En [1.8](pentaho.md){target="_blank" rel="noopener"} y en el criterio **e)** del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.
 
 ## Qué pregunta hacéis (cuatro analíticas)
 
@@ -245,11 +245,11 @@ Los tres oficios de arriba **beben** del dato. Este módulo forma sobre todo a q
 
 El arquitecto **elige** el plano. El ingeniero **construye** las tuberías. El científico **pregunta** con el dato ya usable. El analista **cuenta a las 8** lo que gerencia puede leer. Minería e IA no son “otros nombres del ingeniero”: usan lo que el ingeniero deja listo.
 
-El ciclo generación → ingesta → transformación → entrega → consumo está en [1.5](arquitectura.md).
+El ciclo generación → ingesta → transformación → entrega → consumo está en [1.5](arquitectura.md){target="_blank" rel="noopener"}.
 
 ## Fuera de este apartado (y no lo copies aquí)
 
-OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md). Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md). El paisaje de herramientas y Lambda/Kappa, en [1.5](arquitectura.md). La ingesta, en [1.6](ingesta.md).
+OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md){target="_blank" rel="noopener"}. Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md){target="_blank" rel="noopener"}. El paisaje de herramientas y Lambda/Kappa, en [1.5](arquitectura.md){target="_blank" rel="noopener"}. La ingesta, en [1.6](ingesta.md){target="_blank" rel="noopener"}.
 
 ## El mismo oficio, otros sitios
 
@@ -273,7 +273,7 @@ Cuando el diseño responde a las V que duelen, podéis:
 
 !!! failure "Errores frecuentes en clase y en empresas"
     - “Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.
-    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv) os dirá por qué no pedís las tres cosas a la vez.
+    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv){target="_blank" rel="noopener"} os dirá por qué no pedís las tres cosas a la vez.
     - Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).
     - Medir el éxito en terabytes guardados, no en decisiones mejoradas.
 

@@ -10,20 +10,20 @@ tags:
 
 Almacenar no basta: el criterio **d)** pide **procesar** lo guardado. El **a)** también entra: hay que caracterizar *cómo* se parte el trabajo y *con qué prisa* tiene que salir el número. Un dato en el lago que nadie transforma no sirve a gerencia.
 
-En el [grupo hotelero](caso-hotel.md) eso ya está partido en dos relojes:
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya está partido en dos relojes:
 
 - **Recepción** opera ahora (PMS, cobro). No puede esperar.
 - **Finanzas** cierra a las **23:00**; de madrugada corre el **lote**; a las **8** gerencia abre el panel de **ayer**.
 - Los sensores (~30 s) alimentan el **semáforo** (“¿queda habitación?”), no el cuadro de las 8.
 
-En clase lo aplicáis en la [tarea de los 500 GB](tarea-clase.md): concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
+En clase lo aplicáis en la [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"}: concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
 
 !!! info "Cómo se lee esta página"
-    Primero **dónde** corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el **ritmo** (lote, clic, consulta, flujo). Después los **dos oficios** (operar / informar) y el **SCV** (no podéis pedir las tres letras a un análisis). Cómo se combinan lote y flujo en el edificio va en [1.5](arquitectura.md), no aquí.
+    Primero **dónde** corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el **ritmo** (lote, clic, consulta, flujo). Después los **dos oficios** (operar / informar) y el **SCV** (no podéis pedir las tres letras a un análisis). Cómo se combinan lote y flujo en el edificio va en [1.5](arquitectura.md){target="_blank" rel="noopener"}, no aquí.
 
 ## Concurrente, paralelo y distribuido
 
-Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcláis, no sabréis si os basta el portátil o hace falta un [clúster](clusters.md).
+Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcláis, no sabréis si os basta el portátil o hace falta un [clúster](clusters.md){target="_blank" rel="noopener"}.
 
 | Tipo | Dónde corre | ¿A la vez de verdad? | En el hotel |
 | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 
 **Sí (independiente):** sumar noches por hotel. Partís en cuatro trozos (Santander, Laredo, Comillas, Potes), cada núcleo (o cada nodo) suma el suyo, al final sumáis cuatro parciales. El último paso es barato.
 
-**No (dependiente):** cada paso necesita el resultado del anterior (si el acumulado va *par* sumáis, si va *impar* restáis). Aunque cortéis la lista, el segundo trozo **no sabe** qué hacer hasta que acabe el primero. Más núcleos no acortan ese cuello: es lo que [1.2](clusters.md) llamaba “el clúster no hace magia”.
+**No (dependiente):** cada paso necesita el resultado del anterior (si el acumulado va *par* sumáis, si va *impar* restáis). Aunque cortéis la lista, el segundo trozo **no sabe** qué hacer hasta que acabe el primero. Más núcleos no acortan ese cuello: es lo que [1.2](clusters.md){target="_blank" rel="noopener"} llamaba “el clúster no hace magia”.
 
 !!! tip "Pregunta para el examen"
     “Si solo hay un núcleo y el sistema cambia de programa cada X ms, ¿hace varias tareas al mismo tiempo?”  
@@ -57,13 +57,13 @@ El procesamiento **distribuido** reparte subtareas a **nodos de un clúster**. E
 - La **red** tarda y a veces falla.
 - Un nodo puede caer **a mitad** del trabajo (si se funde el disco de Potes, el job tiene que **reintentar**, no publicar el panel a medias).
 
-En Hadoop de libro la consigna es “**lleva el cálculo al dato**”: copiar 200 GB al portátil para sumarlos es absurdo; mandáis la función al nodo que **ya** tiene el trozo. En un [cubo de objetos](almacenamiento.md) a menudo es al revés: el dato vive en el cubo y el motor **lee por red** ([1.2](clusters.md)). Las dos frases no se pisan: son **dos diseños**.
+En Hadoop de libro la consigna es “**lleva el cálculo al dato**”: copiar 200 GB al portátil para sumarlos es absurdo; mandáis la función al nodo que **ya** tiene el trozo. En un [cubo de objetos](almacenamiento.md){target="_blank" rel="noopener"} a menudo es al revés: el dato vive en el cubo y el motor **lee por red** ([1.2](clusters.md){target="_blank" rel="noopener"}). Las dos frases no se pisan: son **dos diseños**.
 
-MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber *por qué* existen. El i7 de la [tarea](tarea-clase.md) **no** es un clúster.
+MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber *por qué* existen. El i7 de la [tarea](tarea-clase.md){target="_blank" rel="noopener"} **no** es un clúster.
 
 ## Estrategias: no todo es “tiempo real”
 
-El **ritmo** del trabajo no es la [transacción ACID](almacenamiento.md) del cobro. ACID es la garantía (todo o nada). Aquí es **cuánto podéis esperar** el número.
+El **ritmo** del trabajo no es la [transacción ACID](almacenamiento.md){target="_blank" rel="noopener"} del cobro. ACID es la garantía (todo o nada). Aquí es **cuánto podéis esperar** el número.
 
 | Estrategia | ¿Urge el resultado? | En el hotel |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ flowchart TB
     El panel de las 8 **no** es tiempo real: es el lote de **ayer**.  
     La palabra inglesa *online* aquí solo significa “mientras usáis el sistema”, no “hay una transacción de dinero”.
 
-**Streaming** añade otra dificultad: las cuentas se actualizan **conforme llegan** los datos. Suele hacerse en memoria, así que hay un **techo** de cuánto podéis tener “caliente”. No es “un lote, pero más rápido”: es otro contrato. Cómo se **combinan** lote y flujo (Lambda / Kappa) está en [1.5](arquitectura.md).
+**Streaming** añade otra dificultad: las cuentas se actualizan **conforme llegan** los datos. Suele hacerse en memoria, así que hay un **techo** de cuánto podéis tener “caliente”. No es “un lote, pero más rápido”: es otro contrato. Cómo se **combinan** lote y flujo (Lambda / Kappa) está en [1.5](arquitectura.md){target="_blank" rel="noopener"}.
 
 ## Dos trabajos: operar el día a día o analizar el histórico
 
@@ -111,7 +111,7 @@ Mezclar los dos en **la misma** tabla “para no duplicar” suele acabar así:
 - recepción espera porque el informe está recorriendo el PMS, o
 - el informe tarda una eternidad porque la tabla está pensada para cobrar, no para resumir.
 
-Por eso se **copian** los hechos del oficio 1 hacia un almacén del oficio 2 (eso es la [ingesta](ingesta.md)). El segundo **no sustituye** al primero: **se alimenta** de él.
+Por eso se **copian** los hechos del oficio 1 hacia un almacén del oficio 2 (eso es la [ingesta](ingesta.md){target="_blank" rel="noopener"}). El segundo **no sustituye** al primero: **se alimenta** de él.
 
 ### Cómo se llaman en los libros: OLTP y OLAP
 
@@ -133,13 +133,13 @@ Cuando leáis documentación o un examen, esos dos oficios aparecen con siglas i
 
 A veces el almacén de análisis guarda el dato ya **cortado por ejes** (tiempo, hotel, canal). En los libros eso se llama **cubo OLAP**. La idea es simple: el panel de las 8 no tiene que cruzar diez tablas cada vez; el cruce **ya está hecho**. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.
 
-**No es el cubo de objetos** de [1.3](almacenamiento.md) (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es **disco en red**; el otro es un **resumen ya cortado** para el informe.
+**No es el cubo de objetos** de [1.3](almacenamiento.md){target="_blank" rel="noopener"} (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es **disco en red**; el otro es un **resumen ya cortado** para el informe.
 
-En [1.3](almacenamiento.md) el **warehouse** es el sitio típico del oficio 2; el PMS relacional es el sitio típico del oficio 1.
+En [1.3](almacenamiento.md){target="_blank" rel="noopener"} el **warehouse** es el sitio típico del oficio 2; el PMS relacional es el sitio típico del oficio 1.
 
 ## Principio SCV (solo para análisis) { #scv }
 
-Parece el [CAP](almacenamiento.md) de las bases repartidas, pero **no habla de si el saldo se ve igual en todos los nodos**. Habla de **hacer un cálculo** en un sistema de análisis. Como máximo podéis pedirle **dos** de estas tres cosas:
+Parece el [CAP](almacenamiento.md){target="_blank" rel="noopener"} de las bases repartidas, pero **no habla de si el saldo se ve igual en todos los nodos**. Habla de **hacer un cálculo** en un sistema de análisis. Como máximo podéis pedirle **dos** de estas tres cosas:
 
 ![SCV en el hotel: panel de las 8, semáforo y un hotel ahora. Las tres a la vez, no](../assets/ut1/scv-hotel.png)
 
@@ -162,7 +162,7 @@ En Big Data **V casi siempre está** (si no, no estaríais aquí). Entonces el m
     En general **no**: sería S + C + V. O muestreamos (pierde precisión el semáforo) o esperáis al lote (pierde velocidad el panel).
 
 !!! success "Para el criterio d)"
-    Procesar no es “darle a Ejecutar”. Es elegir **lote o flujo**, **operar o analizar** (OLTP u OLAP), y ser conscientes del **SCV**. Luego, en [Pentaho](pentaho.md), lo hacéis visible con un flujo que cambia el dato.
+    Procesar no es “darle a Ejecutar”. Es elegir **lote o flujo**, **operar o analizar** (OLTP u OLAP), y ser conscientes del **SCV**. Luego, en [Pentaho](pentaho.md){target="_blank" rel="noopener"}, lo hacéis visible con un flujo que cambia el dato.
 
 ## Actividad
 

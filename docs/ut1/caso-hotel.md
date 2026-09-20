@@ -10,7 +10,7 @@ tags:
 
 Este es el **hilo de las dos unidades**: una cadena pequeña, **inventada**, con sede en Cantabria. No es una empresa real. Reservas, cobros, sensores y el panel de gerencia salen **siempre de aquí**, para que no cambiéis de historia en cada apartado.
 
-Si entráis directo a [ingesta](ingesta.md) o a la [UT2](../ut2/index.md), empezad por esta página.
+Si entráis directo a [ingesta](ingesta.md){target="_blank" rel="noopener"} o a la [UT2](../ut2/index.md){target="_blank" rel="noopener"}, empezad por esta página.
 
 ## Quiénes son
 
@@ -25,7 +25,7 @@ Cuatro hoteles. Mismo dueño. **Estacionalidades distintas** (playa, ciudad, int
 
 ![Gerencia y los cuatro hoteles: mismo dueño, mismo programa de reservas, estacionalidades distintas](../assets/ut1/caso-cuatro-hoteles.png)
 
-En [1.7](formatos.md) y [1.8](pentaho.md) pueden salir **más filas** (Noja, Santoña, un Excel de un hotel nuevo). Eso es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.
+En [1.7](formatos.md){target="_blank" rel="noopener"} y [1.8](pentaho.md){target="_blank" rel="noopener"} pueden salir **más filas** (Noja, Santoña, un Excel de un hotel nuevo). Eso es el “mañana abre otro”. El esqueleto de la teoría son estos cuatro.
 
 ## El programa de reservas (PMS)
 
@@ -68,21 +68,21 @@ A dónde lo lleváis (un destino para gerencia):
 | De madrugada | Corre la **copia** (el *job*): cruza reservas y cobros y deja el informe. |
 | **8:00** | Gerencia abre el panel. Si pedís el dato a las 8:05 **del mismo día**, o no está o es de **ayer**. |
 
-Las 8:00 **no** son tiempo real. El semáforo **sí** va casi al momento. En [1.6](ingesta.md) veréis por qué eso son **dos tubos**, no uno.
+Las 8:00 **no** son tiempo real. El semáforo **sí** va casi al momento. En [1.6](ingesta.md){target="_blank" rel="noopener"} veréis por qué eso son **dos tubos**, no uno.
 
 ## El hilo de la unidad
 
 Con este caso en la cabeza, cada apartado pregunta una cosa:
 
-1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión**. Un hotel de playa no es un albergue de montaña.
-2. **[1.2](clusters.md)** — El programa de reservas de Laredo cabe en **un** servidor. El trabajo de madrugada de los **cuatro** hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.
-3. **[1.3](almacenamiento.md)** — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a **otro** sitio. Fotos y JSON, a un lago.
-4. **[1.4](procesamiento.md)** — Recepción **opera** ahora. Gerencia **informa** (lote de las 8). El semáforo es **otro** reloj.
-5. **[1.5](arquitectura.md)** — Panel de las 8 y semáforo: **dos caminos** o **una cola**.
-6. **[1.6](ingesta.md)** — Cómo se **copian** PMS, cobros y sensores. El panel de las 8 es el **destino**; no se pinta en el primer taller.
-7. **[1.7](formatos.md)** — Dirección solo mira tres números; el fichero gordo arrastra doce columnas.
-8. **[1.8](pentaho.md)** — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el **CSV**, no Spoon.
-9. **[UT2](../ut2/index.md)** — El martes el CSV ya no abre en Excel. Hay que depositar y procesar **en el sitio**, y acabar **antes de las 8**.
+1. **[1.1](por-que-big-data.md){target="_blank" rel="noopener"}** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión**. Un hotel de playa no es un albergue de montaña.
+2. **[1.2](clusters.md){target="_blank" rel="noopener"}** — El programa de reservas de Laredo cabe en **un** servidor. El trabajo de madrugada de los **cuatro** hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.
+3. **[1.3](almacenamiento.md){target="_blank" rel="noopener"}** — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a **otro** sitio. Fotos y JSON, a un lago.
+4. **[1.4](procesamiento.md){target="_blank" rel="noopener"}** — Recepción **opera** ahora. Gerencia **informa** (lote de las 8). El semáforo es **otro** reloj.
+5. **[1.5](arquitectura.md){target="_blank" rel="noopener"}** — Panel de las 8 y semáforo: **dos caminos** o **una cola**.
+6. **[1.6](ingesta.md){target="_blank" rel="noopener"}** — Cómo se **copian** PMS, cobros y sensores. El panel de las 8 es el **destino**; no se pinta en el primer taller.
+7. **[1.7](formatos.md){target="_blank" rel="noopener"}** — Dirección solo mira tres números; el fichero gordo arrastra doce columnas.
+8. **[1.8](pentaho.md){target="_blank" rel="noopener"}** — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el **CSV**, no Spoon.
+9. **[UT2](../ut2/index.md){target="_blank" rel="noopener"}** — El martes el CSV ya no abre en Excel. Hay que depositar y procesar **en el sitio**, y acabar **antes de las 8**.
 
 !!! tip "Frase para no perderos"
     Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**. Vosotros **copiáis**; no picáis.
