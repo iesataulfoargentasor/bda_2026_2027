@@ -8,9 +8,9 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
-Imagina una empresa que empezó con un servidor, una base de datos relacional y un proceso que, cada noche, genera un informe. Durante años eso basta: el disco no se llena, las ventas se pican en caja sin esperar y todas las facturas tienen las mismas columnas.
+En el [grupo hotelero](caso-hotel.md) esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.
 
-Un día el volumen de clientes se multiplica, aparecen sensores, la web deja logs cada segundo y marketing quiere cruzar todo eso *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
+Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
 
 **Big Data no es “tener muchos Excel”.** Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos que **un sistema de una sola máquina, al estilo clásico, no puede** tratar con garantías de tiempo, coste o variedad.
 
@@ -19,9 +19,12 @@ No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criteri
 !!! tip "Pregunta que debes saber responder"
     “¿Esto es un problema de Big Data?” no se contesta con el logo de una herramienta. Se contesta mirando si el diseño de siempre (un servidor, un esquema fijo, un lote nocturno) **sigue siendo viable**.
 
+!!! info "Cómo se lee esta página"
+    Primero el **viaje del dato** (qué pasa desde que alguien reserva hasta que gerencia decide) y **quién extrae valor**. Después, las **V** para pasar revista al hotel. Los relojes del [caso](caso-hotel.md): finanzas cierra a las **23:00**; de madrugada corre el job; a las **8** gerencia abre el panel de **ayer**. Eso no es tiempo real.
+
 ## Un PC no basta (y a veces sí)
 
-No todo proyecto con datos es Big Data. En el [grupo hotelero](caso-hotel.md), el **día 1** recepción de Laredo pica reservas en un programa y finanzas saca el Excel del mes: eso es **Small Data**. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) **también** sirven ahí.
+No todo proyecto con datos es Big Data. El **día 1**, recepción de Laredo pica reservas en el programa del hotel (PMS: *Property Management System*) y finanzas saca el Excel del mes: eso es **Small Data**. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) **también** sirven ahí.
 
 A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Un servidor **ya no es el diseño**. Ahí sí hablamos de Big Data: hay que **repartir** el trabajo.
 
@@ -31,15 +34,15 @@ Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el
 
 ## De los eventos al valor
 
-Antes de hablar de Hadoop, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
+Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorrerás en las [capas de la arquitectura](arquitectura.md).
 
-Piensa en el [grupo hotelero de Cantabria](caso-hotel.md) en agosto (empieza por Laredo si te ayuda a imaginar temporada alta):
+Piensa en el grupo en agosto (Laredo ayuda a imaginar temporada alta):
 
 1. **Evento.** Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.
 2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto del DNI, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.
 3. **Información.** Organizas esos datos: reservas del día en una tabla, fotos en carpetas por fecha. Ya puedes *consultar* (“¿cuántas llegadas hay mañana?”).
 4. **Conocimiento.** Encajas patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
-5. **Sabiduría.** Sabes *cuándo* aplicar esa regla. El modelo de cancelaciones del hotel de playa **no** se copia ciego a un albergue de invierno.
+5. **Sabiduría.** Sabes *cuándo* aplicar esa regla. El modelo de cancelaciones de Laredo en agosto **no** se copia ciego a Potes en noviembre.
 6. **Valor.** Tomas una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
 
 ![Escalera del dato en Laredo: del evento al valor](../assets/ut1/evento-valor.png)
@@ -53,67 +56,48 @@ Piensa en el [grupo hotelero de Cantabria](caso-hotel.md) en agosto (empieza por
 | **Sabiduría** | Usarlo en su contexto | Solo en temporada alta |
 | **Valor** | Mejor decisión | Menos habitaciones vacías |
 
-Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor (modelos, predicciones, diagnósticos, un sistema que actúa) lo hacen tres oficios que se pisan y **no** son lo mismo: **minería de datos**, **ciencia de datos** e **inteligencia artificial** (IA). Las tres **beben** de la infraestructura de este módulo; ninguna **es** Big Data.
+Las tecnologías de Big Data **capturan, integran, almacenan y procesan**. Extraer valor lo hacen tres oficios que se pisan y **no** son lo mismo: **minería de datos**, **ciencia de datos** e **inteligencia artificial** (IA). Las tres **beben** de la infraestructura de este módulo; ninguna **es** Big Data. Quién *construye* esa infraestructura (el ingeniero) está al final de la página.
 
 ### Tres oficios sobre el mismo dato (y no son sinónimos)
 
-Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran **el mismo** lago y hacen **trabajos distintos**:
+Un viernes en Laredo tenéis el JSON de reservas, los logs de la web y el sensor del parking. Tres personas miran **el mismo** sitio donde está el bruto (el **lago**; el detalle en [1.3](almacenamiento.md)) y hacen **trabajos distintos**:
 
 | Oficio | Pregunta que se hace | Qué entrega | Ejemplo del hotel |
 | --- | --- | --- | --- |
 | **Minería de datos** | «¿Qué patrones *ya están* en lo guardado?» | Reglas, grupos, anomalías | «Quien reserva el viernes por la web y pide parking **cancela más**.» |
-| **Ciencia de datos** | «¿Qué hay que preguntar, con qué dato *limpio*, y cómo se lo cuento a quien decide?» | Pregunta bien hecha, análisis, modelo **y** un relato que gerencia entiende | «¿Por qué los martes de noviembre estamos vacíos?» Limpia canal web frente a OTA, elige el KPI, enseña un gráfico y **no** copia el modelo de playa a Potes. |
+| **Ciencia de datos** | «¿Qué hay que preguntar, con qué dato *limpio*, y cómo se lo cuento a quien decide?» | Pregunta bien hecha, análisis, modelo **y** un relato que gerencia entiende | «¿Por qué los martes de noviembre estamos vacíos?» Separa canal web y OTA (agencias tipo Booking), elige el indicador, enseña un gráfico y **no** copia el modelo de playa a Potes. |
 | **IA** | «¿Qué *sistema* percibe, decide o genera *sin* que un humano mire cada fila?» | Un producto que **actúa** (o responde) | Al confirmar la reserva, un modelo puntúa el riesgo de cancelación y el canal ofrece tarifa flexible; un *chatbot* responde «¿queda habitación al mar?»; una cámara cuenta coches del parking. |
 
-La minería **descubre**. La ciencia de datos **encuadra, limpia, modela y explica**. La IA **pone un sistema a hacer** una tarea que parece inteligente (percibir, clasificar, dialogar, recomendar). Podéis minar un Excel de 50 MB; podéis hacer ciencia de datos con una encuesta de 200 filas; podéis tener IA con reglas (un motor de ajedrez clásico) **sin** un lago. El clúster ayuda cuando las 5 V de más abajo duelen; **no** define el oficio.
-
-```mermaid
-flowchart TB
-  subgraph bda [Este módulo: Big Data]
-    E[Evento] --> D[Dato guardado]
-    D --> I[Información consultable]
-  end
-  subgraph extraer [Extraer valor]
-    I --> M[Minería: patrones]
-    I --> C[Ciencia de datos: pregunta + calidad + relato]
-    M --> C
-    C --> K[Conocimiento]
-    K --> IA[IA: sistema que actúa]
-    C --> V[Decisión humana]
-    IA --> V
-  end
-  V --> VAL[Valor: menos habitaciones vacías]
-  VAL -.->|el modelo se queda viejo| D
-```
+La minería **descubre**. La ciencia de datos **encuadra, limpia, modela y explica**. La IA **pone un sistema a hacer** una tarea que parece inteligente (percibir, clasificar, dialogar, recomendar). Podéis minar un Excel de 50 MB; podéis hacer ciencia de datos con una encuesta de 200 filas; podéis tener IA con reglas (un motor de ajedrez clásico) **sin** un lago. El clúster ayuda cuando las V de más abajo duelen; **no** define el oficio.
 
 #### En qué se parecen
 
 - Las tres buscan **valor**: una decisión mejor que ir a ciegas.
 - Las tres se hunden si falla la **veracidad** (sensores descalibrados, el mismo huésped con tres NIF).
-- Las tres pueden vivir **sin** Hadoop si el conjunto cabe en una máquina.
+- Las tres pueden vivir **sin** un clúster si el conjunto cabe en una máquina.
 - Ninguna sustituye a capturar, guardar y procesar: sin dato usable, el algoritmo más brillante puntúa basura.
 
 #### En qué se distinguen
 
-**Minería de datos** (*data mining*) viene del descubrimiento de conocimiento en bases de datos (a menudo veréis la sigla **KDD**, *Knowledge Discovery in Databases*). Caja de técnicas: asociación (“esto se compra con aquello”), agrupación (*clustering*: tipos de huésped), clasificación, detección de rarezas. El centro de gravedad es el **algoritmo sobre una tabla ya bastante lista**. No obliga a un *dashboard* ni a un *chatbot*.
+**Minería de datos** (*data mining*) viene del descubrimiento de conocimiento en bases de datos (a menudo veréis **KDD**: *Knowledge Discovery in Databases*). Caja de técnicas: asociación (“esto se reserva con aquello”), agrupación (tipos de huésped), clasificación, detección de rarezas. El centro de gravedad es el **algoritmo sobre una tabla ya bastante lista**. No obliga a un cuadro de mando ni a un *chatbot*.
 
-**Ciencia de datos** (*data science*) es un oficio **más ancho**. Incluye formular la pregunta de negocio, decidir qué dato hace falta, **cuidar la calidad**, explorar, modelar (estadística clásica o aprendizaje automático) y **comunicar** el resultado a quien no va a leer un *notebook*. La minería es **una** herramienta de esa caja, no el nombre nuevo de la caja. Por eso es falso el atajo «ciencia de datos = minería pero cuando hay Big Data».
+**Ciencia de datos** (*data science*) es un oficio **más ancho**. Incluye formular la pregunta de negocio, decidir qué dato hace falta, **cuidar la calidad**, explorar, modelar (estadística clásica o aprendizaje automático) y **comunicar** el resultado a quien no va a leer un cuaderno de código. La minería es **una** herramienta de esa caja, no el nombre nuevo de la caja. Por eso es falso el atajo «ciencia de datos = minería pero cuando hay Big Data».
 
 **Inteligencia artificial** es el campo de los sistemas que se comportan de forma inteligente en una tarea. Dentro hay muchas familias: búsqueda, sistemas expertos con reglas, robótica, visión, lenguaje… El **aprendizaje automático** (*machine learning*, **ML**: el programa **mejora con ejemplos** en vez de llevar todas las reglas escritas a mano) es hoy el camino más habitual hacia un producto de IA. Un árbol de decisión puede ser “minería” si lo usáis para *entender* una regla, o “ML / IA” si lo **desplegáis** para puntuar cada reserva nueva. No discutáis la etiqueta: mirad **para qué** sirve el artefacto.
 
 !!! failure "Tres frases que estropean el mapa"
     - «La IA contiene a la ciencia de datos, que contiene a la minería» (no es una matrioska).
-    - «Ciencia de datos = minería + Hadoop» (se puede hacer ciencia de datos con 200 filas; Hadoop no bautiza el oficio).
+    - «Ciencia de datos = minería + Hadoop» (se puede hacer ciencia de datos con 200 filas; el logo del clúster no bautiza el oficio).
     - «IA = el *chatbot*» (visión, reglas, un puntuador de cancelaciones… también son IA).
 
-Mejor pensad en **solapes** y en una **dependencia** de la infraestructura:
+Solapes, no escalera. La infraestructura de este módulo **alimenta** a los tres; no es un peldaño que “se convierte” en IA:
 
 ```mermaid
 flowchart TB
-  BD[Infraestructura Big Data<br/>capturar · guardar · procesar · presentar]
-  DM[Minería de datos<br/>patrones en lo ya guardado]
-  DS[Ciencia de datos<br/>pregunta · calidad · modelo · comunicar]
-  AI[IA<br/>sistema que percibe o actúa]
+  BD[Este módulo: capturar · guardar · procesar · presentar]
+  DM[Minería: patrones en lo ya guardado]
+  DS[Ciencia de datos: pregunta · calidad · modelo · comunicar]
+  AI[IA: sistema que percibe o actúa]
   ML[Aprendizaje automático]
   BD --> DM
   BD --> DS
@@ -128,33 +112,25 @@ flowchart TB
 - La **IA** no es solo un modelo: es el sistema (datos de entrada, modelo, umbral, acción, supervisión). Un *chatbot* sin el JSON de habitaciones al día **alucina** huecos.
 - La **ciencia de datos** puede terminar en un informe **sin** desplegar IA. Gerencia a veces solo necesita el gráfico del martes vacío.
 
-#### Seis pasos de un estudio (en el hotel)
+#### De un estudio al panel (en el hotel)
 
-No hay una receta única, pero un trabajo de ciencia de datos casi siempre recorre este bucle. El **ingeniero** de este módulo alimenta sobre todo los pasos 2 y 3; si fallan, el modelo del 5 puntúa basura.
+No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre este bucle. El **ingeniero** de este módulo alimenta sobre todo la recuperación y la preparación; si fallan, el modelo puntúa basura.
 
-1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes. Todas las partes entienden el *qué* y el *por qué*.
-2. **Recuperación.** Se buscan los datos: PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
-3. **Preparación.** Unificas `web` y `WEB`, quitas canceladas, cruzas reserva con cobro.
-4. **Exploración.** Miras patrones y rarezas (el viernes por la web cancela más).
-5. **Modelado.** Un modelo (a veces de IA) estima el riesgo de no-show o el cupo.
-6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **vuelves al paso 2** con dato nuevo y, si vale, **automatizas**.
+1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes.
+2. **Recuperación.** PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
+3. **Preparación.** Unificas `web` y `WEB`, quitas canceladas, cruzas reserva con cobro (eso, en [1.6](ingesta.md), es la T de un ETL: extraer, transformar, cargar).
+4. **Exploración.** El viernes por la web cancela más.
+5. **Modelado.** Estima el riesgo de que no se presente (*no-show*) o el cupo.
+6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **vuelves al paso 2**.
 
-#### De qué dependen (y de qué depende este módulo)
-
-| Esta pieza… | …necesita | …y alimenta |
-| --- | --- | --- |
-| Minería / ciencia de datos / IA | Dato **accesible y gobernado** (el viaje evento → información) | Conocimiento, modelos, productos |
-| Un modelo en producción | **Reentrenar** cuando el verano no se parece al invierno | Otra vuelta de ingesta y calidad |
-| Este módulo **BDA** | Un problema con Vs que duelen | El **combustible** de los tres oficios |
-
-En el [curso de especialización](../index.md) otros módulos os pondrán a modelar y a evaluar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
+En el [curso de especialización](../index.md) otros módulos os pondrán a modelar. **Aquí** diseñáis el almacén, la ingesta, el formato y la presentación. Si el lago está sucio o no se puede leer a tiempo, da igual el nombre del algoritmo: no hay valor.
 
 !!! tip "Frase para el examen y para el pasillo"
     Big Data **prepara** el dato. La minería **busca patrones**. La ciencia de datos **hace la pregunta y cuenta el resultado**. La IA **encarna** una tarea en un sistema. Se solapan; no se sustituyen.
 
 ## Las V: un diagnóstico, no una lista para recitar
 
-Al principio se usaban **tres V** para decidir si el problema era Big Data: **volumen**, **velocidad** y **variedad**. Luego se añadieron **valor** y **veracidad** (cinco). En algunos textos aparecen dos más (**viabilidad** y **visualización**) hasta siete. No memorices el recuento: **pasa revista** al hotel. Si varias duelen a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
+Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Luego **valor** y **veracidad** (cinco). En algunos textos, **viabilidad** y **visualización** (siete). No memorices el recuento: **pasa revista** al hotel. Si varias duelen a la vez, casi seguro necesitas un diseño de Big Data. Si solo te duele una y el resto cabe en el sistema de siempre, a lo mejor no.
 
 ![Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden](../assets/ut1/cinco-vs-hotel.png)
 
@@ -172,44 +148,44 @@ Es la cantidad de **bytes**. Hoy se habla con naturalidad de terabytes y petabyt
 | Exabyte | EB | 10¹⁸ | Escala de un operador o un ministerio |
 | Zettabyte | ZB | 10²¹ | Orden de magnitud de “todo internet” |
 
-En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 bytes). El fabricante del disco suele anunciar GB en **base 10**; el sistema operativo a menudo muestra GiB. Por eso “el disco de 1 TB no llega a 1000 GB en el explorador”: no está roto, **cuentan distinto**.
+En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 bytes). El fabricante anuncia 1 TB como **1000 GB** (base 10). El explorador suele mostrar **cerca de 931 GB** porque cuenta GiB y a veces los llama “GB”. El disco no está roto: **cuentan distinto**.
 
-El volumen no nace solo de “la base de clientes”. Sale de transacciones, logs, redes sociales, sensores e IoT, historiales clínicos, genómica, satélites, Open Data, cámaras, RFID, industria.
+En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habitación y del DNI. Fuera veréis lo mismo a otra escala: redes, genómica, satélites.
 
 !!! example "Un cálculo para notar la escala"
     Si guardas **4 bytes al día** (un número: el peso) por cada persona del planeta (~8·10⁹) durante un año:
 
     `4 × 8×10⁹ × 365 ≈ 12 TB`
 
-    Eso es **un** atributo, sin fotos ni historial. Multiplica por imágenes, vídeo o genomas y ves por qué “un disco más grande en el mismo PC” deja de ser el plan.
+    Eso es **un** atributo, sin fotos ni historial. Multiplica por imágenes de habitación o por años de logs y ves por qué “un disco más grande en el mismo PC” deja de ser el plan.
 
-**Qué implica en el diseño:** si el dato ya no cabe (o no se lee a tiempo) en **una** máquina, tienes que **repartir** (clúster, lake, formatos que se puedan trocear). Eso es el criterio **a)** empezando a trabajar.
+**Qué implica en el diseño:** si el dato ya no cabe (o no se lee a tiempo) en **una** máquina, hay que **repartir** (clúster, lago, formatos que se puedan trocear). Eso es el criterio **a)** empezando a trabajar.
 
 ### Velocidad
 
-No basta con que quepa: los datos **siguen llegando**. El reto es capturarlos, integrarlos con lo que ya tienes y, si el negocio lo pide, reaccionar **antes de que dejen de servir**.
+No basta con que quepa: los datos **siguen llegando**. El reto es capturarlos, integrarlos y, si el negocio lo pide, reaccionar **antes de que dejen de servir**.
 
-Ejemplos de ritmo (órdenes de magnitud, para hacerse una idea, no para memorizar):
+En el hotel:
 
-- Publicaciones y vídeos subiendo sin parar.
-- Motores y sensores industriales generando decenas o cientos de GB.
-- Una web de reservas escribiendo un log por cada clic.
+- La web de reservas escribe un log por cada clic.
+- Los sensores publican cada ~30 s (el semáforo de recepción no puede esperar al lote de las 23:00).
+- Finanzas cierra a las 23:00; el panel de las 8 es el lote de **ayer**.
 
-Dimensionar el disco **no** arregla un atasco de ingesta. Si llenas un embudo más ancho pero el cuello sigue igual de estrecho, el agua se derrama. De ahí el procesamiento **en streaming** y las colas (Kafka y similares): desacoplan “quien produce” de “quien consume”.
+Dimensionar el disco **no** arregla un atasco de ingesta. Si el embudo es más ancho pero el cuello sigue igual, el agua se derrama. De ahí el flujo continuo y las [colas](ingesta.md) (desacoplan “quien produce” de “quien consume”).
 
 !!! example "Mismo volumen, distinta V"
-    10 TB de facturas históricas que cargas **una vez** al mes → duele sobre todo el **volumen**.  
-    10 TB al día en eventos de sensores que hay que cruzar con el stock **ahora** → duele la **velocidad** (y luego el volumen).
+    10 TB de cobros históricos que cargas **una vez** al mes → duele sobre todo el **volumen**.  
+    10 TB al día en eventos de sensores que hay que cruzar con el PMS **ahora** → duele la **velocidad** (y luego el volumen).
 
 ### Variedad
 
-No todos los datos se parecen a una hoja de cálculo. En el mismo proyecto conviven tres familias:
+No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven tres familias:
 
-| Tipo | Qué es | Cómo lo reconoces | Ejemplo |
+| Tipo | Qué es | Cómo lo reconoces | En el hotel |
 | --- | --- | --- | --- |
-| **Estructurado** | Esquema fijo (filas y columnas) | Todas las filas tienen las mismas columnas | Tabla SQL de facturas |
-| **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON, XML, logs |
-| **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | PDF, foto, audio, vídeo, texto libre |
+| **Estructurado** | Esquema fijo (filas y columnas) | Todas las filas tienen las mismas columnas | Tabla SQL de reservas del PMS |
+| **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON del canal web, logs |
+| **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | Foto del DNI, PDF de incidencia, vídeo del hall |
 
 Un **data warehouse** (almacén de informes) espera dato ya en tablas: decides las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. El detalle está en [1.3](almacenamiento.md).
 
@@ -217,16 +193,16 @@ La variedad es la V que más sorprende al que solo ha visto SQL: el problema no 
 
 ### Veracidad
 
-¿Te puedes fiar de lo que hay? Duplicados, sensores descalibrados, encuestas sesgadas, bots, campos vacíos, relojes mal puestos, el mismo cliente con tres NIF.
+¿Te puedes fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.
 
 A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dónde salió esta cifra”), metadatos y reglas de limpieza. Un modelo sobre datos sucios no es “más Big Data”: es una **peor** decisión, más rápida.
 
 !!! failure "La trampa de la veracidad"
-    “Como hay muchos datos, el error se compensa.” A veces el error está **sesgado** (todos los sensores del almacén Norte fallan igual) y el modelo lo aprende como si fuera verdad.
+    “Como hay muchos datos, el error se compensa.” A veces el error está **sesgado** (todos los sensores de Potes fallan igual en invierno) y el modelo lo aprende como si fuera verdad.
 
 ### Valor
 
-Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (precio, ruta, alerta, diagnóstico, cupo del hotel) **mejora** respecto a no usar esos datos.
+Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (cupo, tarifa, overbooking, una oferta a tiempo) **mejora** respecto a no usar esos datos.
 
 Si no sabes qué decisión vas a mejorar, todavía no tienes un proyecto: tienes un disco.
 
@@ -236,10 +212,10 @@ No entran en el recuento clásico. Sirven para no diseñar un sistema que **nadi
 
 | V extra | Pregunta | En el hotel |
 | --- | --- | --- |
-| **Viabilidad** | ¿La empresa puede **usar** de verdad esos datos? ¿Cuántos hacen falta para la predicción que importa? | Montar sensores en las 80 habitaciones de Potes y no tener a nadie que limpie el JSON **no** es viable. |
-| **Visualización** | ¿Gerencia **ve** el número a tiempo, en un gráfico o un KPI? | El panel de las 8. Un lago de 8 TB sin cuadro de mando no decide nada. |
+| **Viabilidad** | ¿La empresa puede **usar** de verdad esos datos? ¿Cuántos hacen falta para la predicción que importa? | Poner sensores en Potes y no tener a nadie que limpie el JSON **no** es viable. |
+| **Visualización** | ¿Gerencia **ve** el número a tiempo, en un gráfico o un indicador? | El panel de las 8. Un lago de 8 TB sin cuadro de mando no decide nada. |
 
-La visualización no es “hacerlo bonito”. Es el criterio **e)** visto desde la puerta: presentar para que alguien que no abre el *notebook* pueda decidir.
+La visualización no es “hacerlo bonito”. En [1.8](pentaho.md) y en el criterio **e)** del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.
 
 ## Qué pregunta haces (cuatro analíticas)
 
@@ -250,38 +226,30 @@ La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guar
 | **Descriptiva** | ¿Qué pasó? | Ocupación de agosto en Laredo | BI, panel, SQL |
 | **Diagnóstica** | ¿Por qué pasó? | Los martes de noviembre, vacíos | BI + exploración |
 | **Predictiva** | ¿Qué pasará? | Cancelaciones del viernes | Ciencia de datos / IA |
-| **Prescriptiva** | ¿Qué hacemos? | Overbooking y tarifa flexible | IA + una regla de negocio |
+| **Prescriptiva** | ¿Qué hacemos? | Overbooking y tarifa flexible | Una regla de negocio; a veces IA |
 
 El BI **no** desaparece cuando llega el lago. Gerencia sigue necesitando el “qué pasó”. Big Data **no** es un sinónimo de predicción: a veces el valor es un informe de ayer que llega **a las 8**, no un modelo.
 
-![Cuatro preguntas de gerencia y quién las sostiene](../assets/ut1/analiticas-roles.png)
+![Cuatro preguntas de gerencia (izquierda) y el equipo (derecha): el científico no es solo “el modelo”; pregunta, limpia y explica. El ingeniero es este módulo](../assets/ut1/analiticas-roles.png)
 
-## Quién hace qué (roles)
+## Quién hace qué (un solo mapa)
 
-En un equipo de datos conviven varios oficios. **Este módulo** forma sobre todo al **ingeniero**: que el dato entre, se guarde y se pueda leer.
+Los tres oficios de arriba **beben** del dato. Este módulo forma sobre todo a quien **deja ese dato usable**: el **ingeniero**.
 
 | Rol | Encargo | En el hotel |
 | --- | --- | --- |
 | **Analista de datos** | Convierte dato en información (SQL, gráficos). Conoce el negocio. | El informe de ocupación por canal. |
 | **Científico de datos** | Pregunta, calidad, modelo (a menudo IA) y el relato a gerencia. | El riesgo de cancelación; no copia playa a Potes. |
-| **Ingeniero de datos** | Diseño y mantenimiento de extraer, cargar, guardar y procesar (ETL). | El job de la noche **antes de las 8**. **Aquí.** |
-| **Arquitecto de datos** | Estrategia: qué crece, quién accede, linaje, seguridad. | Si abrís Noja, el diseño **aguanta**. |
+| **Ingeniero de datos** | Extraer, transformar, cargar y guardar (ETL). **Aquí.** | El job de madrugada, **antes de las 8**. |
+| **Arquitecto de datos** | Estrategia: qué crece, quién accede, linaje, seguridad. | Si mañana abre otro hotel, el diseño **aguanta**. |
 
-El arquitecto **elige** el plano. El ingeniero **construye** tuberías sobre ese plano. El científico **pregunta** con el dato que ya es usable. El analista **cuenta** el lunes lo que gerencia puede leer.
+El arquitecto **elige** el plano. El ingeniero **construye** las tuberías. El científico **pregunta** con el dato ya usable. El analista **cuenta** el lunes lo que gerencia puede leer. Minería e IA no son “otros nombres del ingeniero”: usan lo que el ingeniero deja listo.
 
-Eso es **ingeniería de datos**: recuperar el bruto (PMS, pasarela, sensores), dejarlo **consistente y de calidad**, y **servirlo** a quien lo consume (gerencia, un modelo, un cuadro de mando). No es “hacer el gráfico del lunes”; es que ese gráfico **pueda** hacerse. El mapa del oficio (generación → ingesta → transformación → entrega → consumo) está en [1.5](arquitectura.md).
-
-Dentro del ingeniero a veces se especializa:
-
-| Especialidad | Encargo | En el hotel |
-| --- | --- | --- |
-| **De tubería** | El flujo diario (Python, SQL, lago) | El job de las 02:00 |
-| **De BI** | SQL y el panel | Ocupación e importe a las 8 |
-| **De producto** | Instalar y mantener Kafka, Airflow, Spark… | Que Kitchen arranque; no lo montáis aún |
+El ciclo generación → ingesta → transformación → entrega → consumo está en [1.5](arquitectura.md).
 
 ## Fuera de este apartado (y no lo copies aquí)
 
-OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md). Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md). El paisaje de herramientas (S3, Kafka, Power BI…) en [1.5](arquitectura.md). La ingesta, en [1.6](ingesta.md).
+OLTP frente a OLAP (operar en recepción / informar a gerencia) se desarrolla en [1.4](procesamiento.md). Dónde guardar (relacional, NoSQL, almacén de informes, lago) está en [1.3](almacenamiento.md). El paisaje de herramientas y Lambda/Kappa, en [1.5](arquitectura.md). La ingesta, en [1.6](ingesta.md).
 
 ## El mismo oficio, otros sitios
 
@@ -298,20 +266,20 @@ Si puedes decir *qué V duele* en cada uno, el 1.1 está asimilado.
 
 Cuando el diseño responde a las V que duelen, puedes:
 
-- Integrar fuentes que antes vivían en silos (caja, web, sensores).
+- Integrar fuentes que antes vivían en silos (PMS, web, sensores).
 - Replicar y distribuir para **no parar** si cae un nodo.
 - Procesar en paralelo lo que una máquina no termina a tiempo.
-- Alimentar minería / IA y **cuadros de mando** para quien decide (criterio **e)** del RA1).
+- Alimentar minería / IA y **cuadros de mando** para quien decide (más adelante, criterio **e)**).
 
 !!! failure "Errores frecuentes en clase y en empresas"
     - “Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.
-    - “Todo tiene que ser en tiempo real.” El [principio SCV](procesamiento.md) te dirá por qué no.
-    - Confundir los **MB de marketing** del disco con lo que cabe de verdad en RAM.
+    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv) te dirá por qué no pedís las tres cosas a la vez.
+    - Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).
     - Medir el éxito en terabytes guardados, no en decisiones mejoradas.
 
 ## Para el criterio a)
 
-Antes de elegir Mongo, Parquet o Pentaho, debes **caracterizar** el problema:
+Antes de elegir Mongo, Parquet o Pentaho, hay que **caracterizar** el problema:
 
 1. ¿Qué Vs duelen de verdad (y cuáles no)?
 2. ¿El dato es de operación (caja, reserva) o de análisis (informe, modelo)?
@@ -321,7 +289,7 @@ Eso es diseñar la solución de almacenamiento. Instalar software viene **despu�
 
 ## Actividades
 
-No puntúan en Moodle. Sirven para comprobar si puedes **caracterizar** (criterio **a)**) sin recitar la lista.
+No puntúan en Moodle. Sirven para comprobar si podéis **caracterizar** (criterio **a)**) sin recitar la lista.
 
 1. **¿Qué V duele?** Para cada frase, elige la V principal y justifica en una línea.
     1. Los sensores de Potes publican cada 30 s y el semáforo de recepción no puede esperar al lote de las 23:00.
