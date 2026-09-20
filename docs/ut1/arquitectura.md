@@ -91,6 +91,91 @@ Atraviesa todas las anteriores: quién lee el NIF, cifrado, copias, amenazas int
 !!! warning "Las dos que se olvidan en el trabajo de clase"
     Seguridad y monitorización. El flujo “CSV → filtro → Excel” llega al 10. Las otras seis capas, si el caso es real, también existen aunque sean simples (una carpeta con permisos y un log de Pentaho).
 
+## Qué tiene que cumplir el edificio
+
+Las capas de arriba son el **edificio**. Una arquitectura Big Data, además, tiene que **aguantar** volumen y velocidad. En el [grupo hotelero](caso-hotel.md):
+
+| Exigencia | En castellano | En el hotel |
+| --- | --- | --- |
+| **Escala** | Añades disco o CPU sin rediseñar | Abrís Noja y el panel de las 8 sigue saliendo |
+| **Aguanta fallos** | Un nodo muerto no tumba el servicio | Se funde un disco en Potes; recepción cobra |
+| **Dato repartido** | Nada de un único SPOF (un solo punto que, si cae, cae todo) | No un USB con “el histórico” |
+| **Proceso repartido** | El cálculo también se parte | El job de ocupación no corre en un portátil |
+| **Dato cerca del cálculo** | Menos red, menos espera | Hadoop clásico; en nube a veces se **separa** ([1.2](clusters.md), [1.3](almacenamiento.md)) |
+
+!!! failure "Sobreingeniería"
+    Montar Kafka + Spark + tres nubes “porque es Big Data” cuando el Excel de Comillas cabe en un PC. Primero la pregunta de gerencia; luego el edificio. Los proveedores publican listas (p. ej. *Well-Architected*): la idea es la misma, no hace falta recitar la guía.
+
+Principios que evitan el zoo:
+
+1. **Componentes comunes** pocos y bien elegidos: cubo de objetos, Git, orquestador, un motor de proceso.
+2. **Todo falla.** Decide cuánto puedes tardar en recuperar el panel (**RTO**) y cuántas horas de reservas puedes perder (**RPO**).
+3. **Elástico**, también hacia abajo (apagar el clúster de madrugada).
+4. **Viva:** el negocio cambia; la arquitectura también.
+5. **Poco acoplada:** cola o API; cambias NiFi por un script sin reescribir el PMS.
+6. **Reversible:** una decisión mala se deshace (versión del job, no “ya está en producción para siempre”).
+7. **Menos privilegio:** el práctico no lee el DNI ([seguridad](#7-seguridad-transversal)).
+
+## Dos caminos: lote y flujo (Lambda y Kappa)
+
+Lote y *streaming* ya están en [1.4](procesamiento.md). Aquí es **cómo se combinan** en el edificio.
+
+- **Lote:** tiene principio y fin. El cierre de las 23:00. Preciso; tarda.
+- **Flujo:** no acaba. Cada evento de sensor. Rápido; a menudo **menos** preciso (una ventana, no todo el histórico).
+
+“Tiempo real” **no** es instantáneo: es responder en un plazo **finito** y útil. El semáforo de recepción sí; el panel de las 8 no hace falta.
+
+### Lambda: los dos a la vez
+
+Cada hecho nuevo (reserva, cobro, sensor) entra por **dos** caminos que luego se consultan juntos:
+
+1. **Capa lenta (lote).** El lago **inmutable**: se **añade**, no se pisa. Por la noche recorres **todo** y calculas la vista del panel (ocupación e importe **cerrados**). Precisión alta; latencia de horas.
+2. **Capa rápida (flujo).** Solo el **incremento** desde el último lote: el semáforo, la ocupación “de ahora”. Baja latencia; puedes muestrear o mirar diez segundos de cada minuto.
+3. **Capa de consulta.** Gerencia pregunta. Si quiere el cierre de ayer, la vista lenta. Si recepción pregunta “¿queda doble?”, la rápida. A veces **mezclas**: ayer cerrado + lo de esta noche hasta las 7:50.
+
+El linaje se conserva porque no reescribes: una cancelación es **otro** registro, no un borrado silencioso.
+
+En el hotel eso es natural: **no** es el mismo algoritmo pintar el panel de las 8 (todo el día, todas las fuentes) y actualizar el semáforo (un evento).
+
+### Kappa: un solo flujo
+
+Si el lote no es más que “un flujo que se puede **releer**”, tiras la capa lenta. Todo pasa por una **cola de mensajes** ([Kafka](https://kafka.apache.org/) y similares). El bruto no se muta; si cambias la transformación, **reprocesas** desde un punto (el *replay*).
+
+Cuatro ideas:
+
+1. Todo es un flujo (el lote es un caso).
+2. El origen no se pisa.
+3. Un solo código que mantener.
+4. Puedes volver a lanzar el proceso sobre los mismos eventos.
+
+Hace falta que los eventos se guarden **en orden**. Si el algoritmo del panel **no** es el del semáforo (p. ej. un modelo de cancelación sobre tres años de Parquet), Kappa se queda corto: ese entrenamiento quiere el camino lento.
+
+![Lambda: panel y semáforo por caminos distintos. Kappa: una cola que se puede releer](../assets/ut1/lambda-kappa-hotel.png)
+
+| Pregunta | Te inclinas a |
+| --- | --- |
+| ¿El cálculo del panel y el del semáforo son **el mismo** (o casi)? | **Kappa** (un código, una cola) |
+| ¿El modelo de cancelación necesita **todo** el histórico y el semáforo no? | **Lambda** |
+| ¿Solo el panel de las 8, sin semáforo? | Un lote. No montes flujo “por si acaso” |
+| ¿Solo el semáforo, y el 8 se puede **rehacer** releyendo la cola? | **Kappa** |
+
+Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en Lambda reduce el doble mantenimiento. El detalle del motor, en la [UT2](../ut2/ecosistema.md).
+
+### Temperatura: no todo el dato se toca igual
+
+![Caliente, templado y frío: ocupación de hoy frente a copias de 2019](../assets/ut1/temperatura-dato.png)
+
+| | **Caliente** | **Templado** | **Frío** |
+| --- | --- | --- | --- |
+| Se consulta | Sin parar | De vez en cuando | Casi nunca |
+| Disco típico | RAM / SSD | Cubo “normal” | Cinta, archivo barato |
+| En el hotel | Semáforo, caché de “¿queda habitación?” | Cierre del mes | Copias de 2019 |
+| Recuperar | Barato en tiempo, caro en € | Equilibrio | Barato guardar, **lento** sacar |
+
+El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Pagar SSD por las fotos de la reforma de 2019 es mal diseño.
+
+El [principio SCV](procesamiento.md#principio-scv-solo-para-análisis) (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundas con CAP ([1.3](almacenamiento.md)).
+
 ## Gobierno, DataOps y orquestación
 
 No son una novena capa con logo. Son **corrientes** que atraviesan el ciclo.
@@ -113,7 +198,7 @@ Si buscas esa expresión verás pósters con cientos de logos. **No los memorice
 | Orquestación | Oozie, Airflow, **Kitchen** (Pentaho) | ¿En qué orden y qué pasa si falla? |
 | Visualización | Power BI, Tableau, informes Pentaho | ¿Qué ve el cliente? |
 
-**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema. **Pentaho** se usa en este módulo para **ETL visual** y para **mostrar** el resultado sin programar el motor.
+**Hadoop** fue la plataforma pionera de **lotes** sobre HDFS (un sistema de ficheros **repartido**). **Spark** cubre lotes y streaming **en memoria** y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. **Pentaho** se usa en este módulo para **ETL visual** y para **mostrar** el resultado sin programar el motor. La cola de Kappa suele ser Kafka; el detalle de ingesta está en [1.6](ingesta.md).
 
 Los mapas cambian de año (nace una marca, muere otra). **Las capas no.** Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/) (orientación, no para recitar).
 
@@ -137,18 +222,25 @@ No hace falta dominarlas todas el primer día. Sí conviene saber **que existen*
 Un ingeniero de datos **no** es un desarrollador de producto. Sí escribe el script que evita el clic manual a las 02:00.
 
 !!! success "Al terminar 1.5"
-    Coge un caso (contadores, reservas, tickets de caja) y dibuja las **ocho** capas. Pon **una** herramienta o responsabilidad en cada una y justifica la de almacenamiento. Si puedes explicarlo en voz alta a un compañero que no ha leído el tema, el apartado está entendido.
+    Coge un caso (contadores, reservas, tickets de caja) y dibuja las **ocho** capas. Pon **una** herramienta o responsabilidad en cada una y justifica la de almacenamiento. Di si el caso pide **Lambda, Kappa o solo lote**. Si puedes explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
 
 ## Actividad
 
-No puntúa en Moodle. Sitúa cada herramienta en **una** fase o corriente del ciclo (generación / ingesta / almacén / transformación / entrega / consumo / orquestación). Una línea de por qué. Si una sirve en dos sitios, dilo.
+No puntúa en Moodle.
 
-| Herramienta | Pista |
-| --- | --- |
-| [Power BI](https://www.microsoft.com/es-es/power-platform/products/power-bi) | Lo que gerencia **ve** |
-| SQL | Lingua franca |
-| [MongoDB](https://www.mongodb.com/) | Dónde reposa un JSON |
-| [Airflow](https://airflow.apache.org/) | Orden de los pasos |
-| [S3](https://aws.amazon.com/s3/) | Cubo de objetos |
+1. Sitúa cada herramienta en **una** fase o corriente (generación / ingesta / almacén / transformación / entrega / consumo / orquestación). Una línea de por qué.
 
-Comprobación: consumo o visualización / transformación (y consulta) / almacén / orquestación / almacén de objetos. Luego dibuja las ocho capas del hotel **o** de los contadores.
+    | Herramienta | Pista |
+    | --- | --- |
+    | [Power BI](https://www.microsoft.com/es-es/power-platform/products/power-bi) | Lo que gerencia **ve** |
+    | SQL | Lingua franca |
+    | [MongoDB](https://www.mongodb.com/) | Dónde reposa un JSON |
+    | [Airflow](https://airflow.apache.org/) | Orden de los pasos |
+    | [S3](https://aws.amazon.com/s3/) | Cubo de objetos |
+
+2. En Lambda, ¿cómo va más rápido el semáforo que el panel de las 8? ¿Qué **pagas** a cambio? (Precisión / ventana / histórico.)
+3. Lote frente a flujo: una frase de **volumen** y otra de **reloj**, con el cierre de las 23:00 y los sensores.
+4. ¿Por qué oiréis tanto Spark en este dibujo, y no “un programa para el lote y otro para el flujo”?
+5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#principio-scv-solo-para-análisis), si quieres **velocidad y volumen**, ¿qué sueltas?
+
+Comprobación (1): consumo / transformación / almacén / orquestación / objetos. (2) Camino rápido = incremento o muestra, no todo el lago. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo). Luego dibuja las ocho capas del hotel **o** de los contadores y marca Lambda o Kappa.

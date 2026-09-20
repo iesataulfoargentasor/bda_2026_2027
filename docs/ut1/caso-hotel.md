@@ -69,7 +69,7 @@ flowchart TB
 ## Qué te van a pedir (el hilo)
 
 1. **[1.1](por-que-big-data.md)** — Un evento (reserva, sensor, cobro) tiene que acabar en una **decisión** (menos habitaciones vacías). Un hotel de playa no es un albergue de montaña.
-2. **[1.5](arquitectura.md)** — El ciclo del ingeniero (generación → panel). Las **capas** se ven también con una comercializadora, para que no parezcan un invento solo de reservas.
+2. **[1.5](arquitectura.md)** — El ciclo del ingeniero, las capas, y si el panel de las 8 y el semáforo van por **dos caminos** (Lambda) o por **una cola** (Kappa).
 3. **[1.6](ingesta.md)** — Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en el taller *Hola ETL*.
 4. **[1.7](formatos.md)** — Dirección solo mira tres números; el CSV arrastra doce columnas.
 5. **[1.8](pentaho.md)** — El mismo cruce reservas ⋈ cobros, ahora agregado por hotel y canal.
