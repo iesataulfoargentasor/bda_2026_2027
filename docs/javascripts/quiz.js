@@ -61,7 +61,7 @@
       const head = correct
         ? "<p><strong>Correcta.</strong></p>"
         : "<p><strong>Incorrecta.</strong></p>";
-      return `${head}<p>${formatExplain(q.explain)}</p>`;
+      return `${head}<p>${formatExplain(q.explain)}</p>${href}`;
     }
     const yours = correct
       ? "<p><strong>Correcta.</strong></p>"

@@ -14,7 +14,7 @@ Antes de 1.1, leed **[el caso: grupo hotelero de Cantabria](caso-hotel.md){targe
 
 Leed cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estilo “¿qué elegiríais y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si podéis explicárselo a un compañero sin mirar la tabla, el apartado está asimilado.
 
-La [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"} aplica eso a 500 GB con un portátil. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [diez de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (un solo Corregir test). Ninguna sustituye a Moodle.
+La [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"} aplica eso a 500 GB con un portátil. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [treinta de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (también Comprobar respuesta). Ninguna sustituye a Moodle.
 
 ## Qué vais a trabajar
 
@@ -30,4 +30,4 @@ La [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"} aplica eso a
 | [1.7 Formatos de datos](formatos.md){target="_blank" rel="noopener"} | **c)** | Dirección solo mira tres números; el CSV gordo arrastra doce columnas. |
 | [1.8 Pentaho](pentaho.md){target="_blank" rel="noopener"} | **d)** / **e)** | El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el **CSV**, no Spoon. |
 | [Tarea para practicar en clase](tarea-clase.md){target="_blank" rel="noopener"} | RA1 + **RA2** | 500 GB del histórico del hotel: concurrente, paralelo, distribuido |
-| [Autoevaluación](autoevaluacion.md){target="_blank" rel="noopener"} | — | Diez de **toda** la unidad (Corregir test). Las diez de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |
+| [Autoevaluación](autoevaluacion.md){target="_blank" rel="noopener"} | — | Treinta de **toda** la unidad (Comprobar respuesta). Las diez de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |
