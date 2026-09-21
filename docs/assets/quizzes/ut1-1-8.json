@@ -6,16 +6,16 @@
     {
       "topic": "Qué es PDI",
       "href": "",
-      "prompt": "En el aula usáis Pentaho Data Integration (PDI / Kettle). ¿Sustituye a Spark o al PMS?",
+      "prompt": "En el aula usáis una ETL visual (PDI / Kettle). ¿Sustituye a Spark o al sistema del día a día?",
       "code": "",
       "options": [
-        "No. Os deja **ver** un ETL (extraer, filtrar, unir, agregar, cargar) sin programar el motor. No picáis la reserva en Spoon.",
+        "No. Os deja **ver** un ETL (extraer, filtrar, unir, agregar, cargar) sin programar el motor. No picáis el hecho operativo en Spoon.",
         "Sí: PDI es el clúster de petabytes.",
-        "Sí: Spoon es el programa de recepción.",
-        "El XML `.ktr` es el catálogo de negocio del 1.5 (qué significa `canal`)."
+        "Sí: Spoon es el programa donde se opera el cobro.",
+        "El XML `.ktr` es el catálogo de negocio del 1.5 (qué significa cada campo)."
       ],
       "answer": 0,
-      "explain": "Procesáis una **copia**. El e) es el CSV, el JSON o la tabla, no un informe de Pentaho Server. No bajéis `pme-ce`: eso es otro programa."
+      "explain": "Procesáis una **copia**. El e) es el CSV, el JSON o la tabla, no un informe del servidor de Pentaho. No bajéis el editor de metadatos (`pme-ce`): eso es otro programa."
     },
     {
       "topic": "Spoon, Pan, Kitchen",
@@ -29,7 +29,7 @@
         "Los tres lanzan el mismo `.ktr`."
       ],
       "answer": 2,
-      "explain": "Spoon es clase y diseño. En producción (o en la entrega “como en empresa”) lanzáis Pan o Kitchen. Si solo funciona al pulsar Play, el procedimiento no está cerrado."
+      "explain": "Spoon es clase y diseño. En producción (o en la entrega “como en empresa”) lanzáis Pan o Kitchen. Si solo funciona al pulsar Play, el procedimiento no está cerrado. PDI 9.x espera **Java 8**; si Spoon no arranca, `java -version`."
     },
     {
       "topic": "Transformación o job",
@@ -39,179 +39,109 @@
       "options": [
         "Kitchen: todo lo que no es Spoon es un job.",
         "Pan. Transformación = el dato **cambia**. Job = **orquesta** (¿existe el fichero? ¿falló el paso?).",
-        "Da igual: `kitchen.bat` sobre el `.ktr`.",
-        "Spoon en el servidor, con msgbox."
+        "Da igual: Kitchen sobre el `.ktr`.",
+        "Spoon en el servidor, con un cuadro de diálogo."
       ],
       "answer": 1,
-      "explain": "Error que se repite: Kitchen sobre un `.ktr` o Pan sobre un `.kjb`. El lote de después de las 23:00 (si no está el CSV, aborta) sí es job → Kitchen."
+      "explain": "Error que se repite: Kitchen sobre un `.ktr` o Pan sobre un `.kjb`. Un lote “si no está el fichero, aborta; si está, lanza dos transformaciones” sí es job → Kitchen."
     },
     {
       "topic": "Filter rows",
       "href": "",
-      "prompt": "Taller 1: `comarca = Trasmiera`. Filter rows, ¿cuántas salidas? ¿A cuál unís el Sort?",
+      "prompt": "Filter rows, ¿cuántas salidas tiene y a cuál unís el siguiente paso?",
       "code": "",
       "options": [
         "Una: las que cumplen.",
         "Tres: cumple, no cumple y nulos.",
-        "Dos: la que **cumple** (Main output) y la que no. El Sort va a la que cumple; un Dummy cierra la otra.",
-        "Ninguna: el filtro se hace en la cabeza y no en un paso."
+        "Ninguna: el filtro se hace “en la cabeza” y no en un paso.",
+        "Dos: la que **cumple** (Main output) y la que no. El siguiente paso va a la que cumple; un Dummy cierra la otra."
       ],
-      "answer": 2,
-      "explain": "El texto tiene que coincidir: `trasmiera` no vale. En el CSV, `Liebana` va **sin** tilde. Filtrar “en la cabeza” no es reproducible."
+      "answer": 3,
+      "explain": "Filtrar “en la cabeza” no es reproducible. El texto de la condición tiene que coincidir con el del fichero."
     },
     {
       "topic": "Criterios d y e",
       "href": "",
-      "prompt": "Gerencia pide el cierre de **ayer**. ¿Les dejáis el `.ktr` o `informe_hotel_canal.csv`?",
+      "prompt": "Habéis procesado un informe. ¿Qué le dejáis a quien no abre Spoon?",
       "code": "",
       "options": [
         "El `.ktr`: así abren Spoon.",
-        "Da igual: el e) es Pentaho Report Designer.",
-        "El `.kjb`: Kitchen es el informe.",
-        "El **CSV**. El cliente no abre Spoon. e) = cabeceras claras, JSON o tabla que ya entienden."
-      ],
-      "answer": 3,
-      "explain": "Habéis procesado (d) cuando la salida **no** es la entrada. Cerrad Spoon y abrid el fichero como empresa. Si preguntan qué es `id_cadena`, el e) no está cerrado."
-    },
-    {
-      "topic": "Pan sin Spoon",
-      "href": "",
-      "prompt": "Guardáis `taller1_trasmiera.ktr`, borráis el CSV de salida. En producción, ¿cómo lo lanzáis?",
-      "code": "",
-      "options": [
-        "Solo Play en Spoon.",
-        "`pan.bat /file=...` El log termina en Finished y el fichero **reaparece**.",
-        "`kitchen.bat` sobre el `.ktr`.",
-        "Subís el `.ktr` a gerencia."
-      ],
-      "answer": 1,
-      "explain": "Text file output a menudo rellena con espacios: pestaña Fields → **Minimal width**. PDI 9.x espera **Java 8**; si Spoon no arranca, `java -version`."
-    },
-    {
-      "topic": "Estos CSV no son los del 1.6",
-      "href": "",
-      "prompt": "`reservas_pdi.csv` y `cobros_pdi.csv`. ¿Son los de Hola ETL o el `reservas.csv` del 1.7?",
-      "code": "",
-      "options": [
-        "Sí: reutilizad `cobros.csv`.",
-        "Sí: mismo grano JSON fila a fila.",
-        "No. Misma **idea** (reservas ⋈ cobros); otras columnas (`id_hotel`) y otro grano (informe). Cobros van con **punto y coma**.",
-        "Son los `listings.csv` de Madrid del PDF."
+        "Da igual: el e) es el diseñador de informes del servidor.",
+        "El **CSV** (o JSON o tabla). El cliente no abre Spoon. e) = cabeceras claras que ya entienden.",
+        "El `.kjb`: Kitchen es el informe."
       ],
       "answer": 2,
-      "explain": "El PDF sirve para **reconocer menús**. No copiéis sus ficheros (NY, Airbnb, RDS deportivo). El caso es el grupo de Cantabria."
+      "explain": "Habéis procesado (d) cuando la salida **no** es la entrada. Cerrad Spoon y abrid el fichero como empresa. Si preguntan qué es un `id` interno, el e) no está cerrado."
     },
     {
       "topic": "Inner join",
       "href": "",
-      "prompt": "La reserva 4 de Santander no tiene fila en `cobros_pdi.csv`. ¿Sale en el informe del taller 2?",
+      "prompt": "Merge join INNER entre dos orígenes. Una fila del primero no tiene pareja. ¿Sale? ¿Hace falta ordenar?",
       "code": "",
       "options": [
-        "Sí: es LEFT JOIN.",
-        "Sí: gerencia quiere las no cobradas.",
-        "Sí, si ordenáis **después** del merge.",
-        "No. Merge join **INNER**: sin cobro no entra. El cliente pide solo las cobradas."
+        "Sí sale: es LEFT JOIN. El orden da igual.",
+        "No. INNER: sin pareja no entra. Si los flujos no están **ordenados por la clave** **antes** del merge, el join miente.",
+        "Sí sale si ordenáis **después** del merge.",
+        "Group by sustituye al join."
       ],
-      "answer": 3,
-      "explain": "Spoon avisa: si los flujos no están **ordenados por la clave** (`id_reserva`) **antes** del merge, el join miente. El hop se tira desde el Merge hacia cada origen."
+      "answer": 1,
+      "explain": "El hop se tira desde el Merge hacia cada origen. Un left join dejaría también las que no tienen pareja; no es el mismo encargo."
     },
     {
       "topic": "Group by",
       "href": "",
-      "prompt": "Group by por `hotel` y `canal`: SUM(cobrado) y COUNT. ¿Quién nombra `cobrado_total` y `n_reservas`?",
+      "prompt": "Group by: SUM y COUNT. ¿Quién nombra los campos de salida?",
       "code": "",
       "options": [
-        "Vosotros, en la columna Name. Gerencia lee **unas pocas filas** (hotel × canal), no el cruce fila a fila.",
+        "Vosotros, en la columna Name. Quien decide lee **unas pocas filas** agregadas, no el cruce fila a fila.",
         "Spoon los inventa.",
-        "El PMS al cerrar a las 23:00.",
+        "El origen operativo al cerrar el día.",
         "Pan, al lanzar el `.ktr`."
       ],
       "answer": 0,
-      "explain": "El Group by también quiere el flujo **ordenado** por las columnas de agrupación. Sort por `hotel`, `canal` entre el merge y el grupo."
+      "explain": "El Group by también quiere el flujo **ordenado** por las columnas de agrupación. Sort entre el merge y el grupo."
     },
     {
       "topic": "Java Filter y nulos",
       "href": "",
-      "prompt": "Java Filter con `noches_min` nulo, **sin** If field value is null. ¿Qué pasa?",
+      "prompt": "Java Filter sobre un campo que puede ser nulo, **sin** If field value is null. ¿Qué pasa?",
       "code": "",
       "options": [
-        "Trata el nulo como 0 y entra como barato.",
-        "El filtro **revienta o miente**. Sustituid nulos por `-1` y **excluid** esos `-1`: no son baratos.",
-        "JSON output rellena los nulos.",
-        "Da igual: el cliente pedía copiar `< 4`."
-      ],
-      "answer": 1,
-      "explain": "El cliente pide **4 o menos** (`<= 4`). En JSON: Get fields o salen objetos vacíos. Nr rows in a bloc `0` = un documento con todos."
-    },
-    {
-      "topic": "Nube y secretos",
-      "href": "",
-      "prompt": "El informe costa/ciudad/interior va a S3 o a Moodle. ¿Dónde van las credenciales de AWS?",
-      "code": "",
-      "options": [
-        "En el `.ktr` que subís a Moodle.",
-        "En una captura del `password`.",
-        "Variables de entorno (o perfil `~/.aws`). **Nunca** en el `.ktr` ni en un repo.",
-        "En el PDF de prácticas, copiadas."
-      ],
-      "answer": 2,
-      "explain": "URI `s3n://NOMBRE-BUCKET/...` (no `s3n://s3n/…`). Un cubo abierto al mundo no es diseño de empresa. Sin cubo, CSV en carpeta: d) y e) ya están."
-    },
-    {
-      "topic": "Job de madrugada",
-      "href": "",
-      "prompt": "A las 23:00 cierra el día. Si el CSV del taller 2 **no** apareció, ¿seguís al 4 y pintáis el panel de las 8?",
-      "code": "",
-      "options": [
-        "No. File exists + **Abort job**. No dais por bueno un panel vacío. `kitchen.bat` sobre el `.kjb`.",
-        "Sí: Kitchen rellena el hueco.",
-        "Sí: el taller 4 consume `informe_hotel_canal.csv`.",
-        "Un msgbox en el servidor sin ventana y listo."
-      ],
-      "answer": 0,
-      "explain": "El taller 4 **vuelve a leer** los CSV de reservas; el File exists del 2 es la **compuerta**. El msgbox estorba en un servidor sin pantalla: en la entrega “empresa” quitadlo."
-    },
-    {
-      "topic": "Update y E=2",
-      "href": "",
-      "prompt": "Tras insertar incidencias 1–4, Update con ids 1, 3, 5 y 99. ¿Cuántos errores esperáis?",
-      "code": "",
-      "options": [
-        "`E=1`: solo el 99.",
-        "`E=0`: Eva está en huéspedes.",
-        "`E=2`: **5** (huésped sin fase previa) y **99** (ni huésped ni fase). 1 y 3 actualizan.",
-        "`E=4`: todas fallan."
-      ],
-      "answer": 2,
-      "explain": "Error handling: descripción y campos al log. Insert / Update (upsert) no es el mismo paso que Update. PostgreSQL viene; MariaDB pide el `.jar` en `lib` y reiniciar Spoon."
-    },
-    {
-      "topic": "El PDF no es el caso",
-      "href": "",
-      "prompt": "El PDF tiene códigos postales de Nueva York y Airbnb de Madrid. ¿Usáis esos ficheros?",
-      "code": "",
-      "options": [
-        "Sí: son el caso del módulo.",
-        "No. Sirve para **reconocer menús**. Aquí el caso es Cantabria. Tampoco copiéis credenciales de capturas.",
-        "Sí: `listings.csv` de Madrid.",
-        "El RDS deportivo es `hotel_pdi`."
-      ],
-      "answer": 1,
-      "explain": "`hotel_pdi.sql` es **local** (PostgreSQL o MariaDB). RDS vale si el profesor lo monta; el oficio no cambia."
-    },
-    {
-      "topic": "Tarjeta de examen",
-      "href": "",
-      "prompt": "Flujo único leer-filtrar-CSV en servidor; reserva sin cobro; Java Filter con nulo; gerencia a las 8. ¿Qué respondéis?",
-      "code": "",
-      "options": [
-        "Kitchen / sí entra / el nulo vale 0 / el `.ktr`.",
-        "Spoon / LEFT JOIN / JSON Get fields / Report Designer.",
-        "Pan sobre el `.kjb` / sí entra / Dummy / el `.kjb`.",
-        "Pan / no entra (inner) / el filtro revienta o miente / el **CSV** (e no es Spoon)."
+        "Trata el nulo como 0 y entra como válido.",
+        "El JSON rellena los nulos solo.",
+        "Da igual: copiad un `< 4` y listo.",
+        "El filtro **revienta o miente**. Sustituid nulos y **excluid** esos valores sentinela: no son “baratos”."
       ],
       "answer": 3,
-      "explain": "Relojes: finanzas cierra a las 23:00; Kitchen de noche; gerencia a las 8 ve el cierre de **ayer**. Ante un problema: almacén, ingesta, formato, procesar (d) y enseñar (e)."
+      "explain": "Leed lo que pide el cliente (`<=` no es `<`). En JSON: Get fields o salen objetos vacíos. Nr rows in a bloc `0` = un documento con todos."
+    },
+    {
+      "topic": "Secretos",
+      "href": "",
+      "prompt": "El CSV acaba en un cubo de objetos o en una carpeta. ¿Dónde van las credenciales de la nube?",
+      "code": "",
+      "options": [
+        "En el `.ktr` que subís a la entrega.",
+        "Variables de entorno (o perfil de credenciales). **Nunca** en el `.ktr` ni en un repo.",
+        "En una captura del password.",
+        "Copiadas de un PDF de prácticas."
+      ],
+      "answer": 1,
+      "explain": "Un cubo abierto al mundo no es diseño de empresa. Sin cubo, CSV en carpeta: d) y e) ya están. El PDF de prácticas sirve para **reconocer menús**, no para copiar ficheros ni credenciales."
+    },
+    {
+      "topic": "Job",
+      "href": "",
+      "prompt": "De madrugada: si el CSV de un paso **no** apareció, ¿seguís y dais el resultado por bueno?",
+      "code": "",
+      "options": [
+        "Sí: Kitchen rellena el hueco.",
+        "Un cuadro de diálogo en el servidor sin ventana y listo.",
+        "No. File exists + **Abort job**. No dais por bueno un resultado vacío. Kitchen sobre el `.kjb`.",
+        "Kitchen sobre el `.ktr` basta."
+      ],
+      "answer": 2,
+      "explain": "El job **orquesta** transformaciones. El msgbox estorba en un servidor sin pantalla: en la entrega “empresa” quitadlo. Update e Insert/Update no son el mismo paso; si un id no encaja, Error handling al log."
     }
   ]
 }
