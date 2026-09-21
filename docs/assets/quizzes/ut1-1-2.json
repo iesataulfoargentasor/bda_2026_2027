@@ -6,21 +6,21 @@
     {
       "topic": "Qué es un clúster",
       "href": "",
-      "prompt": "El job de madrugada de los cuatro hoteles ya no cabe en el servidor del PMS. ¿Qué es un clúster?",
+      "prompt": "¿Qué es un clúster de computadoras?",
       "code": "",
       "options": [
         "Un único PC con mucha RAM.",
-        "Varios ordenadores (nodos) unidos por red que se coordinan para un mismo trabajo.",
-        "Varios núcleos dentro de un portátil.",
+        "Varios ordenadores (**nodos**) unidos por **red** que se coordinan para un mismo trabajo.",
+        "Varios núcleos dentro de un mismo portátil.",
         "Un mainframe: sin él no hay Big Data."
       ],
       "answer": 1,
-      "explain": "Cada nodo tiene su CPU, su disco y su memoria. Crecéis **añadiendo máquinas**, no solo agrandando esa."
+      "explain": "Cada nodo tiene su CPU, su disco y su memoria. En Big Data permite crecer **añadiendo máquinas**, no solo agrandando una. Hoy se montan sobre servidores normales más un programa que reparte tareas y datos."
     },
     {
-      "topic": "Clúster ≠ portátil",
+      "topic": "Clúster ≠ una máquina",
       "href": "",
-      "prompt": "En la tarea de los 500 GB usáis un i7 con varios núcleos. ¿Es un clúster?",
+      "prompt": "Un i7 con varios núcleos, ¿es un clúster?",
       "code": "",
       "options": [
         "Sí: varios núcleos ya son un clúster.",
@@ -29,21 +29,35 @@
         "Solo si instaláis Hadoop en el portátil."
       ],
       "answer": 2,
-      "explain": "Núcleos en un i7 = paralelo en un solo equipo. El clúster son ordenadores **distintos** en red."
+      "explain": "Núcleos en un solo equipo = paralelo local. El clúster son ordenadores **distintos** en red."
     },
     {
-      "topic": "Nodo ≠ recepción",
+      "topic": "Alta disponibilidad",
       "href": "",
-      "prompt": "En el dibujo hay un “nodo Potes”. ¿Qué es?",
+      "prompt": "Un nodo desaparece (luz, disco, red) y el servicio **sigue**. ¿Qué propiedad es?",
       "code": "",
       "options": [
-        "La recepción de Potes: el PMS tiene que estar en el clúster.",
-        "Un nodo de **cómputo del histórico**. El PMS de Potes puede seguir en un servidor.",
-        "La réplica ZIP del disco de gerencia.",
-        "El panel de las 8, que vive en Potes."
+        "**Alta disponibilidad**: hay réplica o otro nodo asume el servicio.",
+        "Solo alto rendimiento: más núcleos.",
+        "Equilibrio de carga: no saturar un nodo.",
+        "Escalabilidad: habéis añadido máquinas."
       ],
-      "answer": 1,
-      "explain": "Los nombres de nodo no son la recepción. El PMS puede quedarse en **un** servidor; el job de madrugada sí se parte."
+      "answer": 0,
+      "explain": "Rendimiento es partir el trabajo y acabarlo antes. Equilibrio es no mandar todo al mismo nodo. Escalabilidad es añadir (o quitar) máquinas cuando cambia el volumen."
+    },
+    {
+      "topic": "Réplica",
+      "href": "",
+      "prompt": "¿Qué es una réplica en el clúster?",
+      "code": "",
+      "options": [
+        "Un ZIP del histórico en un cajón.",
+        "Más RAM en la misma máquina.",
+        "El Excel que alguien descarga al acabar el job.",
+        "Una copia **en marcha** en otro nodo."
+      ],
+      "answer": 3,
+      "explain": "Sin réplica, varios ordenadores son más potencia, no más seguridad. Un ZIP del viernes no salva el servicio a las 8:02. El job bien hecho **no publica** un resultado a medias: acaba, reintenta o deja el anterior."
     },
     {
       "topic": "Alto rendimiento",
@@ -57,161 +71,77 @@
         "No, porque un clúster nunca acelera un job."
       ],
       "answer": 1,
-      "explain": "Ocho nodos **no** son magia lineal. El clúster brilla si el trabajo se puede **trocear** (p. ej. sumar noches por hotel)."
-    },
-    {
-      "topic": "Alta disponibilidad",
-      "href": "",
-      "prompt": "Se funde el disco de Potes y el panel de las 8 sigue. ¿Qué propiedad estáis usando?",
-      "code": "",
-      "options": [
-        "Solo alto rendimiento: más núcleos.",
-        "Equilibrio de carga: Laredo no se come el 100 %.",
-        "Alta disponibilidad: hay réplica o otro nodo asume el servicio.",
-        "Escalabilidad: habéis añadido un hotel."
-      ],
-      "answer": 2,
-      "explain": "Que el servicio **siga** tras un fallo es **alta disponibilidad**. Rendimiento es acabar antes de las 8; equilibrio es no saturar un nodo."
-    },
-    {
-      "topic": "Réplica",
-      "href": "",
-      "prompt": "¿Qué es una réplica en el clúster?",
-      "code": "",
-      "options": [
-        "Una copia **en marcha** en otro nodo, no un ZIP en un cajón.",
-        "Un ZIP del histórico que finanzas guarda el viernes.",
-        "Más RAM en el mismo servidor del PMS.",
-        "El Excel de ocupación que gerencia descarga a las 8."
-      ],
-      "answer": 0,
-      "explain": "Sin réplica, varios ordenadores son más potencia, no más seguridad. El ZIP del viernes no salva el panel a las 8:02."
-    },
-    {
-      "topic": "El job no publica a medias",
-      "href": "",
-      "prompt": "A mitad del job de madrugada se cae un nodo. ¿Qué tiene que pasar?",
-      "code": "",
-      "options": [
-        "Publicar el panel con lo que haya: gerencia ya está en la puerta.",
-        "No publicar a medias: o acaba, o se reintenta, o gerencia ve el de ayer.",
-        "Pasar el PMS al clúster para no perder cobros.",
-        "Apagar el resto de nodos (scale-out)."
-      ],
-      "answer": 1,
-      "explain": "Un panel a medias miente. El job bien hecho **no publica** hasta terminar, reintentar o dejar el de ayer."
-    },
-    {
-      "topic": "Equilibrio de carga",
-      "href": "",
-      "prompt": "Mandáis todos los jobs al nodo que “siempre ha ido bien”. Laredo en agosto está al 100 % y Potes de brazos cruzados. ¿Qué falla?",
-      "code": "",
-      "options": [
-        "Alta disponibilidad: falta una réplica ZIP.",
-        "Equilibrio de carga: creáis un cuello aunque el clúster tenga máquinas libres.",
-        "Nada: el nodo bueno debe llevarlo todo.",
-        "Escalado vertical: hace falta más RAM en recepción."
-      ],
-      "answer": 1,
-      "explain": "El algoritmo debe mirar lo grande que es el trabajo y lo ocupado (y potente) que está cada nodo. Si no, la latencia sube con máquinas libres."
-    },
-    {
-      "topic": "Escalabilidad",
-      "href": "",
-      "prompt": "Abrís otro hotel y añadís nodos. ¿Basta con enchufarlos?",
-      "code": "",
-      "options": [
-        "Sí: más máquinas convierten solo el Excel de finanzas en clúster.",
-        "No: el programa del job tiene que **saber** partirse. El PMS de recepción puede seguir en un servidor.",
-        "Sí, si cada nodo se llama como un hotel.",
-        "No, porque un clúster nunca se puede agrandar después del día 1."
-      ],
-      "answer": 1,
-      "explain": "La escalabilidad es añadir (o quitar) nodos cuando crece el dato. Sin un job que se **parta**, solo tenéis más cajas."
+      "explain": "Ocho nodos no son magia lineal. El clúster brilla si el trabajo se puede **trocear**. La idea clásica es llevar el cálculo al dato: mejor mover una función que petabytes hacia una sola CPU."
     },
     {
       "topic": "Escalado vertical",
       "href": "",
-      "prompt": "Finanzas pide más RAM en el servidor del PMS porque agosto se atasca al picar. ¿Qué escalado es?",
+      "prompt": "Añadís CPU, RAM o disco **en la misma máquina**. ¿Qué escalado es?",
       "code": "",
       "options": [
-        "Horizontal (*scale-out*): más máquinas.",
-        "Vertical (*scale-up*): más CPU, RAM o disco **en la misma máquina**.",
-        "*Scale-in*: quitar nodos en noviembre.",
-        "Ni uno ni otro: es solo un Excel."
+        "Vertical (scale-up).",
+        "Horizontal (scale-out).",
+        "Scale-in: quitar nodos.",
+        "No es escalado: solo vale en un mainframe."
+      ],
+      "answer": 0,
+      "explain": "Vertical = agrandar una máquina (techo de catálogo y de precio). Horizontal = más máquinas. El vertical sigue existiendo (p. ej. una base en un solo servidor); en Big Data **no basta solo** con eso."
+    },
+    {
+      "topic": "Horizontal y scale-in",
+      "href": "",
+      "prompt": "Añadís dos máquinas al clúster. Más adelante apagáis dos porque sobra capacidad. ¿Cómo se llama cada cosa?",
+      "code": "",
+      "options": [
+        "Las dos son scale-out: cualquier cambio en el clúster es crecer.",
+        "La primera es vertical; la segunda, scale-up.",
+        "Añadir = horizontal (scale-out). Quitar = scale-in. Scale-in **no** es el nombre del vertical.",
+        "Apagar nodos es alta disponibilidad."
+      ],
+      "answer": 2,
+      "explain": "En la jerga: scale-up = vertical, scale-out = horizontal, scale-in = reducir. En clase: vertical, horizontal, y scale-in para apagar cuando sobra."
+    },
+    {
+      "topic": "Equilibrio de carga",
+      "href": "",
+      "prompt": "Mandáis todos los jobs al nodo que “siempre ha ido bien”. El resto está de brazos cruzados. ¿Qué falla?",
+      "code": "",
+      "options": [
+        "Alta disponibilidad: falta un ZIP.",
+        "Equilibrio de carga: creáis un cuello aunque el clúster tenga máquinas libres.",
+        "Nada: el nodo bueno debe llevarlo todo.",
+        "Escalado vertical: hace falta más RAM en ese nodo y listo."
       ],
       "answer": 1,
-      "explain": "Agrandar esa máquina es **vertical**. Encaja en el PMS. En Big Data no basta solo con eso: hay techo de catálogo y de precio."
+      "explain": "El algoritmo debe mirar lo grande que es el trabajo y lo ocupado (y potente) que está cada nodo. Un clúster rápido sin réplica es frágil; uno muy replicado pero mal balanceado deja un nodo al 100 %."
     },
     {
-      "topic": "Escalado horizontal",
-      "href": "",
-      "prompt": "El job de ocupación no llega a las 8. Añadís dos máquinas que ya tienen copia del histórico. ¿Qué escalado es?",
-      "code": "",
-      "options": [
-        "Vertical: es el mismo job, luego es la misma máquina.",
-        "*Scale-in*: dos máquinas menos de espera.",
-        "Horizontal (*scale-out*): **más máquinas** en el clúster.",
-        "No es escalado: es solo réplica."
-      ],
-      "answer": 2,
-      "explain": "Más nodos = **horizontal**. La copia del histórico es la réplica que permite partir (y no caerse); el tipo de escalado sigue siendo añadir máquinas."
-    },
-    {
-      "topic": "Scale-in",
-      "href": "",
-      "prompt": "En noviembre apagáis dos nodos porque sobran. ¿Cómo se llama?",
-      "code": "",
-      "options": [
-        "*Scale-out*: siempre que tocáis el clúster es crecer.",
-        "*Scale-up*: apagar es agrandar el que queda.",
-        "*Scale-in*: **quitar** nodos cuando sobra capacidad. No es el nombre antiguo del vertical.",
-        "Alta disponibilidad: un nodo menos es más seguro."
-      ],
-      "answer": 2,
-      "explain": "En la jerga habitual: scale-up = vertical, scale-out = horizontal, scale-in = reducir. En clase decimos vertical y horizontal, y scale-in para apagar en noviembre."
-    },
-    {
-      "topic": "Cuando no hay magia",
+      "topic": "Cuando el clúster no hace magia",
       "href": "",
       "prompt": "Cada paso del job depende del resultado del anterior. Añadís nodos. ¿Qué pasa?",
       "code": "",
       "options": [
         "El tiempo se divide por el número de nodos.",
-        "El segundo nodo espera al primero: más máquinas y el mismo cuello.",
-        "Pasa a ser streaming y acaba a las 8 seguro.",
-        "El PMS absorbe el histórico y ya no hace falta clúster."
+        "Pasa a ser tiempo real y acaba seguro.",
+        "El programa se parte solo al enchufar máquinas.",
+        "El segundo nodo espera al primero: más máquinas y el mismo cuello."
       ],
-      "answer": 1,
-      "explain": "Si la tarea **no se puede partir**, el clúster no acorta el tiempo. Brilla con **independencia** entre trozos (sumar noches por hotel, ficheros distintos)."
+      "answer": 3,
+      "explain": "Si la tarea **no se puede partir**, el clúster no acorta el tiempo. Brilla con **independencia** entre trozos. Añadir nodos no basta: el programa tiene que **saber** partirse. Hay coste de coordinación (red, quien reparte, juntar resultados)."
     },
     {
       "topic": "Cálculo y disco",
       "href": "",
-      "prompt": "Hadoop “de libro” pega el fichero al nodo que calcula. En la nube el dato suele vivir en un cubo de objetos y el clúster se apaga por su cuenta. ¿Qué es cierto?",
+      "prompt": "Hadoop “de libro” pega el fichero al nodo que calcula. En la nube el dato suele vivir en un cubo de objetos y el clúster de cálculo crece o se apaga por su cuenta. ¿Qué es cierto?",
       "code": "",
       "options": [
         "Son el mismo diseño con dos logos.",
-        "Son **dos diseños**: clásico = dato y CPU en el mismo nodo; nube = dato en el cubo, CPU donde haga falta.",
         "En la nube ya no hay clúster.",
-        "El cubo de objetos sustituye al PMS y a ACID."
+        "Son **dos diseños**: clásico = dato y CPU en el mismo nodo; nube = dato en el cubo, CPU donde haga falta.",
+        "El cubo de objetos sustituye a cualquier garantía de la base operativa."
       ],
-      "answer": 1,
-      "explain": "“Llevar el cálculo al dato” es el clúster clásico. En la nube ganáis réplica y disco barato; **pagáis red**. El cobro en recepción sigue siendo el PMS."
-    },
-    {
-      "topic": "Clúster y PMS",
-      "href": "",
-      "prompt": "Hace falta un clúster para el histórico. ¿Eso sustituye a “el cobro no puede verse a medias”?",
-      "code": "",
-      "options": [
-        "Sí: si hay réplica, el cobro ya es seguro.",
-        "No: esa garantía (ACID) es de almacenamiento. El PMS puede seguir en un servidor; el histórico, en el clúster.",
-        "Sí: el panel de las 8 cobra al huésped.",
-        "No, porque un clúster no sirve para el histórico."
-      ],
-      "answer": 1,
-      "explain": "Caracterizar si hace falta repartir no borra el cobro ACID. Son dos decisiones del RA1: el PMS opera; el clúster parte el histórico."
+      "answer": 2,
+      "explain": "Ganáis réplica y disco barato; pagáis red. Un clúster para el histórico **no** sustituye a que una operación crítica (un cobro, un asiento) no se vea a medias: eso es otra decisión de almacenamiento. El sistema operativo puede seguir en un servidor."
     }
   ]
 }

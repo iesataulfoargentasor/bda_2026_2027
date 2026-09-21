@@ -142,6 +142,6 @@ No puntúa en Moodle. Una línea de por qué.
 
 ## Autoevaluación del 1.2
 
-Quince preguntas (A–D, **una** correcta) sobre lo esencial del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
+Diez preguntas (A–D, **una** correcta) sobre los conceptos del apartado. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Podéis repetir el test.
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-2.json"></div>
