@@ -4,214 +4,144 @@
   "mode": "each",
   "questions": [
     {
-      "topic": "Dos relojes",
+      "topic": "Base relacional",
       "href": "",
-      "prompt": "Recepción pica ahora; gerencia abre el panel a las 8. ¿Qué es cierto?",
+      "prompt": "¿Qué es una base de datos relacional y para qué encaja?",
       "code": "",
       "options": [
-        "Gerencia pica en el mismo PMS: así no hay que copiar.",
-        "El panel de las 8 es el lote de ayer: el job **copia** (no pica) ocupación e importe.",
-        "Los sensores caben en las tablas del PMS si hay más RAM.",
-        "El disco de Laredo es el histórico de los cuatro hoteles."
+        "Un fichero JSON sin columnas fijas.",
+        "El único almacén cuando hay terabytes: crece solo en horizontal.",
+        "Tablas con **esquema** (columnas y reglas **antes** de guardar) y SQL. Encaja en operaciones cortas que tienen que quedar **bien hechas**.",
+        "Un clúster Hadoop con otro nombre."
       ],
-      "answer": 1,
-      "explain": "Un cobro no puede verse a medias (ahora). El panel es de **ayer**. JSON, sensores y fotos no viven en las tablas del PMS."
-    },
-    {
-      "topic": "Relacional",
-      "href": "",
-      "prompt": "El PMS de Laredo: tablas, esquema y SQL. ¿Para qué encaja y dónde se queda corto?",
-      "code": "",
-      "options": [
-        "Encaja en operaciones cortas (cobrar, reservar). Como único almacén del volumen extremo suele quedarse corto (crece en vertical).",
-        "Sustituye al lago: el JSON del canal es una tabla más.",
-        "No sirve nunca para Big Data: hay que borrar el PMS.",
-        "Solo sirve si no hay esquema."
-      ],
-      "answer": 0,
-      "explain": "El relacional **sigue** como origen y como sitio de operar. El análisis de tres años de los cuatro hoteles, probablemente no cabe ahí."
+      "answer": 2,
+      "explain": "Una fila es un hecho; una columna, un dato de ese hecho. Un índice evita leerse toda la tabla. Estas bases suelen crecer **en vertical**. Como único almacén del volumen extremo, en general no; como **fuente** y sitio de operar, sí."
     },
     {
       "topic": "NoSQL",
       "href": "",
-      "prompt": "Elegís “NoSQL” para el canal web y los sensores. ¿Qué hay que tener claro?",
+      "prompt": "“NoSQL”, ¿qué es?",
       "code": "",
       "options": [
-        "NoSQL es un producto: con Mongo vale para todo.",
-        "Sustituye al PMS: el cobro también va en un documento.",
-        "Es una **familia** (documento, clave-valor, wide-column, grafo). No sustituye al PMS si el cobro no puede verse a medias.",
-        "Wide-column y Parquet son lo mismo."
-      ],
-      "answer": 2,
-      "explain": "Decir “NoSQL” sin la familia es como “voy en vehículo”. Un JSON de reserva puede vivir en un documento; el asiento del cobro, no."
-    },
-    {
-      "topic": "Wide-column ≠ Parquet",
-      "href": "",
-      "prompt": "Cassandra guarda filas con muchas columnas; Parquet guarda columnas juntas para el informe. ¿Son lo mismo?",
-      "code": "",
-      "options": [
-        "Sí: los dos son “columnar”.",
-        "No: wide-column es una familia NoSQL (filas). Parquet es un fichero columnar para el informe (apartado 1.7).",
-        "Sí, si están en S3.",
-        "No, porque Parquet es el PMS."
+        "Un producto: Mongo cubre todas las familias.",
+        "Una **familia** (documento, clave-valor, wide-column, grafo). Elegir “NoSQL” sin decir cuál es como decir “voy en vehículo”.",
+        "Lo mismo que Parquet: ambos son “columnar”.",
+        "El recambio obligatorio de toda relacional."
       ],
       "answer": 1,
-      "explain": "Mismo mote, dos sitios. El formato del fichero se desarrolla en el 1.7; aquí importa no mezclarlos."
+      "explain": "Cada familia habla un idioma distinto. **Wide-column no es Parquet**: Cassandra o HBase guardan filas; Parquet es un fichero columnar para el informe. No sustituyen a la relacional si un cobro no puede verse a medias."
     },
     {
-      "topic": "Warehouse",
+      "topic": "Data warehouse",
       "href": "",
-      "prompt": "Gerencia quiere ocupación e importe a las 8, siempre las mismas columnas. ¿Qué sitio es?",
+      "prompt": "¿Qué es un data warehouse (almacén de informes)?",
       "code": "",
       "options": [
-        "El data warehouse: se **copia** (no se pica), columnas al **guardar**, pensado para el panel.",
-        "El lago: el bruto ya vale para gerencia.",
-        "El PMS: recepción pinta el panel al cobrar.",
-        "BASE: así el saldo llega antes."
+        "Un sitio **central** para informes e histórico. Los datos **se copian**, no se pican. Las columnas se fijan **al guardar**.",
+        "El sitio donde se opera cada cobro.",
+        "Un disco sucio con JSON bruto.",
+        "Un recorte por departamento, más estrecho que el almacén."
       ],
       "answer": 0,
-      "explain": "El almacén de informes es una **foto** periódica, no la caja. Snowflake o BigQuery son este oficio, no el lago."
+      "explain": "Es una **foto** periódica para inteligencia de negocio, no la caja. Si mañana llega un campo nuevo, hay que **cambiar el modelo**. Snowflake o BigQuery son este oficio, no el lago."
     },
     {
       "topic": "Data mart",
       "href": "",
-      "prompt": "Marketing quiere campañas sin NIF; Laredo solo ve su hotel. ¿Qué es un data mart?",
+      "prompt": "¿Qué es un data mart?",
       "code": "",
       "options": [
         "Otro nombre del data lake.",
-        "El PMS de ese departamento.",
-        "Un **recorte** del warehouse (mismo oficio, más estrecho), no un segundo lago.",
-        "Un clúster de cuatro nodos."
+        "El warehouse entero de la organización.",
+        "Un clúster de cuatro nodos.",
+        "Un **recorte** del warehouse (mismo oficio, más estrecho): un departamento o un ámbito. El diseño sano es el **dependiente** (sale del almacén común)."
       ],
-      "answer": 2,
-      "explain": "Tablas limpias, pregunta ya conocida, se copia. El JSON bruto no va al mart; el NIF no va al de marketing."
-    },
-    {
-      "topic": "Mart dependiente",
-      "href": "",
-      "prompt": "Comillas monta un Excel propio “porque mañana abre otro” y los importes no cuadran con el cierre. ¿Qué tipo de mart es y cuál es el diseño sano?",
-      "code": "",
-      "options": [
-        "Dependiente; mejor uno independiente.",
-        "Independiente. El sano es el **dependiente**: del warehouse de la cadena, un origen de verdad.",
-        "Híbrido; da igual de dónde salga.",
-        "No es un mart: es el lago."
-      ],
-      "answer": 1,
-      "explain": "El independiente parece más rápido el día 1. El martes hay **dos** ocupaciones. El recorte dependiente lee los mismos cobros que gerencia a las 8."
+      "answer": 3,
+      "explain": "Tablas limpias, pregunta ya conocida, se copia. El JSON bruto no va al mart. Un mart **independiente** (ETL propio) parece más rápido el día 1; al poco hay **dos** cifras que no cuadran."
     },
     {
       "topic": "Data lake",
       "href": "",
-      "prompt": "JSON del canal, fotos y sensores: aún no sabéis qué preguntaréis mañana. ¿Warehouse o lago? ¿Cuándo fijáis las columnas?",
+      "prompt": "¿En qué se diferencia un data lake de un warehouse?",
       "code": "",
       "options": [
-        "Warehouse; columnas al guardar.",
-        "Lago; columnas al guardar, como el PMS.",
-        "Los dos son el panel de las 8.",
-        "Lago: el dato **como llegó**; las columnas se interpretan **al leer**."
+        "En el lago las columnas se fijan al guardar, como en el warehouse.",
+        "Lago: el dato **como llegó**; las columnas se interpretan **al leer**. Warehouse: dato limpio, columnas al **guardar**.",
+        "Los dos son el mismo sitio con dos logos.",
+        "El lago sustituye siempre al warehouse."
       ],
-      "answer": 3,
-      "explain": "El lago guarda el original. Sin catálogo ni calidad se vuelve **ciénaga**. En la práctica suele haber lago (bruto) y warehouse (lo que gerencia ve)."
+      "answer": 1,
+      "explain": "El lago encaja cuando **aún no** sabéis qué preguntaréis, o el bruto es de muchos tipos. Sin catálogo ni calidad se vuelve **ciénaga**. En la práctica suele haber **los dos**. El mart es recorte del warehouse, no un tercer sitio para el JSON."
     },
     {
       "topic": "Bloque, objeto, lakehouse",
       "href": "",
-      "prompt": "Disco del PostgreSQL de recepción, un volcado en S3, y bruto + tablas en el mismo sitio. ¿Qué formas son, en ese orden?",
+      "prompt": "Disco de una máquina, un fichero entero en un cubo con una clave, y lago más tablas en el mismo sitio. ¿Qué formas son, en ese orden?",
       "code": "",
       "options": [
-        "Bloque, objeto, lakehouse.",
         "Lakehouse, bloque, objeto.",
         "Los tres son el warehouse.",
+        "**Bloque**, **objeto**, **lakehouse**.",
         "Objeto, ACID, BASE."
       ],
-      "answer": 0,
-      "explain": "Bloque = disco de una máquina. Objeto = fichero entero con una clave en un cubo. Lakehouse = lago **más** tablas (Delta, Iceberg)."
-    },
-    {
-      "topic": "Snowflake y ACID de tabla",
-      "href": "",
-      "prompt": "Oís “Snowflake” y “Delta da ACID”. ¿Qué no hay que mezclar?",
-      "code": "",
-      "options": [
-        "Snowflake es el lakehouse; Delta cobra en recepción.",
-        "Snowflake es warehouse en nube (informes), no lakehouse. El ACID de Delta/Iceberg es de **tabla**; el cobro sigue en el PMS.",
-        "Los dos sustituyen al PMS.",
-        "Lakehouse y warehouse son el mismo logo."
-      ],
-      "answer": 1,
-      "explain": "Lakehouse = lago + tablas. Un MERGE que no deja la ocupación a medias **no** es el cobro de recepción."
+      "answer": 2,
+      "explain": "Bloque = sistema de ficheros de una máquina (o NAS). Objeto = bajáis o sustituís el fichero entero (S3…). Lakehouse = lago **más** tablas (Delta, Iceberg). Snowflake **no** es lakehouse: es warehouse en nube. El ACID de Delta es de **tabla**; no sustituye el cobro operativo."
     },
     {
       "topic": "Transacción",
       "href": "",
-      "prompt": "Descontar la fianza y registrar el cobro. Si el sistema se cae a mitad, ¿qué tiene que pasar?",
+      "prompt": "Transferir 50 € de A a B son dos cambios. Si el sistema se cae a mitad, ¿qué tiene que pasar?",
       "code": "",
       "options": [
-        "Dejar el que haya llegado: recepción ya vio la pantalla.",
         "El paquete es **todo o nada**: o se hacen los dos cambios o no se hace ninguno.",
-        "Publicar el panel de las 8 con el cobro a medias.",
+        "Dejar el que haya llegado: alguien ya vio la pantalla.",
+        "Publicar el informe con el movimiento a medias.",
         "Pasar a BASE para no silenciar al cliente."
       ],
-      "answer": 1,
-      "explain": "Una transacción es un paquete de cambios. Si solo ocurre uno de los dos, recepción está mintiendo. Si falla, se **deshace** todo."
+      "answer": 0,
+      "explain": "En bases de datos, transacción **no** es “un pago” en la calle: es un paquete de cambios. Si termina bien, se **confirma**. Si falla, se **deshace** todo."
     },
     {
       "topic": "ACID",
       "href": "",
-      "prompt": "¿Para qué pedís ACID en el hotel y qué es la C de esas cuatro letras?",
+      "prompt": "En ACID, ¿qué pide cada letra y qué es la C?",
       "code": "",
       "options": [
-        "Para el cobro (todo o nada). La C es **consistencia de reglas** (un saldo no queda prohibido), no la C de CAP.",
-        "Para el JSON del canal. La C es “el mismo valor en todos los nodos”.",
-        "Para el panel de las 8. La C es precisión del análisis (SCV).",
-        "ACID es lo mismo que BASE, con otro nombre."
+        "A = responder siempre; C = el mismo valor en todos los nodos (CAP).",
+        "Las cuatro letras son lo mismo que BASE.",
+        "C es la precisión del análisis (SCV).",
+        "**A** todo o nada; **C** se cumplen las **reglas** (un saldo no queda prohibido); **I** nadie ve el paquete a medias; **D** lo confirmado no se pierde. Esa C **no** es la de CAP."
       ],
-      "answer": 0,
-      "explain": "A = todo o nada; C = reglas; I = nadie ve el paquete a medias; D = lo confirmado no se pierde. Hay **tres C** distintas (ACID, CAP, SCV)."
+      "answer": 3,
+      "explain": "Hay **tres C** distintas: reglas (ACID), valor reciente en los nodos (CAP) y precisión del análisis (SCV, en 1.4). ACID se pide donde el negocio no puede verse a medias."
     },
     {
       "topic": "CAP",
       "href": "",
-      "prompt": "Santander acaba de registrar un pago. Se corta la red con Potes. Potes niega el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?",
+      "prompt": "Se corta la red entre dos nodos de un clúster. Un nodo acaba de escribir un valor. El otro, ¿qué puede hacer según CAP?",
       "code": "",
       "options": [
-        "AP: responde siempre, aunque el saldo sea viejo.",
-        "CA: en un clúster las tres letras se tienen a la vez.",
-        "No aplica: CAP solo es para CSV.",
-        "CP: preferís no responder a enseñar un saldo mentira."
-      ],
-      "answer": 3,
-      "explain": "En un clúster **P no es opcional**. La decisión real es CP o AP. CA es un relacional en un solo sitio, sin red partida entre nodos."
-    },
-    {
-      "topic": "BASE",
-      "href": "",
-      "prompt": "¿BASE para el cobro en recepción?",
-      "code": "",
-      "options": [
-        "Sí: más nodos, más seguro el cobro.",
-        "No. Una estancia cobrada quiere ACID. BASE encaja en extras replicados, sensores o un carrito que aún no es el cobro.",
-        "Sí, si Mongo está en modo “estricto”.",
-        "BASE es la C de ACID."
+        "Tener C, A y P a la vez: en un clúster las tres se cumplen siempre.",
+        "**CP**: no responder antes que dar un valor viejo. **AP**: responder aunque el valor no sea el último. En un clúster **P no es opcional**.",
+        "Solo CA: es lo habitual en un clúster partido.",
+        "CAP no aplica si hay SQL."
       ],
       "answer": 1,
-      "explain": "BASE: hay un valor de respuesta, el estado puede ser blando, y al rato los nodos coinciden. Eso no cobra."
+      "explain": "CAP-C es el dato **más reciente** (o un error), no un viejo haciéndose pasar por actual. CA es un relacional en **un** sitio, sin red partida entre nodos. Preguntad qué hace **este** sistema si se parte la red; no memoricéis el logo."
     },
     {
-      "topic": "Cómo elegir",
+      "topic": "BASE y cómo elegir",
       "href": "",
-      "prompt": "Para caracterizar el diseño (criterio a), ¿qué pregunta va **primero**?",
+      "prompt": "¿BASE para un cobro o un asiento que no puede retractarse? ¿Qué pregunta va **primero** al elegir el almacén?",
       "code": "",
       "options": [
-        "¿Lago o warehouse? El cobro ya se verá.",
-        "¿Qué logo de NoSQL sale en el temario?",
-        "¿Hay un paquete que no puede verse a medias (cobro, fianza)? Si sí → relacional con ACID (el PMS).",
-        "¿Lakehouse? Así no hace falta PMS."
+        "Sí BASE: más nodos, más seguro el cobro. Primero el logo de NoSQL.",
+        "Sí, si el producto está en modo “estricto”. Primero el lakehouse.",
+        "**No.** Eso quiere **ACID**. BASE: hay un valor de respuesta, el estado puede ser blando y al rato los nodos coinciden. Primero: ¿hay un paquete que no puede verse a medias?",
+        "BASE es la C de ACID. Primero el lago."
       ],
       "answer": 2,
-      "explain": "El orden del apartado: primero el paquete ACID; luego si hace falta clúster; luego warehouse, mart, lago o lakehouse **según la pregunta**."
+      "explain": "BASE encaja en un catálogo replicado, sensores o un carrito que **aún no** es el cobro. Orden de diseño: primero ACID; luego clúster o NoSQL si el volumen rompe un servidor; luego warehouse, mart, lago o lakehouse **según la pregunta**."
     }
   ]
 }
