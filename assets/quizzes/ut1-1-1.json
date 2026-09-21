@@ -6,212 +6,142 @@
     {
       "topic": "Qué es Big Data",
       "href": "",
-      "prompt": "En el grupo hotelero, ¿cuándo hablamos de Big Data?",
+      "prompt": "¿Qué es Big Data?",
       "code": "",
       "options": [
-        "Cuando hay más de un Excel de reservas.",
-        "Cuando instalamos Hadoop, da igual el tamaño.",
-        "Cuando un sistema de una sola máquina ya no puede capturar, guardar, procesar y presentar con garantías de tiempo, coste o variedad.",
-        "A partir de 1 TB: lo dice la norma."
+        "Tener muchos Excel, o superar 1 TB: lo dice la norma.",
+        "Instalar Hadoop o Spark, da igual el tamaño del problema.",
+        "Métodos y tecnologías para capturar, almacenar, procesar y presentar datos que un sistema clásico de **una** máquina no puede tratar con garantías de tiempo, coste o variedad.",
+        "Cualquier proyecto donde haya un científico de datos."
       ],
       "answer": 2,
       "explain": "No es “muchos Excel” ni el logo de una herramienta. Tampoco hay un umbral legal en terabytes: el criterio es de **diseño**."
     },
     {
-      "topic": "Small Data",
+      "topic": "¿Es un problema de Big Data?",
       "href": "",
-      "prompt": "El día 1, recepción de Laredo pica reservas en el PMS y finanzas saca el Excel del mes. ¿Qué es?",
+      "prompt": "“¿Esto es un problema de Big Data?” ¿Cómo se responde?",
       "code": "",
       "options": [
-        "Small Data: cabe en un PC. Limpiar y unir también sirven ahí.",
-        "Big Data, porque hay un hotel de verdad.",
-        "Un lago, porque el Excel es “bruto”.",
-        "IA, porque el Excel tiene fórmulas."
+        "Mirando si el diseño de siempre (un servidor, un esquema fijo, un lote) **sigue siendo viable**.",
+        "Contando si hay más de un millón de filas.",
+        "Comprobando si ya hay un clúster instalado.",
+        "Si el disco del fabricante pone “1 TB” y el explorador “931 GB”."
       ],
       "answer": 0,
-      "explain": "El día 1 es **Small Data**. Big Data llega cuando un servidor ya no es el diseño (cuatro hoteles, sensores, logs…)."
+      "explain": "La pregunta no se contesta con un logo. Si volumen, velocidad o variedad (o el coste de agrandar esa máquina) ya no se sostienen, hay que cambiar el diseño. Small Data sigue existiendo: cabe en un PC."
     },
     {
-      "topic": "Evento → valor",
+      "topic": "Viaje del dato",
       "href": "",
-      "prompt": "Un huésped confirma una reserva en Laredo. ¿Cuál es el orden del viaje del dato?",
+      "prompt": "¿Cuál es el orden del viaje del dato?",
       "code": "",
       "options": [
         "Valor → dato → evento → conocimiento.",
+        "Evento → dato → información → conocimiento → sabiduría → valor.",
         "Información → Hadoop → valor.",
-        "El modelo genera el evento; luego se guarda el dato.",
-        "Evento → dato → información → conocimiento → sabiduría → valor."
+        "El modelo genera el evento; luego se guarda el dato."
       ],
-      "answer": 3,
-      "explain": "Primero **ocurre** el hecho, se registra, se organiza, se modela, se sabe cuándo usarlo y la decisión **mejora** el resultado."
+      "answer": 1,
+      "explain": "Primero **ocurre** el hecho, se registra, se organiza, se extrae una regla o un modelo, se sabe **cuándo** usarlo y la decisión **mejora** el resultado. Guardar sin decidir no es valor."
     },
     {
-      "topic": "Minería de datos",
+      "topic": "Tres oficios, no una escalera",
       "href": "",
-      "prompt": "En Laredo aparece la regla «viernes + web + parking → más cancelaciones». Aún no hay un sistema que actúe al reservar. ¿Qué oficio es?",
-      "code": "",
-      "options": [
-        "Minería de datos: un patrón en lo ya guardado.",
-        "IA: hay un algoritmo, luego es un producto que actúa.",
-        "Ingeniería de datos: esa regla es el job de las 23:00.",
-        "BI descriptiva: «¿cuántas noches cobramos en agosto?»."
-      ],
-      "answer": 0,
-      "explain": "La minería **descubre** el patrón. La IA **despliega** una acción (p. ej. tarifa flexible). El ingeniero construye las tuberías."
-    },
-    {
-      "topic": "Oficios",
-      "href": "",
-      "prompt": "«La IA contiene a la ciencia de datos, que contiene a la minería.» ¿Qué respondéis?",
+      "prompt": "«La IA contiene a la ciencia de datos, que contiene a la minería.» ¿Qué hay que responder?",
       "code": "",
       "options": [
         "Correcto: es una matrioska.",
         "Correcto solo si hay un clúster.",
-        "Falso: se solapan; no son una escalera.",
+        "Falso: se **solapan**; no son una escalera. Podéis minar un Excel o hacer ciencia de datos con 200 filas.",
         "Falso porque los tres oficios son el mismo con tres nombres."
       ],
       "answer": 2,
-      "explain": "Se pisan, no se apilan. Podéis minar un Excel, hacer ciencia de datos con 200 filas e IA con reglas **sin** lago."
+      "explain": "Tampoco es «ciencia de datos = minería + Hadoop». El clúster ayuda cuando las V duelen; **no** bautiza el oficio. IA no es solo el chatbot."
     },
     {
-      "topic": "Ciencia de datos",
+      "topic": "Minería, ciencia de datos, IA",
       "href": "",
-      "prompt": "«La ciencia de datos es minería, pero cuando hay Big Data.» ¿Qué hay que responder?",
+      "prompt": "¿Qué distingue a minería de datos, ciencia de datos e inteligencia artificial?",
       "code": "",
       "options": [
-        "Es correcto: sin Hadoop no hay ciencia de datos.",
-        "Falso: la ciencia de datos es más ancha (pregunta, calidad, modelo y comunicar); la minería es una herramienta de esa caja.",
-        "Falso porque la ciencia de datos es solo el chatbot.",
-        "Da igual: minería, ciencia de datos e IA son sinónimos."
-      ],
-      "answer": 1,
-      "explain": "Se puede hacer ciencia de datos con 200 filas. Big Data es la **infraestructura** cuando las V duelen, no el apellido de la minería."
-    },
-    {
-      "topic": "Volumen",
-      "href": "",
-      "prompt": "Reservas, logs, fotos de DNI y sensores de los cuatro hoteles ya no caben (o no se leen a tiempo) en el PC de Laredo. ¿Qué V duele y qué implica?",
-      "code": "",
-      "options": [
-        "Velocidad: el panel de las 8 tiene que pintar cada 30 s.",
-        "Volumen: hay que repartir el trabajo (clúster, lago, formatos que se puedan trocear).",
-        "Valor: aún no hay un KPI.",
-        "Visualización: el gráfico no es bonito."
-      ],
-      "answer": 1,
-      "explain": "El **volumen** es la cantidad de bytes. Si una máquina no llega, el diseño pasa a **repartir**, no a hinchar *ese* PC."
-    },
-    {
-      "topic": "Velocidad",
-      "href": "",
-      "prompt": "Los sensores de Potes publican cada 30 s. El semáforo de recepción no puede esperar al lote de las 23:00. ¿Qué V duele?",
-      "code": "",
-      "options": [
-        "Velocidad: el ritmo de llegada (y de reacción) no se sostiene con el lote nocturno.",
-        "Volumen: 30 s son muchos terabytes sí o sí.",
-        "Valor: gerencia aún no tiene un KPI.",
-        "Visualización: el panel de las 8 no es bonito."
+        "Minería **descubre** patrones en lo ya guardado. Ciencia de datos **pregunta, limpia, modela y explica**. IA **pone un sistema** a percibir, decidir o generar.",
+        "Minería = clúster; ciencia de datos = chatbot; IA = Excel.",
+        "IA es solo el chatbot. El resto es BI.",
+        "Ciencia de datos es minería, pero cuando hay Big Data."
       ],
       "answer": 0,
-      "explain": "El semáforo pide **reaccionar a tiempo**. Agrandar el disco no arregla un atasco de ingesta. El panel de las 8 es **otro** reloj."
+      "explain": "La minería es **una** herramienta de la caja de la ciencia de datos, no el nombre nuevo de la caja. El ML (el programa mejora con ejemplos) es un puente habitual hacia un producto de IA; mirad **para qué** sirve el artefacto."
+    },
+    {
+      "topic": "Volumen y velocidad",
+      "href": "",
+      "prompt": "Misma cantidad de bytes: 10 TB históricos que cargáis **una vez** al mes, frente a 10 TB **al día** que hay que integrar ahora. ¿Qué V duele en cada caso?",
+      "code": "",
+      "options": [
+        "Las dos son solo volumen.",
+        "Las dos son solo velocidad.",
+        "La primera es valor; la segunda, visualización.",
+        "La primera: sobre todo **volumen**. La segunda: **velocidad** (y luego el volumen)."
+      ],
+      "answer": 3,
+      "explain": "Volumen = cantidad de bytes. Velocidad = ritmo de llegada y de reacción. Agrandar el disco no arregla un atasco de ingesta. El fabricante anuncia 1 TB (base 10); el explorador suele mostrar ~931 GB (GiB): cuentan distinto, el disco no está roto."
     },
     {
       "topic": "Variedad",
       "href": "",
-      "prompt": "Tabla SQL del PMS, JSON del canal web y foto del DNI. ¿Qué tipos son, en ese orden?",
+      "prompt": "Una tabla SQL con las mismas columnas en todas las filas, un JSON cuyas claves pueden variar, y una foto o un PDF. ¿Qué tipos son, en ese orden?",
       "code": "",
       "options": [
         "Los tres estructurados: todo es un “dato”.",
+        "Estructurado, semiestructurado, no estructurado.",
         "No estructurado, estructurado, semiestructurado.",
-        "Los tres piden un data warehouse.",
-        "Estructurado, semiestructurado, no estructurado."
-      ],
-      "answer": 3,
-      "explain": "Columnas fijas = **estructurado**. JSON con claves variables = **semiestructurado**. La foto no se filtra como una tabla = **no estructurado**."
-    },
-    {
-      "topic": "Veracidad",
-      "href": "",
-      "prompt": "«Como hay muchos datos, el error se compensa.» ¿Por qué es una trampa?",
-      "code": "",
-      "options": [
-        "Porque el volumen nunca miente.",
-        "Porque más filas siempre mejoran el modelo.",
-        "Porque a veces el error está sesgado (los sensores de Potes fallan igual en invierno) y el modelo lo aprende como verdad.",
-        "Porque la veracidad solo importa en Small Data."
-      ],
-      "answer": 2,
-      "explain": "Un error **sesgado** no se diluye: el modelo lo toma por realidad. Más volumen sin calidad es una peor decisión, más rápida."
-    },
-    {
-      "topic": "Valor",
-      "href": "",
-      "prompt": "Dirección pide guardar *todo* “por si acaso”, pero no sabe qué decisión va a mejorar. ¿Qué V falla?",
-      "code": "",
-      "options": [
-        "Valor: todavía no tenéis un proyecto; tenéis un disco.",
-        "Volumen: faltan terabytes.",
-        "Velocidad: hay que pasar todo a tiempo real.",
-        "Variedad: falta un PDF."
-      ],
-      "answer": 0,
-      "explain": "Almacenar por almacenar es un archivo caro. El **valor** aparece cuando una decisión mejora respecto a no usar esos datos."
-    },
-    {
-      "topic": "Viabilidad",
-      "href": "",
-      "prompt": "Ponéis sensores en Potes y no hay nadie que limpie el JSON. ¿Qué V extra (cuando se habla de 7) está fallando?",
-      "code": "",
-      "options": [
-        "Volumen: hacen falta más sensores.",
-        "Viabilidad: la empresa no puede usar de verdad esos datos.",
-        "Variedad: el JSON no es una tabla.",
-        "El panel de las 8: no es tiempo real."
+        "Los tres exigen un data warehouse."
       ],
       "answer": 1,
-      "explain": "La **viabilidad** pregunta si la empresa puede usar el dato. Capturar sin quien limpie no es un proyecto: es ruido caro."
+      "explain": "La variedad es la V que más sorprende a quien solo ha visto SQL: **no todo es tabla**. Un almacén de informes espera columnas **antes** de guardar; un lago acepta el dato como llega y decide al **leer**."
+    },
+    {
+      "topic": "Veracidad y valor",
+      "href": "",
+      "prompt": "«Como hay muchos datos, el error se compensa» y «guardamos todo por si acaso, sin saber qué decisión mejorar». ¿Qué falla?",
+      "code": "",
+      "options": [
+        "Nada: más volumen siempre limpia el error y justifica el disco.",
+        "Solo el volumen: faltan terabytes.",
+        "Veracidad (un error **sesgado** el modelo lo aprende como verdad) y valor (sin decisión a mejorar, tenéis un archivo caro).",
+        "Solo la velocidad: hay que pasar todo a tiempo real."
+      ],
+      "answer": 2,
+      "explain": "Más basura, más rápido, no es “más Big Data”. Valor es la V que justifica el gasto. Viabilidad y visualización (cuando se habla de 7) preguntan si la empresa puede **usar** y **ver** el número."
     },
     {
       "topic": "Cuatro analíticas",
       "href": "",
-      "prompt": "«¿Cuántos no-show habrá el viernes en Santander?» ¿Qué analítica es?",
+      "prompt": "Descriptiva, diagnóstica, predictiva y prescriptiva. ¿Qué pregunta hace cada una, en ese orden?",
       "code": "",
       "options": [
-        "Descriptiva: cuenta lo que ya pasó.",
-        "Diagnóstica: explica por qué Comillas se vacía los martes.",
-        "Predictiva: estima lo que pasará.",
-        "Prescriptiva: decide si subís el overbooking un 4 %."
+        "¿Qué pasó? ¿Por qué pasó? ¿Qué pasará? ¿Qué hacemos?",
+        "¿Qué haremos? ¿Qué pasó? ¿Hadoop? ¿El chatbot?",
+        "Las cuatro son predicción: Big Data = adelantar el futuro.",
+        "Descriptiva es IA; prescriptiva es solo un gráfico de BI."
       ],
-      "answer": 2,
-      "explain": "«¿Qué pasará?» es **predictiva**. Descriptiva = qué pasó; diagnóstica = por qué; prescriptiva = qué hacemos."
+      "answer": 0,
+      "explain": "La inteligencia de negocio (BI) responde sobre el **pasado** y no desaparece. Big Data **no** es sinónimo de predicción: a veces el valor es un informe de ayer a tiempo."
     },
     {
-      "topic": "Roles",
+      "topic": "Roles (este módulo)",
       "href": "",
-      "prompt": "El panel de las 8 llega a las 11 y las cifras no cuadran con recepción. ¿Quién lo arregla sobre todo?",
+      "prompt": "En este módulo, ¿quién deja el dato usable (extraer, transformar, cargar y guardar)?",
       "code": "",
       "options": [
-        "El analista, que pinta otro gráfico más bonito.",
-        "El ingeniero de datos: la ingesta y la calidad van antes del gráfico.",
-        "El científico, que cambia el nombre del algoritmo.",
-        "El arquitecto, que elige el color del panel."
-      ],
-      "answer": 1,
-      "explain": "Si el dato llega tarde o sucio, el gráfico no se arregla con más color. El **ingeniero** construye las tuberías."
-    },
-    {
-      "topic": "Relojes del hotel",
-      "href": "",
-      "prompt": "Finanzas cierra a las 23:00; de madrugada corre el job; gerencia abre el panel a las 8. ¿Qué es cierto?",
-      "code": "",
-      "options": [
-        "El panel de las 8 es tiempo real: enseña lo que pasa ahora en recepción.",
-        "Si hay sensores, todo el sistema tiene que ser streaming, incluido el importe cobrado.",
-        "Las 8 son el cierre de finanzas; las 23:00 son el panel.",
-        "El panel de las 8 es el lote de ayer. El semáforo de recepción es otro reloj."
+        "El analista: SQL y gráficos para el negocio.",
+        "El científico: la pregunta, el modelo y el relato.",
+        "El arquitecto: elige el color del cuadro de mando.",
+        "El **ingeniero de datos**. El arquitecto elige el plano; el científico pregunta con el dato ya usable; el analista cuenta lo que se puede leer."
       ],
       "answer": 3,
-      "explain": "Las 8 **no** son tiempo real: gerencia ve el cierre de **ayer**. El semáforo (sensores) sí va casi al momento."
+      "explain": "Minería e IA **beben** de lo que el ingeniero deja listo; no son otros nombres del ingeniero. «Tenemos Big Data porque usamos Hadoop» es un error: la herramienta no define el problema."
     }
   ]
 }
