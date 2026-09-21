@@ -8,11 +8,8 @@ tags:
 
 # Autoevaluación de la UT1
 
-Veinticinco preguntas de **opción múltiple** (una correcta) sobre el hilo de la unidad: 5 Vs, minería / ciencia de datos / IA, clústeres, dónde guardar, operar frente a analizar, ingesta, formatos y Pentaho.
+Diez preguntas (A–D, **una** correcta) sobre los conceptos de la unidad: 5 V, minería / ciencia de datos / IA, clústeres, dónde guardar, operar frente a analizar, ingesta, formatos y Pentaho.
 
-Son casos **prácticos** (qué eliges y por qué). No puntúan en Moodle: al pulsar **Corregir test** verás la nota, la opción buena y **por qué**.
+No puntúan en Moodle. Al pulsar **Corregir test** veréis la nota, la opción buena y **por qué**. Si falláis, *Repasar…* os lleva al apartado. Podéis repetir el test.
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1.json"></div>
-
-!!! tip "Cómo usarlo"
-    Responde las veinticinco (A–D) y corrige. Si fallas, el enlace *Repasar…* te lleva al apartado. Puedes **volver a intentar** las veces que quieras.
