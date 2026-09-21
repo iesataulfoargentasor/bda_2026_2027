@@ -6,16 +6,16 @@
     {
       "topic": "Qué es ingerir",
       "href": "",
-      "prompt": "Reservas, cobros y sensores ya existen. Gerencia mira a las 8. ¿Qué es ingerir y cuántos tubos hay?",
+      "prompt": "¿Qué es ingerir datos?",
       "code": "",
       "options": [
-        "Inventar los datos en el panel. Un solo tubo para todo.",
-        "Llevar datos que **ya existen** a otro sitio. Dos tubos: lote (PMS/pasarela → panel de las 8) y flujo (sensores → semáforo).",
-        "Pintar el gráfico en Spoon. Los sensores van al panel de las 8.",
-        "Instalar Kafka: sin logo no hay ingesta."
+        "Inventar los datos en el informe.",
+        "Llevar información que **ya existe** a **otro** sistema, donde se podrá guardar o procesar.",
+        "Pintar el gráfico en la herramienta ETL.",
+        "Instalar una cola: sin logo no hay ingesta."
       ],
       "answer": 1,
-      "explain": "Si este paso falla, el cuadro miente con buena pinta. El semáforo no es el panel; el panel no es tiempo real."
+      "explain": "Si este paso falla, el modelo y el cuadro trabajan sobre arena: la cifra queda bien presentada y es mentira. Flexible y ágil importan más que el logo."
     },
     {
       "topic": "Hacia atrás",
@@ -24,17 +24,17 @@
       "code": "",
       "options": [
         "Logo → origen → destino.",
-        "Origen → veinte fuentes → ya veremos el KPI.",
-        "Destino (qué ve gerencia a las 8) → transformación → origen.",
-        "Formato Parquet → luego la pregunta de negocio."
+        "Origen → veinte fuentes → ya veremos la pregunta.",
+        "Destino (qué tiene que ver quien decide) → transformación → origen.",
+        "Formato del fichero → luego la pregunta de negocio."
       ],
       "answer": 2,
-      "explain": "Sin la pregunta de negocio, unificar veinte fuentes es un proyecto que no sabéis cuándo termina. Flexible y ágil importan más que el logo."
+      "explain": "Sin la pregunta de negocio, unificar veinte fuentes es un proyecto que no sabéis cuándo termina."
     },
     {
       "topic": "Pipeline y ETL",
       "href": "",
-      "prompt": "Una cola guarda altas de reserva, sin cruzar ni cargar un almacén. ¿Es pipeline? ¿Es ETL?",
+      "prompt": "Una cola guarda altas, sin cruzar ni cargar un almacén. ¿Es pipeline? ¿Es ETL?",
       "code": "",
       "options": [
         "Ni una ni otra: sin Spark no hay tubería.",
@@ -48,170 +48,100 @@
     {
       "topic": "Cuatro pisos",
       "href": "",
-      "prompt": "En este apartado el dibujo tiene cuatro pisos y el 4 es el panel. En el 1.5 el 4 era el job. ¿Qué pasa?",
+      "prompt": "En este apartado el dibujo tiene cuatro pisos y el 4 es el destino útil. En el 1.5 el 4 era el job. ¿Qué pasa?",
       "code": "",
       "options": [
-        "Aquí el 4 es el panel; allí el 4 es el procesamiento. No reutilicéis los números.",
-        "Son el mismo 4: el panel es el job.",
+        "Aquí el 4 es dejar algo útil; allí el 4 es el procesamiento. No reutilicéis los números.",
+        "Son el mismo 4: el informe es el job.",
         "Hay que olvidar el 1.5.",
-        "El 4 es siempre unificar `web` y `WEB`."
+        "El 4 es siempre unificar nombres."
       ],
       "answer": 0,
       "explain": "Este dibujo es un **resumen**. El edificio de ocho capas está en el 1.5. La ingesta es la capa de abajo: **lleva** el dato; las fuentes no son la capa."
     },
     {
-      "topic": "No tumbar recepción",
+      "topic": "Separar oficios",
       "href": "",
-      "prompt": "Sumar importes de mil reservas sobre el PMS. ¿Por qué se copia el hecho a otro sitio?",
+      "prompt": "Sumar importes de mil filas **sobre** el sistema que opera el día a día. ¿Por qué se copia el hecho a otro sitio?",
       "code": "",
       "options": [
         "Para no pagar SQL.",
-        "Para que gerencia pique en recepción.",
-        "Si lanzáis el cálculo sobre el programa que cobra, el mostrador espera. El pipeline separa operar e informar.",
-        "Porque el PMS no puede guardar reservas."
+        "Para que quien opera pique también el informe.",
+        "Si lanzáis el cálculo sobre el programa que cobra o reserva, ese programa espera. El pipeline **separa** operar e informar.",
+        "Porque el origen no puede guardar filas."
       ],
       "answer": 2,
-      "explain": "OLTP / OLAP ya están en el 1.4. Aquí la tubería los **separa** para que el informe no tumbe la caja."
+      "explain": "OLTP / OLAP ya están en el 1.4. Aquí la tubería los **separa** para que el informe no tumbe la operación."
     },
     {
       "topic": "Push, pull, poll",
       "href": "",
-      "prompt": "Cada alta se publica al momento; a las 02:00 leéis la tabla; cada 15 min listáis el FTP. ¿Quién inicia en cada caso?",
+      "prompt": "El origen envía cada evento; el destino va a buscar a una hora fija; el destino mira de vez en cuando y, si hay cambio, tira. ¿Quién inicia en cada caso?",
       "code": "",
       "options": [
+        "Los tres son push: siempre empuja el origen.",
+        "**Push** (el origen envía), **pull** (el destino va a buscar), **poll** (mira de vez en cuando y, si hay cambio, tira).",
         "Pull, push, poll.",
-        "Los tres son push: siempre empuja el hotel.",
-        "Poll, pull, push.",
-        "Push (el origen envía), pull (el destino va a buscar), poll (mira de vez en cuando y, si hay cambio, tira)."
+        "Poll, pull, push."
       ],
-      "answer": 3,
+      "answer": 1,
       "explain": "No hay uno “más Big Data”. Conviven. Push encaja con el flujo; pull y poll, con el lote. Primero claváis quién da el primer paso."
     },
     {
-      "topic": "Extracción",
+      "topic": "E y T",
       "href": "",
-      "prompt": "La E de un ETL sobre el PMS. ¿Qué dos reglas hay?",
+      "prompt": "En la E, ¿qué dos reglas hay? En la T, ¿qué no es transformar?",
       "code": "",
       "options": [
-        "Tiene que ser pesada y reescribir el cobro en origen.",
-        "Ligera (recepción casi no se entera) y **no** se modifica el dato operativo.",
-        "Hay que cruzar veinte fuentes en el mismo milisegundo.",
+        "La E tiene que ser **ligera** y **no** modificar el dato operativo. Transformar no es fabricar hechos que nadie registró ni borrar un campo porque “estorbaba”.",
+        "La E tiene que ser pesada y reescribir el origen.",
+        "Hay que cruzar veinte fuentes en el mismo milisegundo que el sensor.",
         "Si las columnas no cuadran, se carga igual “en verde”."
       ],
-      "answer": 1,
-      "explain": "Si colapsa el programa de reservas, la empresa pierde dinero cobrando. Un job en verde con filas cojas envenena el panel: se **aparta**."
-    },
-    {
-      "topic": "Transformación",
-      "href": "",
-      "prompt": "Unificar `WEB` → `web`, cruzar reservas con cobros. ¿Qué no es transformar?",
-      "code": "",
-      "options": [
-        "Fabricar noches que nadie picó, o borrar el canal porque “estorbaba”.",
-        "Quitar duplicados de id_reserva.",
-        "Agregar importe por hotel.",
-        "Calcular ocupación %."
-      ],
       "answer": 0,
-      "explain": "La T mejora calidad e integra. No inventa hechos. Una T pesada no va en el mismo milisegundo que el sensor."
+      "explain": "Si colapsa el programa operativo, la empresa pierde dinero operando. Un job en verde con filas cojas envenena el informe: se **aparta**. Una T pesada no va en el mismo milisegundo que el evento."
     },
     {
-      "topic": "Carga: snapshot e incremental",
+      "topic": "Snapshot e incremental",
       "href": "",
-      "prompt": "El día 1 volcáis tres años de reservas. El martes, ¿pedís otra vez los tres años?",
+      "prompt": "El día 1 volcáis años de histórico. El martes, ¿pedís otra vez todo?",
       "code": "",
       "options": [
         "Sí: cada noche es un snapshot. Da igual el tamaño.",
-        "No. El día 1 es **snapshot** (foto de todo). El martes es **incremental** (solo lo nuevo o lo que cambió).",
         "Sí, porque ELT prohíbe incrementales.",
-        "No hace falta cargar: gerencia lee el PMS."
+        "No hace falta cargar: el informe lee el origen operativo.",
+        "No. El día 1 es **snapshot** (foto de todo). El martes es **incremental** (solo lo nuevo o lo que cambió)."
       ],
-      "answer": 1,
+      "answer": 3,
       "explain": "Mezclarlas es un error caro. Índices, partición y tamaño de transacción también tiran una carga grande si las ignoráis."
     },
     {
       "topic": "ETL y ELT",
       "href": "",
-      "prompt": "El almacén de finanzas no admite filas sucias. El lago de ocupación sí guarda el bruto. ¿ETL, ELT o los dos?",
+      "prompt": "Un destino rígido no admite filas sucias. Un lago sí guarda el bruto. ¿ETL, ELT o los dos?",
       "code": "",
       "options": [
         "Solo ELT: ETL ya no se usa.",
         "Solo ETL: el lago también exige limpio.",
-        "Conviven: cierre de facturación suele ser ETL; el lago, ELT.",
+        "**Conviven**: destino rígido suele ser ETL; el lago, ELT.",
         "Ni uno ni otro: hace falta Kappa."
       ],
       "answer": 2,
-      "explain": "ETL limpia **antes** de cargar (destino rígido). ELT deja el bruto pronto y transforma en el destino. Si gerencia cambia la pregunta, ELT salva si las columnas ya estaban en el bruto."
+      "explain": "ETL limpia **antes** de cargar. ELT deja el bruto pronto y transforma en el destino. Si cambia la pregunta, ELT salva **si** las columnas ya estaban en el bruto."
     },
     {
-      "topic": "Hola ETL",
+      "topic": "Cola y examen",
       "href": "",
-      "prompt": "El taller pandas/DuckDB (reservas web con cobro). ¿Es el panel de las 8? ¿Qué hace el inner join?",
+      "prompt": "El consumidor no puede esperar al lote. La cola aguanta; a veces se frena al productor. ¿Para qué es la cola y qué no es contrapresión?",
       "code": "",
       "options": [
-        "Sí es el panel. El inner deja también las impagadas.",
-        "No: enseña las **tres letras**. El inner join se queda solo con reservas web **que sí** tienen cobro.",
-        "Sí es el panel. Spoon no vuelve a cruzar.",
-        "No, porque DuckDB es el PMS."
-      ],
-      "answer": 1,
-      "explain": "El informe agregado por hotel y canal es el 1.8. Un left join dejaría web sin medio (impagados); no es el objetivo de este taller."
-    },
-    {
-      "topic": "Formato de la L",
-      "href": "",
-      "prompt": "Tras el cruce: verlo en clase, lago para el informe, cobro en recepción. ¿Qué formato encaja en cada uno?",
-      "code": "",
-      "options": [
-        "Parquet / JSON array de 50 GB / Parquet en el PMS.",
-        "JSON o JSONL para verlo; Parquet para el lago; ni Parquet ni JSON como almacén del cobro.",
-        "CSV en los tres: es lo más Big Data.",
-        "El JSON de pandas (array) y el JSONL de DuckDB son el mismo fichero."
-      ],
-      "answer": 1,
-      "explain": "pandas escribe un array; DuckDB suele escribir una reserva por línea. Para el lago, Parquet (columnas). El detalle de formatos está en el 1.7."
-    },
-    {
-      "topic": "Cola",
-      "href": "",
-      "prompt": "El semáforo no puede esperar al lote de las 8. La cola aguanta; a veces se frena al sensor. ¿Para qué es la cola y qué no es contrapresión?",
-      "code": "",
-      "options": [
-        "La cola es el panel de gerencia. Búfer y contrapresión son lo mismo.",
-        "La cola desacopla sensor y semáforo. El **búfer** absorbe; la **contrapresión** pide que el productor afloje. No es el panel de las 8.",
+        "La cola es el informe de negocio. Búfer y contrapresión son lo mismo.",
+        "La cola **desacopla** productor y consumidor. El **búfer** absorbe; la **contrapresión** pide que el productor afloje.",
         "La cola sustituye al warehouse.",
         "Sin contrapresión el lote nocturno no corre."
       ],
       "answer": 1,
-      "explain": "Productor deja el evento; consumidor lo recoge cuando puede. Un CSV de canales y un sensor a 30 s **no** van por el mismo tubo."
-    },
-    {
-      "topic": "Familias, no logos",
-      "href": "",
-      "prompt": "Tabla SQL de noche hacia el lago; sensores al semáforo en segundos. ¿Qué familias encajan (sin recitar el producto)?",
-      "code": "",
-      "options": [
-        "Las dos son Power BI.",
-        "Las dos son cola Kafka, porque es Big Data.",
-        "Noche: puente por lotes (pull), p. ej. Sqoop o Pentaho. Semáforo: flujo / mensajería (Kafka, NiFi…). Un logo solo no puntúa.",
-        "Airflow transforma el JSON; Glue es el PMS."
-      ],
-      "answer": 2,
-      "explain": "Citas la **familia**. Sqoop = SQL ↔ Hadoop (la idea sigue). Airflow **coordina**, no transforma. Criterio b): por qué no el de al lado."
-    },
-    {
-      "topic": "Job en verde",
-      "href": "",
-      "prompt": "El PMS añade motivo_cancelacion. El job de las 02:00 sigue en verde y el campo no llega. ¿Qué falló?",
-      "code": "",
-      "options": [
-        "Nada: en verde significa que el panel dice la verdad.",
-        "Nadie avisó del cambio de esquema: el job “bien” pierde el campo nuevo. ELT ayuda si el bruto ya lo traía; si tirasteis el original, duele.",
-        "Falló Kappa.",
-        "Hay que pintar el semáforo con ese campo."
-      ],
-      "answer": 1,
-      "explain": "En examen: origen, quién inicia, reloj, ETL o ELT, destino, formato, y **por qué no** el de al lado. Apartar el lote roto; el DNI a menudo no entra."
+      "explain": "Un CSV por lotes y un sensor en continuo **no** van por el mismo tubo. Citas la **familia**, no el logo. Un job “en verde” que pierde un campo nuevo es un fallo de esquema: apartar el lote; ELT ayuda si el bruto ya lo traía."
     }
   ]
 }
