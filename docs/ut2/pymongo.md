@@ -33,11 +33,11 @@ reservas = hotel.reservas      # o hotel["reservas"]
 print(reservas.find_one({"hotel": "Laredo"}))
 ```
 
-Si no habéis importado aún:
+Si no habéis importado aún, desde la **raíz del repo** y con `mongoimport` instalado en el PC (el contenedor no lo trae; el detalle está en el [2.6](mongodb.md)):
 
 ```bash
-mongoimport --db hotel --collection reservas --file docs/assets/practicas/reservas_mongo.jsonl
-mongoimport --db hotel --collection opiniones --file docs/assets/practicas/hotel-mongo/opiniones.jsonl
+mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection reservas --file docs/assets/practicas/reservas_mongo.jsonl
+mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection opiniones --file docs/assets/practicas/hotel-mongo/opiniones.jsonl
 ```
 
 Hay un script de aula que imprime el parte: [`parte_gerencia.py`](../assets/practicas/hotel-pymongo/parte_gerencia.py). Arrancad un `mongod` (el del [2.6](mongodb.md), no el *replica set* y el suelto a la vez: los dos quieren el **27017**).

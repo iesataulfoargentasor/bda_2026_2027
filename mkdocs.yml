@@ -96,6 +96,7 @@ nav:
     - 1.1 Por qué Big Data y las 5 Vs: ut1/por-que-big-data.md
     - 1.2 Clústeres: ut1/clusters.md
     - 1.3 Almacenamiento: ut1/almacenamiento.md
+    - "Taller: AWS Academy y S3": ut1/aws-academy-s3.md
     - 1.4 Procesamiento: ut1/procesamiento.md
     - 1.5 Arquitectura y ecosistema: ut1/arquitectura.md
     - 1.6 Ingesta de datos: ut1/ingesta.md

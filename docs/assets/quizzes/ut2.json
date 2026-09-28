@@ -299,16 +299,16 @@
     {
       "topic": "2.5 Columnas",
       "href": "../nosql/",
-      "prompt": "Series de temperatura de 200 habitaciones × un año, leyendo solo temp_c. ¿Familia más natural?",
+      "prompt": "Lecturas de temperatura por habitación (clave hab:214; la 108 no trae humedad). ¿Qué familia encaja, y qué no es?",
       "code": "",
       "options": [
         "Grafo (Neo4j) para cada medida.",
-        "Columnas (Cassandra/HBase): scan de una columna en muchas filas.",
-        "Clave-valor opaco sin poder filtrar por fecha.",
+        "Wide-column (HBase/Cassandra): fila con familias de columnas. No es un fichero Parquet.",
+        "Clave-valor opaco sin poder pedir temp_c.",
         "Solo ACID en una tabla de 8 columnas fijas."
       ],
       "answer": 1,
-      "explain": "El giro columnar brilla en **analítica**, no en el clic de caja."
+      "explain": "Wide-column no es el giro columnar del 1.7. Parquet o Redshift guardan columnas juntas para el panel. HBase y Cassandra guardan filas dispersas y sí actualizan una celda."
     },
     {
       "topic": "2.6 MongoDB",

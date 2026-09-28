@@ -107,32 +107,20 @@ docker run -p 127.0.0.1:27017:27017 --name hotel-mongo -d mongo
 !!! warning "Procesadores sin AVX"
     Mongo **5+** exige AVX. En un PC viejo del aula: `mongo:4.4`.
 
-Cargar el hotel (ficheros en el repo):
+Cargar el hotel. Los comandos se lanzan **desde la raíz del repositorio** (la carpeta donde está `docs`).
+
+La imagen `mongo` trae `mongosh` y **no** trae `mongoimport`. Un `docker exec … mongoimport` falla: el binario no está dentro. Instaláis las [Database Tools](https://www.mongodb.com/try/download/database-tools) en el PC y apuntáis al puerto que publicó el `docker run`:
 
 ```text
-docker cp docs/assets/practicas/reservas_mongo.jsonl hotel-mongo:/tmp/
-docker cp docs/assets/practicas/hotel-mongo/opiniones.jsonl hotel-mongo:/tmp/
-docker exec -it hotel-mongo mongosh
-```
-
-En otro terminal, o desde el host si tenéis *Database Tools*:
-
-```text
-mongoimport --db hotel --collection reservas --file reservas_mongo.jsonl
-mongoimport --db hotel --collection opiniones --file opiniones.jsonl
-```
-
-Dentro del contenedor (si copiasteis a `/tmp`):
-
-```text
-docker exec -it hotel-mongo mongoimport --db hotel --collection reservas --file /tmp/reservas_mongo.jsonl
+mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection reservas --file docs/assets/practicas/reservas_mongo.jsonl
+mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection opiniones --file docs/assets/practicas/hotel-mongo/opiniones.jsonl
 ```
 
 No usamos el *sample dataset* de Atlas (`sample_mflix`, `sample_training`). El caso es el **grupo hotelero**.
 
 ### Atlas (si el profesor lo pide)
 
-Registro → clúster (p. ej. AWS `eu-west-1` / París) → usuario de base → red. **No** dejéis `0.0.0.0/0` en un proyecto con datos reales; en aula, solo si el profesor lo autoriza.
+Registro → clúster → usuario de base → red. En el mapa de AWS, **París es `eu-west-3`** y España es `eu-south-2`. Si la consola muestra `eu-west-1`, eso es **Irlanda**. **No** dejéis `0.0.0.0/0` en un proyecto con datos reales; en aula, solo si el profesor lo autoriza.
 
 La URI segura lleva `mongodb+srv://`:
 
@@ -169,7 +157,7 @@ mongosh "mongodb+srv://USUARIO:CLAVE@cluster0.xxxxx.mongodb.net/hotel"
 [Herramientas](https://www.mongodb.com/try/download/database-tools): JSON ↔ colección y copias **binarias**.
 
 ```text
-mongoimport -d hotel -c reservas --file reservas_mongo.jsonl
+mongoimport -d hotel -c reservas --host 127.0.0.1 --port 27017 --file docs/assets/practicas/reservas_mongo.jsonl
 mongoexport -d hotel -c reservas -o reservas_export.json
 
 mongoimport --type csv -d hotel -c ocupacion --headerline --drop ocupacion.csv

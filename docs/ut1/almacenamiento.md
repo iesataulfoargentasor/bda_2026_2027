@@ -139,6 +139,8 @@ No es lo mismo el **disco del PMS** que el sitio donde gerencia lee el históric
 | **Objeto** | Guardáis el fichero **entero** (un objeto) con una clave, en un cubo. No “abrís el byte 17”: bajáis o sustituís el objeto. Típico en nube ([S3](https://aws.amazon.com/s3/){target="_blank" rel="noopener"}, Azure Blob…). | El volcado de reservas del martes en un cubo; se replica sin que miréis el disco. El formato (Parquet…) está en [1.7](formatos.md){target="_blank" rel="noopener"}. |
 | **Lakehouse** | El lago **más** tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) **sin** montar un warehouse aparte. Productos que oiréis: [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"}. | Bruto de sensores **y** la tabla limpia de ocupación, en el mismo sitio. |
 
+En clase el cubo lo tocáis en el [taller de AWS Academy y S3](aws-academy-s3.md){target="_blank" rel="noopener"}: cubo **privado**, prefijos `lago/` e `informes/`, CSV del hotel. No es el PMS.
+
 ![Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas](../assets/ut1/donde-vive-dato.png)
 
 Snowflake **no** es un lakehouse: es el warehouse en nube del apartado anterior. El *lakehouse* es **lago + tablas**.

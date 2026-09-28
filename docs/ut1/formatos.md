@@ -203,8 +203,19 @@ schema = parse_schema({
     ],
 })
 laredo = df[df["hotel"] == "Laredo"][["id_reserva", "hotel", "noches", "importe", "canal"]]
+# fastavro rechaza numpy.int32 / numpy.float64: pasad a int y float de Python
+filas = [
+    {
+        "id_reserva": int(fila["id_reserva"]),
+        "hotel": str(fila["hotel"]),
+        "noches": int(fila["noches"]),
+        "importe": float(fila["importe"]),
+        "canal": str(fila["canal"]),
+    }
+    for fila in laredo.to_dict("records")
+]
 with open("laredo.avro", "wb") as f:
-    writer(f, schema, laredo.to_dict("records"), codec="deflate")
+    writer(f, schema, filas, codec="deflate")
 ```
 
 Si algún día lo escribís en HDFS, cambiad el host por el de **vuestro** lab; el patrón es el de la librería `hdfs` (`InsecureClient` + `AvroWriter`). No copiéis un nombre de máquina de otro ciclo.
@@ -289,7 +300,7 @@ solo_laredo = pd.read_parquet(
 )
 ```
 
-En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:9000/reservas.parquet")`. DuckDB, en el apartado siguiente, hace lo mismo con SQL y **sin** cargar el fichero a RAM.
+En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, hace lo mismo con SQL y **sin** cargar el fichero a RAM.
 
 ### Preguntar sin cargarlo: DuckDB
 

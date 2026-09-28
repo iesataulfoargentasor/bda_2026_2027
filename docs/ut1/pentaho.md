@@ -41,7 +41,7 @@ Con Spoon, sin escribir el motor:
 - conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);
 - filtrar, limpiar, tipar, *lookup*, *merge join*, agregar, fórmulas;
 - cargar a fichero, tabla o nube;
-- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en [estrella](procesamiento.md){target="_blank" rel="noopener"}, no un almacén entero.
+- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): el hecho es la estancia y la dimensión es el hotel. No montáis el almacén entero.
 
 **No** es el programa de recepción: no picáis la reserva en PDI. Procesáis una **copia**.
 
@@ -190,11 +190,11 @@ Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl){target="_blank" rel=
 
 1. Dos (o tres) **CSV file input**. En cobros y hoteles, `Delimiter = ;`.
 2. En reservas, *Get fields* y dejad `id_reserva` / `id_hotel` como **Integer** (o String si Spoon se come un código con ceros; aquí no hace falta).
-3. **Join → Merge join.** En Spoon, el hop se tira **desde el Merge hacia cada origen** (así nombra *left* y *right*). Clave: `id_reserva` (reservas ⋈ cobros). Tipo *INNER*: las reservas **sin** fila en cobros no entran.
+3. **Join → Merge join.** El hop sale de cada *Sort* y **entra** en el Merge: el dato viaja hacia el join. El **primer** hop que conectéis es el flujo de la izquierda (*left*); el **segundo**, el de la derecha (*right*). Clave: `id_reserva` (reservas ⋈ cobros). Tipo *INNER*: las reservas **sin** fila en cobros no entran.
 
 Spoon **avisa**: si los flujos no están **ordenados por la clave**, el join miente. Añadid **Sort rows** por `id_reserva` **en cada rama** *antes* del merge. Preview del merge: aún **no** está el nombre del hotel (falta la dimensión); sí debe estar `cobrado`.
 
-4. Tercer origen `hoteles_pdi.csv` + otro *Merge join* por `id_hotel` (otra vez: **ordenar ambas entradas** por `id_hotel`). Ahí aparecen Laredo, Santander, Comillas, Potes.
+4. Tercer origen `hoteles_pdi.csv` + otro *Merge join* por `id_hotel`. Otra vez: **ordenar ambas entradas** por `id_hotel`, y tirar cada hop **desde el Sort hacia el Merge**. Ahí aparecen Laredo, Santander, Comillas, Potes.
 5. **Statistics → Group by.** Agrupad por `hotel` y `canal`. Agregados: `SUM(cobrado)` con nombre **`cobrado_total`**, `COUNT` de `id_reserva` con nombre **`n_reservas`**. Esos nombres los ponéis vosotros en la columna *Name*; Spoon no los inventa.
 6. El *Group by* también quiere el flujo **ordenado** por las columnas de agrupación. *Sort* por `hotel`, `canal` entre el merge y el grupo.
 7. **Text file output** → `informe_hotel_canal.csv`.
@@ -243,7 +243,7 @@ Podéis poner **Dummy** en la rama que no cumple (no hace nada; cierra el camino
 
 **Output → JSON output.**
 
-- *Filename:* ruta de `escaprate_cantabria.json`.
+- *Filename:* ruta de `escaparate_cantabria.json`.
 - *Json bloc name:* p. ej. `alojamientos`.
 - *Nr rows in a bloc:* `0` = un solo documento con todos; `1` = un fichero por fila (casi nunca lo queréis aquí).
 - Pestaña *Fields* → **Get fields**. Si no, el JSON sale con objetos vacíos.
@@ -256,7 +256,9 @@ Ejecutad. Abrid el JSON **sin Spoon**. Si un compañero de DAW entiende las clav
 
 Cliente: *“Por **costa / ciudad / interior**: noches cobradas, importe cobrado y **precio medio por noche**. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”*
 
-Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" rel="noopener"} (`Costa`, `Ciudad`, `Interior`):
+Partís de una **copia** del taller 2 **hasta el segundo Merge join** (reservas ⋈ cobros ⋈ hoteles), **antes** del *Group by*. Si partís del `informe_hotel_canal.csv`, ya no están `noches`, `cobrado` ni `id_cadena`: el agregado del taller 2 se los quedó. Este taller **vuelve a leer** los CSV; no consume ese informe. En la copia, cada fila sigue siendo **una reserva cobrada**.
+
+Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" rel="noopener"} (`Costa`, `Ciudad`, `Interior`):
 
 1. CSV de cadenas (`;`) → *Sort* por `id_cadena`.
 2. *Sort* del flujo de hoteles por `id_cadena`.
@@ -268,7 +270,9 @@ Si el aula **no** tiene cubo, *Text file output* a `informe_cadenas.csv` en la c
 
 ### Destino S3 (si el aula usa AWS)
 
-1. *Bucket* del **centro** (el nombre lo da el profesor; no copiéis el de otro ciclo).
+El primer cubo se crea en el [taller de AWS Academy](aws-academy-s3.md){target="_blank" rel="noopener"} (consola, **privado**, sin claves). Este paso de Spoon es **después**, y solo si el profesor lo abre: en Learner Lab a menudo **no** podéis crear un usuario IAM. Si no hay claves, *Text file output* a carpeta y el oficio de d) y e) ya está.
+
+1. *Bucket* del **centro** o el vuestro del lab (el nombre lo da el profesor; no copiéis el de otro ciclo).
 2. Credenciales por **variables de entorno** (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, y si aplica `AWS_SESSION_TOKEN`) o el perfil `~/.aws/credentials`.
 3. Paso **S3 file output**. URI: `s3n://NOMBRE-BUCKET/informe_cadenas` y extensión `csv`. **No** pongáis `s3n://s3n/…` (ese doble `s3n` es un error conocido de PDI).
 
@@ -392,6 +396,7 @@ Si en vez de fallar queréis **insertar** lo que no exista: **Insert / Update** 
 - Kitchen sobre un `.ktr` o Pan sobre un `.kjb`.
 - Filtrar “en la cabeza” y no en un paso: no es reproducible.
 - *Merge join* / *Group by* **sin** ordenar por la clave.
+- Hop **desde el Merge hacia el origen**: el dato no entra. El hop sale del *Sort* y entra en el Merge.
 - Java Filter + nulos sin *If field value is null*.
 - JSON output sin *Get fields*.
 - Cumplir d) (el fichero se genera) y olvidar e) (nadie entiende las claves).

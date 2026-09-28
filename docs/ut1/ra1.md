@@ -30,7 +30,7 @@ Del bloque *Gestión de soluciones con sistemas de almacenamiento y herramientas
 - Almacenamiento de datos masivo.
 - Procesamiento de datos.
 - Analítica de Big Data en los ecosistemas de almacenamiento.
-- Big Data y Cloud (aparece al elegir destinos: S3, Glue, almacenes gestionados).
+- Big Data y Cloud (aparece al elegir destinos: S3, Glue, almacenes gestionados). Primer contacto: [taller AWS Academy y S3](aws-academy-s3.md){target="_blank" rel="noopener"}.
 
 El [RA2](../ut2/ra2.md){target="_blank" rel="noopener"} (UT2) entra en el **sistema** (HDFS, YARN, NoSQL). Aquí el foco es **entender el problema, diseñar el almacén, ingerir, formatear, procesar y mostrar**.
 

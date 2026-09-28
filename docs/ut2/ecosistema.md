@@ -129,7 +129,7 @@ flowchart TB
 | Módulo | Qué resuelve | Encaje en el hotel |
 | --- | --- | --- |
 | **Hive** | Accede a HDFS **como si fuera una base de datos**. *HiveQL* se parece a SQL | Gerencia: `SELECT hotel, SUM(noches)` sin escribir Java. Simplifica el día a día |
-| **HBase** | NoSQL **columnar** encima de HDFS. Tablas de miles de millones de filas × millones de columnas. Escrita en Java | Series de sensores de habitación que **sí** se actualizan. HDFS solo es WORM (*write once, read many*): no editas un bloque a medias |
+| **HBase** | NoSQL **wide-column** encima de HDFS (familias de columnas; no es un Parquet). Tablas enormes y dispersas. Escrita en Java | Series de sensores que **sí** se actualizan. HDFS no reescribe un bloque a medias ([2.3](hdfs.md)) |
 | **Pig** | *Pig Latin*: lenguaje textual de alto nivel. Un **compilador** que genera MapReduce | Flujos de limpieza cuando no queréis Hive ni Java |
 | **Sqoop** | Puente **eficiente** SQL ↔ HDFS (y viceversa) | Volcado nocturno de la tabla Oracle/PostgreSQL de reservas ([ingesta](../ut1/ingesta.md)) |
 | **Flume** | Recoger, agregar y **empujar** logs / redes. Arquitectura *streaming* con flujos configurables | Logs del motor de reservas y del Wi‑Fi hacia el lago |
@@ -137,7 +137,7 @@ flowchart TB
 | **Spark** | Motor **en memoria**; *batch* y *near-real-time*. Una orden de magnitud más rápido que MapReduce en jobs **iterativos** (IA). Puede vivir **sin** Hadoop | Entrenar un modelo de cancelación: veinte pasadas sobre el mismo Parquet |
 | **Ambari** | Instalar, configurar, **mantener y vigilar** el clúster | El *panel* del administrador: no editáis veinte XML a mano en 80 nodos |
 
-**HBase** merece un párrafo extra porque se confunde con HDFS. HDFS es un **sistema de ficheros**: dejas un Parquet y lo lees. HBase es una **tabla** (familias de columnas, *row key*) que **vive encima** de HDFS y permite lecturas/escrituras de **celdas**. Si el sensor de la 214 cambia la temperatura cada minuto, HBase encaja; un CSV de 40 GB en HDFS, no.
+**HBase** merece un párrafo extra porque se confunde con HDFS y con Parquet. HDFS es un **sistema de ficheros**: dejas un Parquet y lo lees. HBase es **wide-column**: una **tabla** (familias de columnas, *row key*) que **vive encima** de HDFS y permite lecturas/escrituras de **celdas**. No es el fichero columnar del [1.7](../ut1/formatos.md): Parquet no actualiza la temperatura de la 214. Si el sensor de esa habitación cambia cada minuto, HBase encaja; un CSV de 40 GB en HDFS, no.
 
 **Spark** no “sustituye a Hadoop” en todos los sitios. Sustituye a **MapReduce** cuando el job **itera**. Puede leer HDFS, S3, un CSV local. En este módulo lo citáis como *módulo del ecosistema*; el RA2 os pide entender el núcleo primero.
 
@@ -447,7 +447,7 @@ Tanto en la VM como en Docker el raíz suele ser `/opt/hadoop`. En *pseudo-distr
 </configuration>
 ```
 
-En una VM de un solo host es habitual `hdfs://localhost:9000` (puerto 9000 o 8020 según la guía). `fs.defaultFS` es el nombre moderno; `fs.default.name` sale en textos viejos: mismo oficio.
+En una VM de un solo host es habitual `hdfs://localhost:9000` (o el 8020, según la guía). **En el Docker de este módulo el RPC es `hdfs://namenode:8020`**, como el XML de arriba. `fs.defaultFS` es el nombre moderno; `fs.default.name` sale en textos viejos: mismo oficio.
 
 **`hdfs-site.xml`** — réplica y carpetas de metadatos / bloques:
 

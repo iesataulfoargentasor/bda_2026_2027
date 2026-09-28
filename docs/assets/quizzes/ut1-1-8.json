@@ -85,7 +85,7 @@
         "Group by sustituye al join."
       ],
       "answer": 1,
-      "explain": "El hop se tira desde el Merge hacia cada origen. Un left join dejaría también las que no tienen pareja; no es el mismo encargo."
+      "explain": "El hop sale de cada flujo ordenado y entra en el Merge: el primero que conectéis es el *left*. Un left join dejaría también las que no tienen pareja; no es el mismo encargo."
     },
     {
       "topic": "Group by",

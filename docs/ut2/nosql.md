@@ -275,9 +275,13 @@ El acceso por clave primaria da **muy buen** rendimiento y escala fácil. Para i
 
 Productos: **Redis**, **DynamoDB**, Voldemort (clon abierto de Dynamo).
 
-## Modelo basado en columnas
+## Dos modelos que comparten la palabra «columna»
 
-El relacional usa la **fila** como unidad: bien para **escribir** una reserva completa. Cuando escribís **poco** y leéis **unas pocas columnas de muchas filas** (ocupación de 80 hoteles × 365 días), conviene **girar** el modelo: guardar por **columnas**. Los valores del mismo tipo quedan juntos → se **comprimen** mejor.
+En el [1.3](../ut1/almacenamiento.md) ya quedó la frontera. Aquí se usan los dos, y no son el mismo oficio.
+
+### Fichero o almacén columnar
+
+El relacional usa la **fila** como unidad: bien para **escribir** una reserva completa. Cuando escribís **poco** y leéis **unas pocas columnas de muchas filas** (ocupación de 80 hoteles × 365 días), un motor analítico **gira** el almacenamiento: los valores del mismo campo van juntos y se **comprimen** mejor. Eso es Parquet, ORC o un *warehouse* como Redshift. El detalle del fichero está en el [1.7](../ut1/formatos.md).
 
 ```text
 Por filas:     [Laredo,web,3,186] [Potes,ota,2,90] [Noja,web,4,210]
@@ -285,13 +289,19 @@ Por columnas:  [Laredo,Potes,Noja] [web,ota,web] [3,2,4] [186,90,210]
 ```
 
 !!! question "Autoevaluación de pizarra"
-    ¿Añadir **un** registro (una reserva nueva) es más barato en filas o en columnas? En **filas**: un sitio, un append. En columnas: tocáis **varias** estructuras. Por eso las columnares brillan en **analítica** (OLAP), no en el clic de recepción (OLTP).
+    ¿Añadir **un** registro (una reserva nueva) es más barato en filas o en un fichero columnar? En **filas**: un sitio, un append. En Parquet tocáis **varias** estructuras. Por eso el columnar brilla en el **panel** (OLAP), no en el clic de recepción (OLTP).
 
 Con Spark en memoria, la ventaja relativa *a veces* se estrecha. El oficio sigue: **scan** de una métrica en millones de filas.
 
-### Representación (Bigtable)
+**Sirve para:** BI, *warehouse* columnar, cubos OLAP, el panel de las 8.
 
-Se inspiran en [Bigtable](https://research.google.com/archive/bigtable.html) de Google: mapa **ordenado**, **multidimensional** y **repartido**. Cada fila puede tener **del orden de un millón** de columnas y hay **miles de millones** de filas, con **versiones**.
+**No encaja:** actualizar la celda del sensor de la 214, ni picar el cobro.
+
+**Productos de este oficio:** Parquet, ORC, Amazon Redshift.
+
+### Wide-column (familias de columnas)
+
+Otra familia, la de [Bigtable](https://research.google.com/archive/bigtable.html): mapa **ordenado**, **multidimensional** y **repartido**. Cada fila puede tener **muchísimas** columnas (a menudo dispersas) y hay **miles de millones** de filas, con **versiones**. No es un Parquet: guardáis **filas** bajo una clave, y cada fila trae las columnas que tenga.
 
 Dos niveles: la clave de fila → un mapa de **familias de columnas** → columnas.
 
@@ -301,7 +311,7 @@ Una **columna** es `nombre` + `valor` + **`timestamp`** (caducidad y “quién g
 { "name": "temp_c", "value": "21.4", "timestamp": 1710000000 }
 ```
 
-Una **fila** es un conjunto de columnas bajo una clave (`hab:214:2026-04-01`). Una **familia** agrupa filas parecidas (como una “tabla”), **sin** exigir las mismas columnas:
+Una **fila** es un conjunto de columnas bajo una clave (`hab:214:2026-04-01`). Una **familia** agrupa columnas de un mismo asunto, **sin** exigir las mismas columnas en cada fila:
 
 ```text
 sensores
@@ -309,21 +319,21 @@ sensores
   hab:108 : { temp_c, puerta }          ← no tiene humedad
 ```
 
-Las **supercolumnas** anidan un mapa dentro de otra columna (metadatos de un ISBN, un cobro). Familias de supercolumnas = ese patrón a escala.
-
-Se accede por **clave de fila** (toda la familia o una columna). Cassandra ofrece **CQL**, parecido a SQL **sin** *joins* ni subconsultas; el `WHERE` es limitado:
+Se accede por **clave de fila** (toda la familia o una columna), no barriendo «la columna importe de todo el lago» como hace Parquet. Cassandra ofrece **CQL**, parecido a SQL **sin** *joins* ni subconsultas; el `WHERE` es limitado:
 
 ```sql
 SELECT temp_c FROM sensores WHERE hab_id = '214';
 ```
 
-Actualizar = **encontrar** + **reescribir**. A veces se reescribe el registro **entero** aunque cambien dos bytes.
+En Cassandra antiguo existían las **supercolumnas** (un mapa anidado dentro de otra columna). CQL ya no las usa: hoy anidáis con un mapa o con otra tabla.
 
-**Sirve para:** BI, *warehouse* columnar, cubos OLAP, metadatos, analítica (casi) en tiempo real. Menos disco (compresión + autoíndice) y agregados que en filas cruzarían muchas tablas.
+Actualizar una celda es **encontrar la fila** y reescribir esa columna. A veces se reescribe más de la cuenta.
 
-**No encaja:** OLTP concurrente: el relacional aísla mejor el clic de caja.
+**Sirve para:** series que **cambian** (el sensor de la 214), filas muy anchas y dispersas, metadatos cuyas columnas aparecen y desaparecen.
 
-Productos: **HBase** (encima de [HDFS](hdfs.md)), **Cassandra**, Amazon Redshift (almacén columnar en la nube; no es “la misma pieza” que HBase, pero el giro fila/columna es el mismo oficio).
+**No encaja:** el scan del panel de las 8 (eso es Parquet) ni el OLTP de caja.
+
+**Productos:** **HBase** (encima de [HDFS](hdfs.md)), **Cassandra**. Redshift queda en el apartado anterior.
 
 ## Modelo de grafos
 
@@ -350,7 +360,7 @@ Productos: **Neo4j**, ArangoDB, OrientDB, TinkerPop, Amazon Neptune.
 
 Documentales y grafos pueden ser **fuertes o eventuales**. **MongoDB** es configurable: por defecto lecturas y escrituras al **primario** (consistencia fuerte); podéis leer de **secundarios** (eventual) **por consulta**. El [2.8](replicas-shards.md) lo enseña.
 
-Clave-valor y columnas suelen ser **eventuales**. Cualquier copia puede recibir una escritura → **conflictos**. Estrategias que veréis citadas:
+Clave-valor y **Cassandra** suelen ser **eventuales**. **HBase**, en la tabla de más abajo, se queda más bien en **CP**. Cualquier copia que acepte escrituras puede generar **conflictos**. Estrategias que veréis citadas:
 
 - **Relojes vectoriales** (Riak): ordenan eventos; gana el más reciente.
 - **CouchDB:** guarda los valores en conflicto y **el usuario** decide.
@@ -390,7 +400,7 @@ CouchDB y Mongo **pueden** moverse en el mapa según lectura en secundarios, *wr
 
 Las distribuidas que eligen **responder** siguen **BASE** (disponibilidad antes que consistencia estricta → AP):
 
-- **Basically Available:** siempre hay respuesta (éxito o error claro), aunque un nodo no haya visto la última escritura.
+- **Basically Available:** hay **un valor** de respuesta, no un silencio. Un «no puedo, la red está partida» es **CP**, como en el [1.3](../ut1/almacenamiento.md).
 - **Soft state:** dos lecturas seguidas pueden **diferir** sin que vosotros hayáis escrito: un nodo iba atrasado.
 - **Eventual consistency:** tras escribir, el clúster es consistente **cuando el cambio llega a todos**. Mientras tanto, estado blando.
 
@@ -404,7 +414,7 @@ Un sistema NoSQL, en la frase que cierra el tema de referencia: *open source* (a
 NewSQL (CockroachDB, etc.) intenta **SQL + escala horizontal + ACID**. No es el núcleo de esta página; si Moodle lo pide, es una presentación de 5–6 diapositivas: qué problema cierra respecto a NoSQL y respecto a un PostgreSQL de un solo nodo.
 
 !!! success "En voz alta"
-    “NoSQL es *not only*. Eligo la familia por la pregunta. Parto cuando no cabe; replico para no morir. CAP me obliga a elegir. La caja sigue en ACID.”
+    “NoSQL es *not only*. Elegís la familia por la pregunta. Partís cuando no cabe; replicáis para no morir. CAP os obliga a elegir. La caja sigue en ACID.”
 
 ## Relación con el RA2
 

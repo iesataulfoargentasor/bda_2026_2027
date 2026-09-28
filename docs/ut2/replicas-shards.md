@@ -300,7 +300,13 @@ sh.shardCollection("hotel.reservas_hash", { id_reserva: "hashed" }, false)
 
 Con pocos documentos suele haber **un** chunk (`MinKey` … `MaxKey`) en un solo shard. `getShardDistribution()` dirá 100 % en Trasmiera. Eso no es un fallo: no hay peso que equilibrar.
 
-Insertad más (o importad [`reservas_mongo.jsonl`](../assets/practicas/reservas_mongo.jsonl) por `mongoimport` contra **27117**). Si sigue en un trozo:
+Insertad más, o importad el JSONL con `mongoimport` **en el PC** (el contenedor no lo trae; igual que en el [2.6](mongodb.md)), contra el `mongos` del puerto **27117**. Si seguís dentro de `hotel-shards`:
+
+```text
+mongoimport --host 127.0.0.1 --port 27117 --db hotel --collection reservas --file ../reservas_mongo.jsonl
+```
+
+Si sigue en un trozo:
 
 ```javascript
 sh.splitFind("hotel.reservas_hash", { id_reserva: 1 })

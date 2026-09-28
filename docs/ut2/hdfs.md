@@ -16,7 +16,7 @@ HDFS **reparte** los ficheros entre todos los nodos: los corta en **bloques** (p
 
 Añadir un servidor incrementa el tamaño **de forma lineal**: el nodo nuevo suma **capacidad** y **redundancia**. No reescribís el programa de reservas.
 
-Está pensado para escribir **una vez** y leer **muchas** (**WORM**: *write once, read many*). Las escrituras llegan a mano (`hdfs dfs -put`) o desde Spark, Flume o Sqoop ([1.6](../ut1/ingesta.md)).
+El diseño es **append**: escribís el fichero (a mano con `hdfs dfs -put`, o desde Spark, Flume o Sqoop; [1.6](../ut1/ingesta.md)), podéis **añadir al final** y podéis **borrarlo**. No editáis el byte 17 del medio. En clase se resume como **WORM** (*write once, read many*): un bloque cerrado se lee muchas veces y no se reescribe. Añadir al final no es un `UPDATE` de una fila.
 
 ## Qué no hace bien (y qué sí)
 
@@ -27,10 +27,10 @@ No ofrece buen rendimiento para:
 - **Varios escritores** a la vez sobre el mismo archivo.
 - **Modificaciones arbitrarias** (el byte 17 del medio, como en un Word).
 
-Una vez escritos, los datos son **inmutables**. Cada fichero solo admite **añadir al final** (*append-only*) o **borrarlo**. No hay un `UPDATE` fila a fila.
+No hay un `UPDATE` fila a fila. El fichero admite **añadir al final** o **borrarse**; el bloque ya escrito no se abre para cambiar un byte.
 
 !!! note "HBase y Hive"
-    Encima de HDFS, **HBase** y **Hive** dan una capa para *tratar* el dato como tabla (celdas que cambian, SQL). El fichero de debajo sigue siendo WORM; la capa de encima **reescribe** o **versiona**. No confundáis “puedo hacer `UPDATE` en Hive” con “HDFS edita el bloque”.
+    Encima de HDFS, **HBase** y **Hive** dan una capa para *tratar* el dato como tabla (celdas que cambian, SQL). El fichero de debajo no se edita por el medio; la capa de encima **reescribe** o **versiona**. No confundáis “puedo hacer `UPDATE` en Hive” con “HDFS edita el bloque”.
 
 **No** es el sitio para el clic de recepción, ni para diez escritores sobre el mismo CSV, ni para un JSON de 2 KB por cada reserva suelta (juntadlos).
 
@@ -511,27 +511,25 @@ cliente.write("/user/bda/mini.csv", "hotel,noches\nLaredo,3\n", overwrite=True)
 
 Sin Kerberos: `InsecureClient`. El *host* es el del aula (en Docker, `localhost` desde el Windows si publicasteis **9870**).
 
-### PyArrow (RPC nativo, puerto **9000** / **8020**)
+### PyArrow (RPC nativo)
 
-Es la vía más usada: rendimiento y Parquet/Avro. [hdfs_hotel.py](../assets/practicas/hotel-hadoop/hdfs_hotel.py).
+Es la vía más usada cuando Python **ve** las librerías de Hadoop: rendimiento y Parquet/Avro. [hdfs_hotel.py](../assets/practicas/hotel-hadoop/hdfs_hotel.py).
+
+Desde el Windows del aula, con el compose de este módulo, el camino que funciona es el **WebHDFS** de arriba (puerto **9870**). `HadoopFileSystem` habla el RPC. En [`config.env`](../assets/practicas/hotel-hadoop/config.env) ese RPC es `namenode:8020`. El compose **no** publica el 8020, y el NameNode anuncia el hostname `namenode`, que el portátil no resuelve. El **9000** sale en otras guías; en este Docker no está.
+
+Usad el bloque de abajo cuando el profesor os dé una máquina donde `namenode` resuelve y Hadoop está en el `CLASSPATH`:
 
 ```text
 pip install pyarrow pandas
-```
-
-Hace falta que Python **encuentre** las librerías nativas de Hadoop:
-
-```text
 export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath --glob)
 ```
-
-(En Windows del aula, el profesor os dará el equivalente; a menudo trabajáis **dentro** del contenedor `namenode`.)
 
 ```python
 import pandas as pd
 from pyarrow import fs
 
-hdfs = fs.HadoopFileSystem(host="localhost", port=9000)
+# Este compose: namenode:8020. Otras guías usan 9000. La UI sigue en el 9870.
+hdfs = fs.HadoopFileSystem(host="namenode", port=8020)
 
 with hdfs.open_input_stream("/user/bda/opiniones.txt") as reader:
     print(reader.read().decode("utf-8")[:200])
@@ -542,7 +540,7 @@ df = pd.DataFrame(
 df.to_parquet("/user/bda/noches_resumen.parquet", filesystem=hdfs, index=False)
 ```
 
-El puerto **9000/8020** es el RPC de `fs.defaultFS`. **No** es el 9870 de la UI. Mezclarlos es el error de la tarde.
+El puerto del RPC **no** es el 9870 de la UI. Mezclarlos es el error de la tarde.
 
 Sin Pandas, el mismo Parquet con PyArrow puro:
 
