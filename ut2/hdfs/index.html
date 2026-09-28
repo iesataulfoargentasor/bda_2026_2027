@@ -586,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut1/procesamiento/" class="md-nav__link">
         
   
@@ -1285,10 +1313,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyarrow-rpc-nativo-puerto-9000-8020" class="md-nav__link">
+  <a href="#pyarrow-rpc-nativo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PyArrow (RPC nativo, puerto 9000 / 8020)
+        PyArrow (RPC nativo)
       
     </span>
   </a>
@@ -1861,10 +1889,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pyarrow-rpc-nativo-puerto-9000-8020" class="md-nav__link">
+  <a href="#pyarrow-rpc-nativo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PyArrow (RPC nativo, puerto 9000 / 8020)
+        PyArrow (RPC nativo)
       
     </span>
   </a>
@@ -2029,7 +2057,7 @@
 <p>Cumple de golpe varios criterios del RA2: <strong>deposita cualquier fichero</strong> (a), <strong>tolera</strong> que se muera un disco (c), <strong>guarda ahora y lees después</strong> (d) y <strong>crece</strong> añadiendo <em>datanodes</em> (e). El <a href="../ecosistema/">2.2</a> os dejó el clúster y YARN; aquí el oficio es <strong>el disco del hotel</strong>.</p>
 <p>HDFS <strong>reparte</strong> los ficheros entre todos los nodos: los corta en <strong>bloques</strong> (por defecto <strong>128 MB</strong>) y guarda <strong>copias</strong> en máquinas distintas. El valor de fábrica del <strong>factor de réplica</strong> es <strong>3</strong>.</p>
 <p>Añadir un servidor incrementa el tamaño <strong>de forma lineal</strong>: el nodo nuevo suma <strong>capacidad</strong> y <strong>redundancia</strong>. No reescribís el programa de reservas.</p>
-<p>Está pensado para escribir <strong>una vez</strong> y leer <strong>muchas</strong> (<strong>WORM</strong>: <em>write once, read many</em>). Las escrituras llegan a mano (<code>hdfs dfs -put</code>) o desde Spark, Flume o Sqoop (<a href="../../ut1/ingesta/">1.6</a>).</p>
+<p>El diseño es <strong>append</strong>: escribís el fichero (a mano con <code>hdfs dfs -put</code>, o desde Spark, Flume o Sqoop; <a href="../../ut1/ingesta/">1.6</a>), podéis <strong>añadir al final</strong> y podéis <strong>borrarlo</strong>. No editáis el byte 17 del medio. En clase se resume como <strong>WORM</strong> (<em>write once, read many</em>): un bloque cerrado se lee muchas veces y no se reescribe. Añadir al final no es un <code>UPDATE</code> de una fila.</p>
 <h2 id="que-no-hace-bien-y-que-si">Qué no hace bien (y qué sí)<a class="headerlink" href="#que-no-hace-bien-y-que-si" title="Permanent link">&para;</a></h2>
 <p>No ofrece buen rendimiento para:</p>
 <ul>
@@ -2038,10 +2066,10 @@
 <li><strong>Varios escritores</strong> a la vez sobre el mismo archivo.</li>
 <li><strong>Modificaciones arbitrarias</strong> (el byte 17 del medio, como en un Word).</li>
 </ul>
-<p>Una vez escritos, los datos son <strong>inmutables</strong>. Cada fichero solo admite <strong>añadir al final</strong> (<em>append-only</em>) o <strong>borrarlo</strong>. No hay un <code>UPDATE</code> fila a fila.</p>
+<p>No hay un <code>UPDATE</code> fila a fila. El fichero admite <strong>añadir al final</strong> o <strong>borrarse</strong>; el bloque ya escrito no se abre para cambiar un byte.</p>
 <div class="admonition note">
 <p class="admonition-title">HBase y Hive</p>
-<p>Encima de HDFS, <strong>HBase</strong> y <strong>Hive</strong> dan una capa para <em>tratar</em> el dato como tabla (celdas que cambian, SQL). El fichero de debajo sigue siendo WORM; la capa de encima <strong>reescribe</strong> o <strong>versiona</strong>. No confundáis “puedo hacer <code>UPDATE</code> en Hive” con “HDFS edita el bloque”.</p>
+<p>Encima de HDFS, <strong>HBase</strong> y <strong>Hive</strong> dan una capa para <em>tratar</em> el dato como tabla (celdas que cambian, SQL). El fichero de debajo no se edita por el medio; la capa de encima <strong>reescribe</strong> o <strong>versiona</strong>. No confundáis “puedo hacer <code>UPDATE</code> en Hive” con “HDFS edita el bloque”.</p>
 </div>
 <p><strong>No</strong> es el sitio para el clic de recepción, ni para diez escritores sobre el mismo CSV, ni para un JSON de 2 KB por cada reserva suelta (juntadlos).</p>
 <h2 id="bloques">Bloques<a class="headerlink" href="#bloques" title="Permanent link">&para;</a></h2>
@@ -2559,48 +2587,48 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="n">cliente</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;/user/bda/mini.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;hotel,noches</span><span class="se">\n</span><span class="s2">Laredo,3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Sin Kerberos: <code>InsecureClient</code>. El <em>host</em> es el del aula (en Docker, <code>localhost</code> desde el Windows si publicasteis <strong>9870</strong>).</p>
-<h3 id="pyarrow-rpc-nativo-puerto-9000-8020">PyArrow (RPC nativo, puerto <strong>9000</strong> / <strong>8020</strong>)<a class="headerlink" href="#pyarrow-rpc-nativo-puerto-9000-8020" title="Permanent link">&para;</a></h3>
-<p>Es la vía más usada: rendimiento y Parquet/Avro. <a href="../../assets/practicas/hotel-hadoop/hdfs_hotel.py">hdfs_hotel.py</a>.</p>
+<h3 id="pyarrow-rpc-nativo">PyArrow (RPC nativo)<a class="headerlink" href="#pyarrow-rpc-nativo" title="Permanent link">&para;</a></h3>
+<p>Es la vía más usada cuando Python <strong>ve</strong> las librerías de Hadoop: rendimiento y Parquet/Avro. <a href="../../assets/practicas/hotel-hadoop/hdfs_hotel.py">hdfs_hotel.py</a>.</p>
+<p>Desde el Windows del aula, con el compose de este módulo, el camino que funciona es el <strong>WebHDFS</strong> de arriba (puerto <strong>9870</strong>). <code>HadoopFileSystem</code> habla el RPC. En <a href="../../assets/practicas/hotel-hadoop/config.env"><code>config.env</code></a> ese RPC es <code>namenode:8020</code>. El compose <strong>no</strong> publica el 8020, y el NameNode anuncia el hostname <code>namenode</code>, que el portátil no resuelve. El <strong>9000</strong> sale en otras guías; en este Docker no está.</p>
+<p>Usad el bloque de abajo cuando el profesor os dé una máquina donde <code>namenode</code> resuelve y Hadoop está en el <code>CLASSPATH</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip install pyarrow pandas
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath --glob)
 </span></code></pre></div>
-<p>Hace falta que Python <strong>encuentre</strong> las librerías nativas de Hadoop:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath --glob)
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">from</span> <span class="nn">pyarrow</span> <span class="kn">import</span> <span class="n">fs</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Este compose: namenode:8020. Otras guías usan 9000. La UI sigue en el 9870.</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;namenode&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8020</span><span class="p">)</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="s2">&quot;/user/bda/opiniones.txt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)[:</span><span class="mi">200</span><span class="p">])</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="p">{</span><span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Laredo&quot;</span><span class="p">,</span> <span class="s2">&quot;Potes&quot;</span><span class="p">],</span> <span class="s2">&quot;noches&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s2">&quot;canal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;ota&quot;</span><span class="p">]}</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="p">)</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;/user/bda/noches_resumen.parquet&quot;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></code></pre></div>
-<p>(En Windows del aula, el profesor os dará el equivalente; a menudo trabajáis <strong>dentro</strong> del contenedor <code>namenode</code>.)</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">from</span> <span class="nn">pyarrow</span> <span class="kn">import</span> <span class="n">fs</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9000</span><span class="p">)</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="s2">&quot;/user/bda/opiniones.txt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)[:</span><span class="mi">200</span><span class="p">])</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
-</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    <span class="p">{</span><span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Laredo&quot;</span><span class="p">,</span> <span class="s2">&quot;Potes&quot;</span><span class="p">],</span> <span class="s2">&quot;noches&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s2">&quot;canal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web&quot;</span><span class="p">,</span> <span class="s2">&quot;ota&quot;</span><span class="p">]}</span>
-</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="p">)</span>
-</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">&quot;/user/bda/noches_resumen.parquet&quot;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span></code></pre></div>
-<p>El puerto <strong>9000/8020</strong> es el RPC de <code>fs.defaultFS</code>. <strong>No</strong> es el 9870 de la UI. Mezclarlos es el error de la tarde.</p>
+<p>El puerto del RPC <strong>no</strong> es el 9870 de la UI. Mezclarlos es el error de la tarde.</p>
 <p>Sin Pandas, el mismo Parquet con PyArrow puro:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">tabla</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="p">{</span>
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>        <span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Laredo&quot;</span><span class="p">,</span> <span class="s2">&quot;Potes&quot;</span><span class="p">,</span> <span class="s2">&quot;Noja&quot;</span><span class="p">],</span>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>        <span class="s2">&quot;apellidos_recepcion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;García&quot;</span><span class="p">,</span> <span class="s2">&quot;Ruiz&quot;</span><span class="p">,</span> <span class="s2">&quot;Sainz&quot;</span><span class="p">],</span>
-</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>        <span class="s2">&quot;edad_lab&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
-</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>    <span class="p">}</span>
-</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="p">)</span>
-</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="s2">&quot;/user/bda/hoteles.parquet&quot;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">tabla</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="p">{</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>        <span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Laredo&quot;</span><span class="p">,</span> <span class="s2">&quot;Potes&quot;</span><span class="p">,</span> <span class="s2">&quot;Noja&quot;</span><span class="p">],</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>        <span class="s2">&quot;apellidos_recepcion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;García&quot;</span><span class="p">,</span> <span class="s2">&quot;Ruiz&quot;</span><span class="p">,</span> <span class="s2">&quot;Sainz&quot;</span><span class="p">],</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>        <span class="s2">&quot;edad_lab&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>    <span class="p">}</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="p">)</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="s2">&quot;/user/bda/hoteles.parquet&quot;</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Otras librerías (las citáis, no las certificáis): <strong>mrjob</strong> (MapReduce en local / clúster / EMR), <strong>Pydoop</strong> (API HDFS + Avro). En este módulo el gesto evaluable es <strong>un script que lee y escribe</strong> en HDFS, no un <em>framework</em> nuevo.</p>
 <h2 id="hue">Hue<a class="headerlink" href="#hue" title="Permanent link">&para;</a></h2>
 <p><strong>Hue</strong> (<em>Hadoop User Experience</em>) es un front-end web: HDFS, Hive, jobs… más amable que la <em>shell</em>. En muchas VM de ciclo viene instalado (<code>/opt/hue-…</code>); arranque típico:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>./build/env/bin/hue runserver
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>./build/env/bin/hue runserver
 </span></code></pre></div>
 <p>Imagen Docker oficial:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>docker run -it -p 8888:8888 gethue/hue:latest
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>docker run -it -p 8888:8888 gethue/hue:latest
 </span></code></pre></div>
 <p>La URL y el usuario os los da el <strong>profesor</strong> (suele ser <code>:8000</code> o <code>:8888</code>). No uses las credenciales de otro centro. Sirve para <strong>ver</strong> el mismo <code>/user/bda</code> que <code>hdfs dfs -ls</code>, subir un CSV a golpes de ratón y, si Hive está enchufado, lanzar un <code>SELECT</code> sin abrir Beeline.</p>
 <p>Hue <strong>no</strong> sustituye a <code>fsck</code> ni a entender la tubería. Es el <em>front</em> para no asustar a gerencia; el RA2 se demuestra en el terminal.</p>

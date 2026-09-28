@@ -586,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut1/procesamiento/" class="md-nav__link">
         
   
@@ -1252,22 +1280,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modelo-basado-en-columnas" class="md-nav__link">
+  <a href="#dos-modelos-que-comparten-la-palabra-columna" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Modelo basado en columnas
+        Dos modelos que comparten la palabra «columna»
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Modelo basado en columnas">
+    <nav class="md-nav" aria-label="Dos modelos que comparten la palabra «columna»">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#representacion-bigtable" class="md-nav__link">
+  <a href="#fichero-o-almacen-columnar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representación (Bigtable)
+        Fichero o almacén columnar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wide-column-familias-de-columnas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wide-column (familias de columnas)
       
     </span>
   </a>
@@ -1745,22 +1784,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modelo-basado-en-columnas" class="md-nav__link">
+  <a href="#dos-modelos-que-comparten-la-palabra-columna" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Modelo basado en columnas
+        Dos modelos que comparten la palabra «columna»
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Modelo basado en columnas">
+    <nav class="md-nav" aria-label="Dos modelos que comparten la palabra «columna»">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#representacion-bigtable" class="md-nav__link">
+  <a href="#fichero-o-almacen-columnar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Representación (Bigtable)
+        Fichero o almacén columnar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wide-column-familias-de-columnas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wide-column (familias de columnas)
       
     </span>
   </a>
@@ -2315,35 +2365,40 @@
 <p><strong>Sirve para:</strong> <code>sessionid</code> del motor de reservas, preferencias, carrito <strong>antes</strong> de cobrar, <strong>caché</strong> de disponibilidad.</p>
 <p><strong>No encaja:</strong> relaciones entre datos, transacciones de <strong>varios</strong> pasos, consultas <strong>por dentro</strong> del valor, operaciones sobre <strong>conjuntos de claves</strong> (“todas las que empiezan por <code>Laredo:</code>” si el producto no lo ayuda).</p>
 <p>Productos: <strong>Redis</strong>, <strong>DynamoDB</strong>, Voldemort (clon abierto de Dynamo).</p>
-<h2 id="modelo-basado-en-columnas">Modelo basado en columnas<a class="headerlink" href="#modelo-basado-en-columnas" title="Permanent link">&para;</a></h2>
-<p>El relacional usa la <strong>fila</strong> como unidad: bien para <strong>escribir</strong> una reserva completa. Cuando escribís <strong>poco</strong> y leéis <strong>unas pocas columnas de muchas filas</strong> (ocupación de 80 hoteles × 365 días), conviene <strong>girar</strong> el modelo: guardar por <strong>columnas</strong>. Los valores del mismo tipo quedan juntos → se <strong>comprimen</strong> mejor.</p>
+<h2 id="dos-modelos-que-comparten-la-palabra-columna">Dos modelos que comparten la palabra «columna»<a class="headerlink" href="#dos-modelos-que-comparten-la-palabra-columna" title="Permanent link">&para;</a></h2>
+<p>En el <a href="../../ut1/almacenamiento/">1.3</a> ya quedó la frontera. Aquí se usan los dos, y no son el mismo oficio.</p>
+<h3 id="fichero-o-almacen-columnar">Fichero o almacén columnar<a class="headerlink" href="#fichero-o-almacen-columnar" title="Permanent link">&para;</a></h3>
+<p>El relacional usa la <strong>fila</strong> como unidad: bien para <strong>escribir</strong> una reserva completa. Cuando escribís <strong>poco</strong> y leéis <strong>unas pocas columnas de muchas filas</strong> (ocupación de 80 hoteles × 365 días), un motor analítico <strong>gira</strong> el almacenamiento: los valores del mismo campo van juntos y se <strong>comprimen</strong> mejor. Eso es Parquet, ORC o un <em>warehouse</em> como Redshift. El detalle del fichero está en el <a href="../../ut1/formatos/">1.7</a>.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Por filas:     [Laredo,web,3,186] [Potes,ota,2,90] [Noja,web,4,210]
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Por columnas:  [Laredo,Potes,Noja] [web,ota,web] [3,2,4] [186,90,210]
 </span></code></pre></div>
 <div class="admonition question">
 <p class="admonition-title">Autoevaluación de pizarra</p>
-<p>¿Añadir <strong>un</strong> registro (una reserva nueva) es más barato en filas o en columnas? En <strong>filas</strong>: un sitio, un append. En columnas: tocáis <strong>varias</strong> estructuras. Por eso las columnares brillan en <strong>analítica</strong> (OLAP), no en el clic de recepción (OLTP).</p>
+<p>¿Añadir <strong>un</strong> registro (una reserva nueva) es más barato en filas o en un fichero columnar? En <strong>filas</strong>: un sitio, un append. En Parquet tocáis <strong>varias</strong> estructuras. Por eso el columnar brilla en el <strong>panel</strong> (OLAP), no en el clic de recepción (OLTP).</p>
 </div>
 <p>Con Spark en memoria, la ventaja relativa <em>a veces</em> se estrecha. El oficio sigue: <strong>scan</strong> de una métrica en millones de filas.</p>
-<h3 id="representacion-bigtable">Representación (Bigtable)<a class="headerlink" href="#representacion-bigtable" title="Permanent link">&para;</a></h3>
-<p>Se inspiran en <a href="https://research.google.com/archive/bigtable.html">Bigtable</a> de Google: mapa <strong>ordenado</strong>, <strong>multidimensional</strong> y <strong>repartido</strong>. Cada fila puede tener <strong>del orden de un millón</strong> de columnas y hay <strong>miles de millones</strong> de filas, con <strong>versiones</strong>.</p>
+<p><strong>Sirve para:</strong> BI, <em>warehouse</em> columnar, cubos OLAP, el panel de las 8.</p>
+<p><strong>No encaja:</strong> actualizar la celda del sensor de la 214, ni picar el cobro.</p>
+<p><strong>Productos de este oficio:</strong> Parquet, ORC, Amazon Redshift.</p>
+<h3 id="wide-column-familias-de-columnas">Wide-column (familias de columnas)<a class="headerlink" href="#wide-column-familias-de-columnas" title="Permanent link">&para;</a></h3>
+<p>Otra familia, la de <a href="https://research.google.com/archive/bigtable.html">Bigtable</a>: mapa <strong>ordenado</strong>, <strong>multidimensional</strong> y <strong>repartido</strong>. Cada fila puede tener <strong>muchísimas</strong> columnas (a menudo dispersas) y hay <strong>miles de millones</strong> de filas, con <strong>versiones</strong>. No es un Parquet: guardáis <strong>filas</strong> bajo una clave, y cada fila trae las columnas que tenga.</p>
 <p>Dos niveles: la clave de fila → un mapa de <strong>familias de columnas</strong> → columnas.</p>
 <p>Una <strong>columna</strong> es <code>nombre</code> + <code>valor</code> + <strong><code>timestamp</code></strong> (caducidad y “quién gana” si hay dos escrituras):</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;temp_c&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;21.4&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1710000000</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
-<p>Una <strong>fila</strong> es un conjunto de columnas bajo una clave (<code>hab:214:2026-04-01</code>). Una <strong>familia</strong> agrupa filas parecidas (como una “tabla”), <strong>sin</strong> exigir las mismas columnas:</p>
+<p>Una <strong>fila</strong> es un conjunto de columnas bajo una clave (<code>hab:214:2026-04-01</code>). Una <strong>familia</strong> agrupa columnas de un mismo asunto, <strong>sin</strong> exigir las mismas columnas en cada fila:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sensores
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  hab:214 : { temp_c, humedad, ultima_lectura }
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  hab:108 : { temp_c, puerta }          ← no tiene humedad
 </span></code></pre></div>
-<p>Las <strong>supercolumnas</strong> anidan un mapa dentro de otra columna (metadatos de un ISBN, un cobro). Familias de supercolumnas = ese patrón a escala.</p>
-<p>Se accede por <strong>clave de fila</strong> (toda la familia o una columna). Cassandra ofrece <strong>CQL</strong>, parecido a SQL <strong>sin</strong> <em>joins</em> ni subconsultas; el <code>WHERE</code> es limitado:</p>
+<p>Se accede por <strong>clave de fila</strong> (toda la familia o una columna), no barriendo «la columna importe de todo el lago» como hace Parquet. Cassandra ofrece <strong>CQL</strong>, parecido a SQL <strong>sin</strong> <em>joins</em> ni subconsultas; el <code>WHERE</code> es limitado:</p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">temp_c</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sensores</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">hab_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;214&#39;</span><span class="p">;</span>
 </span></code></pre></div>
-<p>Actualizar = <strong>encontrar</strong> + <strong>reescribir</strong>. A veces se reescribe el registro <strong>entero</strong> aunque cambien dos bytes.</p>
-<p><strong>Sirve para:</strong> BI, <em>warehouse</em> columnar, cubos OLAP, metadatos, analítica (casi) en tiempo real. Menos disco (compresión + autoíndice) y agregados que en filas cruzarían muchas tablas.</p>
-<p><strong>No encaja:</strong> OLTP concurrente: el relacional aísla mejor el clic de caja.</p>
-<p>Productos: <strong>HBase</strong> (encima de <a href="../hdfs/">HDFS</a>), <strong>Cassandra</strong>, Amazon Redshift (almacén columnar en la nube; no es “la misma pieza” que HBase, pero el giro fila/columna es el mismo oficio).</p>
+<p>En Cassandra antiguo existían las <strong>supercolumnas</strong> (un mapa anidado dentro de otra columna). CQL ya no las usa: hoy anidáis con un mapa o con otra tabla.</p>
+<p>Actualizar una celda es <strong>encontrar la fila</strong> y reescribir esa columna. A veces se reescribe más de la cuenta.</p>
+<p><strong>Sirve para:</strong> series que <strong>cambian</strong> (el sensor de la 214), filas muy anchas y dispersas, metadatos cuyas columnas aparecen y desaparecen.</p>
+<p><strong>No encaja:</strong> el scan del panel de las 8 (eso es Parquet) ni el OLTP de caja.</p>
+<p><strong>Productos:</strong> <strong>HBase</strong> (encima de <a href="../hdfs/">HDFS</a>), <strong>Cassandra</strong>. Redshift queda en el apartado anterior.</p>
 <h2 id="modelo-de-grafos">Modelo de grafos<a class="headerlink" href="#modelo-de-grafos" title="Permanent link">&para;</a></h2>
 <p>Guarda <strong>entidades</strong> y <strong>relaciones</strong>. Las entidades son <strong>nodos</strong> (con propiedades). Las relaciones son <strong>aristas</strong> (también con propiedades y <strong>sentido</strong>). Un nodo ≈ una instancia. La dirección importa: si queréis ida y vuelta, <strong>dos</strong> aristas.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(Huésped:Ana) -[:RECOMENDO {año:2025}]-&gt; (Hotel:Potes)
@@ -2357,7 +2412,7 @@
 <p>Productos: <strong>Neo4j</strong>, ArangoDB, OrientDB, TinkerPop, Amazon Neptune.</p>
 <h2 id="consistencia-segun-la-familia">Consistencia según la familia<a class="headerlink" href="#consistencia-segun-la-familia" title="Permanent link">&para;</a></h2>
 <p>Documentales y grafos pueden ser <strong>fuertes o eventuales</strong>. <strong>MongoDB</strong> es configurable: por defecto lecturas y escrituras al <strong>primario</strong> (consistencia fuerte); podéis leer de <strong>secundarios</strong> (eventual) <strong>por consulta</strong>. El <a href="../replicas-shards/">2.8</a> lo enseña.</p>
-<p>Clave-valor y columnas suelen ser <strong>eventuales</strong>. Cualquier copia puede recibir una escritura → <strong>conflictos</strong>. Estrategias que veréis citadas:</p>
+<p>Clave-valor y <strong>Cassandra</strong> suelen ser <strong>eventuales</strong>. <strong>HBase</strong>, en la tabla de más abajo, se queda más bien en <strong>CP</strong>. Cualquier copia que acepte escrituras puede generar <strong>conflictos</strong>. Estrategias que veréis citadas:</p>
 <ul>
 <li><strong>Relojes vectoriales</strong> (Riak): ordenan eventos; gana el más reciente.</li>
 <li><strong>CouchDB:</strong> guarda los valores en conflicto y <strong>el usuario</strong> decide.</li>
@@ -2427,7 +2482,7 @@
 <h3 id="base-el-otro-extremo-de-acid">BASE (el otro extremo de ACID)<a class="headerlink" href="#base-el-otro-extremo-de-acid" title="Permanent link">&para;</a></h3>
 <p>Las distribuidas que eligen <strong>responder</strong> siguen <strong>BASE</strong> (disponibilidad antes que consistencia estricta → AP):</p>
 <ul>
-<li><strong>Basically Available:</strong> siempre hay respuesta (éxito o error claro), aunque un nodo no haya visto la última escritura.</li>
+<li><strong>Basically Available:</strong> hay <strong>un valor</strong> de respuesta, no un silencio. Un «no puedo, la red está partida» es <strong>CP</strong>, como en el <a href="../../ut1/almacenamiento/">1.3</a>.</li>
 <li><strong>Soft state:</strong> dos lecturas seguidas pueden <strong>diferir</strong> sin que vosotros hayáis escrito: un nodo iba atrasado.</li>
 <li><strong>Eventual consistency:</strong> tras escribir, el clúster es consistente <strong>cuando el cambio llega a todos</strong>. Mientras tanto, estado blando.</li>
 </ul>
@@ -2440,7 +2495,7 @@
 <p>NewSQL (CockroachDB, etc.) intenta <strong>SQL + escala horizontal + ACID</strong>. No es el núcleo de esta página; si Moodle lo pide, es una presentación de 5–6 diapositivas: qué problema cierra respecto a NoSQL y respecto a un PostgreSQL de un solo nodo.</p>
 <div class="admonition success">
 <p class="admonition-title">En voz alta</p>
-<p>“NoSQL es <em>not only</em>. Eligo la familia por la pregunta. Parto cuando no cabe; replico para no morir. CAP me obliga a elegir. La caja sigue en ACID.”</p>
+<p>“NoSQL es <em>not only</em>. Elegís la familia por la pregunta. Partís cuando no cabe; replicáis para no morir. CAP os obliga a elegir. La caja sigue en ACID.”</p>
 </div>
 <h2 id="relacion-con-el-ra2">Relación con el RA2<a class="headerlink" href="#relacion-con-el-ra2" title="Permanent link">&para;</a></h2>
 <table>

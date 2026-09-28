@@ -586,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut1/procesamiento/" class="md-nav__link">
         
   
@@ -2295,8 +2323,8 @@
 </tr>
 <tr>
 <td><strong>HBase</strong></td>
-<td>NoSQL <strong>columnar</strong> encima de HDFS. Tablas de miles de millones de filas × millones de columnas. Escrita en Java</td>
-<td>Series de sensores de habitación que <strong>sí</strong> se actualizan. HDFS solo es WORM (<em>write once, read many</em>): no editas un bloque a medias</td>
+<td>NoSQL <strong>wide-column</strong> encima de HDFS (familias de columnas; no es un Parquet). Tablas enormes y dispersas. Escrita en Java</td>
+<td>Series de sensores que <strong>sí</strong> se actualizan. HDFS no reescribe un bloque a medias (<a href="../hdfs/">2.3</a>)</td>
 </tr>
 <tr>
 <td><strong>Pig</strong></td>
@@ -2330,7 +2358,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>HBase</strong> merece un párrafo extra porque se confunde con HDFS. HDFS es un <strong>sistema de ficheros</strong>: dejas un Parquet y lo lees. HBase es una <strong>tabla</strong> (familias de columnas, <em>row key</em>) que <strong>vive encima</strong> de HDFS y permite lecturas/escrituras de <strong>celdas</strong>. Si el sensor de la 214 cambia la temperatura cada minuto, HBase encaja; un CSV de 40 GB en HDFS, no.</p>
+<p><strong>HBase</strong> merece un párrafo extra porque se confunde con HDFS y con Parquet. HDFS es un <strong>sistema de ficheros</strong>: dejas un Parquet y lo lees. HBase es <strong>wide-column</strong>: una <strong>tabla</strong> (familias de columnas, <em>row key</em>) que <strong>vive encima</strong> de HDFS y permite lecturas/escrituras de <strong>celdas</strong>. No es el fichero columnar del <a href="../../ut1/formatos/">1.7</a>: Parquet no actualiza la temperatura de la 214. Si el sensor de esa habitación cambia cada minuto, HBase encaja; un CSV de 40 GB en HDFS, no.</p>
 <p><strong>Spark</strong> no “sustituye a Hadoop” en todos los sitios. Sustituye a <strong>MapReduce</strong> cuando el job <strong>itera</strong>. Puede leer HDFS, S3, un CSV local. En este módulo lo citáis como <em>módulo del ecosistema</em>; el RA2 os pide entender el núcleo primero.</p>
 <p><strong>Distribuciones</strong> (el clúster ya cableado, con versiones que encajan entre sí):</p>
 <ul>
@@ -2619,7 +2647,7 @@
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&lt;/property&gt;</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">&lt;/configuration&gt;</span>
 </span></code></pre></div>
-<p>En una VM de un solo host es habitual <code>hdfs://localhost:9000</code> (puerto 9000 o 8020 según la guía). <code>fs.defaultFS</code> es el nombre moderno; <code>fs.default.name</code> sale en textos viejos: mismo oficio.</p>
+<p>En una VM de un solo host es habitual <code>hdfs://localhost:9000</code> (o el 8020, según la guía). <strong>En el Docker de este módulo el RPC es <code>hdfs://namenode:8020</code></strong>, como el XML de arriba. <code>fs.defaultFS</code> es el nombre moderno; <code>fs.default.name</code> sale en textos viejos: mismo oficio.</p>
 <p><strong><code>hdfs-site.xml</code></strong> — réplica y carpetas de metadatos / bloques:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;configuration&gt;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&lt;property&gt;</span>

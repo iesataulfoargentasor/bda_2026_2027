@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-"""Lectura/escritura de HDFS con PyArrow (hotel). Ajustad host y puerto del aula."""
+"""Lectura/escritura de HDFS con PyArrow (hotel).
+
+En el compose de este módulo el RPC es namenode:8020 (config.env).
+El 9000 es el de otras guías. La UI y WebHDFS van por el 9870.
+Desde Windows, si namenode no resuelve, usad InsecureClient en el 9870.
+"""
 import pandas as pd
 from pyarrow import fs
 
-HDFS_HOST = "localhost"
-HDFS_PORT = 9000  # RPC nativo; WebHDFS/UI usa 9870
+HDFS_HOST = "namenode"
+HDFS_PORT = 8020
 
 hdfs = fs.HadoopFileSystem(host=HDFS_HOST, port=HDFS_PORT)
 

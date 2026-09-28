@@ -591,6 +591,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../procesamiento/" class="md-nav__link">
         
   
@@ -2039,8 +2067,19 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="p">],</span>
 </span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">})</span>
 </span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">laredo</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;hotel&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Laredo&quot;</span><span class="p">][[</span><span class="s2">&quot;id_reserva&quot;</span><span class="p">,</span> <span class="s2">&quot;hotel&quot;</span><span class="p">,</span> <span class="s2">&quot;noches&quot;</span><span class="p">,</span> <span class="s2">&quot;importe&quot;</span><span class="p">,</span> <span class="s2">&quot;canal&quot;</span><span class="p">]]</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;laredo.avro&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">laredo</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">),</span> <span class="n">codec</span><span class="o">=</span><span class="s2">&quot;deflate&quot;</span><span class="p">)</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># fastavro rechaza numpy.int32 / numpy.float64: pasad a int y float de Python</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="n">filas</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="p">{</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        <span class="s2">&quot;id_reserva&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">&quot;id_reserva&quot;</span><span class="p">]),</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        <span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">&quot;hotel&quot;</span><span class="p">]),</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>        <span class="s2">&quot;noches&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">&quot;noches&quot;</span><span class="p">]),</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>        <span class="s2">&quot;importe&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">&quot;importe&quot;</span><span class="p">]),</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>        <span class="s2">&quot;canal&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">&quot;canal&quot;</span><span class="p">]),</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    <span class="p">}</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">laredo</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="p">]</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;laredo.avro&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    <span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">filas</span><span class="p">,</span> <span class="n">codec</span><span class="o">=</span><span class="s2">&quot;deflate&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Si algún día lo escribís en HDFS, cambiad el host por el de <strong>vuestro</strong> lab; el patrón es el de la librería <code>hdfs</code> (<code>InsecureClient</code> + <code>AvroWriter</code>). No copiéis un nombre de máquina de otro ciclo.</p>
 <h2 id="arrow-el-dato-en-la-ram">Arrow: el dato <em>en la RAM</em><a class="headerlink" href="#arrow-el-dato-en-la-ram" title="Permanent link">&para;</a></h2>
@@ -2099,7 +2138,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;hotel&quot;</span><span class="p">,</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="s2">&quot;Laredo&quot;</span><span class="p">)],</span>
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>En HDFS, si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:9000/reservas.parquet")</code>. DuckDB, en el apartado siguiente, hace lo mismo con SQL y <strong>sin</strong> cargar el fichero a RAM.</p>
+<p>En HDFS, si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")</code>. En el Docker de la <a href="../../ut2/hdfs/" rel="noopener" target="_blank">UT2</a> ese puerto es el <strong>8020</strong> (<code>namenode</code>), no el 9000 de otras guías. DuckDB, en el apartado siguiente, hace lo mismo con SQL y <strong>sin</strong> cargar el fichero a RAM.</p>
 <h3 id="preguntar-sin-cargarlo-duckdb">Preguntar sin cargarlo: DuckDB<a class="headerlink" href="#preguntar-sin-cargarlo-duckdb" title="Permanent link">&para;</a></h3>
 <p><a href="https://duckdb.org/" rel="noopener" target="_blank">DuckDB</a> es SQL <strong>dentro</strong> del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip<span class="w"> </span>install<span class="w"> </span>duckdb

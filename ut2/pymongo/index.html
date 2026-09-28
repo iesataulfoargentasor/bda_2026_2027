@@ -586,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut1/procesamiento/" class="md-nav__link">
         
   
@@ -1752,9 +1780,9 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">reservas</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="n">reservas</span>      <span class="c1"># o hotel[&quot;reservas&quot;]</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">reservas</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;hotel&quot;</span><span class="p">:</span> <span class="s2">&quot;Laredo&quot;</span><span class="p">}))</span>
 </span></code></pre></div>
-<p>Si no habéis importado aún:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mongoimport<span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>reservas<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/reservas_mongo.jsonl
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mongoimport<span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>opiniones<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/hotel-mongo/opiniones.jsonl
+<p>Si no habéis importado aún, desde la <strong>raíz del repo</strong> y con <code>mongoimport</code> instalado en el PC (el contenedor no lo trae; el detalle está en el <a href="../mongodb/">2.6</a>):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mongoimport<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">27017</span><span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>reservas<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/reservas_mongo.jsonl
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mongoimport<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">27017</span><span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>opiniones<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/hotel-mongo/opiniones.jsonl
 </span></code></pre></div>
 <p>Hay un script de aula que imprime el parte: <a href="../../assets/practicas/hotel-pymongo/parte_gerencia.py"><code>parte_gerencia.py</code></a>. Arrancad un <code>mongod</code> (el del <a href="../mongodb/">2.6</a>, no el <em>replica set</em> y el suelto a la vez: los dos quieren el <strong>27017</strong>).</p>
 <div class="language-powershell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$env:HOTEL_MONGO_URI</span> <span class="p">=</span> <span class="s2">&quot;mongodb://localhost:27017&quot;</span>

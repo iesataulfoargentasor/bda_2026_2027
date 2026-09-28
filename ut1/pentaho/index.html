@@ -591,6 +591,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../procesamiento/" class="md-nav__link">
         
   
@@ -2155,7 +2183,7 @@
 <li>conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);</li>
 <li>filtrar, limpiar, tipar, <em>lookup</em>, <em>merge join</em>, agregar, fórmulas;</li>
 <li>cargar a fichero, tabla o nube;</li>
-<li><strong>esbozar</strong> hechos y dimensiones (reservas ⋈ hoteles): un trozo de esquema en <a href="../procesamiento/" rel="noopener" target="_blank">estrella</a>, no un almacén entero.</li>
+<li><strong>esbozar</strong> hechos y dimensiones (reservas ⋈ hoteles): el hecho es la estancia y la dimensión es el hotel. No montáis el almacén entero.</li>
 </ul>
 <p><strong>No</strong> es el programa de recepción: no picáis la reserva en PDI. Procesáis una <strong>copia</strong>.</p>
 <table>
@@ -2335,11 +2363,11 @@
 <ol>
 <li>Dos (o tres) <strong>CSV file input</strong>. En cobros y hoteles, <code>Delimiter = ;</code>.</li>
 <li>En reservas, <em>Get fields</em> y dejad <code>id_reserva</code> / <code>id_hotel</code> como <strong>Integer</strong> (o String si Spoon se come un código con ceros; aquí no hace falta).</li>
-<li><strong>Join → Merge join.</strong> En Spoon, el hop se tira <strong>desde el Merge hacia cada origen</strong> (así nombra <em>left</em> y <em>right</em>). Clave: <code>id_reserva</code> (reservas ⋈ cobros). Tipo <em>INNER</em>: las reservas <strong>sin</strong> fila en cobros no entran.</li>
+<li><strong>Join → Merge join.</strong> El hop sale de cada <em>Sort</em> y <strong>entra</strong> en el Merge: el dato viaja hacia el join. El <strong>primer</strong> hop que conectéis es el flujo de la izquierda (<em>left</em>); el <strong>segundo</strong>, el de la derecha (<em>right</em>). Clave: <code>id_reserva</code> (reservas ⋈ cobros). Tipo <em>INNER</em>: las reservas <strong>sin</strong> fila en cobros no entran.</li>
 </ol>
 <p>Spoon <strong>avisa</strong>: si los flujos no están <strong>ordenados por la clave</strong>, el join miente. Añadid <strong>Sort rows</strong> por <code>id_reserva</code> <strong>en cada rama</strong> <em>antes</em> del merge. Preview del merge: aún <strong>no</strong> está el nombre del hotel (falta la dimensión); sí debe estar <code>cobrado</code>.</p>
 <ol>
-<li>Tercer origen <code>hoteles_pdi.csv</code> + otro <em>Merge join</em> por <code>id_hotel</code> (otra vez: <strong>ordenar ambas entradas</strong> por <code>id_hotel</code>). Ahí aparecen Laredo, Santander, Comillas, Potes.</li>
+<li>Tercer origen <code>hoteles_pdi.csv</code> + otro <em>Merge join</em> por <code>id_hotel</code>. Otra vez: <strong>ordenar ambas entradas</strong> por <code>id_hotel</code>, y tirar cada hop <strong>desde el Sort hacia el Merge</strong>. Ahí aparecen Laredo, Santander, Comillas, Potes.</li>
 <li><strong>Statistics → Group by.</strong> Agrupad por <code>hotel</code> y <code>canal</code>. Agregados: <code>SUM(cobrado)</code> con nombre <strong><code>cobrado_total</code></strong>, <code>COUNT</code> de <code>id_reserva</code> con nombre <strong><code>n_reservas</code></strong>. Esos nombres los ponéis vosotros en la columna <em>Name</em>; Spoon no los inventa.</li>
 <li>El <em>Group by</em> también quiere el flujo <strong>ordenado</strong> por las columnas de agrupación. <em>Sort</em> por <code>hotel</code>, <code>canal</code> entre el merge y el grupo.</li>
 <li><strong>Text file output</strong> → <code>informe_hotel_canal.csv</code>.</li>
@@ -2393,7 +2421,7 @@
 <h3 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
 <p><strong>Output → JSON output.</strong></p>
 <ul>
-<li><em>Filename:</em> ruta de <code>escaprate_cantabria.json</code>.</li>
+<li><em>Filename:</em> ruta de <code>escaparate_cantabria.json</code>.</li>
 <li><em>Json bloc name:</em> p. ej. <code>alojamientos</code>.</li>
 <li><em>Nr rows in a bloc:</em> <code>0</code> = un solo documento con todos; <code>1</code> = un fichero por fila (casi nunca lo queréis aquí).</li>
 <li>Pestaña <em>Fields</em> → <strong>Get fields</strong>. Si no, el JSON sale con objetos vacíos.</li>
@@ -2402,7 +2430,8 @@
 <hr />
 <h2 id="taller-4-formula-y-dejar-el-informe-en-la-nube">Taller 4 — Fórmula y dejar el informe en la nube<a class="headerlink" href="#taller-4-formula-y-dejar-el-informe-en-la-nube" title="Permanent link">&para;</a></h2>
 <p>Cliente: <em>“Por </em><em>costa / ciudad / interior</em><em>: noches cobradas, importe cobrado y </em><em>precio medio por noche</em><em>. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”</em></p>
-<p>Partís del taller 2 (reservas ⋈ cobros ⋈ hoteles). Añadís <a href="../../assets/practicas/cadenas_pdi.csv" rel="noopener" target="_blank">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
+<p>Partís de una <strong>copia</strong> del taller 2 <strong>hasta el segundo Merge join</strong> (reservas ⋈ cobros ⋈ hoteles), <strong>antes</strong> del <em>Group by</em>. Si partís del <code>informe_hotel_canal.csv</code>, ya no están <code>noches</code>, <code>cobrado</code> ni <code>id_cadena</code>: el agregado del taller 2 se los quedó. Este taller <strong>vuelve a leer</strong> los CSV; no consume ese informe. En la copia, cada fila sigue siendo <strong>una reserva cobrada</strong>.</p>
+<p>Añadís <a href="../../assets/practicas/cadenas_pdi.csv" rel="noopener" target="_blank">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
 <ol>
 <li>CSV de cadenas (<code>;</code>) → <em>Sort</em> por <code>id_cadena</code>.</li>
 <li><em>Sort</em> del flujo de hoteles por <code>id_cadena</code>.</li>
@@ -2412,8 +2441,9 @@
 </ol>
 <p>Si el aula <strong>no</strong> tiene cubo, <em>Text file output</em> a <code>informe_cadenas.csv</code> en la carpeta de trabajo y listo: el oficio de d) y e) ya está.</p>
 <h3 id="destino-s3-si-el-aula-usa-aws">Destino S3 (si el aula usa AWS)<a class="headerlink" href="#destino-s3-si-el-aula-usa-aws" title="Permanent link">&para;</a></h3>
+<p>El primer cubo se crea en el <a href="../aws-academy-s3/" rel="noopener" target="_blank">taller de AWS Academy</a> (consola, <strong>privado</strong>, sin claves). Este paso de Spoon es <strong>después</strong>, y solo si el profesor lo abre: en Learner Lab a menudo <strong>no</strong> podéis crear un usuario IAM. Si no hay claves, <em>Text file output</em> a carpeta y el oficio de d) y e) ya está.</p>
 <ol>
-<li><em>Bucket</em> del <strong>centro</strong> (el nombre lo da el profesor; no copiéis el de otro ciclo).</li>
+<li><em>Bucket</em> del <strong>centro</strong> o el vuestro del lab (el nombre lo da el profesor; no copiéis el de otro ciclo).</li>
 <li>Credenciales por <strong>variables de entorno</strong> (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, y si aplica <code>AWS_SESSION_TOKEN</code>) o el perfil <code>~/.aws/credentials</code>.</li>
 <li>Paso <strong>S3 file output</strong>. URI: <code>s3n://NOMBRE-BUCKET/informe_cadenas</code> y extensión <code>csv</code>. <strong>No</strong> pongáis <code>s3n://s3n/…</code> (ese doble <code>s3n</code> es un error conocido de PDI).</li>
 </ol>
@@ -2538,6 +2568,7 @@
 <li>Kitchen sobre un <code>.ktr</code> o Pan sobre un <code>.kjb</code>.</li>
 <li>Filtrar “en la cabeza” y no en un paso: no es reproducible.</li>
 <li><em>Merge join</em> / <em>Group by</em> <strong>sin</strong> ordenar por la clave.</li>
+<li>Hop <strong>desde el Merge hacia el origen</strong>: el dato no entra. El hop sale del <em>Sort</em> y entra en el Merge.</li>
 <li>Java Filter + nulos sin <em>If field value is null</em>.</li>
 <li>JSON output sin <em>Get fields</em>.</li>
 <li>Cumplir d) (el fichero se genera) y olvidar e) (nadie entiende las claves).</li>

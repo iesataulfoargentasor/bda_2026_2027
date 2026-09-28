@@ -586,6 +586,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut1/procesamiento/" class="md-nav__link">
         
   
@@ -2190,12 +2218,15 @@
 <p><code>sh.addShard("trasmiera/trasmiera-a:27017")</code> ya lo hace el script. El <em>router</em> no guarda reservas: si <code>recepcion</code> cae y tenéis otro <code>mongos</code>, el <em>driver</em> cambia; los datos siguen en los shards.</p>
 <h3 id="chunks-que-no-se-mueven-solos-aun">Chunks que no se mueven solos (aún)<a class="headerlink" href="#chunks-que-no-se-mueven-solos-aun" title="Permanent link">&para;</a></h3>
 <p>Con pocos documentos suele haber <strong>un</strong> chunk (<code>MinKey</code> … <code>MaxKey</code>) en un solo shard. <code>getShardDistribution()</code> dirá 100 % en Trasmiera. Eso no es un fallo: no hay peso que equilibrar.</p>
-<p>Insertad más (o importad <a href="../../assets/practicas/reservas_mongo.jsonl"><code>reservas_mongo.jsonl</code></a> por <code>mongoimport</code> contra <strong>27117</strong>). Si sigue en un trozo:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">sh</span><span class="p">.</span><span class="nx">splitFind</span><span class="p">(</span><span class="s2">&quot;hotel.reservas_hash&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id_reserva</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">})</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">// o cortar a mano:</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">// sh.splitAt(&quot;hotel.reservas_rango&quot;, { hotel: &quot;Potes&quot; })</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nx">db</span><span class="p">.</span><span class="nx">reservas_hash</span><span class="p">.</span><span class="nx">getShardDistribution</span><span class="p">()</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">sh</span><span class="p">.</span><span class="nx">status</span><span class="p">()</span>
+<p>Insertad más, o importad el JSONL con <code>mongoimport</code> <strong>en el PC</strong> (el contenedor no lo trae; igual que en el <a href="../mongodb/">2.6</a>), contra el <code>mongos</code> del puerto <strong>27117</strong>. Si seguís dentro de <code>hotel-shards</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mongoimport --host 127.0.0.1 --port 27117 --db hotel --collection reservas --file ../reservas_mongo.jsonl
+</span></code></pre></div>
+<p>Si sigue en un trozo:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">sh</span><span class="p">.</span><span class="nx">splitFind</span><span class="p">(</span><span class="s2">&quot;hotel.reservas_hash&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id_reserva</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">})</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// o cortar a mano:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// sh.splitAt(&quot;hotel.reservas_rango&quot;, { hotel: &quot;Potes&quot; })</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nx">db</span><span class="p">.</span><span class="nx">reservas_hash</span><span class="p">.</span><span class="nx">getShardDistribution</span><span class="p">()</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nx">sh</span><span class="p">.</span><span class="nx">status</span><span class="p">()</span>
 </span></code></pre></div>
 <p><code>splitFind</code> corta por la <strong>mediana</strong>; <code>splitAt</code> por el valor que le dais. El <em>balancer</em> <strong>mueve</strong> después. Justo al cortar, un recuento puede <strong>mentir</strong> unos segundos (trozos a medias).</p>
 <div class="admonition tip">
