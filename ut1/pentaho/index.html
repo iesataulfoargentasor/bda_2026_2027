@@ -2325,7 +2325,7 @@
 <p>Habéis <strong>procesado</strong> (menos filas, ordenadas) y <strong>presentado</strong> (CSV que se abre en Excel).</p>
 <h3 id="pan-sin-spoon">Pan (sin Spoon)<a class="headerlink" href="#pan-sin-spoon" title="Permanent link">&para;</a></h3>
 <p>Guardad <code>taller1_trasmiera.ktr</code>. Borrad el CSV de salida. En la carpeta de PDI:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file=&quot;C:\ruta\taller1_trasmiera.ktr&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file="C:\ruta\taller1_trasmiera.ktr"
 </span></code></pre></div>
 <p>En Linux/macOS: <code>pan.sh /file=...</code>. El log debe terminar en <em>Finished</em> y el fichero debe <strong>reaparecer</strong>. Eso es el procedimiento de madrugada.</p>
 <p>Parámetros útiles (también en Kitchen): <code>/level:Basic</code> (o <code>Error</code>, <code>Debug</code>, <code>Rowlevel</code>…) y <code>/param:"nombre=valor"</code> si el flujo espera variables.</p>
@@ -2415,7 +2415,7 @@
 <p><strong>Utility → If field value is null.</strong> Sustituid nulos de <code>precio</code> y <code>noches_min</code> por <code>-1</code>. Luego el filtro <strong>debe</strong> excluir esos <code>-1</code>: no los coléis como “baratos”.</p>
 <h3 id="filtro-simple-y-filtro-java">Filtro simple y filtro Java<a class="headerlink" href="#filtro-simple-y-filtro-java" title="Permanent link">&para;</a></h3>
 <p><strong>Filter rows</strong> basta para <code>precio &lt; 200</code>. Condiciones con <code>&amp;&amp;</code> / <code>||</code> y texto se leen mejor en <strong>Flow → Java Filter</strong>. Ejemplo (ajustadlo a <strong>vuestros</strong> nombres de campo):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(precio &gt;= 0 &amp;&amp; precio &lt; 200) &amp;&amp; (noches_min &gt;= 0 &amp;&amp; noches_min &lt;= 4) &amp;&amp; !alojamiento_tipo.equals(&quot;Habitacion privada&quot;)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(precio &gt;= 0 &amp;&amp; precio &lt; 200) &amp;&amp; (noches_min &gt;= 0 &amp;&amp; noches_min &lt;= 4) &amp;&amp; !alojamiento_tipo.equals("Habitacion privada")
 </span></code></pre></div>
 <p>Podéis poner <strong>Dummy</strong> en la rama que no cumple (no hace nada; cierra el camino) y la salida JSON en la que sí.</p>
 <h3 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
@@ -2476,7 +2476,7 @@
 <li>Segunda <strong>Transformation</strong> (taller 4). Si comprobáis objeto en S3/Azure, el mismo <em>File exists</em> admite esquema S3 (URL del <em>bucket</em>) en muchas versiones; si no, un paso <em>Shell</em> / script del aula. Sin cubo: comprobad el CSV local.</li>
 </ol>
 <p>Guardad <code>taller5_noche.kjb</code>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kitchen.bat /file=&quot;C:\ruta\taller5_noche.kjb&quot; /level:Basic
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kitchen.bat /file="C:\ruta\taller5_noche.kjb" /level:Basic
 </span></code></pre></div>
 <p>Linux: <code>kitchen.sh /file=taller5_noche.kjb</code>.</p>
 <hr />

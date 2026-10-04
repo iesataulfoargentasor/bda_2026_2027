@@ -1,0 +1,779 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:03.320
+Imagina que son las ocho de la mañana.
+
+00:00:03.325 --> 00:00:07.049
+La directora de una cadena de
+hoteles abre su panel y hace dos
+
+00:00:07.054 --> 00:00:11.320
+preguntas: ¿cuántas habitaciones
+ocupamos ayer, y cuánto hemos cobrado?
+
+00:00:11.325 --> 00:00:13.282
+Parece sencillo.
+
+00:00:13.288 --> 00:00:16.333
+Pero las reservas están
+en un programa, los pagos
+
+00:00:16.338 --> 00:00:19.508
+en otro y los sensores
+envían sus propios mensajes.
+
+00:00:19.512 --> 00:00:22.353
+Antes de calcular nada, hay que conseguir que
+
+00:00:22.358 --> 00:00:24.945
+esa información llegue al lugar adecuado.
+
+00:00:24.950 --> 00:00:28.676
+Eso es la ingesta de datos:
+recoger datos que ya existen y
+
+00:00:28.681 --> 00:00:32.857
+llevarlos a otro sistema, donde
+podamos guardarlos o procesarlos.
+
+00:00:32.862 --> 00:00:35.904
+En este resumen del apartado
+uno punto seis vamos a
+
+00:00:35.909 --> 00:00:39.070
+seguir ese recorrido con el
+mismo hotel como ejemplo.
+
+00:00:39.075 --> 00:00:42.887
+Verás qué decisiones tomar, cómo
+distinguir los conceptos y cómo
+
+00:00:42.892 --> 00:00:46.645
+explicar tu solución sin depender
+de una lista de herramientas.
+
+00:00:46.650 --> 00:00:48.875
+Vamos paso a paso.
+
+00:00:49.900 --> 00:00:53.195
+La primera decisión no
+es qué programa instalar.
+
+00:00:53.200 --> 00:00:56.195
+Es qué necesita el negocio y para cuándo.
+
+00:00:56.200 --> 00:00:59.109
+En nuestro caso, dirección quiere un resumen
+
+00:00:59.114 --> 00:01:01.757
+del día anterior, disponible a las ocho.
+
+00:01:01.762 --> 00:01:06.270
+No está pidiendo una predicción ni
+una pantalla que cambie cada segundo.
+
+00:01:06.275 --> 00:01:09.282
+A partir de ahí diseñamos hacia atrás.
+
+00:01:09.288 --> 00:01:12.132
+Primero concretamos el resultado.
+
+00:01:12.137 --> 00:01:15.592
+Después pensamos qué
+transformaciones harán falta: por
+
+00:01:15.597 --> 00:01:19.308
+ejemplo, relacionar reservas
+con cobros y sumar por hotel.
+
+00:01:19.312 --> 00:01:23.158
+Y finalmente localizamos los
+datos que permiten hacerlo.
+
+00:01:23.162 --> 00:01:27.382
+Este orden evita recoger veinte
+fuentes que nadie necesita.
+
+00:01:27.387 --> 00:01:31.074
+También permite separar dos
+destinos: una zona que conserva
+
+00:01:31.079 --> 00:01:34.266
+datos en bruto, como el
+lago, y otra preparada para
+
+00:01:34.271 --> 00:01:37.895
+consultar información limpia,
+como el almacén de informes.
+
+00:01:37.900 --> 00:01:40.113
+Ambos pueden convivir.
+
+00:01:41.150 --> 00:01:45.995
+A ese recorrido organizado lo
+llamamos pipeline, o tubería de datos.
+
+00:01:46.000 --> 00:01:51.932
+Recogemos información, la guardamos, la
+procesamos y entregamos un resultado útil.
+
+00:01:51.938 --> 00:01:56.145
+Puede terminar en un panel, una
+tabla de informes o un fichero.
+
+00:01:56.150 --> 00:01:59.770
+¿Por qué copiar los datos fuera
+del programa de recepción?
+
+00:01:59.775 --> 00:02:02.742
+Porque calcular informes
+pesados en el sistema que
+
+00:02:02.747 --> 00:02:05.595
+registra reservas puede
+ralentizar el mostrador.
+
+00:02:05.600 --> 00:02:08.289
+El sistema operativo debe seguir trabajando
+
+00:02:08.294 --> 00:02:11.045
+mientras otro entorno se ocupa del análisis.
+
+00:02:11.050 --> 00:02:13.906
+Separar las fases también facilita encontrar
+
+00:02:13.911 --> 00:02:16.508
+fallos y repetir solo el paso necesario.
+
+00:02:16.512 --> 00:02:20.172
+Y el recorrido se revisa: si
+mañana dirección pregunta por
+
+00:02:20.177 --> 00:02:24.532
+cancelaciones y no tenemos ese campo,
+tendremos que volver al origen.
+
+00:02:24.538 --> 00:02:27.888
+Un pipeline no se diseña una vez para siempre.
+
+00:02:28.940 --> 00:02:32.057
+Dentro de los pipelines encontramos un patrón
+
+00:02:32.062 --> 00:02:35.060
+muy conocido: extraer, transformar y cargar.
+
+00:02:35.065 --> 00:02:38.735
+Son las tres letras de ETL.
+
+00:02:38.740 --> 00:02:42.098
+Extraer consiste en leer los datos del origen.
+
+00:02:42.102 --> 00:02:45.410
+Transformar es prepararlos según unas reglas.
+
+00:02:45.415 --> 00:02:48.885
+Y cargar es escribir el
+resultado en el destino.
+
+00:02:48.890 --> 00:02:52.494
+Por ejemplo: leemos reservas
+y cobros, relacionamos cada
+
+00:02:52.499 --> 00:02:55.910
+reserva con su pago y
+guardamos un resumen por hotel.
+
+00:02:55.915 --> 00:02:58.722
+Las tres acciones aparecen claramente, aunque
+
+00:02:58.728 --> 00:03:01.348
+las hayamos programado en un único script.
+
+00:03:01.353 --> 00:03:03.973
+Ahora fíjate en la diferencia.
+
+00:03:03.978 --> 00:03:09.385
+Toda ETL es un pipeline, porque
+organiza el trabajo por fases.
+
+00:03:09.390 --> 00:03:13.372
+Pero una tubería que únicamente
+recoge eventos y los entrega
+
+00:03:13.377 --> 00:03:16.960
+a una cola no tiene por qué
+realizar una ETL completa.
+
+00:03:16.965 --> 00:03:21.978
+Pipeline es la idea general;
+ETL es un patrón concreto.
+
+00:03:22.980 --> 00:03:27.038
+Para mover un dato, alguien
+tiene que iniciar el intercambio.
+
+00:03:27.042 --> 00:03:30.675
+Si el programa de reservas
+envía un aviso cuando se crea
+
+00:03:30.680 --> 00:03:34.312
+una reserva, hablamos de push:
+el origen empuja el dato.
+
+00:03:34.318 --> 00:03:37.750
+Si nuestro proceso va a buscar
+la tabla a las dos de la
+
+00:03:37.755 --> 00:03:41.188
+madrugada, es pull: el destino
+solicita la información.
+
+00:03:41.192 --> 00:03:45.069
+Y si comprueba una carpeta cada
+quince minutos y descarga solo
+
+00:03:45.074 --> 00:03:49.262
+cuando detecta cambios, está haciendo
+poll, una consulta periódica.
+
+00:03:49.267 --> 00:03:52.000
+No hay una opción ganadora para todo.
+
+00:03:52.005 --> 00:03:56.075
+Depende de lo que permita el
+origen y de cuánto podamos esperar.
+
+00:03:56.080 --> 00:03:59.166
+Además, no confundas quién inicia con el ritmo
+
+00:03:59.171 --> 00:04:01.988
+de procesamiento: son preguntas distintas.
+
+00:04:01.992 --> 00:04:05.742
+En el mismo hotel pueden
+convivir varios mecanismos.
+
+00:04:06.770 --> 00:04:09.078
+Volvamos a la extracción.
+
+00:04:09.082 --> 00:04:14.528
+Podemos leer un fichero, una tabla, una
+interfaz de programación o un mensaje.
+
+00:04:14.532 --> 00:04:19.365
+Lo importante es que la lectura sea
+ligera y no altere los datos operativos.
+
+00:04:19.370 --> 00:04:22.928
+Recepción tiene que seguir
+reservando y cobrando.
+
+00:04:22.932 --> 00:04:25.665
+También comprobamos qué ha llegado.
+
+00:04:25.670 --> 00:04:28.302
+¿Están las columnas necesarias?
+
+00:04:28.308 --> 00:04:30.690
+¿Los importes son números?
+
+00:04:30.695 --> 00:04:34.628
+Si un lote está roto, lo
+apartamos para revisarlo.
+
+00:04:34.632 --> 00:04:39.340
+Que el proceso termine sin errores no
+demuestra que el contenido sea válido.
+
+00:04:39.345 --> 00:04:42.802
+Y distinguimos la primera
+carga de las siguientes.
+
+00:04:42.808 --> 00:04:47.678
+Al empezar quizá necesitemos una foto
+completa de tres años de reservas.
+
+00:04:47.682 --> 00:04:53.352
+Después, lo habitual es traer solo lo
+nuevo o modificado: una carga incremental.
+
+00:04:53.357 --> 00:04:57.095
+Así evitamos repetir cada
+noche un trabajo enorme.
+
+00:04:58.150 --> 00:05:00.370
+Ya tenemos los datos.
+
+00:05:00.375 --> 00:05:02.945
+Ahora toca hacer que encajen.
+
+00:05:02.950 --> 00:05:07.095
+Una fuente escribe el canal en
+mayúsculas y otra en minúsculas.
+
+00:05:07.100 --> 00:05:09.932
+Una reserva aparece dos veces.
+
+00:05:09.938 --> 00:05:12.445
+Un importe llega como texto.
+
+00:05:12.450 --> 00:05:16.420
+Normalizar esos casos forma
+parte de la transformación.
+
+00:05:16.425 --> 00:05:20.559
+Después podemos cruzar reservas y
+cobros mediante el identificador de
+
+00:05:20.564 --> 00:05:25.058
+reserva, filtrar lo que necesita el
+informe y sumar los importes por hotel.
+
+00:05:25.062 --> 00:05:29.320
+Cada decisión debe seguir una
+regla de negocio clara y repetible.
+
+00:05:29.325 --> 00:05:32.076
+Transformar no significa inventar noches que
+
+00:05:32.081 --> 00:05:34.770
+nadie registró ni borrar valores incómodos.
+
+00:05:34.775 --> 00:05:38.145
+Si falta información, hay que detectarlo.
+
+00:05:38.150 --> 00:05:41.816
+Y si el cálculo es pesado,
+conviene separarlo de la recepción
+
+00:05:41.821 --> 00:05:45.912
+inmediata de eventos para que no
+bloquee la entrada de nuevos datos.
+
+00:05:46.940 --> 00:05:51.573
+La carga es el momento de escribir,
+pero no basta con pulsar guardar.
+
+00:05:51.578 --> 00:05:54.585
+El destino tiene sus propias reglas.
+
+00:05:54.590 --> 00:05:57.538
+Puede recibir una inserción masiva en una base
+
+00:05:57.543 --> 00:06:00.298
+de datos o leer ficheros desde una carpeta.
+
+00:06:00.302 --> 00:06:04.883
+Con mucho volumen importan tres decisiones:
+cómo gestionar los índices, cómo
+
+00:06:04.888 --> 00:06:09.710
+repartir los datos en particiones y cuántas
+filas confirmar en cada transacción.
+
+00:06:09.715 --> 00:06:12.542
+Por ejemplo, organizar por fecha puede evitar
+
+00:06:12.547 --> 00:06:15.248
+que una consulta recorra todo el histórico.
+
+00:06:15.253 --> 00:06:18.915
+Una prueba con cien filas sirve
+para comprobar la lógica, pero
+
+00:06:18.920 --> 00:06:22.523
+no demuestra que una carga de
+millones vaya a funcionar bien.
+
+00:06:22.528 --> 00:06:27.690
+Necesitamos pensar tanto en la escritura
+como en las consultas que vendrán después.
+
+00:06:28.770 --> 00:06:33.528
+¿Y si queremos conservar los datos
+originales antes de preparar los informes?
+
+00:06:33.532 --> 00:06:39.790
+Entonces podemos usar ELT: extraer,
+cargar y transformar después.
+
+00:06:39.795 --> 00:06:43.740
+La diferencia está en el orden
+y en dónde hacemos el trabajo.
+
+00:06:43.745 --> 00:06:46.973
+Encaja cuando el destino
+puede guardar datos en bruto
+
+00:06:46.978 --> 00:06:49.840
+y contamos con capacidad para procesarlos allí.
+
+00:06:49.845 --> 00:06:54.456
+Por ejemplo, aterrizamos en un lago y
+transformamos con un motor de cálculo;
+
+00:06:54.461 --> 00:06:58.890
+o cargamos en un almacén analítico
+preparado para trabajar de esta forma.
+
+00:06:58.895 --> 00:07:02.983
+Si mañana cambia la pregunta,
+conservar el bruto puede ahorrarnos
+
+00:07:02.988 --> 00:07:07.265
+una nueva extracción, siempre que
+ya contenga los campos necesarios.
+
+00:07:07.270 --> 00:07:13.265
+ETL sigue siendo útil cuando queremos
+preparar los datos antes de entregarlos.
+
+00:07:13.270 --> 00:07:17.270
+No hay que elegir una sola
+estrategia para toda la empresa.
+
+00:07:18.310 --> 00:07:20.980
+Vamos al taller de los apuntes.
+
+00:07:20.985 --> 00:07:24.127
+Su objetivo es más pequeño
+que el panel de dirección:
+
+00:07:24.132 --> 00:07:27.393
+obtener las reservas del
+canal web que ya tienen cobro.
+
+00:07:27.398 --> 00:07:31.268
+Para ello leemos dos
+ficheros, reservas y cobros.
+
+00:07:31.273 --> 00:07:33.418
+Esa es la extracción.
+
+00:07:33.422 --> 00:07:36.632
+En la transformación filtramos
+el canal web y cruzamos
+
+00:07:36.637 --> 00:07:39.430
+ambos ficheros por el identificador de reserva.
+
+00:07:39.435 --> 00:07:42.518
+El cruce interno, o inner join, conserva solo
+
+00:07:42.523 --> 00:07:45.743
+las reservas que tienen coincidencia en cobros.
+
+00:07:45.748 --> 00:07:49.107
+Si quisiéramos localizar
+impagadas, necesitaríamos
+
+00:07:49.112 --> 00:07:52.068
+otro planteamiento, como un cruce izquierdo.
+
+00:07:52.073 --> 00:07:54.918
+Por último escribimos el resultado.
+
+00:07:54.922 --> 00:07:59.218
+Podemos hacerlo con pandas en
+Python o con consultas en DuckDB.
+
+00:07:59.222 --> 00:08:03.330
+Cambia la herramienta, pero las
+tres acciones son las mismas.
+
+00:08:03.335 --> 00:08:06.460
+La agregación para un
+informe completo es un paso
+
+00:08:06.465 --> 00:08:09.723
+adicional, no el objetivo
+de este primer ejercicio.
+
+00:08:10.770 --> 00:08:14.628
+Elegir el fichero de salida
+también es diseñar la carga.
+
+00:08:14.632 --> 00:08:20.840
+Para ver unas filas en clase, un
+CSV o un JSON resultan cómodos.
+
+00:08:20.845 --> 00:08:25.928
+Pero ojo: no todo fichero con extensión
+JSON tiene la misma estructura.
+
+00:08:25.932 --> 00:08:29.903
+En el ejemplo, pandas escribe
+una lista de registros.
+
+00:08:29.908 --> 00:08:33.218
+La exportación de DuckDB
+utiliza habitualmente un
+
+00:08:33.223 --> 00:08:36.465
+registro por línea, lo
+que conocemos como JSONL.
+
+00:08:36.470 --> 00:08:41.690
+Ambos pueden representar datos parecidos,
+pero no se leen exactamente igual.
+
+00:08:41.695 --> 00:08:46.878
+Para consultas analíticas sobre el lago,
+Parquet permite trabajar por columnas.
+
+00:08:46.882 --> 00:08:51.915
+Si solo necesitamos hotel e importe,
+podemos evitar leer otras columnas.
+
+00:08:51.920 --> 00:08:56.636
+Eso no lo convierte en el sustituto del
+sistema de reservas: consultar grandes
+
+00:08:56.641 --> 00:09:01.120
+conjuntos y actualizar operaciones
+individuales son necesidades distintas.
+
+00:09:02.150 --> 00:09:05.532
+Hasta ahora hemos hablado
+del informe de la mañana.
+
+00:09:05.537 --> 00:09:08.485
+Pero recepción tiene otra
+necesidad: saber si una
+
+00:09:08.490 --> 00:09:11.558
+habitación está libre sin
+esperar al día siguiente.
+
+00:09:11.562 --> 00:09:14.545
+Aquí aparecen dos ritmos distintos.
+
+00:09:14.550 --> 00:09:19.232
+El informe de las ocho puede prepararse
+por lotes, después del cierre.
+
+00:09:19.238 --> 00:09:24.120
+El estado de las habitaciones necesita
+un flujo de eventos con poco retraso.
+
+00:09:24.125 --> 00:09:26.665
+Entre ambos encontramos los microlotes:
+
+00:09:26.670 --> 00:09:29.732
+pequeños bloques procesados cada cierto tiempo.
+
+00:09:29.738 --> 00:09:34.145
+La pregunta clave es cuánto puede
+tardar el dato sin perder utilidad.
+
+00:09:34.150 --> 00:09:37.595
+No necesitas procesamiento continuo para todo.
+
+00:09:37.600 --> 00:09:41.570
+Y tampoco sirve un lote
+nocturno para un aviso urgente.
+
+00:09:41.575 --> 00:09:45.007
+Separar estos recorridos
+simplifica el diseño y permite
+
+00:09:45.012 --> 00:09:48.012
+dedicar recursos a lo que
+realmente lo necesita.
+
+00:09:49.070 --> 00:09:52.074
+Imagina que varios sensores
+envían avisos a la vez
+
+00:09:52.079 --> 00:09:54.852
+y el programa de recepción tarda en atenderlos.
+
+00:09:54.858 --> 00:09:58.763
+Una cola o un bus de mensajes
+permite desacoplar ambos lados:
+
+00:09:58.768 --> 00:10:02.352
+el productor publica y el
+consumidor procesa a su ritmo.
+
+00:10:02.358 --> 00:10:06.940
+Mientras haya capacidad, los mensajes
+pendientes quedan almacenados.
+
+00:10:06.945 --> 00:10:09.890
+Esa función de colchón se llama búfer.
+
+00:10:09.895 --> 00:10:13.184
+La contrapresión es otra
+cosa: un mecanismo que frena
+
+00:10:13.189 --> 00:10:16.540
+o limita la entrada cuando
+el consumidor no da abasto.
+
+00:10:16.545 --> 00:10:20.102
+Guardar más y pedir que
+llegue menos no son lo mismo.
+
+00:10:20.108 --> 00:10:23.590
+También cambia cómo se conservan los mensajes.
+
+00:10:23.595 --> 00:10:28.465
+En una cola clásica suelen retirarse
+después de confirmarse su procesamiento.
+
+00:10:28.470 --> 00:10:33.290
+En un sistema como Kafka pueden mantenerse
+según una política de retención.
+
+00:10:33.295 --> 00:10:36.391
+Aquí estamos resolviendo
+el flujo del semáforo de
+
+00:10:36.396 --> 00:10:39.370
+recepción, no sustituyendo el informe nocturno.
+
+00:10:40.400 --> 00:10:43.708
+Ahora sí tiene sentido hablar de herramientas.
+
+00:10:43.712 --> 00:10:48.845
+Para leer, cruzar y escribir podemos
+usar un script o una herramienta visual.
+
+00:10:48.850 --> 00:10:53.432
+Para desacoplar productores y
+consumidores necesitamos mensajería.
+
+00:10:53.438 --> 00:10:58.182
+Y para coordinar tareas y dependencias
+podemos recurrir a un orquestador.
+
+00:10:58.188 --> 00:11:03.170
+Por eso Pentaho, Kafka y Airflow no
+son tres respuestas intercambiables.
+
+00:11:03.175 --> 00:11:08.358
+Se ocupan de funciones diferentes, aunque
+puedan colaborar en una misma solución.
+
+00:11:08.362 --> 00:11:11.116
+También existen conectores para traer datos de
+
+00:11:11.121 --> 00:11:13.995
+aplicaciones y servicios
+gestionados en la nube.
+
+00:11:14.000 --> 00:11:18.295
+En este tema interesa que sepas
+explicar la familia y su función.
+
+00:11:18.300 --> 00:11:21.909
+Un nombre de producto, sin
+origen, ritmo, destino ni
+
+00:11:21.914 --> 00:11:25.732
+justificación, no describe
+un procedimiento de ingesta.
+
+00:11:25.738 --> 00:11:30.537
+Primero explica qué necesitas resolver;
+después elige con qué hacerlo.
+
+00:11:31.570 --> 00:11:34.978
+Nos queda una parte esencial: la fiabilidad.
+
+00:11:34.982 --> 00:11:38.648
+Si el origen añade una columna
+y nadie se entera, el proceso
+
+00:11:38.653 --> 00:11:42.440
+puede seguir apareciendo en verde
+mientras pierde información.
+
+00:11:42.445 --> 00:11:47.815
+Por eso vigilamos cambios, validamos
+entradas y dejamos registro de lo que ocurre.
+
+00:11:47.820 --> 00:11:50.926
+También necesitamos saber
+de dónde sale una cifra y
+
+00:11:50.931 --> 00:11:53.915
+poder repetir el trabajo
+sin duplicar resultados.
+
+00:11:53.920 --> 00:11:57.251
+Conviene decidir si conservamos
+historial, cómo tratamos
+
+00:11:57.256 --> 00:12:00.765
+las correcciones y qué hacemos
+con un lote que llega tarde.
+
+00:12:00.770 --> 00:12:03.890
+Y no todo dato disponible tiene que entrar.
+
+00:12:03.895 --> 00:12:07.055
+Si el informe no necesita
+una imagen del documento
+
+00:12:07.060 --> 00:12:09.777
+de identidad, no la copiamos por costumbre.
+
+00:12:09.782 --> 00:12:13.359
+Elegir los datos necesarios y
+controlar quién accede a ellos
+
+00:12:13.364 --> 00:12:16.945
+forma parte del diseño, igual
+que el formato o la velocidad.
+
+00:12:18.030 --> 00:12:22.100
+Para terminar, prueba a
+explicar una solución completa.
+
+00:12:22.105 --> 00:12:25.991
+El informe de las ocho puede leer
+por la noche reservas y cobros,
+
+00:12:25.996 --> 00:12:29.762
+preparar un resultado fiable y
+dejarlo en el destino analítico.
+
+00:12:29.767 --> 00:12:33.317
+Los sensores, en cambio,
+pueden publicar eventos para
+
+00:12:33.322 --> 00:12:36.738
+que recepción actualice su
+estado con poco retraso.
+
+00:12:36.742 --> 00:12:41.638
+En cada caso concreta siete
+decisiones: origen, quién inicia,
+
+00:12:41.643 --> 00:12:46.137
+ritmo, transformación, destino,
+formato y justificación.
+
+00:12:46.142 --> 00:12:49.042
+Y comprueba la calidad: una tubería rápida no
+
+00:12:49.047 --> 00:12:52.075
+sirve de mucho si entrega una cifra equivocada.
+
+00:12:52.080 --> 00:12:55.650
+Esa es la idea central de la
+ingesta: hacer que el dato
+
+00:12:55.655 --> 00:12:59.550
+adecuado llegue al lugar adecuado,
+a tiempo y con garantías.
+
+00:12:59.555 --> 00:13:03.312
+Ahora vuelve al taller y a
+las actividades del apartado.
+
+00:13:03.318 --> 00:13:08.255
+Este vídeo te da el recorrido; los
+apuntes y Moodle completan el trabajo.
