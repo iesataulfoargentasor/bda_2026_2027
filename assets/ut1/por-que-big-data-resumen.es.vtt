@@ -1,0 +1,211 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:01.747
+Volvamos a nuestros hoteles.
+
+00:00:02.574 --> 00:00:04.593
+Al principio, un ordenador puede ser
+
+00:00:04.605 --> 00:00:06.600
+suficiente para gestionar los datos.
+
+00:00:07.430 --> 00:00:09.533
+Pero llegan más reservas, sensores
+
+00:00:09.545 --> 00:00:10.663
+y registros de la web.
+
+00:00:11.516 --> 00:00:13.055
+¿Necesitamos ya Big Data?
+
+00:00:13.896 --> 00:00:15.170
+No necesariamente.
+
+00:00:16.024 --> 00:00:18.163
+Primero hay que comprobar si el sistema sigue
+
+00:00:18.175 --> 00:00:21.012
+trabajando bien, a tiempo y con un coste razonable.
+
+00:00:21.853 --> 00:00:23.932
+Si deja de hacerlo, toca replantear
+
+00:00:23.944 --> 00:00:26.312
+cómo guardamos y procesamos la información.
+
+00:00:27.141 --> 00:00:28.500
+Pensad en una reserva.
+
+00:00:29.329 --> 00:00:31.108
+Guardarla es solo el comienzo.
+
+00:00:31.937 --> 00:00:33.992
+Al ordenar muchas reservas podemos ver
+
+00:00:34.004 --> 00:00:36.372
+que algunos martes quedan habitaciones vacías.
+
+00:00:37.189 --> 00:00:39.882
+Investigamos qué ocurre, probamos una oferta
+
+00:00:39.894 --> 00:00:41.793
+y comprobamos si mejora el resultado.
+
+00:00:42.622 --> 00:00:44.581
+Ese es el viaje del dato al valor.
+
+00:00:45.423 --> 00:00:47.742
+Y cuidado: lo que funciona en Laredo durante
+
+00:00:47.754 --> 00:00:50.302
+agosto puede no servir en Potes durante noviembre.
+
+00:00:51.144 --> 00:00:54.028
+Para entender las dificultades usamos las cinco uves.
+
+00:00:54.882 --> 00:00:57.009
+Las tres primeras son muy intuitivas.
+
+00:00:57.850 --> 00:01:00.098
+Volumen: cuántos datos acumulamos.
+
+00:01:00.927 --> 00:01:02.730
+Velocidad: a qué ritmo llegan y
+
+00:01:02.742 --> 00:01:04.870
+cuánto podemos esperar para utilizarlos.
+
+00:01:05.735 --> 00:01:07.718
+Variedad: no es lo mismo una tabla de
+
+00:01:07.730 --> 00:01:09.810
+reservas que una foto o un comentario.
+
+00:01:10.639 --> 00:01:12.538
+Incluso dos tablas pueden escribir
+
+00:01:12.550 --> 00:01:14.149
+las fechas de forma diferente.
+
+00:01:15.002 --> 00:01:17.105
+Las otras dos uves son esenciales.
+
+00:01:17.959 --> 00:01:20.759
+Veracidad significa poder fiarnos de los datos: un
+
+00:01:20.771 --> 00:01:23.091
+cobro duplicado no puede contarse dos veces.
+
+00:01:23.932 --> 00:01:27.081
+Valor significa que el resultado sirve para algo, como
+
+00:01:27.093 --> 00:01:30.254
+preparar el cierre más rápido o reducir habitaciones vacías.
+
+00:01:31.084 --> 00:01:33.680
+Guardar más y más información, sin saber para
+
+00:01:33.692 --> 00:01:35.963
+qué, solo aumenta el trabajo y el coste.
+
+00:01:36.805 --> 00:01:39.016
+Con los datos preparados podemos hacer cuatro
+
+00:01:39.028 --> 00:01:41.072
+preguntas: qué pasó, por qué pasó,
+
+00:01:41.288 --> 00:01:43.211
+qué podría pasar y qué conviene hacer.
+
+00:01:44.052 --> 00:01:45.843
+Son las analíticas descriptiva,
+
+00:01:45.988 --> 00:01:48.307
+diagnóstica, predictiva y prescriptiva.
+
+00:01:49.149 --> 00:01:52.490
+Por ejemplo: observar una bajada de ocupación, investigar
+
+00:01:52.502 --> 00:01:56.228
+sus motivos, estimar el próximo martes y comparar promociones.
+
+00:01:57.057 --> 00:01:59.413
+Eso sí: una predicción no es una certeza,
+
+00:01:59.617 --> 00:02:01.889
+y una coincidencia no demuestra una causa.
+
+00:02:02.718 --> 00:02:04.377
+Y aquí conviene separar ideas.
+
+00:02:05.218 --> 00:02:07.274
+La minería de datos busca patrones.
+
+00:02:08.127 --> 00:02:09.569
+La ciencia de datos plantea
+
+00:02:09.581 --> 00:02:12.165
+preguntas, analiza y explica resultados.
+
+00:02:12.995 --> 00:02:15.687
+La inteligencia artificial permite crear sistemas
+
+00:02:15.699 --> 00:02:18.572
+que recomiendan, reconocen imágenes o responden.
+
+00:02:19.413 --> 00:02:22.274
+Se relacionan, pero no son sinónimos de Big Data.
+
+00:02:23.115 --> 00:02:25.170
+También podemos hacer estos trabajos con
+
+00:02:25.182 --> 00:02:27.033
+pocos datos y un solo ordenador.
+
+00:02:27.850 --> 00:02:29.918
+En este módulo os ocuparéis sobre todo
+
+00:02:29.930 --> 00:02:31.444
+de que los datos estén listos:
+
+00:02:31.576 --> 00:02:35.326
+reunirlos, limpiarlos, guardarlos y entregarlos a tiempo.
+
+00:02:36.156 --> 00:02:38.307
+Esa es la labor del ingeniero de datos.
+
+00:02:39.149 --> 00:02:41.108
+El arquitecto diseña el conjunto y
+
+00:02:41.120 --> 00:02:44.245
+el analista prepara información comprensible para dirección.
+
+00:02:45.086 --> 00:02:47.201
+Todos necesitan una base fiable; un
+
+00:02:47.213 --> 00:02:49.677
+gráfico bonito no arregla datos incorrectos.
+
+00:02:50.519 --> 00:02:52.598
+Quedaos con esto: antes de elegir una
+
+00:02:52.610 --> 00:02:55.206
+herramienta, preguntad qué queremos mejorar, qué
+
+00:02:55.218 --> 00:02:58.067
+dificultad tenemos y cuándo necesitamos la respuesta.
+
+00:02:58.896 --> 00:03:00.879
+A veces bastará un ordenador; otras
+
+00:03:00.891 --> 00:03:02.382
+habrá que repartir el trabajo.
+
+00:03:03.211 --> 00:03:04.990
+Y no todo tiene que ser inmediato.
+
+00:03:05.819 --> 00:03:08.379
+El objetivo es conseguir información fiable,
+
+00:03:08.476 --> 00:03:11.180
+comprensible y útil, justo cuando hace falta.
