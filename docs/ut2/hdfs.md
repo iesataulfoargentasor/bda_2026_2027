@@ -12,13 +12,15 @@ El **Hadoop Distributed File System** es la capa de almacenamiento de Hadoop: un
 
 Cumple de golpe varios criterios del RA2: **deposita cualquier fichero** (a), **tolera** que se muera un disco (c), **guarda ahora y lees después** (d) y **crece** añadiendo *datanodes* (e). El [2.2](ecosistema.md) os dejó el clúster y YARN; aquí el oficio es **el disco del hotel**.
 
-HDFS **reparte** los ficheros entre todos los nodos: los corta en **bloques** (por defecto **128 MB**) y guarda **copias** en máquinas distintas. El valor de fábrica del **factor de réplica** es **3**.
+HDFS **reparte** los ficheros entre todos los nodos: los corta en **bloques** (por defecto **128 MiB**) y guarda **copias** en máquinas distintas. El valor de fábrica del **factor de réplica** es **3**.
 
-Añadir un servidor incrementa el tamaño **de forma lineal**: el nodo nuevo suma **capacidad** y **redundancia**. No reescribís el programa de reservas.
+Añadir un DataNode aporta capacidad física. La capacidad útil depende de la replicación, el espacio reservado y el equilibrio entre nodos. El factor de réplica no aumenta automáticamente: un nodo nuevo permite alojar bloques y redistribuirlos, pero hay que comprobar el balanceo.
 
 El diseño es **append**: escribís el fichero (a mano con `hdfs dfs -put`, o desde Spark, Flume o Sqoop; [1.6](../ut1/ingesta.md)), podéis **añadir al final** y podéis **borrarlo**. No editáis el byte 17 del medio. En clase se resume como **WORM** (*write once, read many*): un bloque cerrado se lee muchas veces y no se reescribe. Añadir al final no es un `UPDATE` de una fila.
 
 ## Qué no hace bien (y qué sí)
+
+Relacionad el acceso con la herramienta. El informe nocturno recorre muchos registros secuencialmente: encaja en HDFS. Recepción busca y modifica una reserva concreta en milisegundos: necesita un motor de base de datos. HDFS conserva los ficheros sobre los que ese motor o un procesamiento analítico puede trabajar; no ofrece por sí solo consultas por `id_reserva`.
 
 No ofrece buen rendimiento para:
 
@@ -36,20 +38,24 @@ No hay un `UPDATE` fila a fila. El fichero admite **añadir al final** o **borra
 
 ## Bloques
 
-Un **bloque** es la cantidad **mínima** que HDFS lee o escribe. El tamaño por defecto es **128 MB** porque Hadoop está pensado para ficheros **grandes**.
+Si guardamos un fichero de 600 MiB con bloques de 128 MiB, se divide en cuatro bloques de 128 MiB y uno de 88 MiB. Con replicación 3 se solicitan tres copias de cada bloque: aproximadamente 1800 MiB de contenido físico, más metadatos y otros costes. El último bloque no reserva necesariamente 128 MiB completos para almacenar solo 88 MiB.
 
-Todos los ficheros se parten. Subís `reservas_2024.parquet` de **600 MB** → **5** bloques (4 × 128 MB + un resto). Esos bloques se **reparten** por los DataNodes.
+Una réplica no es un fragmento diferente: cada copia permite reconstruir **el mismo bloque**. Para leer el fichero completo necesitamos una copia accesible de **cada** bloque.
 
-Si el fichero es **menor** de 128 MB, ocupa **un** bloque **lógico**, pero en disco solo los **bytes reales**. Un archivo de 1 MB ocupa **1 MB** en disco, no 128. El “hueco” de 127 MB no se reserva.
+Un **bloque** es la unidad en que HDFS organiza la ubicación y replicación de un fichero. El tamaño habitual por defecto es **128 MiB** (134 217 728 bytes). No es la cantidad mínima de una lectura: un cliente puede pedir solo parte de un bloque. Los paquetes de transferencia y los fragmentos usados para checksum son unidades distintas.
 
-Con factor de réplica **3**, el de 600 MB (5 bloques) se materializa en **15** copias de bloque en el clúster.
+Todos los ficheros se parten. Subís `reservas_2024.parquet` de **600 MiB** → **5** bloques (4 × 128 MiB + un resto). Esos bloques se **reparten** por los DataNodes.
+
+Si el fichero es **menor** de 128 MiB, ocupa **un** bloque **lógico**, pero en disco solo los **bytes reales**. Un archivo de 1 MB almacena aproximadamente **1 MB por réplica**, más metadatos y checksums; no reserva un bloque completo de 128 MiB.
+
+Con factor de réplica **3**, el de 600 MiB (5 bloques) se materializa en **15** copias de bloque en el clúster.
 
 ```mermaid
 flowchart LR
-  F["reservas_2024.parquet 600 MB"] --> B1[Bloque 1 128 MB]
-  F --> B2[Bloque 2 128 MB]
-  F --> B3[Bloque 3 128 MB]
-  F --> B4[Bloque 4 128 MB]
+  F["reservas_2024.parquet 600 MiB"] --> B1[Bloque 1 128 MiB]
+  F --> B2[Bloque 2 128 MiB]
+  F --> B3[Bloque 3 128 MiB]
+  F --> B4[Bloque 4 128 MiB]
   F --> B5[Bloque 5 resto]
   B1 --> R1[3 réplicas]
   B2 --> R2[3 réplicas]
@@ -90,6 +96,18 @@ flowchart TB
 Con réplica 3, HDFS suele dejar **dos** copias en un rack y **una** en **otro**. Si se cae el *switch* del armario de Laredo, queda una copia en Potes.
 
 ## Trabajando con HDFS (`hdfs dfs`)
+
+Distinguid el sistema local del contenedor y el sistema distribuido. En `hdfs dfs -put reservas.csv /user/bda/`, el primer argumento es un fichero local; el segundo es una ruta HDFS. En `-cp`, ambos argumentos son HDFS. En `-get`, copiamos de HDFS al entorno local desde el que ejecutamos el comando.
+
+En el Compose, `/practicas` está montado solo para lectura. Para las descargas y pruebas que escriben ficheros locales, preparad un directorio de trabajo escribible en el Bash del NameNode:
+
+```bash
+mkdir -p /tmp/practica-hdfs
+cp /practicas/reservas.csv /practicas/opiniones.txt /tmp/practica-hdfs/
+cd /tmp/practica-hdfs
+```
+
+Los ficheros de `/tmp` no son los del host. Si queréis conservar una descarga fuera del contenedor, usad `docker compose cp namenode:/tmp/practica-hdfs/fichero .` desde el host, sustituyendo `fichero` por su nombre real.
 
 Desde el terminal se usa el comando `hdfs` y un segundo parámetro. Ante la duda: [documentación oficial de la *shell*](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html).
 
@@ -149,20 +167,20 @@ hdfs dfs -get /user/bda/datos/reservas_backup.csv ./reservas_local.csv
 | `-ls` | Lista (tamaño, réplica, fecha, ruta) |
 | `-count` | Número de directorios, de ficheros y **bytes** |
 | `-mv` | Renombra / mueve **dentro** de HDFS (no baja al PC) |
-| `-head` | Primeras líneas; no tragáis un Parquet de 8 TB |
+| `-head` | Primeros 1024 bytes; útil para texto, no para interpretar un Parquet binario |
 | `-get` | Copia al disco **local** |
 
 `hdfs dfs -cat /user/bda/datos/reservas.csv | more` pagina en el terminal. `-text` intenta mostrar también formatos que `-cat` deja crudos.
 
 ### CRC: el viaje no corrompió
 
-Al bajar podéis pedir el fichero de *checksum* **CRC** para comprobar que los bytes del DataNode coinciden con los del portátil:
+Las lecturas HDFS comprueban checksums de forma habitual. La opción `-crc` de una descarga conserva además un fichero local de checksum; no es lo que activa por primera vez la verificación:
 
 ```text
 hdfs dfs -get -crc /user/bda/datos/reservas.csv reservas_local.csv
 ```
 
-Aparece un `.crc` junto a la copia. Si no cuadra, el viaje (o el disco) mintió. El DataNode **ya** guarda un CRC de cada bloque; esto es la comprobación **en el cliente**.
+Aparece un fichero oculto de nombre semejante a `.reservas.csv.crc` junto a la copia. HDFS mantiene checksums de fragmentos del contenido y puede detectar corrupción. El checksum detecta diferencias; no permite reconstruir por sí solo los bytes correctos: para eso necesitamos una réplica sana.
 
 ## NameNode y DataNode (en profundidad)
 
@@ -177,9 +195,11 @@ Aparece un `.crc` junto a la copia. Si no cuadra, el viaje (o el disco) mintió.
 
 Cuando un cliente quiere leer o escribir, el NameNode le dice **en qué nodos** está el bloque. También vigila que los nodos **no estén caídos** y que la réplica se **mantenga**.
 
-Orden de magnitud de industria (para situar, no para memorizar): un clúster publicado de Facebook anduvo por **1 100** máquinas, **8 800** nodos y del orden de **12 PB**. El hotel de aula no es eso; el **oficio** del NameNode sí.
+La memoria del NameNode depende especialmente del número de ficheros y bloques, no solo de los terabytes. Un millón de ficheros diminutos puede exigir muchos más metadatos que unos pocos ficheros grandes con los mismos bytes. Por eso agrupar eventos en ficheros razonables forma parte del diseño.
 
 ### Secondary NameNode
+
+El nombre induce a error: **no es un NameNode de reserva que tome el mando automáticamente**. Su función de checkpoint combina la imagen de metadatos y las operaciones acumuladas. La alta disponibilidad utiliza NameNodes activo y standby con configuración específica. Confundir ambos mecanismos llevaría a atribuir al laboratorio una recuperación que no tiene.
 
 - Guarda copias de trabajo de **`fsimage`** (foto del árbol) y **`edits`** (diario de cambios, *deltas*).
 - **No** es un nodo de respaldo en caliente. Si el NameNode muere, el Secondary **no** toma el relevo solo.
@@ -193,13 +213,15 @@ Confusión clásica de examen: *Secondary* ≠ *standby*. El standby de HA es **
 - Almacena y lee bloques. Los clientes (y el NameNode) los **recuperan** por dirección.
 - **Reportan** al NameNode la lista de bloques que tienen (*block report*) y un *heartbeat* (“sigo vivo”).
 - Pueden usar **varios discos** (JBOD, [2.2](ecosistema.md)).
-- Guardan un **checksum (CRC)** de cada bloque. Si no cuadra al leer, el cliente prueba **otra** réplica y se informa al maestro.
+- Guardan **checksums (CRC)** de fragmentos del contenido de los bloques. Si no cuadra al leer, el cliente prueba **otra** réplica y se informa al maestro.
 
 ### Racks
 
 Los DataNodes se organizan en **racks** (armarios). Rack 1: nodos de Laredo y Noja; rack 2: Potes y Comillas. Colocar réplicas en **racks distintos** evita perder el bloque si se cae un *switch* entero. Eso es tolerancia a fallos (c) a escala de **edificio**, no solo de disco.
 
 ## Proceso de lectura
+
+Separad el **camino de metadatos** del **camino de datos**. El NameNode informa de qué bloques componen el fichero y dónde hay copias. Los bytes viajan directamente desde los DataNodes al cliente. Así el coordinador no tiene que transportar todas las lecturas del clúster.
 
 Los bytes **no** pasan por el NameNode. El cliente lee **directo** del DataNode. Por eso HDFS **escala**: el tráfico se **reparte**.
 
@@ -232,6 +254,10 @@ Si hay error de red o de **checksum**, el flujo prueba el **siguiente** nodo má
 
 ## Proceso de escritura
 
+El cliente solicita crear el fichero y recibe destinos para el primer bloque. Envía paquetes al primer DataNode y estos se propagan por la cadena de réplicas. Las confirmaciones vuelven hacia el cliente. El NameNode decide ubicación y mantiene metadatos; no es una estación intermedia por la que pasan todos los bytes.
+
+Si un miembro de la cadena falla, el sistema intenta continuar con los destinos disponibles y recuperar el nivel de réplica. Eso requiere nodos sanos y espacio: solicitar factor 3 con un único DataNode no crea tres máquinas ni garantiza tres copias independientes.
+
 La creación, la tubería de réplicas y el cierre:
 
 ```mermaid
@@ -261,6 +287,8 @@ Si un nodo de la tubería muere, HDFS **elige otro** y sigue. No “se pierde la
 
 ## HDFS por dentro (metadatos)
 
+La imagen del sistema de ficheros y el registro de operaciones permiten reconstruir nombres, permisos y asociación con bloques. Los informes de los DataNodes permiten conocer las ubicaciones actuales. Por eso copiar solo un directorio de bloques no equivale a tener una copia utilizable de todo el sistema: los metadatos también importan.
+
 Los cambios del clúster viven en ficheros del NameNode. La carpeta se configura en `$HADOOP_HOME/etc/hadoop/hdfs-site.xml` (en el [compose del 2.2](../assets/practicas/hotel-hadoop/config.env) el espíritu es el mismo: `dfs.namenode.name.dir`).
 
 ```xml
@@ -284,7 +312,11 @@ Al **arrancar**, HDFS carga en RAM el último `fsimage` más los `edits` que aú
 
 ### Bloques en disco: `fsck` y el `blk_*`
 
-Para **ver** bloques hace falta un fichero que **ocupe más de 128 MB**. El [reservas.csv](../assets/practicas/hotel-hadoop/reservas.csv) de aula cabe en **un** bloque: útil para comandos, pobre para `fsck`. Generad uno grande en local (no va a git) con [generar_reservas_grandes.py](../assets/practicas/hotel-hadoop/generar_reservas_grandes.py) o usad un Parquet de prácticas que ya pese.
+`fsck` inspecciona salud y ubicación; no sustituye una copia de seguridad ni repara cualquier problema. **Under-replicated** significa que hay menos copias que las solicitadas, pero puede seguir habiendo una legible. **Missing** indica que faltan copias disponibles de algún bloque. Anotad cuál de las dos situaciones aparece antes de concluir que se perdió el fichero.
+
+Los identificadores y rutas que siguen son ejemplos de una instalación. En el Compose consultad `hdfs getconf -confKey dfs.datanode.data.dir`; la ruta configurada es `/tmp/hadoop-root/dfs/data`. No editéis directamente `blk_*`: usad la API de HDFS.
+
+Para **ver varios bloques** con el tamaño predeterminado hace falta un fichero que **ocupe más de 128 MiB**. El [reservas.csv](../assets/practicas/hotel-hadoop/reservas.csv) de aula cabe en **un** bloque: útil para comandos, pobre para `fsck`. Generad uno grande en local (no va a git) con [generar_reservas_grandes.py](../assets/practicas/hotel-hadoop/generar_reservas_grandes.py) o usad un Parquet de prácticas que ya pese. En el host, desde `docs/assets/practicas/hotel-hadoop`, podéis ejecutar `python generar_reservas_grandes.py --lineas 4500000`. Anotad el tamaño que imprime; ajustad las filas si necesitáis más bloques. Dentro del NameNode, el fichero estará en `/practicas/reservas_grandes.csv`: ejecutad el siguiente `-put` desde `/practicas` o utilizad esa ruta absoluta.
 
 ```text
 hdfs dfs -mkdir -p /user/bda/prueba-hdfs
@@ -398,6 +430,8 @@ ApplicationMaster (por job)
 
 ## Administración
 
+Antes de cambiar parámetros, recoged una línea base: DataNodes vivos, capacidad disponible y bloques con réplica insuficiente. Después de añadir un nodo, comparad esos valores. El nodo aporta capacidad; el reparto de datos existentes puede requerir balanceo. Un factor de replicación mayor consume más espacio, y no puede satisfacerse si no hay suficientes destinos independientes.
+
 | Comando | Oficio |
 | --- | --- |
 | `hdfs dfsadmin -report` | Resumen (capacidad, nodos vivos). Parecido a la UI |
@@ -421,7 +455,7 @@ hdfs dfsadmin -safemode leave
 
 ### Snapshots (foto del lago)
 
-Una *snapshot* guarda **cómo estaba** una carpeta en un instante (copia de seguridad lógica, no un zip en el armario). Primero se **habilita** sobre la carpeta; luego se **crea** la foto.
+Una *snapshot* conserva la vista de una carpeta en un instante mediante referencias a bloques. Permite recuperar cambios y borrados mientras se conserva el almacenamiento, pero **no es una copia independiente del clúster**: perder sus discos puede hacer perder también las snapshots. Primero se **habilita** sobre la carpeta; luego se **crea** la foto.
 
 ```text
 hdfs dfsadmin -allowSnapshot /user/bda/datos
@@ -459,22 +493,27 @@ Criterio **c)** en versión “me equivoqué al borrar”, no solo “se fundió
 
 ## UI del NameNode (puerto 9870)
 
+La UI sirve para inspeccionar estado y metadatos. Poder abrirla no demuestra que podamos leer bloques desde el navegador: las operaciones WebHDFS pueden redirigir al DataNode. En este Compose sus nombres y puertos son internos. Para los ejercicios de lectura y escritura utilizad `hdfs dfs` dentro de la red del laboratorio.
+
+Los cambios de propietario siguientes los ejecuta el administrador HDFS. Deben adaptarse al usuario que realiza la operación; no se resuelve un problema de permisos dando escritura universal a todos.
+
 El explorador (`http://localhost:9870/explorer.html#/`) navega el árbol. Si creáis o borrais **desde el navegador** y sale:
 
 ```text
 Permission denied: user=dr.who, access=WRITE, inode="/":...:supergroup:drwxr-xr-x
 ```
 
-el usuario HTTP por defecto es **`dr.who`**, no el vuestro. Dos salidas de aula:
+el usuario HTTP estático habitual es **`dr.who`**. Para que las operaciones de la UI utilicen `bda`, el administrador debe preparar la carpeta y configurar ese usuario:
 
-1. Una carpeta **escribible** para prácticas web:
+1. Preparar una carpeta propiedad de `bda`:
 
 ```text
 hdfs dfs -mkdir -p /user/bda/pruebas
-hdfs dfs -chmod 777 /user/bda/pruebas
+hdfs dfs -chown bda /user/bda/pruebas
+hdfs dfs -chmod 750 /user/bda/pruebas
 ```
 
-2. O fijar el usuario estático en `core-site.xml` y **reiniciar**:
+2. Fijar el usuario estático en `core-site.xml` y reiniciar el servicio correspondiente:
 
 ```xml
 <property>
@@ -483,7 +522,7 @@ hdfs dfs -chmod 777 /user/bda/pruebas
 </property>
 ```
 
-(El valor es el usuario de **vuestra** VM, no el de otro ciclo.) Las operaciones web las hace ese usuario, grupo `supergroup`.
+El usuario y sus grupos efectivos deben coincidir con los permisos de la carpeta. Este cambio de identidad no resuelve por sí solo la conectividad con los DataNodes ni sustituye autenticación en un despliegue real.
 
 La UI sirve para *ver* bloques y réplicas. El examen oral se aguanta **sin** ella; el lab, no.
 
@@ -500,7 +539,7 @@ pip install hdfs
 ```python
 from hdfs import InsecureClient
 
-cliente = InsecureClient("http://localhost:9870", user="bda")
+cliente = InsecureClient("http://namenode:9870", user="bda")
 
 with cliente.read("/user/bda/opiniones.txt") as r:
     texto = r.read()
@@ -509,9 +548,11 @@ print(texto[:200])
 cliente.write("/user/bda/mini.csv", "hotel,noches\nLaredo,3\n", overwrite=True)
 ```
 
-Sin Kerberos: `InsecureClient`. El *host* es el del aula (en Docker, `localhost` desde el Windows si publicasteis **9870**).
+Sin Kerberos usamos `InsecureClient` en una red de aula controlada. Este código debe ejecutarse en un entorno que resuelva y alcance tanto `namenode:9870` como los DataNodes a los que redirige WebHDFS. **Publicar solo 9870 en Windows no basta para leer o escribir datos**. El usuario `bda` debe tener permisos sobre la ruta. El docente puede proporcionar un entorno cliente conectado a la red Docker; no se presupone que el host tenga esa configuración.
 
 ### PyArrow (RPC nativo)
+
+Esta ampliación requiere más que `pip install`: el entorno necesita Java, bibliotecas Hadoop como `libhdfs`, classpath y conectividad con NameNode y DataNodes. Utilizad un entorno de cliente Hadoop preparado por el docente. Un error al cargar `libhdfs` indica una dependencia local; uno de conexión indica red o servicio. Son diagnósticos diferentes.
 
 Es la vía más usada cuando Python **ve** las librerías de Hadoop: rendimiento y Parquet/Avro. [hdfs_hotel.py](../assets/practicas/hotel-hadoop/hdfs_hotel.py).
 
@@ -532,7 +573,7 @@ from pyarrow import fs
 hdfs = fs.HadoopFileSystem(host="namenode", port=8020)
 
 with hdfs.open_input_stream("/user/bda/opiniones.txt") as reader:
-    print(reader.read().decode("utf-8")[:200])
+    print(reader.read(200).decode("utf-8", errors="replace"))
 
 df = pd.DataFrame(
     {"hotel": ["Laredo", "Potes"], "noches": [12, 9], "canal": ["web", "ota"]}
@@ -562,6 +603,8 @@ Otras librerías (las citáis, no las certificáis): **mrjob** (MapReduce en loc
 
 ## Hue
 
+Hue añade una interfaz web para personas; no reemplaza el sistema de almacenamiento ni aumenta sus garantías. Una operación que falla por permisos desde consola puede fallar también desde Hue. Al observar una pantalla, identificad siempre qué servicio ejecuta la consulta y con qué usuario.
+
 **Hue** (*Hadoop User Experience*) es un front-end web: HDFS, Hive, jobs… más amable que la *shell*. En muchas VM de ciclo viene instalado (`/opt/hue-…`); arranque típico:
 
 ```text
@@ -585,7 +628,7 @@ Añadís un DataNode, lo dais de alta, y el **equilibrador** mueve bloques hacia
 Dejáis el bruto en `/user/bda/crudo/`. En 2027 Spark lee solo `hotel` e `importe`. No fijasteis un esquema rígido el día 1: **esquema al leer**.
 
 !!! tip "Comprobar tolerancia (c)"
-    En un lab **controlado** y con permiso: subid un fichero, mirad `hdfs fsck` o la UI, **parad** un DataNode de prueba y verificad que el fichero **sigue leyéndose** (réplica ≥ 2). Con réplica 1 (Docker de un nodo) **no** podéis demostrar eso: el bloque se queda *under-replicated* o se pierde. Decidlo en voz alta.
+    En un lab **controlado** y con permiso: subid un fichero, mirad `hdfs fsck` o la UI, **parad** un DataNode de prueba y verificad que el fichero **sigue leyéndose** (réplica ≥ 2). Con réplica 1 (Docker de un nodo) **no** podéis demostrar eso: al detener el único DataNode, el bloque queda inaccesible; si además se pierde su almacenamiento, puede perderse el contenido. Decidlo en voz alta.
 
 ## Relación con el RA2
 
@@ -608,6 +651,14 @@ Copiad el comando y, si lo piden, captura.
 3. **Snapshots (opcional).** `/user/bda/snaps` → `allowSnapshot` → subid `reservas.csv` y una copia → *snapshot* `ss1` → borrad los CSV → recuperad desde `.snapshot/ss1` → *snapshot* `ss2` → `ls` de la carpeta y de `.snapshot`. Justificad qué hay en cada foto.
 4. **Por dentro (opcional).** Leed `hdfs-site.xml` (carpeta del NameNode). Listad `current/`. Mirad el id de `VERSION`. `safemode enter` → comprobad la UI → `saveNamespace` → `safemode leave` → ¿hay un `fsimage` nuevo?
 5. **Python.** Con PyArrow (o HdfsCLI si no hay *classpath*): conectar, leer `opiniones.txt`, imprimir las primeras 100 letras, crear un `DataFrame` con tres filas del hotel (vuestro nombre en una) y guardar **Parquet** en `/user/bda/hoteles.parquet`.
+
+### Evidencias y límites de la práctica
+
+Para cada ejercicio entregad **estado inicial → operación → resultado → explicación**. En comandos, verificad contenido y rutas; en snapshots, comparad antes y después del borrado; en lectura, indicad quién transporta los bytes.
+
+La tolerancia a fallos de bloques necesita **al menos dos DataNodes y réplicas realmente ubicadas en ambos**. Comprobad las ubicaciones con `fsck` antes de detener uno. Con el Compose básico, réplica 1, detener el único DataNode deja los datos temporalmente inaccesibles: no demuestra recuperación por réplica. Reiniciarlo con su volumen intacto recupera disponibilidad; perder el volumen puede perder los datos. La prueba de elección de primario se realiza en el [replica set del 2.8](replicas-shards.md).
+
+Al concluir, distinguíd qué habéis observado y qué comportamiento solo habéis explicado a partir del diseño.
 
 ## Referencias
 

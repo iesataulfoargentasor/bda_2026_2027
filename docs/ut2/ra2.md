@@ -27,9 +27,23 @@ Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **507
 
 En la [UT1](../ut1/ra1.md) **diseñabas** la solución (dónde guardar, cómo ingerir, en qué formato, cómo presentar). Aquí **gestionas el sistema** que aguanta el volumen: el clúster de ficheros, el modelo *map* / *reduce*, las familias NoSQL y cómo se **replican** y **parten**.
 
-La [tarea de los 500 GB](../ut1/tarea-clase.md) era el puente: un portátil no basta; hace falta un almacén que crezca **añadiendo máquinas**.
+La [tarea de los 500 GB](../ut1/tarea-clase.md) sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.
 
 !!! note "Cómo se evalúa"
     Debes poder **decir** por qué HDFS o Mongo, **mostrar** (en el lab) que un nodo caído no pierde el dato, **lanzar** un job que parte el trabajo y **justificar** que mañana se añade un disco o un *shard* sin rediseñar el hotel. Las entregas siguen en Moodle.
 
     Para practicar: [autoevaluación de la UT2](autoevaluacion.md).
+
+## Evidencias que conectan teoría y práctica
+
+| Criterio | Evidencia útil | Conclusión que debe evitarse |
+| --- | --- | --- |
+| a) | Relacionar formatos, volumen, consultas y plazo del cierre | «Muchos datos» sin medir ni explicar la carga |
+| b) | Job, tareas observadas, resultado contrastado y tiempos comparables | Una agregación standalone demuestra distribución |
+| c) | Estado inicial, fallo concreto, continuidad o interrupción y recuperación | Tres contenedores protegen frente a perder el ordenador |
+| d) | Reutilizar datos conservados con metadatos y lectores compatibles | Capacidad literalmente infinita o ausencia de reglas |
+| e) | Mostrar el recurso añadido y qué capacidad o función aporta | Añadir cualquier nodo duplica siempre el rendimiento |
+
+El enunciado oficial se conserva arriba. Su aplicación práctica exige concretar recursos, fallos y límites: «sin fallos» no significa que el hardware nunca falle, sino diseñar y probar la respuesta del sistema a los fallos previstos.
+
+La evaluación reúne explicación y observación. Si una ampliación no puede ejecutarse en el entorno disponible, documenta esa limitación y el experimento necesario; no presentes una predicción como un resultado medido.

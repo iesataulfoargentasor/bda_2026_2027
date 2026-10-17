@@ -24,11 +24,13 @@ El criterio **a)** del RA2 aquí: estas bases **depositan** formas raras (JSON, 
 
 Si lo definimos en serio: NoSQL es un conjunto de tecnologías para procesar conjuntos grandes de datos dando **prioridad al rendimiento, la fiabilidad y la agilidad**.
 
-El acrónimo suena a “cualquier cosa que no sea relacional y no hable SQL”. En la práctica el *No* es **not only**: sistemas **complementarios** al SGBD relacional. Priorizan **escala y disponibilidad** frente a la atomicidad y la consistencia *estrictas* de cada escritura.
+El acrónimo suena a “cualquier cosa que no sea relacional y no hable SQL”. En la práctica el *No* es **not only**: sistemas **complementarios** al SGBD relacional. Sus garantías varían: algunas priorizan disponibilidad, otras ofrecen lecturas fuertes y transacciones. **NoSQL describe una familia de modelos, no una renuncia universal a ACID**.
 
 Hay **más de una manera** de resolver el problema. A veces la mejor herramienta es PostgreSQL (cobrar, stock de minibar). A veces es Mongo (reserva con extras que cambian). A veces Redis (sesión). NoSQL no **sustituye** la caja: **amplía** el ecosistema. Eso se llama a menudo **persistencia políglota**: cada pregunta, su almacén.
 
 ### ACID (el listón del relacional)
+
+ACID describe propiedades de una **transacción**, también disponible en ciertos motores NoSQL. La consistencia de ACID significa respetar invariantes, como que una cantidad no sea negativa. La C de CAP, que veremos después, se refiere a la visión de las operaciones entre nodos; son conceptos distintos.
 
 Las relacionales ofrecen **transaccionalidad** con [ACID](../ut1/almacenamiento.md). En el hotel: transferir un depósito de la fianza a la cuenta de Laredo son **dos** cambios. O salen los dos o no sale ninguno.
 
@@ -54,27 +56,31 @@ Más abajo cada modelo se desarrolla. Elegir “NoSQL” sin decir **cuál** es 
 
 ## Siete características (frente al relacional)
 
-1. **Esquema flexible.** No exigen un contrato fijo al guardar. Tragan estructurado, semiestructurado y sin estructurar. Empiezas con `hotel` y `noches`; en abril añades `mascota` **solo** en los documentos nuevos. Los de 2024 siguen sin ese campo.
-2. **Escala horizontal.** *Sharding* / particionado: más nodos, más capacidad. El relacional suele crecer **en vertical** (más RAM, más CPU en *una* máquina). NoSQL crece **repartido**, a menudo **sin** que el código sepa cuántos servidores hay.
-3. **Varios modelos.** Clave-valor, documento, columnas, grafo: problemas que el modelo relacional **no** planteó en los 70.
-4. **Alta disponibilidad y tolerancia a fallos.** Réplica y distribución. Maestro-esclavo o entre pares. Un disco de Potes se funde: el clúster **sigue** (criterio **c)**).
-5. **Lectura y escritura masivas.** Pensadas para redes sociales, sensores IoT, analítica continua. El PMS deja 40 000 eventos/hora: este es el terreno.
-6. **Consistencia eventual (a menudo).** Frente a ACID, muchas priorizan disponibilidad y particiones ([CAP](#teorema-cap)). Los nodos se igualan *al rato*. Útil cuando la **latencia** duele más que un segundo de desfase.
-7. **Almacén distribuido.** Encajan en AWS, Azure, GCP. El hotel no monta un SAN para fingir un solo servidor.
+Estas características son tendencias. Antes de elegir un producto hay que comprobar cuáles ofrece y con qué configuración.
 
-Por eso aparecen en *apps* modernas, IoT y tiempo (casi) real. **No** por eso cobran mejor que PostgreSQL.
+1. **Flexibilidad del esquema.** Un documento puede incluir `mascota` y otro no. La aplicación debe definir qué significa la ausencia y validar los datos imprescindibles. Una base de grafos o de familias de columnas tiene sus propias reglas; no todas aceptan cualquier estructura.
+2. **Escala horizontal.** Algunos motores reparten datos entre nodos mediante particiones. También existen motores SQL distribuidos. El reparto añade capacidad, pero introduce comunicaciones y puede complicar las consultas que cruzan particiones.
+3. **Varios modelos.** Clave-valor, documental, familias de columnas y grafo facilitan diferentes accesos. Buscar una sesión por su clave y recorrer recomendaciones entre clientes son problemas distintos.
+4. **Disponibilidad y tolerancia a fallos.** Las réplicas permiten sobrevivir a ciertos fallos. Hay que concretar cuántos nodos pueden perderse y qué operaciones siguen disponibles; una copia aislada no siempre puede aceptar escrituras.
+5. **Cargas masivas.** La distribución puede mejorar el caudal de lecturas o escrituras. Los índices y la clave de partición deben corresponder a las consultas reales: un clúster no corrige automáticamente un filtro ineficiente.
+6. **Consistencia configurable en algunos productos.** Una lectura de un secundario puede devolver una versión anterior. Una reserva de la última plaza necesita garantías diferentes a un contador aproximado de visitas.
+7. **Despliegue distribuido.** Puede administrarse en servidores propios o contratarse como servicio. La nube cambia quién mantiene la infraestructura, pero no elimina los costes de almacenamiento, réplicas y transferencia.
+
+En el hotel justificaríamos Redis por el acceso a sesiones, MongoDB por la ficha documental y HDFS por el histórico de ficheros. Esa justificación es más útil que afirmar que «NoSQL es más rápido».
 
 ## Esquema dinámico (criterio d)
 
-El relacional pide el esquema **antes**. Si a mitad de un *sprint* gerencia quiere “productos favoritos del cliente” además de dirección y teléfonos, en SQL **añades columna** y **migras** la tabla. En una base grande eso es parada, o un despliegue azul/verde con otra copia. El desarrollo ágil **choca** con migraciones semanales.
+Supongamos que las reservas antiguas contienen `hotel`, `noches` e `importe`, y las nuevas añaden `mascota`. En una colección documental pueden coexistir ambas versiones. La consulta por `hotel` sigue siendo válida, pero la aplicación debe decidir si la ausencia de `mascota` significa «no», «no se preguntó» o «dato desconocido».
 
-NoSQL se construye para **insertar sin esquema predefinido**. Cambiáis la *app* sin tumbar el almacén. Eso no significa “cualquier basura vale”: podéis definir un **esquema al leer** (*schema-on-read*) para que cada consumidor compruebe *su* contrato. Guardáis hoy; el informe de 2027 **interpreta** mañana.
+En un sistema relacional se suele declarar la estructura antes de insertar. Añadir una columna **no exige siempre una parada**: depende del motor, la operación y el despliegue. A su vez, un esquema documental flexible también requiere migraciones si cambiamos el significado o el tipo de un campo.
 
-Los modelos NoSQL **priman la redundancia**: se **desnormaliza** para no hacer *joins*. Por eso el esquema **tiene** que poder crecer (un campo nuevo en el documento de reserva) sin rehacer cinco tablas. El [2.7](modelado.md) entra en embeber frente a referenciar.
+Conviene separar tres decisiones: el **modelo** que organiza los datos, la **validación al escribir** y la **interpretación al leer**. Podemos conservar el JSON original en HDFS y, al mismo tiempo, exigir que `noches` sea un entero positivo en la colección operativa.
+
+Desnormalizar consiste en guardar juntos datos que se leen juntos. Ahorra consultas, pero obliga a decidir cómo mantener las copias coherentes. El [modelado documental](modelado.md) desarrolla este intercambio entre facilidad de lectura, tamaño y coste de actualización.
 
 ## Fragmentación / particionado (criterio e)
 
-El relacional, por cómo está hecho, suele escalar **en vertical**: un servidor cada vez más gordo para no perder disponibilidad. Eso cuesta, tiene **techo de hardware** y concentra el fallo en pocos puntos.
+**Escalar en vertical** es ampliar RAM, CPU o discos de una máquina. Es una opción tanto para SQL como para NoSQL; tiene límites de hardware y no aporta por sí sola alta disponibilidad.
 
 La salida es escalar **en horizontal**: añadir servidores en vez de hinchar uno. Un clúster traga más dato del que cabe en **cualquier** máquina sola. A ese corte se le llama ***sharding*** o **particionado**.
 
@@ -88,19 +94,15 @@ El particionado **no es exclusivo** de NoSQL. En SQL también existe:
 En NoSQL el corte **depende del modelo**:
 
 - Clave-valor y documento: casi siempre **horizontal** (por `_id`, por hotel, por *hash*).
-- Columnas: horizontal **o** vertical (familias de columnas distintas en sitios distintos).
+- Familias de columnas: reparto según claves de fila o de partición y reglas del producto; no se deduce un reparto por servidor para cada columna.
 
-Escalar un SQL **entre muchas instancias** se *puede*: SAN, *shared disk*, pegamento. El motor **no** lo trae de serie. Entonces el equipo:
+El particionado puede realizarlo la aplicación, una extensión o el propio motor, tanto en SQL como en NoSQL. Si lo hacemos a mano, debemos resolver el enrutamiento de consultas, la unión de resultados, las migraciones y los fallos. Un motor distribuido integra parte de ese trabajo, aunque sigue necesitando una clave adecuada.
 
-- guarda cada trozo **autónomo** en su instancia;
-- escribe código para **repartir** consultas y **juntar** resultados;
-- escribe más código para fallos, *joins* entre bases, equilibrado y réplica.
-
-Muchos beneficios (integridad transaccional) se **debilitan o se pierden**. Por eso “SQL partido a mano” duele; NoSQL suele traer el corte **de fábrica**.
+En las familias de columnas, «columna» no implica que cada columna viva en una máquina diferente. HBase reparte rangos de filas en regiones y Cassandra distribuye mediante claves de partición. El modelo lógico y la distribución física son decisiones relacionadas, pero distintas.
 
 ### Auto-sharding
 
-Las NoSQL suelen **partir solas**: datos y consultas se **balancean**. La *app* no conoce el *pool* de servidores. Métodos habituales:
+En los motores con **auto-sharding**, el sistema gestiona la distribución y el enrutamiento una vez configurado. La aplicación utiliza una entrada lógica, pero el administrador sigue eligiendo la clave y vigilando desequilibrios. Métodos habituales:
 
 | Método | Idea | Hotel |
 | --- | --- | --- |
@@ -114,7 +116,7 @@ Sí, cuando:
 
 - **no cabe** (disco o RAM de un solo servidor);
 - las **escrituras** saturan un nodo y queréis **repartir** la carga;
-- un servidor **ocupado** no debe ser el único que responda (disponibilidad).
+- la carga puede dividirse de forma útil entre particiones. La disponibilidad requiere además réplicas y un protocolo de recuperación.
 
 No, cuando el volumen es **pequeño**: repartir **cuesta** (red, *routers*, rebalanceos). Tampoco esperéis a tener **demasiado**: partir un lago ya enorme **satura** el sistema. El [2.8](replicas-shards.md) lo enseña en Mongo.
 
@@ -128,7 +130,7 @@ Sirve para:
 
 - **Escala:** las lecturas se **reparten**; cada nodo tiene (casi) los mismos bytes.
 - **Disponibilidad:** fallo de hardware o corrupción. Una copia puede **tomar el relevo**. Informes y *backups* en secundarios para no tumbar el primario.
-- **Aislamiento** (la I de ACID, en versión *ops*): cambios que se **propagan**. Analítica y preproducción en una copia, sin pegar al nodo que cobra.
+- **Separación de cargas:** determinadas lecturas analíticas pueden dirigirse a secundarios. Esto reduce trabajo en el primario, pero **no es el aislamiento transaccional de ACID**. Una réplica operativa tampoco es un entorno de pruebas independiente: los cambios del primario llegan a ella.
 
 Antes de elegir arquitectura, decidid el **oficio** de la copia: ¿solo **lectura** (informes) o también **escritura**?
 
@@ -139,7 +141,7 @@ Antes de elegir arquitectura, decidid el **oficio** de la copia: ¿solo **lectur
 
 ### Consistencia
 
-En un sistema **consistente**, lo que acabas de escribir **aparece** en la siguiente lectura.
+La consistencia describe qué versiones pueden observar los clientes. **Leer tus propias escrituras** es una garantía concreta; la consistencia linealizable exige además que las operaciones de todos los clientes se comporten como si actuaran sobre una única copia, respetando el orden temporal.
 
 | Modelo | Garantía | Encaje |
 | --- | --- | --- |
@@ -151,11 +153,11 @@ Stock del minibar: si es **fuerte**, cada consulta es el inventario real. Si es 
 La consistencia eventual encaja en *apps* de **solo lectura**, históricos que casi no cambian, o **mucha escritura y poca lectura** (un log).
 
 !!! warning "Réplica no es shard"
-    **Replicar** = el **mismo** dato en varias máquinas. **Particionar** = cada máquina un **trozo**. Lo más seguro y lo que mejor rinde: **las dos cosas** (cada *shard* replicado × 2 o × 3). El [2.8](replicas-shards.md) lo monta.
+    **Replicar** = el **mismo** dato en varias máquinas. **Particionar** = cada máquina un **trozo**. Se pueden combinar: cada shard mantiene réplicas. La seguridad y el rendimiento dependen de cuántas, cómo votan y dónde se alojan; dos votantes no toleran perder uno y seguir eligiendo primario. El [2.8](replicas-shards.md) lo monta.
 
 ## Implantar sin drama
 
-Las empresas empiezan con una prueba **pequeña** (Community, un nodo, poco riesgo). Casi todas las NoSQL son *open source* al inicio. Ciclos más cortos → innovar más barato. Preguntas de aula (escribidlas **antes** de elegir producto):
+Las empresas empiezan con una prueba **pequeña** (Community, un nodo, poco riesgo). Las licencias y modalidades de servicio varían; revisad las del producto elegido. Ciclos más cortos → innovar más barato. Preguntas de aula (escribidlas **antes** de elegir producto):
 
 - ¿Cuántos usuarios / reservas en 3, 6, 12 meses?
 - ¿Qué funciones **comerán** más disco al crecer?
@@ -190,6 +192,8 @@ Casos típicos de arranque:
 - **Perfiles escasos** (y caros) frente a SQL.
 
 ## Modelo documental
+
+La unidad de lectura es una ficha con campos relacionados. En el hotel, reserva, huéspedes y extras pueden viajar juntos. Antes de embeber, estimad tamaño y crecimiento y decidid qué cambios deben ser atómicos. El documento no elimina las relaciones: permite representarlas dentro de la ficha o mediante referencias.
 
 El relacional guarda filas y columnas. El documental guarda **documentos** (casi siempre **JSON**): un objeto, como en programación. Los documentos se agrupan en **colecciones** (o “bases”, según el producto).
 
@@ -230,11 +234,13 @@ Actualizar **un** documento suele ser **una** sentencia: no recorréis tres tabl
 
 **Sirve para:** flujos de eventos entre *apps*, CMS / blog (comentarios, usuarios), analítica web (un campo nuevo cuando aparece una métrica), *e-commerce* que **crece** de esquema.
 
-**No encaja:** operativa con **transacciones complejas** (el cobro ACID); agregados cuya **forma** cambia cada semana (acabaréis normalizando otra vez).
+**Hay que evaluarlo con cuidado** cuando abundan relaciones cruzadas, restricciones entre documentos o transacciones largas. MongoDB admite transacciones, pero su coste y el modelo deben compararse con una solución relacional. No basta con que la información pueda escribirse como JSON.
 
 Productos: **MongoDB** (el de esta UT), **CouchDB**.
 
 ## Modelo clave-valor
+
+La pregunta típica es «dame el valor de esta clave», por ejemplo `sesion:991`. Si necesitamos buscar por el contenido de todos los valores, quizá hagan falta estructuras auxiliares o un motor con índices. Una sesión puede caducar; una reserva confirmada requiere una política de conservación diferente. Los ejemplos de Redis presuponen un servidor Redis y su cliente, independientes del laboratorio MongoDB.
 
 Es una **tabla hash**: casi todo el acceso va por la **clave primaria**. Desde el modelo de datos, es el más **simple**.
 
@@ -267,7 +273,7 @@ r.mset({"Laredo": "disponible", "Potes": "completo"})
 r.get("Potes")  # b'completo'
 ```
 
-El acceso por clave primaria da **muy buen** rendimiento y escala fácil. Para ir al máximo: todo en **RAM** y serializar a disco de vez en cuando → consistencia **eventual**.
+El acceso directo por clave puede ser eficiente. Guardar en RAM y persistir mediante snapshots o registro de operaciones afecta a rendimiento y recuperación ante fallos. **No determina por sí solo la consistencia entre réplicas**: esa propiedad depende del protocolo y de las opciones de lectura y escritura.
 
 **Sirve para:** `sessionid` del motor de reservas, preferencias, carrito **antes** de cobrar, **caché** de disponibilidad.
 
@@ -281,7 +287,7 @@ En el [1.3](../ut1/almacenamiento.md) ya quedó la frontera. Aquí se usan los d
 
 ### Fichero o almacén columnar
 
-El relacional usa la **fila** como unidad: bien para **escribir** una reserva completa. Cuando escribís **poco** y leéis **unas pocas columnas de muchas filas** (ocupación de 80 hoteles × 365 días), un motor analítico **gira** el almacenamiento: los valores del mismo campo van juntos y se **comprimen** mejor. Eso es Parquet, ORC o un *warehouse* como Redshift. El detalle del fichero está en el [1.7](../ut1/formatos.md).
+Muchos motores transaccionales almacenan por filas, lo que favorece leer o escribir una reserva completa. El modelo relacional también puede utilizar almacenamiento columnar. Cuando escribís **poco** y leéis **unas pocas columnas de muchas filas** (ocupación de 80 hoteles × 365 días), un motor analítico **gira** el almacenamiento: los valores del mismo campo van juntos y se **comprimen** mejor. Eso es Parquet, ORC o un *warehouse* como Redshift. El detalle del fichero está en el [1.7](../ut1/formatos.md).
 
 ```text
 Por filas:     [Laredo,web,3,186] [Potes,ota,2,90] [Noja,web,4,210]
@@ -300,6 +306,8 @@ Con Spark en memoria, la ventaja relativa *a veces* se estrecha. El oficio sigue
 **Productos de este oficio:** Parquet, ORC, Amazon Redshift.
 
 ### Wide-column (familias de columnas)
+
+HBase y Cassandra comparten la familia general, pero no una API ni un esquema idénticos. HBase admite calificadores de columna dinámicos por familia; las tablas CQL de Cassandra declaran columnas y claves. En Cassandra se diseña la clave de partición según la consulta, por ejemplo hotel, habitación y día para leer medidas de un periodo acotado.
 
 Otra familia, la de [Bigtable](https://research.google.com/archive/bigtable.html): mapa **ordenado**, **multidimensional** y **repartido**. Cada fila puede tener **muchísimas** columnas (a menudo dispersas) y hay **miles de millones** de filas, con **versiones**. No es un Parquet: guardáis **filas** bajo una clave, y cada fila trae las columnas que tenga.
 
@@ -331,13 +339,15 @@ Actualizar una celda es **encontrar la fila** y reescribir esa columna. A veces 
 
 **Sirve para:** series que **cambian** (el sensor de la 214), filas muy anchas y dispersas, metadatos cuyas columnas aparecen y desaparecen.
 
-**No encaja:** el scan del panel de las 8 (eso es Parquet) ni el OLTP de caja.
+**Conviene evaluar otras opciones** para agregaciones globales sobre muchas columnas o transacciones con relaciones complejas. Estos motores también pueden recorrer datos, pero un formato columnar y un motor analítico pueden ser más adecuados para el informe.
 
 **Productos:** **HBase** (encima de [HDFS](hdfs.md)), **Cassandra**. Redshift queda en el apartado anterior.
 
 ## Modelo de grafos
 
-Guarda **entidades** y **relaciones**. Las entidades son **nodos** (con propiedades). Las relaciones son **aristas** (también con propiedades y **sentido**). Un nodo ≈ una instancia. La dirección importa: si queréis ida y vuelta, **dos** aristas.
+Partimos de una pregunta de recorrido: «¿qué hoteles recomiendan las personas relacionadas con este huésped?». Los nodos representan entidades y las aristas relaciones con significado. El coste depende de cuántos vecinos se visitan, de los filtros y de los índices; tener un grafo no hace barata cualquier consulta global.
+
+Guarda **entidades** y **relaciones**. Las entidades son **nodos** (con propiedades). Las relaciones son **aristas** (también con propiedades y **sentido**). Un nodo ≈ una instancia. La dirección tiene significado, aunque una consulta puede recorrer una relación en ambos sentidos. Solo añadimos otra arista si representa otra relación del dominio.
 
 ```text
 (Huésped:Ana) -[:RECOMENDO {año:2025}]-> (Hotel:Potes)
@@ -348,7 +358,7 @@ Los nodos se organizan por relaciones: el **mismo** dato se interpreta distinto 
 
 **Recorrer** (*traverse*) es la consulta: “huéspedes del club de senderismo **y** con más de dos estancias en Liébana”. En Neo4j las relaciones **ya están persistidas**: no se calculan al vuelo como un `JOIN` de ocho tablas.
 
-En SQL, un grafo “jefe–empleado” es una FK. Añadir *otra* relación (recomendó, visitó, canceló) pide **cambiar el esquema** y mover datos. Además tenéis que **saber las preguntas** al modelar. En el grafo cambiáis el *traverse* **sin** rehacer nodos.
+En SQL podemos representar relaciones mediante claves y tablas de asociaciones, incluso de forma genérica. Un motor de grafos facilita expresar y ejecutar recorridos de relaciones. Ambos modelos requieren diseñar identificadores, propiedades e índices según las preguntas; ninguno elimina el modelado.
 
 **Sirve para:** redes (quién conoce a quién), rutas y distancias (hoteles cercanos, camino más corto), **recomendaciones** (“quien reservó Potes también reservó Fuente Dé”).
 
@@ -358,58 +368,53 @@ Productos: **Neo4j**, ArangoDB, OrientDB, TinkerPop, Amazon Neptune.
 
 ## Consistencia según la familia
 
-Documentales y grafos pueden ser **fuertes o eventuales**. **MongoDB** es configurable: por defecto lecturas y escrituras al **primario** (consistencia fuerte); podéis leer de **secundarios** (eventual) **por consulta**. El [2.8](replicas-shards.md) lo enseña.
+No se deduce la consistencia únicamente del modelo. Un documento, una clave o un nodo de grafo pueden almacenarse con garantías distintas según el producto y el despliegue.
 
-Clave-valor y **Cassandra** suelen ser **eventuales**. **HBase**, en la tabla de más abajo, se queda más bien en **CP**. Cualquier copia que acepte escrituras puede generar **conflictos**. Estrategias que veréis citadas:
+En MongoDB distinguimos **dónde leer** (`readPreference`), **qué confirmación exigir al escribir** (`writeConcern`) y **qué visibilidad exigir al leer** (`readConcern`). Leer del primario no convierte automáticamente toda operación en linealizable. El [2.8](replicas-shards.md) combina estas opciones.
 
-- **Relojes vectoriales** (Riak): ordenan eventos; gana el más reciente.
-- **CouchDB:** guarda los valores en conflicto y **el usuario** decide.
-- **Cassandra:** a menudo “el valor **más grande**” (o el *timestamp* más nuevo) gana.
+Cuando varios nodos aceptan cambios concurrentes, también necesitamos resolver conflictos. Los relojes vectoriales detectan relaciones causales y concurrencia; no eligen simplemente «el más reciente». CouchDB conserva revisiones en conflicto para resolverlas. Cassandra utiliza marcas temporales para reconciliar escrituras; no debemos resumirlo como «gana el número mayor».
 
-Las **escrituras** rinden; las **actualizaciones** con conflicto las paga la *app*.
+Finalmente, **persistencia y consistencia son ejes distintos**: guardar periódicamente una instantánea en disco determina qué puede recuperarse tras un fallo; no determina por sí solo qué versión lee otro cliente. Esto es especialmente importante al estudiar Redis.
 
 ## Teorema CAP
 
-[Eric Brewer, 2000](https://en.wikipedia.org/wiki/CAP_theorem): en un sistema **distribuido** no podéis tener a la vez las tres:
+CAP analiza qué puede garantizar un sistema distribuido **cuando se interrumpe la comunicación entre grupos de nodos**. No significa «elige dos características para siempre».
 
-| Letra | Nombre | Oficio |
+| Letra | Significado en CAP | Pregunta del hotel |
 | --- | --- | --- |
-| **C** | Consistencia | La escritura es atómica; **toda** lectura posterior ve el valor nuevo |
-| **A** | Disponibilidad (*Available*) | Siempre hay **respuesta** (no *downtime* eterno) |
-| **P** | Tolerancia a **particiones** | El sistema sigue si se corta el enlace entre nodos |
+| **C** | Consistencia linealizable: comportamiento como una copia única | ¿Ambas recepciones observan un orden compatible de reservas? |
+| **A** | Toda petición a un nodo no fallido obtiene una respuesta válida de la operación | ¿Pueden seguir aceptando reservas ambos lados? |
+| **P** | El modelo contempla la pérdida de comunicación entre nodos | ¿Qué hacemos mientras Laredo no puede hablar con Potes? |
 
-Podéis ser **CP**, **AP** o **CA**. **No** las tres en un clúster partido. En el [1.3](../ut1/almacenamiento.md) ya está el triángulo; aquí lo usáis para **clasificar productos**.
-
-En la práctica **P no es opcional** en un hotel con dos sedes: un *switch* se cuelga. La pelea real es **C frente a A**. Si elegís disponibilidad, aún podéis tener **consistencia eventual**: cada nodo responde; el dato puede ir **un poco atrasado** y **igualarse**.
-
-Algunos (Riak) dejan elegir el nivel **por petición**.
+Si queda una sola plaza y cada lado acepta una reserva sin comunicarse, podemos venderla dos veces. Para preservar la visión única, alguno de los lados debe esperar o rechazar la operación: se sacrifica disponibilidad en el sentido de CAP. Si ambos lados responden, habrá que aceptar versiones divergentes y resolverlas después. Un mensaje de error no cuenta como disponibilidad de la operación solicitada.
 
 ### Clasificación habitual (no es dogma)
 
-Muchos productos **se configuran**. “Mongo es CP” es el **defecto**, no una ley.
+Las etiquetas **CP** y **AP** resumen comportamientos bajo particiones, no todo un catálogo de productos. **CA** puede describir un escenario en el que no se consideran particiones; no prueba que una base SQL distribuida escape al problema.
 
-| Tipo | Prioriza | Ejemplos que salen en textos |
+| Comportamiento | Ejemplo de decisión | Consecuencia |
 | --- | --- | --- |
-| **CP** | Consistencia + particiones | MongoDB, HBase: pueden **no** responder en un secundario; un secundario puede **promocionar** si cae el primario |
-| **AP** | Disponibilidad + particiones | DynamoDB: replica; **no** garantiza la misma versión en todos los nodos al instante |
-| **CA** | Consistencia + disponibilidad | Relacionales de **un** sitio (PostgreSQL). El dato **no** está partido, así que P “no entra”. Hay extensiones (*Pgpool*, *Citus*…) cuando sí se parte |
+| Preservar C ante P | El lado sin mayoría no acepta nuevas reservas confirmadas | Parte de las escrituras deja de estar disponible |
+| Preservar A ante P | Ambos lados registran comentarios localmente | Se admiten diferencias temporales y posibles conflictos |
+| Sin partición en el escenario | Una única instancia responde a clientes | No se ha probado la tolerancia a una partición entre réplicas |
 
-CouchDB y Mongo **pueden** moverse en el mapa según lectura en secundarios, *write concern*, etc.
+Para clasificar MongoDB, HBase, DynamoDB, Redis o PostgreSQL hay que indicar versión, topología y operación. Una lectura local y una escritura con mayoría pueden tener condiciones distintas incluso en el mismo sistema.
 
 ### BASE (el otro extremo de ACID)
 
-Las distribuidas que eligen **responder** siguen **BASE** (disponibilidad antes que consistencia estricta → AP):
+El nombre reúne tres ideas frecuentes en diseños que aceptan convergencia posterior:
 
-- **Basically Available:** hay **un valor** de respuesta, no un silencio. Un «no puedo, la red está partida» es **CP**, como en el [1.3](../ut1/almacenamiento.md).
-- **Soft state:** dos lecturas seguidas pueden **diferir** sin que vosotros hayáis escrito: un nodo iba atrasado.
-- **Eventual consistency:** tras escribir, el clúster es consistente **cuando el cambio llega a todos**. Mientras tanto, estado blando.
+- **Basically Available:** el servicio intenta seguir ofreciendo operaciones durante fallos parciales, con las limitaciones definidas por el diseño.
+- **Soft state:** el estado observado puede cambiar por la propagación de actualizaciones, aunque este cliente no escriba.
+- **Eventual consistency:** si dejan de llegar cambios y se restablece la comunicación, las réplicas convergen conforme a sus reglas de resolución.
 
-!!! failure "¿BASE para la caja?"
-    **No.** Cobro, fianza, nota oficial: **ACID**. BASE: timeline, catálogo replicado, sensores, carrito **antes** de pasar la tarjeta.
+BASE no es una especificación equivalente a ACID ni convierte automáticamente cualquier motor en AP. Un sistema puede usar transacciones en un ámbito y replicación eventual en otro. Para una plaza de parking debemos proteger el invariante «no vender más plazas que las disponibles»; para un contador de visitas quizá sea aceptable un retraso. La decisión nace de la operación de negocio.
+
+Para repasar la distinción entre consistencia de transacciones y consistencia entre réplicas, vuelve al [ejemplo de la UT1](../ut1/almacenamiento.md).
 
 ## Resumen de aula
 
-Un sistema NoSQL, en la frase que cierra el tema de referencia: *open source* (a menudo), **no relacional**, **sin esquema predefinido**, **escala horizontal**, transaccionalidad **BASE** (salvo que lo endurezcáis).
+NoSQL agrupa modelos no relacionales con distintas interfaces, esquemas y garantías. La licencia, la distribución y las transacciones dependen del producto. Debemos justificar la elección con el patrón de acceso y las garantías necesarias.
 
 NewSQL (CockroachDB, etc.) intenta **SQL + escala horizontal + ACID**. No es el núcleo de esta página; si Moodle lo pide, es una presentación de 5–6 diapositivas: qué problema cierra respecto a NoSQL y respecto a un PostgreSQL de un solo nodo.
 
@@ -425,6 +430,12 @@ NewSQL (CockroachDB, etc.) intenta **SQL + escala horizontal + ACID**. No es el 
 | **d)** | Esquema al guardar **flojo**, esquema al leer; documentos que **crecen** |
 | **e)** | *Auto-sharding*, más nodos, cloud |
 
+## Cómo justificar una elección
+
+Utiliza una ficha con **dato → consulta → garantía → modelo → coste**. Por ejemplo: «sesión de usuario → recuperar por identificador → puede caducar → clave-valor → definir expiración y reconstrucción». Para la última plaza de parking, la garantía cambia: hace falta comprobar y descontar de forma atómica. Una respuesta que solo diga «MongoDB porque admite JSON» está incompleta.
+
+En las prácticas se espera una decisión razonada, no una única combinación de productos. Comprueba que no presentas réplica como aumento de capacidad útil ni una caché como única fuente de reservas confirmadas.
+
 ## Para practicar (Moodle manda la nota)
 
 1. ¿Qué significa el *No* de NoSQL? Relación con el relacional (complemento, no sustituto).
@@ -435,7 +446,7 @@ NewSQL (CockroachDB, etc.) intenta **SQL + escala horizontal + ACID**. No es el 
     - caché de “¿queda habitación doble en Laredo esta noche?”;
     - “quién recomendó Potes a quién” para una campaña.
 4. Investigad **persistencia políglota** y aplicadla al grupo hotelero (caja + Mongo + Redis + HDFS).
-5. Clasificad según CAP (**CA / CP / AP**) y anotad modelo + puesto aproximado en [DB-Engines](https://db-engines.com/en/ranking): Bigtable, Cassandra, DynamoDB, HBase, MongoDB, Redis, Neo4j, PostgreSQL, InfluxDB. Decid **qué pasa si se parte la red**, no solo la etiqueta.
+5. Elegid tres productos entre Bigtable, Cassandra, DynamoDB, HBase, MongoDB, Redis, Neo4j, PostgreSQL e InfluxDB. Indicad modelo, versión, topología y una operación concreta. Con documentación oficial, explicad qué ocurre si se parte la red y justificad si la operación prioriza C o A. Si consultáis [DB-Engines](https://db-engines.com/en/ranking), anotad fecha: popularidad no equivale a rendimiento ni a garantía de consistencia.
 6. (Opcional) 5–6 diapositivas: movimiento **NewSQL** y qué ofrece CockroachDB frente a un relacional clásico.
 
 ## Referencias

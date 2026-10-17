@@ -13,10 +13,10 @@ tags:
 Destaca porque:
 
 - **Esquema dinámico:** dos documentos de `reservas` **no** tienen por qué traer las mismas claves (criterio **d)**).
-- Los *joins* (`$lookup`) existen; desde **5.2** incluso entre colecciones *shardeadas*. No es el gesto del día a día: lo que se usa junto se **embebe** ([2.7](modelado.md)).
-- Una inserción o un `update` de **un** documento es atómico. Una transacción **entre dos documentos** la gestiona el *driver* (o un *session*). En un RDBMS serían varias filas y un `COMMIT`.
+- Los *joins* (`$lookup`) existen; desde **5.1** incluso entre colecciones *shardeadas*. No es el gesto del día a día: lo que se usa junto se **embebe** ([2.7](modelado.md)).
+- Una inserción o un `update` de **un** documento es atómico. Una transacción **entre varios documentos** la ejecuta el servidor en una topología compatible; la aplicación la solicita mediante una sesión del driver. En un RDBMS serían varias filas y un `COMMIT`.
 
-Analogía: base ≈ esquema SQL, colección ≈ tabla, documento ≈ fila… **pero** el esquema **no** se declara antes. El criterio **a)** aquí: depositáis el JSON del motor de reservas **tal cual** y preguntáis sin montar ocho tablas.
+Analogía: base ≈ esquema SQL, colección ≈ tabla, documento ≈ fila… **pero** el esquema puede ser flexible o incorporar validadores explícitos. El criterio **a)** aquí: depositáis el JSON del motor de reservas **tal cual** y preguntáis sin montar ocho tablas.
 
 ## Conceptos
 
@@ -28,7 +28,7 @@ Analogía: base ≈ esquema SQL, colección ≈ tabla, documento ≈ fila… **p
 | **Documento** | Un objeto BSON | Fila |
 | **Campo** | Par clave/valor. Sin esquema obligatorio | Columna |
 
-Una instancia puede tener varias bases; cada base, varias colecciones; cada colección, documentos. Mongo **indexa** (como SQL) para no escanear todo. Toda consulta devuelve un **cursor**: contar, ordenar, limitar, saltar.
+Una instancia puede tener varias bases; cada base, varias colecciones; cada colección, documentos. Mongo **indexa** (como SQL) para no escanear todo. `find()` devuelve un **cursor** que permite recorrer resultados; `findOne()` devuelve un documento o `null`, y los métodos de recuento devuelven un número.
 
 ```mermaid
 flowchart TB
@@ -42,7 +42,11 @@ flowchart TB
 
 ### BSON
 
-En JavaScript creáis objetos JSON. Mongo los guarda como **BSON** (*Binary JSON*): [especificación](https://bsonspec.org/). Es un **superset** de JSON:
+BSON conserva información de tipos: una fecha no es simplemente una cadena con aspecto de fecha. Eso permite comparaciones y operaciones adecuadas. La codificación binaria **no garantiza** que ocupe menos que el JSON equivalente. Para intercambiar tipos como fechas e identificadores en texto utilizamos Extended JSON (`$date`, `$oid`).
+
+Para fechas de la aplicación utilizamos `new Date()` o `ISODate()`. El tipo BSON `Timestamp` tiene un uso interno, por ejemplo en replicación; no es el sustituto habitual de una fecha de creación.
+
+En `mongosh` escribís objetos JavaScript; un texto JSON estricto exige comillas en las claves y no admite constructores como `ObjectId()`. Mongo serializa los documentos como **BSON** (*Binary JSON*): [especificación](https://bsonspec.org/). Es un **superset** de JSON:
 
 - binario;
 - tipos que JSON no tiene: `ObjectId`, `Date`, `BinData`, `Timestamp`…
@@ -58,13 +62,13 @@ const reserva = {
   checkin: ISODate("2026-04-12"),
   extras: ["parking", "cuna"],
   cobro: { medio: "tarjeta", ok: true },
-  creada: Timestamp(),
+  creada: new Date(),
 };
 ```
 
 Restricciones:
 
-- Un documento **no pasa de 16 MB**.
+- Un documento **no pasa de 16 MiB**.
 - `_id` está **reservado** a la clave primaria.
 - Desde Mongo **5.0** un campo *puede* empezar por `$` o llevar `.`; **evitadlo**: rompe consultas y *drivers*.
 
@@ -90,7 +94,7 @@ Tres productos:
 
 | Producto | Oficio |
 | --- | --- |
-| **Atlas** | Nube. Capa gratuita: clúster compartido, **512 MB**, 3 nodos |
+| **Atlas** | Servicio gestionado en la nube; comprobad los límites del plan elegido |
 | **Community** | Gratis *on-premise* (Windows, macOS, Linux) |
 | **Enterprise** | Pago: soporte, seguridad y monitorización extra |
 
@@ -100,16 +104,18 @@ Hoy es más cómodo **Docker** o **Atlas** que instalar el servicio a mano. En c
 
 ### Docker
 
+Anotad `db.version()` al conectar. El ejemplo fija la versión principal `mongo:7` y conserva datos en un volumen. Si el contenedor ya existe, usad `docker start hotel-mongo`; no hace falta volver a crearlo. Este servidor independiente sirve para consultas, pero **no** para transacciones multidocumento: esas se prueban con el replica set del 2.8.
+
 ```text
-docker run -p 127.0.0.1:27017:27017 --name hotel-mongo -d mongo
+docker run -p 127.0.0.1:27017:27017 --name hotel-mongo -v hotel_mongo_data:/data/db -d mongo:7
 ```
 
 !!! warning "Procesadores sin AVX"
-    Mongo **5+** exige AVX. En un PC viejo del aula: `mongo:4.4`.
+    En plataformas x86-64, las versiones modernas requieren AVX. Si el equipo no es compatible, utilizad el servidor de aula o Atlas que indique el docente; no cambiéis automáticamente a una versión antigua sin soporte.
 
 Cargar el hotel. Los comandos se lanzan **desde la raíz del repositorio** (la carpeta donde está `docs`).
 
-La imagen `mongo` trae `mongosh` y **no** trae `mongoimport`. Un `docker exec … mongoimport` falla: el binario no está dentro. Instaláis las [Database Tools](https://www.mongodb.com/try/download/database-tools) en el PC y apuntáis al puerto que publicó el `docker run`:
+La disponibilidad de `mongoimport` depende de la imagen instalada; podéis comprobarla con `docker exec hotel-mongo mongoimport --version`. Para que los comandos siguientes se ejecuten desde el PC, instalad las [Database Tools](https://www.mongodb.com/try/download/database-tools) en el PC y apuntáis al puerto que publicó el `docker run`:
 
 ```text
 mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection reservas --file docs/assets/practicas/reservas_mongo.jsonl
@@ -118,11 +124,25 @@ mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection opiniones --fi
 
 No usamos el *sample dataset* de Atlas (`sample_mflix`, `sample_training`). El caso es el **grupo hotelero**.
 
+### Comprobar la carga antes de practicar
+
+La entrada original tiene **15 reservas** y **6 opiniones**. Importad una sola vez en colecciones vacías: como el JSONL no fija `_id`, repetir la importación añade duplicados. Si los recuentos no coinciden, revisad la base y las cargas previas antes de continuar.
+
+```javascript
+use hotel
+db.reservas.countDocuments({})
+db.opiniones.countDocuments({})
+db.reservas.countDocuments({hotel: "Laredo"}) // 3
+db.reservas.countDocuments({canal: "web"})   // 6
+```
+
+Los ejemplos de inserción de «Hola MongoDB» son demostraciones: hacedlos en una colección de prueba o después de comprobar las consultas originales. Para empezar de nuevo, conservad primero el trabajo que queráis entregar y recargad únicamente las colecciones de práctica. No añadimos `--drop` por defecto para evitar eliminar datos al repetir un comando.
+
 ### Atlas (si el profesor lo pide)
 
 Registro → clúster → usuario de base → red. En el mapa de AWS, **París es `eu-west-3`** y España es `eu-south-2`. Si la consola muestra `eu-west-1`, eso es **Irlanda**. **No** dejéis `0.0.0.0/0` en un proyecto con datos reales; en aula, solo si el profesor lo autoriza.
 
-La URI segura lleva `mongodb+srv://`:
+La URI de Atlas suele utilizar `mongodb+srv://`, que consulta registros DNS y activa TLS por defecto. La seguridad también depende de credenciales, permisos y configuración de red:
 
 ```text
 mongodb+srv://USUARIO:CLAVE@cluster0.xxxxx.mongodb.net/hotel
@@ -160,7 +180,7 @@ mongosh "mongodb+srv://USUARIO:CLAVE@cluster0.xxxxx.mongodb.net/hotel"
 mongoimport -d hotel -c reservas --host 127.0.0.1 --port 27017 --file docs/assets/practicas/reservas_mongo.jsonl
 mongoexport -d hotel -c reservas -o reservas_export.json
 
-mongoimport --type csv -d hotel -c ocupacion --headerline --drop ocupacion.csv
+mongoimport --type csv -d hotel -c ocupacion_lab --headerline --file ocupacion.csv
 
 mongodump -d hotel -o backup_hotel
 mongorestore -d hotel backup_hotel/hotel
@@ -175,7 +195,7 @@ Monitorización: `mongostat`, `mongotop`. En Atlas van en el panel. *Drivers* of
 
 ### Compass y VS Code
 
-**Compass:** explorar, esquema, agregados, índices, consultas. Hay edición completa, **solo lectura** (analítica) e *isolated* (solo local). Pegáis la URI y listo. Abajo hay un **mongosh** embebido.
+**Compass:** explorar, esquema, agregados, índices, consultas. Las funciones disponibles dependen de la versión instalada. Pegáis la URI y listo. Abajo hay un **mongosh** embebido.
 
 **MongoDB for VS Code:** la misma URI y un *playground* (guion al estilo *shell*).
 
@@ -211,15 +231,15 @@ db.reservas.findOne({ hotel: "Laredo" })
 | `db.help()` | Ayuda |
 | `db.version()` | Versión del servidor |
 
-El esquema **aparece** al insertar. Podéis insertar otra reserva **sin** `extras` y Mongo no se queja. Más adelante, un `validator` ([2.7](modelado.md)) pone reglas **suaves**.
+El esquema **aparece** al insertar. Podéis insertar otra reserva **sin** `extras` y Mongo no se queja. Más adelante, un `validator` ([2.7](modelado.md)) puede exigir reglas y rechazar documentos que las incumplan.
 
 ### JavaScript en el shell
 
 ```javascript
-load("scripts/semilla_hotel.js")
+load("semilla_hotel.js")
 ```
 
-La ruta relativa es desde **donde lanzasteis** `mongosh`. En Compass embebido **no** hay `load`; usad *Shift+Enter* para varias líneas.
+Este ejemplo presupone que habéis guardado vuestro código en `semilla_hotel.js`; no es un fichero incluido en el repositorio. La ruta se resuelve donde se ejecuta `mongosh`: si está dentro de Docker, copiad primero el archivo al contenedor. Para los datos iniciales de esta unidad utilizad los JSONL enlazados, sin necesidad de ese script.
 
 ```text
 mongosh hotel semilla_hotel.js
@@ -235,6 +255,8 @@ for (let i = 0; i < 10; i++) {
 
 ## ObjectId
 
+El identificador distingue documentos; no es el número de reserva ni garantiza un orden cronológico exacto entre clientes. Los ejemplos que usan `getTimestamp()` presuponen que `_id` es un `ObjectId`; si insertáis un entero como identificador, ese método no existe para ese valor. Una referencia debe conservar el mismo valor **y tipo** que el identificador referenciado.
+
 `_id` es único **en la colección** (clave primaria). Si no lo ponéis, el ***driver*** (no el servidor) fabrica un **ObjectId** de 12 bytes:
 
 - 4 bytes: *timestamp*;
@@ -248,7 +270,7 @@ db.reservas.findOne()._id
 db.reservas.findOne()._id.getTimestamp()
 ```
 
-Es **global, único e inmutable**. No se cambia el `_id` de un documento ya guardado.
+El `_id` no se modifica una vez guardado. En una colección sin particionar, su índice único evita duplicados dentro de la colección. En sharding, la garantía global de índices únicos depende de la clave de partición; no deduzcáis unicidad global solo por el nombre del campo.
 
 Si lo ponéis vosotros, Mongo **no** añade ObjectId. Puede ser número, cadena u **otro documento** (cuidado: más lío al consultar):
 
@@ -269,11 +291,15 @@ db.reservas.find()
 db.reservas.findOne()
 ```
 
-`find()` devuelve un **cursor** (abierto ~30 min de inactividad o hasta agotarlo). El *shell* muestra **20** y espera `it` para seguir. `findOne()` = un documento (o `null`).
+`find()` devuelve un **cursor**, que se consume por lotes y puede caducar según los límites de cursor y sesión. El *shell* muestra **20** y espera `it` para seguir. `findOne()` = un documento (o `null`).
 
 Los ejemplos de abajo asumen [reservas_mongo.jsonl](../assets/practicas/reservas_mongo.jsonl) y [opiniones.jsonl](../assets/practicas/hotel-mongo/opiniones.jsonl) ya importados (`use hotel`).
 
 ### Criterios (Y implícita)
+
+Traducid primero la pregunta: «reservas web de Laredo con tres o más noches» combina tres condiciones sobre el mismo documento. La consulta selecciona documentos, no columnas. Un resultado vacío puede significar que no hay coincidencias, que habéis elegido otra base o que un campo tiene un tipo diferente; comprobad esas posibilidades antes de cambiar operadores.
+
+`$ne` y `$nin` pueden incluir documentos en los que el campo está ausente. Si necesitáis «canal informado y distinto de web», combinad `$exists: true` y `$ne: "web"`. Igualmente, `{campo: null}` puede coincidir con valor nulo o campo ausente; usad `$exists` para distinguirlos.
 
 Varios campos en el mismo objeto = **AND**:
 
@@ -281,8 +307,8 @@ Varios campos en el mismo objeto = **AND**:
 db.reservas.find({ hotel: "Laredo", canal: "web" })
 ```
 
-!!! tip "AND: el filtro estrecho, primero"
-    Si A lo cumplen 40 000 docs, B 9 000 y C 200, conviene que el motor **empiece por C**. En la práctica: índices y el criterio **más selectivo** delante en la cabeza al diseñar. Mongo reordena, pero un `$or` / `$and` mal pensado duele.
+!!! tip "El orden escrito no fija el plan"
+    La selectividad ayuda a diseñar índices, pero poner una condición primero en el objeto no obliga al motor a ejecutarla antes. Comparad planes con `explain("executionStats")`: documentos examinados, claves examinadas y documentos devueltos.
 
 | Comparación | Operador |
 | --- | --- |
@@ -300,7 +326,7 @@ db.reservas.find({ canal: { $ne: "web" } })
 db.reservas.find({ noches: { $lt: 2 }, canal: { $ne: "ota" } })
 ```
 
-Las cadenas se comparan en orden **UTF-8**. `Laredo` y `laredo` no son lo mismo.
+Sin una collation específica se utiliza comparación binaria de cadenas. `Laredo` y `laredo` no son iguales; una collation puede cambiar reglas lingüísticas y sensibilidad a mayúsculas.
 
 **`$exists`:** el documento **tiene** (o no) el campo. Encaja con el esquema flexible: unas reservas tienen `extras`, otras no.
 
@@ -342,6 +368,8 @@ db.reservas.find({ hotel: { $type: "string" } })
 
 ### Proyección
 
+El primer argumento de `find` responde **qué documentos**; el segundo, **qué campos devolver**. La proyección reduce el contenido transferido y facilita leer la respuesta, pero no modifica los documentos almacenados. Excluir `_id` es la excepción habitual que permite combinar inclusión de campos con una exclusión.
+
 Segundo argumento: qué campos ver (`1` / `true`) u ocultar (`0` / `false`). `_id` sale **siempre** salvo que lo apaguéis.
 
 ```javascript
@@ -366,8 +394,8 @@ db.reservas.find({ hotel: "Laredo", canal: "web" })
 db.reservas.find({ $and: [{ hotel: "Laredo" }, { canal: "web" }] })
 ```
 
-!!! tip "OR: el filtro ancho, primero"
-    En un `$or`, empezar por el criterio que **más** documentos cumple reduce el trabajo de los demás. Al revés que el AND.
+!!! tip "OR une alternativas"
+    Un documento se devuelve si cumple al menos una rama. Cambiar su orden no garantiza una mejora. Importan las condiciones y los índices que el planificador pueda utilizar; comprobad el plan de ejecución.
 
 **`$nor`:** no cumple **ninguna** de las condiciones.
 
@@ -387,6 +415,8 @@ db.reservas.find({ canal: { $nin: ["ota"] } })
 
 ### Subdocumentos (notación punto)
 
+La notación `"cobro.ok"` accede a una propiedad dentro de un objeto. Comparar un subdocumento completo puede exigir una coincidencia más estricta, incluido su contenido y orden de campos. Para preguntar por una propiedad concreta, preferid la ruta con punto. En arrays, además hay que decidir si las condiciones deben cumplirlas elementos distintos o **el mismo elemento**.
+
 Da igual el nivel. El orden de los campos **dentro** del subdocumento no importa.
 
 ```javascript
@@ -395,6 +425,10 @@ db.opiniones.find({ titulo: "Vistas al mar", "comentarios.autor": "Luis Sainz" }
 ```
 
 ### Arrays
+
+Ejemplo: un comentario de Ana tiene `email: "a@ejemplo.es"` y otro de Luis tiene `email: "l@ejemplo.es"`. Filtrar por autor Ana y correo de Luis con dos rutas independientes puede encontrar el documento: cada condición la cumple un elemento. Con `$elemMatch`, ambas deben cumplirse en **un mismo comentario**, así que no coincidiría.
+
+No confundáis `$elemMatch` en el **filtro** con su uso en la **proyección**: el primero selecciona documentos; el segundo devuelve solamente el **primer elemento coincidente** del array. Para devolver todos los comentarios que cumplen una condición, se necesita una expresión de agregación como `$filter`.
 
 Un array de **escalares** se consulta como un campo: `{ extras: "parking" }` = “contiene parking”.
 
@@ -433,13 +467,15 @@ db.opiniones.find({ titulo: "Centro y ruido" }, { comentarios: { $slice: 2 }, et
 
 ### Fechas
 
+El JSONL utiliza Extended JSON para que `checkin` se importe como fecha BSON. Una cadena `"2026-04-12"` no es el mismo tipo. Para un periodo utilizad inicio incluido y final excluido: abril es `>= 2026-04-01T00:00:00Z` y `< 2026-05-01T00:00:00Z` si el periodo se define en UTC. Para un día civil de Cantabria, convertid sus límites teniendo en cuenta la zona horaria.
+
 Guardad **`Date` / `ISODate`**, no `"12/04/2026"` en texto, si vais a filtrar rangos. El JSONL de reservas usa Extended JSON (`$date`) para que `mongoimport` cree fechas de verdad.
 
 ```javascript
 const fechas = {
   hoy: new Date(),
   checkin: ISODate("2026-04-12"),
-  ahora: Timestamp(),
+  ahora: new Date(),
 };
 ```
 
@@ -457,6 +493,8 @@ En agregación (y a veces en proyección moderna) `$dateToString` formatea. El d
 
 ### `distinct`
 
+`distinct("hotel")` devuelve valores diferentes de ese campo, no el número de reservas por hotel. Si hay tres reservas de Laredo, el nombre aparece una vez. Para obtener totales o sumas necesitaremos `$group`, desarrollado en [2.9](pymongo.md).
+
 Valores distintos de un campo (como un `SELECT DISTINCT`):
 
 ```javascript
@@ -465,6 +503,8 @@ db.reservas.distinct("canal", { comarca: "Trasmiera" })
 ```
 
 ### Cursores
+
+El cursor evita traer todos los resultados de golpe. Configurad filtro, proyección y orden antes de recorrerlo. Sin un orden explícito, «los dos primeros» no es una selección de negocio estable. Para paginar con empates, añadid `_id` como segundo criterio, por ejemplo `sort({importe: -1, _id: 1})`.
 
 Guardáis el cursor y lo recorréis. `limit` / `sort` / `skip` se ejecutan en el **servidor**. `hasNext` / `next` en el **cliente**.
 
@@ -501,13 +541,24 @@ db.reservas.countDocuments({ hotel: "Laredo", noches: { $gte: 3 } })
 
 `count()` en colección y en cursor está **deprecated** (4.0+). Aún lo veréis: `find(…).count()`.
 
-Estimación **rápida** (metadatos; **no** aplica bien el filtro):
+Estimación basada en metadatos de toda la colección: `estimatedDocumentCount()` **no acepta un filtro de consulta**. Para un subconjunto utilizad `countDocuments(filtro)`:
 
 ```javascript
 db.reservas.estimatedDocumentCount()
 ```
 
 ## Insertar y modificar
+
+Para mantener reproducibles las consultas, terminad primero el bloque de lectura sobre las colecciones originales. Después copiad los datos a una base independiente y realizad **todo el bloque de escrituras y borrados** allí:
+
+```javascript
+use hotel
+db.reservas.aggregate([{ $out: { db: "hotel_escrituras", coll: "reservas" } }])
+db.opiniones.aggregate([{ $out: { db: "hotel_escrituras", coll: "opiniones" } }])
+use hotel_escrituras
+```
+
+`$out` reemplaza la colección de destino si existía: usad únicamente esta base de ejercicios. Los ejemplos siguientes mantienen el nombre `reservas`, pero la base activa ya es `hotel_escrituras`. Verificadla con `db.getName()`.
 
 `insertMany` = array de documentos.
 
@@ -559,6 +610,8 @@ db.reservas.updateMany({ hotel: "Laredo" }, { $rename: { notas: "observaciones" 
 
 ### `replaceOne`
 
+Reemplazar significa aportar el nuevo contenido completo, conservando el identificador según las reglas de la operación. Un campo omitido desaparece. Para cambiar solo una propiedad, utilizad `$set`: evita borrar accidentalmente huéspedes, fechas o extras que no habéis incluido en el documento de sustitución.
+
 Sustituye **todo** el documento (salvo `_id`) por el que pasáis. Los campos que no listéis **desaparecen**.
 
 ```javascript
@@ -570,7 +623,9 @@ db.reservas.replaceOne(
 
 ### Concurrencia
 
-Un `updateMany` **no** es una transacción ACID de toda la colección (salvo *session* en el *driver*). Cada **documento** sí es atómico: no queda a medias. Entre documento y documento puede haber una pausa.
+Leer `noches`, sumar uno en la aplicación y escribir el resultado puede perder un incremento si dos clientes leen el mismo valor inicial. `$inc` expresa el cambio relativo dentro de la operación atómica. Para descontar una plaza, el filtro debe exigir además `libres: {$gte: 1}` y hay que comprobar si realmente se modificó el documento.
+
+Un `updateMany` **no** es una transacción ACID de toda la colección (salvo que se incluya en una transacción explícita sobre una topología compatible; una sesión por sí sola no basta). Cada **documento** sí es atómico: no queda a medias. Entre documento y documento puede haber una pausa.
 
 `findOneAndUpdate` (el `findAndModify` moderno) busca y cambia **atómico** y puede devolver el documento **ya** cambiado:
 
@@ -585,6 +640,8 @@ db.reservas.findOneAndUpdate(
 Útil para **contadores** (habitaciones libres) sin que dos recepciones pisen el mismo número.
 
 ### Arrays: `$push`, `$pull`, `$`
+
+`$push` añade incluso si el valor ya existe; `$addToSet` evita añadir un valor idéntico, pero no ordena ni elimina duplicados previos. El operador posicional `$` depende del elemento que identificó el filtro. Antes de actualizar, ejecutad un `find` con ese filtro para comprobar qué reserva y qué array estáis seleccionando.
 
 | Operador | Oficio |
 | --- | --- |
@@ -619,6 +676,8 @@ db.reservas.updateOne(
 
 ## Borrar
 
+Primero ejecutad `find(filtro)` y `countDocuments(filtro)` en la base de escrituras para comprobar el alcance. Después contrastad `deletedCount` con lo esperado. El resultado de una eliminación es un recuento, no una copia de los documentos borrados.
+
 ```javascript
 db.reservas.deleteOne({ hotel: "Islares" })
 db.reservas.deleteMany({ hotel: "prueba" })
@@ -637,7 +696,7 @@ Vaciar y **tirar índices**: `db.reservas.drop()`. Borrar la base: `use hotel` y
 | **a)** | JSON anidado **depositado** y **consultado** sin ocho tablas |
 | **d)** | Documentos con distintas claves; `$exists`; campos nuevos con `$set` |
 
-El “rápido” es *para este modelo*. Un agregado de 8 TB sigue siendo [HDFS + Spark](computacion-distribuida.md). Réplicas y *shards*: [2.8](replicas-shards.md). Python: [2.9](pymongo.md).
+El rendimiento depende de consultas, índices y recursos. Para agregados grandes sobre ficheros podemos evaluar [HDFS y un motor distribuido](computacion-distribuida.md), sin convertir un tamaño concreto en una frontera universal entre productos. Réplicas y *shards*: [2.8](replicas-shards.md). Python: [2.9](pymongo.md).
 
 !!! success "En voz alta"
     “Mongo guarda BSON. El `_id` lo fabrica el driver. `find` es un cursor. Actualizo con `$set`, no pisando el documento a ciegas. El array se toca con `$push` y `$`.”
@@ -665,7 +724,7 @@ Importad `reservas` y `opiniones`. Copiad comando y resultado (o captura).
     1. Etiqueta `playa`; `playa` **y** `parking` (`$all`); `playa` **o** `nieve` (`$in`).
     2. Sin etiqueta `spa` (`$nin` o `$not`).
     3. Exactamente **un** comentario (`$size`); al menos un comentario (`comentarios.0` `$exists` o `$not` `$size: 0`).
-    4. Algún comentario de `Luis Sainz`; proyectar **solo** esos comentarios (`$elemMatch`).
+    4. Algún comentario de `Luis Sainz`; proyectar el **primer** comentario coincidente (`$elemMatch`); explicad por qué no devuelve todos.
     5. `cuerpo` que contenga `wifi` (`$regex`); título + `$slice` de 2 comentarios y 3 etiquetas.
 4. **Escrituras** (colección `reservas` o una `reservas_lab` que luego `drop`):
     1. Insertar Islares (Trasmiera, 2 noches).
@@ -673,6 +732,12 @@ Importad `reservas` y `opiniones`. Copiad comando y resultado (o captura).
     3. Añadir `provincia: "Cantabria"`; `$rename` a `comunidad`.
     4. `$set` de `extras: []` y luego `$addToSet` `"parking"`; `$` para cambiar un extra.
     5. `$unset` de un campo; `deleteOne` de Islares.
+
+### Cómo comprobar las respuestas
+
+Entregad pregunta en lenguaje natural, filtro, proyección y resultado. En arrays, incluid un contraejemplo que distinga «el mismo elemento» de «elementos distintos». En fechas, explicad límites y zona horaria. En escrituras, anotad recuento de coincidencias y modificaciones: `matchedCount: 1` y `modifiedCount: 0` puede significar que el valor ya era el solicitado.
+
+Las actividades de escritura se hacen sobre `hotel_escrituras`; las del [parte en Python](pymongo.md) parten otra vez de `hotel` sin modificar. Así una práctica no altera silenciosamente los resultados de la siguiente.
 
 ## Referencias
 

@@ -12,11 +12,15 @@ Si Big Data es la *filosofía* de trabajo con grandes volúmenes (volumen, veloc
 
 No es “un `.exe` que instalas y ya”. Es un **proyecto** de código abierto: un núcleo (ficheros + recursos + un modelo de programación sencillo) y un **ecosistema** de módulos que se enchufan encima. El criterio **e)** del RA2 es exactamente eso: el sistema **crece añadiendo piezas** (un *datanode*, Hive, Spark) sin reescribir el programa de reservas de Laredo.
 
-Hoy se trabaja sobre Hadoop **3.x** (la rama **3.4.x** es la vigente en documentación). Sigue habiendo jobs compilados para la **2**. En la **1** el cómputo era *JobTracker* + *TaskTracker*; eso ya no se instala, pero sale en textos viejos y en entrevistas.
+En estas prácticas utilizamos Hadoop **3.x**. Anotad la versión efectiva con `hadoop version`, porque la etiqueta Docker puede actualizarse. Sigue habiendo jobs compilados para la **2**. En la **1** el cómputo era *JobTracker* + *TaskTracker*; eso ya no se instala, pero sale en textos viejos y en entrevistas.
 
 El grupo hotelero no “compra Hadoop porque está de moda”. Lo usa porque **deposita cualquier fichero** (logs, Parquet, fotos de habitación) y **procesa en el mismo sitio** donde está guardado. Eso es el criterio **a)** del RA2: importancia del almacén para depositar y procesar *cualquier* tipo, rápido, a escala.
 
 ## Qué promete (y por qué importa al RA2)
+
+El problema combina tres preguntas: **dónde conservar el histórico**, **quién obtiene recursos para procesarlo** y **cómo expresar el cálculo**. HDFS responde a la primera, YARN a la segunda y MapReduce a la tercera. El ecosistema añade formas de consultar, ingerir y coordinar; no son tres nombres para la misma función.
+
+Por ejemplo, el cierre nocturno lee reservas de HDFS, solicita recursos a YARN y ejecuta un agregado. Si añadimos Hive para escribir esa consulta en SQL, no necesitamos convertir el NameNode en una base de datos: Hive aporta una interfaz y utiliza un motor de ejecución.
 
 | Promesa | En castellano de recepción | Criterio |
 | --- | --- | --- |
@@ -25,7 +29,7 @@ El grupo hotelero no “compra Hadoop porque está de moda”. Lo usa porque **d
 | **Escalable** | De un servidor a miles. Cada máquina aporta **disco y CPU** locales (*scale-out*, no *scale-up*) | **e)** |
 | **Portable** | Linux de aula, Windows en un *edge*, cloud (EMR, HDInsight, Dataproc) | **a)** |
 
-**Confiable** y **tolerante a fallos** no son lo mismo, aunque se parecen. La primera habla de **copias** y de **reintentar** el cálculo. La segunda habla de **recuperación automática**: el hardware cae, el clúster sigue, y cuando el disco vuelve a estar sano **entra otra vez** en el grupo. En un hotel de 80 nodos, un disco muerto **cada semana** no es un incidente: es el calendario.
+La **fiabilidad** es la capacidad de prestar el servicio de acuerdo con sus requisitos; la **tolerancia a fallos** contribuye a ella mediante réplicas, reintentos y recuperación. No son dos mecanismos independientes. Siempre debemos indicar qué fallos se toleran: un sistema puede soportar un DataNode caído y seguir dependiendo de un único coordinador.
 
 **Escalable** aquí significa *horizontal*. No cambiáis el servidor de 64 GB por uno de 512 GB (eso es *scale-up*). Enchufáis **otro worker** y sumáis terabytes *y* contenedores a la vez.
 
@@ -37,7 +41,7 @@ Hadoop está pensado para **data-local computing**: no arrastras 8 TB de reserva
 
 La filosofía, en una frase: *almacena todo en un sitio y procesa en ese mismo sitio*. Mueves el **programa**, no el lago. Mover petabytes por la red suele ser más caro (tiempo y euros) que enviar 200 KB de bytecode al DataNode que ya tiene el trozo.
 
-Eso exige un entorno **repartido** de datos **y** de procesos. El sistema de ficheros es [HDFS](hdfs.md) (bloques, réplicas, NameNode: el detalle está allí). Encima, el cómputo se sienta en los **mismos** *workers*. Un DataNode no es “solo disco”: también corre *maps*, *reduces* y contenedores Spark.
+Eso exige un entorno **repartido** de datos **y** de procesos. El sistema de ficheros es [HDFS](hdfs.md) (bloques, réplicas, NameNode: el detalle está allí). Encima, el cómputo se sienta en los **mismos** *workers*. En un worker pueden convivir **dos procesos distintos**: el DataNode sirve bloques y el NodeManager ejecuta y supervisa tareas. El proceso DataNode no ejecuta los maps.
 
 ```mermaid
 flowchart LR
@@ -66,6 +70,8 @@ flowchart LR
 
 ### Tres roles de máquina
 
+Un **rol** es una responsabilidad, no necesariamente una máquina exclusiva. En el portátil agrupamos servicios para aprender; en un despliegue grande podemos separarlos para dimensionar recursos y fallos. El cliente envía el trabajo, los servicios de coordinación mantienen el estado y los workers realizan el trabajo con los datos.
+
 | Rol | Oficio | Cuántos (orden de magnitud) |
 | --- | --- | --- |
 | **Maestro** | Gestión global: NameNode, ResourceManager, a menudo ZooKeeper. Controla *dónde* está el dato y *quién* corre el job | Típicamente **unos pocos** (a menudo **3**, para no tener un solo punto frágil). Hardware más exigente |
@@ -79,15 +85,17 @@ El maestro **no** guarda los 8 TB de reservas. Guarda el **mapa** (qué bloque e
 
 ### Números de catálogo (para situaros, no para memorizar)
 
+Los valores siguientes son orientativos, no requisitos mínimos ni una receta de compra. Dimensionad a partir de bytes que se leen por segundo, concurrencia y memoria de las tareas. Más CPU no soluciona un disco saturado; más RAM puede reducir accesos, pero no corrige una red insuficiente.
+
 En un *datacenter* real veréis órdenes de magnitud así. No los recitáis en un examen al decimal; sí debéis **notar** que el *worker* es disco y el maestro es CPU/RAM.
 
 - **Worker:** 64–128 GB de RAM; 12–24 discos de 4–12 TB en **JBOD** (*just a bunch of drives*, a menudo **sin RAID**); 2 CPU × 6–8 núcleos.
 - **Maestro:** 128–256 GB; 2 SSD de 2–4 TB en RAID; 2 CPU × 8–16 núcleos. Aquí pesa más la **CPU y la RAM** que los terabytes: el NameNode vive en memoria.
 - **Edge:** del orden de 256 GB de RAM; 2 discos de 2–3 TB en RAID; 2 CPU × 8 núcleos. Mucha RAM para clientes; poco disco de lago.
 
-¿Por qué **JBOD y no RAID** en el *worker*? Porque HDFS **ya replica** el bloque en otros nodos. Un RAID-5 dentro del servidor duplica el trabajo y **esconde** el fallo que Hadoop sabe gestionar. El hotel prefiere tres copias en tres racks a un RAID local que no entiende YARN.
+¿Por qué **JBOD y no RAID** en el *worker*? Porque HDFS **ya replica** el bloque en otros nodos. HDFS puede aprovechar discos independientes y recuperar copias a nivel de clúster, por lo que muchos diseños usan JBOD. RAID protege frente a ciertos fallos locales, pero no sustituye réplicas en otros nodos ni dominios de fallo. La elección depende del diseño; no la realiza YARN.
 
-Cada *worker* que enchufáis **suma capacidad de disco y de jobs a la vez**. Eso es el criterio **e)** en el armario, no solo en el diagrama. Añadir un nodo no es “más carpeta”: es más **HDFS** y más **contenedores**.
+Un worker con DataNode y NodeManager configurados puede aportar tanto disco como recursos de ejecución. Eso es el criterio **e)** en el armario, no solo en el diagrama. Añadir un nodo no es “más carpeta”: es más **HDFS** y más **contenedores**.
 
 ## El núcleo: cuatro piezas
 
@@ -103,6 +111,10 @@ Para el analista, el clúster **parece** una carpeta enorme (`hdfs dfs -ls /`). 
 Eso no significa que el clúster sea “como un USB enorme”. Hay un NameNode, hay réplicas, hay *splits*. Pero **el código del job** no abre un socket a `datanode-17`. Hadoop lo hace.
 
 ## El ecosistema (módulos que se añaden)
+
+Leed la tabla como un recorrido del dato: **entrada → almacenamiento → procesamiento → consulta → coordinación**. Algunos proyectos aparecen por su importancia histórica; que estén en un diagrama no significa que deban instalarse todos. Comprobad compatibilidad y mantenimiento antes de utilizarlos en un proyecto nuevo.
+
+En el caso del hotel, distinguimos el fichero original, su catálogo o metadatos, el motor que calcula y la herramienta que presenta el resultado. Un catálogo no guarda necesariamente los bytes; un motor SQL no sustituye automáticamente el almacenamiento.
 
 El RA2 habla del **amplio ecosistema**. No certificáis todos. Sí debéis **citar la familia** y saber *cuándo* se enchufa. El núcleo **no cambia**: HDFS sigue siendo HDFS cuando llega Hive.
 
@@ -177,7 +189,7 @@ Imaginad tres bloques (tres *mappers*):
 
 Hasta que no se **reduzca**, hay **duplicados** de clave: dos `Laredo`, dos `Potes`, dos `Noja`.
 
-- **Map:** cada bloque emite pares. No suma todavía.
+- **Map:** cada tarea procesa su split y emite pares. No suma todavía.
 - **Shuffle / sort:** el clúster **junta** todas las `Laredo` en el mismo *reducer* (el gesto de un `GROUP BY`).
 - **Reduce:** suma las noches de Laredo (`3+1=4`), de Potes (`5+2=7`), etc. Escribe el resultado otra vez en HDFS.
 
@@ -191,8 +203,8 @@ flowchart LR
   M3 --> S
   S --> R1["Reduce Laredo, Potes"]
   S --> R2["Reduce Noja, Santander, Comillas"]
-  R1 --> O[HDFS part-r-00000]
-  R2 --> O
+  R1 --> O1[HDFS part-r-00000]
+  R2 --> O2[HDFS part-r-00001]
 ```
 
 Pasos reales (más que “map y ya”):
@@ -200,7 +212,7 @@ Pasos reales (más que “map y ya”):
 1. Lectura desde HDFS de los ficheros de entrada como pares clave/valor (a menudo la **línea** es el valor; la clave puede ser el *offset*).
 2. Cada línea va a un *mapper*. Hay **tantos *mappers* como *splits*** (orden de magnitud: tantos como bloques).
 3. El *mapper* parsea el hotel (clave) y las noches (valor) y emite `(hotel, noches)`.
-4. Para facilitar la agregación, se **ordenan y barajan** los datos por clave. Aquí viajan por la red: es el momento caro si el *mapper* no es *data-local*.
+4. Para facilitar la agregación, se **ordenan y barajan** los datos por clave. Aquí viajan por la red: puede ser costoso incluso si la entrada del mapper era local, porque las claves se reúnen entre tareas.
 5. El *reducer* suma las ocurrencias de cada hotel y genera un fichero por **partición** de salida.
 6. Las partes se ven como `part-r-00000` (o `part-00000` en Streaming) más un `_SUCCESS` si el job acabó bien.
 
@@ -212,7 +224,7 @@ El criterio **b)** (comprobar el *poder* del modelo) se cierra cuando **lanzáis
 
 **YARN** (*Yet Another Resource Negotiator*) es un **planificador de tareas** y **gestor de recursos** distribuidos. Forma parte de Hadoop desde la **versión 2**. Abstrae la gestión de recursos de los procesos MapReduce: la asignación es más efectiva y **no** está atada a un solo marco.
 
-Encima conviven **MapReduce v2**, Tez, Impala, Spark… Varias aplicaciones **a la vez**, en el mismo clúster, sin que un *wordcount* se coma toda la RAM del hotel.
+Pueden ejecutarse sobre YARN **MapReduce v2**, Tez y Spark. Otros motores del ecosistema tienen su propia arquitectura de servicios. Varias aplicaciones **a la vez**, en el mismo clúster, sin que un *wordcount* se coma toda la RAM del hotel.
 
 Objetivo: separar en **dos oficios** lo que en Hadoop 1 iba mezclado:
 
@@ -236,7 +248,7 @@ La idea: **un ResourceManager por clúster** (el planificador global) y **un App
 | Proceso | Dónde | Vida |
 | --- | --- | --- |
 | **ResourceManager (RM)** | Uno por clúster. Equivale, en espíritu, al NameNode del *cómputo* | Siempre encendido |
-| **NodeManager (NM)** | Uno por *worker* (junto al DataNode). Tantos NM como DataNodes | Siempre; si cae, el RM manda el trabajo a otro |
+| **NodeManager (NM)** | Uno por *worker* (junto al DataNode). Su número no tiene que coincidir con el de DataNodes | Siempre; si cae, el RM manda el trabajo a otro |
 | **ApplicationMaster (AM)** | **Uno por aplicación**, en un *worker* | Nace y muere con el job |
 | **Job History Server** | Archiva logs de jobs | Opcional; **recomendable** para auditar |
 
@@ -247,6 +259,8 @@ El AM es una librería **específica del framework** (el AM de MapReduce no es e
 Si todos los AM vivieran en el maestro, el RM sería un cuello de botella: no podrías lanzar cientos de jobs. Por eso el AM corre en un **worker**.
 
 ### ResourceManager
+
+Cuando dos aplicaciones compiten, el ResourceManager no les entrega toda la máquina a ambas: aplica las reglas de colas, capacidad y prioridad. Puede haber una aplicación aceptada pero esperando recursos. Esa espera es distinta de una tarea que ya está ejecutándose y tarda mucho.
 
 Mantiene la lista de NM **vivos** y su holgura. El cliente **siempre** habla con él. El RM:
 
@@ -263,6 +277,8 @@ Por dentro tiene dos mitades. No las mezcléis:
 En el `config.env` del aula veréis un **Capacity Scheduler**: colas (`root.default`), un tope de aplicaciones (`maximum-applications=10000`), un porcentaje máximo de recursos para ApplicationMasters (`0.1`). Eso es política de hotel: *el job de gerencia no se come el 100 % del clúster*.
 
 ### NodeManager
+
+El NodeManager informa de recursos y estado del nodo y supervisa las tareas asignadas. Si una tarea termina con error, necesitamos sus registros para distinguir falta de memoria, dependencia ausente y datos inválidos. Reiniciar todos los servicios sin leer el error elimina pistas y no corrige la causa.
 
 En cada *worker*:
 
@@ -291,6 +307,8 @@ El número de tareas a la vez ≈ número de contenedores libres. El techo del c
 El NM **mata** el proceso que se sale de su caja (más RAM de la pedida). También monta variables de entorno, dependencias y servicios auxiliares (el *shuffle* de MapReduce es uno: `mapreduce_shuffle`).
 
 ### ApplicationMaster
+
+El AM conoce el progreso de **su aplicación**, mientras que el ResourceManager tiene una visión global de los recursos. Esa separación permite que distintas aplicaciones utilicen estrategias de ejecución diferentes sobre el mismo clúster. Un reintento puede recuperar un fallo transitorio; un error determinista del mapper se repetirá.
 
 Negocia **más** contenedores con el RM, habla con los NM, **coordina** las tareas de *su* job y vigila el progreso.
 
@@ -343,11 +361,20 @@ No hace falta la OVA ni el usuario de otro ciclo. Si instaláis a mano en Ubuntu
 
 ### Mini-clúster Docker de este módulo
 
+Este laboratorio simula las funciones de un clúster en **un ordenador**. Necesitáis Docker con contenedores Linux, memoria suficiente y los ficheros de la carpeta de prácticas descargados juntos. Los comandos `docker compose` se ejecutan en el host; los comandos `hdfs`, `yarn` y `mapred`, en el Bash del NameNode salvo indicación contraria.
+
+El directorio local está montado como `/practicas`, solo para lectura, y los datos HDFS se guardan en volúmenes. `docker compose down` detiene el laboratorio y conserva esos volúmenes; `down -v` los elimina. Si ya teníais un clúster creado sin volúmenes, exportad sus ficheros antes de recrearlo con esta configuración.
+
+Antes de Streaming, ejecutad `docker compose exec nodemanager python3 --version`. Si no hay intérprete, el docente debe proporcionar una imagen Hadoop con Python 3 en los nodos ejecutores. No basta con tener Python instalado en Windows. Los primeros jobs Java no requieren Python.
+
 Ficheros en [hotel-hadoop](../assets/practicas/hotel-hadoop/compose.yaml): proyecto `hotel-hadoop`, hostnames `namenode` / `resourcemanager`. **No** copies el proyecto ni los contenedores `iabd-*` de otro temario.
 
 [compose.yaml](../assets/practicas/hotel-hadoop/compose.yaml):
 
 ```yaml
+# Mini-clúster de aula (un NameNode, un DataNode, RM y NM).
+# Nombres propios del IES: no copies el proyecto iabd-hadoop.
+
 name: hotel-hadoop
 
 services:
@@ -361,11 +388,17 @@ services:
       - ./config.env
     environment:
       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    working_dir: /practicas
+    volumes:
+      - .:/practicas:ro
+      - hdfs_name:/tmp/hadoop-root/dfs/name
 
   datanode:
     image: apache/hadoop:3
     hostname: datanode
     command: ["hdfs", "datanode"]
+    volumes:
+      - hdfs_data:/tmp/hadoop-root/dfs/data
     env_file:
       - ./config.env
 
@@ -384,19 +417,22 @@ services:
     command: ["yarn", "nodemanager"]
     env_file:
       - ./config.env
+
+volumes:
+  hdfs_name:
+  hdfs_data:
 ```
 
 [config.env](../assets/practicas/hotel-hadoop/config.env) (la imagen oficial traduce estas variables a XML):
 
 ```text
-CORE-SITE.XML_fs.default.name=hdfs://namenode
-CORE-SITE.XML_fs.defaultFS=hdfs://namenode
+CORE-SITE.XML_fs.defaultFS=hdfs://namenode:8020
 HDFS-SITE.XML_dfs.namenode.rpc-address=namenode:8020
 HDFS-SITE.XML_dfs.replication=1
 MAPRED-SITE.XML_mapreduce.framework.name=yarn
-MAPRED-SITE.XML_yarn.app.mapreduce.am.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
-MAPRED-SITE.XML_mapreduce.map.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
-MAPRED-SITE.XML_mapreduce.reduce.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
+MAPRED-SITE.XML_yarn.app.mapreduce.am.env=HADOOP_MAPRED_HOME=/opt/hadoop
+MAPRED-SITE.XML_mapreduce.map.env=HADOOP_MAPRED_HOME=/opt/hadoop
+MAPRED-SITE.XML_mapreduce.reduce.env=HADOOP_MAPRED_HOME=/opt/hadoop
 YARN-SITE.XML_yarn.resourcemanager.hostname=resourcemanager
 YARN-SITE.XML_yarn.nodemanager.pmem-check-enabled=false
 YARN-SITE.XML_yarn.nodemanager.vmem-check-enabled=false
@@ -413,12 +449,16 @@ CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.state=RUNNING
 CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_submit_applications=*
 CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_administer_queue=*
 CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.node-locality-delay=40
+CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings=
+CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings-override.enable=false
+HDFS-SITE.XML_dfs.namenode.name.dir=file:///tmp/hadoop-root/dfs/name
+HDFS-SITE.XML_dfs.datanode.data.dir=file:///tmp/hadoop-root/dfs/data
 ```
 
 Arranque (PowerShell o bash; `docker compose` es el plugin actual):
 
 ```text
-cd ruta\docs\assets\practicas\hotel-hadoop
+cd docs/assets/practicas/hotel-hadoop
 docker compose up -d
 docker compose exec namenode bash
 ```
@@ -430,9 +470,11 @@ UIs desde el **host** (el Windows del aula):
 
 `ENSURE_NAMENODE_DIR` le dice a la imagen que **prepare** el directorio del NameNode la primera vez (equivale, en espíritu, a no tener que formatear a mano en este compose). En una VM clásica **sí** formateáis vosotros.
 
-En el portátil, `dfs.replication=1`: no hay tres discos. En el hotel de verdad, **3**. `pmem-check` y `vmem-check` a `false` evitan que el NodeManager mate tareas por límites de memoria **virtual** demasiado estrictos en Docker (un clásico de aula).
+En el portátil, `dfs.replication=1`: no hay tres discos. En el hotel de verdad, **3**. `pmem-check` y `vmem-check` a `false` evitan que el NodeManager mate tareas por límites de memoria **física y virtual** demasiado estrictos en Docker (un clásico de aula).
 
 ### Ficheros XML (`$HADOOP_HOME/etc/hadoop`)
+
+Cada propiedad configura una responsabilidad. `fs.defaultFS` indica a los clientes el sistema de ficheros por defecto; `dfs.replication` solicita copias por bloque; `mapreduce.framework.name` selecciona YARN; la dirección del ResourceManager permite localizar al coordinador de recursos. Cambiar una propiedad en un contenedor no actualiza mágicamente todos los demás: la configuración debe ser coherente entre servicios.
 
 Tanto en la VM como en Docker el raíz suele ser `/opt/hadoop`. En *pseudo-distribuido* veréis `localhost` o el hostname de **esa** máquina. No copies el hostname de otro instituto.
 
@@ -516,6 +558,8 @@ Si no podéis con la VM ni con Docker, el plan B del ciclo es un servicio cloud 
 
 ## Arrancar y mirar
 
+Los comandos `start-dfs.sh` y `start-yarn.sh` siguientes corresponden a una **instalación tradicional**. En el Compose ya se arranca un servicio por contenedor: usad `docker compose ps` y `docker compose logs nombre_servicio`. No ejecutéis un segundo arranque dentro del contenedor. `jps` muestra únicamente procesos Java del entorno desde el que se invoca, no todos los del clúster.
+
 En una instalación clásica (scripts en `$HADOOP_HOME/sbin`):
 
 ```text
@@ -545,6 +589,10 @@ En Docker no usáis `start-dfs.sh`: cada **servicio** del compose *es* un proces
 
 ## Primer job: el *wordcount* (y el nuestro)
 
+Primero verificamos la entrada: el fichero local debe existir en `/practicas`, la copia HDFS debe contener las mismas líneas y el directorio de salida debe ser nuevo. El cliente carga la entrada, pero las tareas leen desde HDFS. Si aparece `FileNotFound`, comprobad si el mensaje se refiere a la ruta local o a la ruta HDFS: son espacios diferentes.
+
+Los comandos con `$HADOOP_HOME` y `\` al final de línea se ejecutan en **Bash del contenedor**. El patrón del jar debe localizar un único archivo de ejemplos de la instalación.
+
 El “Hola mundo” histórico de Hadoop cuenta **palabras** de un texto. Hadoop trae ejemplos ya compilados en `$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar` (`wordcount`, `pi`, *grep*…).
 
 En este módulo **no** usamos el Quijote como caso de gerencia. Contáis palabras de [opiniones.txt](../assets/practicas/hotel-hadoop/opiniones.txt) (reseñas de Laredo, Potes, Santander, Noja y Comillas) o noches de [reservas.csv](../assets/practicas/hotel-hadoop/reservas.csv). El jar de ejemplo sirve igual: entra un fichero, sale un recuento.
@@ -557,10 +605,10 @@ hdfs dfs -put opiniones.txt /user/bda/
 hdfs dfs -ls /user/bda
 ```
 
-El *wordcount* (sustituid la versión del jar por la de vuestra instalación; `3.3.6` y `3.4.x` conviven en aulas):
+El *wordcount* (el patrón del jar debe coincidir con un único fichero de ejemplos de vuestra instalación):
 
 ```text
-yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
+yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
   wordcount /user/bda/opiniones.txt /user/bda/salida_wc
 ```
 
@@ -620,7 +668,7 @@ Map-Reduce Framework
 | Contador | Pregunta de aula |
 | --- | --- |
 | `Launched map tasks` | ¿Cuántos *mappers*? ¿Coincide con los *splits*? |
-| `Data-local map tasks` | ¿El map corrió **en el nodo que tenía el bloque**? Si es 0 en un clúster grande, algo va mal (red de más) |
+| `Data-local map tasks` | ¿El map corrió **en el nodo que tenía el bloque**? Si es 0, revisad topología y planificación; en este laboratorio los servicios viven en contenedores separados y no se garantiza localidad |
 | `Map input records` | Líneas (o registros) que entraron al map |
 | `Combine output records` | Si es menor que `Map output records`, el *combiner* **ahorró** tráfico |
 | `Reduce input groups` | Claves distintas que vio el *reducer* (palabras distintas, hoteles distintos) |
@@ -659,10 +707,12 @@ hdfs dfs -head /user/bda/salida_wc/part-r-00000
 
 ### El estimador de π (paralelismo visible)
 
+Este ejemplo permite observar tareas, pero con muy pocas muestras el tiempo está dominado por el arranque. Para comparar paralelismo manteniendo la carga, contrastad `pi 8 25000` y `pi 4 50000`: ambas configuraciones usan 200 000 muestras. El número de maps cambia; el trabajo total de muestreo se mantiene. Registrad además si YARN pudo ejecutarlos simultáneamente.
+
 Otro ejemplo del mismo jar:
 
 ```text
-yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
+yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
   pi 8 24
 ```
 
@@ -674,6 +724,8 @@ Estima π con **8** *maps* y **24** muestras por map. Si cambiáis a `pi 4 50`:
 No es “el botón mágico de Hadoop”. Es un job que **parte** un experimento de Montecarlo. El resultado **varía** un poco: es una estimación, no una constante memorizada. El criterio **b)** aquí es *ver* 8 mapas en el 8088, no recitar 3,1416.
 
 ## MapReduce en Python: Hadoop Streaming
+
+Aquí **Streaming** nombra la comunicación de los procesos por entrada y salida estándar. Sigue siendo un trabajo **por lotes** sobre una entrada finita: no es procesamiento continuo de eventos. El mapper escribe solo pares válidos en `stdout`; los mensajes de diagnóstico van a `stderr`, para no contaminar los datos del reducer.
 
 El API nativo de MapReduce está escrito en **Java**. **Hadoop Streaming** permite cualquier lenguaje que lea `stdin` y escriba `stdout` (la tubería Unix `|`). Hadoop manda el crudo al *mapper*; tras el *shuffle*, al *reducer*.
 
@@ -701,7 +753,7 @@ for linea in sys.stdin:
             print(f"{palabra}\t1")
 ```
 
-Prueba **local**, sin clúster (PowerShell redirige igual):
+Prueba **local en Bash**, sin clúster (la variante de PowerShell aparece después):
 
 ```text
 python mapper.py < opiniones.txt
@@ -779,62 +831,57 @@ El *wordcount* demuestra Streaming. El job del RA2 es el agregado:
 python mapper_noches.py < reservas.csv | sort | python reducer_noches.py
 ```
 
-El *mapper* salta la cabecera (`id_reserva,…`), parte por comas y emite `Laredo\t3`. El *reducer* suma. El [2.4](computacion-distribuida.md) os pide **contrastar** esa salida con un `GROUP BY` en DuckDB o pandas sobre el mismo CSV.
+El *mapper* salta la cabecera (`id_reserva,…`), interpreta las cinco columnas CSV, valida los campos y emite `Laredo\t3`. El *reducer* suma. El [2.4](computacion-distribuida.md) os pide **contrastar** esa salida con un `GROUP BY` en DuckDB o pandas sobre el mismo CSV.
+
+Las tuberías anteriores con `< fichero` son de **Bash**. En PowerShell, para el fichero pequeño, utilizad:
+
+```powershell
+Get-Content opiniones.txt | python mapper.py | Sort-Object | python reducer.py
+Get-Content reservas.csv | python mapper_noches.py | Sort-Object | python reducer_noches.py
+```
+
+El resultado completo de noches y su comprobación independiente están en [2.4](computacion-distribuida.md). En ambas pruebas debe usarse el CSV de esta carpeta, no uno de UT1 con otras columnas.
 
 ### Lanzar en el clúster
 
-Sintaxis general:
+Entrad en el Bash del NameNode, donde la carpeta de prácticas está montada, y verificad que Python 3 existe también en el NodeManager. Al invocar explícitamente `python3`, los scripts no necesitan permiso de ejecución. Guardad los ficheros como UTF-8.
 
-```text
+```bash
+cd /practicas
+hdfs dfs -mkdir -p /user/bda
+hdfs dfs -put -f opiniones.txt /user/bda/opiniones.txt
 mapred streaming \
-  -input carpetaOFicheroHDFS \
-  -output carpetaSalidaHDFS \
-  -mapper scriptMapper \
-  -reducer scriptReducer
-```
-
-Permisos de ejecución (Linux / contenedor). Sin `+x`, Streaming no puede lanzar el script:
-
-```text
-chmod u+x mapper.py reducer.py
-```
-
-Si los scripts están **solo** en vuestro disco (el caso habitual de aula), `-file` **los sube** al job:
-
-```text
-mapred streaming \
+  -files mapper.py,reducer.py \
   -input /user/bda/opiniones.txt \
-  -output /user/bda/salida_stream \
-  -mapper mapper.py -file mapper.py \
-  -reducer reducer.py -file reducer.py
+  -output /user/bda/salida_stream_01 \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducer.py"
+hdfs dfs -cat '/user/bda/salida_stream_01/part-*'
 ```
 
-Sin `-file`, Hadoop busca el script **ya** en HDFS (o en la ruta del contenedor). Si la carpeta de salida existe: `hdfs dfs -rm -r /user/bda/salida_stream`.
+`-files` distribuye los ficheros a los directorios de trabajo de las tareas. Las rutas de entrada y salida son HDFS; los scripts se toman del directorio local del cliente. Sin distribuirlos o instalarlos en los workers, no basta con que estén en el NameNode. En documentación antigua veréis `-file`; aquí utilizamos la opción genérica `-files` antes de las opciones de Streaming.
 
-En Hadoop **1.x** no existía `mapred streaming`. Se usaba:
+El mismo envío puede realizarse con el jar de Streaming:
 
-```text
-hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
-  -input ... -output ... -mapper ... -reducer ...
+```bash
+hadoop jar "$HADOOP_HOME"/share/hadoop/tools/lib/hadoop-streaming-*.jar -help
 ```
 
-Comprobar:
+Para repetir, elegid otra carpeta de salida y conservad la anterior hasta comparar. No supongáis un nombre fijo para la parte de salida: listad el directorio y leed `part-*`.
 
-```text
-hdfs dfs -head /user/bda/salida_stream/part-00000
-```
+El agregado de noches utiliza el mismo mecanismo:
 
-Ojo al nombre: el jar de ejemplos escribe `part-r-00000`; Streaming suele escribir `part-00000`. El `_SUCCESS` es el mismo oficio.
-
-El job de noches:
-
-```text
+```bash
+hdfs dfs -put -f reservas.csv /user/bda/reservas.csv
 mapred streaming \
+  -files mapper_noches.py,reducer_noches.py \
   -input /user/bda/reservas.csv \
-  -output /user/bda/salida_noches \
-  -mapper mapper_noches.py -file mapper_noches.py \
-  -reducer reducer_noches.py -file reducer_noches.py
+  -output /user/bda/salida_noches_01 \
+  -mapper "python3 mapper_noches.py" \
+  -reducer "python3 reducer_noches.py"
 ```
+
+**Diagnóstico:** salida ya existente → nueva ruta; `python3` ausente → revisar imagen del worker; registro inválido → comprobar contrato del CSV; aplicación esperando → revisar recursos YARN. Un estado final correcto debe acompañarse de los totales esperados del [2.4](computacion-distribuida.md).
 
 ## Relación con el RA2
 
@@ -855,9 +902,9 @@ Copiad el comando y, si el profesor lo pide, una captura donde se vea el resulta
 
 1. Arranca HDFS y YARN (`jps` o `docker compose ps`; UI **9870** y **8088**). Explica qué proceso es cada uno y por qué el Secondary NameNode **no** es el standby.
 2. Sube [opiniones.txt](../assets/practicas/hotel-hadoop/opiniones.txt). Lanza el `wordcount` del jar. Lista la carpeta de salida y lee `part-r-00000`. ¿Cuántos *maps* salieron? ¿Por qué? ¿Qué pasa si vuelves a lanzar **sin** borrar la carpeta?
-3. Lanza `yarn jar … pi 8 24`. Cambia a `pi 4 50`. ¿Qué cambia: el paralelismo, la muestra por map, ambos? ¿El número que imprime es exactamente π?
-4. Streaming con [mapper.py](../assets/practicas/hotel-hadoop/mapper.py) y [reducer.py](../assets/practicas/hotel-hadoop/reducer.py): limpia puntuación y unifica mayúsculas. Comprueba en HDFS el `part-00000`. Luego el par **noches** (`mapper_noches.py` / `reducer_noches.py`) y contrasta con un `GROUP BY` local ([2.4](computacion-distribuida.md)).
-5. Arranca el *History Server*. Relaciona un `application_…` de la UI de YARN con la carpeta de HDFS (`_SUCCESS`, *counters*, URL del proxy).
+3. Lanza `yarn jar … pi 8 24` y después `pi 4 50`: explica por qué cambian tanto el número de maps como las muestras totales. Para comparar con la misma carga utiliza `pi 8 25000` y `pi 4 50000`. Registra tiempo y concurrencia; el resultado es una estimación, no una prueba de velocidad con solo unas pocas muestras.
+4. Streaming con [mapper.py](../assets/practicas/hotel-hadoop/mapper.py) y [reducer.py](../assets/practicas/hotel-hadoop/reducer.py): limpia puntuación y unifica mayúsculas. Lista la salida y comprueba en HDFS todos los `part-*`. Luego el par **noches** (`mapper_noches.py` / `reducer_noches.py`) y contrasta con un `GROUP BY` local ([2.4](computacion-distribuida.md)).
+5. Relaciona un `application_…` de YARN con su entrada, salida, estado final y contadores. Como ampliación, utiliza el History Server si el entorno del docente lo tiene configurado. El Compose básico no incluye ese servicio; no presentes su ausencia como un fallo del job.
 
 ## Referencias (para profundizar, no para copiar la práctica)
 

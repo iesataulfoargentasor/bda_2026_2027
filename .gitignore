@@ -9,3 +9,6 @@ Thumbs.db
 _fuente/
 docs/assets/practicas/pdi_sales.csv
 scripts/_ingesta_video/
+
+# Datos sintéticos grandes de la práctica Hadoop de UT2
+docs/assets/practicas/hotel-hadoop/reservas_grandes.csv

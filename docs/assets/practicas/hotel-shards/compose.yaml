@@ -14,7 +14,7 @@ services:
       - --configdb
       - cfgrs/cfg-santander:27017
     ports:
-      - "27117:27017"
+      - "127.0.0.1:27117:27017"
     volumes:
       - ./anadir-shards.js:/scripts/anadir-shards.js:ro
     depends_on:
@@ -25,19 +25,19 @@ services:
   cfg-santander:
     image: mongo:7
     hostname: cfg-santander
-    command: ["mongod", "--configsvr", "--replSet", "cfgrs", "--bind_ip_all"]
+    command: ["mongod", "--configsvr", "--port", "27017", "--replSet", "cfgrs", "--bind_ip_all"]
     ports:
-      - "27118:27017"
+      - "127.0.0.1:27118:27017"
     volumes:
       - ./iniciar-cfg.js:/scripts/iniciar-cfg.js:ro
-      - vol_cfg:/data/db
+      - vol_cfg:/data/configdb
 
   trasmiera-a:
     image: mongo:7
     hostname: trasmiera-a
-    command: ["mongod", "--shardsvr", "--replSet", "trasmiera", "--bind_ip_all"]
+    command: ["mongod", "--shardsvr", "--port", "27017", "--replSet", "trasmiera", "--bind_ip_all"]
     ports:
-      - "27119:27017"
+      - "127.0.0.1:27119:27017"
     volumes:
       - ./iniciar-trasmiera.js:/scripts/iniciar-trasmiera.js:ro
       - vol_tr_a:/data/db
@@ -45,18 +45,18 @@ services:
   trasmiera-b:
     image: mongo:7
     hostname: trasmiera-b
-    command: ["mongod", "--shardsvr", "--replSet", "trasmiera", "--bind_ip_all"]
+    command: ["mongod", "--shardsvr", "--port", "27017", "--replSet", "trasmiera", "--bind_ip_all"]
     ports:
-      - "27120:27017"
+      - "127.0.0.1:27120:27017"
     volumes:
       - vol_tr_b:/data/db
 
   liebana-a:
     image: mongo:7
     hostname: liebana-a
-    command: ["mongod", "--shardsvr", "--replSet", "liebana", "--bind_ip_all"]
+    command: ["mongod", "--shardsvr", "--port", "27017", "--replSet", "liebana", "--bind_ip_all"]
     ports:
-      - "27121:27017"
+      - "127.0.0.1:27121:27017"
     volumes:
       - ./iniciar-liebana.js:/scripts/iniciar-liebana.js:ro
       - vol_li_a:/data/db
@@ -64,9 +64,9 @@ services:
   liebana-b:
     image: mongo:7
     hostname: liebana-b
-    command: ["mongod", "--shardsvr", "--replSet", "liebana", "--bind_ip_all"]
+    command: ["mongod", "--shardsvr", "--port", "27017", "--replSet", "liebana", "--bind_ip_all"]
     ports:
-      - "27122:27017"
+      - "127.0.0.1:27122:27017"
     volumes:
       - vol_li_b:/data/db
 

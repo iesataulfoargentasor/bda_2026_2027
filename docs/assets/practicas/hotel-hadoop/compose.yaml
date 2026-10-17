@@ -14,11 +14,17 @@ services:
       - ./config.env
     environment:
       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    working_dir: /practicas
+    volumes:
+      - .:/practicas:ro
+      - hdfs_name:/tmp/hadoop-root/dfs/name
 
   datanode:
     image: apache/hadoop:3
     hostname: datanode
     command: ["hdfs", "datanode"]
+    volumes:
+      - hdfs_data:/tmp/hadoop-root/dfs/data
     env_file:
       - ./config.env
 
@@ -37,3 +43,7 @@ services:
     command: ["yarn", "nodemanager"]
     env_file:
       - ./config.env
+
+volumes:
+  hdfs_name:
+  hdfs_data:

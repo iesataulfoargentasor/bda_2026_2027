@@ -7,11 +7,14 @@ for linea in sys.stdin:
     linea = linea.strip()
     if not linea:
         continue
-    hotel, n = linea.split("\t", 1)
     try:
+        hotel, n = linea.split("\t", 1)
         n = int(n)
-    except ValueError:
-        continue
+        if not hotel or n < 1:
+            raise ValueError("clave vacía o noches no positivas")
+    except ValueError as exc:
+        print(f"Par inválido recibido por el reducer: {exc}", file=sys.stderr)
+        sys.exit(1)
     if hotel != actual:
         if actual is not None:
             print(f"{actual}\t{total}")
