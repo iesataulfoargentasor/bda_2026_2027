@@ -1,0 +1,162 @@
+[
+  {
+    "title": "La reserva y el cobro de Ana están en sitios distintos",
+    "label": "Vamos a construir el recorrido que los reúne.",
+    "active": 0,
+    "heading": "Recepción registra la reserva; la pasarela confirma el pago",
+    "body": "El análisis necesita recibir ambos datos y saber cómo relacionarlos.",
+    "takeaway": "Ingesta: incorporar datos existentes a un destino.",
+    "narration": "Ana reserva por la web y paga su estancia en Laredo. La reserva queda en el programa del hotel y el cobro en el sistema de pagos. La directora quiere conocer el dinero cobrado por hotel, pero esos datos todavía no están juntos donde los va a consultar. La ingesta resuelve esa entrada: incorporar información que ya existe a un destino. Vamos a construir el recorrido, paso a paso, sin interrumpir el trabajo de recepción.",
+    "kind": "normal"
+  },
+  {
+    "title": "Empezamos por la pregunta, no por la herramienta",
+    "label": "Diseñamos desde el resultado hacia las fuentes.",
+    "active": 0,
+    "heading": "Resultado → reglas → datos necesarios",
+    "body": "¿Qué importe? ¿De qué cierre? ¿De qué hotel? ¿Para cuándo?",
+    "takeaway": "Reservar no demuestra que se haya cobrado.",
+    "narration": "Antes de copiar nada, concretamos el resultado. Queremos cobros confirmados del cierre anterior, agrupados por hotel y disponibles a las ocho. Necesitamos saber qué pago corresponde a cada reserva y cómo tratar devoluciones o datos tardíos. Después localizamos esos campos en los orígenes. No copiamos todas las fuentes por si acaso. Y no damos por cobrado el precio de una reserva: el pago necesita su propia confirmación.",
+    "kind": "normal"
+  },
+  {
+    "title": "Organizamos el recorrido en pasos comprobables",
+    "label": "Ese recorrido es el pipeline.",
+    "active": 0,
+    "heading": "Recoger → conservar → preparar → publicar",
+    "body": "Cada paso recibe algo definido y deja una salida que el siguiente puede utilizar.",
+    "takeaway": "Pipeline es el recorrido; ETL es un patrón dentro de él.",
+    "narration": "A ese recorrido organizado lo llamamos pipeline, o tubería de datos. Podemos recoger, conservar una copia, preparar y publicar un resultado. Separar los pasos ayuda a localizar fallos y repetir solo lo necesario. No es un producto que haya que comprar. ETL es un patrón concreto dentro de esta idea: extraer, transformar y cargar. Una tubería que solo transporta eventos no tiene por qué realizar una ETL completa.",
+    "kind": "normal"
+  },
+  {
+    "title": "¿Quién inicia el movimiento de los datos?",
+    "label": "El mismo hotel puede utilizar varios mecanismos.",
+    "active": 0,
+    "heading": "Push: el origen envía. Pull: el destino solicita. Poll: consulta periódica.",
+    "body": "Enviar una reserva, pedir la tabla de noche o revisar una carpeta cada quince minutos.",
+    "takeaway": "Quién inicia y a qué ritmo procesamos son decisiones distintas.",
+    "narration": "Para recibir la reserva de Ana, alguien debe iniciar el intercambio. Si el origen envía un aviso, es push. Si nuestro proceso solicita los datos por la noche, es pull. Si revisa periódicamente una carpeta para detectar novedades, es polling. No confundamos esto con lote o flujo: un origen puede enviar un archivo diario mediante push, y un consumidor de flujo puede pedir mensajes continuamente mediante pull. Elegimos según lo que permita la fuente y el retraso aceptable.",
+    "kind": "normal"
+  },
+  {
+    "title": "Primero comprobamos qué hemos recibido",
+    "label": "Extraer bien exige más que abrir un fichero.",
+    "active": 0,
+    "heading": "Campos, tipos, identificadores y periodo esperado",
+    "body": "Un archivo debe estar completo; una API puede entregar varias páginas.",
+    "takeaway": "Apartamos lo incorrecto y dejamos rastro del motivo.",
+    "narration": "Ahora llegan los datos. Comprobamos que existan el identificador de reserva, el hotel y los campos acordados, con tipos válidos. Si pedimos una API, quizá debamos recorrer varias páginas para recibirlo todo. Si leemos un fichero, esperamos a que termine de escribirse. Un lote defectuoso se aparta para revisión, no se oculta ni se convierte en ceros. La extracción debe ser ligera: recepción sigue atendiendo y nosotros no alteramos sus operaciones.",
+    "kind": "normal"
+  },
+  {
+    "title": "No necesitamos copiar tres años cada noche",
+    "label": "La primera carga y las siguientes tienen necesidades diferentes.",
+    "active": 0,
+    "heading": "Inicial: una fotografía completa. Incremental: altas y cambios.",
+    "body": "También debemos contemplar borrados cuando el origen y el objetivo lo requieran.",
+    "takeaway": "Confirmar el avance después de una carga correcta.",
+    "narration": "La primera vez quizá copiemos todo el histórico necesario. Después podemos traer solo registros nuevos o modificados: es una carga incremental. También hay que contemplar borrados cuando corresponda. Usamos una fecha de modificación o un mecanismo de captura de cambios, conocido como CDC. Guardamos hasta dónde hemos llegado solo después de completar correctamente la carga. Si adelantamos esa marca antes de escribir, un fallo podría hacer que el siguiente intento se saltase el pago de Ana.",
+    "kind": "normal"
+  },
+  {
+    "title": "Unimos la reserva de Ana con su cobro",
+    "label": "La clave compartida permite relacionar ambos orígenes.",
+    "active": 1,
+    "heading": "Reserva A17 + pago que indica A17 → información relacionada",
+    "body": "No unimos por nombre del huésped ni por coincidencia de importes.",
+    "takeaway": "Primero definimos qué representa cada fila.",
+    "narration": "Con los datos recibidos, buscamos la relación correcta. Imaginemos que la reserva de Ana se identifica como A diecisiete y que su pago contiene esa misma referencia. Esa clave permite unir ambas filas. Antes normalizamos representaciones, como web en mayúsculas o minúsculas, siguiendo reglas conocidas. No unimos por nombre del huésped ni por importe. Dos pagos de cien euros pueden ser distintos; para detectar un duplicado necesitamos un identificador fiable del pago.",
+    "kind": "normal"
+  },
+  {
+    "title": "Una reserva puede tener varios pagos",
+    "label": "El cruce cambia el número de filas: hay que interpretarlo.",
+    "active": 1,
+    "heading": "Ana paga 40 € y después 60 € para la misma reserva",
+    "body": "El cruce puede producir dos filas: suman 100 €, pero siguen representando una reserva.",
+    "takeaway": "Contar filas del cruce no siempre equivale a contar reservas.",
+    "narration": "Supongamos ahora que Ana paga cuarenta euros y después otros sesenta. Al relacionar los pagos con su reserva, obtenemos dos filas. Sumar ambos cobros da cien euros y puede ser correcto. Contar esas filas como dos reservas sería un error. Por eso, antes de agregar, comprobamos la relación entre los datos. El taller usa identificadores únicos en sus ficheros, pero un sistema real puede tener varios pagos por reserva y necesita reglas adecuadas.",
+    "kind": "normal"
+  },
+  {
+    "title": "El taller empieza con una pregunta pequeña",
+    "label": "Hola ETL selecciona reservas web con cobro.",
+    "active": 1,
+    "heading": "Extraer dos ficheros → filtrar y cruzar → escribir el resultado",
+    "body": "La unión interna conserva coincidencias. Una unión izquierda permite detectar reservas sin pago.",
+    "takeaway": "Este ejercicio no construye el panel completo de ocupación.",
+    "narration": "En el taller Hola ETL buscamos reservas de la web que tengan cobro. Leemos los dos ficheros, filtramos el canal y hacemos una unión interna: solo conservamos coincidencias. Si quisiéramos investigar reservas sin pago, necesitaríamos otro planteamiento, como una unión izquierda. Después escribimos el resultado. Python con pandas y SQL con DuckDB pueden resolver ese mismo trabajo. Todavía no hemos construido el panel completo ni calculado ocupación: faltan otros datos y pasos.",
+    "kind": "normal"
+  },
+  {
+    "title": "ETL y ELT: cambia cuándo transformamos",
+    "label": "Comparemos el mismo recorrido respecto al destino analítico acordado.",
+    "active": 1,
+    "heading": "",
+    "body": "",
+    "takeaway": "Ambas estrategias requieren calidad, permisos y reglas.",
+    "narration": "Veamos ahora las dos maneras de ordenar el trabajo. En ETL extraemos, transformamos y cargamos el resultado preparado en el destino analítico. En ELT extraemos, cargamos primero en ese entorno y transformamos allí después. Imaginad que recibimos reservas originales en una zona restringida y usamos SQL para producir una tabla validada. Eso es ELT. La diferencia no es limpiar o no limpiar: es cuándo y dónde hacemos la transformación.",
+    "kind": "etl"
+  },
+  {
+    "title": "Guardar primero no significa publicar sin revisar",
+    "label": "Disponibilidad para ingeniería y validez para dirección son estados distintos.",
+    "active": 2,
+    "heading": "Original recibido ≠ informe listo para consultar",
+    "body": "Conservar el original permite repetir cálculos si contiene los campos necesarios.",
+    "takeaway": "ETL también puede conservar copias originales.",
+    "narration": "En ELT, dirección no debería consultar el bruto como si fuera un informe terminado. Primero validamos y publicamos la tabla correcta. Conservar el original permite rehacer una transformación si cambia la pregunta, siempre que los campos necesarios estuvieran incluidos. ETL también puede conservar originales en una zona previa. Ninguna opción nos libra de los controles. Si mañana necesitamos el motivo de cancelación y nunca lo recogimos, habrá que volver a la fuente.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cargar es publicar una versión completa",
+    "label": "La escritura debe soportar fallos y reintentos.",
+    "active": 2,
+    "heading": "Escribir provisionalmente → comprobar → publicar",
+    "body": "Podemos añadir, sustituir un periodo o insertar y actualizar por una clave estable.",
+    "takeaway": "Idempotencia: repetir sin duplicar el resultado.",
+    "narration": "Vamos a guardar el resultado. Podemos añadir registros, sustituir el informe de un día o actualizar por una clave estable. Si el proceso falla a mitad, la directora no debe ver medio total como si fuera definitivo. Una opción es escribir en una zona provisional, comprobar recuentos e importes y publicar al terminar. Además, repetir la carga no debe duplicar el cobro de Ana. Esa propiedad se llama idempotencia y hay que diseñarla, no darla por supuesta.",
+    "kind": "normal"
+  },
+  {
+    "title": "El destino también determina cómo escribimos",
+    "label": "El formato y la organización deben servir a las consultas.",
+    "active": 2,
+    "heading": "CSV o JSON para revisar; Parquet para consultas analíticas por columnas",
+    "body": "Particiones, índices y tamaño de las transacciones influyen en una carga grande.",
+    "takeaway": "JSON como lista y JSONL por líneas no se leen igual.",
+    "narration": "El fichero de salida también forma parte del diseño. Para revisar unas filas, CSV o JSON pueden ser cómodos. Una lista JSON y un JSONL con un registro por línea no se leen igual. Para consultar columnas del lago, Parquet puede evitar leer campos innecesarios. Además, organizamos por fechas cuando ayude a consultar y ajustamos índices y tamaño de las transacciones al destino. Una prueba con cien filas no demuestra que millones se cargarán a tiempo.",
+    "kind": "normal"
+  },
+  {
+    "title": "Mientras preparamos el cierre, los sensores siguen enviando",
+    "label": "Ese segundo recorrido necesita atender eventos con poco retraso.",
+    "active": 3,
+    "heading": "Productor → cola o registro de mensajes → consumidor",
+    "body": "El intermediario desacopla el envío del procesamiento.",
+    "takeaway": "Una señal de presencia no decide si la habitación se puede vender.",
+    "narration": "El informe nocturno ya tiene su recorrido. Pero mientras Ana sale a desayunar, los sensores siguen enviando señales de presencia. Es otra necesidad, con otro plazo. Podemos usar una cola o un registro de mensajes entre productor y consumidor para que trabajen a ritmos diferentes. Recordad que ausencia de personas no significa habitación disponible para vender. Aquí actualizamos un indicador operativo; no sustituimos el cierre de cobros de las ocho.",
+    "kind": "normal"
+  },
+  {
+    "title": "¿Qué pasa si llegan más mensajes de los que procesamos?",
+    "label": "Guardar temporalmente y frenar la entrada son cosas distintas.",
+    "active": 3,
+    "heading": "Búfer: absorbe un pico. Contrapresión: limita la entrada.",
+    "body": "La capacidad es finita; una sobrecarga permanente requiere otra respuesta.",
+    "takeaway": "Recibir de nuevo un mensaje no debe duplicar sus efectos.",
+    "narration": "Si los mensajes llegan más rápido de lo que se procesan, el búfer guarda los pendientes mientras haya capacidad. La contrapresión, en cambio, frena o limita la entrada. Un almacén temporal no resuelve una sobrecarga permanente. También puede repetirse un mensaje si el consumidor falla antes de confirmar su procesamiento. Por eso el destino debe reconocer los eventos ya tratados. En algunas colas se retiran tras confirmarlos; en registros como Kafka pueden conservarse según una política de retención.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cerramos el recorrido con controles, no con una luz verde",
+    "label": "Las herramientas se eligen por la función que deben cumplir.",
+    "active": -1,
+    "heading": "Origen · quién inicia · ritmo · transformación · destino · formato",
+    "body": "Comprobar recibidos, rechazados, duplicados, totales y cambios en el origen.",
+    "takeaway": "El dato adecuado, a tiempo y con un resultado comprobable.",
+    "narration": "Ya podemos explicar nuestra solución. Las reservas y los cobros llegan, se relacionan, se validan y se publican; los sensores siguen un recorrido independiente. Revisamos filas recibidas, rechazadas, duplicados y totales, vigilamos cambios en el origen y copiamos solo los datos necesarios. Después elegimos herramientas: una ETL para transformar, mensajería para desacoplar y un orquestador para coordinar. La ingesta queda bien diseñada cuando sabemos qué entra, cuándo, cómo llega al destino y cómo demostrar que el resultado es fiable.",
+    "kind": "normal"
+  }
+]

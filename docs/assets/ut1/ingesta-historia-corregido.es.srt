@@ -1,0 +1,758 @@
+1
+00:00:00,100 --> 00:00:01,410
+Ana reserva por la web y
+
+2
+00:00:01,422 --> 00:00:02,924
+paga su estancia en Laredo.
+
+3
+00:00:03,183 --> 00:00:05,106
+La reserva queda en el programa del hotel
+
+4
+00:00:05,118 --> 00:00:06,873
+y el cobro en el sistema de pagos.
+
+5
+00:00:07,149 --> 00:00:09,324
+La directora quiere conocer el dinero
+cobrado
+
+6
+00:00:09,336 --> 00:00:11,464
+por hotel, pero esos datos todavía no
+
+7
+00:00:11,476 --> 00:00:13,423
+están juntos donde los va a consultar.
+
+8
+00:00:13,709 --> 00:00:16,281
+La ingesta resuelve esa entrada: incorporar
+
+9
+00:00:16,293 --> 00:00:18,481
+información que ya existe a un destino.
+
+10
+00:00:18,723 --> 00:00:20,898
+Vamos a construir el recorrido, paso a
+
+11
+00:00:20,910 --> 00:00:23,446
+paso, sin interrumpir el trabajo de
+recepción.
+
+12
+00:00:23,876 --> 00:00:26,652
+Antes de copiar nada, concretamos el
+resultado.
+
+13
+00:00:26,895 --> 00:00:30,020
+Queremos cobros confirmados del cierre
+anterior, agrupados
+
+14
+00:00:30,032 --> 00:00:31,786
+por hotel y disponibles a las ocho.
+
+15
+00:00:32,070 --> 00:00:34,918
+Necesitamos saber qué pago corresponde a
+cada reserva
+
+16
+00:00:34,930 --> 00:00:37,238
+y cómo tratar devoluciones o datos tardíos.
+
+17
+00:00:37,505 --> 00:00:40,257
+Después localizamos esos campos en los
+orígenes.
+
+18
+00:00:40,519 --> 00:00:42,887
+No copiamos todas las fuentes por si acaso.
+
+19
+00:00:43,137 --> 00:00:44,940
+Y no damos por cobrado el precio de
+
+20
+00:00:44,952 --> 00:00:48,137
+una reserva: el pago necesita su propia
+confirmación.
+
+21
+00:00:48,536 --> 00:00:50,592
+A ese recorrido organizado lo llamamos
+
+22
+00:00:50,604 --> 00:00:52,358
+pipeline, o tubería de datos.
+
+23
+00:00:52,631 --> 00:00:54,927
+Podemos recoger, conservar una copia,
+
+24
+00:00:55,023 --> 00:00:56,790
+preparar y publicar un resultado.
+
+25
+00:00:57,022 --> 00:00:59,029
+Separar los pasos ayuda a localizar
+
+26
+00:00:59,041 --> 00:01:01,061
+fallos y repetir solo lo necesario.
+
+27
+00:01:01,305 --> 00:01:03,204
+No es un producto que haya que comprar.
+
+28
+00:01:03,464 --> 00:01:05,423
+ETL es un patrón concreto dentro
+
+29
+00:01:05,435 --> 00:01:08,103
+de esta idea: extraer, transformar y cargar.
+
+30
+00:01:08,385 --> 00:01:10,560
+Una tubería que solo transporta eventos no
+
+31
+00:01:10,572 --> 00:01:12,808
+tiene por qué realizar una ETL completa.
+
+32
+00:01:13,243 --> 00:01:14,877
+Para recibir la reserva de Ana,
+
+33
+00:01:15,034 --> 00:01:16,909
+alguien debe iniciar el intercambio.
+
+34
+00:01:17,166 --> 00:01:19,558
+Si el origen envía un aviso, es push.
+
+35
+00:01:19,877 --> 00:01:21,896
+Si nuestro proceso solicita los datos
+
+36
+00:01:21,908 --> 00:01:23,206
+por la noche, es pull.
+
+37
+00:01:23,550 --> 00:01:25,629
+Si revisa periódicamente una carpeta
+
+38
+00:01:25,641 --> 00:01:27,732
+para detectar novedades, es polling.
+
+39
+00:01:28,034 --> 00:01:30,846
+No confundamos esto con lote o flujo: un
+origen
+
+40
+00:01:30,858 --> 00:01:33,719
+puede enviar un archivo diario mediante
+push, y un
+
+41
+00:01:33,731 --> 00:01:37,433
+consumidor de flujo puede pedir mensajes
+continuamente mediante pull.
+
+42
+00:01:37,738 --> 00:01:39,336
+Elegimos según lo que permita la
+
+43
+00:01:39,348 --> 00:01:40,995
+fuente y el retraso aceptable.
+
+44
+00:01:41,415 --> 00:01:42,893
+Ahora llegan los datos.
+
+45
+00:01:43,163 --> 00:01:46,144
+Comprobamos que existan el identificador de
+reserva, el
+
+46
+00:01:46,156 --> 00:01:48,860
+hotel y los campos acordados, con tipos
+válidos.
+
+47
+00:01:49,162 --> 00:01:51,157
+Si pedimos una API, quizá debamos
+
+48
+00:01:51,169 --> 00:01:53,597
+recorrer varias páginas para recibirlo todo.
+
+49
+00:01:53,837 --> 00:01:55,796
+Si leemos un fichero, esperamos
+
+50
+00:01:55,808 --> 00:01:57,178
+a que termine de escribirse.
+
+51
+00:01:57,446 --> 00:02:00,066
+Un lote defectuoso se aparta para revisión,
+no
+
+52
+00:02:00,078 --> 00:02:01,917
+se oculta ni se convierte en ceros.
+
+53
+00:02:02,193 --> 00:02:04,898
+La extracción debe ser ligera: recepción
+sigue
+
+54
+00:02:04,910 --> 00:02:07,662
+atendiendo y nosotros no alteramos sus
+operaciones.
+
+55
+00:02:08,113 --> 00:02:11,106
+La primera vez quizá copiemos todo el
+histórico necesario.
+
+56
+00:02:11,331 --> 00:02:13,735
+Después podemos traer solo registros nuevos
+
+57
+00:02:13,747 --> 00:02:16,054
+o modificados: es una carga incremental.
+
+58
+00:02:16,315 --> 00:02:19,008
+También hay que contemplar borrados cuando
+corresponda.
+
+59
+00:02:19,290 --> 00:02:21,826
+Usamos una fecha de modificación o un
+mecanismo
+
+60
+00:02:21,838 --> 00:02:24,434
+de captura de cambios, conocido como CDC.
+
+61
+00:02:24,710 --> 00:02:26,718
+Guardamos hasta dónde hemos llegado solo
+
+62
+00:02:26,730 --> 00:02:28,977
+después de completar correctamente la carga.
+
+63
+00:02:29,237 --> 00:02:31,557
+Si adelantamos esa marca antes de escribir,
+
+64
+00:02:31,761 --> 00:02:33,588
+un fallo podría hacer que el siguiente
+
+65
+00:02:33,600 --> 00:02:35,559
+intento se saltase el pago de Ana.
+
+66
+00:02:35,990 --> 00:02:39,043
+Con los datos recibidos, buscamos la
+relación correcta.
+
+67
+00:02:39,323 --> 00:02:40,958
+Imaginemos que la reserva de Ana
+
+68
+00:02:40,970 --> 00:02:42,845
+se identifica como A diecisiete y que
+
+69
+00:02:42,857 --> 00:02:44,984
+su pago contiene esa misma referencia.
+
+70
+00:02:45,234 --> 00:02:47,302
+Esa clave permite unir ambas filas.
+
+71
+00:02:47,561 --> 00:02:50,397
+Antes normalizamos representaciones, como
+web en
+
+72
+00:02:50,409 --> 00:02:53,534
+mayúsculas o minúsculas, siguiendo reglas
+conocidas.
+
+73
+00:02:53,796 --> 00:02:56,356
+No unimos por nombre del huésped ni por
+importe.
+
+74
+00:02:56,610 --> 00:02:59,615
+Dos pagos de cien euros pueden ser
+distintos; para
+
+75
+00:02:59,627 --> 00:03:03,185
+detectar un duplicado necesitamos un
+identificador fiable del pago.
+
+76
+00:03:03,626 --> 00:03:05,657
+Supongamos ahora que Ana paga cuarenta
+
+77
+00:03:05,669 --> 00:03:07,436
+euros y después otros sesenta.
+
+78
+00:03:07,680 --> 00:03:09,122
+Al relacionar los pagos con
+
+79
+00:03:09,134 --> 00:03:11,166
+su reserva, obtenemos dos filas.
+
+80
+00:03:11,436 --> 00:03:12,914
+Sumar ambos cobros da cien
+
+81
+00:03:12,926 --> 00:03:14,453
+euros y puede ser correcto.
+
+82
+00:03:14,691 --> 00:03:17,491
+Contar esas filas como dos reservas sería un
+error.
+
+83
+00:03:17,771 --> 00:03:20,018
+Por eso, antes de agregar, comprobamos
+
+84
+00:03:20,030 --> 00:03:21,557
+la relación entre los datos.
+
+85
+00:03:21,840 --> 00:03:24,135
+El taller usa identificadores únicos en sus
+
+86
+00:03:24,147 --> 00:03:26,803
+ficheros, pero un sistema real puede tener
+varios
+
+87
+00:03:26,815 --> 00:03:29,484
+pagos por reserva y necesita reglas
+adecuadas.
+
+88
+00:03:29,926 --> 00:03:31,777
+En el taller Hola ETL buscamos
+
+89
+00:03:31,789 --> 00:03:33,640
+reservas de la web que tengan cobro.
+
+90
+00:03:33,884 --> 00:03:36,468
+Leemos los dos ficheros, filtramos el canal
+y
+
+91
+00:03:36,480 --> 00:03:39,821
+hacemos una unión interna: solo conservamos
+coincidencias.
+
+92
+00:03:40,130 --> 00:03:42,485
+Si quisiéramos investigar reservas sin pago,
+
+93
+00:03:42,666 --> 00:03:45,983
+necesitaríamos otro planteamiento, como una
+unión izquierda.
+
+94
+00:03:46,252 --> 00:03:48,199
+Después escribimos el resultado.
+
+95
+00:03:48,441 --> 00:03:50,424
+Python con pandas y SQL con
+
+96
+00:03:50,436 --> 00:03:52,804
+DuckDB pueden resolver ese mismo trabajo.
+
+97
+00:03:53,046 --> 00:03:55,522
+Todavía no hemos construido el panel
+completo ni
+
+98
+00:03:55,534 --> 00:03:58,714
+calculado ocupación: faltan otros datos y
+pasos.
+
+99
+00:03:59,030 --> 00:04:01,818
+Veamos ahora las dos maneras de ordenar el
+trabajo.
+
+100
+00:04:02,062 --> 00:04:04,851
+En ETL extraemos, transformamos y cargamos
+
+101
+00:04:04,863 --> 00:04:07,375
+el resultado preparado en el destino
+analítico.
+
+102
+00:04:07,609 --> 00:04:10,049
+En ELT extraemos, cargamos primero en
+
+103
+00:04:10,061 --> 00:04:12,308
+ese entorno y transformamos allí después.
+
+104
+00:04:12,581 --> 00:04:15,286
+Imaginad que recibimos reservas originales
+en una
+
+105
+00:04:15,298 --> 00:04:17,954
+zona restringida y usamos SQL para preparar
+
+106
+00:04:17,966 --> 00:04:20,134
+una tabla con los datos ya comprobados.
+
+107
+00:04:20,405 --> 00:04:22,425
+Ese orden corresponde a ELT.
+
+108
+00:04:22,682 --> 00:04:24,798
+La diferencia no es limpiar o no limpiar:
+
+109
+00:04:24,942 --> 00:04:27,129
+es cuándo y dónde hacemos la transformación.
+
+110
+00:04:27,582 --> 00:04:30,070
+En ELT, dirección no debería consultar el
+
+111
+00:04:30,082 --> 00:04:32,257
+bruto como si fuera un informe terminado.
+
+112
+00:04:32,516 --> 00:04:35,208
+Primero validamos y publicamos la tabla
+correcta.
+
+113
+00:04:35,468 --> 00:04:37,619
+Conservar el original permite rehacer una
+
+114
+00:04:37,631 --> 00:04:40,203
+transformación si cambia la pregunta,
+siempre
+
+115
+00:04:40,215 --> 00:04:42,715
+que los campos necesarios estuvieran
+incluidos.
+
+116
+00:04:43,000 --> 00:04:46,390
+ETL también puede conservar originales en
+una zona previa.
+
+117
+00:04:46,630 --> 00:04:48,950
+Ninguna opción nos libra de los controles.
+
+118
+00:04:49,228 --> 00:04:51,836
+Si mañana necesitamos el motivo de
+cancelación y
+
+119
+00:04:51,848 --> 00:04:54,517
+nunca lo recogimos, habrá que volver a la
+fuente.
+
+120
+00:04:54,955 --> 00:04:56,626
+Vamos a guardar el resultado.
+
+121
+00:04:56,873 --> 00:04:59,817
+Podemos añadir registros, sustituir el
+informe de un
+
+122
+00:04:59,829 --> 00:05:01,981
+día o actualizar por una clave estable.
+
+123
+00:05:02,231 --> 00:05:04,466
+Si el proceso falla a mitad, la directora
+
+124
+00:05:04,478 --> 00:05:06,978
+no debe ver medio total como si fuera
+definitivo.
+
+125
+00:05:07,210 --> 00:05:09,722
+Una opción es escribir en una zona
+provisional,
+
+126
+00:05:09,950 --> 00:05:12,691
+comprobar recuentos e importes y publicar al
+terminar.
+
+127
+00:05:12,985 --> 00:05:14,872
+Además, repetir la carga no debe
+
+128
+00:05:14,884 --> 00:05:16,182
+duplicar el cobro de Ana.
+
+129
+00:05:16,424 --> 00:05:18,588
+Esa propiedad se llama idempotencia y
+
+130
+00:05:18,600 --> 00:05:20,811
+hay que diseñarla, no darla por supuesta.
+
+131
+00:05:21,233 --> 00:05:24,106
+El fichero de salida también forma parte del
+diseño.
+
+132
+00:05:24,370 --> 00:05:26,558
+Para revisar unas filas, CSV
+
+133
+00:05:26,570 --> 00:05:28,048
+o JSON pueden ser cómodos.
+
+134
+00:05:28,341 --> 00:05:30,000
+Una lista JSON y un JSONL con un
+
+135
+00:05:30,012 --> 00:05:31,995
+registro por línea no se leen igual.
+
+136
+00:05:32,267 --> 00:05:34,574
+Para consultar columnas del lago, Parquet
+
+137
+00:05:34,586 --> 00:05:36,738
+puede evitar leer campos innecesarios.
+
+138
+00:05:37,034 --> 00:05:40,376
+Además, organizamos por fechas cuando ayude
+a consultar y
+
+139
+00:05:40,388 --> 00:05:43,621
+ajustamos índices y tamaño de las
+transacciones al destino.
+
+140
+00:05:43,863 --> 00:05:45,390
+Una prueba con cien filas no
+
+141
+00:05:45,402 --> 00:05:47,589
+demuestra que millones se cargarán a tiempo.
+
+142
+00:05:48,016 --> 00:05:50,432
+El informe nocturno ya tiene su recorrido.
+
+143
+00:05:50,689 --> 00:05:52,503
+Pero mientras Ana sale a desayunar,
+
+144
+00:05:52,684 --> 00:05:55,364
+los sensores siguen enviando señales de
+presencia.
+
+145
+00:05:55,613 --> 00:05:57,740
+Es otra necesidad, con otro plazo.
+
+146
+00:05:58,000 --> 00:05:59,490
+Podemos usar una cola o un
+
+147
+00:05:59,502 --> 00:06:02,062
+registro de mensajes entre productor y
+consumidor
+
+148
+00:06:02,074 --> 00:06:03,997
+para que trabajen a ritmos diferentes.
+
+149
+00:06:04,154 --> 00:06:06,149
+Recordad que ausencia de personas no
+
+150
+00:06:06,161 --> 00:06:08,505
+significa habitación disponible para vender.
+
+151
+00:06:08,792 --> 00:06:11,965
+Aquí actualizamos un indicador operativo; no
+sustituimos
+
+152
+00:06:11,977 --> 00:06:13,480
+el cierre de cobros de las ocho.
+
+153
+00:06:13,951 --> 00:06:15,766
+Si los mensajes llegan más rápido
+
+154
+00:06:15,778 --> 00:06:17,412
+de lo que se procesan, el búfer
+
+155
+00:06:17,424 --> 00:06:19,708
+guarda los pendientes mientras haya
+capacidad.
+
+156
+00:06:19,934 --> 00:06:23,167
+La contrapresión, en cambio, frena o limita
+la entrada.
+
+157
+00:06:23,420 --> 00:06:26,629
+Un almacén temporal no resuelve una
+sobrecarga permanente.
+
+158
+00:06:26,882 --> 00:06:28,961
+También puede repetirse un mensaje si el
+
+159
+00:06:28,973 --> 00:06:31,846
+consumidor falla antes de confirmar su
+procesamiento.
+
+160
+00:06:32,111 --> 00:06:33,301
+Por eso el destino debe
+
+161
+00:06:33,313 --> 00:06:35,296
+reconocer los eventos ya tratados.
+
+162
+00:06:35,551 --> 00:06:39,109
+En algunas colas se retiran tras
+confirmarlos; en registros
+
+163
+00:06:39,121 --> 00:06:42,414
+como Kafka pueden conservarse según una
+política de retención.
+
+164
+00:06:42,831 --> 00:06:44,983
+Ya podemos explicar nuestra solución.
+
+165
+00:06:45,246 --> 00:06:47,061
+Las reservas y los cobros llegan,
+
+166
+00:06:47,194 --> 00:06:49,525
+se relacionan, se validan y se publican;
+
+167
+00:06:49,790 --> 00:06:52,362
+los sensores siguen un recorrido
+independiente.
+
+168
+00:06:52,610 --> 00:06:57,706
+Revisamos filas recibidas, rechazadas,
+duplicados y totales, vigilamos cambios
+
+169
+00:06:57,718 --> 00:07:00,326
+en el origen y copiamos solo los datos
+necesarios.
+
+170
+00:07:00,602 --> 00:07:05,049
+Después elegimos herramientas: una ETL para
+transformar, mensajería
+
+171
+00:07:05,061 --> 00:07:07,465
+para desacoplar y un orquestador para
+coordinar.
+
+172
+00:07:07,737 --> 00:07:10,068
+La ingesta queda bien diseñada cuando
+sabemos
+
+173
+00:07:10,080 --> 00:07:12,580
+qué entra, cuándo, cómo llega al destino y
+
+174
+00:07:12,592 --> 00:07:14,864
+cómo demostrar que el resultado es fiable.
