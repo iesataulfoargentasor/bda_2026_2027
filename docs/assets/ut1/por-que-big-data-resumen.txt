@@ -1,0 +1,18 @@
+POR QUÉ BIG DATA Y LAS CINCO V
+Voz sintética: Ximena (español de España). Narración continua.
+
+Volvamos a nuestros hoteles. Al principio, un ordenador puede ser suficiente para gestionar los datos. Pero llegan más reservas, sensores y registros de la web. ¿Necesitamos ya Big Data? No necesariamente. Primero hay que comprobar si el sistema sigue trabajando bien, a tiempo y con un coste razonable. Si deja de hacerlo, toca replantear cómo guardamos y procesamos la información.
+
+Pensad en una reserva. Guardarla es solo el comienzo. Al ordenar muchas reservas podemos ver que algunos martes quedan habitaciones vacías. Investigamos qué ocurre, probamos una oferta y comprobamos si mejora el resultado. Ese es el viaje del dato al valor. Y cuidado: lo que funciona en Laredo durante agosto puede no servir en Potes durante noviembre.
+
+Para entender las dificultades usamos las cinco uves. Las tres primeras son muy intuitivas. Volumen: cuántos datos acumulamos. Velocidad: a qué ritmo llegan y cuánto podemos esperar para utilizarlos. Variedad: no es lo mismo una tabla de reservas que una foto o un comentario. Incluso dos tablas pueden escribir las fechas de forma diferente.
+
+Las otras dos uves son esenciales. Veracidad significa poder fiarnos de los datos: un cobro duplicado no puede contarse dos veces. Valor significa que el resultado sirve para algo, como preparar el cierre más rápido o reducir habitaciones vacías. Guardar más y más información, sin saber para qué, solo aumenta el trabajo y el coste.
+
+Con los datos preparados podemos hacer cuatro preguntas: qué pasó, por qué pasó, qué podría pasar y qué conviene hacer. Son las analíticas descriptiva, diagnóstica, predictiva y prescriptiva. Por ejemplo: observar una bajada de ocupación, investigar sus motivos, estimar el próximo martes y comparar promociones. Eso sí: una predicción no es una certeza, y una coincidencia no demuestra una causa.
+
+Y aquí conviene separar ideas. La minería de datos busca patrones. La ciencia de datos plantea preguntas, analiza y explica resultados. La inteligencia artificial permite crear sistemas que recomiendan, reconocen imágenes o responden. Se relacionan, pero no son sinónimos de Big Data. También podemos hacer estos trabajos con pocos datos y un solo ordenador.
+
+En este módulo os ocuparéis sobre todo de que los datos estén listos: reunirlos, limpiarlos, guardarlos y entregarlos a tiempo. Esa es la labor del ingeniero de datos. El arquitecto diseña el conjunto y el analista prepara información comprensible para dirección. Todos necesitan una base fiable; un gráfico bonito no arregla datos incorrectos.
+
+Quedaos con esto: antes de elegir una herramienta, preguntad qué queremos mejorar, qué dificultad tenemos y cuándo necesitamos la respuesta. A veces bastará un ordenador; otras habrá que repartir el trabajo. Y no todo tiene que ser inmediato. El objetivo es conseguir información fiable, comprensible y útil, justo cuando hace falta.

@@ -8,6 +8,19 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
+## Vídeo resumen: las ideas esenciales
+
+Empieza con este resumen para entender cuándo necesitamos Big Data, qué significan las cinco V y cómo los datos ayudan a tomar decisiones. Los ejemplos del grupo hotelero conectan estas ideas con vuestro trabajo en el módulo. **Duración: 3 minutos y 12 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/por-que-big-data-resumen-portada.jpg" aria-label="Resumen de Por qué Big Data y las cinco V" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/por-que-big-data-resumen.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/por-que-big-data-resumen.mp4) · [Leer la transcripción](../assets/ut1/por-que-big-data-resumen.txt) · [Descargar los subtítulos](../assets/ut1/por-que-big-data-resumen.es.srt)
+
 ## Punto de partida: de una necesidad a una solución
 
 El objetivo de esta unidad es aprender a justificar decisiones sobre los datos. Imaginad que dirección pide conocer cuánto se ha cobrado en cada hotel. Antes de elegir una herramienta, necesitamos identificar dónde se registra cada cobro, cómo se relaciona con una reserva y cuándo debe estar disponible el informe. Esa secuencia conecta la necesidad del negocio con el diseño técnico.

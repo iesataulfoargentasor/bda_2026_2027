@@ -1,0 +1,162 @@
+[
+  {
+    "title": "¿Por qué necesitamos Big Data?",
+    "label": "Primero, entender el problema. Después, elegir las herramientas.",
+    "cards": [
+      [
+        "Al principio",
+        "Un ordenador puede bastar."
+      ],
+      [
+        "El hotel crece",
+        "Más reservas, sensores y datos de la web."
+      ],
+      [
+        "La pregunta",
+        "¿Seguimos llegando a tiempo?"
+      ]
+    ],
+    "takeaway": "El tamaño, por sí solo, no decide la solución.",
+    "narration": "Volvamos a nuestros hoteles. Al principio, un ordenador puede ser suficiente para gestionar los datos. Pero llegan más reservas, sensores y registros de la web. ¿Necesitamos ya Big Data? No necesariamente. Primero hay que comprobar si el sistema sigue trabajando bien, a tiempo y con un coste razonable. Si deja de hacerlo, toca replantear cómo guardamos y procesamos la información."
+  },
+  {
+    "title": "Guardar datos es solo el principio",
+    "label": "Lo importante es lo que conseguimos hacer con ellos.",
+    "cards": [
+      [
+        "Registrar",
+        "Una reserva queda guardada."
+      ],
+      [
+        "Comprender",
+        "Detectamos cuándo quedan habitaciones vacías."
+      ],
+      [
+        "Mejorar",
+        "Probamos una oferta y medimos su efecto."
+      ]
+    ],
+    "takeaway": "El valor aparece cuando comprobamos una mejora.",
+    "narration": "Pensad en una reserva. Guardarla es solo el comienzo. Al ordenar muchas reservas podemos ver que algunos martes quedan habitaciones vacías. Investigamos qué ocurre, probamos una oferta y comprobamos si mejora el resultado. Ese es el viaje del dato al valor. Y cuidado: lo que funciona en Laredo durante agosto puede no servir en Potes durante noviembre."
+  },
+  {
+    "title": "Tres preguntas sobre los datos",
+    "label": "Las primeras V: volumen, velocidad y variedad.",
+    "cards": [
+      [
+        "Volumen",
+        "¿Cuánto hay que guardar y durante cuánto tiempo?"
+      ],
+      [
+        "Velocidad",
+        "¿Cuánto llega y cuándo necesitamos la respuesta?"
+      ],
+      [
+        "Variedad",
+        "¿Qué formatos y significados debemos combinar?"
+      ]
+    ],
+    "takeaway": "Reservas, sensores, fotos y comentarios plantean retos distintos.",
+    "narration": "Para entender las dificultades usamos las cinco uves. Las tres primeras son muy intuitivas. Volumen: cuántos datos acumulamos. Velocidad: a qué ritmo llegan y cuánto podemos esperar para utilizarlos. Variedad: no es lo mismo una tabla de reservas que una foto o un comentario. Incluso dos tablas pueden escribir las fechas de forma diferente."
+  },
+  {
+    "title": "¿Podemos fiarnos? ¿Nos sirve?",
+    "label": "Las otras dos V: veracidad y valor.",
+    "cards": [
+      [
+        "Veracidad",
+        "Un cobro repetido no es un ingreso nuevo."
+      ],
+      [
+        "Valor",
+        "Un informe fiable ahorra trabajo y ayuda a decidir."
+      ]
+    ],
+    "takeaway": "Más datos no corrigen automáticamente los errores.",
+    "narration": "Las otras dos uves son esenciales. Veracidad significa poder fiarnos de los datos: un cobro duplicado no puede contarse dos veces. Valor significa que el resultado sirve para algo, como preparar el cierre más rápido o reducir habitaciones vacías. Guardar más y más información, sin saber para qué, solo aumenta el trabajo y el coste."
+  },
+  {
+    "title": "Cuatro maneras de preguntar",
+    "label": "Cada pregunta necesita un análisis diferente.",
+    "cards": [
+      [
+        "Descriptiva",
+        "¿Qué pasó?"
+      ],
+      [
+        "Diagnóstica",
+        "¿Por qué pasó?"
+      ],
+      [
+        "Predictiva",
+        "¿Qué podría pasar?"
+      ],
+      [
+        "Prescriptiva",
+        "¿Qué conviene hacer?"
+      ]
+    ],
+    "takeaway": "Investigar causas y predecir exige cautela.",
+    "narration": "Con los datos preparados podemos hacer cuatro preguntas: qué pasó, por qué pasó, qué podría pasar y qué conviene hacer. Son las analíticas descriptiva, diagnóstica, predictiva y prescriptiva. Por ejemplo: observar una bajada de ocupación, investigar sus motivos, estimar el próximo martes y comparar promociones. Eso sí: una predicción no es una certeza, y una coincidencia no demuestra una causa."
+  },
+  {
+    "title": "Big Data, ciencia de datos e IA",
+    "label": "Trabajan juntos, pero no significan lo mismo.",
+    "cards": [
+      [
+        "Minería de datos",
+        "Descubre patrones."
+      ],
+      [
+        "Ciencia de datos",
+        "Formula preguntas, analiza y explica."
+      ],
+      [
+        "Inteligencia artificial",
+        "Realiza tareas como recomendar o responder."
+      ]
+    ],
+    "takeaway": "También pueden trabajar con conjuntos de datos pequeños.",
+    "narration": "Y aquí conviene separar ideas. La minería de datos busca patrones. La ciencia de datos plantea preguntas, analiza y explica resultados. La inteligencia artificial permite crear sistemas que recomiendan, reconocen imágenes o responden. Se relacionan, pero no son sinónimos de Big Data. También podemos hacer estos trabajos con pocos datos y un solo ordenador."
+  },
+  {
+    "title": "¿Y cuál es vuestro papel?",
+    "label": "Este módulo se centra especialmente en la ingeniería de datos.",
+    "cards": [
+      [
+        "Arquitectura",
+        "Diseñar cómo encaja el sistema."
+      ],
+      [
+        "Ingeniería",
+        "Reunir, preparar y entregar datos fiables."
+      ],
+      [
+        "Análisis",
+        "Convertirlos en información comprensible."
+      ]
+    ],
+    "takeaway": "Sin datos utilizables, el mejor análisis pierde su base.",
+    "narration": "En este módulo os ocuparéis sobre todo de que los datos estén listos: reunirlos, limpiarlos, guardarlos y entregarlos a tiempo. Esa es la labor del ingeniero de datos. El arquitecto diseña el conjunto y el analista prepara información comprensible para dirección. Todos necesitan una base fiable; un gráfico bonito no arregla datos incorrectos."
+  },
+  {
+    "title": "La pregunta que debe quedar",
+    "label": "Antes de instalar una herramienta, entiende la necesidad.",
+    "cards": [
+      [
+        "Qué mejorar",
+        "La decisión o el trabajo que importa."
+      ],
+      [
+        "Qué dificulta hacerlo",
+        "Las V que realmente plantean problemas."
+      ],
+      [
+        "Qué solución basta",
+        "La que cumple los requisitos de forma viable."
+      ]
+    ],
+    "takeaway": "Datos fiables + a tiempo + útiles para decidir.",
+    "narration": "Quedaos con esto: antes de elegir una herramienta, preguntad qué queremos mejorar, qué dificultad tenemos y cuándo necesitamos la respuesta. A veces bastará un ordenador; otras habrá que repartir el trabajo. Y no todo tiene que ser inmediato. El objetivo es conseguir información fiable, comprensible y útil, justo cuando hace falta."
+  }
+]
