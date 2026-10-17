@@ -8,6 +8,19 @@ tags:
 
 # 1.4. Procesamiento de datos
 
+## Vídeo: un día en el hotel
+
+Acompaña a Ana desde el pago en recepción hasta el cierre nocturno, las consultas de dirección y las señales de los sensores. Este recorrido conecta las distintas formas de procesar datos y explica qué trabajo hacemos, cuándo necesitamos el resultado y dónde lo calculamos. **Duración: 6 minutos y 59 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/procesamiento-historia-portada.jpg" aria-label="Procesamiento de datos: un día en el hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/procesamiento-historia.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/procesamiento-historia.mp4) · [Leer la transcripción](../assets/ut1/procesamiento-historia.txt) · [Descargar los subtítulos](../assets/ut1/procesamiento-historia.es.srt)
+
 ## Tres preguntas para clasificar un procesamiento
 
 En 1.3 elegimos cómo conservar los datos. Ahora vamos a transformarlos en un resultado: por ejemplo, sumar los cobros de ayer por hotel. Para describir ese trabajo necesitamos responder tres preguntas independientes.
