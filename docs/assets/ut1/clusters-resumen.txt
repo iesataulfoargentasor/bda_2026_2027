@@ -1,0 +1,18 @@
+CLÚSTERES DE COMPUTADORAS
+Voz sintética: Ximena (español de España). Narración continua.
+
+Volvamos al hotel. La directora espera su informe a las ocho, pero el cálculo de madrugada empieza a llegar tarde. ¿Compramos más ordenadores? Antes hay que medir qué está pasando: quizá falta memoria, quizá leer los datos tarda demasiado. Un clúster puede ayudar, pero solo si responde al problema que tenemos.
+
+Imaginad un equipo de personas que colabora en una tarea. Un clúster funciona con una idea parecida: varios ordenadores, llamados nodos, conectados por una red y coordinados por un programa. Cada uno tiene su propia memoria y su propio procesador. Por eso, un portátil con muchos núcleos sigue siendo una máquina, no un clúster.
+
+Por ejemplo, queremos sumar los cobros de un año. Dividimos los registros en varios grupos. Cada nodo calcula una parte y después reunimos las sumas. A esto lo llamamos particionar. El programa debe organizar el reparto y comprobar que cada cobro se cuenta una sola vez, incluso si hay que repetir una tarea que ha fallado.
+
+Ahora imaginad que se estropea un disco. Si esos datos solo estaban allí, tener otras máquinas no basta. Replicar significa mantener copias para poder recuperarnos. Además, hay que detectar el fallo y reorganizar el trabajo sin publicar un informe incompleto. Y ojo: una réplica no sustituye a una copia de seguridad, porque un borrado accidental también puede propagarse.
+
+Así se entienden las cuatro ventajas principales. Rendimiento: acabar antes. Disponibilidad: mantener el servicio ante ciertos fallos. Equilibrio de carga: repartir bien el esfuerzo. Y escalabilidad: poder aumentar la capacidad. Pensad en Laredo en agosto: darle sus datos a un nodo y los de un hotel casi vacío a otro puede dejar el trabajo muy desequilibrado.
+
+Podemos crecer de dos maneras. Escalar en vertical es mejorar la misma máquina, por ejemplo añadiendo memoria. Escalar en horizontal es incorporar más máquinas. Y si aumentamos recursos en temporada alta y los reducimos después, hablamos de elasticidad. Eso sí: conectar ordenadores no hace que un programa aprenda por sí solo a repartir el trabajo.
+
+Tampoco esperéis que cuatro nodos lo hagan todo cuatro veces más rápido. Hay pasos que dependen de otros, y comunicarse lleva tiempo. En algunos diseños, los datos están junto al cálculo. En otros, se guardan aparte, como ocurre a menudo en la nube. Así podemos retirar máquinas de cálculo sin perder los datos, aunque necesitamos la red para acceder a ellos.
+
+Quedaos con tres preguntas: ¿podemos repartir la tarea?, ¿qué ocurrirá si una máquina falla?, ¿la mejora compensa el coste? El programa de recepción puede seguir en un servidor, mientras el histórico se procesa en un clúster. Lo importante es que cada parte tenga los recursos que necesita y que el informe llegue completo y a tiempo.

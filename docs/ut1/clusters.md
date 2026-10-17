@@ -8,6 +8,19 @@ tags:
 
 # 1.2. Clústeres de computadoras
 
+## Vídeo resumen: las ideas esenciales
+
+Empieza con este resumen para entender qué es un clúster, cómo reparte el trabajo y qué necesita para recuperarse de un fallo. El ejemplo del grupo hotelero ayuda a distinguir particiones y réplicas, crecimiento vertical y horizontal, y las ventajas y límites de añadir máquinas. **Duración: 3 minutos y 1 segundo.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/clusters-resumen-portada.jpg" aria-label="Resumen de Clústeres de computadoras" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/clusters-resumen.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/clusters-resumen.mp4) · [Leer la transcripción](../assets/ut1/clusters-resumen.txt) · [Descargar los subtítulos](../assets/ut1/clusters-resumen.es.srt)
+
 ## Del problema al reparto del trabajo
 
 En 1.1 hemos identificado situaciones en las que el sistema disponible puede resultar insuficiente. En este apartado estudiamos cómo colaborarían varias máquinas. La decisión depende de una medida concreta: cuánto tarda el trabajo, cuánta memoria necesita o qué interrupción del servicio se puede aceptar. Tener cuatro hoteles, por sí solo, no demuestra que haga falta un clúster.

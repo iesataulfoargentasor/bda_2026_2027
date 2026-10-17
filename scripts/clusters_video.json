@@ -1,0 +1,166 @@
+[
+  {
+    "title": "El informe tiene que llegar a las ocho",
+    "label": "¿Qué hacemos si una máquina ya no termina a tiempo?",
+    "cards": [
+      [
+        "La necesidad",
+        "Preparar el cierre de los hoteles."
+      ],
+      [
+        "La comprobación",
+        "Medir dónde se pierde tiempo."
+      ],
+      [
+        "Una posible solución",
+        "Repartir el trabajo entre máquinas."
+      ]
+    ],
+    "takeaway": "Tener cuatro hoteles no obliga a tener un clúster.",
+    "narration": "Volvamos al hotel. La directora espera su informe a las ocho, pero el cálculo de madrugada empieza a llegar tarde. ¿Compramos más ordenadores? Antes hay que medir qué está pasando: quizá falta memoria, quizá leer los datos tarda demasiado. Un clúster puede ayudar, pero solo si responde al problema que tenemos."
+  },
+  {
+    "title": "Un clúster es un equipo de ordenadores",
+    "label": "Cada máquina se llama nodo y tiene sus propios recursos.",
+    "cards": [
+      [
+        "Nodos",
+        "Cada uno tiene procesador, memoria y disco."
+      ],
+      [
+        "Red",
+        "Permite intercambiar datos y resultados."
+      ],
+      [
+        "Coordinación",
+        "Un programa organiza el trabajo."
+      ]
+    ],
+    "takeaway": "Varios núcleos dentro de un portátil siguen siendo una máquina.",
+    "narration": "Imaginad un equipo de personas que colabora en una tarea. Un clúster funciona con una idea parecida: varios ordenadores, llamados nodos, conectados por una red y coordinados por un programa. Cada uno tiene su propia memoria y su propio procesador. Por eso, un portátil con muchos núcleos sigue siendo una máquina, no un clúster."
+  },
+  {
+    "title": "Dividir, calcular y reunir",
+    "label": "Ejemplo: sumar los cobros de un año.",
+    "cards": [
+      [
+        "Repartir",
+        "Cada registro entra en un solo grupo."
+      ],
+      [
+        "Calcular a la vez",
+        "Cada nodo obtiene una suma parcial."
+      ],
+      [
+        "Combinar",
+        "Las sumas parciales forman el total."
+      ]
+    ],
+    "takeaway": "Particionar = repartir datos distintos.",
+    "narration": "Por ejemplo, queremos sumar los cobros de un año. Dividimos los registros en varios grupos. Cada nodo calcula una parte y después reunimos las sumas. A esto lo llamamos particionar. El programa debe organizar el reparto y comprobar que cada cobro se cuenta una sola vez, incluso si hay que repetir una tarea que ha fallado."
+  },
+  {
+    "title": "Repartir no es lo mismo que copiar",
+    "label": "Particiones para distribuir; réplicas para recuperarse.",
+    "cards": [
+      [
+        "Partición",
+        "Una parte diferente de los datos."
+      ],
+      [
+        "Réplica",
+        "Otra copia de los mismos datos."
+      ],
+      [
+        "Recuperación",
+        "Detectar el fallo y reorganizar el trabajo."
+      ]
+    ],
+    "takeaway": "Una réplica no sustituye a una copia de seguridad.",
+    "narration": "Ahora imaginad que se estropea un disco. Si esos datos solo estaban allí, tener otras máquinas no basta. Replicar significa mantener copias para poder recuperarnos. Además, hay que detectar el fallo y reorganizar el trabajo sin publicar un informe incompleto. Y ojo: una réplica no sustituye a una copia de seguridad, porque un borrado accidental también puede propagarse."
+  },
+  {
+    "title": "Cuatro ventajas, cuatro objetivos",
+    "label": "Cada una responde a una necesidad diferente.",
+    "cards": [
+      [
+        "Rendimiento",
+        "Terminar antes."
+      ],
+      [
+        "Disponibilidad",
+        "Mantener el servicio ante fallos."
+      ],
+      [
+        "Equilibrio de carga",
+        "Evitar que un nodo lo haga todo."
+      ],
+      [
+        "Escalabilidad",
+        "Aumentar la capacidad al crecer."
+      ]
+    ],
+    "takeaway": "No basta con tener máquinas: hay que organizarlas bien.",
+    "narration": "Así se entienden las cuatro ventajas principales. Rendimiento: acabar antes. Disponibilidad: mantener el servicio ante ciertos fallos. Equilibrio de carga: repartir bien el esfuerzo. Y escalabilidad: poder aumentar la capacidad. Pensad en Laredo en agosto: darle sus datos a un nodo y los de un hotel casi vacío a otro puede dejar el trabajo muy desequilibrado."
+  },
+  {
+    "title": "Dos formas de crecer",
+    "label": "Vertical: mejorar una máquina. Horizontal: añadir máquinas.",
+    "cards": [
+      [
+        "Vertical",
+        "Más memoria o potencia en el mismo equipo."
+      ],
+      [
+        "Horizontal",
+        "Más nodos trabajando juntos."
+      ],
+      [
+        "Elasticidad",
+        "Aumentar o reducir recursos según la demanda."
+      ]
+    ],
+    "takeaway": "Añadir máquinas exige un programa capaz de aprovecharlas.",
+    "narration": "Podemos crecer de dos maneras. Escalar en vertical es mejorar la misma máquina, por ejemplo añadiendo memoria. Escalar en horizontal es incorporar más máquinas. Y si aumentamos recursos en temporada alta y los reducimos después, hablamos de elasticidad. Eso sí: conectar ordenadores no hace que un programa aprenda por sí solo a repartir el trabajo."
+  },
+  {
+    "title": "Más máquinas no hacen magia",
+    "label": "La red, la coordinación y las tareas dependientes también cuentan.",
+    "cards": [
+      [
+        "Lo repartible",
+        "Se puede calcular al mismo tiempo."
+      ],
+      [
+        "Lo que debe esperar",
+        "Depende de resultados anteriores."
+      ],
+      [
+        "El coste añadido",
+        "Comunicar y combinar también lleva tiempo."
+      ]
+    ],
+    "takeaway": "Cuatro nodos no garantizan terminar cuatro veces antes.",
+    "narration": "Tampoco esperéis que cuatro nodos lo hagan todo cuatro veces más rápido. Hay pasos que dependen de otros, y comunicarse lleva tiempo. En algunos diseños, los datos están junto al cálculo. En otros, se guardan aparte, como ocurre a menudo en la nube. Así podemos retirar máquinas de cálculo sin perder los datos, aunque necesitamos la red para acceder a ellos."
+  },
+  {
+    "title": "La decisión empieza por estas preguntas",
+    "label": "El clúster es una solución que hay que justificar.",
+    "cards": [
+      [
+        "¿Se puede repartir?",
+        "Buscar partes independientes."
+      ],
+      [
+        "¿Qué pasa si falla?",
+        "Preparar copias y recuperación."
+      ],
+      [
+        "¿Cumple el objetivo?",
+        "Medir tiempo, capacidad y coste."
+      ]
+    ],
+    "takeaway": "Medir, repartir bien y preparar la recuperación.",
+    "narration": "Quedaos con tres preguntas: ¿podemos repartir la tarea?, ¿qué ocurrirá si una máquina falla?, ¿la mejora compensa el coste? El programa de recepción puede seguir en un servidor, mientras el histórico se procesa en un clúster. Lo importante es que cada parte tenga los recursos que necesita y que el informe llegue completo y a tiempo."
+  }
+]
