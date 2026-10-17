@@ -9,6 +9,17 @@ tags:
 
 # 1.8. Pentaho: procesar y presentar
 
+## Cómo se conectan los talleres con la unidad
+
+Pentaho Data Integration permite expresar visualmente las operaciones estudiadas: leer un origen, comprobar tipos, filtrar, unir, agregar y escribir un resultado. Cada paso recibe filas y entrega filas a los pasos siguientes. El objetivo es comprender ese cambio, además de aprender dónde se encuentra cada opción.
+
+Una **transformación** describe el tratamiento de los datos. Un **job** organiza tareas y sus condiciones de ejecución: ejecutar una transformación, comprobar un fichero o detener el proceso si falla. Esta distinción explica por qué se utilizan archivos y ejecutables diferentes.
+
+Antes de cada taller, escribid cuatro elementos: entrada, regla de negocio, salida y comprobación. Por ejemplo, para el informe por hotel y canal, la entrada son reservas y cobros; la regla selecciona reservas con cobro; la salida contiene una fila por grupo; la comprobación contrasta los totales con el detalle de origen.
+
+Los talleres avanzan desde una lectura sencilla hasta la automatización y la conexión con una base de datos. Usad las vistas previas después de cada cambio relevante. Si el resultado final no cuadra, localizar el primer paso donde cambia indebidamente el número de filas es más útil que repetir todo el flujo.
+
+
 Los criterios **d)** y **e)** del RA1 se cierran aquí: **procesar** el dato ya almacenado y **enseñárselo** a alguien que no abre Spoon.
 
 En el aula usáis **Pentaho Data Integration (PDI / Kettle)**, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja **ver** un [ETL](ingesta.md){target="_blank" rel="noopener"}: extraer, filtrar, unir, agregar y cargar **sin programar el motor**.
@@ -119,6 +130,10 @@ Rutas: no dejéis `C:\Users\tu-cuenta\...` tapadas si el `.ktr` tiene que correr
 
 ## Taller 0 — Que Spoon hable
 
+**Qué se aprende:** comprobar que el entorno ejecuta una transformación antes de introducir ficheros o conexiones. El primer paso genera una fila con información del sistema y el segundo la escribe en el registro de ejecución.
+
+**Resultado esperado:** una ejecución finalizada sin errores y una línea que identifica la versión de PDI. Guardad la transformación y volved a abrirla. Si falla, anotad el mensaje completo y revisad Java y la instalación indicada por el aula; todavía no hay datos de negocio que puedan causar el error.
+
 Objetivo: una transformación que **no** lee un CSV. Comprobáis que PDI arranca y veis la versión.
 
 1. *File → New → Transformation* (o `Ctrl+N`).
@@ -131,6 +146,10 @@ Si esto falla, no paséis al taller 1: el entorno no está listo.
 ---
 
 ## Taller 1 — Filtrar, ordenar, persistir y Pan
+
+El flujo se construye en cuatro etapas: lectura → filtro → ordenación → escritura. La lectura debe conservar todas las filas del origen; el filtro reduce el conjunto a Trasmiera; la ordenación cambia su orden, no su número; la escritura conserva el resultado seleccionado.
+
+Anotad el recuento después del filtro y comprobad que coincide con las líneas de datos del CSV de salida, sin contar la cabecera. Tratad el código postal como texto si necesitáis conservar ceros iniciales. Tras ejecutar Pan, abrid de nuevo el archivo: el objetivo es demostrar que la transformación funciona sin interacción con Spoon.
 
 Cliente: *“Listado de alojamientos de la comarca **Trasmiera**, ordenados por código postal, en un CSV limpio.”*
 
@@ -176,6 +195,12 @@ Parámetros útiles (también en Kitchen): `/level:Basic` (o `Error`, `Debug`, `
 
 ## Taller 2 — Unir dos orígenes y agregar
 
+Antes de construir el flujo, identificad su granularidad: en los archivos suministrados hay una fila por reserva y como máximo una fila de cobro por reserva. Por ello, una unión interna devuelve una fila por reserva cobrada. Si un origen real admitiera varios pagos por reserva, habría que revisar esta regla antes de contar reservas.
+
+El primer join añade el cobro; el segundo incorpora el nombre del hotel. La agrupación cambia la granularidad a **una fila por hotel y canal**. Después de agrupar ya no podemos recuperar el detalle de cada reserva desde ese informe.
+
+Configurad explícitamente las entradas izquierda y derecha del Merge join y verificad sus claves y tipos. El orden en que dibujáis las conexiones no sustituye esa comprobación. Cada entrada debe estar ordenada por la clave de la unión; la entrada de Group by debe ordenarse por sus campos de agrupación.
+
 Cliente: *“Importe cobrado y número de reservas **por hotel y canal**. Las que aún no tienen cobro no entran.”*
 
 Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl){target="_blank" rel="noopener"} (reservas ⋈ cobros, solo cobradas). **No** reutilicéis aquellos CSV: aquí el hotel va por `id_hotel`, el cobro va con **punto y coma**, y gerencia quiere un **agregado**, no el JSON de una fila.
@@ -190,9 +215,9 @@ Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl){target="_blank" rel=
 
 1. Dos (o tres) **CSV file input**. En cobros y hoteles, `Delimiter = ;`.
 2. En reservas, *Get fields* y dejad `id_reserva` / `id_hotel` como **Integer** (o String si Spoon se come un código con ceros; aquí no hace falta).
-3. **Join → Merge join.** El hop sale de cada *Sort* y **entra** en el Merge: el dato viaja hacia el join. El **primer** hop que conectéis es el flujo de la izquierda (*left*); el **segundo**, el de la derecha (*right*). Clave: `id_reserva` (reservas ⋈ cobros). Tipo *INNER*: las reservas **sin** fila en cobros no entran.
+3. **Join → Merge join.** El hop sale de cada *Sort* y **entra** en el Merge: el dato viaja hacia el join. En la configuración del paso, comprobad qué flujo figura como entrada izquierda (*left*) y cuál como derecha (*right*). Clave: `id_reserva` (reservas ⋈ cobros). Tipo *INNER*: las reservas **sin** fila en cobros no entran.
 
-Spoon **avisa**: si los flujos no están **ordenados por la clave**, el join miente. Añadid **Sort rows** por `id_reserva` **en cada rama** *antes* del merge. Preview del merge: aún **no** está el nombre del hotel (falta la dimensión); sí debe estar `cobrado`.
+Spoon **avisa**: si los flujos no están **ordenados por la clave**, la unión puede producir resultados incorrectos. Añadid **Sort rows** por `id_reserva` **en cada rama** *antes* del merge. Preview del merge: aún **no** está el nombre del hotel (falta la dimensión); sí debe estar `cobrado`.
 
 4. Tercer origen `hoteles_pdi.csv` + otro *Merge join* por `id_hotel`. Otra vez: **ordenar ambas entradas** por `id_hotel`, y tirar cada hop **desde el Sort hacia el Merge**. Ahí aparecen Laredo, Santander, Comillas, Potes.
 5. **Statistics → Group by.** Agrupad por `hotel` y `canal`. Agregados: `SUM(cobrado)` con nombre **`cobrado_total`**, `COUNT` de `id_reserva` con nombre **`n_reservas`**. Esos nombres los ponéis vosotros en la columna *Name*; Spoon no los inventa.
@@ -201,9 +226,35 @@ Spoon **avisa**: si los flujos no están **ordenados por la clave**, el join mie
 
 Criterio **e):** gerencia lee **unas pocas filas** (hotel × canal), no el cruce fila a fila.
 
+### Resultado de referencia del taller 2
+
+Con los archivos suministrados, las 20 reservas y los 15 cobros producen 15 filas tras la unión interna y 13 grupos al agregar. El importe total es 3.965,50 €. Si cambia alguno de estos resultados, revisad separadores, tipos, claves y duplicados antes de continuar.
+
+| Hotel | Canal | Reservas cobradas | Importe (€) |
+| --- | --- | ---: | ---: |
+| Comillas | ota | 1 | 132.00 |
+| Comillas | recepcion | 1 | 525.00 |
+| Comillas | web | 2 | 642.00 |
+| Laredo | ota | 1 | 124.00 |
+| Laredo | web | 2 | 496.50 |
+| Noja | ota | 1 | 195.00 |
+| Noja | web | 1 | 280.00 |
+| Potes | ota | 1 | 260.00 |
+| Potes | recepcion | 1 | 201.00 |
+| Potes | web | 1 | 150.00 |
+| Santander | ota | 1 | 390.00 |
+| Santander | recepcion | 1 | 410.00 |
+| Santander | web | 1 | 160.00 |
+
 ---
 
 ## Taller 3 — Limpiar, filtrar en serio y JSON
+
+Aquí se combinan selección de columnas, tratamiento de ausencias y reglas de filtrado. Aplicad las condiciones de forma explícita: precio válido y menor de 200, estancia mínima válida y no superior a cuatro noches, y tipo diferente de habitación privada.
+
+La puntuación no forma parte del filtro solicitado. Por tanto, una puntuación nula no justifica eliminar un alojamiento que cumple las demás condiciones. Los valores `-1` que se utilizan como marcador deben excluirse de las comparaciones de precio o noches; no representan un precio negativo real.
+
+**Comprobación con el archivo suministrado:** deben quedar los identificadores 101, 104, 106, 107, 108, 110, 113, 116, 118 y 119. Son diez alojamientos. El 110 comprueba el límite de cuatro noches; el 117 comprueba el rechazo del precio inválido. Abrid el JSON y verificad estos identificadores y los nombres de las claves.
 
 Cliente: *“Alojamientos para un **escaparate web** (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”*
 
@@ -225,7 +276,7 @@ Fichero: [alojamientos_opiniones.csv](../assets/practicas/alojamientos_opiniones
 
 ### Nulos
 
-Un **Java Filter** sobre `noches_min` **revienta o miente** si el campo es nulo. No copiéis un `< 4`: el cliente pide **4 o menos** (`<= 4`).
+Un **Java Filter** sobre `noches_min` **puede fallar o producir un resultado incorrecto** si el campo es nulo. No copiéis un `< 4`: el cliente pide **4 o menos** (`<= 4`).
 
 **Utility → If field value is null.** Sustituid nulos de `precio` y `noches_min` por `-1`. Luego el filtro **debe** excluir esos `-1`: no los coléis como “baratos”.
 
@@ -245,7 +296,7 @@ Podéis poner **Dummy** en la rama que no cumple (no hace nada; cierra el camino
 
 - *Filename:* ruta de `escaparate_cantabria.json`.
 - *Json bloc name:* p. ej. `alojamientos`.
-- *Nr rows in a bloc:* `0` = un solo documento con todos; `1` = un fichero por fila (casi nunca lo queréis aquí).
+- *Nr rows in a bloc:* `0` = un solo documento con todos; `1` limita cada bloque a una fila. No equivale por sí solo a crear un archivo independiente por registro; la división en archivos depende de las opciones de salida.
 - Pestaña *Fields* → **Get fields**. Si no, el JSON sale con objetos vacíos.
 
 Ejecutad. Abrid el JSON **sin Spoon**. Si un compañero de DAW entiende las claves, el **e)** va bien.
@@ -253,6 +304,10 @@ Ejecutad. Abrid el JSON **sin Spoon**. Si un compañero de DAW entiende las clav
 ---
 
 ## Taller 4 — Fórmula y dejar el informe en la nube
+
+La media solicitada es una **media ponderada por noches**: sumamos los importes y dividimos por la suma de noches. Promediar los precios medios de reservas de distinta duración daría otro resultado. Antes de dividir, comprobad que `noches_total` sea mayor que cero.
+
+La publicación en S3, Azure o carpeta se realiza después de validar el CSV local. El cambio de destino no debe cambiar ni los grupos ni los totales. Si falla la subida, el proceso debe informar del fallo y conservar una salida que permita repetir la publicación.
 
 Cliente: *“Por **costa / ciudad / interior**: noches cobradas, importe cobrado y **precio medio por noche**. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”*
 
@@ -263,12 +318,20 @@ Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" 
 1. CSV de cadenas (`;`) → *Sort* por `id_cadena`.
 2. *Sort* del flujo de hoteles por `id_cadena`.
 3. **Merge join** `id_cadena`.
-4. *Sort* por `cadena` → **Group by:** `id_cadena`, `cadena`. En *Name* del agregado: `SUM(noches)` → **`noches_total`**, `SUM(cobrado)` → **`importe_total`**.
+4. *Sort* por `id_cadena`, `cadena` → **Group by:** `id_cadena`, `cadena`. En *Name* del agregado: `SUM(noches)` → **`noches_total`**, `SUM(cobrado)` → **`importe_total`**.
 5. **Transform → Calculator.** Operación *A/B* (o la equivalente en vuestra versión): `importe_total / noches_total` → `precio_medio_noche`. Recorred el desplegable: hay texto, fechas y números; no memoricéis la lista.
 
 Si el aula **no** tiene cubo, *Text file output* a `informe_cadenas.csv` en la carpeta de trabajo y listo: el oficio de d) y e) ya está.
 
 ### Destino S3 (si el aula usa AWS)
+
+Antes de publicar, contrastad el resultado del taller 4 con esta tabla. Las medias se muestran redondeadas a dos decimales; mantened la precisión del cálculo hasta la presentación.
+
+| Ámbito | Noches | Importe (€) | Precio por noche (€) |
+| --- | ---: | ---: | ---: |
+| Ciudad | 13 | 960.00 | 73.85 |
+| Costa | 35 | 2394.50 | 68.41 |
+| Interior | 9 | 611.00 | 67.89 |
 
 El primer cubo se crea en el [taller de AWS Academy](aws-academy-s3.md){target="_blank" rel="noopener"} (consola, **privado**, sin claves). Este paso de Spoon es **después**, y solo si el profesor lo abre: en Learner Lab a menudo **no** podéis crear un usuario IAM. Si no hay claves, *Text file output* a carpeta y el oficio de d) y e) ya está.
 
@@ -276,7 +339,7 @@ El primer cubo se crea en el [taller de AWS Academy](aws-academy-s3.md){target="
 2. Credenciales por **variables de entorno** (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, y si aplica `AWS_SESSION_TOKEN`) o el perfil `~/.aws/credentials`.
 3. Paso **S3 file output**. URI: `s3n://NOMBRE-BUCKET/informe_cadenas` y extensión `csv`. **No** pongáis `s3n://s3n/…` (ese doble `s3n` es un error conocido de PDI).
 
-Una política `Principal: *` + `s3:*` deja el cubo abierto al mundo. En clase, si os la muestran, es para que el paso *funcione*; **no** es el diseño de una empresa.
+No utilicéis permisos públicos para resolver un fallo de autenticación. Revisad las credenciales temporales y los permisos sobre el destino con el profesor; si el laboratorio no permite el conector, completad la salida local.
 
 ### Destino Azure (si el aula usa cuenta de estudiante)
 
@@ -302,6 +365,12 @@ Habéis procesado (d: agregáis y calculáis) y presentado (e: tres números por
 
 ## Taller 5 — Un job que no se miente
 
+El job controla dependencias: no debe lanzar una tarea que requiere una salida válida si la tarea anterior ha fallado. Configurad las conexiones condicionales de éxito y error, además de la comprobación de existencia del fichero.
+
+Probad tres escenarios: primera ejecución sin informe previo, repetición con informe previo y fallo provocado al indicar una ruta de entrada inexistente en una copia de prueba. En el tercero, el job debe detenerse con error y no anunciar una publicación correcta. Restaurad la ruta al terminar.
+
+La existencia de un CSV es una comprobación inicial, pero no demuestra que sea completo: puede contener solo una cabecera. En una automatización real se comprobarían también filas, totales y fecha del informe. El borrado previo se utiliza aquí para practicar condiciones; publicar una salida validada desde un archivo provisional permite conservar el último informe correcto durante la regeneración.
+
 Cliente: *“A las 23:00 cierra el día. De madrugada: si ya existe el informe del taller 2, bórralo; regenera 2; si ese CSV **no** apareció, **para** (no pintéis el panel de las 8 con un hueco); luego el 4.”*
 
 El taller 4 **vuelve a leer** los CSV de reservas; no consume `informe_hotel_canal.csv`. El *File exists* del 2 es la **compuerta**: si el cruce falló, no seguís.
@@ -325,6 +394,10 @@ Linux: `kitchen.sh /file=taller5_noche.kjb`.
 ---
 
 ## Taller 6 — Hablar con una base de datos
+
+Este taller distingue tres operaciones. Un **lookup** consulta una tabla para añadir información al flujo. Un **insert** crea una fila nueva. Un **update** busca una fila existente y modifica sus campos. La combinación **insert/update** decide entre las dos últimas según las claves configuradas.
+
+Antes de ejecutar, revisad el esquema SQL y los tipos de fecha. La columna `fecha` del CSV corresponde a `fecha_inicio` en el destino; no son dos fechas diferentes. Para repetir las pruebas, utilizad un estado inicial conocido y comprobad si una ejecución anterior ya insertó filas. Así no confundiréis un duplicado de pruebas con un fallo del paso.
 
 Cliente: *“Las incidencias del mostrador llegan en CSV; los nombres están en la tabla de huéspedes. Inserta el cierre, actualiza si ya existía, y si el id no encaja, que se vea **por qué** falló.”*
 
@@ -373,7 +446,7 @@ Esperad **`E=2`**, no `E=1`. Clic derecho en el *Update* → **Error handling…
 
 ### Upsert
 
-Si en vez de fallar queréis **insertar** lo que no exista: **Insert / Update** (no es el mismo paso que *Update*). Eso es la carga diaria que no duplica la clave. En este esquema no hay PK en `fases_incidencia`: las claves de búsqueda las definís vosotros en el paso.
+Si en vez de fallar queréis **insertar** lo que no exista: **Insert / Update** (no es el mismo paso que *Update*). En este esquema no hay clave primaria ni restricción única en `fases_incidencia`: las claves de búsqueda se definen en el paso. Esto sirve para practicar, pero no garantiza ausencia de duplicados ante ejecuciones concurrentes. En una solución real se debe definir una clave adecuada y reforzarla en la base de datos. Tampoco hay una clave foránea hacia huéspedes: el identificador 99 requiere validación explícita si se permite insertar.
 
 ---
 
@@ -416,7 +489,7 @@ No puntúa en Moodle. Una línea de por qué.
 4. Gerencia pide el cierre de ayer. ¿Les dejáis el `.ktr` o `informe_hotel_canal.csv`?
 
 !!! tip "Comprobación"
-    Pan / no (inner: sin cobro no entra) / el filtro revienta o miente / el CSV (el criterio e no es Spoon).
+    Pan / no (inner: sin cobro no entra) / el filtro puede fallar o evaluar incorrectamente el valor ausente / el CSV (el criterio e no es Spoon).
 
 ## Autoevaluación del 1.8
 

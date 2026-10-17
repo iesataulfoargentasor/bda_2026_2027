@@ -54,7 +54,7 @@ Si el círculo no pasa a verde, esperad un minuto y recargad el lab. No abráis 
 
 Arriba a la derecha hay una **región**. Usad **la del Readme** (casi siempre *N. Virginia*, `us-east-1`).
 
-Si cambiáis a Irlanda o España “porque estamos en Cantabria”, el cubo **deja de verse**. No se ha perdido: está en la otra región. Volved a la de origen.
+Usad la región autorizada por el laboratorio. Los cubos tienen una región asociada, aunque la consola puede listar cubos de varias regiones. Si no encontráis uno, revisad la cuenta, los filtros, los permisos y la región; no concluyáis que se ha borrado.
 
 ## 3. Crear el cubo
 
@@ -72,6 +72,8 @@ Si cambiáis a Irlanda o España “porque estamos en Cantabria”, el cubo **de
 Ese cubo **no cobra en recepción**. Es el sitio del **histórico copiado** (lago o informe), no la tabla del PMS.
 
 ## 4. Prefijos: parecen carpetas, son claves
+
+La dirección de un objeto combina el nombre del cubo y su clave. Por ejemplo, en `s3://mi-cubo/lago/reservas/dia.csv`, el cubo es `mi-cubo` y la clave es `lago/reservas/dia.csv`. Las barras facilitan organizar y seleccionar objetos; no convierten S3 en un disco de carpetas tradicional.
 
 En S3 no hay carpetas de disco: hay **claves** con barras. La consola las pinta como carpetas para que no os volváis locos.
 
@@ -104,6 +106,8 @@ Hoy **no** pintáis el panel. Solo dejáis el bruto en el cubo.
 
 ## 5. Subir dos CSV (pesan poco)
 
+**Comprobación de la copia:** conservad los archivos originales en una carpeta de trabajo, subid cada uno al prefijo indicado y descargadlo de nuevo desde la consola autenticada. Comparad nombre, tamaño y contenido. La subida conserva los datos; todavía no los une, limpia ni agrega.
+
 Descargad desde este sitio (no hace falta el de Hola ETL ni el del 1.7):
 
 - [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv){target="_blank" rel="noopener"}
@@ -123,6 +127,8 @@ No subáis DNI, fotos de huéspedes ni un Excel con NIF. El lago de clase usa re
 
 ## 6. Comprobar que no es público
 
+La prueba de incógnito verifica que esa URL no permite una descarga anónima. Completadla revisando Block Public Access y los permisos del cubo. Un error de acceso aislado también puede deberse a una URL incorrecta; por eso conviene comprobar primero que el objeto existe y que podéis descargarlo desde vuestra sesión autorizada.
+
 1. En el objeto, copiad **Object URL**.
 2. Pegadla en una ventana de **incógnito** (sin la consola abierta).
 3. Tiene que fallar (`AccessDenied` o similar). Si se descarga el CSV, el cubo está abierto: **cerrad el acceso público** y avisad al profesor.
@@ -135,7 +141,7 @@ Cuando acabéis:
 
 1. Volved a la pestaña del **lab** (no solo cerréis Chrome).
 2. **End Lab**. No pulseis **Reset**.
-3. El cubo **sigue**. El próximo día: Start Lab otra vez, misma región, mismo cubo.
+3. Consultad las instrucciones del laboratorio sobre conservación de recursos. End Lab termina la sesión, pero no debe interpretarse como una garantía universal de borrado o conservación. Guardad fuera del laboratorio los archivos de práctica necesarios.
 
 Si lanzáis una máquina EC2 “a ver qué es” y os vais, **sigue cobrando** hasta que la paréis o hagáis End Lab. S3 de unos KB no os va a dejar sin crédito; un clúster olvidado, sí.
 
@@ -143,13 +149,13 @@ Si lanzáis una máquina EC2 “a ver qué es” y os vais, **sigue cobrando** h
 
 No puntúa en Moodle. Una línea de por qué.
 
-1. El PostgreSQL de recepción y este cubo: ¿bloque u objeto? ¿Se puede “abrir el byte 17” en S3?
+1. El PostgreSQL de recepción y este cubo: ¿bloque u objeto? ¿Qué diferencia hay entre leer un rango de bytes y modificar un objeto?
 2. ¿Por qué **Block Public Access** y no un enlace para que gerencia mire el CSV en el móvil del pasillo?
 3. ¿Subiríais aquí los 500 GB del histórico “porque en la nube cabe todo”? ¿Qué V o qué crédito duele?
 4. Este cubo, ¿sustituye al PMS para cobrar una estancia?
 
 !!! tip "Comprobación"
-    Objeto (el fichero entero; no hay byte 17) / el CSV del lago no es el panel y no va a internet / no: crédito y no es el ejercicio / no: el cobro sigue siendo ACID en el PMS.
+    El volumen de PostgreSQL utiliza bloques; S3 utiliza objetos y admite lecturas por rangos, pero eso no equivale a editar bytes arbitrarios del objeto / el CSV del lago no es el panel y no va a internet / no: crédito y no es el ejercicio / no: el cobro sigue siendo ACID en el PMS.
 
 ## Errores que se repiten
 

@@ -25,11 +25,11 @@
       "options": [
         "Sí: el array es el formato más partible.",
         "Sí, si lo llamáis Parquet.",
-        "No. Es un solo bloque: **un** nodo se lo come entero. JSONL = un objeto por línea.",
+        "Un array grande es menos sencillo de repartir; JSONL facilita localizar registros. Hay que comprobar el lector y la compresión.",
         "No, porque JSON no existe en analítica."
       ],
       "answer": 2,
-      "explain": "Para repartir, el fichero tiene que dejarse **cortar**. JSONL, Avro, Parquet y ORC se diseñan para eso; el array enorme, no."
+      "explain": "El formato influye en la lectura paralela. Algunos lectores procesan JSON de forma incremental; no se puede afirmar que cualquier array deba cargarse entero en un nodo."
     },
     {
       "topic": "CSV y JSONL",
@@ -38,12 +38,12 @@
       "code": "",
       "options": [
         "CSV lleva el esquema dentro. JSONL es un array de 2 GB.",
-        "`01` ¿texto o número? Una coma rompe el campo. JSONL = **un objeto por línea**, no un objeto enorme.",
+        "CSV requiere acordar tipos y escapar delimitadores dentro de campos; JSONL contiene un objeto por línea.",
         "CSV es el lago del informe. JSONL es la base operativa.",
         "CSV y Parquet son lo mismo."
       ],
       "answer": 1,
-      "explain": "CSV es universal y se depura. Para sumar un importe soléis arrastrar el resto de columnas. XML sigue en facturas; también hay que poder trocearlo."
+      "explain": "Una coma dentro de un campo CSV es válida si se entrecomilla correctamente. El formato no fija por sí solo si 01 es texto o número."
     },
     {
       "topic": "null y None",
@@ -85,7 +85,7 @@
         "No, porque Avro no tiene esquema."
       ],
       "answer": 1,
-      "explain": "El esquema (JSON) viaja en la cabecera. Encaja cuando escribís mucho, el esquema cambia y el destino es un bus, no la caja. Lecturas de tres campos de un millón → columnas (Parquet)."
+      "explain": "Un archivo contenedor Avro incluye el esquema. En mensajería puede utilizarse un registro externo de esquemas. El formato no proporciona por sí solo las transacciones de un gestor de bases de datos."
     },
     {
       "topic": "Comprimir",
@@ -110,10 +110,10 @@
         "Arrow es Avro en disco. Feather es el lago de tres años.",
         "Feather sustituye a Delta Lake.",
         "Arrow cobra en caja.",
-        "Arrow = columnas **en memoria** (Python, R, Java sin copiar). Feather = entre dos celdas. Parquet = el lago."
+        "Arrow define una representación columnar en memoria; Feather permite persistir e intercambiar tablas mediante Arrow IPC."
       ],
       "answer": 3,
-      "explain": "Arrow no es Avro. Feather es rapidísimo entre scripts; no es el archivo de años en el cubo."
+      "explain": "Las conversiones no siempre evitan copias. En el lago del caso elegimos Parquet por sus lectores y consultas, no porque Feather sea incapaz de conservar archivos."
     },
     {
       "topic": "Parquet y DuckDB",
@@ -122,12 +122,12 @@
       "code": "",
       "options": [
         "Sí: Parquet ya recorta solo. SQL no lee Parquet.",
-        "No. Eso es usar el lago **como un CSV**. Recortad **al leer**. DuckDB hace SQL sobre el fichero **sin** tragárselo a RAM.",
+        "Conviene seleccionar columnas y aplicar filtros en la lectura. DuckDB puede consultar el archivo sin convertirlo completo en un DataFrame.",
         "Sí, si el fichero se llama .parquet.",
         "No, porque Parquet no lleva esquema y DuckDB solo lee CSV."
       ],
       "answer": 1,
-      "explain": "Parquet es columnar, esquema dentro, row groups. El informe pide dos columnas: no arrastréis el resto. DuckDB, como SQLite, pensado para resúmenes; por dentro habla Arrow."
+      "explain": "El ahorro depende de los datos y de las estadísticas. DuckDB utiliza memoria y puede necesitar almacenamiento temporal; no significa que calcule sin recursos."
     },
     {
       "topic": "Lago y cómo elegir",
@@ -137,11 +137,11 @@
       "options": [
         "Sí: el lago es la caja. CSV en todos.",
         "Sí el Parquet; Delta sustituye a la operación.",
-        "No. El lago es **append**. Delta/Iceberg/Hudi = Parquet + diario (ACID de **tabla**). Hive → ORC; Spark/lago → Parquet; cola → Avro; entre celdas → Feather.",
+        "Conviene gestionar la tabla y sus versiones con mecanismos como Delta, Iceberg o Hudi; el formato de archivo y el motor se eligen según la carga.",
         "ORC es el mensaje de Kafka. Feather es el archivo del cubo."
       ],
       "answer": 2,
-      "explain": "No se tacha una fila en el fichero viejo: se escribe uno nuevo y se anota. MERGE no deja la tabla a medias; eso no cobra. Humano o API → CSV/JSON. Serializar puede perder el tipo: no traduzcáis en cada capa."
+      "explain": "Un formato de tabla coordina archivos y cambios. Borrar de la versión actual no elimina automáticamente todas las versiones históricas."
     }
   ]
 }

@@ -16,19 +16,27 @@ Leed cada apartado **en orden**. En todos hay un ejemplo y una pregunta del esti
 
 La [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"} aplica eso a 500 GB con un portátil. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [treinta de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (también Comprobar respuesta). Ninguna sustituye a Moodle.
 
+## Cómo se relacionan los apartados
+
+La unidad sigue una secuencia de decisiones. Primero identificamos el problema y sus requisitos (1.1); después estudiamos los recursos de cálculo (1.2) y la organización del almacenamiento (1.3). A continuación elegimos cómo procesar (1.4) y conectamos los componentes en una arquitectura (1.5). Finalmente construimos el recorrido de los datos (1.6), seleccionamos su representación (1.7) y practicamos el proceso con Pentaho (1.8).
+
+El caso hotelero permite revisar la misma decisión desde distintos puntos de vista. Cada vez que aparezca una herramienta, relacionadla con una necesidad concreta: conservar un original, garantizar una operación, reducir el tiempo de lectura o entregar un informe comprensible. Los horarios del caso son requisitos del ejemplo, no características obligatorias de las tecnologías.
+
+Para estudiar cada apartado, identificad primero el problema, explicad los conceptos con vuestras palabras y aplicadlos al caso antes de responder al cuestionario. En las prácticas, comprobad tanto que el proceso termina como que el resultado cumple la regla de negocio.
+
 ## Qué vais a trabajar
 
 | Apartado | Criterio | Qué os lleváis |
 | --- | --- | --- |
 | [El caso: grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} | — | La cadena, los cuatro hoteles y los dos relojes (23:00 / 8:00) |
 | [1.1 Por qué Big Data y las 5 Vs](por-que-big-data.md){target="_blank" rel="noopener"} | **a)** | Un evento (reserva, sensor, cobro) tiene que acabar en una decisión. Un hotel de playa no es un albergue de montaña. |
-| [1.2 Clústeres](clusters.md){target="_blank" rel="noopener"} | **a)** | El PMS de Laredo cabe en un servidor; el job de madrugada de los cuatro, no. Si se funde un disco, el panel de las 8 no puede caerse. |
+| [1.2 Clústeres](clusters.md){target="_blank" rel="noopener"} | **a)** | Medir cuándo un servidor basta y cuándo conviene repartir el trabajo. Si se funde un disco, el panel de las 8 no puede caerse. |
 | [1.3 Almacenamiento](almacenamiento.md){target="_blank" rel="noopener"} | **a)** | El cobro es ACID en el PMS. El histórico de gerencia va a un almacén (o a un mart). JSON y fotos, al lago. |
 | [Taller: AWS Academy y S3](aws-academy-s3.md){target="_blank" rel="noopener"} | **a)** | Primer cubo **privado** en Learner Lab. El dato aterriza copiado; no se pica en S3. |
 | [1.4 Procesamiento](procesamiento.md){target="_blank" rel="noopener"} | **a)** / **d)** | Recepción **opera** (OLTP). Gerencia **informa** (lote de las 8). El semáforo es otro reloj. |
-| [1.5 Arquitectura y ecosistema](arquitectura.md){target="_blank" rel="noopener"} | **a)** / **e)** | Panel de las 8 y semáforo: **dos tubos** (Lambda) o **una cola** (Kappa). El cuadro de mando es una capa; aquí no se pinta. |
+| [1.5 Arquitectura y ecosistema](arquitectura.md){target="_blank" rel="noopener"} | **a)** / **e)** | Relacionar capas, lotes y flujos; distinguir Lambda y Kappa de dos pipelines independientes. El cuadro de mando es una capa; aquí no se pinta. |
 | [1.6 Ingesta de datos](ingesta.md){target="_blank" rel="noopener"} | **b)** | Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en Hola ETL. |
-| [1.7 Formatos de datos](formatos.md){target="_blank" rel="noopener"} | **c)** | Dirección solo mira tres números; el CSV gordo arrastra doce columnas. |
+| [1.7 Formatos de datos](formatos.md){target="_blank" rel="noopener"} | **c)** | Dirección solo mira tres números; el CSV de gran tamaño arrastra doce columnas. |
 | [1.8 Pentaho](pentaho.md){target="_blank" rel="noopener"} | **d)** / **e)** | El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el **CSV**, no Spoon. |
 | [Tarea para practicar en clase](tarea-clase.md){target="_blank" rel="noopener"} | RA1 + **RA2** | 500 GB del histórico del hotel: concurrente, paralelo, distribuido |
 | [Autoevaluación](autoevaluacion.md){target="_blank" rel="noopener"} | — | Treinta de **toda** la unidad (Comprobar respuesta). Las diez de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |

@@ -8,7 +8,16 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
-En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.
+## Punto de partida: de una necesidad a una solución
+
+El objetivo de esta unidad es aprender a justificar decisiones sobre los datos. Imaginad que dirección pide conocer cuánto se ha cobrado en cada hotel. Antes de elegir una herramienta, necesitamos identificar dónde se registra cada cobro, cómo se relaciona con una reserva y cuándo debe estar disponible el informe. Esa secuencia conecta la necesidad del negocio con el diseño técnico.
+
+Las cinco V ayudan a describir las dificultades de ese recorrido. El volumen y la velocidad condicionan los recursos; la variedad condiciona la integración; la veracidad exige controles; el valor permite comprobar si el resultado sirve para decidir. No son cinco requisitos que deban cumplirse por igual ni una prueba automática para comprar un clúster.
+
+A lo largo del apartado seguiremos tres pasos: comprender cómo un registro se convierte en información útil, distinguir los trabajos que aprovechan esa información y analizar qué características de los datos dificultan el proceso. Después, en 1.2, estudiaremos una posible respuesta a esas dificultades: repartir el trabajo entre máquinas.
+
+
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción registra sin esperar y las reservas tienen las mismas columnas.
 
 Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
 
@@ -24,15 +33,19 @@ No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criteri
 
 ## Un PC no basta (y a veces sí)
 
-No todo proyecto con datos es Big Data. El **día 1**, recepción de Laredo pica reservas en el programa del hotel (PMS: *Property Management System*) y finanzas saca el Excel del mes: eso es **Small Data**. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) **también** sirven ahí.
+No todo proyecto con datos es Big Data. El **día 1**, recepción de Laredo registra reservas en el programa del hotel (PMS: *Property Management System*) y finanzas saca el Excel del mes: eso es **Small Data**. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) **también** sirven ahí.
 
-A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Un servidor **ya no es el diseño**. Ahí sí hablamos de Big Data: hay que **repartir** el trabajo.
+A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Este crecimiento obliga a medir si el servidor sigue cumpliendo los requisitos. Si el volumen, la variedad o los tiempos superan su capacidad viable, habrá que revisar el diseño y posiblemente **repartir** el trabajo.
 
 Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el crudo sin refinar no mueve el coche. Guardar por guardar, en la década de 2020, **no** basta. Hay que **conocer** el dato y **cuidarlo** (calidad, linaje, permiso). Si no, gerencia decide con un número bonito y falso.
 
 ![Un PC en recepción de Laredo frente a la cadena completa, que ya no cabe en un servidor](../assets/ut1/small-vs-big.png)
 
 ## De los eventos al valor
+
+La transformación del dato en valor requiere contexto. El número `186.50` aislado no permite decidir: necesitamos saber si es un importe, en qué moneda está expresado, a qué reserva corresponde y si representa un precio previsto o un cobro confirmado. Esos significados se documentan como metadatos.
+
+Cuando relacionamos el importe con una fecha y un hotel podemos calcular ingresos diarios. Al comparar varios días aparecen patrones que conviene investigar. Una decisión basada en esos patrones solo aporta valor si se comprueba su efecto: por ejemplo, si una campaña aumenta la ocupación sin reducir excesivamente el margen. Esta secuencia es un modelo didáctico; en un proyecto real se vuelve a etapas anteriores cuando faltan datos o una interpretación resulta incorrecta.
 
 Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dato**. Es el mismo viaje que luego recorreréis en las [capas de la arquitectura](arquitectura.md){target="_blank" rel="noopener"}.
 
@@ -114,7 +127,7 @@ flowchart TB
 
 #### De un estudio al panel (en el hotel)
 
-No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre este bucle. El **ingeniero** de este módulo alimenta sobre todo la recuperación y la preparación; si fallan, el modelo puntúa basura.
+No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre este bucle. El **ingeniero** de este módulo alimenta sobre todo la recuperación y la preparación; si fallan, el modelo produce resultados poco fiables.
 
 1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes.
 2. **Recuperación.** PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
@@ -135,6 +148,10 @@ Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Lu
 ![Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden](../assets/ut1/cinco-vs-hotel.png)
 
 ### Volumen
+
+Para estimar almacenamiento hay que calcular cuánto se genera y durante cuánto tiempo se conserva. Un punto de partida es `registros diarios × bytes por registro × días de conservación`. Después se añaden las copias, los índices, los resultados intermedios y el margen de crecimiento. La compresión puede reducir la cifra, pero debe medirse con datos representativos.
+
+Por ejemplo, 1.000 sensores que envían un registro de 200 bytes cada 30 segundos generan unos 576 MB diarios antes de añadir metadatos y réplicas. La cantidad puede ser manejable en una máquina; la dificultad cambia si conservamos años de datos, incorporamos vídeo o exigimos muchas consultas simultáneas. Por eso el tamaño se interpreta junto con los requisitos del sistema.
 
 Es la cantidad de **bytes**. Hoy se habla con naturalidad de terabytes y petabytes; los centros grandes llegan a exabytes.
 
@@ -163,6 +180,10 @@ En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habi
 
 ### Velocidad
 
+Aquí conviene separar **tasa de llegada** y **latencia**. La primera indica cuántos registros o bytes llegan por segundo. La segunda mide cuánto tarda un dato en estar disponible para su uso. Un sistema puede aceptar muchos eventos por segundo y, aun así, tardar varios minutos en actualizar el informe.
+
+Si entran 1.000 eventos por segundo y solo se procesan 800, quedan pendientes 200 cada segundo: al cabo de un minuto hay 12.000 eventos acumulados. Una cola absorbe un pico temporal, pero no resuelve por sí sola una diferencia permanente entre entrada y capacidad de procesamiento.
+
 No basta con que quepa: los datos **siguen llegando**. El reto es capturarlos, integrarlos y, si el negocio lo pide, reaccionar **antes de que dejen de servir**.
 
 En el hotel:
@@ -179,6 +200,10 @@ Dimensionar el disco **no** arregla un atasco de ingesta. Si el embudo es más a
 
 ### Variedad
 
+La variedad también existe dentro de datos aparentemente iguales. Dos CSV pueden expresar las fechas de forma distinta, utilizar monedas diferentes o asignar códigos diferentes al mismo hotel. Integrar exige acordar tanto la estructura como el significado de los campos.
+
+“No estructurado” significa que el contenido no se presenta directamente como registros tabulares. Una imagen sí tiene formato, tamaño y metadatos; para analizar qué aparece en ella necesitamos extraer características. Del mismo modo, un PDF puede contener texto, tablas o una imagen escaneada, y su tratamiento dependerá de ese contenido.
+
 No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven tres familias:
 
 | Tipo | Qué es | Cómo lo reconoces | En el hotel |
@@ -193,6 +218,10 @@ La variedad es la V que más sorprende al que solo ha visto SQL: el problema no 
 
 ### Veracidad
 
+Podemos convertir esta V en controles concretos: **completitud** (¿falta el identificador?), **validez** (¿la fecha tiene un formato permitido?), **unicidad** (¿se ha recibido dos veces el mismo cobro?), **coherencia** (¿la salida es posterior a la entrada?) y **actualidad** (¿el informe corresponde al periodo anunciado?).
+
+Detectar un dato inválido no implica borrarlo sin explicación. Se puede apartar en una zona de revisión, registrar el motivo y corregirlo con el responsable del origen. Así conservamos la trazabilidad y evitamos confundir “dato ausente” con “valor cero”.
+
 ¿Os podéis fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.
 
 A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dónde salió esta cifra”), metadatos y reglas de limpieza. Un modelo sobre datos sucios no es “más Big Data”: es una **peor** decisión, más rápida.
@@ -201,6 +230,10 @@ A más volumen, más basura **si no hay calidad y gobierno**: linaje (“de dón
     “Como hay muchos datos, el error se compensa.” A veces el error está **sesgado** (todos los sensores de Potes fallan igual en invierno) y el modelo lo aprende como si fuera verdad.
 
 ### Valor
+
+Para evaluar el valor hay que definir un objetivo observable antes de construir la solución. “Tener un lago” describe un medio; “reducir de dos horas a diez minutos la preparación del cierre” describe un resultado que podemos medir.
+
+El beneficio se compara con los costes de almacenamiento, cálculo, mantenimiento y trabajo humano. También se comprueba que la mejora no perjudique otra necesidad: un informe más rápido que ralentiza las reservas puede no compensar. La pregunta de negocio orienta, por tanto, todas las decisiones técnicas posteriores.
 
 Es la V que **justifica el gasto**. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (cupo, tarifa, overbooking, una oferta a tiempo) **mejora** respecto a no usar esos datos.
 
@@ -218,6 +251,10 @@ No entran en el recuento clásico. Sirven para no diseñar un sistema que **nadi
 La visualización no es “hacerlo bonito”. En [1.8](pentaho.md){target="_blank" rel="noopener"} y en el criterio **e)** del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.
 
 ## Qué pregunta hacéis (cuatro analíticas)
+
+Las cuatro analíticas pueden encadenarse sobre un mismo problema. Primero calculamos que la ocupación de los martes ha bajado (**descriptiva**); después investigamos si cambió el calendario o el canal de venta (**diagnóstica**); estimamos la ocupación del próximo martes (**predictiva**) y comparamos posibles promociones (**prescriptiva**).
+
+Una asociación no demuestra una causa. Si las reservas de un canal cancelan más, puede influir el tipo de tarifa o la temporada. Asimismo, una predicción debe expresar su incertidumbre y una recomendación debe respetar restricciones como el presupuesto o la capacidad del hotel.
 
 La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guardado y responde sobre el **pasado**: qué ocurrió y por qué. Con más dato y, a veces, IA, podéis mirar **adelante**: qué pasará y qué conviene hacer.
 
@@ -273,7 +310,7 @@ Cuando el diseño responde a las V que duelen, podéis:
 
 !!! failure "Errores frecuentes en clase y en empresas"
     - “Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.
-    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv){target="_blank" rel="noopener"} os dirá por qué no pedís las tres cosas a la vez.
+    - “Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el [SCV](procesamiento.md#scv){target="_blank" rel="noopener"} ayudará a valorar los compromisos entre plazo, precisión y volumen.
     - Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).
     - Medir el éxito en terabytes guardados, no en decisiones mejoradas.
 

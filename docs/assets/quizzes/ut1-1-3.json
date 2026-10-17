@@ -15,7 +15,7 @@
         "Un clúster Hadoop con otro nombre."
       ],
       "answer": 2,
-      "explain": "Una fila es un hecho; una columna, un dato de ese hecho. Un índice evita leerse toda la tabla. Estas bases suelen crecer **en vertical**. Como único almacén del volumen extremo, en general no; como **fuente** y sitio de operar, sí."
+      "explain": "El modelo relacional organiza tablas, claves y restricciones. SQL permite consultarlas. La escala y las garantías dependen del gestor y del diseño; también existen sistemas relacionales distribuidos."
     },
     {
       "topic": "NoSQL",
@@ -29,7 +29,7 @@
         "El recambio obligatorio de toda relacional."
       ],
       "answer": 1,
-      "explain": "Cada familia habla un idioma distinto. **Wide-column no es Parquet**: Cassandra o HBase guardan filas; Parquet es un fichero columnar para el informe. No sustituyen a la relacional si un cobro no puede verse a medias."
+      "explain": "NoSQL agrupa modelos como documentos, clave-valor, wide-column y grafos. Las garantías dependen del gestor y su configuración; algunos ofrecen transacciones ACID. Wide-column y un archivo columnar como Parquet son conceptos diferentes."
     },
     {
       "topic": "Data warehouse",
@@ -54,10 +54,10 @@
         "Otro nombre del data lake.",
         "El warehouse entero de la organización.",
         "Un clúster de cuatro nodos.",
-        "Un **recorte** del warehouse (mismo oficio, más estrecho): un departamento o un ámbito. El diseño sano es el **dependiente** (sale del almacén común)."
+        "Un conjunto analítico orientado a un departamento o ámbito; puede depender del warehouse o alimentarse de otras fuentes."
       ],
       "answer": 3,
-      "explain": "Tablas limpias, pregunta ya conocida, se copia. El JSON bruto no va al mart. Un mart **independiente** (ETL propio) parece más rápido el día 1; al poco hay **dos** cifras que no cuadran."
+      "explain": "Compartir un warehouse facilita definiciones comunes. Un mart independiente requiere coordinación para evitar discrepancias, pero no es incorrecto por definición."
     },
     {
       "topic": "Data lake",
@@ -76,16 +76,16 @@
     {
       "topic": "Bloque, objeto, lakehouse",
       "href": "",
-      "prompt": "Disco de una máquina, un fichero entero en un cubo con una clave, y lago más tablas en el mismo sitio. ¿Qué formas son, en ese orden?",
+      "prompt": "Volumen accesible por bloques, objetos identificados por claves y arquitectura de tablas sobre un lago: ¿cómo se llaman?",
       "code": "",
       "options": [
         "Lakehouse, bloque, objeto.",
         "Los tres son el warehouse.",
-        "**Bloque**, **objeto**, **lakehouse**.",
+        "Bloques, objetos y lakehouse, respectivamente; el tercero describe una arquitectura, no otro modo físico de acceso.",
         "Objeto, ACID, BASE."
       ],
       "answer": 2,
-      "explain": "Bloque = sistema de ficheros de una máquina (o NAS). Objeto = bajáis o sustituís el fichero entero (S3…). Lakehouse = lago **más** tablas (Delta, Iceberg). Snowflake **no** es lakehouse: es warehouse en nube. El ACID de Delta es de **tabla**; no sustituye el cobro operativo."
+      "explain": "Un NAS suele ofrecer acceso a ficheros. Un servicio de objetos puede permitir lecturas por rangos. Un lakehouse añade gestión de tablas y metadatos sobre el lago."
     },
     {
       "topic": "Transacción",
@@ -127,21 +127,21 @@
         "CAP no aplica si hay SQL."
       ],
       "answer": 1,
-      "explain": "CAP-C es el dato **más reciente** (o un error), no un viejo haciéndose pasar por actual. CA es un relacional en **un** sitio, sin red partida entre nodos. Preguntad qué hace **este** sistema si se parte la red; no memoricéis el logo."
+      "explain": "Durante una partición no pueden garantizarse simultáneamente consistencia fuerte y disponibilidad para todas las operaciones. La elección depende del comportamiento del sistema, no de que utilice SQL o documentos."
     },
     {
       "topic": "BASE y cómo elegir",
       "href": "",
-      "prompt": "¿BASE para un cobro o un asiento que no puede retractarse? ¿Qué pregunta va **primero** al elegir el almacén?",
+      "prompt": "¿Qué debéis determinar antes de elegir cómo almacenar una operación de cobro?",
       "code": "",
       "options": [
         "Sí BASE: más nodos, más seguro el cobro. Primero el logo de NoSQL.",
         "Sí, si el producto está en modo “estricto”. Primero el lakehouse.",
-        "**No.** Eso quiere **ACID**. BASE: hay un valor de respuesta, el estado puede ser blando y al rato los nodos coinciden. Primero: ¿hay un paquete que no puede verse a medias?",
+        "Qué cambios deben confirmarse conjuntamente y qué garantías necesita la operación; BASE no sustituye esas garantías.",
         "BASE es la C de ACID. Primero el lago."
       ],
       "answer": 2,
-      "explain": "BASE encaja en un catálogo replicado, sensores o un carrito que **aún no** es el cobro. Orden de diseño: primero ACID; luego clúster o NoSQL si el volumen rompe un servidor; luego warehouse, mart, lago o lakehouse **según la pregunta**."
+      "explain": "BASE admite convergencia eventual bajo las condiciones del sistema. Las transacciones y la consistencia de las réplicas se analizan por ámbito, no solo por la etiqueta del producto."
     }
   ]
 }

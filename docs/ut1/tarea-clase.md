@@ -45,7 +45,7 @@ Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detal
 
 | Tipo | Dónde corre | En esta tarea |
 | --- | --- | --- |
-| **Secuencial / concurrente** | Un proceso (un núcleo se puede *turnar*) | Leéis el fichero **por trozos** y actualizáis suma y recuento |
+| **Secuencial por bloques** | Un proceso actualiza el cálculo bloque a bloque | Leéis el fichero **por trozos** y actualizáis suma y recuento |
 | **Paralelo local** | Varios **núcleos** de **una** máquina | Los **10 núcleos** del portátil; si se apaga, muere el job |
 | **Distribuido** | **Varias máquinas** en red | El cálculo va **al dato**; réplicas si se funde un disco; acabar **antes de las 8** |
 
@@ -70,9 +70,15 @@ Explicad por qué **no** es buena idea:
 Hablad al menos de: **espacio en disco**, **RAM**, **entrada/salida de disco** (leer y escribir es lento) y **red** (bajar 500 GB por la wifi del aula no es “un rato”).
 
 !!! example "Pista, no la respuesta"
-    Libres ≈ 300 GB < 500 GB. Pandas quiere el dataset **entero** (y suele ocupar *más* RAM que el fichero en disco). Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la RTX.
+    Libres ≈ 300 GB < 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la RTX.
 
 ### 2. Opción 1 — Local secuencial (por trozos)
+
+La lectura por bloques evita mantener todo el archivo en memoria. El tamaño del bloque debe dejar espacio para los datos convertidos y las operaciones intermedias. Si el archivo está en red, sigue siendo necesario transferir sus bytes al proceso lector, aunque no se guarden permanentemente en el disco local.
+
+Para la **media**, basta mantener suma y recuento de valores válidos. Para la **desviación típica**, se necesita un algoritmo incremental estable y aclarar si se calcula la desviación poblacional o muestral. Para **normalizar cada valor a 0–1**, normalmente se necesitan dos pasadas: una para obtener mínimo y máximo y otra para transformar. Si máximo y mínimo coinciden, debe definirse cómo tratar ese caso.
+
+La normalización de cada registro produce una salida del tamaño del conjunto transformado, no un único número. Si se pide solo mínimo y máximo, la salida sí es pequeña. Indicad expresamente cuál de los dos resultados vais a entregar.
 
 ¿Se puede calcular la media / desviación / normalización **sin** guardar el fichero entero ni cargarlo en RAM?
 
@@ -80,11 +86,13 @@ Describid, a alto nivel, un plan en Python:
 
 - Lectura **línea a línea** o por **bloques** (*chunks*: trozos que caben en RAM).
 - Cálculo **incremental** (una pasada: vais actualizando suma y recuento; la media es `suma/n` al final).
-- Escribís **solo** el resultado (unos bytes) hacia el destino elegido.
+- Escribís la estadística resumida o el conjunto normalizado, según la operación elegida. Estimad también el tamaño de esa salida.
 
 Relacionadlo con **secuencial**: un solo proceso que lee y actualiza contadores.
 
 ### 3. Opción 2 — Local **paralela**
+
+El plan debe limitar cuántos bloques están en memoria simultáneamente. Diez procesos con bloques grandes pueden agotar los 32 GB aunque cada bloque, por separado, quepa. Además, varias lecturas pueden competir por la misma conexión de red. Comparad la tasa de lectura antes y después de aumentar trabajadores.
 
 ¿Cómo aprovecháis los **10 núcleos / 20 hilos**?
 
@@ -93,6 +101,10 @@ Comentad una vía: Spark **en modo local**, **Dask** o `multiprocessing`. Hoy no
 Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). El panel de las 8 **no** puede depender de ese portátil.
 
 ### 4. Opción 3 — Distribuido
+
+Explicad cómo se combinan los resultados parciales. Para una media, cada trabajador devuelve suma y recuento y el coordinador divide las sumas globales. Guardar solo medias locales pierde la ponderación por tamaño.
+
+El diseño también debe indicar dónde se ejecuta cada tarea, cómo se identifica una partición terminada y qué ocurre si se repite. Tener varios nodos no garantiza tolerancia a fallos si la única copia del origen o el coordinador sigue siendo un punto único de fallo.
 
 La empresa puede usar un clúster (Hadoop/Spark, propio o en nube) o el servicio que indique el profesor.
 
@@ -115,6 +127,10 @@ Valorad cargar el fichero (o **particionarlo**) en un almacén de informes / *la
 Decid en qué tareas de datos **sí** suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser **leer bytes de red/disco**, no multiplicar matrices.
 
 ### 7. Elección final
+
+Presentad una recomendación con supuestos verificables: formato y ubicación del origen, ancho de banda disponible, plazo, frecuencia de repetición y tamaño de la salida. Una media puntual puede justificar un plan distinto de un informe que debe regenerarse cada mañana.
+
+Incluid una estimación mínima de lectura: `tiempo = bytes / bytes por segundo`. A 100 MB/s sostenidos, leer 500 GB decimales exige al menos 5.000 segundos —unos 83 minutos—, sin contar interpretación ni cálculo. La cifra no predice el tiempo real; sirve para descartar promesas incompatibles con el límite de entrada/salida.
 
 Recomendad **una opción o una combinación** a gerencia.
 

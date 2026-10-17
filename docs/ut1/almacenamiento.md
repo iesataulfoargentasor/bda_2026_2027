@@ -8,6 +8,22 @@ tags:
 
 # 1.3. Conceptos de almacenamiento
 
+## Un mapa para ordenar los conceptos
+
+Después de estudiar las máquinas en 1.2, necesitamos decidir qué guardamos en ellas y cómo lo utilizaremos. En esta página aparecen conceptos de distintos niveles. Separarlos evita comparar alternativas que pueden formar parte de una misma solución.
+
+| Nivel de decisión | Pregunta | Conceptos |
+| --- | --- | --- |
+| Modelo de datos | ¿Cómo representamos y consultamos la información? | Relacional, documentos, clave-valor, grafos |
+| Organización analítica | ¿Para qué reunimos los datos? | Warehouse, mart, lake, lakehouse |
+| Acceso al almacenamiento | ¿Cómo escribe y lee el software? | Bloques, ficheros, objetos |
+| Garantías | ¿Qué ocurre con los cambios y los fallos? | Transacciones, ACID, CAP, BASE |
+
+Por ejemplo, un lago puede guardar ficheros Parquet en almacenamiento de objetos. Parquet es el formato del fichero, el almacenamiento de objetos es el servicio que lo conserva y el lago es la organización del conjunto. Son decisiones complementarias. Un lakehouse añade gestión de tablas sobre ese almacenamiento; por ello se estudia junto al lago, aunque no sea un mecanismo físico equivalente a los bloques.
+
+Para seguir el caso, distinguiremos los datos operativos del PMS, las copias originales que conservamos para volver a procesarlas y las tablas preparadas para informes. La misma reserva puede aparecer en los tres lugares con funciones diferentes. La ingesta de 1.6 explicará cómo mantener ese recorrido.
+
+
 Diseñar la solución (criterio **a)**) es elegir **dónde vive el dato** y **qué garantías** ofrecéis. No hace falta haber cursado un módulo de bases de datos: cada idea se explica aquí con un ejemplo, y **después** aparece la sigla, si la tiene.
 
 En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya está partido en dos relojes:
@@ -15,7 +31,7 @@ En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya est
 - **Recepción** pica ahora en el PMS. Un cobro **no** puede verse a medias.
 - **Gerencia** abre a las **8** el panel de **ayer**. Finanzas cerró a las **23:00**; de madrugada corre el job que **copia** (no pica) ocupación e importe.
 
-JSON del canal, sensores y fotos de habitación **no** caben en las tablas del PMS. El histórico de los cuatro hoteles **tampoco** es el disco de Laredo.
+El PMS no tiene por qué estar diseñado para integrar todos los JSON, sensores y fotografías, aunque un gestor relacional pueda almacenar algunos de esos datos. El histórico de los cuatro hoteles **tampoco** es el disco de Laredo.
 
 !!! info "Cómo se lee esta página"
     Primero **dónde** guardáis (PMS, lago, almacén de informes, *data mart*). Luego **cómo** (bloque, cubo, *lakehouse*). Al final **qué pasa si se cae o se parte la red** (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.
@@ -42,23 +58,21 @@ flowchart LR
 
 ## Base de datos relacional
 
-Pensad en una hoja de cálculo bien hecha, con reglas. Los datos viven en **tablas**:
+Una base de datos relacional organiza la información en **tablas**. Cada fila representa una entidad o un hecho; cada columna representa un atributo. En el hotel podemos tener una tabla de hoteles, otra de reservas y otra de cobros.
 
-- cada **fila** es un hecho (una reserva, un cobro, un check-in);
-- cada **columna** es un dato de ese hecho (fecha, importe, hotel).
+El **esquema** define nombres, tipos y restricciones. Una clave primaria identifica una fila sin ambigüedad, como `id_reserva`. Una clave foránea relaciona tablas: el `id_hotel` de una reserva debe corresponder a un hotel existente. SQL permite consultar y modificar esos datos.
 
-Antes de guardar nada, declaráis **cómo es** la tabla: qué columnas hay, de qué tipo (número, texto, fecha) y qué no se puede romper (un localizador no se puede repetir, un importe no puede estar vacío). A ese “contrato” se le llama **esquema**. El lenguaje habitual para preguntar y cambiar esas tablas es **SQL**.
+| Tabla | Qué representa una fila | Relación |
+| --- | --- | --- |
+| Hoteles | Un establecimiento | Se identifica por `id_hotel` |
+| Reservas | Una reserva | Se relaciona con un hotel |
+| Cobros | Un pago registrado | Se relaciona con una reserva |
 
-Un **índice** es como el índice de un libro: evitáis leerse todas las páginas para encontrar un NIF.
+Separar las tablas evita repetir la dirección del hotel en cada reserva. Para recuperar información conjunta utilizamos una unión o **join**. Un **índice** permite localizar ciertos valores sin recorrer todas las filas, aunque ocupa espacio y debe mantenerse al escribir.
 
-Este modelo encaja cuando el trabajo es **muchas operaciones cortas del día a día**: cobrar una estancia, reservar una doble, picar un extra. Cada una tiene que quedar **bien hecha**, no a medias. En el hotel, ese sitio es el **PMS**.
+Este modelo es habitual en aplicaciones operativas porque facilita expresar relaciones y restricciones. Las transacciones, que veremos después, permiten agrupar cambios relacionados. Modelo relacional y transacciones son conceptos distintos, aunque suelen utilizarse juntos.
 
-**Por qué cuesta en Big Data:** estas bases suelen crecer **en vertical** (un servidor más gordo). Cuando la tabla ya no cabe, o cruzar tres tablas enormes no termina a tiempo, el relacional deja de ser el almacén *único*. **No desaparece**: sigue siendo el origen típico del que **copiáis** datos hacia el lago o hacia el almacén de informes. El PMS de Laredo seguirá aquí; el análisis de tres años de los cuatro hoteles, probablemente no.
-
-!!! tip "La pregunta de aula"
-    “¿Las relacionales sirven para Big Data?”  
-    Como **único** almacén del volumen extremo: en general **no**, por el techo vertical.  
-    Como **fuente** y como sitio de las operaciones de negocio: **sí**, y mucho.
+La capacidad de crecimiento depende del gestor y de la arquitectura. Existen sistemas relacionales distribuidos y almacenes analíticos que utilizan SQL a gran escala. Por tanto, “relacional” no significa necesariamente “una sola máquina”. En nuestro caso conservamos el PMS como origen operativo y valoramos un entorno separado para los informes si su carga perjudica a recepción.
 
 ## Base de datos NoSQL
 
@@ -75,9 +89,15 @@ Nacen para **volumen**, **variedad** y crecer **añadiendo máquinas**. “NoSQL
 
 Cada familia habla un idioma distinto. Lo que veis en tutoriales de MongoDB **no** sirve igual en las otras.
 
-**¿Sirven para Big Data?** Sí, cuando el problema es **repartir y crecer**. **No** sustituyen al PMS si el cobro no puede verse a medias. Un JSON de reserva *puede* vivir en un documento; el asiento del cobro, no.
+La elección depende de las consultas, las relaciones y las garantías necesarias. NoSQL no implica ausencia de transacciones: algunos gestores, como [MongoDB](https://www.mongodb.com/docs/manual/core/transactions/), ofrecen transacciones entre varios documentos. Hay que comprobar su alcance, configuración y coste. En el caso mantenemos el cobro en el PMS existente; esto es una decisión del ejemplo, no una prohibición general para las bases documentales.
 
 ## Data warehouse (almacén de informes)
+
+Un warehouse integra datos de varios orígenes con definiciones comunes. Si un hotel llama “ingreso” al precio reservado y otro al pago recibido, sumar ambas columnas produciría un informe incoherente. Antes de cargar el almacén se acuerda qué significa cada indicador y con qué detalle se conserva.
+
+Ese nivel de detalle se denomina **granularidad** o **grano**. Una fila puede representar un cobro individual o el total de un hotel en un día. El detalle permite nuevas preguntas; el resumen acelera consultas conocidas, pero pierde información. Por ejemplo, con un total diario no podemos reconstruir los pagos individuales.
+
+En un modelo dimensional, los **hechos** contienen medidas —importe, noches— y las **dimensiones** aportan contexto —hotel, fecha, canal—. Así podemos consultar la misma medida desde diferentes perspectivas. La frecuencia de actualización se diseña según la necesidad: en este caso es nocturna, aunque un warehouse también puede recibir cargas frecuentes.
 
 Es un sitio **central**, pensado para **informes y decisiones** (inteligencia de negocio, *BI*), con **histórico**. Los datos **no se pican** ahí: **se copian** desde el PMS, la pasarela y, si hace falta, el lago. Es una **foto** periódica, no el sitio donde recepción cobra.
 
@@ -86,6 +106,10 @@ Las columnas se deciden **antes** de guardar: si mañana el canal añade un camp
 En la nube oiréis [Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"} o BigQuery: es **este** oficio (informes), no el lago.
 
 ## Data mart (un recorte, no otro lago)
+
+Un mart organiza datos para un ámbito concreto, como finanzas o marketing. Puede materializarse en tablas propias o en vistas sobre el almacén común. Su utilidad es reducir la complejidad para el usuario y proporcionar definiciones apropiadas a su trabajo.
+
+La independencia de un mart no lo convierte automáticamente en incorrecto: el riesgo aparece cuando sus reglas, periodos o fuentes difieren sin documentarse. Si dos informes muestran importes distintos, primero comprobamos si ambos incluyen impuestos, devoluciones y la misma fecha de cierre.
 
 El almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Un **data mart** es el **mismo oficio** (tablas limpias, pregunta ya conocida, se copia, no se pica), pero **más estrecho**: un departamento o un hotel.
 
@@ -109,9 +133,13 @@ Tres maneras de alimentarlo (el nombre es de libro; el criterio es de diseño):
 | **Independiente** | ETL propio, sin pasar por el almacén del grupo | Comillas monta un Excel “porque mañana abre otro”. Los importes **no cuadran** con el cierre |
 | **Híbrido** | Del warehouse **y** de un fichero extra | Campañas de la OTA + ocupación ya curada |
 
-El independiente parece más rápido el día 1. El martes, finanzas y Laredo discuten **dos** ocupaciones. Por eso el recorte **dependiente** es el diseño sano: un origen de verdad, varias vistas.
+Un mart dependiente facilita compartir definiciones. Si se elige uno independiente, hay que documentar y conciliar sus reglas para evitar indicadores contradictorios.
 
 ## Data lake
+
+Para que el lago resulte utilizable, suele organizarse en zonas: **originales** recibidos, datos **validados o preparados** y resultados **publicados**. Por ello un lago puede contener tanto datos en bruto como tablas depuradas. Cada conjunto necesita propietario, descripción, esquema cuando proceda, fecha de actualización y reglas de acceso.
+
+Conservar el original permite repetir una transformación corregida sin volver al sistema operativo. Esta conservación tiene límites: se deben definir periodos de retención y procedimientos de eliminación. “Guardar el bruto” no significa conservar cualquier dato indefinidamente ni permitir que todos lo consulten.
 
 El **data lake** (lago de datos) guarda el dato **como llegó**: JSON del canal, log de la web, foto de habitación, CSV de Comillas, serie del sensor. Encaja cuando **aún no** sabéis qué preguntaréis mañana, o cuando el bruto es de muchos tipos.
 
@@ -131,26 +159,25 @@ En la práctica el grupo suele tener **los dos**: el lago para el bruto y el war
 
 ## Cómo se guarda (bloque, objeto, lakehouse)
 
-No es lo mismo el **disco del PMS** que el sitio donde gerencia lee el histórico.
+Una vez decidida la función del almacén, debemos distinguir el modo de acceso al almacenamiento de la organización analítica que construimos sobre él.
 
-| Forma | Idea | En el hotel |
+| Acceso | Cómo se utiliza | Ejemplo |
 | --- | --- | --- |
-| **Bloque** | El sistema operativo parte el disco en bloques y monta un sistema de ficheros. Es el disco de *una* máquina (o un NAS compartido). | El volumen donde corre PostgreSQL de recepción. |
-| **Objeto** | Guardáis el fichero **entero** (un objeto) con una clave, en un cubo. No “abrís el byte 17”: bajáis o sustituís el objeto. Típico en nube ([S3](https://aws.amazon.com/s3/){target="_blank" rel="noopener"}, Azure Blob…). | El volcado de reservas del martes en un cubo; se replica sin que miréis el disco. El formato (Parquet…) está en [1.7](formatos.md){target="_blank" rel="noopener"}. |
-| **Lakehouse** | El lago **más** tablas: esquema, actualizaciones e incluso borrados (un huésped ejerce el derecho de supresión) **sin** montar un warehouse aparte. Productos que oiréis: [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"}. | Bruto de sensores **y** la tabla limpia de ocupación, en el mismo sitio. |
+| **Bloques** | Se presenta un volumen sobre el que el sistema operativo puede crear un sistema de archivos. Permite leer y escribir bloques. | Volumen que utiliza la base de datos del PMS. |
+| **Ficheros** | Se accede a archivos y directorios mediante rutas. Puede ser local o compartido por red. | Una carpeta del aula o un NAS que ofrece NFS/SMB. |
+| **Objetos** | Cada objeto se identifica mediante una clave y se accede a él mediante una API. | CSV o Parquet almacenados en S3 o Azure Blob. |
 
-En clase el cubo lo tocáis en el [taller de AWS Academy y S3](aws-academy-s3.md){target="_blank" rel="noopener"}: cubo **privado**, prefijos `lago/` e `informes/`, CSV del hotel. No es el PMS.
+Un objeto puede leerse completo o por rangos de bytes si el servicio lo permite. Esto no equivale a modificar un byte arbitrario como en un volumen de bloques: normalmente se escribe una nueva versión del objeto. Esa diferencia resulta importante para elegir el servicio que necesita una aplicación.
 
-![Bloque en el PMS, cubo de objetos y lakehouse: bruto y tablas juntas](../assets/ut1/donde-vive-dato.png)
+El **lakehouse** pertenece a otro nivel: es una arquitectura que incorpora gestión de tablas sobre un lago. Formatos de tabla como Delta Lake o Apache Iceberg registran qué archivos forman una versión de la tabla y coordinan cambios. El apartado [1.7](formatos.md) desarrolla esta relación entre archivos y tablas.
 
-Snowflake **no** es un lakehouse: es el warehouse en nube del apartado anterior. El *lakehouse* es **lago + tablas**.
+![Almacenamiento utilizado en el caso hotelero](../assets/ut1/donde-vive-dato.png)
 
-El diario de Delta o Iceberg puede dar un **ACID de tabla** (un `MERGE` no deja la ocupación a medias; podéis borrar un NIF). **Eso no cobra en recepción.** El cobro sigue en el PMS. El detalle del formato está en [1.7](formatos.md){target="_blank" rel="noopener"}.
+En el [taller de S3](aws-academy-s3.md) crearemos un cubo privado con prefijos para originales e informes. Crear esos prefijos no construye por sí solo un warehouse o un lakehouse: faltan modelos, procesos y controles.
 
-**Calcular y guardar se pueden separar.** En un clúster Hadoop clásico el dato y la CPU **conviven** en el nodo (lo visteis en [1.2](clusters.md){target="_blank" rel="noopener"}). En un lago en cubo, el disco escala solo; el motor (Spark, Athena, un job que lee el cubo…) se enciende, lee, escribe y se apaga. A veces hay un híbrido: copiáis un trozo a HDFS (el disco repartido de Hadoop) **solo para el job** y el resultado vuelve al cubo.
+**Almacenamiento y cálculo pueden crecer por separado.** En un clúster Hadoop clásico, HDFS y los procesos de cálculo pueden compartir nodos. En otra arquitectura, los archivos permanecen en almacenamiento de objetos y las máquinas de cálculo se crean cuando hacen falta. El segundo diseño facilita ajustar la capacidad de proceso, pero requiere planificar el acceso por red.
 
-!!! tip "RAM frente a disco (orden de magnitud)"
-    La RAM es **órdenes** más rápida que un SSD, y el SSD más que un disco de platos. Por eso Spark “en memoria” y por eso el panel de las 8 no puede barrer 8 TB desde un HDD como si fuera una variable. El formato (Parquet, columnas) está en [1.7](formatos.md){target="_blank" rel="noopener"}.
+La RAM permite acceso rápido a datos en uso, pero es limitada y normalmente volátil. SSD y HDD conservan los datos y ofrecen capacidades, costes y rendimientos distintos. Las diferencias dependen del acceso secuencial o aleatorio y del hardware; conviene medir la carga real en lugar de aplicar una proporción fija de velocidad.
 
 ## Qué es una transacción (hace falta para entender ACID)
 
@@ -164,6 +191,10 @@ Cuando el paquete termina bien, el sistema lo **confirma** (queda grabado). Si a
 
 ## ACID: cuando el negocio no puede verse a medias
 
+Una transacción empieza, ejecuta operaciones y termina con una confirmación (**commit**) o una cancelación (**rollback**). La base de datos protege las operaciones incluidas dentro de su ámbito. Si interviene una pasarela externa, una transacción local no deshace automáticamente un cargo externo: la aplicación necesita coordinar la operación, comprobar su estado y evitar duplicados.
+
+El aislamiento admite distintos niveles. No todos hacen que las operaciones se comporten como si se ejecutasen una detrás de otra; ese es el objetivo del nivel serializable. Además, la consistencia depende de las reglas que realmente se hayan definido: la base no puede detectar por sí sola una regla de negocio desconocida.
+
 Son las cuatro garantías que se piden a una base usada para esas transacciones (casi siempre, una relacional). El acrónimo se entiende con la misma transferencia de 50 €:
 
 | Letra | Nombre | Qué exige | Si fallara |
@@ -173,7 +204,7 @@ Son las cuatro garantías que se piden a una base usada para esas transacciones 
 | **I** | Aislamiento | Nadie ve el paquete a medias | Otra persona lee A ya descontada y B aún no ingresada |
 | **D** | Durabilidad | Lo confirmado **no se pierde** | Tras confirmar, un corte de luz borra el ingreso |
 
-Para conseguirlo, el sistema suele **bloquear** un momento lo que está tocando (como reservar un asiento en el cine mientras pagáis). Escribir en disco (durabilidad) es más lento que dejarlo solo en la memoria RAM: por eso estas bases no son las más rápidas del mundo, son las más **serias** para dinero y para el cobro en recepción.
+Los gestores pueden combinar bloqueos, versiones de las filas y registros de recuperación. Estas técnicas tienen costes, pero permiten coordinar accesos y recuperar operaciones confirmadas. El rendimiento debe compararse para una carga y unas garantías concretas; ACID no significa simplemente “base lenta”.
 
 No toda base “relacional” cumple esto al 100 % si la configuráis en modo relajado. Para **caja, cobro o una nota que ya no se puede retractar** sí debéis exigir estas cuatro letras.
 
@@ -182,8 +213,8 @@ No toda base “relacional” cumple esto al 100 % si la configuráis en modo re
 Hasta ahora imaginabais **un** servidor. En un [clúster](clusters.md){target="_blank" rel="noopener"} el dato está en **varios** ordenadores. El teorema de Brewer (CAP) dice que, **si se corta la red entre ellos**, no podéis tener a la vez las tres cosas siguientes:
 
 - **C**onsistencia: quien pregunta recibe el dato **más reciente**, o un error. Nunca un valor viejo haciéndose pasar por actual.
-- **A**vailability (disponibilidad): quien pregunta recibe **alguna** respuesta (un valor; aunque no sea el último).
-- **P**artition tolerance: el sistema **sigue funcionando** aunque se corte el enlace entre nodos.
+- **A**vailability (disponibilidad): toda solicitud recibida por un nodo que no ha fallado obtiene una respuesta de la operación; un error que rechaza la operación no satisface esta garantía.
+- **P**artition tolerance: el diseño contempla que la red pueda impedir la comunicación entre grupos de nodos. Durante esa partición debe resolver el compromiso entre consistencia y disponibilidad.
 
 Esta **C no es la C de ACID**. ACID-C son las **reglas** (un saldo no queda prohibido). CAP-C es **el mismo valor reciente en los nodos**, no uno viejo. En [1.4](procesamiento.md#scv){target="_blank" rel="noopener"} hay una tercera C (precisión del análisis): tampoco es esta.
 
@@ -193,7 +224,7 @@ En un clúster real **P no es opcional**: un cable se corta, un *switch* se cuel
 | --- | --- | --- |
 | **CP** | C + P | “Prefiero no responder a enseñar un saldo mentira.” |
 | **AP** | A + P | “Prefiero responder; ya se pondrán de acuerdo los nodos.” |
-| **CA** | C + A | Un relacional en **un** sitio: el dato no está partido, así que “cortar la red entre nodos” **no entra** en el problema |
+| **CA** | C + A sin partición | Puede mantenerse cuando no hay partición de red; no es una tercera solución que evite el compromiso durante una partición |
 
 ```mermaid
 flowchart TB
@@ -214,22 +245,23 @@ flowchart TB
 
 Muchos productos **se configuran**. No memoricéis “Mongo es CP” como dogma: preguntad *qué hace este sistema si se parte la red*.
 
-## BASE: el otro extremo de ACID
+## BASE: disponibilidad y convergencia { #base-el-otro-extremo-de-acid }
 
-Cuando una base distribuida elige **responder aunque algún nodo vaya atrasado** (A + P), el diseño típico se llama **BASE**. Otra vez, primero la idea y luego las letras:
+BASE describe un enfoque frecuente en sistemas distribuidos que admiten que distintas réplicas tarden en converger. No es un teorema ni una clasificación que excluya todas las transacciones.
 
-- **B**asically **A**vailable: hay **un valor** de respuesta, no un silencio. Un “no puedo, la red está partida” es más bien **CP**, no BASE.
-- **S**oft state (estado blando): dos lecturas seguidas pueden diferir **aunque vosotros no hayáis escrito**. Un nodo aún no había recibido la copia.
-- **E**ventual consistency (consistencia **eventual**): *al rato* (segundos o más) todos los nodos dicen lo mismo.
+- **Basically Available**: se busca mantener el servicio disponible, incluso con degradaciones previstas.
+- **Soft state**: el estado observado puede cambiar por sincronización entre réplicas, sin una nueva acción del usuario que consulta.
+- **Eventual consistency**: si dejan de producirse cambios y la comunicación se recupera, las réplicas terminan convergiendo según las reglas del sistema. No establece por sí sola un plazo fijo.
 
-!!! failure "¿BASE para el cobro en recepción?"
-    **No.** Una estancia cobrada o una reseña ya publicada quieren **ACID**. BASE encaja en el catálogo de extras replicado, lecturas de sensores o un carrito que **aún no** es el cobro.
+Por ejemplo, un cambio en la descripción de un extra puede tardar en aparecer en todos los hoteles. El negocio puede admitir ese retraso. Para evitar vender dos veces la última habitación, en cambio, necesitamos garantías acordes con esa operación.
+
+La elección se hace por operación y por requisito. Un catálogo, una reseña y un cobro no necesitan necesariamente las mismas garantías. Un sistema puede utilizar transacciones en un ámbito y replicación eventual en otro. Antes de elegir, preguntad qué consecuencias tendría una lectura desactualizada o una escritura concurrente.
 
 ## Cómo elegir (criterio a)
 
 Recorred las preguntas **en este orden**, con el hotel:
 
-1. ¿Hay un paquete que no puede verse a medias (cobro, fianza)? → relacional con **ACID** (el PMS).
+1. ¿Hay cambios que deban confirmarse conjuntamente? → exigid transacciones y garantías adecuadas. En este caso las proporciona el PMS relacional.
 2. ¿El volumen o la variedad rompen un solo servidor (cuatro hoteles, JSON, fotos, sensores)? → **clúster** + NoSQL o ficheros repartidos.
 3. ¿La pregunta ya está clara y se repetirá cada mañana a las 8 (ocupación e importe)? → **warehouse**.
 4. ¿Solo un departamento o un hotel necesita ese recorte (marketing, Laredo) y no toda gerencia? → **data mart**, alimentado del warehouse. No montéis un segundo almacén a escondidas.
@@ -244,7 +276,7 @@ Si podéis justificar esas frases con el [caso](caso-hotel.md){target="_blank" r
 
 No puntúa en Moodle. Una línea de por qué.
 
-1. Recepción cobra una estancia (fianza + pasarela). ¿Relacional con ACID, lago en bruto o BASE?
+1. El PMS debe confirmar conjuntamente dos cambios locales relacionados con una fianza. ¿Qué garantía necesita y por qué una copia en el lago no la sustituye?
 2. El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Warehouse (columnas al guardar) o lago (columnas al leer)?
 3. Gerencia quiere ocupación e importe **a las 8**, siempre las mismas columnas. ¿Warehouse o lago?
 4. Marketing quiere campañas **sin** NIF, y finanzas no tiene que ver ese recorte. ¿Lago, warehouse entero o data mart?

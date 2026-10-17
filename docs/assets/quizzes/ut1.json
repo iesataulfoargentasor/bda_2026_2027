@@ -127,7 +127,7 @@
         "Un clúster Hadoop con otro nombre."
       ],
       "answer": 2,
-      "explain": "Suelen crecer **en vertical**. Como único almacén del volumen extremo, en general no; como **fuente** y sitio de operar, sí."
+      "explain": "El modelo relacional organiza tablas, claves y restricciones. SQL permite consultarlas. La escala y las garantías dependen del gestor y del diseño; también existen sistemas relacionales distribuidos."
     },
     {
       "topic": "1.3 NoSQL",
@@ -141,7 +141,7 @@
         "El recambio obligatorio de toda relacional."
       ],
       "answer": 1,
-      "explain": "**Wide-column no es Parquet**: Cassandra guarda filas; Parquet es un fichero columnar para el informe. No sustituyen a la relacional si un cobro no puede verse a medias."
+      "explain": "NoSQL agrupa modelos como documentos, clave-valor, wide-column y grafos. Las garantías dependen del gestor y su configuración; algunos ofrecen transacciones ACID. Wide-column y un archivo columnar como Parquet son conceptos diferentes."
     },
     {
       "topic": "1.3 Warehouse y lago",
@@ -166,10 +166,10 @@
         "Otro nombre del data lake.",
         "El warehouse entero de la organización.",
         "Un clúster de cuatro nodos.",
-        "Un **recorte** del warehouse (mismo oficio, más estrecho). El diseño sano es el **dependiente** (sale del almacén común)."
+        "Un conjunto analítico orientado a un departamento o ámbito; puede depender del warehouse o alimentarse de otras fuentes."
       ],
       "answer": 3,
-      "explain": "Tablas limpias, pregunta ya conocida, se copia. El JSON bruto no va al mart. Un mart independiente parece más rápido el día 1; al poco hay **dos** cifras que no cuadran."
+      "explain": "Compartir un warehouse facilita definiciones comunes. Un mart independiente requiere coordinación para evitar discrepancias, pero no es incorrecto por definición."
     },
     {
       "topic": "1.3 ACID",
@@ -202,16 +202,16 @@
     {
       "topic": "1.3 BASE y cómo elegir",
       "href": "../almacenamiento/",
-      "prompt": "¿BASE para un cobro que no puede retractarse? ¿Qué pregunta va **primero** al elegir el almacén?",
+      "prompt": "¿Qué debéis determinar antes de elegir cómo almacenar una operación de cobro?",
       "code": "",
       "options": [
         "Sí BASE: más nodos, más seguro el cobro. Primero el logo de NoSQL.",
         "Sí, si el producto está en modo “estricto”. Primero el lakehouse.",
-        "**No.** Eso quiere **ACID**. BASE: hay un valor de respuesta, el estado puede ser blando y al rato los nodos coinciden. Primero: ¿hay un paquete que no puede verse a medias?",
+        "Qué cambios deben confirmarse conjuntamente y qué garantías necesita la operación; BASE no sustituye esas garantías.",
         "BASE es la C de ACID. Primero el lago."
       ],
       "answer": 2,
-      "explain": "BASE encaja en un catálogo replicado, sensores o un carrito que **aún no** es el cobro. Luego clúster o NoSQL si el volumen rompe un servidor; luego warehouse, mart, lago o lakehouse **según la pregunta**."
+      "explain": "BASE admite convergencia eventual bajo las condiciones del sistema. Las transacciones y la consistencia de las réplicas se analizan por ámbito, no solo por la etiqueta del producto."
     },
     {
       "topic": "1.4 Concurrente, paralelo, distribuido",
@@ -225,7 +225,7 @@
         "Paralelo (una máquina); **distribuido** (varias máquinas); **concurrente** (el núcleo se turna: multitarea simulada)."
       ],
       "answer": 3,
-      "explain": "Un i7 no es un clúster. “4 núcleos / 8 hilos” **no** son 8 núcleos físicos: un núcleo comparte recursos entre hilos."
+      "explain": "Concurrencia significa progreso de varias tareas, no necesariamente simultáneo. Paralelismo significa ejecución simultánea y puede existir en una o varias máquinas. Distribuido implica varias máquinas que se comunican."
     },
     {
       "topic": "1.4 Cuándo paralelizar",
@@ -272,16 +272,16 @@
     {
       "topic": "1.4 SCV",
       "href": "../procesamiento/",
-      "prompt": "El principio SCV habla de un **cálculo** de análisis. ¿La C es la de CAP o la de ACID? ¿Se pueden pedir las tres letras?",
+      "prompt": "¿Cómo utilizamos SCV para razonar sobre un análisis con recursos limitados?",
       "code": "",
       "options": [
         "Sí: las tres C son la misma letra y S+C+V es el diseño habitual.",
         "Es la C de CAP: el mismo valor en todos los nodos.",
         "Es la velocidad de las 5 V; las tres se cumplen con más RAM.",
-        "No. Aquí C es **precisión** (usar todos los datos, sin muestrear). Como máximo **dos** letras. V casi siempre está: C+V, S+V o S+C."
+        "Como una guía para valorar velocidad, precisión y volumen, no como un teorema que impida siempre lograr las tres."
       ],
       "answer": 3,
-      "explain": "S = poco tiempo hasta el **número**. V = conjuntos enormes de cálculo. CAP y ACID son otras C. Las 5 V son otra velocidad y otro volumen."
+      "explain": "Se pueden revisar recursos, formato, agregados previos o alcance. Una ventana puede dar resultados exactos para su periodo; SCV no equivale a CAP."
     },
     {
       "topic": "1.5 Por qué capas",
@@ -289,7 +289,7 @@
       "prompt": "¿Por qué un sistema Big Data no es “un programa que lo hace todo”? En el ciclo el 4 es la entrega; en el edificio el 4 es el job. ¿Qué hay que hacer?",
       "code": "",
       "options": [
-        "Si va todo junto no podéis probar ni explicar el diseño. **No mezcléis** los números: ciclo = fases; edificio = ocho capas.",
+        "Porque separar responsabilidades facilita probar, mantener y sustituir componentes, incluso si el prototipo usa un único script.",
         "Porque una norma obliga a ocho logos. Usad siempre el 4 como “el panel”.",
         "Un solo script lo sustituye todo. Los números son el mismo 4 con tres nombres.",
         "SQL deja de existir. Capa 4 = unificar nombres."
@@ -300,16 +300,16 @@
     {
       "topic": "1.5 Lambda y Kappa",
       "href": "../arquitectura/",
-      "prompt": "¿Qué es Lambda y qué es Kappa? ¿Hay que duplicar siempre cada hecho por dos caminos?",
+      "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
         "Siempre Lambda: más caminos es más Big Data.",
         "Siempre Kappa: el lote ya no existe.",
-        "Lambda = camino **lento** (lote) + camino **rápido** (flujo) + capa de consulta que elige. No todo hecho tiene que ir por los dos. Kappa = **una** cola, un código, se puede **releer**.",
+        "Lambda combina vistas por lotes y recientes; Kappa utiliza una vía principal de eventos que permite reconstruir vistas mediante replay.",
         "Lambda y Kappa son logos de Hadoop."
       ],
       "answer": 2,
-      "explain": "Si el algoritmo del informe histórico **no** es el del indicador al momento, Kappa se queda corto. Si solo hay un cierre diario, un lote basta. Tiempo real = plazo **finito y útil**, no “cero milisegundos”."
+      "explain": "Lambda necesita conciliar los caminos sin duplicar hechos. Kappa requiere retención y reprocesamiento controlado. Dos pipelines independientes no bastan para definir Lambda."
     },
     {
       "topic": "1.5 Transversales y sobreingeniería",
@@ -390,10 +390,10 @@
         "El array es lo más partible. El CSV es columnar. None es el nulo de JSON.",
         "Da igual el formato: el precio es solo el disco.",
         "CSV y Parquet son lo mismo. JSONL es un array de 2 GB.",
-        "El array es **un** bloque. JSONL = un objeto por línea. El CSV suele **escanear todas** las columnas (en cloud a menudo pagáis por ello). En JSON el vacío es **null**."
+        "Un array grande es menos sencillo de repartir; JSONL facilita localizar registros. Hay que comprobar el lector y la compresión."
       ],
       "answer": 3,
-      "explain": "`01` ¿texto o número? Una coma rompe el CSV. None es **Python**. Para repartir, el fichero tiene que dejarse **cortar**."
+      "explain": "El formato influye en la lectura paralela. Algunos lectores procesan JSON de forma incremental; no se puede afirmar que cualquier array deba cargarse entero en un nodo."
     },
     {
       "topic": "1.7 Filas, Avro, Parquet",

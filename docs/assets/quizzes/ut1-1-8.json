@@ -85,7 +85,7 @@
         "Group by sustituye al join."
       ],
       "answer": 1,
-      "explain": "El hop sale de cada flujo ordenado y entra en el Merge: el primero que conectéis es el *left*. Un left join dejaría también las que no tienen pareja; no es el mismo encargo."
+      "explain": "Ordenad ambas entradas por la clave y comprobad en la configuración cuál es izquierda y derecha. INNER conserva coincidencias; LEFT también conserva las filas de la izquierda sin pareja."
     },
     {
       "topic": "Group by",
@@ -110,10 +110,10 @@
         "Trata el nulo como 0 y entra como válido.",
         "El JSON rellena los nulos solo.",
         "Da igual: copiad un `< 4` y listo.",
-        "El filtro **revienta o miente**. Sustituid nulos y **excluid** esos valores sentinela: no son “baratos”."
+        "Hay que tratar explícitamente los nulos o usar una condición que los contemple; los valores sentinela deben excluirse cuando representan datos inválidos."
       ],
       "answer": 3,
-      "explain": "Leed lo que pide el cliente (`<=` no es `<`). En JSON: Get fields o salen objetos vacíos. Nr rows in a bloc `0` = un documento con todos."
+      "explain": "El comportamiento depende de la expresión. Comparad los límites pedidos y verificad los registros que deben incluirse y excluirse."
     },
     {
       "topic": "Secretos",

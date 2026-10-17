@@ -10,7 +10,7 @@
       "code": "",
       "options": [
         "Porque una norma obliga a ocho logos.",
-        "Porque si va todo junto no podéis probar, ni sustituir una pieza, ni explicar el diseño.",
+        "Porque separar responsabilidades facilita probar, mantener y sustituir componentes, incluso si el prototipo usa un único script.",
         "Porque SQL deja de existir.",
         "Porque hay que picar el informe a mano."
       ],
@@ -29,7 +29,7 @@
         "Son el mismo 4 con tres nombres."
       ],
       "answer": 2,
-      "explain": "Unificar nombres es la **capa 2** del edificio. Transformar (cruzar, agregar) es la **capa 4**. La entrega del ciclo no es esa capa."
+      "explain": "Los números pertenecen a esquemas distintos. Explicad la responsabilidad y el recorrido del dato; normalizar nombres también es una transformación de integración."
     },
     {
       "topic": "Ciclo y lago",
@@ -48,16 +48,16 @@
     {
       "topic": "Capa 2 frente a capa 4",
       "href": "",
-      "prompt": "Unificar el mismo concepto con dos nombres (`web` y `WEB`) frente a cruzar dos tablas de hechos. ¿Dónde va cada uno en el edificio?",
+      "prompt": "¿Cómo se relacionan integración y transformación?",
       "code": "",
       "options": [
         "Los dos son ingesta (capa 1).",
         "Los dos son visualización (capa 6).",
         "El cruce es capa 2; unificar nombres es el panel.",
-        "Unificar nombres = capa 2 (integración / calidad). El cruce = capa 4 (procesamiento)."
+        "Unificar nombres y unir fuentes son transformaciones utilizadas para integrar; las capas separan responsabilidades, no operaciones excluyentes."
       ],
       "answer": 3,
-      "explain": "La capa 2 pone el mismo nombre a la misma cosa. Transformar (agregar, unir) es el job, no “poner WEB = web”."
+      "explain": "El esquema destaca la armonización en integración y el cálculo en procesamiento, aunque una herramienta o transformación puede cubrir ambas responsabilidades."
     },
     {
       "topic": "Visualización",
@@ -76,7 +76,7 @@
     {
       "topic": "Capas transversales",
       "href": "",
-      "prompt": "Un flujo de clase “CSV → filtro → Excel” llega al 10. ¿Qué dos capas se olvidan casi siempre?",
+      "prompt": "En un flujo CSV → filtro → Excel, ¿qué dos responsabilidades transversales hay que contemplar también?",
       "code": "",
       "options": [
         "Ingesta y almacén.",
@@ -118,16 +118,16 @@
     {
       "topic": "Lambda y Kappa",
       "href": "",
-      "prompt": "¿Qué es Lambda y qué es Kappa? ¿Hay que duplicar siempre cada hecho por dos caminos?",
+      "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
         "Siempre Lambda: más caminos es más Big Data.",
-        "Lambda = camino **lento** (lote, histórico) + camino **rápido** (flujo) + capa de consulta que elige. No todo hecho tiene que ir por los dos. Kappa = **una** cola, un código, se puede **releer**.",
+        "Lambda combina vistas por lotes y recientes; Kappa utiliza una vía principal de eventos que permite reconstruir vistas mediante replay.",
         "Siempre Kappa: el lote ya no existe.",
         "Lambda y Kappa son logos de Hadoop."
       ],
       "answer": 1,
-      "explain": "Si el algoritmo del informe histórico **no** es el del indicador al momento, Kappa se queda corto. Si solo hay un cierre diario, un lote basta. Mezclar vista lenta y rápida es **otra** pregunta, no el cierre de ayer."
+      "explain": "Lambda necesita conciliar los caminos sin duplicar hechos. Kappa requiere retención y reprocesamiento controlado. Dos pipelines independientes no bastan para definir Lambda."
     },
     {
       "topic": "Temperatura y paisaje",
@@ -141,7 +141,7 @@
         "Hadoop = flujo; Spark solo sirve para el lote."
       ],
       "answer": 2,
-      "explain": "El camino rápido de Lambda vive en caliente; el histórico del lote, de templado a frío. Sacar de frío es **lento**. Hadoop = lotes sobre HDFS; Spark cubre lote y flujo. Gobierno y DataOps son **corrientes**, no una novena capa."
+      "explain": "La temperatura depende de frecuencia de acceso y plazo de recuperación. Un histórico que se consulta a diario debe estar accesible dentro del plazo requerido. Gobierno y orquestación afectan a todo el recorrido."
     }
   ]
 }

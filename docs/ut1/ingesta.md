@@ -8,6 +8,17 @@ tags:
 
 # 1.6. Ingesta de datos
 
+## Qué vamos a construir y cómo comprobarlo
+
+La arquitectura de 1.5 sitúa los componentes. Este apartado explica el recorrido que conecta los sistemas de origen con el lugar donde analizamos los datos. Ingestar consiste en incorporar datos a un destino; un pipeline puede incluir además validaciones, transformaciones y publicación de resultados.
+
+En el ejemplo de reservas y cobros hay que tomar tres decisiones antes de programar: qué representa cada fila, qué campo relaciona ambos orígenes y qué hacer con una reserva sin cobro. Si decidimos incluir solo reservas cobradas, una unión interna conserva únicamente las coincidencias. Esa regla debe aparecer en el enunciado y comprobarse en el resultado.
+
+También debemos revisar la relación entre las tablas. Si una reserva tiene dos pagos, la unión produce dos filas para esa reserva. Sumar los pagos puede ser correcto, pero contar esas filas como dos reservas sería incorrecto. En los ejercicios se trabaja con los datos suministrados; en un sistema real hay que comprobar esta relación antes de agregar.
+
+Una ejecución correcta requiere más que terminar sin errores: comprobad filas leídas, filas rechazadas, duplicados y totales. Definid además qué sucede si repetís la carga. Una carga idempotente puede repetirse sin duplicar el resultado, por ejemplo actualizando por una clave estable. En 1.7 elegiremos el formato de los datos que el pipeline escribe.
+
+
 Este apartado es el criterio **b)** del [RA1](ra1.md){target="_blank" rel="noopener"}: cómo **entran** los datos en el sistema. Todavía no hace falta saber Kafka, Spark ni Parquet. Sí hace falta entender el problema con un ejemplo y, después, ponerle nombre a cada idea.
 
 Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.
@@ -166,7 +177,7 @@ Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifr
 
 El contexto es el **[caso del grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}** (Santander, Laredo, Comillas, Potes). Resumen para no perderse:
 
-- Recepción pica las reservas en el **programa de reservas** del hotel (en la jerga, PMS: *Property Management System*).
+- Recepción registra las reservas en el **programa de reservas** del hotel (en la jerga, PMS: *Property Management System*).
 - La pasarela de pago sabe qué estancias se han cobrado.
 - En las habitaciones hay sensores de ocupación.
 - Dirección quiere, cada mañana a las 8, **ocupación e importe cobrado por hotel**.
@@ -256,6 +267,10 @@ Unificar veinte fuentes **gasta** el proyecto. La veracidad del dato se cuida aq
 
 ### Extracción
 
+Antes de extraer, documentad un pequeño contrato de entrada: campos obligatorios, tipos, identificadores y periodo esperado. Si la fuente es una API paginada, una sola respuesta puede contener únicamente parte de las reservas. Si es un fichero, debe estar completo antes de leerlo.
+
+Una extracción incremental necesita reconocer altas, cambios y, cuando proceda, borrados. Puede utilizar una fecha de modificación o mecanismos de captura de cambios (**CDC**). Guardad el punto de avance solo después de una carga correcta. Si lo adelantáis antes de escribir, un fallo puede hacer que os saltéis registros en el siguiente intento.
+
 Recopiláis los datos del origen y los lleváis a una zona de trabajo, sin cambiar todavía el programa de recepción.
 
 Orígenes típicos:
@@ -283,11 +298,15 @@ Hay tres formas de iniciar el movimiento. No son tres productos.
 | Encaja | Evento, sensor, aviso automático (*webhook*: el origen llama a una URL tuya cuando pasa algo) | Lote nocturno, leer una base **SQL** (el lenguaje de las bases de datos en tablas) | Carpetas, buzones, **API** (un “mostrador” por internet que, si preguntas bien, te devuelve datos) |
 | Riesgo | Te inundan, o el origen no sabe adónde empujar | Tiras en hora punta y tumbas la recepción | Preguntas poco = te enteras tarde; preguntas mucho = molestas |
 
-No hay uno “más Big Data”. En la misma empresa conviven. El *push* encaja con el flujo continuo; *pull* y *poll*, con el trabajo por lotes.
+No hay uno “más Big Data”. En la misma empresa conviven. Esas asociaciones son frecuentes en los ejemplos, pero no obligatorias: el mecanismo de transferencia no determina por sí solo el ritmo de procesamiento.
 
 Más adelante hay un catálogo con nombre y para qué sirve cada herramienta. Primero claváis **quién da el primer paso**.
 
 ### Transformación
+
+Para explicar una transformación, indicad qué cambia y qué debe conservarse. Normalizar `WEB` a `web` cambia la representación, pero mantiene el significado del canal. Unir reservas y cobros añade información relacionada. Agregar por hotel reduce el detalle: varias filas pasan a representar un total.
+
+La eliminación de duplicados requiere una regla. Dos filas con el mismo importe no son necesariamente el mismo cobro; necesitamos un identificador del evento o una clave acordada. Cuando hay versiones de una reserva, debemos decidir si conservamos el historial o el estado más reciente.
 
 Dejáis formato y contenido que el destino entiende. En el hotel suele ser:
 
@@ -305,6 +324,10 @@ Dejáis formato y contenido que el destino entiende. En el hotel suele ser:
 En continuo, una transformación pesada (cruzar veinte fuentes) **no** va en el mismo milisegundo que el sensor. A veces la T gorda espera al lote.
 
 ### Carga
+
+Hay tres patrones frecuentes: **añadir** registros nuevos, **sustituir** un conjunto delimitado —por ejemplo, el informe de un día— o **insertar/actualizar** por clave. La elección depende de si el origen publica hechos nuevos o corrige datos anteriores.
+
+Imaginad que el proceso escribe medio informe y falla. Si el usuario lo consulta en ese momento, verá un total incompleto. Una solución es escribir en un destino provisional, comprobar recuentos y totales, y publicar el resultado solo cuando esté validado. El mecanismo concreto depende del almacén, pero la intención es que el consumidor distinga una versión completa de una carga en curso.
 
 Escribís en el destino, **adaptándoos** a cómo ese destino espera recibir datos: una sentencia SQL masiva, un fichero que el almacén lee, una carpeta en la nube.
 
@@ -324,6 +347,10 @@ El **formato** de lo que escribís (CSV, JSON, Parquet…) es parte de esta L: l
 
 ## ELT
 
+La diferencia se entiende fijando el destino del que estamos hablando. En ETL, los datos se transforman antes de cargarlos en el destino analítico acordado. En ELT, primero se cargan en ese entorno y después se transforman allí. Ambos pueden conservar copias originales y ambos necesitan controles de acceso y calidad.
+
+Por ejemplo, podemos extraer un CSV, guardarlo en una zona restringida del almacén y ejecutar SQL para producir una tabla validada. Aunque el bruto ya esté cargado, dirección debe consultar la tabla publicada. “Disponible para ingeniería” y “apto para tomar decisiones” son estados distintos.
+
 **ELT** cambia las letras: extraer → **cargar** → transformar.
 
 Los datos se dejan primero **aún sin limpiar**. El sitio típico es el [lago](almacenamiento.md){target="_blank" rel="noopener"}. En la nube a veces es un almacén **elástico** ([Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"}, BigQuery…), que sí puede tragar bruto y transformar después. El *data warehouse* clásico de [1.3](almacenamiento.md){target="_blank" rel="noopener"} —pasillos fijos, columnas acordadas— suele querer el dato **ya limpio**: ahí encaja ETL, no ELT.
@@ -335,7 +362,7 @@ La transformación la hace después el destino: SQL, un notebook, o [**Apache Sp
 | Orden | Extraer → **transformar** → cargar | Extraer → **cargar** → transformar |
 | Dónde se limpia | Un motor en medio (script, [Pentaho](pentaho.md){target="_blank" rel="noopener"}, [Talend](https://www.talend.com/){target="_blank" rel="noopener"}) | El lago o un almacén **elástico** en la nube |
 | Cuándo | El destino **no** debe tragar basura | El destino aguanta bruto y hay **varios** consumidores |
-| Ver el crudo | Más tarde | Antes |
+| Conservar el original | Puede guardarse en una zona previa | Se carga antes de transformar |
 | Si gerencia cambia la pregunta | Retocas la T **antes** de recargar | Consulta nueva **si** esas columnas ya estaban en el bruto |
 
 ELT no es “ETL al revés para quedar moderno”. Cambia **quién** trabaja y **cuándo** se ve el dato:
@@ -429,6 +456,10 @@ cobros.to_csv("cobros.csv", index=False)
 
 ### pandas
 
+Leed el código como una secuencia de tablas. `df_r` contiene todas las reservas; `web` contiene únicamente las del canal solicitado; `cruce` contiene las que además tienen correspondencia en cobros. El filtro y la unión pueden reducir el número de filas por motivos distintos.
+
+En estos datos sintéticos, `id_reserva` es único en ambos ficheros. Podéis comprobarlo con `df_r["id_reserva"].is_unique` y `df_c["id_reserva"].is_unique`. Tras el cruce, verificad que todos los canales son `web`, que no aparecen claves ajenas a los cobros y que el fichero se puede volver a leer. El resultado no es un agregado por hotel: mantiene el detalle de las reservas seleccionadas.
+
 Leemos CSV, filtramos, cruzamos y escribimos JSON. `merge(..., how="inner")` es un **inner join**: solo las reservas que **sí** tienen cobro. Un `left` (*left join*) dejaría reservas web sin `medio`: útil para ver impagados; no es el objetivo de este taller.
 
 ```python
@@ -446,6 +477,10 @@ cruce.to_json("web_cobrado.json", orient="records", force_ascii=False)
 ```
 
 ### Hola DuckDB
+
+El equivalente SQL debe producir el mismo conjunto lógico que pandas. `FROM` selecciona los orígenes, `JOIN ... ON` relaciona las claves, `WHERE` aplica el filtro y `SELECT` define las columnas resultantes. El orden visual de las filas puede variar si no se solicita un `ORDER BY`; eso no implica que las dos soluciones calculen datos diferentes.
+
+Para compararlas, ordenad por `id_reserva`, revisad los nombres y tipos de las columnas y contrastad recuentos e importes. Comparar únicamente el tamaño de los archivos no demuestra que el contenido sea equivalente.
 
 **[DuckDB](https://duckdb.org/){target="_blank" rel="noopener"}** es una base de datos **analítica** y **embebida** (sitio oficial: [duckdb.org](https://duckdb.org/){target="_blank" rel="noopener"}; código: [github.com/duckdb/duckdb](https://github.com/duckdb/duckdb){target="_blank" rel="noopener"}):
 
@@ -570,6 +605,10 @@ En voz alta: “desacoplar al sensor del semáforo de recepción” → familia 
 
 ### Lote o flujo
 
+Un envío **push** también puede entregar un fichero al final del día. Un consumidor de flujo puede solicitar continuamente mensajes mediante **pull**. El polling es una forma periódica de consulta. Por tanto, quién inicia la transferencia y con qué ritmo se procesa son decisiones independientes.
+
+En una cola, **confirmar** un mensaje significa comunicar que se ha procesado. Si el consumidor falla antes de confirmar, puede recibirlo otra vez. Para evitar duplicar un cobro, el destino necesita reconocer el identificador ya procesado o aplicar otra estrategia idempotente. La garantía de entrega del transporte no resuelve por sí sola todos los efectos en los destinos.
+
 El detalle de ritmos está en [1.4](procesamiento.md){target="_blank" rel="noopener"}. Aquí, aplicados al hotel:
 
 | | **Lote** (*batch*) | **Micro-lote** | **Continuo** (*streaming*) |
@@ -600,7 +639,7 @@ Citas la **familia**. El producto concreto cambia de año. No memoricéis logos;
 
 Las herramientas de ingesta para ecosistemas Big Data se agrupan así:
 
-- **[Apache Sqoop](https://sqoop.apache.org/){target="_blank" rel="noopener"}:** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**[HBase](https://hbase.apache.org/){target="_blank" rel="noopener"}** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. El proyecto está en mantenimiento: la *idea* (volcado nocturno *pull*) sigue; el binario concreto, no siempre.
+- **[Apache Sqoop](https://sqoop.apache.org/){target="_blank" rel="noopener"}:** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**[HBase](https://hbase.apache.org/){target="_blank" rel="noopener"}** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. Es una herramienta del ecosistema histórico de Hadoop: la *idea* (volcado nocturno *pull*) sigue; el binario concreto, no siempre.
 - **[Apache Flume](https://flume.apache.org/){target="_blank" rel="noopener"}:** tubería de **logs y eventos** hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.
 - **[Apache NiFi](https://nifi.apache.org/){target="_blank" rel="noopener"}:** pantalla con **cajas y flechas** (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.
 - **[Logstash](https://www.elastic.co/logstash){target="_blank" rel="noopener"}** (Elastic): nació para meter logs en **[Elasticsearch](https://www.elastic.co/elasticsearch){target="_blank" rel="noopener"}** (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.
@@ -652,7 +691,7 @@ En un supuesto de aula o de examen, claváis **estas** decisiones y las justific
 El martes el programa de reservas añade `motivo_cancelacion`:
 
 - **¿Quién te avisa?** Si nadie, el job sigue “bien” y el campo nuevo se pierde.
-- **¿Guardas historial o pitas encima?** Un *update* borra cómo estaba la reserva el lunes. Borrar e insertar, o versionar, dejan rastro.
+- **¿Guardas historial o pitas encima?** Sobrescribir o borrar e insertar no conserva por sí solo el estado anterior. Para mantener historial hacen falta versiones, auditoría o un registro de cambios.
 - **¿Reprocesas?** Si gerencia cambia el indicador, a veces basta una consulta nueva sobre el bruto (ELT). A veces hay que **volver a ingerir**. Reusar lo ya cargado evita tragarte otra vez tres años de SQL.
 
 Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga a pedir otra extracción. Eso duele.

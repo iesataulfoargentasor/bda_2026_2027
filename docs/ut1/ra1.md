@@ -25,6 +25,20 @@ Esta unidad desarrolla el **RA1** del módulo *Big Data aplicado* (código **507
 
 ## Contenidos básicos del BOE que toca esta UT
 
+### Cómo demostrar el aprendizaje
+
+La siguiente correspondencia es una orientación didáctica, no un criterio oficial adicional:
+
+| Criterio | Evidencia que podéis explicar |
+| --- | --- |
+| a) Diseño | Diagrama con origen, almacenamiento, procesamiento y destino, acompañado de una justificación. |
+| b) Ingesta | Procedimiento que indica qué se extrae, cuándo, cómo se valida y cómo se repite ante un fallo. |
+| c) Formato | Comparación razonada según tipos, consultas, compatibilidad y medidas. |
+| d) Procesamiento | Flujo ejecutado y resultados contrastados con la entrada. |
+| e) Presentación | Salida con nombres claros, unidades, periodo y explicación para su consumidor. |
+
+Un mismo taller puede aportar evidencias de varios criterios. Por ejemplo, generar un CSV demuestra procesamiento si aplica las reglas solicitadas; su mera existencia no demuestra que sea fácil de interpretar.
+
 Del bloque *Gestión de soluciones con sistemas de almacenamiento y herramientas del centro de datos*:
 
 - Almacenamiento de datos masivo.

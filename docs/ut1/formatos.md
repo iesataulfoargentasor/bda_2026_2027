@@ -8,14 +8,25 @@ tags:
 
 # 1.7. Formatos de datos
 
-El criterio **c)** es este: **en qué forma dejáis el dato** para que el siguiente paso no se ahogue. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.
+## Del dato lógico a su representación
+
+En 1.6 hemos definido qué datos entran, cómo se transforman y dónde terminan. Ahora decidimos cómo representarlos para que puedan intercambiarse y leerse con eficiencia. Una misma tabla de reservas puede escribirse en CSV o Parquet y mantener los mismos valores, aunque cambien el tamaño, los tipos conservados y la forma de lectura.
+
+Conviene distinguir tres ideas: el **esquema** describe campos y tipos; el **formato** define cómo se representan; la **compresión** reduce el espacio mediante una codificación adicional. Comprimir un CSV no lo convierte en un formato columnar ni añade automáticamente tipos de datos.
+
+Si necesitamos recuperar una reserva completa, una organización por filas puede ser adecuada. Si queremos sumar únicamente el importe de millones de reservas, una organización por columnas permite leer menos campos. La ventaja depende de la consulta y del lector empleado: no basta con cambiar la extensión.
+
+Los talleres comparan formatos de intercambio y almacenamiento, y presentan Arrow para trabajar en memoria. Anotad en cada prueba qué datos se mantienen, qué tamaño ocupa el resultado y qué consulta se ejecuta. En 1.8 aplicaremos la lectura, transformación y escritura mediante Pentaho.
+
+
+El criterio **c)** es este: **en qué forma dejáis el dato** para que el siguiente paso pueda procesarlo de forma adecuada. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.
 
 !!! info "Cómo se lee esta página"
     Primero el **caso** y la tarjeta (fila frente a columna). Luego **Avro** (talleres 1–2: el mensaje). Después **Parquet + DuckDB** (el lago del panel). El **taller medido** va al final. ORC y Delta son una idea, no un segundo curso. Los relojes: gerencia a las **8** ve el cierre de **ayer**.
 
 ## Un caso para no perderse
 
-El [grupo hotelero de Cantabria](caso-hotel.md){target="_blank" rel="noopener"} (Santander, Laredo, Comillas, Potes) guarda cada reserva con **muchas** columnas en el PMS. Gerencia, a las **8**, solo quiere *ocupación e importe por hotel*. Si el fichero es un CSV gordo, el motor **lee todas las columnas** para calcular tres números. En cloud, a menudo **pagáis por lo que escaneáis**, no solo por lo que guardáis.
+El [grupo hotelero de Cantabria](caso-hotel.md){target="_blank" rel="noopener"} (Santander, Laredo, Comillas, Potes) guarda cada reserva con **muchas** columnas en el PMS. Gerencia, a las **8**, solo quiere *ocupación e importe por hotel*. Si el fichero es un CSV de gran tamaño, el motor **lee todas las columnas** para calcular tres números. En cloud, a menudo **pagáis por lo que escaneáis**, no solo por lo que guardáis.
 
 Esa es la pregunta del apartado: ¿el dato viaja **fila a fila** (bien para *esta* reserva en un mensaje o en el PMS) o **campo a campo** (bien para el panel)? ¿Hace falta que un humano lo abra, o que Spark lo **trocee** entre nodos?
 
@@ -45,7 +56,11 @@ Con `n = 200_000` ya notáis tamaño y tiempo. Subid a un millón si la máquina
 
 ## Qué tiene que cumplir el formato
 
-Para que un clúster (Hadoop, Spark) o un almacén en la nube pueda **repartir** el trabajo, el fichero tiene que dejarse **cortar en trozos**. Un JSON con un array de diez millones de objetos entre `[` y `]` es un solo bloque: **un** nodo se lo come entero.
+Para evaluar un formato distinguimos **legibilidad**, **tipos**, **evolución del esquema** y **acceso parcial**. Un fichero fácil de abrir a mano puede requerir más trabajo para interpretar números y fechas. Un formato binario puede conservar esa información y permitir al lector omitir partes, pero necesita herramientas compatibles.
+
+La posibilidad de repartir una lectura depende también del lector y de la compresión. JSONL facilita localizar límites entre registros. Un array JSON puede requerir un tratamiento especial para repartirse; no significa que todo fichero JSON obligue siempre a cargarlo completo en memoria.
+
+Para que un clúster (Hadoop, Spark) o un almacén en la nube pueda **repartir** el trabajo, el fichero tiene que dejarse **cortar en trozos**. Un array JSON grande resulta menos sencillo de repartir entre lectores independientes; hay que comprobar si el motor admite lectura incremental o división de ese formato.
 
 Además suele pedirse:
 
@@ -67,7 +82,7 @@ Dos familias, no dos religiones:
 | Esquema | A medias o en la cabeza | Suele ir **dentro** del fichero |
 | Uso | API, entrega a un compañero | Analítica a escala |
 
-**CSV.** Universal. `01` ¿texto o número? Una coma dentro del campo lo rompe. Para sumar *importe* soléis arrastrar *canal* y *comentarios*.
+**CSV.** Universal. `01` ¿texto o número? Una coma dentro de un campo requiere entrecomillado y escape correctos. Para sumar *importe* soléis arrastrar *canal* y *comentarios*.
 
 **JSON / JSONL.** El JSON “de libro” (un objeto enorme) no se parte bien. **JSON Lines** = **una reserva por línea**:
 
@@ -84,11 +99,15 @@ Dos familias, no dos religiones:
 
 ## Una reserva junta o un campo junto
 
+La organización por filas favorece leer muchos campos de cada registro. Sin embargo, un fichero CSV no tiene por defecto un índice que localice directamente la reserva 17: puede ser necesario recorrerlo. La organización columnar favorece seleccionar pocas columnas de muchos registros.
+
+En Parquet, un **grupo de filas** contiene fragmentos separados por columna. El lector puede seleccionar columnas y, con estadísticas apropiadas, descartar grupos incompatibles con un filtro. Además, particionar el conjunto por fecha puede evitar abrir archivos de otros periodos. Selección de columnas, descarte por estadísticas y particionado son optimizaciones distintas.
+
 ![Por filas: esta reserva (PMS o un mensaje Avro). Por columnas: el panel lee importe (Parquet)](../assets/ut1/filas-columnas.png)
 
 Pensad en mil reservas `hotel | noches | importe | comentarios`.
 
-**Todo el registro junto** (CSV, JSON; **Avro** en un bus): leer la reserva 17 es barato. Sumar *solo* importes obliga a saltar el resto mil veces. **Añadir** reservas al final es natural.
+**Todo el registro junto** (CSV, JSON; **Avro** en un bus): reconstruir los campos de un registro es directo una vez localizado. Sumar *solo* importes obliga a saltar el resto mil veces. **Añadir** reservas al final es natural.
 
 Eso **no** convierte Avro en el PMS. Recibir el cobro en recepción es la tabla del [1.3](almacenamiento.md){target="_blank" rel="noopener"} (ACID). Avro es el **mensaje** (Kafka): también va por filas, con esquema.
 
@@ -101,7 +120,7 @@ En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: 
 
 ## Comprimir no es gratis
 
-El algoritmo busca **repeticiones** (`Laredo, Laredo, Laredo…`) y las recodifica. Viaja menos por la red. A cambio, la CPU **aprieta y destapa**. Sobre 100 GB, “media” deja unos 50 GB y “alta” unos 40. En Big Data suele ganar el que es **rápido**, no el que más aprieta.
+El algoritmo busca **repeticiones** (`Laredo, Laredo, Laredo…`) y las recodifica. Viaja menos por la red. A cambio, la CPU **aprieta y destapa**. La reducción depende del contenido: texto repetitivo y datos ya comprimidos pueden responder de forma muy diferente. En Big Data suele ganar el que es **rápido**, no el que más aprieta.
 
 | Códec | Velocidad | Ahorro | Típico en |
 | --- | --- | --- | --- |
@@ -122,6 +141,10 @@ No memoricéis megas de un recorte ajeno. **Medid el vuestro** al final del tall
 
 ## Avro: el mensaje que se explica solo
 
+El esquema especifica qué campos forman cada registro y qué valores son válidos. Un campo que admite nulo debe declararlo; nulo representa ausencia de valor y se distingue de cero o de una cadena vacía. Cuando el esquema cambia, escritor y lector deben aplicar reglas compatibles.
+
+En un **archivo contenedor Avro**, el esquema se conserva en la cabecera. En mensajería, los sistemas pueden utilizar un identificador y un registro externo de esquemas: no debe suponerse que cada mensaje contiene la cabecera completa de un archivo. Los talleres siguientes trabajan con archivos contenedores.
+
 [Avro](https://avro.apache.org/){target="_blank" rel="noopener"} guarda **por filas**, en binario. El esquema (JSON) viaja en la **cabecera**. Quien lee sabe cómo se escribió. Encaja cuando **escribís mucho**, el esquema **cambia** y el destino es un bus ([Kafka](ingesta.md){target="_blank" rel="noopener"}), no el PMS. Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/){target="_blank" rel="noopener"}.
 
 !!! tip "Orden de los talleres"
@@ -137,6 +160,10 @@ pip install avro fastavro
 ```
 
 ### Taller 1 — Una reserva con hueco
+
+**Objetivo:** escribir dos registros y recuperarlos con sus tipos. Primero se lee el esquema; después se abre un escritor binario y se añaden registros. Cerrar el escritor completa el archivo. Finalmente, el lector reconstruye los registros y permite inspeccionar el esquema utilizado.
+
+**Comprobación:** deben recuperarse dos reservas. La primera conserva el importe 186,5; la segunda tiene importe nulo. El nulo no significa que la estancia sea gratuita. Si cambiáis `noches` por un texto incompatible con el esquema, la escritura debe rechazarlo.
 
 Descargad [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. La segunda reserva no trae importe: el esquema admite nulo.
 
@@ -168,6 +195,8 @@ En pantalla veréis `importe: None`: eso es Python. En el fichero el nulo es Avr
 
 ### Taller 2 — Lo mismo, más rápido (fastavro)
 
+Este taller conserva el objetivo y cambia la biblioteca. Comparad los registros leídos de ambos archivos, no sus bytes: dos escritores pueden producir archivos diferentes que representan los mismos datos. La ventaja de rendimiento debe medirse para vuestro volumen y entorno; con dos registros apenas es representativa.
+
 ```python
 import json
 import fastavro
@@ -184,6 +213,10 @@ with open("reservas_fa.avro", "wb") as f:
 ```
 
 ### Taller 3 — Del DataFrame al Avro
+
+Aquí seleccionamos Laredo y cinco columnas del conjunto generado. Por tanto, el archivo resultante no contiene todo el DataFrame original. Anotad el número de filas filtradas y verificad que coincide con el número de registros recuperados de Avro.
+
+El ejemplo utiliza números en coma flotante con fines didácticos. Para importes contables se debe acordar una representación decimal exacta o unidades enteras, como céntimos. Cambiar el formato no elimina los errores de redondeo de una representación numérica inadecuada.
 
 Usad el `df` del generador (o filtrarlo: solo `hotel == "Laredo"`).
 
@@ -222,6 +255,10 @@ Si algún día lo escribís en HDFS, cambiad el host por el de **vuestro** lab; 
 
 ## Arrow: el dato *en la RAM*
 
+El formato en disco responde a cómo conservar y leer bytes; la representación en memoria responde a cómo trabaja el programa con los valores ya disponibles. Arrow organiza columnas con tipos y una representación explícita de los nulos. Esa disposición facilita intercambios entre herramientas compatibles.
+
+La ausencia de copias no está garantizada en todas las conversiones: cambiar tipos o transformar a estructuras incompatibles puede requerir memoria adicional. En el ejemplo, la segunda fila conserva un importe nulo, y eso debe seguir siendo cierto tras convertir o escribir la tabla.
+
 [Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"}, [Avro](https://avro.apache.org/){target="_blank" rel="noopener"} y [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} viven en **disco**. **[Arrow](https://arrow.apache.org/){target="_blank" rel="noopener"}** describe columnas **en memoria** para que Python, R o Java las compartan sin copiarlas (*zero-copy*) y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/){target="_blank" rel="noopener"}. Arrow **no** es Avro.
 
 ```bash
@@ -245,7 +282,7 @@ print(tabla)
 
 pandas 2 puede leer el CSV con motor Arrow (`dtype_backend="pyarrow"`): textos y nulos suelen ir mejor que con NumPy.
 
-**Feather** (Arrow IPC) es el fichero **entre dos celdas** del mismo pipeline: rapidísimo, no es el archivo de 2020–2026.
+**Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
 
 ```python
 import pyarrow.feather as feather
@@ -263,6 +300,8 @@ otro = feather.read_feather("reservas.feather")
 
 ### Taller 4 — Tabla Arrow → Parquet
 
+Escribimos la tabla pequeña creada en el apartado Arrow. El resultado debe mantener sus dos filas, los tres campos y el importe nulo. Después de leerlo, comparad el esquema y los valores. Este taller comprueba conservación de datos, no velocidad a gran escala.
+
 ```python
 import pyarrow.parquet as pq
 
@@ -271,6 +310,8 @@ print(pq.read_table("reservas.parquet"))
 ```
 
 ### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md){target="_blank" rel="noopener"})
+
+Cread primero un archivo de texto con exactamente los dos objetos mostrados, uno por línea, y guardadlo como `reservas.jsonl`. El lector infiere un esquema y produce una tabla Arrow; el escritor genera Parquet. Comprobad que la ausencia de `importe` en la segunda línea se representa como nulo, no como cero.
 
 `reservas.jsonl`:
 
@@ -288,6 +329,10 @@ pq.write_table(pajson.read_json("reservas.jsonl"), "reservas_desde_json.parquet"
 
 ### Taller 6 — Filtrar *al leer* (no tragarse el Parquet)
 
+Se utiliza ahora el DataFrame grande del generador. La opción `columns` solicita solo las columnas necesarias y `filters` expresa la condición que el lector puede aplicar. El ahorro efectivo depende de cómo estén distribuidos los valores y de las estadísticas disponibles: si todos los grupos contienen Laredo, el motor quizá tenga que leerlos todos, aunque descarte las filas restantes.
+
+Comprobad que el resultado tiene únicamente `hotel` e `importe`, que todas sus filas son de Laredo y que su recuento coincide con el filtro equivalente sobre `df`. Medid después el tiempo; primero debe ser correcto.
+
 Escribir Parquet y luego hacer `read_parquet` **entero** + un filtro en pandas es usar el lago **como un CSV**. El formato sirve si recortáis **en la lectura**:
 
 ```python
@@ -300,11 +345,11 @@ solo_laredo = pd.read_parquet(
 )
 ```
 
-En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, hace lo mismo con SQL y **sin** cargar el fichero a RAM.
+En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.
 
 ### Preguntar sin cargarlo: DuckDB
 
-[DuckDB](https://duckdb.org/){target="_blank" rel="noopener"} es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). No traga el Parquet a RAM.
+[DuckDB](https://duckdb.org/){target="_blank" rel="noopener"} es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). Procesa los archivos mediante su motor y no exige convertir previamente el conjunto completo en un DataFrame. Aun así, utiliza memoria y puede necesitar espacio temporal.
 
 ```bash
 pip install duckdb
@@ -331,6 +376,8 @@ Si particionáis por año: `FROM 'reservas/*.parquet'`. Por dentro habla Arrow: 
 
 ## ORC: cuando el ecosistema es Hive
 
+ORC también organiza datos por columnas y conserva información que ayuda a evitar lecturas innecesarias. Compararlo con Parquet exige comprobar las operaciones y versiones del motor que se utilizará. La compatibilidad del equipo y de los lectores puede pesar más que una pequeña diferencia de tamaño en una prueba aislada.
+
 [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} (*Optimized Row Columnar*) nació para **Hive**. Tiras (*stripes*) con mín/máx para **no leer** lo que no puede cumplir el filtro. Compresión habitual `zlib`. pandas `to_orc` (desde 1.5) sale **sin** comprimir si no lo pides.
 
 ```python
@@ -348,7 +395,11 @@ Si el equipo “es Spark”, veréis más Parquet. No es que ORC sea peor: es **
 
 ## Cuando el lago también tiene que *actualizar*
 
-Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. El lago es **append**: se **añade**; no abrís el fichero y tacháis una fila (un NIF que hay que retirar). [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"} y [Hudi](https://hudi.apache.org/){target="_blank" rel="noopener"} son **Parquet (u ORC) + un diario**: no se edita el fichero viejo; se escribe uno nuevo y se anota.
+Un formato de archivo describe un archivo; un formato de tabla gestiona el conjunto de archivos que constituye una tabla. Al actualizar una reserva, el sistema registra una nueva versión lógica y coordina qué archivos o registros de borrado deben consultar los lectores. Los mecanismos concretos varían entre Delta Lake, Iceberg y Hudi.
+
+Conservar versiones permite recuperar estados anteriores, pero requiere políticas de mantenimiento. Borrar una fila de la versión actual no implica necesariamente eliminar de inmediato todas sus copias históricas. Hay que distinguir la modificación lógica de la limpieza física de archivos antiguos.
+
+Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. En muchos pipelines se añaden archivos nuevos. Para actualizar o borrar registros se necesita una estrategia que gestione los archivos afectados y sus versiones. [Delta Lake](https://delta.io/){target="_blank" rel="noopener"}, [Iceberg](https://iceberg.apache.org/){target="_blank" rel="noopener"} y [Hudi](https://hudi.apache.org/){target="_blank" rel="noopener"} gestionan archivos de datos y metadatos de tabla. Los formatos de archivo admitidos y los mecanismos de actualización dependen de cada proyecto.
 
 Eso permite viajar en el tiempo, un [ACID](almacenamiento.md){target="_blank" rel="noopener"} de **tabla** (un `MERGE` no deja la ocupación a medias) y compactar ficheros pequeños. **Eso no cobra en recepción:** el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
 
@@ -377,23 +428,27 @@ Eso permite viajar en el tiempo, un [ACID](almacenamiento.md){target="_blank" re
 
 | | Escribir | Leer | Ocupa |
 | --- | --- | --- | --- |
-| CSV | Lento | Lento | Mucho |
-| Feather | Muy rápido | Muy rápido | Medio |
-| Parquet + Snappy | Rápido | Rápido | Poco |
-| Avro | Rápido | Rápido | Medio |
-| ORC | Medio | Medio | Poco |
+| CSV | Depende de la serialización | Requiere interpretar texto | A menudo mayor sin compresión |
+| Feather | Optimizado para intercambio Arrow | Depende de tipos y lector | Depende de compresión y contenido |
+| Parquet + Snappy | Incluye codificación columnar | Ventajoso al seleccionar columnas | Depende de los datos |
+| Avro | Orientado a registros | Depende de campos necesarios | Depende de esquema y compresión |
+| ORC | Incluye codificación columnar | Puede omitir columnas y bloques | Depende de los datos |
 
 !!! tip "Serializar"
     Memoria → bytes (y al revés). Cada conversión puede **perder el tipo**. Elegid formato en la frontera y no traduzcáis en cada capa.
 
 ## Taller medido (lo que se examina)
 
+Para que la comparación sea válida, utilizad las mismas filas, columnas y tipos en todas las alternativas. Registrad versiones, número de registros, tamaño del archivo, compresión y consulta. Separad el tiempo de escritura del de lectura y del de cálculo.
+
+Repetid cada medida y explicad si los datos podían estar en caché. No comparéis una lectura completa de CSV con una consulta de dos columnas sobre Parquet sin aclarar que se están midiendo dos patrones de acceso. Además del tiempo, contrastad el resultado: recuentos, nulos y sumas deben coincidir dentro de la tolerancia numérica acordada.
+
 Abrid un cuaderno **en blanco**. Generad el `df` (`n ≥ 200_000`). Cronometrad y anotad tamaños (`os.path.getsize`) de:
 
 1. `reservas.csv`
 2. `reservas.parquet` y `reservas_zstd.parquet`
 3. `reservas.orc`
-4. `laredo.avro` (solo un hotel, tres o cuatro columnas)
+4. `laredo.avro` (solo Laredo y las cinco columnas del taller 3): comparadlo con CSV y Parquet generados a partir de ese mismo subconjunto, por separado de la comparación del conjunto completo
 5. `reservas.feather` — comparad **tiempo de lectura** frente al CSV
 
 Luego, **sin** cargar el Parquet entero en pandas (como el taller 6):
@@ -412,7 +467,7 @@ print("escritura s:", round(time.perf_counter() - t0, 3))
 print("bytes:", os.path.getsize("reservas.parquet"))
 ```
 
-Lo que tenéis que poder decir en voz alta: por qué el Parquet ocupó menos que el CSV, por qué Feather se leyó antes y por qué Avro sigue teniendo sentido si el canal de reservas **añade un campo** en abril.
+Explicad los resultados observados, incluso si un formato no fue el más rápido esperado. Relacionad diferencias con columnas leídas, compresión, tipos y tamaño. Justificad también cómo se gestionaría la incorporación de un campo en Avro.
 
 La entrega, si la hay, es Moodle. No hace falta ningún dataset de otro centro ni compartir el cuaderno fuera.
 
@@ -423,10 +478,10 @@ No puntúa en Moodle. Una línea de por qué.
 1. El panel de las 8 solo usa `hotel` e `importe`. ¿CSV o Parquet para el lago?
 2. El JSON del canal viaja por Kafka y el mes que viene añaden un campo. ¿Avro, Parquet o Feather?
 3. `{"hotel": "Laredo", "importe": None}` ¿es JSON válido?
-4. ¿Dejáis tres años de histórico en **Feather** en el cubo? ¿Por qué?
+4. Para el histórico consultado con distintas herramientas, ¿por qué elegiríais Parquet frente a Feather? Relacionad la respuesta con los consumidores previstos.
 
 !!! tip "Comprobación"
-    Parquet / Avro / no (`None` es Python; en JSON es `null`) / no (Feather es entre celdas, no el archivo del lago).
+    Parquet / Avro / no (`None` es Python; en JSON es `null`) / para este lago preferimos Parquet por los lectores y consultas previstos; Feather es un formato de intercambio persistente, no una prohibición de conservar datos.
 
 ## Autoevaluación del 1.7
 

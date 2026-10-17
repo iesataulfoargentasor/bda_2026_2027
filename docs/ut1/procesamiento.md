@@ -8,6 +8,21 @@ tags:
 
 # 1.4. Procesamiento de datos
 
+## Tres preguntas para clasificar un procesamiento
+
+En 1.3 elegimos cómo conservar los datos. Ahora vamos a transformarlos en un resultado: por ejemplo, sumar los cobros de ayer por hotel. Para describir ese trabajo necesitamos responder tres preguntas independientes.
+
+1. **¿Dónde se ejecuta?** Puede utilizar un ordenador o varias máquinas; dentro de ellas puede aprovechar varios núcleos.
+2. **¿Cuándo se ejecuta?** Puede procesar un conjunto cerrado por lotes o atender datos que llegan de forma continua.
+3. **¿Para qué se ejecuta?** Puede registrar una operación del negocio o analizar muchas operaciones ya registradas.
+
+Un informe nocturno puede ser analítico, por lotes y distribuido al mismo tiempo. Un servicio de reservas puede atender muchas operaciones concurrentes en una sola máquina. Por tanto, estas palabras describen dimensiones diferentes, no casillas excluyentes.
+
+En particular, el paralelismo significa ejecutar trabajo simultáneamente y puede existir tanto dentro de una máquina como entre varias. En los ejemplos de esta unidad usaremos el portátil para ilustrar el paralelismo local y el clúster para ilustrar el procesamiento distribuido.
+
+Una vez distinguidas estas decisiones, en 1.5 veremos cómo encajan el procesamiento, el almacenamiento y la consulta en una arquitectura completa.
+
+
 Almacenar no basta: el criterio **d)** pide **procesar** lo guardado. El **a)** también entra: hay que caracterizar *cómo* se parte el trabajo y *con qué prisa* tiene que salir el número. Un dato en el lago que nadie transforma no sirve a gerencia.
 
 En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya está partido en dos relojes:
@@ -19,7 +34,7 @@ En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya est
 En clase lo aplicáis en la [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"}: concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
 
 !!! info "Cómo se lee esta página"
-    Primero **dónde** corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el **ritmo** (lote, clic, consulta, flujo). Después los **dos oficios** (operar / informar) y el **SCV** (no podéis pedir las tres letras a un análisis). Cómo se combinan lote y flujo en el edificio va en [1.5](arquitectura.md){target="_blank" rel="noopener"}, no aquí.
+    Primero **dónde** corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el **ritmo** (lote, clic, consulta, flujo). Después los **dos oficios** (operar / informar) y el **SCV** (compromisos entre velocidad, precisión y volumen). Cómo se combinan lote y flujo en el edificio va en [1.5](arquitectura.md){target="_blank" rel="noopener"}, no aquí.
 
 ## Concurrente, paralelo y distribuido
 
@@ -28,7 +43,7 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 | Tipo | Dónde corre | ¿A la vez de verdad? | En el hotel |
 | --- | --- | --- | --- |
 | **Concurrente** | Una o varias máquinas | **No necesariamente** | Un núcleo que se **turna**: el job y el antivirus |
-| **Paralelo** | Varios **núcleos** de **una** máquina | Sí | Diez núcleos suman noches de **Laredo** |
+| **Paralelo** | Varios recursos de cálculo, en una o varias máquinas | Sí | Diez núcleos suman noches de **Laredo** |
 | **Distribuido** | **Varias máquinas** en red | Sí, en general (más red y fallos) | Un nodo por hotel: Santander, Laredo, Comillas, Potes |
 
 ![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos-hotel](../assets/ut1/paralelo-distribuido.png)
@@ -37,9 +52,13 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 
 **Paralelo (multinúcleo).** Varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.
 
-**Multihilo:** un núcleo *comparte* recursos entre hilos. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si **los dos** necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” **no** es lo mismo que 8 núcleos físicos.
+**Multihilo de hardware (SMT):** un núcleo comparte recursos entre varios hilos de ejecución. No debe confundirse con crear varios hilos de software, que el sistema operativo planifica sobre los procesadores disponibles. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si **los dos** necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” **no** es lo mismo que 8 núcleos físicos.
 
 ### Cuándo se puede paralelizar
+
+Para combinar resultados parciales debemos conservar la información necesaria. La suma total es la suma de las sumas parciales. La media global, en cambio, se obtiene dividiendo la suma total entre el recuento total; no se calcula promediando sin más las medias de grupos de tamaños diferentes.
+
+Por ejemplo, un hotel tiene 2 cobros con media de 100 € y otro tiene 8 con media de 200 €. La media global es `(2 × 100 + 8 × 200) / 10 = 180 €`, no 150 €. Un buen reparto conserva en cada nodo la suma y el recuento, y combina ambos al final.
 
 **Sí (independiente):** sumar noches por hotel. Partís en cuatro trozos (Santander, Laredo, Comillas, Potes), cada núcleo (o cada nodo) suma el suyo, al final sumáis cuatro parciales. El último paso es barato.
 
@@ -51,7 +70,7 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 
 ## Distribuido (entre máquinas)
 
-El procesamiento **distribuido** reparte subtareas a **nodos de un clúster**. Es paralelo *más* tres problemas que en un solo PC no teníais:
+El procesamiento **distribuido** reparte trabajo entre máquinas y puede ejecutarlo en paralelo. Además de coordinar tareas, debe afrontar tres dificultades:
 
 - Los datos **no** están todos en la misma RAM.
 - La **red** tarda y a veces falla.
@@ -63,12 +82,16 @@ MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún;
 
 ## Estrategias: no todo es “tiempo real”
 
+**Lote** significa trabajar con un conjunto delimitado. Aunque pueda ejecutarse de noche, sigue teniendo un plazo de entrega. **Streaming** procesa una secuencia que continúa creciendo. Los **microlotes** agrupan los eventos recibidos durante intervalos cortos y los procesan sucesivamente.
+
+En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la ocupación de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.
+
 El **ritmo** del trabajo no es la [transacción ACID](almacenamiento.md){target="_blank" rel="noopener"} del cobro. ACID es la garantía (todo o nada). Aquí es **cuánto podéis esperar** el número.
 
 | Estrategia | ¿Urge el resultado? | En el hotel |
 | --- | --- | --- |
-| **Por lotes** (*batch*) | No | Finanzas cierra a las 23:00; el job de madrugada; el **panel de las 8** (ayer) |
-| **Por transacciones** | Sí (muy por debajo de 1 s) | Picar el cobro en el **PMS**. Es el reloj del clic, no “ACID” |
+| **Por lotes** (*batch*) | Hay un plazo acordado; no se responde a cada evento | Finanzas cierra a las 23:00; el job de madrugada; el **panel de las 8** (ayer) |
+| **Por transacciones** | Normalmente baja latencia, según la operación | Picar el cobro en el **PMS**. Es el reloj del clic, no “ACID” |
 | **Interactivo** | Sí, mientras miráis | A las 11 filtráis Laredo en el almacén: “¿cómo vamos *hoy*?”. **No** es el panel de las 8 |
 | **Flujo** (*streaming*) | Sí, **al ritmo** en que llegan | Sensores cada ~30 s → **semáforo** de recepción |
 
@@ -96,13 +119,13 @@ flowchart TB
     El panel de las 8 **no** es tiempo real: es el lote de **ayer**.  
     La palabra inglesa *online* aquí solo significa “mientras usáis el sistema”, no “hay una transacción de dinero”.
 
-**Streaming** añade otra dificultad: las cuentas se actualizan **conforme llegan** los datos. Suele hacerse en memoria, así que hay un **techo** de cuánto podéis tener “caliente”. No es “un lote, pero más rápido”: es otro contrato. Cómo se **combinan** lote y flujo (Lambda / Kappa) está en [1.5](arquitectura.md){target="_blank" rel="noopener"}.
+**Streaming** añade otra dificultad: las cuentas se actualizan **conforme llegan** los datos. El estado puede mantenerse en memoria y en almacenamiento persistente, según el motor. Hay que dimensionarlo y definir cómo se recupera tras un fallo. No es “un lote, pero más rápido”: es otro contrato. Cómo se **combinan** lote y flujo (Lambda / Kappa) está en [1.5](arquitectura.md){target="_blank" rel="noopener"}.
 
 ## Dos trabajos: operar el día a día o analizar el histórico
 
 En el hotel conviven **dos oficios** que parecen el mismo (“usar el ordenador con datos”) y no lo son.
 
-**Oficio 1 — Operar.** Recepción pica la reserva y el cobro. Muchas personas a la vez, cada una toca **poca** información, y tiene que terminar **en milisegundos**. Si esto se atasca, hay cola en el mostrador.
+**Oficio 1 — Operar.** Recepción registra la reserva y el cobro. Muchas personas a la vez, cada una toca **poca** información, y tiene que terminar **en milisegundos**. Si esto se atasca, hay cola en el mostrador.
 
 **Oficio 2 — Analizar.** Gerencia pregunta “ocupación de agosto en Laredo frente a julio” o “importe cobrado por hotel”. Eso recorre **mucho** histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser **defendible**.
 
@@ -139,30 +162,25 @@ En [1.3](almacenamiento.md){target="_blank" rel="noopener"} el **warehouse** es 
 
 ## Principio SCV (solo para análisis) { #scv }
 
-Parece el [CAP](almacenamiento.md){target="_blank" rel="noopener"} de las bases repartidas, pero **no habla de si el saldo se ve igual en todos los nodos**. Habla de **hacer un cálculo** en un sistema de análisis. Como máximo podéis pedirle **dos** de estas tres cosas:
+En algunos materiales se utiliza SCV para discutir el compromiso entre **velocidad**, **precisión** y **volumen** de un análisis. Lo emplearemos como una guía de razonamiento bajo recursos limitados, no como un teorema equivalente a CAP.
 
-![SCV en el hotel: panel de las 8, semáforo y un hotel ahora. Las tres a la vez, no](../assets/ut1/scv-hotel.png)
-
-| Letra | Aquí significa | No lo confundáis con |
+| Dimensión | Qué debemos concretar | Ejemplo |
 | --- | --- | --- |
-| **S**peed (velocidad) | Poco tiempo desde que el dato está en el sistema de análisis hasta el **número** | La “velocidad” de las 5 V (ritmo al que *llegan* los datos) |
-| **C**onsistency (aquí: **precisión**) | Usáis **todos** los datos, sin muestrear | La C de CAP (mismo valor en todos los nodos) ni la C de ACID (reglas del cobro) |
-| **V**olume | Podéis atacar conjuntos enormes | El “volumen” de las 5 V, aplicado al *trabajo* de cálculo |
+| Speed | Plazo máximo para obtener el resultado | Actualizar un indicador en segundos. |
+| Consistency, usada aquí como precisión | Si aceptamos aproximaciones y con qué error | Estimar una media con una muestra representativa. |
+| Volume | Cantidad de datos que intervienen | Analizar varios años de reservas. |
 
-En Big Data **V casi siempre está** (si no, no estaríais aquí). Entonces el menú real es:
+Esta C no es la consistencia de ACID ni la de CAP. Tampoco usar todos los registros garantiza exactitud: los datos pueden contener errores. Una ventana temporal puede dar un resultado exacto para esa ventana, aunque no describa todo el histórico.
 
-| Eliges | Qué sacrificáis | En el hotel |
-| --- | --- | --- |
-| **C + V** | Speed | **Panel de las 8**: todos los cobros de ayer; no es instantáneo |
-| **S + V** | Precisión (muestreo o ventana) | **Semáforo**: rápido; no usa todas las filas del lago |
-| **S + C** | Volume | Consulta **un** hotel ahora (Laredo): exacto y rápido; poco volumen |
+Supongamos que una consulta tarda diez minutos y dirección necesita respuesta en diez segundos. Podemos preparar agregados previamente, elegir otro formato, mejorar el cálculo, aumentar recursos, limitar el periodo o utilizar una aproximación. Cada alternativa tiene costes y responde a una pregunta diferente. No hay una obligación universal de sacrificar una de las tres dimensiones.
 
-!!! example "Pregunta de aula"
-    ¿Análisis en tiempo real con *todos* los petabytes del lago y la misma precisión que el cierre de las 23:00?  
-    En general **no**: sería S + C + V. O muestreamos (pierde precisión el semáforo) o esperáis al lote (pierde velocidad el panel).
+El panel nocturno dispone de varias horas para validar el cierre. Un indicador continuo dispone de menos tiempo y necesita definir cómo trata los eventos tardíos. Ambos pueden calcular resultados exactos para su ámbito si el diseño y los recursos lo permiten.
+
+!!! example "Decisión razonada"
+    Para calcular el importe de ayer, una tabla ya agregada por fecha y hotel puede ofrecer una respuesta rápida y exacta sin releer todo el histórico. El trabajo se ha realizado antes: no ha desaparecido.
 
 !!! success "Para el criterio d)"
-    Procesar no es “darle a Ejecutar”. Es elegir **lote o flujo**, **operar o analizar** (OLTP u OLAP), y ser conscientes del **SCV**. Luego, en [Pentaho](pentaho.md){target="_blank" rel="noopener"}, lo hacéis visible con un flujo que cambia el dato.
+    Explicad qué cálculo realizáis, sobre qué datos, en qué plazo y cómo comprobareis el resultado. Después justificad si necesitáis lote, flujo, ejecución local o distribuida.
 
 ## Actividad
 
@@ -171,10 +189,10 @@ No puntúa en Moodle. Una línea de por qué.
 1. El portátil tiene 10 núcleos y sumáis noches de Laredo **en esa máquina**. ¿Paralelo o distribuido?
 2. El job de madrugada parte el histórico en **cuatro nodos** (un hotel cada uno). ¿Paralelo o distribuido?
 3. Recepción cobra una estancia; gerencia abre ocupación por hotel a las 8. ¿OLTP u OLAP en cada caso?
-4. El semáforo quiere ir **al momento**, con **todas** las filas del lago y la misma precisión que el cierre. Según el SCV, ¿se puede? ¿Qué suelta?
+4. Una consulta sobre todo el histórico supera el plazo requerido. Proponed dos cambios de diseño y explicad qué coste o limitación introduce cada uno.
 
 !!! tip "Comprobación"
-    Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / no: S+C+V no cabe; el semáforo suelta precisión (S+V) o esperáis al lote (C+V).
+    Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / con los recursos del supuesto, habrá que reducir el trabajo, aceptar una aproximación o aumentar el tiempo disponible; también se puede revisar la arquitectura y el presupuesto.
 
 ## Autoevaluación del 1.4
 

@@ -8,7 +8,18 @@ tags:
 
 # 1.5. Arquitectura por capas y paisaje de herramientas
 
-Un sistema Big Data no es “un programa que lo hace todo”. Si metéis ingesta, limpieza, modelos y el PDF para gerencia en el mismo script, no podéis probar, ni sustituir una pieza, ni explicar el diseño (criterio **a)**).
+## Cómo construir una visión de conjunto
+
+Hasta ahora hemos estudiado necesidades, máquinas, almacenamiento y procesamiento por separado. Una arquitectura explica cómo colaboran esos elementos para entregar un resultado. Las capas que siguen representan responsabilidades: una misma herramienta puede cubrir varias y una capa puede necesitar varias herramientas.
+
+Sigamos una reserva: el PMS la registra; un proceso extrae una copia; la integración unifica los identificadores de hotel; el almacenamiento conserva los datos; el procesamiento calcula totales; la consulta recupera los indicadores y la visualización los presenta. Cada paso necesita una entrada definida y debe producir una salida que el siguiente pueda interpretar.
+
+Si el panel muestra un importe incorrecto, este mapa permite investigar su origen. Puede faltar un cobro en la extracción, haberse duplicado una reserva en la integración o haberse aplicado una regla incorrecta al calcular. La monitorización informa de fallos y tiempos; el linaje permite reconstruir de dónde procede el resultado.
+
+Primero estudiaremos esas responsabilidades y después las formas de combinarlas para atender lotes y flujos. En 1.6 nos detendremos en el recorrido de entrada y transformación de los datos.
+
+
+Un sistema Big Data no es “un programa que lo hace todo”. Separar responsabilidades facilita probar, sustituir componentes y explicar el diseño (criterio **a)**), incluso cuando un primer prototipo utiliza un único script.
 
 Se parte en **capas** que se hablan entre sí. Cada capa tiene **una** responsabilidad. Así sabéis dónde encajan la [ingesta](ingesta.md){target="_blank" rel="noopener"}, el [formato](formatos.md){target="_blank" rel="noopener"}, [Pentaho](pentaho.md){target="_blank" rel="noopener"} y el cuadro de mando.
 
@@ -23,7 +34,7 @@ Antes de los logos, el dato recorre un ciclo. Las tecnologías cambian; **estas 
 
 1. **Generación.** Quién, dónde y cuándo nace el dato: PMS, pasarela, sensor, un Excel de Comillas, una API.
 2. **Ingesta.** Moverlo al almacén. El detalle (pipeline, push/pull/poll, ETL/ELT) está en [1.6](ingesta.md){target="_blank" rel="noopener"}.
-3. **Transformación.** Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. No es lo mismo que unificar nombres (eso es la capa 2, más abajo). El resultado suele **añadirse** al lago, no pisar el fichero: si un huésped pide borrar el NIF, no editáis el Parquet a mano ([1.7](formatos.md){target="_blank" rel="noopener"}).
+3. **Transformación.** Cruzar, limpiar, agregar. Aquí vive Pentaho y, a escala, Spark SQL. Unificar nombres también es una transformación; en el esquema siguiente la destacamos dentro de integración para explicar su propósito. El resultado suele **añadirse** al lago, no pisar el fichero: si un huésped pide borrar el NIF, no editáis el Parquet a mano ([1.7](formatos.md){target="_blank" rel="noopener"}).
 4. **Entrega** (*serving*). El dato **ya es de fiar** y se lo dais a un consumidor: panel, modelo, fichero para el científico.
 5. **Consumo.** Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado **antes**.
 
@@ -56,29 +67,41 @@ El ciclo son **fases** (qué le pasa al dato). Las ocho capas son el **edificio*
 
 ### 1. Ingesta
 
+La salida de esta capa debe permitir saber qué se ha recibido y qué falta. Además de los registros, conservamos datos de control: fuente, instante de extracción y periodo cubierto. Si una API devuelve varias páginas, hay que recorrerlas todas; si un fichero se está escribiendo todavía, conviene esperar una señal de finalización antes de incorporarlo.
+
 Entráis a las fuentes que **ya existen**: el PMS, la pasarela, el JSON del canal, los sensores, un CSV de Comillas. **No** elegís cómo habla el origen: os adaptáis (SQL, HTTP, fichero, cola).
 
 Si esta capa falla, el resto analiza el vacío. El detalle está en [1.6](ingesta.md){target="_blank" rel="noopener"}.
 
 ### 2. Colección / integración
 
+Integrar exige resolver identidades y unidades. Si el código `1` significa Laredo en una fuente y Santander en otra, no podemos unir ambas tablas directamente. Necesitamos una correspondencia entre códigos locales y un identificador común. Del mismo modo, deben documentarse moneda, zona horaria y significado de los estados de reserva.
+
 Unificáis **formato y semántica**. El mismo canal no puede llamarse `web` en Laredo y `WEB` en Potes sin un criterio. El mismo huésped no puede tener tres NIF. Aquí nace (o se rompe) la calidad.
 
-Esto **no** es el cruce reservas ⋈ cobros: eso es transformar (capa 4). Aquí es poner el mismo nombre a la misma cosa.
+La integración incluye armonizar significados y relacionar fuentes. Estas tareas se ejecutan mediante transformaciones. Las separamos didácticamente por su propósito, pero no son categorías excluyentes ni requieren programas distintos.
 
 ### 3. Almacenamiento
+
+Esta responsabilidad incluye organizar conjuntos, definir cuánto tiempo se conservan y controlar quién puede leerlos. Para el hotel podemos mantener originales por fecha de recepción y tablas preparadas por fecha de negocio. Ambas fechas pueden diferir si un cobro llega con retraso. Las copias de seguridad y los procedimientos de restauración forman parte del diseño.
 
 Lago, warehouse, *lakehouse*, HDFS, objeto en cloud… [distribuido](clusters.md){target="_blank" rel="noopener"} si el volumen lo pide. Aquí aplicáis lo de [1.3](almacenamiento.md){target="_blank" rel="noopener"}: ¿el cobro puede verse a medias o no? ¿lago, almacén de informes o los dos?
 
 ### 4. Procesamiento
 
+Cada cálculo necesita reglas explícitas. Para el importe por hotel hay que decidir si se incluyen devoluciones, qué se hace con reservas sin pago y cómo se tratan monedas diferentes. El proceso debe producir el mismo resultado al ejecutarse sobre la misma entrada y la misma versión de las reglas, salvo que exista una variación intencionada y documentada.
+
 Infraestructura **batch**, **streaming** o híbrida. *No* extrae valor ella sola: deja el dato **listo** (agregado, limpio, unido). El job de madrugada, Spark o un script viven aquí. Lote o flujo, en [1.4](procesamiento.md){target="_blank" rel="noopener"}.
 
 ### 5. Consulta y analítica
 
+La consulta permite seleccionar y combinar los datos preparados. El análisis interpreta el resultado en su contexto. Un descenso de ocupación puede estar relacionado con habitaciones cerradas por reforma: el número, por sí solo, no explica la causa. El catálogo y las definiciones de indicadores ayudan a interpretar correctamente las consultas.
+
 SQL, notebooks, modelos. Aquí sale **conocimiento**: “Laredo cancela más el viernes por la web”.
 
 ### 6. Visualización
+
+Un resultado comprensible indica periodo, unidades, filtros y fecha de actualización. Si el panel muestra 80 %, debe aclarar qué cuenta como habitación disponible y a qué día corresponde. También debe distinguir un valor cero de un dato pendiente. Estas decisiones son tan importantes como elegir barras, líneas o una tabla.
 
 Informes y cuadros de mando para **gerencia**. Es el criterio **e)**: fácil de interpretar. Un `.ktr` o un Parquet crudo **no** son esta capa. El panel de las 8 **sí**.
 
@@ -88,10 +111,12 @@ Atraviesa todas las anteriores: quién lee el NIF, cifrado, copias, amenazas int
 
 ### 8. Monitorización (transversal)
 
+Hay que observar tanto la ejecución como los datos. Un proceso puede terminar correctamente y producir cero filas por un filtro mal configurado. Por eso registramos duración, errores, filas recibidas, descartadas y publicadas, además del periodo cubierto. Una alerta útil identifica el problema y a quién corresponde revisarlo.
+
 ¿El job de anoche acabó **antes de las 8**? ¿El dato del panel es de ayer o de marzo? Auditoría. Sin esto, el prototipo de clase funciona y el de producción **miente** sin que nadie lo sepa.
 
 !!! warning "Las dos que se olvidan en el trabajo de clase"
-    Seguridad y monitorización. El flujo “CSV → filtro → Excel” llega al 10. Las otras seis capas, si el caso es real, también existen aunque sean simples (una carpeta con permisos y un log de Pentaho).
+    Seguridad y monitorización. Un flujo “CSV → filtro → Excel” también necesita controles. Las otras seis capas, si el caso es real, también existen aunque sean simples (una carpeta con permisos y un log de Pentaho).
 
 ## Qué tiene que cumplir el edificio
 
@@ -120,74 +145,63 @@ Principios que evitan el zoo:
 
 ## Dos caminos: lote y flujo (Lambda y Kappa)
 
-Lote y *streaming* ya están en [1.4](procesamiento.md){target="_blank" rel="noopener"}. Aquí es **cómo se combinan** en el edificio.
+El procesamiento por lotes y el continuo pueden coexistir en una empresa. Esa coexistencia, por sí sola, no define una arquitectura Lambda. Para entender Lambda y Kappa debemos preguntar cómo se obtienen y se reconstruyen las vistas que consultan los usuarios.
 
-- **Lote:** tiene principio y fin. El cierre de las 23:00. Preciso; tarda. **Eso es el panel de las 8.**
-- **Flujo:** no acaba. Cada evento de sensor. Rápido; a menudo **menos** preciso (una ventana, no todo el histórico). **Eso es el semáforo.**
+Un flujo puede calcular resultados exactos para su ámbito; usar ventanas no implica necesariamente muestrear. La dificultad está en coordinar estados, duplicados, eventos tardíos y recuperación ante fallos. Un lote, por su parte, procesa un conjunto delimitado y también necesita controles de calidad.
 
-“Tiempo real” **no** es instantáneo: es responder en un plazo **finito** y útil. El semáforo de recepción sí; el panel de las 8 no hace falta.
+### Lambda: una vista histórica y una actualización reciente
 
-### Lambda: los dos a la vez
+Lambda combina una capa de **lote**, una capa **rápida** y una capa de **servicio o consulta**. La primera calcula vistas sobre el histórico; la segunda incorpora los eventos recientes antes de que el lote los haya integrado. La consulta utiliza las vistas necesarias sin contar dos veces los mismos hechos.
 
-En los libros, **Lambda** es: cada hecho puede entrar a la vez por un camino **lento** (lote, histórico) y uno **rápido** (flujo), y luego se consulta **el que toca**.
+Por ejemplo, una consulta del importe acumulado puede combinar el histórico cerrado con los cobros posteriores al último corte. Cuando el siguiente lote incorpora esos cobros, la parte rápida deja de aportarlos a esa consulta. Es necesario definir la frontera temporal y mantener reglas coherentes en ambos caminos.
 
-En **este hotel** no mezcléis eso con “todo por dos caminos”. Hay **dos tubos y dos destinos**:
+```mermaid
+flowchart LR
+  E[Eventos de cobro] --> H[Histórico conservado]
+  E --> R[Procesamiento reciente]
+  H --> B[Vista por lotes]
+  B --> Q[Consulta con corte temporal]
+  R --> Q
+```
 
-- PMS y pasarela → lote de madrugada → **panel de las 8** (cierre de **ayer**).
-- Sensores → flujo → **semáforo de recepción**.
+La ventaja es combinar una base histórica recalculable con baja latencia para eventos recientes. El coste es mantener y conciliar dos caminos. El [ejemplo de AWS sobre arquitectura Lambda](https://aws.amazon.com/blogs/big-data/build-a-big-data-lambda-architecture-for-batch-and-real-time-analytics-using-amazon-redshift/) ilustra esta separación.
 
-El cobro del panel **no** alimenta el semáforo. El sensor **no** pinta el importe de gerencia. En [1.6](ingesta.md){target="_blank" rel="noopener"} esos dos tubos se verán otra vez.
+En nuestro caso básico, el informe nocturno de cobros y el indicador de sensores tienen fuentes y objetivos distintos. Son dos pipelines, pero no bastan para afirmar que hemos construido Lambda. El panel de las 8 sigue mostrando el cierre de ayer; una consulta de “hoy hasta ahora” sería otro requisito.
 
-Las tres capas de Lambda, aplicadas al hotel:
+### Kappa: procesamiento continuo con capacidad de repetición
 
-1. **Capa lenta (lote).** El lago **inmutable**: se **añade**, no se pisa. Por la noche recorréis **todo** y calculáis la vista del panel (ocupación e importe **cerrados**). Precisión alta; latencia de horas. Gerencia a las **8** mira **solo** esta vista: es **ayer**, no el semáforo.
-2. **Capa rápida (flujo).** Solo el **incremento** desde el último lote: el semáforo, la ocupación “de ahora”. Baja latencia; podéis muestrear o mirar diez segundos de cada minuto.
-3. **Capa de consulta.** ¿Cierre de ayer? Vista lenta. ¿Queda doble? Vista rápida. **No** mezcléis las dos en el panel de las 8. La mezcla es **otra** pregunta (p. ej. a las 11, “importe de *hoy* hasta ahora”: cierre de anoche + el flujo de la mañana).
+Kappa propone mantener una vía principal de procesamiento de eventos. Si cambia una regla o hay que reconstruir una vista, se vuelven a procesar los eventos conservados. Este **replay** requiere retención suficiente, versiones de las reglas y control para no duplicar efectos en los destinos.
 
-El linaje se conserva porque no reescribís: una cancelación es **otro** registro, no un borrado silencioso.
+Un registro de eventos como Kafka puede formar parte de la solución. No es suficiente instalar una cola: hay que asegurar que conserva los eventos necesarios y que los consumidores pueden reconstruir su estado. El orden suele garantizarse dentro de cada partición, no globalmente entre todas las particiones.
 
-En el hotel eso es natural: **no** es el mismo algoritmo pintar el panel de las 8 (todo el día, todas las fuentes) y actualizar el semáforo (un evento).
+Kappa no obliga a que todos los consumidores ejecuten el mismo cálculo. Puede haber varios resultados derivados del mismo flujo. La elección depende de si las vistas requeridas pueden reconstruirse de forma viable y del coste de mantener una vía adicional por lotes.
 
-### Kappa: un solo flujo
-
-Si el lote no es más que “un flujo que se puede **releer**”, tiréis la capa lenta. Todo pasa por una **cola de mensajes** ([Kafka](https://kafka.apache.org/){target="_blank" rel="noopener"} y similares). El bruto no se muta; si cambiáis la transformación, **reprocesáis** desde un punto (el *replay*).
-
-Cuatro ideas:
-
-1. Todo es un flujo (el lote es un caso).
-2. El origen no se pisa.
-3. Un solo código que mantener.
-4. Podéis volver a lanzar el proceso sobre los mismos eventos.
-
-Hace falta que los eventos se guarden **en orden**. Si el algoritmo del panel **no** es el del semáforo (p. ej. un modelo de cancelación sobre tres años de Parquet), Kappa se queda corto: ese entrenamiento quiere el camino lento.
-
-![Lambda: panel y semáforo por caminos distintos. Kappa: una cola que se puede releer](../assets/ut1/lambda-kappa-hotel.png)
-
-| Pregunta | Os inclináis a |
+| Necesidad | Diseño que conviene estudiar |
 | --- | --- |
-| ¿El cálculo del panel y el del semáforo son **el mismo** (o casi)? | **Kappa** (un código, una cola) |
-| ¿El modelo de cancelación necesita **todo** el histórico y el semáforo no? | **Lambda** |
-| ¿Solo el panel de las 8, sin semáforo? | Un lote. No montéis flujo “por si acaso” |
-| ¿Solo el semáforo, y el 8 se puede **rehacer** releyendo la cola? | **Kappa** |
+| Solo un informe del día anterior | Un pipeline por lotes puede ser suficiente. |
+| Histórico recalculable y resultados recientes combinados | Lambda, si compensa mantener ambos caminos. |
+| Vistas derivadas de eventos que pueden conservarse y reproducirse | Kappa. |
+| Informes de cobros y sensores con objetivos independientes | Dos pipelines; justificar cada uno sin forzar una etiqueta. |
 
-Spark se cita tanto porque **el mismo** código puede cubrir lote y flujo: en Lambda reduce el doble mantenimiento. El detalle del motor, en la [UT2](../ut2/ecosistema.md){target="_blank" rel="noopener"}.
+Spark puede utilizarse para lotes y flujo, pero compartir un motor no elimina automáticamente la complejidad del estado, el tiempo de los eventos o los reintentos.
 
-### Temperatura: no todo el dato se toca igual
+### Temperatura: no todo el dato se consulta igual
 
-![Caliente, templado y frío: semáforo de ahora frente a copias de 2019](../assets/ut1/temperatura-dato.png)
+La temperatura expresa frecuencia de acceso y plazo de recuperación. No describe si el dato es correcto ni si pertenece a Lambda o Kappa.
 
-| | **Caliente** | **Templado** | **Frío** |
-| --- | --- | --- | --- |
-| Se consulta | Sin parar | De vez en cuando | Casi nunca |
-| Disco típico | RAM / SSD | Cubo “normal” | Cinta, archivo barato |
-| En el hotel | Semáforo, caché de “¿queda habitación?” | Cierre del mes | Copias de 2019 |
-| Recuperar | Barato en tiempo, caro en € | Equilibrio | Barato guardar, **lento** sacar |
+| Temperatura | Necesidad | Ejemplo |
+| --- | --- | --- |
+| Caliente | Acceso frecuente con poca latencia | Estado reciente o una caché de indicadores. |
+| Templado | Consultas periódicas | Informes del trimestre. |
+| Frío | Consulta excepcional, recuperación más lenta aceptable | Copias históricas sujetas a una política de conservación. |
 
-El camino rápido de Lambda vive en caliente. El histórico del lote, de templado a frío. Pagar SSD por las fotos de la reforma de 2019 es mal diseño.
+![Temperaturas del dato en el caso hotelero](../assets/ut1/temperatura-dato.png)
 
-El [principio SCV](procesamiento.md#scv){target="_blank" rel="noopener"} (velocidad / precisión / volumen del **cálculo**) explica el trueque: el semáforo (S + V) **no** usa todas las filas; el panel de las 8 (C + V) **no** es instantáneo. No lo confundáis con CAP ([1.3](almacenamiento.md){target="_blank" rel="noopener"}).
+El almacenamiento frío suele abaratar la conservación, pero puede introducir costes de recuperación o esperas. Si el informe diario necesita releer un conjunto, ese conjunto debe estar disponible dentro del plazo previsto. La política de almacenamiento se diseña a partir del acceso real.
 
 ## Gobierno, DataOps y orquestación
+
+Estas prácticas se complementan. Si cambia la definición de “reserva cobrada”, el gobierno del dato identifica quién aprueba el significado; DataOps permite probar y versionar el cambio; la orquestación ejecuta las tareas en el orden adecuado. El linaje permite conocer qué informes dependen de esa definición y deben recalcularse.
 
 No son una novena capa con logo. Son **corrientes** que atraviesan el ciclo.
 
@@ -230,36 +244,27 @@ No hace falta dominarlas todas el primer día. Sí conviene saber **que existen*
 - SQL (lingua franca de la transformación) y un lenguaje de scripts (en clase, Python).
 - Un cuaderno Jupyter para probar; a producción, el mismo flujo en un orquestador.
 
-Un ingeniero de datos **no** es un desarrollador de producto. Sí escribe el script que evita el clic manual a las 02:00.
+La ingeniería de datos y el desarrollo de producto colaboran y pueden solaparse. Sí escribe el script que evita el clic manual a las 02:00.
 
 ## El mismo oficio, otro sitio
 
 El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las **8**. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.
 
 !!! success "Al terminar 1.5"
-    Dibujad las **ocho** capas del [hotel](caso-hotel.md){target="_blank" rel="noopener"}. Ponéd **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
+    Dibujad las **ocho** capas del [hotel](caso-hotel.md){target="_blank" rel="noopener"}. Poned **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
 
 ## Actividad
 
-No puntúa en Moodle. Una línea de por qué.
+No puntúa en Moodle. Justificad cada respuesta con el caso hotelero.
 
-1. Situad cada herramienta en **una** de las ocho capas, o en la corriente de orquestación.
+1. Situad Power BI, SQL, MongoDB, Airflow y S3 en el esquema de responsabilidades. Explicad cuándo una herramienta puede cubrir más de una.
+2. ¿Por qué un informe nocturno de cobros y un flujo independiente de sensores no bastan para definir Lambda?
+3. Una consulta combina un histórico cerrado con cobros recientes. ¿Cómo evitaríais contar dos veces un cobro cuando se actualiza el histórico?
+4. ¿Qué condiciones necesita un replay para reconstruir una vista sin duplicar resultados?
+5. El proceso termina sin errores, pero el informe tiene cero filas. ¿Qué control habría ayudado a detectarlo?
 
-    | Herramienta | Pista |
-    | --- | --- |
-    | [Power BI](https://www.microsoft.com/es-es/power-platform/products/power-bi){target="_blank" rel="noopener"} | Lo que gerencia **ve** |
-    | SQL | Preguntar ocupación ya curada |
-    | [MongoDB](https://www.mongodb.com/){target="_blank" rel="noopener"} | Dónde reposa un JSON |
-    | [Airflow](https://airflow.apache.org/){target="_blank" rel="noopener"} | Orden de los pasos |
-    | [S3](https://aws.amazon.com/s3/){target="_blank" rel="noopener"} | Cubo de objetos |
-
-2. En Lambda, el semáforo va más rápido que el panel de las 8. ¿Qué **pagáis** a cambio? El panel de las 8, ¿mezcla los dos caminos?
-3. Lote frente a flujo: una frase de **volumen** y otra de **reloj**, con el cierre de las 23:00 y los sensores.
-4. ¿Por qué oiréis tanto Spark en este dibujo, y no “un programa para el lote y otro para el flujo”?
-5. Los sensores de Potes disparan a saco. Según el [SCV](procesamiento.md#scv){target="_blank" rel="noopener"}, si queréis **velocidad y volumen**, ¿qué soltáis?
-
-!!! tip "Comprobación"
-    (1) Visualización (6) / consulta (5) / almacén (3) / orquestación / almacén (3). (2) Precisión o histórico; el panel de las 8 **no** mezcla. (3) Lote = mucho dato, fin; flujo = continuo, ventana. (4) Un motor, dos modos. (5) Precisión (muestreo).
+!!! tip "Comprobación razonada"
+    (1) Visualización, consulta, almacenamiento, orquestación y almacenamiento, respectivamente; SQL también transforma. (2) Lambda coordina vistas histórica y reciente sobre los hechos necesarios para la consulta. (3) Un corte temporal o una identificación explícita de los eventos incluidos. (4) Eventos retenidos, reglas conocidas y escritura controlada. (5) Control de recuentos y del periodo recibido.
 
 ## Autoevaluación del 1.5
 

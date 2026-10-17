@@ -8,6 +8,17 @@ tags:
 
 # 1.2. Clústeres de computadoras
 
+## Del problema al reparto del trabajo
+
+En 1.1 hemos identificado situaciones en las que el sistema disponible puede resultar insuficiente. En este apartado estudiamos cómo colaborarían varias máquinas. La decisión depende de una medida concreta: cuánto tarda el trabajo, cuánta memoria necesita o qué interrupción del servicio se puede aceptar. Tener cuatro hoteles, por sí solo, no demuestra que haga falta un clúster.
+
+Supongamos que queremos sumar los cobros de un año. Podemos dividir los registros en cuatro conjuntos, calcular una suma parcial en cada nodo y sumar después los cuatro resultados. Para que funcione, cada registro debe entrar en un conjunto y las sumas deben usar las mismas reglas. Un programa coordinador asigna las tareas y comprueba su finalización. Si una tarea falla, debe poder repetirse sin contar dos veces sus resultados.
+
+Hay dos decisiones diferentes: **particionar** reparte datos distintos entre nodos; **replicar** mantiene copias de los mismos datos. La primera ayuda a distribuir el volumen y el trabajo; la segunda permite recuperar datos o continuar el servicio ante ciertos fallos. Una réplica tampoco sustituye a una copia de seguridad: un borrado accidental puede propagarse a las réplicas.
+
+Las propiedades que se explican a continuación describen objetivos distintos. Al terminar, debéis poder justificar si vuestro diseño busca reducir el tiempo de cálculo, mantener el servicio disponible o aumentar su capacidad. En 1.3 añadiremos otra decisión: cómo organizar los datos y qué garantías exigir al guardarlos.
+
+
 Cuando una sola máquina no da más de sí, la tentación es “comprar el servidor más gordo del catálogo”. Eso funciona un tiempo (escalado **vertical**) y luego choca con un techo: precio, enchufe, lo que el fabricante vende.
 
 Un **clúster** es otro planteamiento: varios ordenadores (**nodos**) unidos por **red** que se coordinan para un mismo trabajo. **No** son un único PC con mucha RAM: cada nodo tiene su CPU, su disco y su memoria. En Big Data es la pieza que permite crecer **añadiendo máquinas**, no solo agrandando *esa*.
@@ -51,11 +62,19 @@ Estas cuatro se apoyan entre sí. Un clúster “rápido” pero sin réplica es
 
 ### Alto rendimiento
 
+El tiempo total incluye lectura, cálculo, comunicación y combinación de resultados. Si leer los datos consume la mayor parte del tiempo, añadir CPU apenas ayuda. Primero medimos el cuello de botella y después decidimos qué recurso aumentar.
+
+Supongamos que un trabajo tarda 100 minutos: 20 corresponden a una fase que no podemos repartir y 80 a tareas independientes. Con cuatro trabajadores ideales, la segunda fase bajaría a 20 minutos; el total sería 40, antes de contar coordinación. El ejemplo explica por qué cuatro nodos no garantizan una aceleración de cuatro veces.
+
 Cada nodo es un ordenador completo (CPU, RAM, disco). Si el trabajo se puede **trocear**, mandáis un trozo a cada uno y juntáis el resultado. Ocho nodos **no** convierten 8 horas en 1 hora por arte de magia: la red, el reparto y el trozo que no se puede partir se comen tiempo. A veces rinde como 6 o 7; a veces casi como 1.
 
 La idea clásica es “llevar el cálculo al dato”: mejor mover una función pequeña que mover petabytes hacia una sola CPU. En Hadoop de libro el fichero **ya está** en el nodo que calcula. En la nube a menudo **no** (más abajo).
 
 ### Alta disponibilidad
+
+La disponibilidad necesita mecanismos de detección y recuperación, además de copias. El sistema debe detectar que un nodo no responde, decidir qué componente asume su trabajo y evitar publicar resultados incompletos. Conviene que las réplicas no compartan todos los riesgos: dos copias en discos conectados a la misma fuente de alimentación pueden perderse juntas.
+
+También se distingue entre mantener un servicio accesible y recuperar una tarea de cálculo. Una consulta puede continuar desde otra réplica; un cálculo interrumpido puede necesitar repetir una partición. En ambos casos importa cuánto tiempo de interrupción se admite.
 
 Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:
 
@@ -68,6 +87,10 @@ Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad.
 
 ### Equilibrio de carga
 
+Repartir el mismo número de ficheros no garantiza repartir el mismo trabajo. Un fichero de Laredo puede contener diez veces más reservas que uno de Potes. Este reparto desigual se llama **sesgo de datos**: algunos trabajadores terminan pronto mientras otro retrasa el resultado final.
+
+Una solución es dividir los datos en particiones de tamaño más parecido y asignar nuevas tareas a los nodos que van quedando libres. El reparto debe considerar también la ubicación de los datos, para no ahorrar tiempo de CPU a costa de transferir grandes volúmenes por la red.
+
 Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. El algoritmo debería mirar:
 
 - Lo grande que es el trabajo.
@@ -77,6 +100,10 @@ Un mal balanceo es mandar todos los jobs al nodo que “siempre ha ido bien”. 
 Si no, creáis un **cuello de botella**: la latencia media sube aunque el clúster “tenga máquinas libres”.
 
 ### Escalabilidad
+
+La escalabilidad describe cómo cambia la capacidad cuando aumentamos los recursos. Se comprueba midiendo, por ejemplo, registros procesados por segundo con dos, cuatro y ocho nodos. Si duplicamos nodos y apenas mejora el resultado, puede existir una fase centralizada o un límite de red.
+
+La **elasticidad** añade la posibilidad de ajustar recursos a la demanda: aumentar capacidad en temporada alta y reducirla después. Para aprovecharla, los datos deben seguir disponibles cuando se retiran máquinas de cálculo y las tareas deben poder redistribuirse.
 
 No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y crecéis. El volumen del hotel **no** se estima bien a priori: si os pasáis de pesimistas, habéis tirado el dinero; si os quedáis cortos, el job no llega a las 8.
 
@@ -102,7 +129,7 @@ Añadir nodos **no** convierte solo un Excel de finanzas en clúster: el program
 
     En clase decimos **vertical** y **horizontal** y no hay duda.
 
-El vertical **sigue existiendo** (un nodo de informes más gordo, un PMS más RAM). En Big Data **no basta solo** con eso: hay un techo de catálogo y un precio absurdo cerca de ese techo. El horizontal es el que encaja cuando el volumen no para de crecer.
+El vertical **sigue existiendo** (un nodo de informes de mayor capacidad, un PMS más RAM). En Big Data **no basta solo** con eso: hay un techo de catálogo y un precio absurdo cerca de ese techo. El horizontal es el que encaja cuando el volumen no para de crecer.
 
 ## Cuándo un clúster no hace magia
 
