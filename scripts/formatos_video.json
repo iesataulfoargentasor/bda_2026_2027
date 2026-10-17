@@ -1,0 +1,152 @@
+[
+  {
+    "title": "La reserva de Ana continúa su viaje",
+    "label": "Ya sabemos recoger datos. Ahora decidimos cómo representarlos.",
+    "active": 0,
+    "heading": "Una reserva, varias necesidades",
+    "body": "Enviar el registro · conservar el histórico · calcular el informe",
+    "takeaway": "El formato se elige pensando en el siguiente paso.",
+    "narration": "Ana ha reservado tres noches en Laredo. En el apartado anterior aprendimos a reunir su reserva y su cobro. Ahora el recorrido continúa: necesitamos enviar datos entre programas, guardar el histórico y preparar el informe de la mañana. La información puede ser la misma, pero no conviene representarla siempre de la misma manera. Un formato decide cómo se escriben esos datos para que otro programa los recupere. Vamos a seguir la reserva de Ana y elegir el formato cuando aparezca cada necesidad.",
+    "kind": "normal"
+  },
+  {
+    "title": "Antes del formato, acordamos el significado",
+    "label": "Esquema, formato y compresión responden a preguntas distintas.",
+    "active": 0,
+    "heading": "Qué contiene → cómo se escribe → cuánto ocupa",
+    "body": "Esquema: campos y tipos. Formato: representación. Compresión: codificación adicional.",
+    "takeaway": "Comprimir un CSV no lo convierte en Parquet.",
+    "narration": "Primero acordamos qué significa cada campo. Identificador de reserva, hotel, noches e importe forman parte del esquema, junto con sus tipos. El formato indica cómo representamos esos valores; la compresión intenta reducir los bytes que ocupan. Son decisiones diferentes. Comprimir un archivo CSV no le añade tipos ni lo convierte en columnar. Pasar los valores de la memoria a bytes se llama serializar. Al recuperarlos hacemos el camino inverso, y debemos comprobar que siguen significando lo mismo.",
+    "kind": "normal"
+  },
+  {
+    "title": "El primer envío debe entenderse",
+    "label": "Una compañera necesita inspeccionar los datos de Ana.",
+    "active": 0,
+    "heading": "CSV: sencillo, pero necesita acuerdos",
+    "body": "Separador · comillas · codificación · tipos de campos",
+    "takeaway": "El código 01 puede perder el cero si se interpreta como número.",
+    "narration": "Imaginemos que una compañera quiere revisar la reserva. Un CSV puede resultar cómodo porque es texto y muchas herramientas lo abren. Pero tenemos que acordar separadores, codificación y tipos. El código cero uno puede convertirse por error en el número uno. Si Ana escribe una coma en su comentario, hay que entrecomillar ese campo correctamente. Además, guardar por filas no proporciona un índice: encontrar una reserva concreta puede exigir recorrer el archivo. La facilidad para abrirlo no resuelve todas las necesidades.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cuando el dato llega como mensaje",
+    "label": "El canal web envía reservas con campos identificados.",
+    "active": 0,
+    "heading": "JSONL: un objeto completo por línea",
+    "body": "JSON permite anidados; JSONL facilita localizar registros independientes.",
+    "takeaway": "En JSON se escribe null; None pertenece a Python.",
+    "narration": "Ahora el canal web envía reservas con nombres de campo y quizá datos anidados. JSON encaja en ese intercambio. Si recibimos muchas, JSON Lines coloca un objeto completo por línea y facilita localizar los límites de cada registro. Un gran array JSON puede ser más complicado de repartir entre lectores, aunque algunos motores lo procesan de forma incremental. También importa la compresión. Y atención a los nulos: en JSON escribimos null; None pertenece a Python. Si recibimos facturas en XML, respetaremos igualmente su estructura y sus herramientas de lectura.",
+    "kind": "normal"
+  },
+  {
+    "title": "El mensaje necesita un contrato estable",
+    "label": "Otros programas deben interpretar la reserva igual que nosotros.",
+    "active": 0,
+    "heading": "Avro: registros binarios con esquema",
+    "body": "El archivo contenedor incluye el esquema; un mensaje puede referenciarlo externamente.",
+    "takeaway": "Avro representa datos; no sustituye a la base de recepción.",
+    "narration": "Cuando el intercambio crece, interesa un contrato más explícito. Avro representa registros en binario y utiliza un esquema que indica qué campos y tipos admite cada reserva. En un archivo contenedor, ese esquema está en la cabecera. En mensajería, puede utilizarse un identificador que remite a un registro externo de esquemas. Por eso no debemos imaginar una cabecera completa dentro de cada mensaje. Avro puede acompañar los eventos de un sistema como Kafka, pero no sustituye a la base de datos que registra el cobro en recepción.",
+    "kind": "normal"
+  },
+  {
+    "title": "Un dato ausente no es un importe de cero",
+    "label": "La segunda reserva del taller todavía no trae importe.",
+    "active": 0,
+    "heading": "Nulo ≠ cero ≠ texto vacío",
+    "body": "Declarar nulos y acordar la compatibilidad cuando cambia el esquema.",
+    "takeaway": "Cambiar de formato no corrige un tipo numérico inadecuado.",
+    "narration": "En los primeros talleres escribimos dos reservas. Una tiene importe y la otra admite un valor nulo. Ese nulo significa que no tenemos el dato, no que la estancia sea gratuita. Después leemos el archivo y comprobamos ambas reservas. Si mañana añadimos un campo, debemos acordar cómo lo interpretarán los lectores antiguos y nuevos: la evolución necesita reglas compatibles. Comparar Avro con fastavro significa comparar los valores recuperados, no exigir archivos idénticos. Para dinero real, además, acordamos decimales exactos o céntimos enteros; cambiar de formato no elimina errores de redondeo.",
+    "kind": "normal"
+  },
+  {
+    "title": "La pregunta de gerencia cambia la lectura",
+    "label": "A las ocho se consulta el cierre del día anterior.",
+    "active": 1,
+    "heading": "Filas: una reserva · Columnas: muchos importes",
+    "body": "El resumen necesita hotel e importe, pero no los comentarios de cada cliente.",
+    "takeaway": "Importe de la reserva no equivale a cobro confirmado.",
+    "narration": "La reserva ya ha viajado. Ahora llega la pregunta de gerencia: queremos resumir importes por hotel. Aquí necesitamos pocos campos de muchas reservas, no todos los detalles de Ana. En una organización por filas, los campos de cada reserva van juntos. En una organización por columnas, los valores del mismo campo se agrupan y el lector puede seleccionar los necesarios. Esta es la razón para cambiar de representación. Y conservamos una distinción importante: el importe de una reserva no demuestra un cobro; el informe de cobros necesita los datos y reglas del apartado anterior.",
+    "kind": "normal"
+  },
+  {
+    "title": "Parquet prepara el histórico para consultar",
+    "label": "Guardamos por columnas para leer lo que pide el informe.",
+    "active": 1,
+    "heading": "Cada grupo de filas separa sus columnas",
+    "body": "Grupo 1: hotel | noches | importe | comentarios\nGrupo 2: hotel | noches | importe | comentarios",
+    "takeaway": "Seleccionar hotel e importe evita leer columnas innecesarias.",
+    "narration": "Para ese histórico elegimos Parquet. Es columnar y conserva información sobre el esquema. No imaginéis una única columna gigantesca para todo el archivo: Parquet lo organiza en grupos de filas, y dentro de cada grupo separa las columnas. El lector puede pedir hotel e importe sin leer los comentarios. Eso puede ahorrar lectura, tiempo y transferencia. Pero no basta con cambiar la extensión del fichero. Hay que escribir realmente en Parquet y usar un lector que aproveche su estructura.",
+    "kind": "normal"
+  },
+  {
+    "title": "Tres formas distintas de leer menos",
+    "label": "Columnas, estadísticas y particiones se complementan.",
+    "active": 1,
+    "heading": "1. Elegir campos  2. Descartar grupos  3. Omitir archivos",
+    "body": "Columnas: hotel e importe. Estadísticas: grupos posibles. Particiones: fechas necesarias.",
+    "takeaway": "Un filtro no garantiza que se puedan saltar todos los grupos.",
+    "narration": "Podemos ahorrar trabajo de tres maneras. Primera: seleccionar solo las columnas necesarias. Segunda: utilizar estadísticas para descartar grupos que no pueden cumplir el filtro. Si todos los grupos contienen reservas de Laredo, filtrar por Laredo quizá no permita saltarse ninguno. Tercera: organizar el conjunto en particiones, por ejemplo por fecha, para no abrir archivos de otros periodos. Son mecanismos distintos. Por eso solicitamos columnas y filtros al leer, en lugar de cargar todo el archivo y recortarlo después.",
+    "kind": "normal"
+  },
+  {
+    "title": "Ahora los datos deben entrar en la memoria",
+    "label": "El formato del archivo y la representación en RAM cumplen papeles distintos.",
+    "active": 2,
+    "heading": "Parquet en disco → Arrow en memoria → cálculo",
+    "body": "Arrow organiza columnas tipadas y nulos para herramientas compatibles.",
+    "takeaway": "Arrow y Avro son tecnologías distintas.",
+    "narration": "Para calcular, los valores tienen que estar disponibles en memoria. Aquí aparece Arrow, cuyo nombre se parece a Avro, pero tiene otra función: describe una representación columnar en memoria, con tipos y nulos. Eso facilita intercambios entre herramientas compatibles y puede evitar copias. No siempre: una conversión de tipos puede necesitar memoria adicional. Feather permite guardar e intercambiar tablas mediante Arrow. Puede servir entre pasos de trabajo; para el histórico de este caso mantenemos Parquet por las consultas y lectores previstos.",
+    "kind": "normal"
+  },
+  {
+    "title": "Consultamos el archivo sin cargarlo entero en pandas",
+    "label": "El siguiente paso del recorrido es obtener el resumen.",
+    "active": 2,
+    "heading": "DuckDB es el motor; Parquet es el formato",
+    "body": "La consulta agrupa por hotel y calcula el importe medio.",
+    "takeaway": "El motor utiliza memoria y puede necesitar espacio temporal.",
+    "narration": "Ya tenemos el histórico preparado. DuckDB permite expresar una consulta SQL sobre el archivo Parquet sin convertir primero todo el conjunto en un DataFrame de pandas. Podemos agrupar por hotel y calcular el importe medio. DuckDB es el motor que hace el trabajo; Parquet es el formato que lee. No significa que calcule sin memoria ni recursos. Los talleres recorren ese camino: conservar valores al escribir Parquet, convertir JSON Lines y seleccionar columnas y reservas de Laredo durante la lectura.",
+    "kind": "normal"
+  },
+  {
+    "title": "Reducir tamaño también tiene un coste",
+    "label": "Menos bytes pueden ahorrar disco, red y tiempo de lectura.",
+    "active": 2,
+    "heading": "Compresión: ahorro de espacio a cambio de CPU",
+    "body": "Snappy, gzip o zstd: comparar con los mismos datos y la misma consulta.",
+    "takeaway": "No existe un porcentaje de ahorro garantizado.",
+    "narration": "Al guardar el histórico podemos comprimirlo. Las repeticiones de nombres como Laredo ayudan a reducir espacio, y transferir menos bytes puede acelerar el recorrido. A cambio, la máquina trabaja para comprimir y descomprimir. Snappy, gzip o zstd ofrecen distintos equilibrios; no elegimos únicamente el archivo más pequeño. Tampoco prometemos un porcentaje fijo de ahorro. Si el equipo trabaja con Hive, ORC es otra opción columnar. La elección depende de los lectores, las operaciones y las medidas, no de declarar un ganador universal.",
+    "kind": "normal"
+  },
+  {
+    "title": "Ana modifica su reserva después del cierre",
+    "label": "El histórico necesita gestionar cambios de forma coherente.",
+    "active": 3,
+    "heading": "Archivo Parquet ≠ tabla con versiones",
+    "body": "Delta Lake, Iceberg y Hudi coordinan datos y metadatos de tabla.",
+    "takeaway": "Eliminar de la versión actual no borra automáticamente el histórico.",
+    "narration": "Hasta aquí hemos guardado y consultado archivos. Pero Ana modifica su reserva: ahora necesitamos actualizar el histórico sin que alguien lea un resultado a medias. Un archivo Parquet aislado no coordina por sí solo las versiones de todo el conjunto. Formatos de tabla como Delta Lake, Iceberg o Hudi gestionan archivos y metadatos para aplicar cambios de forma coherente. Según el sistema y su configuración, podemos consultar estados anteriores. Eso exige mantenimiento: borrar una fila de la versión actual no elimina automáticamente todas sus copias históricas.",
+    "kind": "normal"
+  },
+  {
+    "title": "La decisión se demuestra con una prueba justa",
+    "label": "Primero comprobamos los datos; después medimos el rendimiento.",
+    "active": 3,
+    "heading": "Mismas filas, columnas, tipos y consulta",
+    "body": "Registrar tamaño, compresión, escritura, lectura y cálculo. Repetir las medidas.",
+    "takeaway": "El Avro de Laredo se compara con el mismo subconjunto.",
+    "narration": "Para justificar nuestras decisiones, el taller genera doscientas mil reservas sintéticas. Comparamos las mismas filas, columnas y tipos, anotamos compresión y tamaño, y separamos escritura, lectura y cálculo. Repetimos las medidas porque la caché puede cambiar los tiempos. El Avro del taller contiene solo Laredo y cinco columnas: no sería justo compararlo con un CSV de todos los hoteles. Antes del cronómetro comprobamos recuentos, nulos y resultados. Si algo ocupa menos porque hemos perdido datos, no hemos mejorado el formato.",
+    "kind": "normal"
+  },
+  {
+    "title": "Una reserva, un recorrido con decisiones",
+    "label": "Cada representación responde a una necesidad del siguiente paso.",
+    "active": -1,
+    "heading": "Intercambiar → conservar → calcular → mantener",
+    "body": "Texto o Avro · Parquet u ORC · Arrow y motores · formatos de tabla",
+    "takeaway": "Elegir formato es conservar el significado y facilitar el trabajo.",
+    "narration": "Volvamos a Ana. Su reserva puede viajar en texto o en Avro, incorporarse a un histórico Parquet y pasar por Arrow mientras calculamos. DuckDB puede consultar ese histórico, y un formato de tabla puede ayudar a gestionar sus cambios. No hace falta utilizar todas estas piezas en cada proyecto. Lo importante es preguntar quién leerá los datos, qué campos necesita y qué cambios habrá después. Elegir bien el formato consiste en conservar el significado y facilitar el siguiente paso. Esa es la decisión que debéis saber explicar.",
+    "kind": "normal"
+  }
+]

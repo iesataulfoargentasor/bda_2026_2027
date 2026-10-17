@@ -8,6 +8,19 @@ tags:
 
 # 1.7. Formatos de datos
 
+## Vídeo: la reserva de Ana cambia de formato
+
+Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. **Duración: 7 minutos y 45 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/formatos-historia-portada.jpg" aria-label="Formatos de datos: la reserva de Ana cambia de formato" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/formatos-historia.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
+
+[Descargar el vídeo](../assets/ut1/formatos-historia.mp4) · [Leer la transcripción](../assets/ut1/formatos-historia.txt) · [Descargar los subtítulos](../assets/ut1/formatos-historia.es.srt)
+
 ## Del dato lógico a su representación
 
 En 1.6 hemos definido qué datos entran, cómo se transforman y dónde terminan. Ahora decidimos cómo representarlos para que puedan intercambiarse y leerse con eficiencia. Una misma tabla de reservas puede escribirse en CSV o Parquet y mantener los mismos valores, aunque cambien el tamaño, los tipos conservados y la forma de lectura.
