@@ -1,0 +1,128 @@
+[
+  {
+    "title": "Sigamos la reserva de Ana",
+    "label": "Una historia, varias necesidades conectadas.",
+    "active": 0,
+    "heading": "Ana reserva dos noches en Laredo",
+    "body": "Recepción atiende su estancia. Dirección analizará después los resultados.",
+    "takeaway": "El mismo dato puede tener funciones diferentes.",
+    "narration": "Ana reserva dos noches en el hotel de Laredo. Recepción necesita saber cuándo llega y qué habitación tiene. Más tarde, la directora querrá conocer la ocupación y el dinero cobrado. Marketing estudiará qué campañas funcionan. Vamos a acompañar esa misma reserva durante todo el recorrido. Cada lugar donde guardemos sus datos tendrá una función, y cada decisión responderá a una necesidad concreta."
+  },
+  {
+    "title": "Primero: que la reserva esté bien relacionada",
+    "label": "Seguimos en el programa de recepción.",
+    "active": 0,
+    "heading": "Hotel, reserva y cobro se conectan mediante identificadores",
+    "body": "La reserva identifica el hotel; cada cobro indica a qué reserva pertenece.",
+    "takeaway": "Base relacional: tablas, relaciones y reglas.",
+    "narration": "Empezamos en recepción. En una base relacional podemos tener una tabla de hoteles, otra de reservas y otra de cobros. La reserva de Ana incluye un identificador del hotel, y su pago lleva el identificador de la reserva. Es como poner referencias claras entre fichas: evitamos confundir pagos o repetir la dirección del hotel en cada reserva. Cuando necesitamos consultar todo junto, relacionamos las tablas. SQL nos permite hacer esas consultas."
+  },
+  {
+    "title": "Después: confirmar juntos los cambios relacionados",
+    "label": "Una operación no debe quedar a medias.",
+    "active": 0,
+    "heading": "Una transacción agrupa cambios dentro de la base",
+    "body": "Si los cambios deben ir juntos, se confirman todos o se deshacen todos.",
+    "takeaway": "Atomicidad: todo o nada.",
+    "narration": "Pero relacionar bien las tablas no basta. Imaginad que el programa debe descontar parte de una fianza y registrar su aplicación a un cargo. Si ambos cambios son locales y deben ir juntos, los agrupamos en una transacción. Si algo falla antes de confirmar, se deshace el paquete. Esa es la atomicidad, la primera garantía de ACID. Así evitamos que quede registrado solo la mitad de lo que debía ocurrir."
+  },
+  {
+    "title": "¿Qué más protege esa operación?",
+    "label": "Las otras garantías completan el trabajo.",
+    "active": 0,
+    "heading": "Reglas, operaciones simultáneas y cambios confirmados",
+    "body": "Consistencia, aislamiento y durabilidad protegen aspectos diferentes.",
+    "takeaway": "Una transacción local no controla por sí sola una pasarela externa.",
+    "narration": "Las otras garantías completan la protección. Consistencia significa respetar las reglas que hemos definido. Aislamiento controla cómo interfieren operaciones simultáneas; su comportamiento depende del nivel elegido. Durabilidad protege los cambios confirmados frente a fallos contemplados por el sistema. Y hay un límite importante: si interviene una pasarela de tarjeta, deshacer una transacción local no devuelve automáticamente ese dinero. El programa también debe comprobar qué ocurrió fuera y evitar cobrar dos veces."
+  },
+  {
+    "title": "¿Y si una copia no conoce el último cambio?",
+    "label": "La fiabilidad también depende de la comunicación.",
+    "active": 0,
+    "heading": "Un corte de red puede separar las copias",
+    "body": "Durante ese corte, el sistema debe resolver qué operaciones acepta y con qué garantías.",
+    "takeaway": "CAP: consistencia y disponibilidad durante una partición.",
+    "narration": "Ahora imaginad que hay copias en varias máquinas y se corta la comunicación. Una puede desconocer una reserva recién confirmada. Durante ese corte no podemos garantizar a la vez datos siempre actualizados y respuesta para todas las operaciones. Ese es el compromiso de CAP. Podemos rechazar algunas operaciones para no utilizar información antigua, o mantener las respuestas aceptando esa posibilidad. Aquí consistencia se refiere a la actualidad del dato; no es la misma idea de reglas que vimos en ACID."
+  },
+  {
+    "title": "El retraso no importa igual en todas las operaciones",
+    "label": "Decidimos según sus consecuencias.",
+    "active": 0,
+    "heading": "Cambiar un desayuno no es vender la última habitación",
+    "body": "Algunas diferencias temporales son aceptables; otras pueden causar un problema serio.",
+    "takeaway": "BASE admite convergencia eventual, sin fijar un plazo.",
+    "narration": "Para decidir, pensemos en las consecuencias. Que la descripción del desayuno tarde un poco en actualizarse puede ser aceptable. Vender dos veces la última habitación sería mucho más grave. BASE describe un enfoque que admite diferencias temporales entre copias: cuando cesan los cambios y se recupera la comunicación, terminan convergiendo según las reglas del sistema. Eso no promete un tiempo fijo. Elegimos las garantías para cada operación, no solo por la marca de la base."
+  },
+  {
+    "title": "La reserva está registrada. Ahora queremos analizarla",
+    "label": "Preparamos una copia para otro trabajo.",
+    "active": 1,
+    "heading": "Recepción sigue atendiendo a los huéspedes",
+    "body": "Conservamos originales para analizarlos sin cargar el programa operativo.",
+    "takeaway": "Data lake: un conjunto organizado de datos variados.",
+    "narration": "Volvamos al recorrido de Ana. Su reserva ya está registrada y recepción sigue atendiendo. Nosotros queremos estudiarla junto con miles de reservas, registros de la web y lecturas de sensores. Podemos conservar copias originales en un lago de datos. Así, si descubrimos un error en nuestro análisis, volvemos al original y repetimos el proceso. La copia sirve para ese nuevo trabajo; no sustituye a la reserva con la que opera recepción."
+  },
+  {
+    "title": "Conservar no significa amontonar",
+    "label": "El lago necesita orden para resultar útil.",
+    "active": 1,
+    "heading": "Originales → datos preparados → resultados publicados",
+    "body": "Documentamos origen, contenido, responsables, permisos y tiempo de conservación.",
+    "takeaway": "Sin organización, encontrar el dato correcto se vuelve difícil.",
+    "narration": "Para que ese lago sea útil, necesitamos saber de dónde salió cada conjunto, qué contiene, quién lo mantiene y cuándo se actualizó. Podemos separar originales, datos preparados y resultados publicados. También limitamos quién accede y cuánto tiempo conservamos la información. Guardarlo todo para siempre no es el objetivo. Por ejemplo, si corregimos cómo interpretamos las fechas de las reservas, el original permite rehacer el cálculo y documentar la corrección."
+  },
+  {
+    "title": "Del original a una respuesta para dirección",
+    "label": "Ahora hay que preparar información comparable.",
+    "active": 2,
+    "heading": "¿Cuánto se cobró ayer en cada hotel?",
+    "body": "Validamos pagos, evitamos duplicados y usamos las mismas definiciones.",
+    "takeaway": "Data warehouse: información preparada para consultar.",
+    "narration": "Ya tenemos los materiales, pero la directora no quiere revisar miles de ficheros. Pregunta cuánto se cobró ayer en cada hotel. Comprobamos que los pagos estén confirmados, evitamos duplicados y aplicamos la misma definición de cobro en toda la cadena. Organizamos esa información en un almacén de informes, o data warehouse. El lago conserva materiales para trabajar; el almacén ofrece información preparada. En este caso, el proceso nocturno deja listo el cierre anterior para las ocho."
+  },
+  {
+    "title": "¿Guardamos cada cobro o solo el total?",
+    "label": "El detalle decide qué podremos preguntar después.",
+    "active": 2,
+    "heading": "Un total diario no permite reconstruir los pagos individuales",
+    "body": "Importe: una medida. Hotel, fecha y canal: su contexto.",
+    "takeaway": "Granularidad: qué representa cada fila.",
+    "narration": "Dentro del almacén hay otra decisión importante. Si guardamos una fila por cobro, podremos investigar el pago de Ana. Si guardamos solo el total diario, la consulta será sencilla, pero habremos perdido ese detalle en la tabla resumida. A esto lo llamamos granularidad. El importe es una medida; el hotel, la fecha y el canal aportan contexto. Gracias a esa organización podemos comparar cobros por día, por hotel o por canal sin cambiar su significado."
+  },
+  {
+    "title": "Cada departamento consulta su parte",
+    "label": "Compartimos definiciones y limitamos el acceso.",
+    "active": 3,
+    "heading": "Marketing estudia campañas; finanzas revisa cobros",
+    "body": "Cada equipo recibe información adecuada para su trabajo.",
+    "takeaway": "Data mart: un ámbito analítico concreto.",
+    "narration": "A partir de esa información, marketing estudia campañas y finanzas revisa cobros. Un data mart organiza lo que necesita cada ámbito. En nuestro ejemplo se alimenta del almacén común, de modo que ambos equipos parten de las mismas definiciones. Marketing no necesita datos personales innecesarios de Ana. También existen marts con otras fuentes; lo importante es documentar sus reglas para que dos informes no parezcan contradecirse cuando, en realidad, cuentan cosas diferentes."
+  },
+  {
+    "title": "Con el recorrido claro, elegimos las herramientas",
+    "label": "Cada parte puede necesitar una forma distinta de organizar datos.",
+    "active": -1,
+    "heading": "Tablas y modelos NoSQL responden a distintas consultas",
+    "body": "Documentos para registros flexibles, clave-valor para sesiones, grafos para relaciones.",
+    "takeaway": "NoSQL es una familia; no significa ausencia de transacciones.",
+    "narration": "Ahora que sabemos para qué sirve cada parte, podemos elegir herramientas. Las tablas encajan bien cuando necesitamos relaciones claras. Si la reserva web incluye extras diferentes, puede resultar útil un modelo de documentos. Para una sesión web puede encajar clave y valor; para investigar relaciones entre tarjetas y reservas, un grafo. Son ejemplos de la familia NoSQL. Ninguna opción gana siempre, y algunas ofrecen transacciones: debemos comprobar las garantías del gestor concreto."
+  },
+  {
+    "title": "¿Dónde se apoyan esas herramientas?",
+    "label": "Organización y modo de acceso son decisiones complementarias.",
+    "active": -1,
+    "heading": "Un lago puede guardar ficheros en almacenamiento de objetos",
+    "body": "Bloques, ficheros y objetos describen cómo accedemos al almacenamiento.",
+    "takeaway": "Lakehouse: gestión de tablas sobre un lago.",
+    "narration": "Esas herramientas necesitan almacenamiento al que acceder. Podemos usar bloques, como los de un volumen; ficheros con carpetas y rutas; u objetos identificados por una clave. Un lago puede guardar sus ficheros como objetos: ambas ideas encajan. Si añadimos gestión de tablas y control de sus versiones sobre el lago, hablamos de un lakehouse. No es otro tipo de disco. Además, los datos pueden permanecer guardados aunque retiremos las máquinas que usamos para analizarlos."
+  },
+  {
+    "title": "La reserva es la misma; su función cambia",
+    "label": "Todo el recorrido responde a necesidades conectadas.",
+    "active": -1,
+    "heading": "Registrar → conservar → preparar → consultar",
+    "body": "Cada paso necesita una organización y unas garantías adecuadas.",
+    "takeaway": "Primero el uso del dato; después la solución.",
+    "narration": "Ya podemos reconstruir la historia. Recepción registra la reserva de Ana con garantías. Conservamos originales para volver a trabajarlos. Preparamos información comparable para dirección y ofrecemos a cada departamento su parte. Las herramientas y el almacenamiento sostienen ese recorrido. Antes de elegir, preguntad para qué guardamos el dato, con qué detalle, quién lo consultará y qué debe pasar si algo falla. Así cada concepto ocupa su lugar dentro de una misma solución."
+  }
+]

@@ -8,6 +8,19 @@ tags:
 
 # 1.3. Conceptos de almacenamiento
 
+## Vídeo: el recorrido de la reserva de Ana
+
+Sigue una reserva desde recepción hasta los informes de dirección. Esta explicación conecta las transacciones y sus garantías con la conservación de originales, el lago de datos, el almacén de informes y los datos que necesita cada departamento. **Versión ampliada: 7 minutos y 3 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/almacenamiento-ampliado-portada.jpg" aria-label="Almacenamiento: el recorrido de la reserva de Ana, versión ampliada" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/almacenamiento-ampliado.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/almacenamiento-ampliado.mp4) · [Leer la transcripción](../assets/ut1/almacenamiento-ampliado.txt) · [Descargar los subtítulos](../assets/ut1/almacenamiento-ampliado.es.srt)
+
 ## Un mapa para ordenar los conceptos
 
 Después de estudiar las máquinas en 1.2, necesitamos decidir qué guardamos en ellas y cómo lo utilizaremos. En esta página aparecen conceptos de distintos niveles. Separarlos evita comparar alternativas que pueden formar parte de una misma solución.
