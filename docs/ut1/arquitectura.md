@@ -8,6 +8,19 @@ tags:
 
 # 1.5. Arquitectura por capas y paisaje de herramientas
 
+## Vídeo: del cobro de Ana al panel
+
+Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectura, qué controles necesita el recorrido y cómo se recupera ante fallos. La explicación de Lambda y Kappa utiliza el mismo ejemplo numérico y esquemas comparativos para distinguir ambas opciones. **Duración: 8 minutos y 36 segundos.** La comparación de Lambda y Kappa comienza aproximadamente en el **minuto 4:31**.
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/arquitectura-lambda-kappa-ritmo-portada.jpg" aria-label="Arquitectura: del cobro de Ana al panel, con explicación de Lambda y Kappa" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/arquitectura-lambda-kappa-ritmo.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/arquitectura-lambda-kappa-ritmo.mp4) · [Leer la transcripción](../assets/ut1/arquitectura-lambda-kappa-ritmo.txt) · [Descargar los subtítulos](../assets/ut1/arquitectura-lambda-kappa-ritmo.es.srt)
+
 ## Cómo construir una visión de conjunto
 
 Hasta ahora hemos estudiado necesidades, máquinas, almacenamiento y procesamiento por separado. Una arquitectura explica cómo colaboran esos elementos para entregar un resultado. Las capas que siguen representan responsabilidades: una misma herramienta puede cubrir varias y una capa puede necesitar varias herramientas.
