@@ -746,6 +746,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#video-el-viaje-de-la-reserva-y-el-cobro-de-ana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vídeo: el viaje de la reserva y el cobro de Ana
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#introduccion" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1644,6 +1655,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#video-el-viaje-de-la-reserva-y-el-cobro-de-ana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vídeo: el viaje de la reserva y el cobro de Ana
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#introduccion" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2086,88 +2108,15 @@
 <p class="admonition-title">Cómo se lee esta página</p>
 <p>Primero la <strong>teoría</strong> (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller <strong>Hola ETL</strong> (las tres letras; <strong>no</strong> es el panel de las 8). Después <strong>colas y examen</strong> (semáforo ≠ cuadro de gerencia). Los <strong>logos</strong>, al final: familia, no producto. El vídeo de abajo resume; si una figura y el MP4 no coinciden, <strong>manda el texto</strong>.</p>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">Vídeo para estudiar (13 min 9 s)</p>
-<p>Explicación guiada con el caso del grupo hotelero, esquemas por etapas y subtítulos en español. Narración con voz sintética neural en español de España. <strong>No</strong> sustituye los apuntes ni Moodle; en caso de discrepancia, manda <strong>este texto</strong>.</p>
-<p><video controls preload="metadata" playsinline poster="../../assets/ut1/ingesta-estudio-portada.jpg" style="width:100%;max-width:960px;border-radius:4px;">
-  <source src="../../assets/ut1/ingesta-estudio.mp4?v=20261004" type="video/mp4">
-  <track kind="subtitles" src="../../assets/ut1/ingesta-estudio.es.vtt" srclang="es" label="Español">
-</video></p>
-<p><a href="../../assets/ut1/ingesta-estudio.mp4" rel="noopener" target="_blank">Descargar vídeo MP4</a> · <a href="../../assets/ut1/ingesta-estudio.mp3" rel="noopener" target="_blank">Audio MP3</a> · <a href="../../assets/ut1/ingesta-estudio.es.srt">Subtítulos SRT</a> · <a href="../../assets/ut1/ingesta-estudio-guion.txt" rel="noopener" target="_blank">Guion completo</a></p>
-</div>
-<details class="note">
-<summary>Escuchar solo el audio</summary>
-<p><audio controls preload="none" style="width:100%;max-width:960px;">
-  <source src="../../assets/ut1/ingesta-estudio.mp3" type="audio/mpeg">
-</audio></p>
-</details>
-<details class="note">
-<summary>Transcripción completa por capítulos</summary>
-<p><strong>00:00 · Antes del panel, están los datos</strong></p>
-<p>Imagina que son las ocho de la mañana. La directora de una cadena de hoteles abre su panel y hace dos preguntas: ¿cuántas habitaciones ocupamos ayer, y cuánto hemos cobrado? Parece sencillo. Pero las reservas están en un programa, los pagos en otro y los sensores envían sus propios mensajes.</p>
-<p>Antes de calcular nada, hay que conseguir que esa información llegue al lugar adecuado. Eso es la ingesta de datos: recoger datos que ya existen y llevarlos a otro sistema, donde podamos guardarlos o procesarlos.</p>
-<p>En este resumen del apartado uno punto seis vamos a seguir ese recorrido con el mismo hotel como ejemplo. Verás qué decisiones tomar, cómo distinguir los conceptos y cómo explicar tu solución sin depender de una lista de herramientas. Vamos paso a paso.</p>
-<p><strong>00:49 · Diseña desde la pregunta</strong></p>
-<p>La primera decisión no es qué programa instalar. Es qué necesita el negocio y para cuándo. En nuestro caso, dirección quiere un resumen del día anterior, disponible a las ocho. No está pidiendo una predicción ni una pantalla que cambie cada segundo.</p>
-<p>A partir de ahí diseñamos hacia atrás. Primero concretamos el resultado. Después pensamos qué transformaciones harán falta: por ejemplo, relacionar reservas con cobros y sumar por hotel. Y finalmente localizamos los datos que permiten hacerlo.</p>
-<p>Este orden evita recoger veinte fuentes que nadie necesita. También permite separar dos destinos: una zona que conserva datos en bruto, como el lago, y otra preparada para consultar información limpia, como el almacén de informes. Ambos pueden convivir.</p>
-<p><strong>01:40 · Un recorrido organizado: el pipeline</strong></p>
-<p>A ese recorrido organizado lo llamamos pipeline, o tubería de datos. Recogemos información, la guardamos, la procesamos y entregamos un resultado útil. Puede terminar en un panel, una tabla de informes o un fichero.</p>
-<p>¿Por qué copiar los datos fuera del programa de recepción? Porque calcular informes pesados en el sistema que registra reservas puede ralentizar el mostrador. El sistema operativo debe seguir trabajando mientras otro entorno se ocupa del análisis.</p>
-<p>Separar las fases también facilita encontrar fallos y repetir solo el paso necesario. Y el recorrido se revisa: si mañana dirección pregunta por cancelaciones y no tenemos ese campo, tendremos que volver al origen. Un pipeline no se diseña una vez para siempre.</p>
-<p><strong>02:28 · ETL: tres acciones, en ese orden</strong></p>
-<p>Dentro de los pipelines encontramos un patrón muy conocido: extraer, transformar y cargar. Son las tres letras de ETL. Extraer consiste en leer los datos del origen. Transformar es prepararlos según unas reglas. Y cargar es escribir el resultado en el destino.</p>
-<p>Por ejemplo: leemos reservas y cobros, relacionamos cada reserva con su pago y guardamos un resumen por hotel. Las tres acciones aparecen claramente, aunque las hayamos programado en un único script.</p>
-<p>Ahora fíjate en la diferencia. Toda ETL es un pipeline, porque organiza el trabajo por fases. Pero una tubería que únicamente recoge eventos y los entrega a una cola no tiene por qué realizar una ETL completa. Pipeline es la idea general; ETL es un patrón concreto.</p>
-<p><strong>03:22 · ¿Quién da el primer paso?</strong></p>
-<p>Para mover un dato, alguien tiene que iniciar el intercambio. Si el programa de reservas envía un aviso cuando se crea una reserva, hablamos de push: el origen empuja el dato.</p>
-<p>Si nuestro proceso va a buscar la tabla a las dos de la madrugada, es pull: el destino solicita la información. Y si comprueba una carpeta cada quince minutos y descarga solo cuando detecta cambios, está haciendo poll, una consulta periódica.</p>
-<p>No hay una opción ganadora para todo. Depende de lo que permita el origen y de cuánto podamos esperar. Además, no confundas quién inicia con el ritmo de procesamiento: son preguntas distintas. En el mismo hotel pueden convivir varios mecanismos.</p>
-<p><strong>04:06 · Extraer sin estropear el origen</strong></p>
-<p>Volvamos a la extracción. Podemos leer un fichero, una tabla, una interfaz de programación o un mensaje. Lo importante es que la lectura sea ligera y no altere los datos operativos. Recepción tiene que seguir reservando y cobrando.</p>
-<p>También comprobamos qué ha llegado. ¿Están las columnas necesarias? ¿Los importes son números? Si un lote está roto, lo apartamos para revisarlo. Que el proceso termine sin errores no demuestra que el contenido sea válido.</p>
-<p>Y distinguimos la primera carga de las siguientes. Al empezar quizá necesitemos una foto completa de tres años de reservas. Después, lo habitual es traer solo lo nuevo o modificado: una carga incremental. Así evitamos repetir cada noche un trabajo enorme.</p>
-<p><strong>04:57 · Transformar es aplicar reglas</strong></p>
-<p>Ya tenemos los datos. Ahora toca hacer que encajen. Una fuente escribe el canal en mayúsculas y otra en minúsculas. Una reserva aparece dos veces. Un importe llega como texto. Normalizar esos casos forma parte de la transformación.</p>
-<p>Después podemos cruzar reservas y cobros mediante el identificador de reserva, filtrar lo que necesita el informe y sumar los importes por hotel. Cada decisión debe seguir una regla de negocio clara y repetible.</p>
-<p>Transformar no significa inventar noches que nadie registró ni borrar valores incómodos. Si falta información, hay que detectarlo. Y si el cálculo es pesado, conviene separarlo de la recepción inmediata de eventos para que no bloquee la entrada de nuevos datos.</p>
-<p><strong>05:46 · Cargar también requiere diseño</strong></p>
-<p>La carga es el momento de escribir, pero no basta con pulsar guardar. El destino tiene sus propias reglas. Puede recibir una inserción masiva en una base de datos o leer ficheros desde una carpeta.</p>
-<p>Con mucho volumen importan tres decisiones: cómo gestionar los índices, cómo repartir los datos en particiones y cuántas filas confirmar en cada transacción. Por ejemplo, organizar por fecha puede evitar que una consulta recorra todo el histórico.</p>
-<p>Una prueba con cien filas sirve para comprobar la lógica, pero no demuestra que una carga de millones vaya a funcionar bien. Necesitamos pensar tanto en la escritura como en las consultas que vendrán después.</p>
-<p><strong>06:28 · ELT: guardar antes de transformar</strong></p>
-<p>¿Y si queremos conservar los datos originales antes de preparar los informes? Entonces podemos usar ELT: extraer, cargar y transformar después. La diferencia está en el orden y en dónde hacemos el trabajo.</p>
-<p>Encaja cuando el destino puede guardar datos en bruto y contamos con capacidad para procesarlos allí. Por ejemplo, aterrizamos en un lago y transformamos con un motor de cálculo; o cargamos en un almacén analítico preparado para trabajar de esta forma.</p>
-<p>Si mañana cambia la pregunta, conservar el bruto puede ahorrarnos una nueva extracción, siempre que ya contenga los campos necesarios. ETL sigue siendo útil cuando queremos preparar los datos antes de entregarlos. No hay que elegir una sola estrategia para toda la empresa.</p>
-<p><strong>07:17 · Hola ETL: un ejemplo pequeño</strong></p>
-<p>Vamos al taller de los apuntes. Su objetivo es más pequeño que el panel de dirección: obtener las reservas del canal web que ya tienen cobro. Para ello leemos dos ficheros, reservas y cobros. Esa es la extracción.</p>
-<p>En la transformación filtramos el canal web y cruzamos ambos ficheros por el identificador de reserva. El cruce interno, o inner join, conserva solo las reservas que tienen coincidencia en cobros. Si quisiéramos localizar impagadas, necesitaríamos otro planteamiento, como un cruce izquierdo.</p>
-<p>Por último escribimos el resultado. Podemos hacerlo con pandas en Python o con consultas en DuckDB. Cambia la herramienta, pero las tres acciones son las mismas. La agregación para un informe completo es un paso adicional, no el objetivo de este primer ejercicio.</p>
-<p><strong>08:10 · El formato depende del uso</strong></p>
-<p>Elegir el fichero de salida también es diseñar la carga. Para ver unas filas en clase, un CSV o un JSON resultan cómodos. Pero ojo: no todo fichero con extensión JSON tiene la misma estructura.</p>
-<p>En el ejemplo, pandas escribe una lista de registros. La exportación de DuckDB utiliza habitualmente un registro por línea, lo que conocemos como JSONL. Ambos pueden representar datos parecidos, pero no se leen exactamente igual.</p>
-<p>Para consultas analíticas sobre el lago, Parquet permite trabajar por columnas. Si solo necesitamos hotel e importe, podemos evitar leer otras columnas. Eso no lo convierte en el sustituto del sistema de reservas: consultar grandes conjuntos y actualizar operaciones individuales son necesidades distintas.</p>
-<p><strong>09:01 · Un hotel, dos ritmos</strong></p>
-<p>Hasta ahora hemos hablado del informe de la mañana. Pero recepción tiene otra necesidad: saber si una habitación está libre sin esperar al día siguiente. Aquí aparecen dos ritmos distintos.</p>
-<p>El informe de las ocho puede prepararse por lotes, después del cierre. El estado de las habitaciones necesita un flujo de eventos con poco retraso. Entre ambos encontramos los microlotes: pequeños bloques procesados cada cierto tiempo.</p>
-<p>La pregunta clave es cuánto puede tardar el dato sin perder utilidad. No necesitas procesamiento continuo para todo. Y tampoco sirve un lote nocturno para un aviso urgente. Separar estos recorridos simplifica el diseño y permite dedicar recursos a lo que realmente lo necesita.</p>
-<p><strong>09:48 · La cola deja trabajar a cada uno</strong></p>
-<p>Imagina que varios sensores envían avisos a la vez y el programa de recepción tarda en atenderlos. Una cola o un bus de mensajes permite desacoplar ambos lados: el productor publica y el consumidor procesa a su ritmo.</p>
-<p>Mientras haya capacidad, los mensajes pendientes quedan almacenados. Esa función de colchón se llama búfer. La contrapresión es otra cosa: un mecanismo que frena o limita la entrada cuando el consumidor no da abasto. Guardar más y pedir que llegue menos no son lo mismo.</p>
-<p>También cambia cómo se conservan los mensajes. En una cola clásica suelen retirarse después de confirmarse su procesamiento. En un sistema como Kafka pueden mantenerse según una política de retención. Aquí estamos resolviendo el flujo del semáforo de recepción, no sustituyendo el informe nocturno.</p>
-<p><strong>10:40 · Elige una función, luego una herramienta</strong></p>
-<p>Ahora sí tiene sentido hablar de herramientas. Para leer, cruzar y escribir podemos usar un script o una herramienta visual. Para desacoplar productores y consumidores necesitamos mensajería. Y para coordinar tareas y dependencias podemos recurrir a un orquestador.</p>
-<p>Por eso Pentaho, Kafka y Airflow no son tres respuestas intercambiables. Se ocupan de funciones diferentes, aunque puedan colaborar en una misma solución. También existen conectores para traer datos de aplicaciones y servicios gestionados en la nube.</p>
-<p>En este tema interesa que sepas explicar la familia y su función. Un nombre de producto, sin origen, ritmo, destino ni justificación, no describe un procedimiento de ingesta. Primero explica qué necesitas resolver; después elige con qué hacerlo.</p>
-<p><strong>11:31 · Que termine no basta: debe ser fiable</strong></p>
-<p>Nos queda una parte esencial: la fiabilidad. Si el origen añade una columna y nadie se entera, el proceso puede seguir apareciendo en verde mientras pierde información. Por eso vigilamos cambios, validamos entradas y dejamos registro de lo que ocurre.</p>
-<p>También necesitamos saber de dónde sale una cifra y poder repetir el trabajo sin duplicar resultados. Conviene decidir si conservamos historial, cómo tratamos las correcciones y qué hacemos con un lote que llega tarde.</p>
-<p>Y no todo dato disponible tiene que entrar. Si el informe no necesita una imagen del documento de identidad, no la copiamos por costumbre. Elegir los datos necesarios y controlar quién accede a ellos forma parte del diseño, igual que el formato o la velocidad.</p>
-<p><strong>12:17 · Tu solución, explicada en siete decisiones</strong></p>
-<p>Para terminar, prueba a explicar una solución completa. El informe de las ocho puede leer por la noche reservas y cobros, preparar un resultado fiable y dejarlo en el destino analítico. Los sensores, en cambio, pueden publicar eventos para que recepción actualice su estado con poco retraso.</p>
-<p>En cada caso concreta siete decisiones: origen, quién inicia, ritmo, transformación, destino, formato y justificación. Y comprueba la calidad: una tubería rápida no sirve de mucho si entrega una cifra equivocada.</p>
-<p>Esa es la idea central de la ingesta: hacer que el dato adecuado llegue al lugar adecuado, a tiempo y con garantías. Ahora vuelve al taller y a las actividades del apartado. Este vídeo te da el recorrido; los apuntes y Moodle completan el trabajo.</p>
-</details>
+<h2 id="video-el-viaje-de-la-reserva-y-el-cobro-de-ana">Vídeo: el viaje de la reserva y el cobro de Ana<a class="headerlink" href="#video-el-viaje-de-la-reserva-y-el-cobro-de-ana" title="Permanent link">&para;</a></h2>
+<p>Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de distintos sistemas, los relacionamos y publicamos un resultado fiable. El recorrido explica las cargas incrementales, cómo evitar duplicados, las diferencias entre ETL y ELT y el papel de las colas en la entrada de eventos. <strong>Duración: 7 minutos y 15 segundos.</strong></p>
+<video controls playsinline preload="metadata" poster="../../assets/ut1/ingesta-historia-corregido-portada.jpg" aria-label="Ingesta: el viaje de la reserva y el cobro de Ana" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/ingesta-historia-corregido.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+<p>El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.</p>
+<p><a href="../../assets/ut1/ingesta-historia-corregido.mp4">Descargar el vídeo</a> · <a href="../../assets/ut1/ingesta-historia-corregido.txt">Leer la transcripción</a> · <a href="../../assets/ut1/ingesta-historia-corregido.es.srt">Descargar los subtítulos</a></p>
 <h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h2>
 <p><strong>Ingerir datos</strong> es el proceso de coger información que ya existe en varios sitios —un fichero, una base de datos, una web, un sensor— y llevarla a <strong>otro</strong> sistema, donde se podrá guardar o procesar.</p>
 <p>El contexto es el <strong><a href="../caso-hotel/" rel="noopener" target="_blank">caso del grupo hotelero</a></strong> (Santander, Laredo, Comillas, Potes). Resumen para no perderse:</p>
