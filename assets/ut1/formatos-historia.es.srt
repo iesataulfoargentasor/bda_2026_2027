@@ -1,0 +1,810 @@
+1
+00:00:00,100 --> 00:00:02,251
+Ana ha reservado tres noches en Laredo.
+
+2
+00:00:02,518 --> 00:00:04,381
+En el apartado anterior aprendimos a
+
+3
+00:00:04,393 --> 00:00:06,100
+reunir su reserva y su cobro.
+
+4
+00:00:06,331 --> 00:00:09,180
+Ahora el recorrido continúa: necesitamos
+enviar
+
+5
+00:00:09,192 --> 00:00:11,728
+datos entre programas, guardar el histórico
+y
+
+6
+00:00:11,740 --> 00:00:13,350
+preparar el informe de la mañana.
+
+7
+00:00:13,596 --> 00:00:15,952
+La información puede ser la misma, pero no
+
+8
+00:00:15,964 --> 00:00:18,392
+conviene representarla siempre de la misma
+manera.
+
+9
+00:00:18,648 --> 00:00:20,847
+Un formato decide cómo se escriben esos
+
+10
+00:00:20,859 --> 00:00:22,950
+datos para que otro programa los recupere.
+
+11
+00:00:23,210 --> 00:00:25,013
+Vamos a seguir la reserva de Ana y
+
+12
+00:00:25,025 --> 00:00:27,525
+elegir el formato cuando aparezca cada
+necesidad.
+
+13
+00:00:27,928 --> 00:00:30,368
+Primero acordamos qué significa cada campo.
+
+14
+00:00:30,628 --> 00:00:33,897
+Identificador de reserva, hotel, noches e
+importe forman
+
+15
+00:00:33,909 --> 00:00:36,060
+parte del esquema, junto con sus tipos.
+
+16
+00:00:36,324 --> 00:00:39,509
+El formato indica cómo representamos esos
+valores; la
+
+17
+00:00:39,521 --> 00:00:42,057
+compresión intenta reducir los bytes que
+ocupan.
+
+18
+00:00:42,270 --> 00:00:43,917
+Son decisiones diferentes.
+
+19
+00:00:44,187 --> 00:00:46,182
+Comprimir un archivo CSV no le
+
+20
+00:00:46,194 --> 00:00:48,249
+añade tipos ni lo convierte en columnar.
+
+21
+00:00:48,507 --> 00:00:50,081
+Pasar los valores de la memoria
+
+22
+00:00:50,093 --> 00:00:51,523
+a bytes se llama serializar.
+
+23
+00:00:51,792 --> 00:00:54,448
+Al recuperarlos hacemos el camino inverso, y
+
+24
+00:00:54,460 --> 00:00:57,044
+debemos comprobar que siguen significando lo
+mismo.
+
+25
+00:00:57,464 --> 00:01:00,553
+Imaginemos que una compañera quiere revisar
+la reserva.
+
+26
+00:01:00,823 --> 00:01:03,106
+Un CSV puede resultar cómodo porque
+
+27
+00:01:03,118 --> 00:01:05,222
+es texto y muchas herramientas lo abren.
+
+28
+00:01:05,486 --> 00:01:08,768
+Pero tenemos que acordar separadores,
+codificación y tipos.
+
+29
+00:01:09,028 --> 00:01:11,000
+El código cero uno puede convertirse
+
+30
+00:01:11,012 --> 00:01:12,322
+por error en el número uno.
+
+31
+00:01:12,590 --> 00:01:14,285
+Si Ana escribe una coma en su
+
+32
+00:01:14,297 --> 00:01:17,350
+comentario, hay que entrecomillar ese campo
+correctamente.
+
+33
+00:01:17,606 --> 00:01:20,635
+Además, guardar por filas no proporciona un
+índice:
+
+34
+00:01:20,674 --> 00:01:24,098
+encontrar una reserva concreta puede exigir
+recorrer el archivo.
+
+35
+00:01:24,355 --> 00:01:27,648
+La facilidad para abrirlo no resuelve todas
+las necesidades.
+
+36
+00:01:28,089 --> 00:01:30,157
+Ahora el canal web envía reservas con
+
+37
+00:01:30,169 --> 00:01:32,320
+nombres de campo y quizá datos anidados.
+
+38
+00:01:32,603 --> 00:01:34,490
+JSON encaja en ese intercambio.
+
+39
+00:01:34,751 --> 00:01:37,179
+Si recibimos muchas, JSON Lines coloca
+
+40
+00:01:37,191 --> 00:01:39,306
+un objeto completo por línea y facilita
+
+41
+00:01:39,318 --> 00:01:41,434
+localizar los límites de cada registro.
+
+42
+00:01:41,729 --> 00:01:43,315
+Un gran array JSON puede ser más
+
+43
+00:01:43,327 --> 00:01:45,649
+complicado de repartir entre lectores,
+aunque
+
+44
+00:01:45,661 --> 00:01:48,233
+algunos motores lo procesan de forma
+incremental.
+
+45
+00:01:48,519 --> 00:01:50,142
+También importa la compresión.
+
+46
+00:01:50,386 --> 00:01:51,961
+Y atención a los nulos: en
+
+47
+00:01:51,973 --> 00:01:54,665
+JSON escribimos null; None pertenece a
+Python.
+
+48
+00:01:54,928 --> 00:01:58,533
+Si recibimos facturas en XML, respetaremos
+igualmente
+
+49
+00:01:58,545 --> 00:02:00,709
+su estructura y sus herramientas de lectura.
+
+50
+00:02:01,143 --> 00:02:04,749
+Cuando el intercambio crece, interesa un
+contrato más explícito.
+
+51
+00:02:04,992 --> 00:02:08,129
+Avro representa registros en binario y
+utiliza un esquema
+
+52
+00:02:08,141 --> 00:02:10,762
+que indica qué campos y tipos admite cada
+reserva.
+
+53
+00:02:10,995 --> 00:02:12,713
+En un archivo contenedor, ese
+
+54
+00:02:12,725 --> 00:02:14,204
+esquema está en la cabecera.
+
+55
+00:02:14,449 --> 00:02:17,406
+En mensajería, puede utilizarse un
+identificador que
+
+56
+00:02:17,418 --> 00:02:19,689
+remite a un registro externo de esquemas.
+
+57
+00:02:19,960 --> 00:02:21,547
+Por eso no debemos imaginar una
+
+58
+00:02:21,559 --> 00:02:23,782
+cabecera completa dentro de cada mensaje.
+
+59
+00:02:24,022 --> 00:02:26,377
+Avro puede acompañar los eventos de un
+sistema
+
+60
+00:02:26,389 --> 00:02:28,625
+como Kafka, pero no sustituye a la base
+
+61
+00:02:28,637 --> 00:02:30,933
+de datos que registra el cobro en recepción.
+
+62
+00:02:31,333 --> 00:02:34,037
+En los primeros talleres escribimos dos
+reservas.
+
+63
+00:02:34,280 --> 00:02:35,518
+Una tiene importe y la
+
+64
+00:02:35,530 --> 00:02:36,960
+otra admite un valor nulo.
+
+65
+00:02:37,225 --> 00:02:39,148
+Ese nulo significa que no tenemos el
+
+66
+00:02:39,160 --> 00:02:41,335
+dato, no que la estancia sea gratuita.
+
+67
+00:02:41,580 --> 00:02:44,729
+Después leemos el archivo y comprobamos
+ambas reservas.
+
+68
+00:02:45,004 --> 00:02:47,720
+Si mañana añadimos un campo, debemos acordar
+
+69
+00:02:47,732 --> 00:02:49,920
+cómo lo interpretarán los lectores antiguos
+
+70
+00:02:49,932 --> 00:02:53,129
+y nuevos: la evolución necesita reglas
+compatibles.
+
+71
+00:02:53,406 --> 00:02:55,773
+Comparar Avro con fastavro significa
+comparar
+
+72
+00:02:55,785 --> 00:02:58,898
+los valores recuperados, no exigir archivos
+idénticos.
+
+73
+00:02:59,204 --> 00:03:03,002
+Para dinero real, además, acordamos
+decimales exactos o céntimos
+
+74
+00:03:03,014 --> 00:03:06,267
+enteros; cambiar de formato no elimina
+errores de redondeo.
+
+75
+00:03:06,700 --> 00:03:08,239
+La reserva ya ha viajado.
+
+76
+00:03:08,458 --> 00:03:10,297
+Ahora llega la pregunta de gerencia:
+
+77
+00:03:10,477 --> 00:03:12,220
+queremos resumir importes por hotel.
+
+78
+00:03:12,551 --> 00:03:14,643
+Aquí necesitamos pocos campos de muchas
+
+79
+00:03:14,655 --> 00:03:16,842
+reservas, no todos los detalles de Ana.
+
+80
+00:03:17,073 --> 00:03:19,092
+En una organización por filas, los
+
+81
+00:03:19,104 --> 00:03:20,967
+campos de cada reserva van juntos.
+
+82
+00:03:21,251 --> 00:03:23,436
+En una organización por columnas, los
+
+83
+00:03:23,448 --> 00:03:25,251
+valores del mismo campo se agrupan y
+
+84
+00:03:25,263 --> 00:03:27,499
+el lector puede seleccionar los necesarios.
+
+85
+00:03:27,757 --> 00:03:30,401
+Esta es la razón para cambiar de
+representación.
+
+86
+00:03:30,660 --> 00:03:33,809
+Y conservamos una distinción importante: el
+importe de una
+
+87
+00:03:33,821 --> 00:03:36,125
+reserva no demuestra un cobro; el informe de
+
+88
+00:03:36,138 --> 00:03:39,250
+cobros necesita los datos y reglas del
+apartado anterior.
+
+89
+00:03:39,704 --> 00:03:41,639
+Para ese histórico elegimos Parquet.
+
+90
+00:03:41,944 --> 00:03:44,829
+Es columnar y conserva información sobre el
+esquema.
+
+91
+00:03:45,075 --> 00:03:48,068
+No imaginéis una única columna gigantesca
+para todo
+
+92
+00:03:48,080 --> 00:03:50,796
+el archivo: Parquet lo organiza en grupos de
+filas,
+
+93
+00:03:50,965 --> 00:03:53,248
+y dentro de cada grupo separa las columnas.
+
+94
+00:03:53,519 --> 00:03:55,243
+El lector puede pedir hotel e
+
+95
+00:03:55,255 --> 00:03:57,046
+importe sin leer los comentarios.
+
+96
+00:03:57,334 --> 00:04:00,110
+Eso puede ahorrar lectura, tiempo y
+transferencia.
+
+97
+00:04:00,366 --> 00:04:02,986
+Pero no basta con cambiar la extensión del
+fichero.
+
+98
+00:04:03,235 --> 00:04:05,266
+Hay que escribir realmente en Parquet y
+
+99
+00:04:05,278 --> 00:04:07,418
+usar un lector que aproveche su estructura.
+
+100
+00:04:07,846 --> 00:04:09,986
+Podemos ahorrar trabajo de tres maneras.
+
+101
+00:04:10,249 --> 00:04:13,181
+Primera: seleccionar solo las columnas
+necesarias.
+
+102
+00:04:13,477 --> 00:04:16,554
+Segunda: utilizar estadísticas para
+descartar grupos
+
+103
+00:04:16,566 --> 00:04:18,093
+que no pueden cumplir el filtro.
+
+104
+00:04:18,368 --> 00:04:20,928
+Si todos los grupos contienen reservas de
+Laredo,
+
+105
+00:04:21,097 --> 00:04:23,885
+filtrar por Laredo quizá no permita saltarse
+ninguno.
+
+106
+00:04:24,151 --> 00:04:27,625
+Tercera: organizar el conjunto en
+particiones, por ejemplo
+
+107
+00:04:27,637 --> 00:04:30,485
+por fecha, para no abrir archivos de otros
+periodos.
+
+108
+00:04:30,759 --> 00:04:32,394
+Son mecanismos distintos.
+
+109
+00:04:32,657 --> 00:04:35,397
+Por eso solicitamos columnas y filtros al
+leer, en
+
+110
+00:04:35,409 --> 00:04:38,294
+lugar de cargar todo el archivo y recortarlo
+después.
+
+111
+00:04:38,749 --> 00:04:40,564
+Para calcular, los valores tienen
+
+112
+00:04:40,576 --> 00:04:42,282
+que estar disponibles en memoria.
+
+113
+00:04:42,537 --> 00:04:44,869
+Aquí aparece Arrow, cuyo nombre se parece a
+
+114
+00:04:44,881 --> 00:04:47,537
+Avro, pero tiene otra función: describe una
+
+115
+00:04:47,549 --> 00:04:50,590
+representación columnar en memoria, con
+tipos y nulos.
+
+116
+00:04:50,864 --> 00:04:53,244
+Eso facilita intercambios entre herramientas
+
+117
+00:04:53,256 --> 00:04:55,287
+compatibles y puede evitar copias.
+
+118
+00:04:55,553 --> 00:04:57,296
+No siempre: una conversión de
+
+119
+00:04:57,308 --> 00:04:59,447
+tipos puede necesitar memoria adicional.
+
+120
+00:04:59,683 --> 00:05:02,880
+Feather permite guardar e intercambiar
+tablas mediante Arrow.
+
+121
+00:05:03,197 --> 00:05:05,310
+Puede servir entre pasos de trabajo; para
+
+122
+00:05:05,322 --> 00:05:07,100
+el histórico de este caso mantenemos
+
+123
+00:05:07,112 --> 00:05:09,661
+Parquet por las consultas y lectores
+previstos.
+
+124
+00:05:10,120 --> 00:05:11,995
+Ya tenemos el histórico preparado.
+
+125
+00:05:12,236 --> 00:05:15,289
+DuckDB permite expresar una consulta SQL
+sobre
+
+126
+00:05:15,301 --> 00:05:17,573
+el archivo Parquet sin convertir primero
+todo
+
+127
+00:05:17,585 --> 00:05:20,001
+el conjunto en un DataFrame de pandas.
+
+128
+00:05:20,263 --> 00:05:23,075
+Podemos agrupar por hotel y calcular el
+importe medio.
+
+129
+00:05:23,318 --> 00:05:24,904
+DuckDB es el motor que hace el
+
+130
+00:05:24,916 --> 00:05:27,104
+trabajo; Parquet es el formato que lee.
+
+131
+00:05:27,344 --> 00:05:30,229
+No significa que calcule sin memoria ni
+recursos.
+
+132
+00:05:30,492 --> 00:05:33,545
+Los talleres recorren ese camino: conservar
+valores al
+
+133
+00:05:33,557 --> 00:05:36,221
+escribir Parquet, convertir JSON Lines y
+seleccionar
+
+134
+00:05:36,233 --> 00:05:38,781
+columnas y reservas de Laredo durante la
+lectura.
+
+135
+00:05:39,208 --> 00:05:41,552
+Al guardar el histórico podemos comprimirlo.
+
+136
+00:05:41,829 --> 00:05:44,665
+Las repeticiones de nombres como Laredo
+ayudan a reducir
+
+137
+00:05:44,677 --> 00:05:48,163
+espacio, y transferir menos bytes puede
+acelerar el recorrido.
+
+138
+00:05:48,445 --> 00:05:51,558
+A cambio, la máquina trabaja para comprimir
+y descomprimir.
+
+139
+00:05:51,826 --> 00:05:55,251
+Snappy, gzip o zstd ofrecen distintos
+equilibrios;
+
+140
+00:05:55,456 --> 00:05:58,028
+no elegimos únicamente el archivo más
+pequeño.
+
+141
+00:05:58,292 --> 00:06:00,912
+Tampoco prometemos un porcentaje fijo de
+ahorro.
+
+142
+00:06:01,163 --> 00:06:02,713
+Si el equipo trabaja con Hive,
+
+143
+00:06:02,857 --> 00:06:04,660
+ORC es otra opción columnar.
+
+144
+00:06:04,936 --> 00:06:07,736
+La elección depende de los lectores, las
+operaciones
+
+145
+00:06:07,748 --> 00:06:10,513
+y las medidas, no de declarar un ganador
+universal.
+
+146
+00:06:10,945 --> 00:06:13,553
+Hasta aquí hemos guardado y consultado
+archivos.
+
+147
+00:06:13,827 --> 00:06:17,198
+Pero Ana modifica su reserva: ahora
+necesitamos actualizar el
+
+148
+00:06:17,210 --> 00:06:19,842
+histórico sin que alguien lea un resultado a
+medias.
+
+149
+00:06:20,125 --> 00:06:22,589
+Un archivo Parquet aislado no coordina por
+sí
+
+150
+00:06:22,601 --> 00:06:24,632
+solo las versiones de todo el conjunto.
+
+151
+00:06:24,869 --> 00:06:26,732
+Formatos de tabla como Delta Lake,
+
+152
+00:06:26,937 --> 00:06:29,401
+Iceberg o Hudi gestionan archivos y
+metadatos
+
+153
+00:06:29,413 --> 00:06:31,552
+para aplicar cambios de forma coherente.
+
+154
+00:06:31,812 --> 00:06:32,978
+Según el sistema y su
+
+155
+00:06:32,990 --> 00:06:36,127
+configuración, podemos consultar estados
+anteriores.
+
+156
+00:06:36,395 --> 00:06:39,034
+Eso exige mantenimiento: borrar una fila de
+la
+
+157
+00:06:39,046 --> 00:06:42,856
+versión actual no elimina automáticamente
+todas sus copias históricas.
+
+158
+00:06:43,297 --> 00:06:45,809
+Para justificar nuestras decisiones, el
+taller
+
+159
+00:06:45,821 --> 00:06:48,093
+genera doscientas mil reservas sintéticas.
+
+160
+00:06:48,362 --> 00:06:51,703
+Comparamos las mismas filas, columnas y
+tipos, anotamos
+
+161
+00:06:51,715 --> 00:06:55,340
+compresión y tamaño, y separamos escritura,
+lectura y cálculo.
+
+162
+00:06:55,581 --> 00:06:57,191
+Repetimos las medidas porque la
+
+163
+00:06:57,203 --> 00:06:58,886
+caché puede cambiar los tiempos.
+
+164
+00:06:59,180 --> 00:07:01,176
+El Avro del taller contiene solo Laredo
+
+165
+00:07:01,188 --> 00:07:03,808
+y cinco columnas: no sería justo compararlo
+
+166
+00:07:03,820 --> 00:07:05,911
+con un CSV de todos los hoteles.
+
+167
+00:07:06,180 --> 00:07:09,822
+Antes del cronómetro comprobamos recuentos,
+nulos y resultados.
+
+168
+00:07:10,115 --> 00:07:11,750
+Si algo ocupa menos porque hemos
+
+169
+00:07:11,762 --> 00:07:14,262
+perdido datos, no hemos mejorado el formato.
+
+170
+00:07:14,687 --> 00:07:15,781
+Volvamos a Ana.
+
+171
+00:07:16,037 --> 00:07:17,972
+Su reserva puede viajar en texto o
+
+172
+00:07:17,984 --> 00:07:19,874
+en Avro, incorporarse a un histórico
+
+173
+00:07:19,886 --> 00:07:22,218
+Parquet y pasar por Arrow mientras
+calculamos.
+
+174
+00:07:22,481 --> 00:07:25,342
+DuckDB puede consultar ese histórico, y un
+formato
+
+175
+00:07:25,354 --> 00:07:27,673
+de tabla puede ayudar a gestionar sus
+cambios.
+
+176
+00:07:27,927 --> 00:07:29,489
+No hace falta utilizar todas
+
+177
+00:07:29,501 --> 00:07:31,160
+estas piezas en cada proyecto.
+
+178
+00:07:31,427 --> 00:07:33,927
+Lo importante es preguntar quién leerá los
+datos,
+
+179
+00:07:34,047 --> 00:07:36,487
+qué campos necesita y qué cambios habrá
+después.
+
+180
+00:07:36,756 --> 00:07:39,124
+Elegir bien el formato consiste en conservar
+
+181
+00:07:39,136 --> 00:07:41,503
+el significado y facilitar el siguiente
+paso.
+
+182
+00:07:41,781 --> 00:07:44,173
+Esa es la decisión que debéis saber
+explicar.
