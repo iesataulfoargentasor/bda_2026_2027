@@ -1658,7 +1658,7 @@
 <p>Si el círculo no pasa a verde, esperad un minuto y recargad el lab. No abráis a la vez una consola personal de Amazon: mezclar las dos es el error más caro del primer día.</p>
 <h2 id="2-region">2. Región<a class="headerlink" href="#2-region" title="Permanent link">&para;</a></h2>
 <p>Arriba a la derecha hay una <strong>región</strong>. Usad <strong>la del Readme</strong> (casi siempre <em>N. Virginia</em>, <code>us-east-1</code>).</p>
-<p>Si cambiáis a Irlanda o España “porque estamos en Cantabria”, el cubo <strong>deja de verse</strong>. No se ha perdido: está en la otra región. Volved a la de origen.</p>
+<p>Usad la región autorizada por el laboratorio. Los cubos tienen una región asociada, aunque la consola puede listar cubos de varias regiones. Si no encontráis uno, revisad la cuenta, los filtros, los permisos y la región; no concluyáis que se ha borrado.</p>
 <h2 id="3-crear-el-cubo">3. Crear el cubo<a class="headerlink" href="#3-crear-el-cubo" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Buscad <strong>S3</strong> → <strong>Create bucket</strong>.</li>
@@ -1674,6 +1674,7 @@
 </ol>
 <p>Ese cubo <strong>no cobra en recepción</strong>. Es el sitio del <strong>histórico copiado</strong> (lago o informe), no la tabla del PMS.</p>
 <h2 id="4-prefijos-parecen-carpetas-son-claves">4. Prefijos: parecen carpetas, son claves<a class="headerlink" href="#4-prefijos-parecen-carpetas-son-claves" title="Permanent link">&para;</a></h2>
+<p>La dirección de un objeto combina el nombre del cubo y su clave. Por ejemplo, en <code>s3://mi-cubo/lago/reservas/dia.csv</code>, el cubo es <code>mi-cubo</code> y la clave es <code>lago/reservas/dia.csv</code>. Las barras facilitan organizar y seleccionar objetos; no convierten S3 en un disco de carpetas tradicional.</p>
 <p>En S3 no hay carpetas de disco: hay <strong>claves</strong> con barras. La consola las pinta como carpetas para que no os volváis locos.</p>
 <p>Cread (Create folder) estos prefijos:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>lago/reservas/
@@ -1712,6 +1713,7 @@
   cubo --&gt; P8[Más adelante: panel de ayer]</code></pre>
 <p>Hoy <strong>no</strong> pintáis el panel. Solo dejáis el bruto en el cubo.</p>
 <h2 id="5-subir-dos-csv-pesan-poco">5. Subir dos CSV (pesan poco)<a class="headerlink" href="#5-subir-dos-csv-pesan-poco" title="Permanent link">&para;</a></h2>
+<p><strong>Comprobación de la copia:</strong> conservad los archivos originales en una carpeta de trabajo, subid cada uno al prefijo indicado y descargadlo de nuevo desde la consola autenticada. Comparad nombre, tamaño y contenido. La subida conserva los datos; todavía no los une, limpia ni agrega.</p>
 <p>Descargad desde este sitio (no hace falta el de Hola ETL ni el del 1.7):</p>
 <ul>
 <li><a href="../../assets/practicas/reservas_pdi.csv" rel="noopener" target="_blank">reservas_pdi.csv</a></li>
@@ -1729,6 +1731,7 @@
 </ul>
 <p>No subáis DNI, fotos de huéspedes ni un Excel con NIF. El lago de clase usa reservas <strong>de práctica</strong>.</p>
 <h2 id="6-comprobar-que-no-es-publico">6. Comprobar que no es público<a class="headerlink" href="#6-comprobar-que-no-es-publico" title="Permanent link">&para;</a></h2>
+<p>La prueba de incógnito verifica que esa URL no permite una descarga anónima. Completadla revisando Block Public Access y los permisos del cubo. Un error de acceso aislado también puede deberse a una URL incorrecta; por eso conviene comprobar primero que el objeto existe y que podéis descargarlo desde vuestra sesión autorizada.</p>
 <ol>
 <li>En el objeto, copiad <strong>Object URL</strong>.</li>
 <li>Pegadla en una ventana de <strong>incógnito</strong> (sin la consola abierta).</li>
@@ -1740,20 +1743,20 @@
 <ol>
 <li>Volved a la pestaña del <strong>lab</strong> (no solo cerréis Chrome).</li>
 <li><strong>End Lab</strong>. No pulseis <strong>Reset</strong>.</li>
-<li>El cubo <strong>sigue</strong>. El próximo día: Start Lab otra vez, misma región, mismo cubo.</li>
+<li>Consultad las instrucciones del laboratorio sobre conservación de recursos. End Lab termina la sesión, pero no debe interpretarse como una garantía universal de borrado o conservación. Guardad fuera del laboratorio los archivos de práctica necesarios.</li>
 </ol>
 <p>Si lanzáis una máquina EC2 “a ver qué es” y os vais, <strong>sigue cobrando</strong> hasta que la paréis o hagáis End Lab. S3 de unos KB no os va a dejar sin crédito; un clúster olvidado, sí.</p>
 <h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
 <p>No puntúa en Moodle. Una línea de por qué.</p>
 <ol>
-<li>El PostgreSQL de recepción y este cubo: ¿bloque u objeto? ¿Se puede “abrir el byte 17” en S3?</li>
+<li>El PostgreSQL de recepción y este cubo: ¿bloque u objeto? ¿Qué diferencia hay entre leer un rango de bytes y modificar un objeto?</li>
 <li>¿Por qué <strong>Block Public Access</strong> y no un enlace para que gerencia mire el CSV en el móvil del pasillo?</li>
 <li>¿Subiríais aquí los 500 GB del histórico “porque en la nube cabe todo”? ¿Qué V o qué crédito duele?</li>
 <li>Este cubo, ¿sustituye al PMS para cobrar una estancia?</li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Comprobación</p>
-<p>Objeto (el fichero entero; no hay byte 17) / el CSV del lago no es el panel y no va a internet / no: crédito y no es el ejercicio / no: el cobro sigue siendo ACID en el PMS.</p>
+<p>El volumen de PostgreSQL utiliza bloques; S3 utiliza objetos y admite lecturas por rangos, pero eso no equivale a editar bytes arbitrarios del objeto / el CSV del lago no es el panel y no va a internet / no: crédito y no es el ejercicio / no: el cobro sigue siendo ACID en el PMS.</p>
 </div>
 <h2 id="errores-que-se-repiten">Errores que se repiten<a class="headerlink" href="#errores-que-se-repiten" title="Permanent link">&para;</a></h2>
 <ul>

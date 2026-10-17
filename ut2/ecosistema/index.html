@@ -2426,7 +2426,7 @@
 <p>Pasos reales (más que “map y ya”):</p>
 <ol>
 <li>Lectura desde HDFS de los ficheros de entrada como pares clave/valor (a menudo la <strong>línea</strong> es el valor; la clave puede ser el <em>offset</em>).</li>
-<li>Cada línea va a un <em>mapper</em>. Hay <strong>tantos <em>mappers<em> como </em>splits</em></strong> (orden de magnitud: tantos como bloques).</li>
+<li>Cada línea va a un <em>mapper</em>. Hay <strong>tantos <em>mappers</em> como <em>splits</em></strong> (orden de magnitud: tantos como bloques).</li>
 <li>El <em>mapper</em> parsea el hotel (clave) y las noches (valor) y emite <code>(hotel, noches)</code>.</li>
 <li>Para facilitar la agregación, se <strong>ordenan y barajan</strong> los datos por clave. Aquí viajan por la red: es el momento caro si el <em>mapper</em> no es <em>data-local</em>.</li>
 <li>El <em>reducer</em> suma las ocurrencias de cada hotel y genera un fichero por <strong>partición</strong> de salida.</li>

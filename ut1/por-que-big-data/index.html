@@ -567,6 +567,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#punto-de-partida-de-una-necesidad-a-una-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de partida: de una necesidad a una solución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#un-pc-no-basta-y-a-veces-si" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1533,6 +1544,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#punto-de-partida-de-una-necesidad-a-una-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de partida: de una necesidad a una solución
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#un-pc-no-basta-y-a-veces-si" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1875,7 +1897,11 @@
 
 
 <h1 id="11-por-que-big-data-y-las-5-vs">1.1. Por qué Big Data y las 5 Vs<a class="headerlink" href="#11-por-que-big-data-y-las-5-vs" title="Permanent link">&para;</a></h1>
-<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a> esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción pica sin esperar y las reservas tienen las mismas columnas.</p>
+<h2 id="punto-de-partida-de-una-necesidad-a-una-solucion">Punto de partida: de una necesidad a una solución<a class="headerlink" href="#punto-de-partida-de-una-necesidad-a-una-solucion" title="Permanent link">&para;</a></h2>
+<p>El objetivo de esta unidad es aprender a justificar decisiones sobre los datos. Imaginad que dirección pide conocer cuánto se ha cobrado en cada hotel. Antes de elegir una herramienta, necesitamos identificar dónde se registra cada cobro, cómo se relaciona con una reserva y cuándo debe estar disponible el informe. Esa secuencia conecta la necesidad del negocio con el diseño técnico.</p>
+<p>Las cinco V ayudan a describir las dificultades de ese recorrido. El volumen y la velocidad condicionan los recursos; la variedad condiciona la integración; la veracidad exige controles; el valor permite comprobar si el resultado sirve para decidir. No son cinco requisitos que deban cumplirse por igual ni una prueba automática para comprar un clúster.</p>
+<p>A lo largo del apartado seguiremos tres pasos: comprender cómo un registro se convierte en información útil, distinguir los trabajos que aprovechan esa información y analizar qué características de los datos dificultan el proceso. Después, en 1.2, estudiaremos una posible respuesta a esas dificultades: repartir el trabajo entre máquinas.</p>
+<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a> esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción registra sin esperar y las reservas tienen las mismas columnas.</p>
 <p>Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo <em>ahora</em>. El servidor no “se pone un poco lento”: <strong>deja de ser el diseño adecuado</strong>. Ahí entran las metodologías de <strong>macrodatos</strong> / <strong>Big Data</strong>.</p>
 <p><strong>Big Data no es “tener muchos Excel”.</strong> Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos que <strong>un sistema de una sola máquina, al estilo clásico, no puede</strong> tratar con garantías de tiempo, coste o variedad.</p>
 <p>No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es este: <strong>el sistema tradicional no escala</strong> en volumen, velocidad o variedad (o el coste de agrandar <em>esa</em> máquina es inasumible).</p>
@@ -1888,11 +1914,13 @@
 <p>Tres bloques, <strong>en este orden</strong>: (1) el <strong>viaje</strong> del evento al valor; (2) los <strong>oficios</strong> que extraen ese valor (minería, ciencia de datos, IA) — van <strong>antes</strong> de las V, no las sustituyen; (3) las <strong>V</strong> para pasar revista al hotel. Los relojes del <a href="../caso-hotel/" rel="noopener" target="_blank">caso</a>: finanzas cierra a las <strong>23:00</strong>; de madrugada corre el job; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>. Eso no es tiempo real.</p>
 </div>
 <h2 id="un-pc-no-basta-y-a-veces-si">Un PC no basta (y a veces sí)<a class="headerlink" href="#un-pc-no-basta-y-a-veces-si" title="Permanent link">&para;</a></h2>
-<p>No todo proyecto con datos es Big Data. El <strong>día 1</strong>, recepción de Laredo pica reservas en el programa del hotel (PMS: <em>Property Management System</em>) y finanzas saca el Excel del mes: eso es <strong>Small Data</strong>. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) <strong>también</strong> sirven ahí.</p>
-<p>A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Un servidor <strong>ya no es el diseño</strong>. Ahí sí hablamos de Big Data: hay que <strong>repartir</strong> el trabajo.</p>
+<p>No todo proyecto con datos es Big Data. El <strong>día 1</strong>, recepción de Laredo registra reservas en el programa del hotel (PMS: <em>Property Management System</em>) y finanzas saca el Excel del mes: eso es <strong>Small Data</strong>. Cabe en un PC. Las destrezas de este módulo (limpiar, unir, guardar con criterio) <strong>también</strong> sirven ahí.</p>
+<p>A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos de reformas. Este crecimiento obliga a medir si el servidor sigue cumpliendo los requisitos. Si el volumen, la variedad o los tiempos superan su capacidad viable, habrá que revisar el diseño y posiblemente <strong>repartir</strong> el trabajo.</p>
 <p>Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el crudo sin refinar no mueve el coche. Guardar por guardar, en la década de 2020, <strong>no</strong> basta. Hay que <strong>conocer</strong> el dato y <strong>cuidarlo</strong> (calidad, linaje, permiso). Si no, gerencia decide con un número bonito y falso.</p>
 <p><img alt="Un PC en recepción de Laredo frente a la cadena completa, que ya no cabe en un servidor" src="../../assets/ut1/small-vs-big.png" /></p>
 <h2 id="de-los-eventos-al-valor">De los eventos al valor<a class="headerlink" href="#de-los-eventos-al-valor" title="Permanent link">&para;</a></h2>
+<p>La transformación del dato en valor requiere contexto. El número <code>186.50</code> aislado no permite decidir: necesitamos saber si es un importe, en qué moneda está expresado, a qué reserva corresponde y si representa un precio previsto o un cobro confirmado. Esos significados se documentan como metadatos.</p>
+<p>Cuando relacionamos el importe con una fecha y un hotel podemos calcular ingresos diarios. Al comparar varios días aparecen patrones que conviene investigar. Una decisión basada en esos patrones solo aporta valor si se comprueba su efecto: por ejemplo, si una campaña aumenta la ocupación sin reducir excesivamente el margen. Esta secuencia es un modelo didáctico; en un proyecto real se vuelve a etapas anteriores cuando faltan datos o una interpretación resulta incorrecta.</p>
 <p>Antes de hablar de clústeres, Parquet o Pentaho, hay que ver <strong>el viaje del dato</strong>. Es el mismo viaje que luego recorreréis en las <a href="../arquitectura/" rel="noopener" target="_blank">capas de la arquitectura</a>.</p>
 <p>Pensad en el grupo en agosto (Laredo ayuda a imaginar temporada alta):</p>
 <ol>
@@ -2018,7 +2046,7 @@
 <li>La <strong>ciencia de datos</strong> puede terminar en un informe <strong>sin</strong> desplegar IA. Gerencia a veces solo necesita el gráfico del martes vacío.</li>
 </ul>
 <h4 id="de-un-estudio-al-panel-en-el-hotel">De un estudio al panel (en el hotel)<a class="headerlink" href="#de-un-estudio-al-panel-en-el-hotel" title="Permanent link">&para;</a></h4>
-<p>No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre este bucle. El <strong>ingeniero</strong> de este módulo alimenta sobre todo la recuperación y la preparación; si fallan, el modelo puntúa basura.</p>
+<p>No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre este bucle. El <strong>ingeniero</strong> de este módulo alimenta sobre todo la recuperación y la preparación; si fallan, el modelo produce resultados poco fiables.</p>
 <ol>
 <li><strong>Objetivo.</strong> Gerencia quiere menos habitaciones vacías los martes.</li>
 <li><strong>Recuperación.</strong> PMS, pasarela, sensores, un Excel de Comillas. Sale <strong>bruto</strong>.</li>
@@ -2036,6 +2064,8 @@
 <p>Al principio se usaban <strong>tres V</strong>: <strong>volumen</strong>, <strong>velocidad</strong> y <strong>variedad</strong>. Luego <strong>valor</strong> y <strong>veracidad</strong> (cinco). En algunos textos, <strong>viabilidad</strong> y <strong>visualización</strong> (siete). No memoricéis el recuento: <strong>pasad revista</strong> al hotel. Si varias duelen a la vez, casi seguro necesitáis un diseño de Big Data. Si solo os duele una y el resto cabe en el sistema de siempre, a lo mejor no.</p>
 <p><img alt="Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden" src="../../assets/ut1/cinco-vs-hotel.png" /></p>
 <h3 id="volumen">Volumen<a class="headerlink" href="#volumen" title="Permanent link">&para;</a></h3>
+<p>Para estimar almacenamiento hay que calcular cuánto se genera y durante cuánto tiempo se conserva. Un punto de partida es <code>registros diarios × bytes por registro × días de conservación</code>. Después se añaden las copias, los índices, los resultados intermedios y el margen de crecimiento. La compresión puede reducir la cifra, pero debe medirse con datos representativos.</p>
+<p>Por ejemplo, 1.000 sensores que envían un registro de 200 bytes cada 30 segundos generan unos 576 MB diarios antes de añadir metadatos y réplicas. La cantidad puede ser manejable en una máquina; la dificultad cambia si conservamos años de datos, incorporamos vídeo o exigimos muchas consultas simultáneas. Por eso el tamaño se interpreta junto con los requisitos del sistema.</p>
 <p>Es la cantidad de <strong>bytes</strong>. Hoy se habla con naturalidad de terabytes y petabytes; los centros grandes llegan a exabytes.</p>
 <table>
 <thead>
@@ -2101,6 +2131,8 @@
 </div>
 <p><strong>Qué implica en el diseño:</strong> si el dato ya no cabe (o no se lee a tiempo) en <strong>una</strong> máquina, hay que <strong>repartir</strong> (clúster, lago, formatos que se puedan trocear). Eso es el criterio <strong>a)</strong> empezando a trabajar.</p>
 <h3 id="velocidad">Velocidad<a class="headerlink" href="#velocidad" title="Permanent link">&para;</a></h3>
+<p>Aquí conviene separar <strong>tasa de llegada</strong> y <strong>latencia</strong>. La primera indica cuántos registros o bytes llegan por segundo. La segunda mide cuánto tarda un dato en estar disponible para su uso. Un sistema puede aceptar muchos eventos por segundo y, aun así, tardar varios minutos en actualizar el informe.</p>
+<p>Si entran 1.000 eventos por segundo y solo se procesan 800, quedan pendientes 200 cada segundo: al cabo de un minuto hay 12.000 eventos acumulados. Una cola absorbe un pico temporal, pero no resuelve por sí sola una diferencia permanente entre entrada y capacidad de procesamiento.</p>
 <p>No basta con que quepa: los datos <strong>siguen llegando</strong>. El reto es capturarlos, integrarlos y, si el negocio lo pide, reaccionar <strong>antes de que dejen de servir</strong>.</p>
 <p>En el hotel:</p>
 <ul>
@@ -2115,6 +2147,8 @@
 10 TB al día en eventos de sensores que hay que cruzar con el PMS <strong>ahora</strong> → duele la <strong>velocidad</strong> (y luego el volumen).</p>
 </div>
 <h3 id="variedad">Variedad<a class="headerlink" href="#variedad" title="Permanent link">&para;</a></h3>
+<p>La variedad también existe dentro de datos aparentemente iguales. Dos CSV pueden expresar las fechas de forma distinta, utilizar monedas diferentes o asignar códigos diferentes al mismo hotel. Integrar exige acordar tanto la estructura como el significado de los campos.</p>
+<p>“No estructurado” significa que el contenido no se presenta directamente como registros tabulares. Una imagen sí tiene formato, tamaño y metadatos; para analizar qué aparece en ella necesitamos extraer características. Del mismo modo, un PDF puede contener texto, tablas o una imagen escaneada, y su tratamiento dependerá de ese contenido.</p>
 <p>No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven tres familias:</p>
 <table>
 <thead>
@@ -2149,6 +2183,8 @@
 <p>Un <strong>data warehouse</strong> (almacén de informes) espera dato ya en tablas: decidís las columnas <strong>antes</strong> de guardar. Un <strong>data lake</strong> (lago) acepta el dato “como llega” y decide cómo interpretarlo <strong>al leer</strong>. Un <strong>data mart</strong> es un <strong>recorte</strong> de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>.</p>
 <p>La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que <strong>no todo es tabla</strong>.</p>
 <h3 id="veracidad">Veracidad<a class="headerlink" href="#veracidad" title="Permanent link">&para;</a></h3>
+<p>Podemos convertir esta V en controles concretos: <strong>completitud</strong> (¿falta el identificador?), <strong>validez</strong> (¿la fecha tiene un formato permitido?), <strong>unicidad</strong> (¿se ha recibido dos veces el mismo cobro?), <strong>coherencia</strong> (¿la salida es posterior a la entrada?) y <strong>actualidad</strong> (¿el informe corresponde al periodo anunciado?).</p>
+<p>Detectar un dato inválido no implica borrarlo sin explicación. Se puede apartar en una zona de revisión, registrar el motivo y corregirlo con el responsable del origen. Así conservamos la trazabilidad y evitamos confundir “dato ausente” con “valor cero”.</p>
 <p>¿Os podéis fiar de lo que hay? Duplicados, sensores descalibrados, campos vacíos, relojes mal puestos, el mismo huésped con tres NIF.</p>
 <p>A más volumen, más basura <strong>si no hay calidad y gobierno</strong>: linaje (“de dónde salió esta cifra”), metadatos y reglas de limpieza. Un modelo sobre datos sucios no es “más Big Data”: es una <strong>peor</strong> decisión, más rápida.</p>
 <div class="admonition failure">
@@ -2156,6 +2192,8 @@
 <p>“Como hay muchos datos, el error se compensa.” A veces el error está <strong>sesgado</strong> (todos los sensores de Potes fallan igual en invierno) y el modelo lo aprende como si fuera verdad.</p>
 </div>
 <h3 id="valor">Valor<a class="headerlink" href="#valor" title="Permanent link">&para;</a></h3>
+<p>Para evaluar el valor hay que definir un objetivo observable antes de construir la solución. “Tener un lago” describe un medio; “reducir de dos horas a diez minutos la preparación del cierre” describe un resultado que podemos medir.</p>
+<p>El beneficio se compara con los costes de almacenamiento, cálculo, mantenimiento y trabajo humano. También se comprueba que la mejora no perjudique otra necesidad: un informe más rápido que ralentiza las reservas puede no compensar. La pregunta de negocio orienta, por tanto, todas las decisiones técnicas posteriores.</p>
 <p>Es la V que <strong>justifica el gasto</strong>. Almacenar por almacenar no es Big Data: es un archivo caro. El valor aparece cuando una decisión (cupo, tarifa, overbooking, una oferta a tiempo) <strong>mejora</strong> respecto a no usar esos datos.</p>
 <p>Si no sabéis qué decisión vais a mejorar, todavía no tenéis un proyecto: tenéis un disco.</p>
 <h3 id="viabilidad-y-visualizacion-cuando-se-habla-de-7">Viabilidad y visualización (cuando se habla de 7)<a class="headerlink" href="#viabilidad-y-visualizacion-cuando-se-habla-de-7" title="Permanent link">&para;</a></h3>
@@ -2183,6 +2221,8 @@
 </table>
 <p>La visualización no es “hacerlo bonito”. En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> y en el criterio <strong>e)</strong> del RA1 es presentar para que alguien que no abre el cuaderno pueda decidir.</p>
 <h2 id="que-pregunta-haceis-cuatro-analiticas">Qué pregunta hacéis (cuatro analíticas)<a class="headerlink" href="#que-pregunta-haceis-cuatro-analiticas" title="Permanent link">&para;</a></h2>
+<p>Las cuatro analíticas pueden encadenarse sobre un mismo problema. Primero calculamos que la ocupación de los martes ha bajado (<strong>descriptiva</strong>); después investigamos si cambió el calendario o el canal de venta (<strong>diagnóstica</strong>); estimamos la ocupación del próximo martes (<strong>predictiva</strong>) y comparamos posibles promociones (<strong>prescriptiva</strong>).</p>
+<p>Una asociación no demuestra una causa. Si las reservas de un canal cancelan más, puede influir el tipo de tarifa o la temporada. Asimismo, una predicción debe expresar su incertidumbre y una recomendación debe respetar restricciones como el presupuesto o la capacidad del hotel.</p>
 <p>La <strong>inteligencia de negocio</strong> (<em>business intelligence</em>, <strong>BI</strong>) coge lo ya guardado y responde sobre el <strong>pasado</strong>: qué ocurrió y por qué. Con más dato y, a veces, IA, podéis mirar <strong>adelante</strong>: qué pasará y qué conviene hacer.</p>
 <table>
 <thead>
@@ -2280,7 +2320,7 @@
 <p class="admonition-title">Errores frecuentes en clase y en empresas</p>
 <ul>
 <li>“Tenemos Big Data porque usamos Hadoop.” La herramienta no define el problema.</li>
-<li>“Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el <a href="../procesamiento/#scv" rel="noopener" target="_blank">SCV</a> os dirá por qué no pedís las tres cosas a la vez.</li>
+<li>“Todo tiene que ser en tiempo real.” El panel de las 8 es un lote; el <a href="../procesamiento/#scv" rel="noopener" target="_blank">SCV</a> ayudará a valorar los compromisos entre plazo, precisión y volumen.</li>
 <li>Confundir los GB de marketing del disco con lo que el explorador muestra (base 10 frente a GiB).</li>
 <li>Medir el éxito en terabytes guardados, no en decisiones mejoradas.</li>
 </ul>

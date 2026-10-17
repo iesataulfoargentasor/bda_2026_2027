@@ -1529,8 +1529,10 @@
 <p>No es un servidor. El PMS es el <strong>programa</strong>. Suele vivir en un ordenador que está siempre encendido (un <strong>servidor</strong>). Si ese programa se cae, recepción no puede hacer check-in: <strong>no puede parar</strong>.</p>
 <p>Los cuatro hoteles usan <strong>el mismo</strong> PMS (mismo dueño). Eso no significa que Laredo en agosto y Potes en noviembre se comporten igual.</p>
 <p>Gerencia <strong>no</strong> abre el PMS a las 8 para sumar a mano. Quiere <strong>un panel</strong>: ocupación e importe cobrado <strong>por hotel</strong>.</p>
-<p><img alt="Recepción pica ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa" src="../../assets/ut1/caso-pms-y-panel.png" /></p>
+<p><img alt="Recepción registra ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa" src="../../assets/ut1/caso-pms-y-panel.png" /></p>
 <h2 id="que-haceis-vosotros-punto-de-partida">Qué hacéis vosotros (punto de partida)<a class="headerlink" href="#que-haceis-vosotros-punto-de-partida" title="Permanent link">&para;</a></h2>
+<p>Seguiremos una reserva desde su registro hasta el informe. El PMS identifica la reserva y su hotel; el sistema de pagos aporta el importe confirmado. La clave de reserva permite relacionarlos. La fecha del cobro y la fecha de la estancia pueden diferir: cada indicador debe indicar cuál utiliza.</p>
+<p>Para calcular un <strong>porcentaje de ocupación</strong> también necesitamos las habitaciones disponibles y las ocupadas durante el periodo. Contar reservas cobradas no equivale a medir ocupación. Los talleres de cruce calculan importes y recuentos con datos simplificados; no contienen todos los campos necesarios para construir el panel completo.</p>
 <p>El dato <strong>ya está</strong> en los programas del día a día. Vosotros <strong>no lo inventáis</strong> y <strong>no picáis reservas</strong>. El oficio de este módulo es <strong>copiarlo</strong> a un sitio pensado para informes, <strong>a tiempo</strong>, y <strong>sin falsear</strong> el número.</p>
 <p>De dónde sale (tres orígenes):</p>
 <ol>
@@ -1545,6 +1547,8 @@
 <p><strong>Sin falsear</strong> quiere decir: no coléis como cobrado lo que no se ha cobrado; no presentéis a las 8:05 del martes el martes como si ya hubiera cerrado; no mezcléis el semáforo de recepción con el cuadro de mando.</p>
 <p><img alt="Dos tubos: lote nocturno al panel de las 8; sensores al semáforo de recepción, no al panel" src="../../assets/ut1/caso-que-haceis.png" /></p>
 <h2 id="dos-relojes-no-los-mezcleis">Dos relojes (no los mezcléis)<a class="headerlink" href="#dos-relojes-no-los-mezcleis" title="Permanent link">&para;</a></h2>
+<p>En el ejemplo, “cierre” es el corte de negocio fijado a las 23:00. Los registros posteriores se asignan al siguiente cierre o se tratan como correcciones según una regla acordada. Un informe debe indicar fecha de cierre y hora de actualización para no confundirse con el estado actual.</p>
+<p>Los sensores indican presencia, no disponibilidad comercial. Una habitación sin personas puede estar reservada o pendiente de limpieza. El semáforo es una simplificación didáctica de un indicador operativo; para decidir si una habitación se puede vender habría que combinar el PMS y otros estados del hotel.</p>
 <table>
 <thead>
 <tr>
@@ -1555,7 +1559,7 @@
 <tbody>
 <tr>
 <td><strong>Ahora</strong></td>
-<td>Recepción pica en el PMS. No espera al informe.</td>
+<td>Recepción registra en el PMS. No espera al informe.</td>
 </tr>
 <tr>
 <td>Cada cobro</td>
@@ -1584,12 +1588,12 @@
 <p>Con este caso en la cabeza, cada apartado pregunta una cosa:</p>
 <ol>
 <li><strong><a href="../por-que-big-data/" rel="noopener" target="_blank">1.1</a></strong> — Un evento (reserva, sensor, cobro) tiene que acabar en una <strong>decisión</strong>. Un hotel de playa no es un albergue de montaña.</li>
-<li><strong><a href="../clusters/" rel="noopener" target="_blank">1.2</a></strong> — El programa de reservas de Laredo cabe en <strong>un</strong> servidor. El trabajo de madrugada de los <strong>cuatro</strong> hoteles, no. Si se funde un disco, el panel de las 8 no puede caerse.</li>
+<li><strong><a href="../clusters/" rel="noopener" target="_blank">1.2</a></strong> — El programa de reservas de Laredo cabe en <strong>un</strong> servidor. El trabajo de madrugada debe medirse para decidir si necesita repartirse. Si se funde un disco, el panel de las 8 no puede caerse.</li>
 <li><strong><a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a></strong> — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a <strong>otro</strong> sitio. Fotos y JSON, a un lago.</li>
 <li><strong><a href="../procesamiento/" rel="noopener" target="_blank">1.4</a></strong> — Recepción <strong>opera</strong> ahora. Gerencia <strong>informa</strong> (lote de las 8). El semáforo es <strong>otro</strong> reloj.</li>
 <li><strong><a href="../arquitectura/" rel="noopener" target="_blank">1.5</a></strong> — Panel de las 8 y semáforo: <strong>dos caminos</strong> o <strong>una cola</strong>.</li>
 <li><strong><a href="../ingesta/" rel="noopener" target="_blank">1.6</a></strong> — Cómo se <strong>copian</strong> PMS, cobros y sensores. El panel de las 8 es el <strong>destino</strong>; no se pinta en el primer taller.</li>
-<li><strong><a href="../formatos/" rel="noopener" target="_blank">1.7</a></strong> — Dirección solo mira tres números; el fichero gordo arrastra doce columnas.</li>
+<li><strong><a href="../formatos/" rel="noopener" target="_blank">1.7</a></strong> — Dirección solo mira tres números; el fichero completo arrastra doce columnas.</li>
 <li><strong><a href="../pentaho/" rel="noopener" target="_blank">1.8</a></strong> — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el <strong>CSV</strong>, no Spoon.</li>
 <li><strong><a href="../../ut2/" rel="noopener" target="_blank">UT2</a></strong> — El martes el CSV ya no abre en Excel. Hay que depositar y procesar <strong>en el sitio</strong>, y acabar <strong>antes de las 8</strong>.</li>
 </ol>

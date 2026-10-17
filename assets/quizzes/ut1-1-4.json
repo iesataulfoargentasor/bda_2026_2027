@@ -15,7 +15,7 @@
         "Distribuido es un procesador con muchos hilos."
       ],
       "answer": 1,
-      "explain": "Concurrente = el sistema **reparte el tiempo** (no necesariamente a la vez). Paralelo = varios núcleos de **una** máquina. Distribuido = **varias** máquinas en red. Un i7 no es un clúster."
+      "explain": "Concurrencia significa progreso de varias tareas, no necesariamente simultáneo. Paralelismo significa ejecución simultánea y puede existir en una o varias máquinas. Distribuido implica varias máquinas que se comunican."
     },
     {
       "topic": "Concurrente",
@@ -71,7 +71,7 @@
         "Que hay que copiar todos los petabytes a un portátil para sumarlos."
       ],
       "answer": 0,
-      "explain": "Distribuido es paralelo **más** red y fallos. Hadoop de libro lleva el **cálculo al dato**; en un cubo de objetos el motor **lee por red**. Son dos diseños."
+      "explain": "Las máquinas se comunican por red y pueden fallar de manera independiente. El cálculo distribuido puede ser paralelo, pero necesita coordinar datos, tareas y recuperación."
     },
     {
       "topic": "Lote y ritmo",
@@ -132,16 +132,16 @@
     {
       "topic": "SCV",
       "href": "",
-      "prompt": "El principio SCV habla de un **cálculo** de análisis. ¿La C es la de CAP o la de ACID? ¿Se pueden pedir las tres letras?",
+      "prompt": "¿Cómo utilizamos SCV para razonar sobre un análisis con recursos limitados?",
       "code": "",
       "options": [
         "Sí: las tres C son la misma letra y S+C+V es el diseño habitual.",
         "Es la C de CAP: el mismo valor en todos los nodos.",
-        "No. Aquí C es **precisión** (usar todos los datos, sin muestrear). Como máximo **dos** letras. V casi siempre está: el menú real es C+V, S+V o S+C.",
+        "Como una guía para valorar velocidad, precisión y volumen, no como un teorema que impida siempre lograr las tres.",
         "Es la velocidad de las 5 V; las tres se cumplen con más RAM."
       ],
       "answer": 2,
-      "explain": "S = poco tiempo hasta el **número**. V = conjuntos enormes de cálculo. CAP y ACID son otras C. Las 5 V son otra velocidad y otro volumen."
+      "explain": "Se pueden revisar recursos, formato, agregados previos o alcance. Una ventana puede dar resultados exactos para su periodo; SCV no equivale a CAP."
     }
   ]
 }
