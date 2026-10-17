@@ -2155,9 +2155,11 @@
 <h1 id="22-ecosistema-hadoop">2.2. Ecosistema Hadoop<a class="headerlink" href="#22-ecosistema-hadoop" title="Permanent link">&para;</a></h1>
 <p>Si Big Data es la <em>filosofía</em> de trabajo con grandes volúmenes (volumen, velocidad, variedad), <a href="https://hadoop.apache.org/">Apache Hadoop</a> es el <strong>catalizador</strong> que la industria usó durante años para materializarla. Un clúster Hadoop puede crecer hasta <strong>miles de máquinas</strong> y un almacén del orden de <strong>petabytes</strong>.</p>
 <p>No es “un <code>.exe</code> que instalas y ya”. Es un <strong>proyecto</strong> de código abierto: un núcleo (ficheros + recursos + un modelo de programación sencillo) y un <strong>ecosistema</strong> de módulos que se enchufan encima. El criterio <strong>e)</strong> del RA2 es exactamente eso: el sistema <strong>crece añadiendo piezas</strong> (un <em>datanode</em>, Hive, Spark) sin reescribir el programa de reservas de Laredo.</p>
-<p>Hoy se trabaja sobre Hadoop <strong>3.x</strong> (la rama <strong>3.4.x</strong> es la vigente en documentación). Sigue habiendo jobs compilados para la <strong>2</strong>. En la <strong>1</strong> el cómputo era <em>JobTracker</em> + <em>TaskTracker</em>; eso ya no se instala, pero sale en textos viejos y en entrevistas.</p>
+<p>En estas prácticas utilizamos Hadoop <strong>3.x</strong>. Anotad la versión efectiva con <code>hadoop version</code>, porque la etiqueta Docker puede actualizarse. Sigue habiendo jobs compilados para la <strong>2</strong>. En la <strong>1</strong> el cómputo era <em>JobTracker</em> + <em>TaskTracker</em>; eso ya no se instala, pero sale en textos viejos y en entrevistas.</p>
 <p>El grupo hotelero no “compra Hadoop porque está de moda”. Lo usa porque <strong>deposita cualquier fichero</strong> (logs, Parquet, fotos de habitación) y <strong>procesa en el mismo sitio</strong> donde está guardado. Eso es el criterio <strong>a)</strong> del RA2: importancia del almacén para depositar y procesar <em>cualquier</em> tipo, rápido, a escala.</p>
 <h2 id="que-promete-y-por-que-importa-al-ra2">Qué promete (y por qué importa al RA2)<a class="headerlink" href="#que-promete-y-por-que-importa-al-ra2" title="Permanent link">&para;</a></h2>
+<p>El problema combina tres preguntas: <strong>dónde conservar el histórico</strong>, <strong>quién obtiene recursos para procesarlo</strong> y <strong>cómo expresar el cálculo</strong>. HDFS responde a la primera, YARN a la segunda y MapReduce a la tercera. El ecosistema añade formas de consultar, ingerir y coordinar; no son tres nombres para la misma función.</p>
+<p>Por ejemplo, el cierre nocturno lee reservas de HDFS, solicita recursos a YARN y ejecuta un agregado. Si añadimos Hive para escribir esa consulta en SQL, no necesitamos convertir el NameNode en una base de datos: Hive aporta una interfaz y utiliza un motor de ejecución.</p>
 <table>
 <thead>
 <tr>
@@ -2189,13 +2191,13 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Confiable</strong> y <strong>tolerante a fallos</strong> no son lo mismo, aunque se parecen. La primera habla de <strong>copias</strong> y de <strong>reintentar</strong> el cálculo. La segunda habla de <strong>recuperación automática</strong>: el hardware cae, el clúster sigue, y cuando el disco vuelve a estar sano <strong>entra otra vez</strong> en el grupo. En un hotel de 80 nodos, un disco muerto <strong>cada semana</strong> no es un incidente: es el calendario.</p>
+<p>La <strong>fiabilidad</strong> es la capacidad de prestar el servicio de acuerdo con sus requisitos; la <strong>tolerancia a fallos</strong> contribuye a ella mediante réplicas, reintentos y recuperación. No son dos mecanismos independientes. Siempre debemos indicar qué fallos se toleran: un sistema puede soportar un DataNode caído y seguir dependiendo de un único coordinador.</p>
 <p><strong>Escalable</strong> aquí significa <em>horizontal</em>. No cambiáis el servidor de 64 GB por uno de 512 GB (eso es <em>scale-up</em>). Enchufáis <strong>otro worker</strong> y sumáis terabytes <em>y</em> contenedores a la vez.</p>
 <p><strong>Portable</strong> no es “corre en el móvil”. Es que el mismo job se lanza en la VM del aula, en un <em>edge</em> de Windows y en un EMR de AWS <strong>sin reescribir</strong> el <code>mapper</code>.</p>
 <h2 id="procesamiento-en-el-mismo-cluster-que-el-dato">Procesamiento en el mismo clúster que el dato<a class="headerlink" href="#procesamiento-en-el-mismo-cluster-que-el-dato" title="Permanent link">&para;</a></h2>
 <p>Hadoop está pensado para <strong>data-local computing</strong>: no arrastras 8 TB de reservas al portátil; <strong>mandas el cálculo</strong> al nodo que ya tiene el bloque.</p>
 <p>La filosofía, en una frase: <em>almacena todo en un sitio y procesa en ese mismo sitio</em>. Mueves el <strong>programa</strong>, no el lago. Mover petabytes por la red suele ser más caro (tiempo y euros) que enviar 200 KB de bytecode al DataNode que ya tiene el trozo.</p>
-<p>Eso exige un entorno <strong>repartido</strong> de datos <strong>y</strong> de procesos. El sistema de ficheros es <a href="../hdfs/">HDFS</a> (bloques, réplicas, NameNode: el detalle está allí). Encima, el cómputo se sienta en los <strong>mismos</strong> <em>workers</em>. Un DataNode no es “solo disco”: también corre <em>maps</em>, <em>reduces</em> y contenedores Spark.</p>
+<p>Eso exige un entorno <strong>repartido</strong> de datos <strong>y</strong> de procesos. El sistema de ficheros es <a href="../hdfs/">HDFS</a> (bloques, réplicas, NameNode: el detalle está allí). Encima, el cómputo se sienta en los <strong>mismos</strong> <em>workers</em>. En un worker pueden convivir <strong>dos procesos distintos</strong>: el DataNode sirve bloques y el NodeManager ejecuta y supervisa tareas. El proceso DataNode no ejecuta los maps.</p>
 <pre class="mermaid"><code>flowchart LR
   subgraph maestro["Maestros (pocos)"]
     NN[NameNode]
@@ -2219,6 +2221,7 @@
   RM --- DN2
   RM --- DN3</code></pre>
 <h3 id="tres-roles-de-maquina">Tres roles de máquina<a class="headerlink" href="#tres-roles-de-maquina" title="Permanent link">&para;</a></h3>
+<p>Un <strong>rol</strong> es una responsabilidad, no necesariamente una máquina exclusiva. En el portátil agrupamos servicios para aprender; en un despliegue grande podemos separarlos para dimensionar recursos y fallos. El cliente envía el trabajo, los servicios de coordinación mantienen el estado y los workers realizan el trabajo con los datos.</p>
 <table>
 <thead>
 <tr>
@@ -2251,14 +2254,15 @@
 <p><em>Commodity hardware</em> = servidor <strong>x86 no especializado</strong>: no exige la resiliencia de un <em>mainframe</em>. Se reponen. <strong>No</strong> es el sobremesa del aula (aunque en clase uséis una VM <em>pseudo-distribuida</em>: un solo PC hace de maestro y de esclavo a la vez). Tampoco es “el más barato de Amazon”: es <em>estándar de rack</em>, no <em>exótico</em>.</p>
 </div>
 <h3 id="numeros-de-catalogo-para-situaros-no-para-memorizar">Números de catálogo (para situaros, no para memorizar)<a class="headerlink" href="#numeros-de-catalogo-para-situaros-no-para-memorizar" title="Permanent link">&para;</a></h3>
+<p>Los valores siguientes son orientativos, no requisitos mínimos ni una receta de compra. Dimensionad a partir de bytes que se leen por segundo, concurrencia y memoria de las tareas. Más CPU no soluciona un disco saturado; más RAM puede reducir accesos, pero no corrige una red insuficiente.</p>
 <p>En un <em>datacenter</em> real veréis órdenes de magnitud así. No los recitáis en un examen al decimal; sí debéis <strong>notar</strong> que el <em>worker</em> es disco y el maestro es CPU/RAM.</p>
 <ul>
 <li><strong>Worker:</strong> 64–128 GB de RAM; 12–24 discos de 4–12 TB en <strong>JBOD</strong> (<em>just a bunch of drives</em>, a menudo <strong>sin RAID</strong>); 2 CPU × 6–8 núcleos.</li>
 <li><strong>Maestro:</strong> 128–256 GB; 2 SSD de 2–4 TB en RAID; 2 CPU × 8–16 núcleos. Aquí pesa más la <strong>CPU y la RAM</strong> que los terabytes: el NameNode vive en memoria.</li>
 <li><strong>Edge:</strong> del orden de 256 GB de RAM; 2 discos de 2–3 TB en RAID; 2 CPU × 8 núcleos. Mucha RAM para clientes; poco disco de lago.</li>
 </ul>
-<p>¿Por qué <strong>JBOD y no RAID</strong> en el <em>worker</em>? Porque HDFS <strong>ya replica</strong> el bloque en otros nodos. Un RAID-5 dentro del servidor duplica el trabajo y <strong>esconde</strong> el fallo que Hadoop sabe gestionar. El hotel prefiere tres copias en tres racks a un RAID local que no entiende YARN.</p>
-<p>Cada <em>worker</em> que enchufáis <strong>suma capacidad de disco y de jobs a la vez</strong>. Eso es el criterio <strong>e)</strong> en el armario, no solo en el diagrama. Añadir un nodo no es “más carpeta”: es más <strong>HDFS</strong> y más <strong>contenedores</strong>.</p>
+<p>¿Por qué <strong>JBOD y no RAID</strong> en el <em>worker</em>? Porque HDFS <strong>ya replica</strong> el bloque en otros nodos. HDFS puede aprovechar discos independientes y recuperar copias a nivel de clúster, por lo que muchos diseños usan JBOD. RAID protege frente a ciertos fallos locales, pero no sustituye réplicas en otros nodos ni dominios de fallo. La elección depende del diseño; no la realiza YARN.</p>
+<p>Un worker con DataNode y NodeManager configurados puede aportar tanto disco como recursos de ejecución. Eso es el criterio <strong>e)</strong> en el armario, no solo en el diagrama. Añadir un nodo no es “más carpeta”: es más <strong>HDFS</strong> y más <strong>contenedores</strong>.</p>
 <h2 id="el-nucleo-cuatro-piezas">El núcleo: cuatro piezas<a class="headerlink" href="#el-nucleo-cuatro-piezas" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2289,6 +2293,8 @@
 <p>Para el analista, el clúster <strong>parece</strong> una carpeta enorme (<code>hdfs dfs -ls /</code>). Por debajo hay miles de discos. Las aplicaciones se escriben <strong>sin</strong> programar sockets ni saber la topología: el científico se centra en la pregunta (“noches por hotel”), no en la red.</p>
 <p>Eso no significa que el clúster sea “como un USB enorme”. Hay un NameNode, hay réplicas, hay <em>splits</em>. Pero <strong>el código del job</strong> no abre un socket a <code>datanode-17</code>. Hadoop lo hace.</p>
 <h2 id="el-ecosistema-modulos-que-se-anaden">El ecosistema (módulos que se añaden)<a class="headerlink" href="#el-ecosistema-modulos-que-se-anaden" title="Permanent link">&para;</a></h2>
+<p>Leed la tabla como un recorrido del dato: <strong>entrada → almacenamiento → procesamiento → consulta → coordinación</strong>. Algunos proyectos aparecen por su importancia histórica; que estén en un diagrama no significa que deban instalarse todos. Comprobad compatibilidad y mantenimiento antes de utilizarlos en un proyecto nuevo.</p>
+<p>En el caso del hotel, distinguimos el fichero original, su catálogo o metadatos, el motor que calcula y la herramienta que presenta el resultado. Un catálogo no guarda necesariamente los bytes; un motor SQL no sustituye automáticamente el almacenamiento.</p>
 <p>El RA2 habla del <strong>amplio ecosistema</strong>. No certificáis todos. Sí debéis <strong>citar la familia</strong> y saber <em>cuándo</em> se enchufa. El núcleo <strong>no cambia</strong>: HDFS sigue siendo HDFS cuando llega Hive.</p>
 <pre class="mermaid"><code>flowchart TB
   subgraph nucleo["Núcleo"]
@@ -2408,7 +2414,7 @@
 </table>
 <p>Hasta que no se <strong>reduzca</strong>, hay <strong>duplicados</strong> de clave: dos <code>Laredo</code>, dos <code>Potes</code>, dos <code>Noja</code>.</p>
 <ul>
-<li><strong>Map:</strong> cada bloque emite pares. No suma todavía.</li>
+<li><strong>Map:</strong> cada tarea procesa su split y emite pares. No suma todavía.</li>
 <li><strong>Shuffle / sort:</strong> el clúster <strong>junta</strong> todas las <code>Laredo</code> en el mismo <em>reducer</em> (el gesto de un <code>GROUP BY</code>).</li>
 <li><strong>Reduce:</strong> suma las noches de Laredo (<code>3+1=4</code>), de Potes (<code>5+2=7</code>), etc. Escribe el resultado otra vez en HDFS.</li>
 </ul>
@@ -2421,14 +2427,14 @@
   M3 --&gt; S
   S --&gt; R1["Reduce Laredo, Potes"]
   S --&gt; R2["Reduce Noja, Santander, Comillas"]
-  R1 --&gt; O[HDFS part-r-00000]
-  R2 --&gt; O</code></pre>
+  R1 --&gt; O1[HDFS part-r-00000]
+  R2 --&gt; O2[HDFS part-r-00001]</code></pre>
 <p>Pasos reales (más que “map y ya”):</p>
 <ol>
 <li>Lectura desde HDFS de los ficheros de entrada como pares clave/valor (a menudo la <strong>línea</strong> es el valor; la clave puede ser el <em>offset</em>).</li>
 <li>Cada línea va a un <em>mapper</em>. Hay <strong>tantos <em>mappers</em> como <em>splits</em></strong> (orden de magnitud: tantos como bloques).</li>
 <li>El <em>mapper</em> parsea el hotel (clave) y las noches (valor) y emite <code>(hotel, noches)</code>.</li>
-<li>Para facilitar la agregación, se <strong>ordenan y barajan</strong> los datos por clave. Aquí viajan por la red: es el momento caro si el <em>mapper</em> no es <em>data-local</em>.</li>
+<li>Para facilitar la agregación, se <strong>ordenan y barajan</strong> los datos por clave. Aquí viajan por la red: puede ser costoso incluso si la entrada del mapper era local, porque las claves se reúnen entre tareas.</li>
 <li>El <em>reducer</em> suma las ocurrencias de cada hotel y genera un fichero por <strong>partición</strong> de salida.</li>
 <li>Las partes se ven como <code>part-r-00000</code> (o <code>part-00000</code> en Streaming) más un <code>_SUCCESS</code> si el job acabó bien.</li>
 </ol>
@@ -2436,7 +2442,7 @@
 <p>El criterio <strong>b)</strong> (comprobar el <em>poder</em> del modelo) se cierra cuando <strong>lanzáis</strong> un job, no cuando recitáis las dos palabras. Más abajo hay un <em>Hola job</em>; el <a href="../computacion-distribuida/">2.4</a> insiste en medirlo contra un <code>GROUP BY</code> local.</p>
 <h2 id="yarn-quien-presta-la-cpu">YARN: quién presta la CPU<a class="headerlink" href="#yarn-quien-presta-la-cpu" title="Permanent link">&para;</a></h2>
 <p><strong>YARN</strong> (<em>Yet Another Resource Negotiator</em>) es un <strong>planificador de tareas</strong> y <strong>gestor de recursos</strong> distribuidos. Forma parte de Hadoop desde la <strong>versión 2</strong>. Abstrae la gestión de recursos de los procesos MapReduce: la asignación es más efectiva y <strong>no</strong> está atada a un solo marco.</p>
-<p>Encima conviven <strong>MapReduce v2</strong>, Tez, Impala, Spark… Varias aplicaciones <strong>a la vez</strong>, en el mismo clúster, sin que un <em>wordcount</em> se coma toda la RAM del hotel.</p>
+<p>Pueden ejecutarse sobre YARN <strong>MapReduce v2</strong>, Tez y Spark. Otros motores del ecosistema tienen su propia arquitectura de servicios. Varias aplicaciones <strong>a la vez</strong>, en el mismo clúster, sin que un <em>wordcount</em> se coma toda la RAM del hotel.</p>
 <p>Objetivo: separar en <strong>dos oficios</strong> lo que en Hadoop 1 iba mezclado:</p>
 <ol>
 <li>Un <strong>gestor de procesos</strong> (prioridades, convivencia, recuperación ante fallos).</li>
@@ -2469,7 +2475,7 @@
 </tr>
 <tr>
 <td><strong>NodeManager (NM)</strong></td>
-<td>Uno por <em>worker</em> (junto al DataNode). Tantos NM como DataNodes</td>
+<td>Uno por <em>worker</em> (junto al DataNode). Su número no tiene que coincidir con el de DataNodes</td>
 <td>Siempre; si cae, el RM manda el trabajo a otro</td>
 </tr>
 <tr>
@@ -2488,6 +2494,7 @@
 <p>El AM es una librería <strong>específica del framework</strong> (el AM de MapReduce no es el de Spark): negocia recursos con el RM y trabaja con los NM para ejecutar y vigilar <strong>sus</strong> tareas.</p>
 <p>Si todos los AM vivieran en el maestro, el RM sería un cuello de botella: no podrías lanzar cientos de jobs. Por eso el AM corre en un <strong>worker</strong>.</p>
 <h3 id="resourcemanager">ResourceManager<a class="headerlink" href="#resourcemanager" title="Permanent link">&para;</a></h3>
+<p>Cuando dos aplicaciones compiten, el ResourceManager no les entrega toda la máquina a ambas: aplica las reglas de colas, capacidad y prioridad. Puede haber una aplicación aceptada pero esperando recursos. Esa espera es distinta de una tarea que ya está ejecutándose y tarda mucho.</p>
 <p>Mantiene la lista de NM <strong>vivos</strong> y su holgura. El cliente <strong>siempre</strong> habla con él. El RM:</p>
 <ul>
 <li>aplica <strong>políticas de prioridad</strong> (quién come primero);</li>
@@ -2502,6 +2509,7 @@
 </ul>
 <p>En el <code>config.env</code> del aula veréis un <strong>Capacity Scheduler</strong>: colas (<code>root.default</code>), un tope de aplicaciones (<code>maximum-applications=10000</code>), un porcentaje máximo de recursos para ApplicationMasters (<code>0.1</code>). Eso es política de hotel: <em>el job de gerencia no se come el 100 % del clúster</em>.</p>
 <h3 id="nodemanager">NodeManager<a class="headerlink" href="#nodemanager" title="Permanent link">&para;</a></h3>
+<p>El NodeManager informa de recursos y estado del nodo y supervisa las tareas asignadas. Si una tarea termina con error, necesitamos sus registros para distinguir falta de memoria, dependencia ausente y datos inválidos. Reiniciar todos los servicios sin leer el error elimina pistas y no corrige la causa.</p>
 <p>En cada <em>worker</em>:</p>
 <ul>
 <li>informa al RM del consumo (CPU, memoria) de sus contenedores;</li>
@@ -2523,6 +2531,7 @@
 </div>
 <p>El NM <strong>mata</strong> el proceso que se sale de su caja (más RAM de la pedida). También monta variables de entorno, dependencias y servicios auxiliares (el <em>shuffle</em> de MapReduce es uno: <code>mapreduce_shuffle</code>).</p>
 <h3 id="applicationmaster">ApplicationMaster<a class="headerlink" href="#applicationmaster" title="Permanent link">&para;</a></h3>
+<p>El AM conoce el progreso de <strong>su aplicación</strong>, mientras que el ResourceManager tiene una visión global de los recursos. Esa separación permite que distintas aplicaciones utilicen estrategias de ejecución diferentes sobre el mismo clúster. Un reintento puede recuperar un fallo transitorio; un error determinista del mapper se repetirá.</p>
 <p>Negocia <strong>más</strong> contenedores con el RM, habla con los NM, <strong>coordina</strong> las tareas de <em>su</em> job y vigila el progreso.</p>
 <p>Hay <strong>un AM por aplicación</strong>. Corre en un <em>worker</em> (escalabilidad). Cuando el job acaba, el AM <strong>muere</strong>. RM y NM <strong>siguen</strong> aunque no haya nadie trabajando: son el <em>sistema operativo</em> del clúster. Cada vez que lanzáis un job nuevo, el RM reserva un contenedor y <strong>ahí</strong> nace otro AM.</p>
 <h3 id="secuencia-de-un-job">Secuencia de un job<a class="headerlink" href="#secuencia-de-un-job" title="Permanent link">&para;</a></h3>
@@ -2560,73 +2569,92 @@
 </ol>
 <p>No hace falta la OVA ni el usuario de otro ciclo. Si instaláis a mano en Ubuntu, el artículo típico es “Apache Hadoop en Ubuntu 22.04”; la versión de Hadoop la marca el aula (3.3.x / 3.4.x). El raíz suele ser <code>/opt/hadoop</code> y <code>$HADOOP_HOME/etc/hadoop</code> guarda los XML.</p>
 <h3 id="mini-cluster-docker-de-este-modulo">Mini-clúster Docker de este módulo<a class="headerlink" href="#mini-cluster-docker-de-este-modulo" title="Permanent link">&para;</a></h3>
+<p>Este laboratorio simula las funciones de un clúster en <strong>un ordenador</strong>. Necesitáis Docker con contenedores Linux, memoria suficiente y los ficheros de la carpeta de prácticas descargados juntos. Los comandos <code>docker compose</code> se ejecutan en el host; los comandos <code>hdfs</code>, <code>yarn</code> y <code>mapred</code>, en el Bash del NameNode salvo indicación contraria.</p>
+<p>El directorio local está montado como <code>/practicas</code>, solo para lectura, y los datos HDFS se guardan en volúmenes. <code>docker compose down</code> detiene el laboratorio y conserva esos volúmenes; <code>down -v</code> los elimina. Si ya teníais un clúster creado sin volúmenes, exportad sus ficheros antes de recrearlo con esta configuración.</p>
+<p>Antes de Streaming, ejecutad <code>docker compose exec nodemanager python3 --version</code>. Si no hay intérprete, el docente debe proporcionar una imagen Hadoop con Python 3 en los nodos ejecutores. No basta con tener Python instalado en Windows. Los primeros jobs Java no requieren Python.</p>
 <p>Ficheros en <a href="../../assets/practicas/hotel-hadoop/compose.yaml">hotel-hadoop</a>: proyecto <code>hotel-hadoop</code>, hostnames <code>namenode</code> / <code>resourcemanager</code>. <strong>No</strong> copies el proyecto ni los contenedores <code>iabd-*</code> de otro temario.</p>
 <p><a href="../../assets/practicas/hotel-hadoop/compose.yaml">compose.yaml</a>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hotel-hadoop</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">services</span><span class="p">:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">namenode</span><span class="p">:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">namenode</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"namenode"</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9870:9870"</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">ENSURE_NAMENODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/hadoop-root/dfs/name"</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">datanode</span><span class="p">:</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datanode</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"datanode"</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Mini-clúster de aula (un NameNode, un DataNode, RM y NM).</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Nombres propios del IES: no copies el proyecto iabd-hadoop.</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hotel-hadoop</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">namenode</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">namenode</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"namenode"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"9870:9870"</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">ENSURE_NAMENODE_DIR</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/hadoop-root/dfs/name"</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/practicas</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/practicas:ro</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hdfs_name:/tmp/hadoop-root/dfs/name</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="nt">resourcemanager</span><span class="p">:</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="nt">datanode</span><span class="p">:</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourcemanager</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"resourcemanager"</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8088:8088"</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datanode</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"datanode"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hdfs_data:/tmp/hadoop-root/dfs/data</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span><span class="nt">nodemanager</span><span class="p">:</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span><span class="nt">resourcemanager</span><span class="p">:</span>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodemanager</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"nodemanager"</span><span class="p p-Indicator">]</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourcemanager</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"resourcemanager"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8088:8088"</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span><span class="nt">nodemanager</span><span class="p">:</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodemanager</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"nodemanager"</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">  </span><span class="nt">hdfs_name</span><span class="p">:</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">  </span><span class="nt">hdfs_data</span><span class="p">:</span>
 </span></code></pre></div>
 <p><a href="../../assets/practicas/hotel-hadoop/config.env">config.env</a> (la imagen oficial traduce estas variables a XML):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CORE-SITE.XML_fs.default.name=hdfs://namenode
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>CORE-SITE.XML_fs.defaultFS=hdfs://namenode
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>HDFS-SITE.XML_dfs.namenode.rpc-address=namenode:8020
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>HDFS-SITE.XML_dfs.replication=1
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>MAPRED-SITE.XML_mapreduce.framework.name=yarn
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>MAPRED-SITE.XML_yarn.app.mapreduce.am.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>MAPRED-SITE.XML_mapreduce.map.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>MAPRED-SITE.XML_mapreduce.reduce.env=HADOOP_MAPRED_HOME=$HADOOP_HOME
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>YARN-SITE.XML_yarn.resourcemanager.hostname=resourcemanager
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>YARN-SITE.XML_yarn.nodemanager.pmem-check-enabled=false
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>YARN-SITE.XML_yarn.nodemanager.vmem-check-enabled=false
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>YARN-SITE.XML_yarn.nodemanager.delete.debug-delay-sec=600
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>YARN-SITE.XML_yarn.nodemanager.aux-services=mapreduce_shuffle
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.maximum-applications=10000
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.maximum-am-resource-percent=0.1
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.resource-calculator=org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.queues=default
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.capacity=100
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.user-limit-factor=1
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.maximum-capacity=100
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.state=RUNNING
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_submit_applications=*
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_administer_queue=*
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.node-locality-delay=40
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>CORE-SITE.XML_fs.defaultFS=hdfs://namenode:8020
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>HDFS-SITE.XML_dfs.namenode.rpc-address=namenode:8020
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>HDFS-SITE.XML_dfs.replication=1
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>MAPRED-SITE.XML_mapreduce.framework.name=yarn
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>MAPRED-SITE.XML_yarn.app.mapreduce.am.env=HADOOP_MAPRED_HOME=/opt/hadoop
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>MAPRED-SITE.XML_mapreduce.map.env=HADOOP_MAPRED_HOME=/opt/hadoop
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>MAPRED-SITE.XML_mapreduce.reduce.env=HADOOP_MAPRED_HOME=/opt/hadoop
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>YARN-SITE.XML_yarn.resourcemanager.hostname=resourcemanager
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>YARN-SITE.XML_yarn.nodemanager.pmem-check-enabled=false
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>YARN-SITE.XML_yarn.nodemanager.vmem-check-enabled=false
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>YARN-SITE.XML_yarn.nodemanager.delete.debug-delay-sec=600
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>YARN-SITE.XML_yarn.nodemanager.aux-services=mapreduce_shuffle
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.maximum-applications=10000
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.maximum-am-resource-percent=0.1
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.resource-calculator=org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.queues=default
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.capacity=100
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.user-limit-factor=1
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.maximum-capacity=100
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.state=RUNNING
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_submit_applications=*
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.root.default.acl_administer_queue=*
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.node-locality-delay=40
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings=
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>CAPACITY-SCHEDULER.XML_yarn.scheduler.capacity.queue-mappings-override.enable=false
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>HDFS-SITE.XML_dfs.namenode.name.dir=file:///tmp/hadoop-root/dfs/name
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>HDFS-SITE.XML_dfs.datanode.data.dir=file:///tmp/hadoop-root/dfs/data
 </span></code></pre></div>
 <p>Arranque (PowerShell o bash; <code>docker compose</code> es el plugin actual):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd ruta\docs\assets\practicas\hotel-hadoop
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd docs/assets/practicas/hotel-hadoop
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker compose up -d
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>docker compose exec namenode bash
 </span></code></pre></div>
@@ -2636,8 +2664,9 @@
 <li>YARN (jobs y contenedores): <a href="http://localhost:8088">http://localhost:8088</a></li>
 </ul>
 <p><code>ENSURE_NAMENODE_DIR</code> le dice a la imagen que <strong>prepare</strong> el directorio del NameNode la primera vez (equivale, en espíritu, a no tener que formatear a mano en este compose). En una VM clásica <strong>sí</strong> formateáis vosotros.</p>
-<p>En el portátil, <code>dfs.replication=1</code>: no hay tres discos. En el hotel de verdad, <strong>3</strong>. <code>pmem-check</code> y <code>vmem-check</code> a <code>false</code> evitan que el NodeManager mate tareas por límites de memoria <strong>virtual</strong> demasiado estrictos en Docker (un clásico de aula).</p>
+<p>En el portátil, <code>dfs.replication=1</code>: no hay tres discos. En el hotel de verdad, <strong>3</strong>. <code>pmem-check</code> y <code>vmem-check</code> a <code>false</code> evitan que el NodeManager mate tareas por límites de memoria <strong>física y virtual</strong> demasiado estrictos en Docker (un clásico de aula).</p>
 <h3 id="ficheros-xml-hadoop_homeetchadoop">Ficheros XML (<code>$HADOOP_HOME/etc/hadoop</code>)<a class="headerlink" href="#ficheros-xml-hadoop_homeetchadoop" title="Permanent link">&para;</a></h3>
+<p>Cada propiedad configura una responsabilidad. <code>fs.defaultFS</code> indica a los clientes el sistema de ficheros por defecto; <code>dfs.replication</code> solicita copias por bloque; <code>mapreduce.framework.name</code> selecciona YARN; la dirección del ResourceManager permite localizar al coordinador de recursos. Cambiar una propiedad en un contenedor no actualiza mágicamente todos los demás: la configuración debe ser coherente entre servicios.</p>
 <p>Tanto en la VM como en Docker el raíz suele ser <code>/opt/hadoop</code>. En <em>pseudo-distribuido</em> veréis <code>localhost</code> o el hostname de <strong>esa</strong> máquina. No copies el hostname de otro instituto.</p>
 <p><strong><code>core-site.xml</code></strong> — cuál es el sistema de ficheros y <strong>quién</strong> es el NameNode:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;configuration&gt;</span>
@@ -2697,6 +2726,7 @@
 <p>En el compose de este módulo, <code>ENSURE_NAMENODE_DIR</code> cubre ese primer arranque.</p>
 <p>Si no podéis con la VM ni con Docker, el plan B del ciclo es un servicio cloud (EMR). El oficio (NameNode, YARN, un job) <strong>es el mismo</strong>; cambian los clics.</p>
 <h2 id="arrancar-y-mirar">Arrancar y mirar<a class="headerlink" href="#arrancar-y-mirar" title="Permanent link">&para;</a></h2>
+<p>Los comandos <code>start-dfs.sh</code> y <code>start-yarn.sh</code> siguientes corresponden a una <strong>instalación tradicional</strong>. En el Compose ya se arranca un servicio por contenedor: usad <code>docker compose ps</code> y <code>docker compose logs nombre_servicio</code>. No ejecutéis un segundo arranque dentro del contenedor. <code>jps</code> muestra únicamente procesos Java del entorno desde el que se invoca, no todos los del clúster.</p>
 <p>En una instalación clásica (scripts en <code>$HADOOP_HOME/sbin</code>):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>start-dfs.sh      # NameNode, DataNodes y Secondary NameNode
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>jps               # ¿qué procesos Java hay?
@@ -2719,6 +2749,8 @@
 </ul>
 <p>En Docker no usáis <code>start-dfs.sh</code>: cada <strong>servicio</strong> del compose <em>es</em> un proceso (<code>hdfs namenode</code>, <code>yarn resourcemanager</code>…). El equivalente de <code>jps</code> es <code>docker compose ps</code> más entrar al contenedor.</p>
 <h2 id="primer-job-el-wordcount-y-el-nuestro">Primer job: el <em>wordcount</em> (y el nuestro)<a class="headerlink" href="#primer-job-el-wordcount-y-el-nuestro" title="Permanent link">&para;</a></h2>
+<p>Primero verificamos la entrada: el fichero local debe existir en <code>/practicas</code>, la copia HDFS debe contener las mismas líneas y el directorio de salida debe ser nuevo. El cliente carga la entrada, pero las tareas leen desde HDFS. Si aparece <code>FileNotFound</code>, comprobad si el mensaje se refiere a la ruta local o a la ruta HDFS: son espacios diferentes.</p>
+<p>Los comandos con <code>$HADOOP_HOME</code> y <code>\</code> al final de línea se ejecutan en <strong>Bash del contenedor</strong>. El patrón del jar debe localizar un único archivo de ejemplos de la instalación.</p>
 <p>El “Hola mundo” histórico de Hadoop cuenta <strong>palabras</strong> de un texto. Hadoop trae ejemplos ya compilados en <code>$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar</code> (<code>wordcount</code>, <code>pi</code>, <em>grep</em>…).</p>
 <p>En este módulo <strong>no</strong> usamos el Quijote como caso de gerencia. Contáis palabras de <a href="../../assets/practicas/hotel-hadoop/opiniones.txt">opiniones.txt</a> (reseñas de Laredo, Potes, Santander, Noja y Comillas) o noches de <a href="../../assets/practicas/hotel-hadoop/reservas.csv">reservas.csv</a>. El jar de ejemplo sirve igual: entra un fichero, sale un recuento.</p>
 <p>Comandos de HDFS (el detalle de cada uno está en el <a href="../hdfs/">2.3</a>):</p>
@@ -2726,8 +2758,8 @@
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>hdfs dfs -put opiniones.txt /user/bda/
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>hdfs dfs -ls /user/bda
 </span></code></pre></div>
-<p>El <em>wordcount</em> (sustituid la versión del jar por la de vuestra instalación; <code>3.3.6</code> y <code>3.4.x</code> conviven en aulas):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
+<p>El <em>wordcount</em> (el patrón del jar debe coincidir con un único fichero de ejemplos de vuestra instalación):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  wordcount /user/bda/opiniones.txt /user/bda/salida_wc
 </span></code></pre></div>
 <p><code>hadoop jar …</code> hace <strong>lo mismo</strong> en Hadoop 3: acaba hablando con YARN. En textos viejos veréis solo <code>hadoop jar</code>.</p>
@@ -2812,7 +2844,7 @@
 </tr>
 <tr>
 <td><code>Data-local map tasks</code></td>
-<td>¿El map corrió <strong>en el nodo que tenía el bloque</strong>? Si es 0 en un clúster grande, algo va mal (red de más)</td>
+<td>¿El map corrió <strong>en el nodo que tenía el bloque</strong>? Si es 0, revisad topología y planificación; en este laboratorio los servicios viven en contenedores separados y no se garantiza localidad</td>
 </tr>
 <tr>
 <td><code>Map input records</code></td>
@@ -2852,8 +2884,9 @@
 </span></code></pre></div>
 <p><code>-ls</code> ve la carpeta; <code>-cat</code> / <code>-head</code> ven el recuento. En la autoevaluación del temario de referencia esas dos preguntas salen tal cual: son el gesto mínimo de “el job existió”.</p>
 <h3 id="el-estimador-de-paralelismo-visible">El estimador de π (paralelismo visible)<a class="headerlink" href="#el-estimador-de-paralelismo-visible" title="Permanent link">&para;</a></h3>
+<p>Este ejemplo permite observar tareas, pero con muy pocas muestras el tiempo está dominado por el arranque. Para comparar paralelismo manteniendo la carga, contrastad <code>pi 8 25000</code> y <code>pi 4 50000</code>: ambas configuraciones usan 200 000 muestras. El número de maps cambia; el trabajo total de muestreo se mantiene. Registrad además si YARN pudo ejecutarlos simultáneamente.</p>
 <p>Otro ejemplo del mismo jar:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  pi 8 24
 </span></code></pre></div>
 <p>Estima π con <strong>8</strong> <em>maps</em> y <strong>24</strong> muestras por map. Si cambiáis a <code>pi 4 50</code>:</p>
@@ -2863,6 +2896,7 @@
 </ul>
 <p>No es “el botón mágico de Hadoop”. Es un job que <strong>parte</strong> un experimento de Montecarlo. El resultado <strong>varía</strong> un poco: es una estimación, no una constante memorizada. El criterio <strong>b)</strong> aquí es <em>ver</em> 8 mapas en el 8088, no recitar 3,1416.</p>
 <h2 id="mapreduce-en-python-hadoop-streaming">MapReduce en Python: Hadoop Streaming<a class="headerlink" href="#mapreduce-en-python-hadoop-streaming" title="Permanent link">&para;</a></h2>
+<p>Aquí <strong>Streaming</strong> nombra la comunicación de los procesos por entrada y salida estándar. Sigue siendo un trabajo <strong>por lotes</strong> sobre una entrada finita: no es procesamiento continuo de eventos. El mapper escribe solo pares válidos en <code>stdout</code>; los mensajes de diagnóstico van a <code>stderr</code>, para no contaminar los datos del reducer.</p>
 <p>El API nativo de MapReduce está escrito en <strong>Java</strong>. <strong>Hadoop Streaming</strong> permite cualquier lenguaje que lea <code>stdin</code> y escriba <code>stdout</code> (la tubería Unix <code>|</code>). Hadoop manda el crudo al <em>mapper</em>; tras el <em>shuffle</em>, al <em>reducer</em>.</p>
 <p>Oficio: no reescribís el <em>framework</em>. Escribís dos scripts tontos y <strong>el clúster</strong> los reparte.</p>
 <p>Los scripts de esta página están en <a href="../../assets/practicas/hotel-hadoop/mapper.py">hotel-hadoop</a>: <a href="../../assets/practicas/hotel-hadoop/mapper.py">mapper.py</a>, <a href="../../assets/practicas/hotel-hadoop/reducer.py">reducer.py</a>, y el par de <strong>noches por hotel</strong> (<a href="../../assets/practicas/hotel-hadoop/mapper_noches.py">mapper_noches.py</a>, <a href="../../assets/practicas/hotel-hadoop/reducer_noches.py">reducer_noches.py</a>).</p>
@@ -2882,7 +2916,7 @@
 </span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>        <span class="k">if</span> <span class="n">palabra</span><span class="p">:</span>
 </span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">palabra</span><span class="si">}</span><span class="se">\t</span><span class="s2">1"</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Prueba <strong>local</strong>, sin clúster (PowerShell redirige igual):</p>
+<p>Prueba <strong>local en Bash</strong>, sin clúster (la variante de PowerShell aparece después):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python mapper.py &lt; opiniones.txt
 </span></code></pre></div>
 <p>Salida (recorte):</p>
@@ -2938,41 +2972,40 @@
 <p>El <em>wordcount</em> demuestra Streaming. El job del RA2 es el agregado:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python mapper_noches.py &lt; reservas.csv | sort | python reducer_noches.py
 </span></code></pre></div>
-<p>El <em>mapper</em> salta la cabecera (<code>id_reserva,…</code>), parte por comas y emite <code>Laredo\t3</code>. El <em>reducer</em> suma. El <a href="../computacion-distribuida/">2.4</a> os pide <strong>contrastar</strong> esa salida con un <code>GROUP BY</code> en DuckDB o pandas sobre el mismo CSV.</p>
+<p>El <em>mapper</em> salta la cabecera (<code>id_reserva,…</code>), interpreta las cinco columnas CSV, valida los campos y emite <code>Laredo\t3</code>. El <em>reducer</em> suma. El <a href="../computacion-distribuida/">2.4</a> os pide <strong>contrastar</strong> esa salida con un <code>GROUP BY</code> en DuckDB o pandas sobre el mismo CSV.</p>
+<p>Las tuberías anteriores con <code>&lt; fichero</code> son de <strong>Bash</strong>. En PowerShell, para el fichero pequeño, utilizad:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">Get-Content</span> <span class="n">opiniones</span><span class="p">.</span><span class="n">txt</span> <span class="p">|</span> <span class="n">python</span> <span class="n">mapper</span><span class="p">.</span><span class="n">py</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="p">|</span> <span class="n">python</span> <span class="n">reducer</span><span class="p">.</span><span class="n">py</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">Get-Content</span> <span class="n">reservas</span><span class="p">.</span><span class="n">csv</span> <span class="p">|</span> <span class="n">python</span> <span class="n">mapper_noches</span><span class="p">.</span><span class="n">py</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="p">|</span> <span class="n">python</span> <span class="n">reducer_noches</span><span class="p">.</span><span class="n">py</span>
+</span></code></pre></div>
+<p>El resultado completo de noches y su comprobación independiente están en <a href="../computacion-distribuida/">2.4</a>. En ambas pruebas debe usarse el CSV de esta carpeta, no uno de UT1 con otras columnas.</p>
 <h3 id="lanzar-en-el-cluster">Lanzar en el clúster<a class="headerlink" href="#lanzar-en-el-cluster" title="Permanent link">&para;</a></h3>
-<p>Sintaxis general:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>mapred streaming \
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  -input carpetaOFicheroHDFS \
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>  -output carpetaSalidaHDFS \
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>  -mapper scriptMapper \
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>  -reducer scriptReducer
+<p>Entrad en el Bash del NameNode, donde la carpeta de prácticas está montada, y verificad que Python 3 existe también en el NodeManager. Al invocar explícitamente <code>python3</code>, los scripts no necesitan permiso de ejecución. Guardad los ficheros como UTF-8.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nb">cd</span><span class="w"> </span>/practicas
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>-p<span class="w"> </span>/user/bda
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>-f<span class="w"> </span>opiniones.txt<span class="w"> </span>/user/bda/opiniones.txt
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>mapred<span class="w"> </span>streaming<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span>-files<span class="w"> </span>mapper.py,reducer.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">  </span>-input<span class="w"> </span>/user/bda/opiniones.txt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">  </span>-output<span class="w"> </span>/user/bda/salida_stream_01<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">  </span>-mapper<span class="w"> </span><span class="s2">"python3 mapper.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">  </span>-reducer<span class="w"> </span><span class="s2">"python3 reducer.py"</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span><span class="s1">'/user/bda/salida_stream_01/part-*'</span>
 </span></code></pre></div>
-<p>Permisos de ejecución (Linux / contenedor). Sin <code>+x</code>, Streaming no puede lanzar el script:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>chmod u+x mapper.py reducer.py
+<p><code>-files</code> distribuye los ficheros a los directorios de trabajo de las tareas. Las rutas de entrada y salida son HDFS; los scripts se toman del directorio local del cliente. Sin distribuirlos o instalarlos en los workers, no basta con que estén en el NameNode. En documentación antigua veréis <code>-file</code>; aquí utilizamos la opción genérica <code>-files</code> antes de las opciones de Streaming.</p>
+<p>El mismo envío puede realizarse con el jar de Streaming:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>hadoop<span class="w"> </span>jar<span class="w"> </span><span class="s2">"</span><span class="nv">$HADOOP_HOME</span><span class="s2">"</span>/share/hadoop/tools/lib/hadoop-streaming-*.jar<span class="w"> </span>-help
 </span></code></pre></div>
-<p>Si los scripts están <strong>solo</strong> en vuestro disco (el caso habitual de aula), <code>-file</code> <strong>los sube</strong> al job:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>mapred streaming \
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  -input /user/bda/opiniones.txt \
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  -output /user/bda/salida_stream \
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>  -mapper mapper.py -file mapper.py \
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>  -reducer reducer.py -file reducer.py
+<p>Para repetir, elegid otra carpeta de salida y conservad la anterior hasta comparar. No supongáis un nombre fijo para la parte de salida: listad el directorio y leed <code>part-*</code>.</p>
+<p>El agregado de noches utiliza el mismo mecanismo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>-f<span class="w"> </span>reservas.csv<span class="w"> </span>/user/bda/reservas.csv
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>mapred<span class="w"> </span>streaming<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span>-files<span class="w"> </span>mapper_noches.py,reducer_noches.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span>-input<span class="w"> </span>/user/bda/reservas.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">  </span>-output<span class="w"> </span>/user/bda/salida_noches_01<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="w">  </span>-mapper<span class="w"> </span><span class="s2">"python3 mapper_noches.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="w">  </span>-reducer<span class="w"> </span><span class="s2">"python3 reducer_noches.py"</span>
 </span></code></pre></div>
-<p>Sin <code>-file</code>, Hadoop busca el script <strong>ya</strong> en HDFS (o en la ruta del contenedor). Si la carpeta de salida existe: <code>hdfs dfs -rm -r /user/bda/salida_stream</code>.</p>
-<p>En Hadoop <strong>1.x</strong> no existía <code>mapred streaming</code>. Se usaba:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>  -input ... -output ... -mapper ... -reducer ...
-</span></code></pre></div>
-<p>Comprobar:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>hdfs dfs -head /user/bda/salida_stream/part-00000
-</span></code></pre></div>
-<p>Ojo al nombre: el jar de ejemplos escribe <code>part-r-00000</code>; Streaming suele escribir <code>part-00000</code>. El <code>_SUCCESS</code> es el mismo oficio.</p>
-<p>El job de noches:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>mapred streaming \
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>  -input /user/bda/reservas.csv \
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>  -output /user/bda/salida_noches \
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>  -mapper mapper_noches.py -file mapper_noches.py \
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>  -reducer reducer_noches.py -file reducer_noches.py
-</span></code></pre></div>
+<p><strong>Diagnóstico:</strong> salida ya existente → nueva ruta; <code>python3</code> ausente → revisar imagen del worker; registro inválido → comprobar contrato del CSV; aplicación esperando → revisar recursos YARN. Un estado final correcto debe acompañarse de los totales esperados del <a href="../computacion-distribuida/">2.4</a>.</p>
 <h2 id="relacion-con-el-ra2">Relación con el RA2<a class="headerlink" href="#relacion-con-el-ra2" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3013,9 +3046,9 @@
 <ol>
 <li>Arranca HDFS y YARN (<code>jps</code> o <code>docker compose ps</code>; UI <strong>9870</strong> y <strong>8088</strong>). Explica qué proceso es cada uno y por qué el Secondary NameNode <strong>no</strong> es el standby.</li>
 <li>Sube <a href="../../assets/practicas/hotel-hadoop/opiniones.txt">opiniones.txt</a>. Lanza el <code>wordcount</code> del jar. Lista la carpeta de salida y lee <code>part-r-00000</code>. ¿Cuántos <em>maps</em> salieron? ¿Por qué? ¿Qué pasa si vuelves a lanzar <strong>sin</strong> borrar la carpeta?</li>
-<li>Lanza <code>yarn jar … pi 8 24</code>. Cambia a <code>pi 4 50</code>. ¿Qué cambia: el paralelismo, la muestra por map, ambos? ¿El número que imprime es exactamente π?</li>
-<li>Streaming con <a href="../../assets/practicas/hotel-hadoop/mapper.py">mapper.py</a> y <a href="../../assets/practicas/hotel-hadoop/reducer.py">reducer.py</a>: limpia puntuación y unifica mayúsculas. Comprueba en HDFS el <code>part-00000</code>. Luego el par <strong>noches</strong> (<code>mapper_noches.py</code> / <code>reducer_noches.py</code>) y contrasta con un <code>GROUP BY</code> local (<a href="../computacion-distribuida/">2.4</a>).</li>
-<li>Arranca el <em>History Server</em>. Relaciona un <code>application_…</code> de la UI de YARN con la carpeta de HDFS (<code>_SUCCESS</code>, <em>counters</em>, URL del proxy).</li>
+<li>Lanza <code>yarn jar … pi 8 24</code> y después <code>pi 4 50</code>: explica por qué cambian tanto el número de maps como las muestras totales. Para comparar con la misma carga utiliza <code>pi 8 25000</code> y <code>pi 4 50000</code>. Registra tiempo y concurrencia; el resultado es una estimación, no una prueba de velocidad con solo unas pocas muestras.</li>
+<li>Streaming con <a href="../../assets/practicas/hotel-hadoop/mapper.py">mapper.py</a> y <a href="../../assets/practicas/hotel-hadoop/reducer.py">reducer.py</a>: limpia puntuación y unifica mayúsculas. Lista la salida y comprueba en HDFS todos los <code>part-*</code>. Luego el par <strong>noches</strong> (<code>mapper_noches.py</code> / <code>reducer_noches.py</code>) y contrasta con un <code>GROUP BY</code> local (<a href="../computacion-distribuida/">2.4</a>).</li>
+<li>Relaciona un <code>application_…</code> de YARN con su entrada, salida, estado final y contadores. Como ampliación, utiliza el History Server si el entorno del docente lo tiene configurado. El Compose básico no incluye ese servicio; no presentes su ausencia como un fallo del job.</li>
 </ol>
 <h2 id="referencias-para-profundizar-no-para-copiar-la-practica">Referencias (para profundizar, no para copiar la práctica)<a class="headerlink" href="#referencias-para-profundizar-no-para-copiar-la-practica" title="Permanent link">&para;</a></h2>
 <ul>

@@ -1338,6 +1338,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Las mismas promesas que el 2.8">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecutar-python-dentro-de-la-red-del-replica-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar Python dentro de la red del replica set
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1392,6 +1409,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-comprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de comprobación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1601,6 +1635,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Las mismas promesas que el 2.8">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ejecutar-python-dentro-de-la-red-del-replica-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejecutar Python dentro de la red del replica set
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1655,6 +1706,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-comprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de comprobación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1763,14 +1831,16 @@
 
 
 <h1 id="29-mongodb-y-python">2.9. MongoDB y Python<a class="headerlink" href="#29-mongodb-y-python" title="Permanent link">&para;</a></h1>
-<p>Recepción no abre <code>mongosh</code> a las ocho: abre un <strong>script</strong>. <a href="https://www.mongodb.com/docs/languages/python/pymongo-driver/current/">PyMongo</a> es el conector oficial. Aquí comprobáis el criterio <strong>b)</strong> (el procesamiento lo lanza la <em>app</em>) y el <strong>d)</strong> (metéis <code>mascota</code> en 2027 y los <code>find</code> de 2026 <strong>no</strong> se rompen).</p>
+<p>Gerencia puede obtener el parte de las ocho mediante un <strong>script</strong>, sin escribir consultas manualmente en <code>mongosh</code>. <a href="https://www.mongodb.com/docs/languages/python/pymongo-driver/current/">PyMongo</a> es el conector oficial. Aquí comprobáis el criterio <strong>b)</strong> (el procesamiento lo lanza la <em>app</em>) y el <strong>d)</strong> (metéis <code>mascota</code> en 2027 y los <code>find</code> de 2026 <strong>no</strong> se rompen).</p>
 <p>El <em>shell</em> del <a href="../mongodb/">2.6</a> enseña el oficio. Python es el mismo gesto con otro teclado: filtro, proyección, cursor, <em>pipeline</em>, <code>WriteConcern</code>. Las reservas y opiniones son las del hotel, no un catálogo de cine ni el proyecto de otro ciclo.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Windows: .venv\Scripts\activate</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span>pymongo
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"pymongo&gt;=4,&lt;5"</span>
 </span></code></pre></div>
-<p>En el aula usad <strong>4.x</strong> (la que instale <code>pip</code> ese día). La URI típica es <code>mongodb://localhost:27017</code>. Atlas trae usuario, <code>tls</code> y a menudo <code>mongodb+srv://</code>. <strong>No</strong> subáis la URI con contraseña a Moodle en claro.</p>
+<p>En el aula usad <strong>PyMongo 4.x</strong> y anotad la versión instalada. La URI típica es <code>mongodb://localhost:27017</code>. Atlas trae usuario, <code>tls</code> y a menudo <code>mongodb+srv://</code>. <strong>No</strong> subáis la URI con contraseña a Moodle en claro.</p>
 <h2 id="el-primer-cable">El primer cable<a class="headerlink" href="#el-primer-cable" title="Permanent link">&para;</a></h2>
+<p>Importad una sola vez los JSONL en <code>hotel</code>: deben existir <strong>15 reservas y 6 opiniones</strong>. Las consultas de este bloque utilizan esos datos originales. <code>MongoClient</code> crea un cliente, el acceso a <code>cliente["hotel"]</code> obtiene una referencia a la base y <code>find_one</code> envía una consulta. No son tres formas equivalentes de conectar.</p>
+<p>En programas completos, reutilizad el cliente y cerradlo al terminar, por ejemplo con <code>with MongoClient(...) as cliente:</code>. Para comprobar conectividad de manera explícita utilizad <code>cliente.admin.command("ping")</code>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">"mongodb://localhost:27017"</span><span class="p">)</span>
@@ -1780,7 +1850,7 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">reservas</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="n">reservas</span>      <span class="c1"># o hotel["reservas"]</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">reservas</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">}))</span>
 </span></code></pre></div>
-<p>Si no habéis importado aún, desde la <strong>raíz del repo</strong> y con <code>mongoimport</code> instalado en el PC (el contenedor no lo trae; el detalle está en el <a href="../mongodb/">2.6</a>):</p>
+<p>Si no habéis importado aún, desde la <strong>raíz del repo</strong> y con <code>mongoimport</code> instalado en el PC (el procedimiento y la comprobación de carga están en el <a href="../mongodb/">2.6</a>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mongoimport<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">27017</span><span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>reservas<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/reservas_mongo.jsonl
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mongoimport<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">27017</span><span class="w"> </span>--db<span class="w"> </span>hotel<span class="w"> </span>--collection<span class="w"> </span>opiniones<span class="w"> </span>--file<span class="w"> </span>docs/assets/practicas/hotel-mongo/opiniones.jsonl
 </span></code></pre></div>
@@ -1789,7 +1859,9 @@
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">python</span> <span class="n">docs</span><span class="p">/</span><span class="n">assets</span><span class="p">/</span><span class="n">practicas</span><span class="p">/</span><span class="n">hotel-pymongo</span><span class="p">/</span><span class="n">parte_gerencia</span><span class="p">.</span><span class="n">py</span>
 </span></code></pre></div>
 <h2 id="una-llave-no-un-enchufe-por-clic">Una llave, no un enchufe por clic<a class="headerlink" href="#una-llave-no-un-enchufe-por-clic" title="Permanent link">&para;</a></h2>
-<p><code>MongoClient</code> <strong>no</strong> es “abro el socket, pregunto, cierro”. Arranca un <strong><em>pool</em></strong> (por defecto, del orden de <strong>100</strong> conexiones). Cada <code>find</code> toma una y la suelta. Abrir un cliente <strong>dentro</strong> del <code>for</code> de un Flask es el error clásico.</p>
+<p>Un cliente gestiona conexiones y descubre la topología. Crear uno por documento desperdicia ese trabajo. <code>connectTimeoutMS</code> limita el establecimiento de una conexión; <code>serverSelectionTimeoutMS</code> limita cuánto se busca un servidor adecuado. Ninguno equivale a cancelar automáticamente una escritura ya realizada.</p>
+<p>Las opciones de reintento no hacen idempotente cualquier código de aplicación. Si el programa no sabe si se confirmó una operación, necesita un identificador de negocio para comprobarla y evitar duplicarla. Los errores mostrados al alumnado no deben imprimir una URI que pudiera contener contraseña.</p>
+<p><code>MongoClient</code> <strong>no</strong> es “abro el socket, pregunto, cierro”. Mantiene un <strong><em>pool</em></strong> que crece según la demanda, con un límite predeterminado de 100 conexiones por servidor; no abre 100 de golpe. Cada <code>find</code> toma una y la suelta. Abrir un cliente <strong>dentro</strong> del <code>for</code> de un Flask es el error clásico.</p>
 <p>Podéis pasar la URI o trocearla. Opciones que en el hotel importan:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">"mongodb://localhost:27017"</span><span class="p">,</span>
@@ -1808,8 +1880,10 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">uri</span> <span class="o">=</span> <span class="s2">"mongodb://rs-laredo:27017,rs-potes:27017,rs-noja:27017/?replicaSet=hotelrs"</span>
 </span></code></pre></div>
 <p>En Atlas, <code>mongodb+srv://…</code> ya lista los miembros. <code>tls=True</code> va en la cadena. El <em>pool</em> ve los tres <em>hosts</em>; no hace falta “elegir el primario a mano”.</p>
-<p><strong>Pereza:</strong> <code>cliente.hotel</code> y <code>hotel.reservas</code> <strong>no</strong> crean nada en disco hasta el primer <code>insert</code>. Un typo (<code>cliente.htel</code>) no falla al instante: falla cuando escribís.</p>
+<p><strong>Pereza:</strong> <code>cliente.hotel</code> y <code>hotel.reservas</code> <strong>no</strong> crean nada en disco hasta el primer <code>insert</code>. Un typo (<code>cliente.htel</code>) no falla al instante: puede crear una base equivocada al escribir. Verificad el nombre antes de cargar datos.</p>
 <h2 id="preguntar-sin-vaciar-el-bson">Preguntar sin vaciar el BSON<a class="headerlink" href="#preguntar-sin-vaciar-el-bson" title="Permanent link">&para;</a></h2>
+<p>Construid primero el filtro como diccionario de Python. Las claves de operadores son cadenas (<code>"$gte"</code>); los booleanos son <code>True</code> y <code>False</code>, y el valor nulo es <code>None</code>. Copiar literalmente <code>true</code> del shell JavaScript produce un error en Python.</p>
+<p>Una consulta vacía no demuestra fallo de conexión: puede no haber coincidencias. Contrastad <code>count_documents({})</code>, base y filtro. Al convertir un cursor completo en JSON o en una lista, cargáis sus resultados en memoria; el ejemplo siguiente limita la salida a diez documentos.</p>
 <p><code>find</code> devuelve un <strong>cursor</strong>, no una lista. <code>count_documents</code> cuenta con el mismo filtro.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">filtro</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$gte"</span><span class="p">:</span> <span class="mi">3</span><span class="p">}}</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">reservas</span><span class="o">.</span><span class="n">count_documents</span><span class="p">(</span><span class="n">filtro</span><span class="p">))</span>
@@ -1822,12 +1896,14 @@
 <p>BSON no es JSON. Para volcar a un fichero o a una API:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">bson.json_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">cursor</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">})</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">cursor</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">})</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">dumps</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </span></code></pre></div>
 <p><code>ObjectId</code> y fechas salen con <code>$oid</code> / <code>$date</code>. <code>json.dumps</code> de la biblioteca estándar <strong>rompe</strong> con esos tipos.</p>
 <h2 id="el-parte-agregacion-en-el-motor">El parte: agregación en el motor<a class="headerlink" href="#el-parte-agregacion-en-el-motor" title="Permanent link">&para;</a></h2>
-<p>El criterio <strong>b)</strong> aquí no es YARN: es <strong>dejar el trabajo en Mongo</strong> (<code>aggregate</code>) y que Python solo <strong>imprima</strong>. Tres fases que gerencia pide cada mañana: filtrar, agrupar, ordenar.</p>
+<p>Seguid la forma de los datos después de cada etapa. <code>$match</code> conserva reservas que cumplen el filtro; <code>$group</code> produce un documento por hotel; <code>$sort</code> ordena esos resúmenes. En <code>$sum: "$noches"</code>, el valor es una referencia al campo; en <code>$sum: 1</code>, se cuenta un documento.</p>
+<p><code>media</code> en el ejemplo es la <strong>media del importe por reserva</strong>, no el precio medio por noche. Este último exigiría dividir el importe total entre las noches totales, especificando qué reservas entran. Y la suma de noches no es un porcentaje de ocupación: faltan calendario y capacidad.</p>
+<p>Aquí aprendemos a <strong>dejar el trabajo en Mongo</strong> (<code>aggregate</code>) y que Python solo reciba el resultado. Una agregación sobre un servidor independiente no demuestra computación distribuida; esa evidencia se obtiene con el experimento del <a href="../computacion-distribuida/">2.4</a>. Tres fases que gerencia pide cada mañana: filtrar, agrupar, ordenar.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">DESCENDING</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="p">[</span>
@@ -1869,7 +1945,10 @@
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">"hotel"</span><span class="p">],</span> <span class="s2">"opiniones:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">"criticas"</span><span class="p">]))</span>
 </span></code></pre></div>
 <p>Si la opinión apuntara a <code>_id</code> de una reserva, el <code>localField</code> sería <code>_id</code> y el <code>foreignField</code> un <code>ObjectId</code> guardado. Si <strong>cada</strong> pantalla necesita <code>$lookup</code>, el <a href="../modelado/">2.7</a> os está pidiendo embeber un trozo.</p>
+<p>En el <code>$lookup</code> anterior, cada reserva de Laredo recibe las opiniones de ese hotel. Con los datos originales salen <strong>tres reservas</strong>, cada una con <strong>dos opiniones</strong>. Sumar los tamaños de esos arrays daría seis asociaciones, no seis opiniones distintas. Para una fila por hotel, agrupad primero o consultad una colección de hoteles.</p>
+<p><code>$unwind</code> genera una fila por elemento del array. Si una reserva tiene dos extras, participa en dos filas: no suméis después su importe como si cada fila fuera una reserva diferente sin decidir cómo evitar la duplicación.</p>
 <h2 id="el-cursor-cortar-ordenar-saltar">El cursor: cortar, ordenar, saltar<a class="headerlink" href="#el-cursor-cortar-ordenar-saltar" title="Permanent link">&para;</a></h2>
+<p>Para comparar cursor y pipeline, consumid ambos sobre los mismos datos, con idéntico filtro, proyección y orden. En el fichero original Potes tiene importes 124, 490 y 280: los dos mayores son <strong>490 y 280</strong>. Si hay empates, añadid <code>_id</code> como desempate en ambos. La equivalencia no significa que cualquier cadena arbitraria de etapas produzca el mismo resultado.</p>
 <p>Lo que en el <em>pipeline</em> es <code>$limit</code> / <code>$sort</code> / <code>$skip</code>, en el cursor son métodos <strong>encadenados</strong>. Mismo resultado; elegid uno y no mezcléis sin motivo.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASCENDING</span><span class="p">,</span> <span class="n">DESCENDING</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
@@ -1894,169 +1973,205 @@
 </span></code></pre></div>
 <p>Paginación de aula: <code>.sort("checkin", ASCENDING).skip(10).limit(10)</code>. En colecciones <strong>enormes</strong>, <code>skip</code> recorre lo saltado: mejor un rango (<code>"_id": {"$gt": ultimo}</code>).</p>
 <h2 id="escribir-borrar-enmendar">Escribir, borrar, enmendar<a class="headerlink" href="#escribir-borrar-enmendar" title="Permanent link">&para;</a></h2>
+<p>Realizad las modificaciones sobre la base <code>hotel_escrituras</code>, preparada en el <a href="../mongodb/">2.6</a>. Antes de continuar, reasignad los manejadores:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">hotel</span> <span class="o">=</span> <span class="n">cliente</span><span class="p">[</span><span class="s2">"hotel_escrituras"</span><span class="p">]</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">reservas</span> <span class="o">=</span> <span class="n">hotel</span><span class="p">[</span><span class="s2">"reservas"</span><span class="p">]</span>
+</span></code></pre></div>
+<p>Así las altas y cambios no alteran los 15 documentos originales del parte. En las respuestas de escritura distinguimos que el servidor haya confirmado la operación, que haya encontrado un documento y que realmente lo haya cambiado.</p>
 <h3 id="altas">Altas<a class="headerlink" href="#altas" title="Permanent link">&para;</a></h3>
+<p>Conservad <code>inserted_id</code> si otra colección necesita referenciar el documento. El identificador puede ser un <code>ObjectId</code> u otro tipo permitido: no lo convirtáis automáticamente a <code>ObjectId</code>. Si <code>find_one</code> devuelve <code>None</code>, comprobádlo antes de acceder a <code>["_id"]</code>.</p>
 <p><code>insert_one</code> → <code>InsertOneResult</code>: <code>acknowledged</code> (falso si <code>w=0</code>) e <code>inserted_id</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">alta</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Noja"</span><span class="p">,</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"recepcion"</span><span class="p">,</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="s2">"importe"</span><span class="p">:</span> <span class="mi">110</span><span class="p">,</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="s2">"mascota"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>   <span class="c1"># d): el campo no existía en 2026</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">})</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">alta</span><span class="o">.</span><span class="n">acknowledged</span><span class="p">,</span> <span class="n">alta</span><span class="o">.</span><span class="n">inserted_id</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">alta</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Noja"</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"recepcion"</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="s2">"importe"</span><span class="p">:</span> <span class="mi">110</span><span class="p">,</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="s2">"mascota"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>   <span class="c1"># d): el campo no existía en 2026</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">})</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">alta</span><span class="o">.</span><span class="n">acknowledged</span><span class="p">,</span> <span class="n">alta</span><span class="o">.</span><span class="n">inserted_id</span><span class="p">)</span>
 </span></code></pre></div>
 <p><code>insert_many</code> → <code>InsertManyResult</code> (lista de ids). Una opinión que <strong>señala</strong> una reserva concreta:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">bson.objectid</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectId</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">id_reserva</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">})[</span><span class="s2">"_id"</span><span class="p">]</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">hotel</span><span class="p">[</span><span class="s2">"opiniones"</span><span class="p">]</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="s2">"reserva_id"</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">id_reserva</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">id_reserva</span><span class="p">,</span> <span class="n">ObjectId</span><span class="p">)</span> <span class="k">else</span> <span class="n">id_reserva</span><span class="p">,</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="s2">"autor"</span><span class="p">:</span> <span class="s2">"Mostrador"</span><span class="p">,</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    <span class="s2">"cuerpo"</span><span class="p">:</span> <span class="s2">"El huésped pidió cuna a última hora."</span><span class="p">,</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="p">})</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">bson.objectid</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectId</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">id_reserva</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">})[</span><span class="s2">"_id"</span><span class="p">]</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">hotel</span><span class="p">[</span><span class="s2">"opiniones"</span><span class="p">]</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="s2">"reserva_id"</span><span class="p">:</span> <span class="n">id_reserva</span><span class="p">,</span>  <span class="c1"># conserva exactamente su valor y su tipo</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="s2">"autor"</span><span class="p">:</span> <span class="s2">"Mostrador"</span><span class="p">,</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="s2">"cuerpo"</span><span class="p">:</span> <span class="s2">"El huésped pidió cuna a última hora."</span><span class="p">,</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="p">})</span>
 </span></code></pre></div>
 <p><code>_id</code> o índice único ya ocupado → <code>DuplicateKeyError</code>. Informad; no tragéis el error.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">DuplicateKeyError</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">try</span><span class="p">:</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">alta</span><span class="o">.</span><span class="n">inserted_id</span><span class="p">,</span> <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Fantasma"</span><span class="p">})</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">except</span> <span class="n">DuplicateKeyError</span><span class="p">:</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"esa reserva ya está en el libro"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">DuplicateKeyError</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">alta</span><span class="o">.</span><span class="n">inserted_id</span><span class="p">,</span> <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Fantasma"</span><span class="p">})</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">except</span> <span class="n">DuplicateKeyError</span><span class="p">:</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"esa reserva ya está en el libro"</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="bajas">Bajas<a class="headerlink" href="#bajas" title="Permanent link">&para;</a></h3>
 <p><code>delete_one</code> / <code>delete_many</code> → <code>deleted_count</code>. Vaciar con <code>delete_many({})</code> deja la colección; <code>reservas.drop()</code> la <strong>quita</strong> (índices incluidos). En el hotel, <code>drop</code> de <code>reservas</code> un viernes es noticia.</p>
 <h3 id="cambios">Cambios<a class="headerlink" href="#cambios" title="Permanent link">&para;</a></h3>
-<p>Segundo argumento: <strong>operador</strong> (<code>$set</code>, <code>$inc</code>, <code>$unset</code>…). Si pasáis un documento pelado, <strong>sustituye</strong> el entero.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">r</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">update_many</span><span class="p">(</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="p">{</span><span class="s2">"importe"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$lt"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}},</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="p">{</span><span class="s2">"$set"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"importe"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"aviso"</span><span class="p">:</span> <span class="s2">"importe corregido"</span><span class="p">}},</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="p">)</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">matched_count</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">modified_count</span><span class="p">)</span>
+<p>El ejemplo marca un importe negativo para revisión y conserva su valor. Convertirlo automáticamente en cero alteraría la información sin justificar si era un error, una devolución u otro caso. Una modificación puede encontrar cero documentos: eso no siempre es un fallo técnico, pero debe interpretarse según la operación de negocio.</p>
+<p>Segundo argumento: <strong>operador</strong> (<code>$set</code>, <code>$inc</code>, <code>$unset</code>…). <code>update_one</code> y <code>update_many</code> no admiten un documento ordinario como reemplazo: para sustituir el contenido se utiliza <code>replace_one</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">r</span> <span class="o">=</span> <span class="n">reservas</span><span class="o">.</span><span class="n">update_many</span><span class="p">(</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="p">{</span><span class="s2">"importe"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$lt"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}},</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="p">{</span><span class="s2">"$set"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"aviso"</span><span class="p">:</span> <span class="s2">"revisar importe negativo"</span><span class="p">}},</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">)</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">matched_count</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">modified_count</span><span class="p">)</span>
 </span></code></pre></div>
 <p><code>upsert=True</code>: si no hay match, <strong>inserta</strong>. <code>bypass_document_validation=True</code> se salta el validador del <a href="../modelado/">2.7</a>: solo con permiso y motivo (migración). Por defecto, <code>False</code>.</p>
 <h3 id="a-granel">A granel<a class="headerlink" href="#a-granel" title="Permanent link">&para;</a></h3>
+<p><code>bulk_write</code> reduce viajes entre cliente y servidor; no convierte el lote en una transacción. Por defecto, un error puede detener las operaciones ordenadas siguientes, dejando las anteriores aplicadas. Comprobad el resultado y utilizad identificadores concretos si queréis afectar a una reserva determinada.</p>
 <p>Varias operaciones en un <em>batch</em>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpdateOne</span><span class="p">,</span> <span class="n">DeleteOne</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">reservas</span><span class="o">.</span><span class="n">bulk_write</span><span class="p">([</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">UpdateOne</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Comillas"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">},</span> <span class="p">{</span><span class="s2">"$inc"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}),</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">DeleteOne</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"prueba"</span><span class="p">}),</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpdateOne</span><span class="p">,</span> <span class="n">DeleteOne</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="n">reservas</span><span class="o">.</span><span class="n">bulk_write</span><span class="p">([</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">UpdateOne</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Comillas"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">},</span> <span class="p">{</span><span class="s2">"$inc"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}),</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">DeleteOne</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"prueba"</span><span class="p">}),</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="p">])</span>
 </span></code></pre></div>
 <h2 id="las-mismas-promesas-que-el-28">Las mismas promesas que el 2.8<a class="headerlink" href="#las-mismas-promesas-que-el-28" title="Permanent link">&para;</a></h2>
-<p>Lectura: clases de <code>ReadPreference</code>. Escritura: <code>WriteConcern</code>. Se fijan en el cliente, en <code>get_database</code> / <code>get_collection</code> o en <code>with_options</code> para <strong>una</strong> operación.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadPreference</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.write_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">WriteConcern</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">"mongodb://localhost:27017"</span><span class="p">,</span> <span class="n">replicaSet</span><span class="o">=</span><span class="s2">"hotelrs"</span><span class="p">)</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">read_preference</span><span class="p">)</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="n">informes</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">get_database</span><span class="p">(</span><span class="s2">"hotel"</span><span class="p">,</span> <span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">SECONDARY</span><span class="p">)</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="n">mostrador</span> <span class="o">=</span> <span class="n">informes</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="s2">"reservas"</span><span class="p">,</span> <span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">)</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="n">ocupacion</span> <span class="o">=</span> <span class="n">mostrador</span><span class="o">.</span><span class="n">with_options</span><span class="p">(</span><span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">SECONDARY_PREFERRED</span><span class="p">)</span>
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="n">cobro</span> <span class="o">=</span> <span class="n">mostrador</span><span class="o">.</span><span class="n">with_options</span><span class="p">(</span><span class="n">write_concern</span><span class="o">=</span><span class="n">WriteConcern</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="s2">"majority"</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">))</span>
-</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="n">cobro</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Potes"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"importe"</span><span class="p">:</span> <span class="mi">95</span><span class="p">})</span>
+<p>Lectura: clases de <code>ReadPreference</code>. Escritura: <code>WriteConcern</code>. Se fijan en el cliente, en <code>get_database</code> / <code>get_collection</code> o mediante <code>with_options</code>, que devuelve un manejador nuevo con esas opciones para sus operaciones posteriores.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadPreference</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.write_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">WriteConcern</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">serverSelectionTimeoutMS</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>  <span class="c1"># URI interna del set, definida antes</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">read_preference</span><span class="p">)</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">informes</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">get_database</span><span class="p">(</span><span class="s2">"hotel"</span><span class="p">,</span> <span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">SECONDARY</span><span class="p">)</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">mostrador</span> <span class="o">=</span> <span class="n">informes</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="s2">"reservas"</span><span class="p">,</span> <span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">)</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="n">ocupacion</span> <span class="o">=</span> <span class="n">mostrador</span><span class="o">.</span><span class="n">with_options</span><span class="p">(</span><span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">SECONDARY_PREFERRED</span><span class="p">)</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="n">cobro</span> <span class="o">=</span> <span class="n">mostrador</span><span class="o">.</span><span class="n">with_options</span><span class="p">(</span><span class="n">write_concern</span><span class="o">=</span><span class="n">WriteConcern</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="s2">"majority"</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">))</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="n">cobro</span><span class="o">.</span><span class="n">insert_one</span><span class="p">({</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Potes"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"importe"</span><span class="p">:</span> <span class="mi">95</span><span class="p">})</span>
 </span></code></pre></div>
 <p>Valores: <code>PRIMARY</code>, <code>PRIMARY_PREFERRED</code>, <code>SECONDARY</code>, <code>SECONDARY_PREFERRED</code>, <code>NEAREST</code> (los mismos nombres del <a href="../replicas-shards/">2.8</a>). El informe de ocupación puede ir a Noja; el cobro, no.</p>
-<h2 id="dos-papeles-un-si-transacciones">Dos papeles, un “sí” (transacciones)<a class="headerlink" href="#dos-papeles-un-si-transacciones" title="Permanent link">&para;</a></h2>
-<p>Un <code>update</code> <strong>de un</strong> documento ya es atómico: por eso el <a href="../modelado/">2.7</a> embebe el cobro cuando cabe. Si el cobro vive en <code>cobros</code> y la reserva en <code>reservas</code>, hace falta una <strong>sesión</strong> y, en la práctica, un <strong>replica set</strong> (un <code>mongod</code> suelto de juguete, según versión, <strong>no</strong> abre transacción).</p>
-<p>Mongo ofrece dos APIs. La <strong>Core</strong> (<code>start_transaction</code> / <code>commit_transaction</code>) os deja el reintento. La <strong>Callback</strong> (<code>with_transaction</code>) inicia, ejecuta, hace <em>commit</em> o aborta y <strong>reintenta</strong> el <em>commit</em>. Es la que usaréis.</p>
-<p>Historia de aula: entra un pedido de parking y <strong>a la vez</strong> baja el cupo.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span><span class="p">,</span> <span class="n">ReadPreference</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.read_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadConcern</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.write_concern</span><span class="w"> </span><span class="kn">import</span> <span class="n">WriteConcern</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">URI</span> <span class="o">=</span> <span class="s2">"mongodb://localhost:27017/?replicaSet=hotelrs"</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">URI</span><span class="p">)</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">majority</span> <span class="o">=</span> <span class="n">WriteConcern</span><span class="p">(</span><span class="s2">"majority"</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">)</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">bd</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">get_database</span><span class="p">(</span><span class="s2">"hotel"</span><span class="p">,</span> <span class="n">write_concern</span><span class="o">=</span><span class="n">majority</span><span class="p">)</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">sesion</span><span class="p">):</span>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">reservas</span> <span class="o">=</span> <span class="n">sesion</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">hotel</span><span class="o">.</span><span class="n">reservas</span>
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>    <span class="n">plazas</span> <span class="o">=</span> <span class="n">sesion</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">hotel</span><span class="o">.</span><span class="n">parking</span>
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>    <span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>        <span class="p">{</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"web"</span><span class="p">,</span> <span class="s2">"extras"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"parking"</span><span class="p">],</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>        <span class="n">session</span><span class="o">=</span><span class="n">sesion</span><span class="p">,</span>
-</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>    <span class="p">)</span>
-</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>    <span class="n">plazas</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
-</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>        <span class="p">{</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"libres"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$gte"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>
-</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>        <span class="p">{</span><span class="s2">"$inc"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"libres"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}},</span>
-</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>        <span class="n">session</span><span class="o">=</span><span class="n">sesion</span><span class="p">,</span>
-</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>    <span class="p">)</span>
-</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>
-</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="k">with</span> <span class="n">cliente</span><span class="o">.</span><span class="n">start_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sesion</span><span class="p">:</span>
-</span><span id="__span-21-24"><a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>    <span class="n">sesion</span><span class="o">.</span><span class="n">with_transaction</span><span class="p">(</span>
-</span><span id="__span-21-25"><a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>        <span class="n">callback</span><span class="p">,</span>
-</span><span id="__span-21-26"><a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>        <span class="n">read_concern</span><span class="o">=</span><span class="n">ReadConcern</span><span class="p">(</span><span class="s2">"local"</span><span class="p">),</span>
-</span><span id="__span-21-27"><a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>        <span class="n">write_concern</span><span class="o">=</span><span class="n">majority</span><span class="p">,</span>
-</span><span id="__span-21-28"><a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>        <span class="n">read_preference</span><span class="o">=</span><span class="n">ReadPreference</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span>
-</span><span id="__span-21-29"><a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>    <span class="p">)</span>
+<h3 id="ejecutar-python-dentro-de-la-red-del-replica-set">Ejecutar Python dentro de la red del replica set<a class="headerlink" href="#ejecutar-python-dentro-de-la-red-del-replica-set" title="Permanent link">&para;</a></h3>
+<p>Los nombres <code>rs-laredo</code>, <code>rs-potes</code> y <code>rs-noja</code> son internos de Docker. Para que el driver descubra los miembros sin configurar el DNS de Windows, mantened <code>hotel-rs</code> levantado y ejecutad desde la <strong>raíz del repositorio</strong>, en PowerShell:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">docker</span> <span class="n">run</span> <span class="p">-</span><span class="n">-rm</span> <span class="n">-it</span> <span class="p">-</span><span class="n">-network</span> <span class="n">hotel-rs_default</span> <span class="n">-v</span> <span class="s2">"${PWD}:/trabajo:ro"</span> <span class="n">-w</span> <span class="p">/</span><span class="n">trabajo</span> <span class="n">python</span><span class="p">:</span><span class="n">3</span><span class="p">.</span><span class="n">12-slim</span> <span class="n">bash</span>
 </span></code></pre></div>
-<p>Cada operación <strong>lleva</strong> <code>session=sesion</code>. Si no hay plaza, el <code>update</code> no toca nada: decidid en el <em>callback</em> si abortáis. El banco, si exige ACID de libro mayor, sigue siendo territorio <a href="../../ut1/almacenamiento/">relacional</a>.</p>
+<p>Este contenedor cliente necesita acceso a Internet para instalar PyMongo. En su Bash:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"pymongo&gt;=4,&lt;5"</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HOTEL_MONGO_URI</span><span class="o">=</span><span class="s1">'mongodb://rs-laredo:27017,rs-potes:27017,rs-noja:27017/?replicaSet=hotelrs'</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>python<span class="w"> </span>docs/assets/practicas/hotel-pymongo/reservar_parking.py
+</span></code></pre></div>
+<p>La red se llama <code>hotel-rs_default</code> con el nombre de proyecto del Compose incluido. Si se ha cambiado el nombre del proyecto, adaptad la red. Usar <code>localhost:27017</code> dentro del contenedor cliente apuntaría al propio cliente, no a MongoDB.</p>
+<h2 id="dos-papeles-un-si-transacciones">Dos papeles, un “sí” (transacciones)<a class="headerlink" href="#dos-papeles-un-si-transacciones" title="Permanent link">&para;</a></h2>
+<p>Una actualización de un documento es atómica. Si una operación modifica documentos distintos, como el cupo de parking y la reserva, necesitamos una transacción explícita para confirmarlos juntos. <strong>Un servidor standalone no admite transacciones multidocumento</strong>; utilizamos el replica set preparado en el 2.8.</p>
+<p>MongoDB ofrece una API explícita de inicio/commit/abort y una API de callback, <code>with_transaction</code>. Esta última puede reejecutar el callback o reintentar el commit ante determinados errores. Por tanto, dentro del callback no enviamos correos ni realizamos efectos externos que pudieran duplicarse.</p>
+<p>El programa completo está en <a href="../../assets/practicas/hotel-pymongo/reservar_parking.py">reservar_parking.py</a>. Usa una base independiente, <code>hotel_tx</code>, e inicializa <strong>una plaza</strong>, únicamente si aún no existe. Su núcleo es:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">operacion</span><span class="p">(</span><span class="n">sesion</span><span class="p">):</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>    <span class="n">resultado</span> <span class="o">=</span> <span class="n">bd</span><span class="o">.</span><span class="n">parking</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>        <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"libres"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$gte"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>        <span class="p">{</span><span class="s2">"$inc"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"libres"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}},</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>        <span class="n">session</span><span class="o">=</span><span class="n">sesion</span><span class="p">,</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>    <span class="p">)</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    <span class="k">if</span> <span class="n">resultado</span><span class="o">.</span><span class="n">modified_count</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No quedan plazas: no se crea la reserva"</span><span class="p">)</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    <span class="n">bd</span><span class="o">.</span><span class="n">reservas</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>        <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="n">identificador</span><span class="p">,</span> <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"extras"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"parking"</span><span class="p">],</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>        <span class="n">session</span><span class="o">=</span><span class="n">sesion</span><span class="p">,</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<p><code>bd</code> e <code>identificador</code> se preparan fuera del callback. El programa lo ejecuta con lectura <code>snapshot</code>, escritura <code>majority</code> y preferencia <code>PRIMARY</code>. Todas las operaciones participantes llevan <code>session=sesion</code>.</p>
+<p>La comprobación de <code>modified_count</code> es esencial: <strong>no encontrar plazas no provoca automáticamente una excepción</strong>. Sin esa comprobación, una transacción podría confirmar una reserva sin haber descontado cupo. Si la inserción falla después del descuento, el aborto también deshace ese descuento.</p>
+<p>Prueba en una base <code>hotel_tx</code> nueva:</p>
+<table>
+<thead>
+<tr>
+<th>Ejecución</th>
+<th>Resultado esperado</th>
+<th>Estado final</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primera</td>
+<td>Reserva confirmada</td>
+<td>Una reserva y cero plazas</td>
+</tr>
+<tr>
+<td>Segunda</td>
+<td>Mensaje de falta de plazas</td>
+<td>Sigue una reserva y cero plazas</td>
+</tr>
+<tr>
+<td>Error de inserción dentro de una transacción</td>
+<td>Aborto</td>
+<td>Se conserva el cupo anterior</td>
+</tr>
+</tbody>
+</table>
+<p>No repongáis una plaza antes de la segunda ejecución: el objetivo es probar el rechazo. Para repetir el experimento desde cero, el docente reinicia solo los datos de <code>hotel_tx</code>. Un error de red o de confirmación requiere comprobar el estado antes de reintentar una operación de negocio.</p>
 <div class="admonition note">
 <p class="admonition-title">ODM</p>
-<p>Un mapeo objeto-documento (Beanie + Pydantic, etc.) es un atajo de <em>app</em>. En esta UT el RA2 se demuestra con <strong>PyMongo</strong>. No hace falta un <em>framework</em> encima para el criterio <strong>b)</strong>.</p>
+<p>Un mapeo objeto-documento, como los basados en modelos de validación, puede simplificar una aplicación. En esta unidad usamos PyMongo para ver explícitamente filtros, sesiones y resultados. Un ODM no elimina la necesidad de comprender sus garantías.</p>
 </div>
 <h2 id="extra-una-url-para-gerencia-flask">Extra: una URL para gerencia (Flask)<a class="headerlink" href="#extra-una-url-para-gerencia-flask" title="Permanent link">&para;</a></h2>
 <p>El RA2 <strong>no</strong> pide un MVC. Si el profesor quiere ver el dato en el navegador, Flask basta. Distinto del “Hola / Adiós / listado de usuarios” de otros apuntes: aquí la ruta útil es la <strong>ocupación</strong>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pymongo<span class="w"> </span>flask
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pymongo<span class="w"> </span>flask
 </span></code></pre></div>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>mostrador/
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  app.py
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>  conexion.py
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>  templates/
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    inicio.html
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    ocupacion.html
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>mostrador/
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  app.py
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  conexion.py
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>  templates/
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    inicio.html
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    ocupacion.html
 </span></code></pre></div>
-<p><code>flask.g</code> vive <strong>una petición</strong>. Guardad ahí el cliente (el <em>pool</em>), no creéis uno por ruta.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># conexion.py</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">hotel_db</span><span class="p">():</span>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    <span class="n">db</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"_hotel"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>    <span class="k">if</span> <span class="n">db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>        <span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HOTEL_MONGO_URI"</span><span class="p">,</span> <span class="s2">"mongodb://localhost:27017"</span><span class="p">)</span>
-</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>        <span class="n">db</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">_hotel</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">maxPoolSize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">wtimeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">)[</span><span class="s2">"hotel"</span><span class="p">]</span>
-</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="k">return</span> <span class="n">db</span>
+<p><code>flask.g</code> vive <strong>una petición</strong>: crear allí un cliente nuevo por petición impediría reutilizar el pool entre peticiones. En esta aplicación guardamos un <code>MongoClient</code> en <code>app.extensions</code>, compartido por las rutas dentro del proceso. En un despliegue con varios procesos, cada uno crea su propio cliente.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># conexion.py</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">current_app</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">iniciar</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>    <span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HOTEL_MONGO_URI"</span><span class="p">,</span> <span class="s2">"mongodb://localhost:27017"</span><span class="p">)</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>    <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">[</span><span class="s2">"mongo"</span><span class="p">]</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">maxPoolSize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">serverSelectionTimeoutMS</span><span class="o">=</span><span class="mi">4000</span><span class="p">)</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">hotel_db</span><span class="p">():</span>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>    <span class="k">return</span> <span class="n">current_app</span><span class="o">.</span><span class="n">extensions</span><span class="p">[</span><span class="s2">"mongo"</span><span class="p">][</span><span class="s2">"hotel"</span><span class="p">]</span>
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># app.py</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">DESCENDING</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">conexion</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
-</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">inicio</span><span class="p">():</span>
-</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"inicio.html"</span><span class="p">)</span>
-</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>
-</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/ocupacion"</span><span class="p">)</span>
-</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">ocupacion</span><span class="p">():</span>
-</span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>    <span class="n">col</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">hotel_db</span><span class="p">()[</span><span class="s2">"reservas"</span><span class="p">]</span>
-</span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>    <span class="n">filas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
-</span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>        <span class="p">{</span><span class="s2">"$group"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="s2">"$hotel"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$sum"</span><span class="p">:</span> <span class="s2">"$noches"</span><span class="p">}}},</span>
-</span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>        <span class="p">{</span><span class="s2">"$sort"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"noches"</span><span class="p">:</span> <span class="n">DESCENDING</span><span class="p">}},</span>
-</span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>    <span class="p">]))</span>
-</span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"ocupacion.html"</span><span class="p">,</span> <span class="n">filas</span><span class="o">=</span><span class="n">filas</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># app.py</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">DESCENDING</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">conexion</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="n">conexion</span><span class="o">.</span><span class="n">iniciar</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">inicio</span><span class="p">():</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"inicio.html"</span><span class="p">)</span>
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">"/ocupacion"</span><span class="p">)</span>
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">ocupacion</span><span class="p">():</span>
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>    <span class="n">col</span> <span class="o">=</span> <span class="n">conexion</span><span class="o">.</span><span class="n">hotel_db</span><span class="p">()[</span><span class="s2">"reservas"</span><span class="p">]</span>
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>    <span class="n">filas</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>        <span class="p">{</span><span class="s2">"$group"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"_id"</span><span class="p">:</span> <span class="s2">"$hotel"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$sum"</span><span class="p">:</span> <span class="s2">"$noches"</span><span class="p">}}},</span>
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>        <span class="p">{</span><span class="s2">"$sort"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"noches"</span><span class="p">:</span> <span class="n">DESCENDING</span><span class="p">}},</span>
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>    <span class="p">]))</span>
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">"ocupacion.html"</span><span class="p">,</span> <span class="n">filas</span><span class="o">=</span><span class="n">filas</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-html highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="cm">&lt;!-- templates/ocupacion.html --&gt;</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Noches por sede<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
-</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>{% for f in filas %}
-</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>  <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>{{ f._id }}: {{ f.noches }}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>{% endfor %}
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+<p>La ruta conserva el nombre <code>/ocupacion</code>, pero muestra noches reservadas, no un porcentaje. La plantilla inicial permite visitar también <code>/</code>:</p>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="cm">&lt;!-- templates/inicio.html --&gt;</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Parte de gerencia<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"{{ url_for('ocupacion') }}"</span><span class="p">&gt;</span>Consultar noches reservadas por hotel<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 </span></code></pre></div>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nb">cd </span><span class="n">mostrador</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">flask</span> <span class="p">-</span><span class="n">-app</span> <span class="n">app</span> <span class="n">run</span> <span class="p">-</span><span class="n">-debug</span>
+<div class="language-html highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="cm">&lt;!-- templates/ocupacion.html --&gt;</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Noches por sede<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>{% for f in filas %}
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>  <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>{{ f._id }}: {{ f.noches }}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>{% endfor %}
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+</span></code></pre></div>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nb">cd </span><span class="n">mostrador</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="n">flask</span> <span class="p">-</span><span class="n">-app</span> <span class="n">app</span> <span class="n">run</span> <span class="p">-</span><span class="n">-debug</span>
 </span></code></pre></div>
 <p><code>http://127.0.0.1:5000/ocupacion</code>. Jinja: <code>{{ variable }}</code> y <code>{% for %}</code>. Eso es el <em>bridge</em> a una <em>app</em>; el oficio de Big Data ya lo hizo <code>aggregate</code>.</p>
 <h2 id="como-se-cierra-el-apartado-y-la-ut2">Cómo se cierra el apartado (y la UT2)<a class="headerlink" href="#como-se-cierra-el-apartado-y-la-ut2" title="Permanent link">&para;</a></h2>
-<p>Un script que suma noches por hotel es <strong>b)</strong>. Un <code>insert_one</code> con <code>mascota</code> que no tumba los <code>find</code> viejos es <strong>d)</strong>. <code>WriteConcern</code> y <code>ReadPreference</code> en el cliente son el <a href="../replicas-shards/">2.8</a> con otro idioma.</p>
+<p>Un script que suma noches por hotel practica procesamiento en el servidor; para demostrar el modelo distribuido de <strong>b)</strong> se añade la evidencia del 2.4. Un <code>insert_one</code> con <code>mascota</code> que no tumba los <code>find</code> viejos es <strong>d)</strong>. <code>WriteConcern</code> y <code>ReadPreference</code> en el cliente son el <a href="../replicas-shards/">2.8</a> con otro idioma.</p>
 <div class="admonition success">
 <p class="admonition-title">Cerrar la UT2</p>
 <p>HDFS <strong>deposita</strong> el lago y <strong>tolera</strong> discos muertos. YARN/MapReduce <strong>demuestran</strong> el cómputo partido. Mongo <strong>guarda</strong> el JSON inquieto. Réplicas y <em>shards</em> <strong>prueban</strong> fallos y <strong>muestran</strong> el crecimiento. PyMongo <strong>enciende</strong> eso desde Python. Hive, Spark y el resto son <strong>módulos</strong> que enchufáis después.</p>
@@ -2072,7 +2187,7 @@
 <tbody>
 <tr>
 <td><strong>b)</strong></td>
-<td><code>aggregate</code>, cursores, <em>bulk</em>; el trabajo pesado <strong>dentro</strong> del motor</td>
+<td>Procesamiento en el motor con <code>aggregate</code>; se complementa con la prueba distribuida del 2.4</td>
 </tr>
 <tr>
 <td><strong>d)</strong></td>
@@ -2087,13 +2202,16 @@
 <h2 id="para-practicar-moodle-manda">Para practicar (Moodle manda)<a class="headerlink" href="#para-practicar-moodle-manda" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Parte.</strong> Importad <code>reservas</code> y <code>opiniones</code>. Ejecutad <code>parte_gerencia.py</code> (o el vuestro). Entregad captura de <code>count_documents</code>, un <code>find</code> de Laredo y el <code>$group</code> por hotel.</li>
-<li><strong>Esquema que crece.</strong> Insertad una reserva de 2027 con <code>mascota: true</code>. Un <code>find({"mascota": true})</code> y otro <code>find({"hotel": "Laredo"})</code> que <strong>siga</strong> devolviendo las de 2026. Eso es <strong>d)</strong> en Python.</li>
+<li><strong>Esquema que crece.</strong> Insertad una reserva de 2027 con <code>mascota: True</code>. Un <code>find({"mascota": True})</code> y otro <code>find({"hotel": "Laredo"})</code> que <strong>siga</strong> devolviendo las de 2026. Eso es <strong>d)</strong> en Python.</li>
 <li><strong>Cursor frente a <em>pipeline</em>.</strong> La misma pregunta (Potes, orden por importe, dos filas) de las dos formas. Una frase: cuándo usaríais cada una.</li>
 <li><strong>Errores.</strong> Forzad un <code>DuplicateKeyError</code> y un <code>ServerSelectionTimeoutError</code> (URI falsa). Capturad; no vale el <em>traceback</em> suelto.</li>
 <li><strong>Promesas.</strong> Sobre <code>hotelrs</code> (si el lab está levantado): un <code>insert_one</code> con <code>WriteConcern(w="majority", wtimeout=2500)</code> y un <code>find</code> con <code>SECONDARY</code>. Relacionadlo con el viernes de Laredo del <a href="../replicas-shards/">2.8</a>.</li>
-<li>(Opcional) Ruta Flask <code>/ocupacion</code> con <code>g</code> y el <em>pool</em>. No hace falta login ni un MVC de otro proyecto.</li>
+<li>(Opcional) Ruta Flask <code>/ocupacion</code> con un cliente compartido por proceso y el <em>pool</em>. No hace falta login ni un MVC de otro proyecto.</li>
 <li>(Opcional) Transacción <code>reservas</code> + <code>parking</code> en el <em>replica set</em>. Si el <code>mongod</code> es suelto, documentad <strong>por qué</strong> falla.</li>
 </ol>
+<h3 id="criterios-de-comprobacion">Criterios de comprobación<a class="headerlink" href="#criterios-de-comprobacion" title="Permanent link">&para;</a></h3>
+<p>En las consultas de lectura, contrastad los recuentos iniciales y los importes de Potes indicados arriba. En escrituras, mostrad el antes, el resultado de la operación y el después sobre <code>hotel_escrituras</code>. En la transacción, entregad tanto la primera ejecución correcta como el rechazo de la segunda: mostrar solo el camino de éxito deja sin probar la regla de negocio.</p>
+<p>La aplicación Flask es opcional y utiliza <code>hotel</code> sin modificar. Probad <code>/</code> y <code>/ocupacion</code>, y comprobad que los totales coinciden con el script de gerencia. El servidor con <code>--debug</code> es para desarrollo local.</p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.mongodb.com/docs/languages/python/pymongo-driver/current/">PyMongo</a></li>

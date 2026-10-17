@@ -1415,6 +1415,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Un validador no es un CREATE TABLE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probar-el-contrato-no-solo-crearlo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probar el contrato, no solo crearlo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1458,6 +1475,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#criterios-para-revisar-la-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para revisar la entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1856,6 +1890,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Un validador no es un CREATE TABLE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probar-el-contrato-no-solo-crearlo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probar el contrato, no solo crearlo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1899,6 +1950,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#criterios-para-revisar-la-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para revisar la entrega
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2007,8 +2075,8 @@
 
 
 <h1 id="27-modelado-documental">2.7. Modelado documental<a class="headerlink" href="#27-modelado-documental" title="Permanent link">&para;</a></h1>
-<p>En SQL dibujáis tablas y <em>después</em> las pantallas se adaptan. En Mongo es al revés: <strong>las pantallas mandan</strong>. El criterio <strong>d)</strong> del RA2 no es “tirar JSON al cubo”. Es: <strong>guardáis lo que hay hoy</strong> y <strong>dejáis hueco</strong> para el campo de abril, sin tumbar el hotel una noche y sin reescribir 40 000 reservas.</p>
-<p>Un documento es el sitio donde vive <strong>lo que se lee junto</strong>. ACID, en Mongo, es <strong>por documento</strong>. Si partís la reserva y el cobro en dos colecciones, o los tocáis <strong>en el mismo</strong> <code>update</code> o montáis una transacción en el <em>driver</em>. El atajo mental “3FN + <code>$lookup</code> en cada pantalla” suele ser señal de que seguís modelando como PostgreSQL.</p>
+<p>Tanto en SQL como en MongoDB empezamos por los datos, las operaciones y las reglas de negocio. En un modelo documental tiene especial importancia <strong>qué información se lee y actualiza junta</strong>. El criterio <strong>d)</strong> del RA2 no es “tirar JSON al cubo”. Es: <strong>guardáis lo que hay hoy</strong> y <strong>dejáis hueco</strong> para el campo de abril, sin tumbar el hotel una noche y sin reescribir 40 000 reservas.</p>
+<p>Un documento es el sitio donde vive <strong>lo que se lee junto</strong>. Una escritura sobre un documento es atómica. Si una operación modifica reserva y cobro en dos documentos, un único <code>update</code> no los convierte en una unidad atómica: necesitáis una transacción explícita en el servidor, iniciada desde una sesión del cliente. El atajo mental “3FN + <code>$lookup</code> en cada pantalla” suele ser señal de que seguís modelando como PostgreSQL.</p>
 <p>El código se lee mejor —y el <code>find</code> corre antes— cuando aceptáis <strong>cierta redundancia</strong>. Duplicar el nombre del hotel en la reserva no es suciedad: es <strong>no hacer un join</strong> cada vez que recepción abre la ficha.</p>
 <h2 id="empieza-por-las-preguntas-no-por-las-entidades">Empieza por las preguntas, no por las entidades<a class="headerlink" href="#empieza-por-las-preguntas-no-por-las-entidades" title="Permanent link">&para;</a></h2>
 <p>Antes de Compass, escribid <strong>qué hace</strong> cada rol. Tres ejemplos del grupo:</p>
@@ -2084,7 +2152,9 @@
 </table>
 <p>Conclusión distinta a “un JSON por clic”: <strong>agrupáis escrituras</strong> y <strong>precalculáis</strong> lo que gerencia pide siempre. El detalle de <em>buckets</em> está más abajo.</p>
 <h2 id="solo-hay-dos-gestos-meter-dentro-o-senalar-fuera">Solo hay dos gestos: meter dentro o señalar fuera<a class="headerlink" href="#solo-hay-dos-gestos-meter-dentro-o-senalar-fuera" title="Permanent link">&para;</a></h2>
-<p><strong>Meter dentro (embeber):</strong> el cobro viaja <em>con</em> la reserva. Un <code>find</code>, un <code>update</code>. Atómico. Tope: <strong>16 MB</strong> por documento. <code>bsonSize</code> en el <em>shell</em> os dice cuánto ocupa el que tenéis abierto:</p>
+<p>Decidid con cuatro preguntas: ¿se lee junto?, ¿cambia junto?, ¿crece de forma acotada?, ¿necesita una actualización atómica? Embeber favorece la lectura conjunta y la atomicidad de un documento. Referenciar evita repetir entidades compartidas y permite que cada una tenga su propio ciclo de vida.</p>
+<p>Duplicar un nombre puede representar una <strong>instantánea histórica</strong> o una copia del nombre actual. En el primer caso no debemos actualizarlo si cambia el hotel; en el segundo necesitamos una estrategia para mantenerlo sincronizado. La duplicación solo está bien definida cuando explicitamos esa diferencia.</p>
+<p><strong>Meter dentro (embeber):</strong> el cobro viaja <em>con</em> la reserva. Un <code>find</code>, un <code>update</code>. Atómico. Tope: <strong>16 MiB</strong> por documento. <code>bsonSize</code> en el <em>shell</em> os dice cuánto ocupa el que tenéis abierto:</p>
 <div class="language-javascript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">bsonSize</span><span class="p">(</span><span class="nx">db</span><span class="p">.</span><span class="nx">reservas</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="w"> </span><span class="nx">hotel</span><span class="o">:</span><span class="w"> </span><span class="s2">"Laredo"</span><span class="w"> </span><span class="p">}))</span>
 </span></code></pre></div>
 <p>Fotos de habitación: la ruta o un <code>id</code> de objeto; los bytes gordos a <strong>GridFS</strong> o a <a href="../hdfs/">HDFS</a>, no al BSON.</p>
@@ -2120,6 +2190,7 @@
 <h2 id="cardinalidad-el-hotel-en-cuatro-tamanos">Cardinalidad: el hotel en cuatro tamaños<a class="headerlink" href="#cardinalidad-el-hotel-en-cuatro-tamanos" title="Permanent link">&para;</a></h2>
 <p>No memoricéis “1:N = array”. Preguntad <strong>cuántos</strong> y <strong>si se leen siempre juntos</strong>.</p>
 <h3 id="uno-a-uno-ficha-y-direccion-de-envio">Uno a uno (ficha y dirección de envío)<a class="headerlink" href="#uno-a-uno-ficha-y-direccion-de-envio" title="Permanent link">&para;</a></h3>
+<p>La cardinalidad 1:1 no obliga a embeber. Si los datos de llegada son pequeños y aparecen en la ficha de reserva, resulta cómodo. Si un documento médico u otra información con acceso separado tuviera un ciclo de vida distinto, la referencia podría ser más adecuada. El criterio es la operación, no solo el dibujo de la relación.</p>
 <p>La reserva y el <em>check-in</em> breve (matrícula del coche, hora de llegada) se leen <strong>siempre</strong> a la vez → <strong>dentro</strong>.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"hotel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Potes"</span><span class="p">,</span>
@@ -2129,6 +2200,7 @@
 </span></code></pre></div>
 <p>Separadlos si: uno se consulta <strong>casi nunca</strong>, uno es <strong>enorme</strong>, o uno se <strong>reescribe</strong> diez veces más que el otro. Si tenéis que cambiar <strong>los dos a la vez</strong>, volved a embeber: si no, pagáis transacción.</p>
 <h3 id="uno-a-pocos-huespedes">Uno a pocos (huéspedes)<a class="headerlink" href="#uno-a-pocos-huespedes" title="Permanent link">&para;</a></h3>
+<p>Escribid el límite esperado: por ejemplo, cuatro huéspedes en una reserva familiar. Ese límite hace previsible el tamaño. Si el mismo huésped necesita un perfil compartido entre muchas reservas, la ficha histórica puede guardar sus datos de estancia y una referencia opcional al perfil, sin copiar todo su historial.</p>
 <p>Una reserva, 1–4 personas. Van <strong>en un array dentro</strong>. Misma lectura, mismo <code>update</code>.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"hotel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Santander"</span><span class="p">,</span>
@@ -2138,8 +2210,9 @@
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">]</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Cuidado con el techo de 16 MB si alguien embebe <strong>PDFs</strong>.</p>
+<p>Cuidado con el techo de 16 MiB si alguien embebe <strong>PDFs</strong>.</p>
 <h3 id="uno-a-muchos-hotel-reservas">Uno a muchos (hotel → reservas)<a class="headerlink" href="#uno-a-muchos-hotel-reservas" title="Permanent link">&para;</a></h3>
+<p>La consulta «reservas del hotel durante abril» se resuelve filtrando la colección de reservas. Un índice que empiece por <code>hotel_id</code> y continúe por la fecha puede ayudar. Evitamos cargar un documento de hotel creciente cada vez que entra una reserva y podemos paginar los resultados.</p>
 <p>Un hotel, decenas de miles de reservas. El <code>_id</code> del hotel vive <strong>en el lado de las muchas</strong>. No metáis un array de 40 000 <code>ObjectId</code> en <code>hoteles</code>.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Laredo"</span><span class="p">,</span><span class="w"> </span><span class="nt">"telefono"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942…"</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
@@ -2148,10 +2221,12 @@
 <p><strong>Precio ya cobrado:</strong> ese número se <strong>congela</strong> en la reserva. Si mañana Laredo pone la doble a 200 €, el cobro de abril <strong>no</strong> se mueve. Es el mismo gesto que embeber el precio en un pedido: el catálogo cambia; el ticket, no.</p>
 <p><strong>Nombre del hotel en la ficha:</strong> si recepción lo pide <strong>siempre</strong>, copiad <code>nombre</code> + <code>comarca</code> en la reserva (<em>referencia extendida</em>). El teléfono que <strong>sí</strong> cambia se queda en <code>hoteles</code>.</p>
 <h3 id="uno-a-tropecientos-habitacion-logs-de-puerta">Uno a tropecientos (habitación → logs de puerta)<a class="headerlink" href="#uno-a-tropecientos-habitacion-logs-de-puerta" title="Permanent link">&para;</a></h3>
+<p>Cada evento debe identificar inequívocamente habitación <strong>y hotel</strong>: la habitación 214 puede existir en varias sedes. Además se registra el instante y el tipo de evento. Para consultar un periodo, el índice debe seguir esa combinación; guardar eventos en otra colección sin diseñar el acceso solo desplaza el problema.</p>
 <p>Millones de líneas. La habitación <strong>no</strong> guarda el array. Cada evento apunta a la habitación (muchos → uno). Invertís la flecha para no reventar el BSON.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"hab"</span><span class="p">:</span><span class="w"> </span><span class="s2">"214"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-04-12T22:03:00Z"</span><span class="p">,</span><span class="w"> </span><span class="nt">"evento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apertura"</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="varios-a-varios-habitaciones-servicios">Varios a varios (habitaciones ↔ servicios)<a class="headerlink" href="#varios-a-varios-habitaciones-servicios" title="Permanent link">&para;</a></h3>
+<p>Una colección de asociaciones es válida también en MongoDB. Resulta útil cuando la relación tiene atributos propios, como vigencia, precio contratado o disponibilidad. No implica necesariamente tres viajes a la base: una agregación puede reunir resultados. Comparad frecuencia de lectura y coste de mantener referencias duplicadas antes de elegir.</p>
 <p>Spa, parking, cuna: una habitación tiene pocos servicios; un servicio (parking) toca muchas habitaciones. Tres caminos, <strong>ninguno</strong> es “la tabla puente de SQL” como primera opción:</p>
 <ol>
 <li>Colección puente <code>hab_id</code> + <code>servicio_id</code>: tres lecturas. Solo si el puente <strong>tiene vida propia</strong> (fecha, precio extra).</li>
@@ -2161,33 +2236,44 @@
 <p>Regla de pulgar: si un lado es 3 y el otro 500 000, el 3 <strong>cabe dentro</strong> del 500 000. Si ambos son 3 y 5, podéis <strong>cruzar</strong> arrays de ids.</p>
 <div class="admonition warning">
 <p class="admonition-title">Arrays que no paran de crecer</p>
-<p>Cientos de hijos embebidos: mal. Miles de ids en un array: mal. Cardinalidad alta = <strong>otra colección</strong>, no un <code>[]</code> eterno.</p>
+<p>No hay un umbral universal de elementos. Importan el tamaño, el crecimiento, la frecuencia de actualización y qué parte se lee. Si el array crece sin límite, separadlo o divididlo en grupos acotados antes de acercaros al máximo del documento.</p>
 </div>
 <h3 id="arboles-comarca-municipio-hotel">Árboles (comarca → municipio → hotel)<a class="headerlink" href="#arboles-comarca-municipio-hotel" title="Permanent link">&para;</a></h3>
+<p>Guardar ancestros permite buscar descendientes con una condición sencilla, pero mover un hotel o una rama exige actualizar esas rutas. Una referencia al padre simplifica los cambios, aunque recorrer varios niveles necesita más trabajo. Justificad qué operación es frecuente en vuestro caso.</p>
 <p>Hijos en un array, o <strong>ancestros</strong> (<code>["Cantabria", "Trasmiera", "Laredo"]</code>) para preguntar “todo lo de Trasmiera” sin <em>join</em> recursivo. <a href="https://www.mongodb.com/docs/manual/applications/data-models-tree-structures/">Árboles en Mongo</a>. No traduzcáis el organigrama relacional <em>tal cual</em>.</p>
 <h2 id="un-recetario-no-un-catecismo">Un recetario (no un catecismo)<a class="headerlink" href="#un-recetario-no-un-catecismo" title="Permanent link">&para;</a></h2>
 <p>Mongo University parte los patrones en representación / acceso / agrupación. Aquí los agrupo por <strong>el problema que os salta en recepción</strong>. No hace falta recitar los veinte nombres; sí reconocer el gesto.</p>
 <h3 id="el-campo-se-multiplica-precio_es-precio_uk">El campo se multiplica (<code>precio_es</code>, <code>precio_uk</code>…)<a class="headerlink" href="#el-campo-se-multiplica-precio_es-precio_uk" title="Permanent link">&para;</a></h3>
+<p>Este es el <strong>patrón de atributos</strong>. Por ejemplo, <code>tarifas: [{canal: "web", precio: 90, moneda: "EUR"}]</code>. Para exigir canal web y precio menor que 100 en la misma tarifa, usad <code>$elemMatch</code>. Un índice sobre los campos del array puede ayudar, pero aumenta el coste de escritura.</p>
 <p>En vez de una columna por país, un <strong>array de objetos</strong> (<code>sitio</code>, <code>importe</code>, <code>moneda</code>). Añadir Andorra es <strong>otro elemento</strong>, no otra clave. Se indexa y se ordena mejor.</p>
 <p>En el hotel: tarifas por <strong>canal</strong> (<code>web</code>, <code>ota</code>, <code>recepcion</code>), no <code>tarifa_web</code>, <code>tarifa_ota</code>.</p>
 <h3 id="ayer-el-json-no-es-el-de-hoy">Ayer el JSON no es el de hoy<a class="headerlink" href="#ayer-el-json-no-es-el-de-hoy" title="Permanent link">&para;</a></h3>
+<p>El <strong>versionado de esquema</strong> exige lectores compatibles: si <code>v</code> falta, tratadlo como la versión antigua definida por el equipo. Primero desplegad un lector que entienda ambas versiones, después empezad a escribir la nueva y, si procede, migrad por lotes. Cambiar solo la etiqueta <code>v</code> sin transformar el contenido no es una migración correcta.</p>
 <p>Campo <code>v: 2</code> (o <code>esquema</code>). Los documentos viejos siguen; la <em>app</em> sabe cómo leer. Evitáis la parada de “migrar toda la colección a las 03:00”. Eso <strong>es</strong> el criterio <strong>d)</strong>.</p>
 <h3 id="el-mismo-tipo-de-cosa-con-rarezas">El mismo tipo de cosa, con rarezas<a class="headerlink" href="#el-mismo-tipo-de-cosa-con-rarezas" title="Permanent link">&para;</a></h3>
+<p>El <strong>patrón polimórfico</strong> conserva campos comunes y un discriminador de tipo. Por ejemplo, una reserva OTA añade localizador del proveedor; una de recepción añade puesto. La validación puede aplicar reglas diferentes según el tipo. Si las operaciones y el ciclo de vida son totalmente distintos, revisad si conviene separar colecciones.</p>
 <p><code>tipo: "web" | "ota"</code> y un subdocumento <code>detalle</code> distinto. <strong>Una</strong> colección <code>reservas</code>, no tres. Consultas unificadas.</p>
 <h3 id="la-ficha-pesa-y-la-lista-no">La ficha pesa y la lista no<a class="headerlink" href="#la-ficha-pesa-y-la-lista-no" title="Permanent link">&para;</a></h3>
+<p>El <strong>patrón de subconjunto</strong> mantiene cerca la parte más utilizada. Antes de duplicar datos, probad una proyección: evita transferir campos innecesarios. Si aun así el volumen del documento y el conjunto de trabajo perjudican el acceso, separar contenido extenso puede ayudar. Las dos representaciones deben tener una regla de actualización.</p>
 <p>Colección <em>gorda</em> (hotel con todos los textos legales) y una <strong>flaca</strong> (nombre, comarca, plazas) para el listado. Relación 1:1. Menos bytes por la red.</p>
 <h3 id="no-hace-falta-el-numero-exacto-ahora">No hace falta el número exacto <em>ahora</em><a class="headerlink" href="#no-hace-falta-el-numero-exacto-ahora" title="Permanent link">&para;</a></h3>
+<p>Distinguid <strong>agrupación de escrituras</strong> y <strong>aproximación estadística</strong>. Acumular 100 clics y escribir el total puede ser exacto si no se pierde el acumulador; actualizar con probabilidad del 1 % y sumar 100 produce una estimación con variación. Ninguno debe aplicarse sin más a una cantidad que no puede perderse, como plazas disponibles.</p>
 <p>Visitas a la web del hotel: el cliente <strong>acumula</strong> 100 clics y escribe <strong>una</strong> vez (o un aleatorio que dispara ~1 %). Menos escrituras; el contador <strong>no</strong> es de caja.</p>
 <h3 id="el-join-os-persigue">El join os persigue<a class="headerlink" href="#el-join-os-persigue" title="Permanent link">&para;</a></h3>
+<p>La <strong>referencia extendida</strong> conserva el identificador del hotel y unos pocos atributos copiados. Definid si esos atributos son históricos o deben actualizarse. Una caché o una proyección pueden ser alternativas: no hace falta duplicar toda la entidad para ahorrar una consulta.</p>
 <p>Duplicad en la reserva lo que <strong>siempre</strong> pintáis (nombre del hotel). Dejad fuera lo que <strong>cambia</strong> (teléfono). Redundancia <strong>consciente</strong>.</p>
 <h3 id="el-informe-es-siempre-la-misma-suma">El informe es siempre la misma suma<a class="headerlink" href="#el-informe-es-siempre-la-misma-suma" title="Permanent link">&para;</a></h3>
-<p>Colección <code>ocupacion_diaria</code> con <code>noches_totales</code> que <strong>actualizáis al escribir</strong> una reserva. Gerencia lee un documento, no agrega 8 000.</p>
+<p>El <strong>patrón calculado</strong> intercambia trabajo de lectura por trabajo de actualización. Puede recalcularse cada noche o mantenerse con eventos. En el primer caso hay retraso conocido; en el segundo debemos gestionar reintentos, anulaciones y fallos parciales. Conviene poder reconstruir el resumen desde los datos originales.</p>
+<p>Una colección de resúmenes puede guardar <code>noches_totales</code> por hotel y periodo. Gerencia lee un resultado ya calculado. Debéis mantenerlo también al modificar o cancelar una reserva y evitar contar dos veces un evento reintentado. Para una ocupación diaria real hacen falta fechas y habitaciones disponibles; sumar noches reservadas no produce por sí solo un porcentaje de ocupación.</p>
 <h3 id="el-sensor-no-para-cubo">El sensor no para (cubo)<a class="headerlink" href="#el-sensor-no-para-cubo" title="Permanent link">&para;</a></h3>
+<p>El <strong>patrón bucket</strong> agrupa un número o periodo acotado de medidas. A una medida por minuto, una hora aporta hasta 60 valores por sensor. Guardad hotel, habitación, inicio de hora, suma y número de medidas; la media es <code>suma / n</code>, no se divide siempre por 60 si faltan lecturas. Definid qué ocurre con datos tardíos y evitad que un bucket crezca indefinidamente. Las colecciones de series temporales son una alternativa específica del motor.</p>
 <p>Un documento <strong>por hora</strong> (o por día) con <code>medidas: [ … ]</code> y <code>suma</code> / <code>n</code>. Menos documentos, índices más flacos, fácil de <strong>purgar</strong> el mes viejo. Encaja con la carga de la 214.</p>
 <h3 id="uno-de-cada-mil-se-sale-atipico">Uno de cada mil se sale (atípico)<a class="headerlink" href="#uno-de-cada-mil-se-sale-atipico" title="Permanent link">&para;</a></h3>
+<p>El <strong>patrón atípico</strong> conserva el camino habitual sencillo y mueve el exceso a otra colección. La reserva debe indicar que existe continuación y cómo recuperarla. Comprobad tanto una reserva normal como una excepcional: optimizar el caso frecuente no permite perder extras del caso poco frecuente.</p>
 <p>El 99 % de reservas tiene ≤ 6 extras. Una agencia deja 200. No hinchéis el 99 %: flag <code>rara: true</code> y el resto en <code>reservas_extras</code>. La <em>app</em> hace el segundo <code>find</code> <strong>solo</strong> en ese caso.</p>
 <p>Otros nombres que veréis: <strong>árbol</strong> (ancestros), <strong>preasignación</strong> (estructura vacía de antemano; hoy Mongo gestiona mejor la RAM, menos urgente).</p>
 <h3 id="lo-que-no-quereis-hacer">Lo que no queréis hacer<a class="headerlink" href="#lo-que-no-quereis-hacer" title="Permanent link">&para;</a></h3>
+<p>Evaluad los patrones con la consulta que intentan mejorar. Cread unos datos pequeños, ejecutad la lectura y la actualización y estimad cómo crecerían en un año. No se trata de aplicar todos los patrones: cada uno introduce un coste que debe compensar el problema que resuelve.</p>
 <table>
 <thead>
 <tr>
@@ -2199,7 +2285,7 @@
 <tbody>
 <tr>
 <td>Array sin techo</td>
-<td>Lecturas lentas, 16 MB</td>
+<td>Lecturas lentas, 16 MiB</td>
 <td>Otra colección o páginas</td>
 </tr>
 <tr>
@@ -2232,7 +2318,7 @@
 <h2 id="un-validador-no-es-un-create-table">Un validador no es un <code>CREATE TABLE</code><a class="headerlink" href="#un-validador-no-es-un-create-table" title="Permanent link">&para;</a></h2>
 <p>El esquema <strong>sigue siendo dinámico</strong>. El validador pone <strong>barandillas</strong>: que <code>noches</code> sea entero ≥ 1, que exista <code>hotel</code>. Si prohibís <strong>cualquier</strong> campo nuevo, chocáis con <strong>d)</strong>.</p>
 <p>Al crear:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="s2">"reservas"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">createCollection</span><span class="p">(</span><span class="s2">"reservas_validacion"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">validator</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">$jsonSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
@@ -2245,7 +2331,7 @@
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">          </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s2">"origen de la reserva"</span><span class="p">,</span>
 </span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">        </span><span class="p">},</span>
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">        </span><span class="nx">noches</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="nx">minimum</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">maximum</span><span class="o">:</span><span class="w"> </span><span class="mf">60</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">        </span><span class="nx">importe</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s2">"double"</span><span class="p">,</span><span class="w"> </span><span class="nx">minimum</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">        </span><span class="nx">importe</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"double"</span><span class="p">,</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="s2">"long"</span><span class="p">,</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">],</span><span class="w"> </span><span class="nx">minimum</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">        </span><span class="nx">huespedes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">          </span><span class="nx">bsonType</span><span class="o">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
 </span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">          </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
@@ -2266,18 +2352,28 @@
 <p><code>validationLevel</code> y <code>validationAction</code> deciden qué pasa con documentos <strong>viejos</strong> y si el fallo <strong>rechaza</strong> o solo <strong>avisa</strong>. En Compass: pestaña <em>Validation</em>.</p>
 <p>Colección <strong>ya</strong> existente:</p>
 <div class="language-javascript highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">runCommand</span><span class="p">({</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">collMod</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas"</span><span class="p">,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">validator</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$jsonSchema</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* … */</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">})</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">collMod</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas_validacion"</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">validationLevel</span><span class="o">:</span><span class="w"> </span><span class="s2">"strict"</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nx">validationAction</span><span class="o">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">})</span>
 </span></code></pre></div>
 <p>En Atlas el usuario de prácticas a veces <strong>no</strong> puede <code>collMod</code> (hace falta rol de admin).</p>
 <p>Ver el validador:</p>
-<div class="language-javascript highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">getCollectionInfos</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas"</span><span class="w"> </span><span class="p">})[</span><span class="mf">0</span><span class="p">].</span><span class="nx">options</span><span class="p">.</span><span class="nx">validator</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nx">db</span><span class="p">.</span><span class="nx">runCommand</span><span class="p">({</span><span class="w"> </span><span class="nx">listCollections</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">getCollectionInfos</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas_validacion"</span><span class="w"> </span><span class="p">})[</span><span class="mf">0</span><span class="p">].</span><span class="nx">options</span><span class="p">.</span><span class="nx">validator</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nx">db</span><span class="p">.</span><span class="nx">runCommand</span><span class="p">({</span><span class="w"> </span><span class="nx">listCollections</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"reservas_validacion"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span>
 </span></code></pre></div>
 <p>Un <code>insertOne</code> que rompe el esquema devuelve <code>Document failed validation</code> y <strong>qué</strong> regla falló. Leedlo; no es un “error misterioso”.</p>
+<h3 id="probar-el-contrato-no-solo-crearlo">Probar el contrato, no solo crearlo<a class="headerlink" href="#probar-el-contrato-no-solo-crearlo" title="Permanent link">&para;</a></h3>
+<p>La colección <code>reservas_validacion</code> es independiente de los datos de consulta del 2.6. En el ejemplo <code>noches</code> debe ser entero; <code>importe</code> admite varios tipos numéricos. Para importes monetarios de producción, acordad una representación exacta, como céntimos enteros o <code>Decimal128</code>; los decimales binarios del fichero de aula simplifican el ejercicio.</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">db</span><span class="p">.</span><span class="nx">reservas_validacion</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">({</span><span class="nx">hotel</span><span class="o">:</span><span class="w"> </span><span class="s2">"Laredo"</span><span class="p">,</span><span class="w"> </span><span class="nx">noches</span><span class="o">:</span><span class="w"> </span><span class="nx">Int32</span><span class="p">(</span><span class="mf">2</span><span class="p">),</span><span class="w"> </span><span class="nx">importe</span><span class="o">:</span><span class="w"> </span><span class="mf">124</span><span class="p">})</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// Debe rechazarse: noches no cumple el tipo entero.</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nx">db</span><span class="p">.</span><span class="nx">reservas_validacion</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">({</span><span class="nx">hotel</span><span class="o">:</span><span class="w"> </span><span class="s2">"Laredo"</span><span class="p">,</span><span class="w"> </span><span class="nx">noches</span><span class="o">:</span><span class="w"> </span><span class="s2">"dos"</span><span class="p">,</span><span class="w"> </span><span class="nx">importe</span><span class="o">:</span><span class="w"> </span><span class="mf">124</span><span class="p">})</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// Debe admitirse: el contrato permite campos adicionales.</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nx">db</span><span class="p">.</span><span class="nx">reservas_validacion</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">({</span><span class="nx">hotel</span><span class="o">:</span><span class="w"> </span><span class="s2">"Potes"</span><span class="p">,</span><span class="w"> </span><span class="nx">noches</span><span class="o">:</span><span class="w"> </span><span class="nx">Int32</span><span class="p">(</span><span class="mf">1</span><span class="p">),</span><span class="w"> </span><span class="nx">importe</span><span class="o">:</span><span class="w"> </span><span class="mf">90</span><span class="p">,</span><span class="w"> </span><span class="nx">mascota</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">})</span>
+</span></code></pre></div>
+<p><code>strict</code> aplica la validación a inserciones y actualizaciones; <code>error</code> rechaza operaciones inválidas. Cambiar las reglas no repara automáticamente los documentos anteriores. Para migrar una colección existente, inspeccionad los datos, preparad lectores compatibles y comprobad qué escrituras aceptará el nuevo validador.</p>
 <h2 id="compass-como-pizarra-no-como-examen">Compass como pizarra (no como examen)<a class="headerlink" href="#compass-como-pizarra-no-como-examen" title="Permanent link">&para;</a></h2>
-<p>Desde 2025 Compass <strong>infiere</strong> un esquema a partir de una muestra y deja dibujar colecciones, tipos e índices. Útil para <strong>enseñar</strong> el modelo. El RA2 se aguanta si justificáis <strong>por qué</strong> embebeis el huésped y <strong>por qué</strong> no el log de la puerta.</p>
+<p>Compass permite explorar el esquema inferido de una muestra; las opciones de diagramación dependen de la versión. Útil para <strong>enseñar</strong> el modelo. El RA2 se aguanta si justificáis <strong>por qué</strong> embebeis el huésped y <strong>por qué</strong> no el log de la puerta.</p>
 <h2 id="como-se-cierra-el-apartado">Cómo se cierra el apartado<a class="headerlink" href="#como-se-cierra-el-apartado" title="Permanent link">&para;</a></h2>
 <p>Da igual la carga y los patrones: el modelo <strong>sigue a las historias de usuario</strong>. Si no podéis decir “recepción abre <em>esto</em> y por eso el cobro va <em>aquí</em>”, el dibujo es decoración.</p>
 <div class="admonition success">
@@ -2309,13 +2405,16 @@
 </table>
 <h2 id="para-practicar-moodle-manda">Para practicar (Moodle manda)<a class="headerlink" href="#para-practicar-moodle-manda" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>De un ER de hotel a documentos.</strong> Entidades típicas: hotel, habitación, reserva, huésped, cobro, servicio (spa/parking), incidencia. La <em>app</em> muestra (a) ficha de reserva, (b) ficha de hotel con teléfono, (c) listado de incidencias de una habitación. Entregad: un JSON de ejemplo <strong>por</strong> colección, <code>insertOne</code>/<code>insertMany</code>, por qué embebeis o referenciáis (comentarios en el JSON), validador de <code>reservas</code> y de <code>hoteles</code>. Si Compass lo pide el profesor: captura o <code>.mdm</code>.</li>
+<li><strong>De un ER de hotel a documentos.</strong> Entidades típicas: hotel, habitación, reserva, huésped, cobro, servicio (spa/parking), incidencia. La <em>app</em> muestra (a) ficha de reserva, (b) ficha de hotel con teléfono, (c) listado de incidencias de una habitación. Entregad: un JSON de ejemplo <strong>por</strong> colección, <code>insertOne</code>/<code>insertMany</code>, por qué embebeis o referenciáis (explicaciones fuera del JSON, que no admite comentarios), validador de <code>reservas</code> y de <code>hoteles</code>. Si Compass lo pide el profesor: captura o <code>.mdm</code>.</li>
 <li><strong>Tarifas.</strong> Partís de <code>tarifa_web</code>, <code>tarifa_ota</code>, <code>tarifa_recepcion</code>. Pasadlo a array de <code>{ canal, precio, moneda }</code>. Un <code>update</code> que añada <code>agencias</code>.</li>
 <li><strong>Versión de esquema.</strong> Las reservas viejas tienen <code>telefono_hotel</code> plano. Las nuevas, <code>hotel: { id, nombre }</code>. Campo <code>v</code>. Un <code>updateMany</code> que marque las viejas con <code>v: 1</code> y las que ya tengan objeto con <code>v: 2</code>.</li>
 <li><strong>Cubo.</strong> Medidas de temperatura de la 214 (un JSON por minuto, 2 horas). Rediseñad <strong>un documento por hora</strong> con <code>medidas</code> y <code>temp_media</code>. Explicad qué patrón es y qué ganáis al purgar.</li>
 <li><strong>Atípico.</strong> El 99 % tiene ≤ 5 extras. Diseñad <code>rara</code> + colección auxiliar. No hace falta implementar la <em>app</em>.</li>
 <li>(Opcional) Tres patrones que <strong>ya</strong> usáis en <code>reservas</code> + <code>opiniones</code> del <a href="../mongodb/">2.6</a> (array de huéspedes, comentarios, etiquetas). Nombradlos con vuestras palabras.</li>
 </ol>
+<h3 id="criterios-para-revisar-la-entrega">Criterios para revisar la entrega<a class="headerlink" href="#criterios-para-revisar-la-entrega" title="Permanent link">&para;</a></h3>
+<p>Cada colección debe incluir un ejemplo válido, una consulta que justifique su existencia y una explicación del crecimiento esperado. Para referencias, comprobad tipos e identificadores; para duplicaciones, explicad cómo se mantienen o por qué son históricas; para validadores, adjuntad un caso aceptado y otro rechazado.</p>
+<p>Los ejercicios que cambian <code>hotel</code> de cadena a objeto se realizan en una colección <strong>independiente</strong>, por ejemplo <code>reservas_versionadas</code>. No modifiquéis la colección usada por el 2.6 y el 2.9: sus consultas presuponen <code>hotel</code> como cadena. En los buckets, usad 120 medidas conocidas y verificad que las dos horas conservan las 120, incluidas las que lleguen fuera de orden.</p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Curso <em>M320 Data Modeling</em> (MongoDB University): la <strong>idea</strong> de carga → relaciones → patrones; los ejemplos de esta página son del hotel.</li>

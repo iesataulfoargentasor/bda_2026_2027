@@ -3,7 +3,9 @@
 
 En el compose de este módulo el RPC es namenode:8020 (config.env).
 El 9000 es el de otras guías. La UI y WebHDFS van por el 9870.
-Desde Windows, si namenode no resuelve, usad InsecureClient en el 9870.
+Requiere un cliente Hadoop con Java, libhdfs y classpath configurados,
+además de conectividad con NameNode y DataNodes. Publicar solo 9870 en
+Windows tampoco basta para WebHDFS: sus lecturas redirigen al DataNode.
 """
 import pandas as pd
 from pyarrow import fs
@@ -15,7 +17,7 @@ hdfs = fs.HadoopFileSystem(host=HDFS_HOST, port=HDFS_PORT)
 
 fichero = "/user/bda/opiniones.txt"
 with hdfs.open_input_stream(fichero) as reader:
-    texto = reader.read().decode("utf-8")
+    texto = reader.read(200).decode("utf-8", errors="replace")
 print(texto[:200])
 
 df = pd.DataFrame(

@@ -10,7 +10,7 @@ services:
     hostname: rs-laredo
     command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     volumes:
       - vol_laredo:/data/db
       - ./iniciar-rs.js:/scripts/iniciar-rs.js:ro
@@ -20,7 +20,7 @@ services:
     hostname: rs-potes
     command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
     ports:
-      - "27018:27017"
+      - "127.0.0.1:27018:27017"
     volumes:
       - vol_potes:/data/db
 
@@ -29,7 +29,7 @@ services:
     hostname: rs-noja
     command: ["mongod", "--replSet", "hotelrs", "--bind_ip_all"]
     ports:
-      - "27019:27017"
+      - "127.0.0.1:27019:27017"
     volumes:
       - vol_noja:/data/db
 

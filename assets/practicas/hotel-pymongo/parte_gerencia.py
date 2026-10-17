@@ -1,25 +1,14 @@
 #!/usr/bin/env python3
-"""Parte de ocupación del grupo hotelero. URI por variable de entorno o localhost."""
+"""Parte de noches reservadas del grupo hotelero. URI por variable de entorno o localhost."""
 import os
 
 from pymongo import ASCENDING, DESCENDING, MongoClient
-from pymongo.errors import ServerSelectionTimeoutError
+from pymongo.errors import PyMongoError
 
 URI = os.environ.get("HOTEL_MONGO_URI", "mongodb://localhost:27017")
 
 
-def conectar():
-    cliente = MongoClient(URI, serverSelectionTimeoutMS=4000, wtimeout=2500)
-    cliente.admin.command("ping")
-    return cliente
-
-
-def main():
-    try:
-        cliente = conectar()
-    except ServerSelectionTimeoutError as exc:
-        raise SystemExit(f"No hay mongod en {URI}: {exc}") from exc
-
+def imprimir_parte(cliente):
     reservas = cliente["hotel"]["reservas"]
     print("colecciones:", cliente["hotel"].list_collection_names())
     print("reservas:", reservas.count_documents({}))
@@ -38,6 +27,18 @@ def main():
     proy = {"hotel": 1, "importe": 1, "noches": 1, "_id": 0}
     for doc in reservas.find(filtro, proy).sort("importe", ASCENDING).limit(5):
         print(" ", doc)
+
+
+def main():
+    try:
+        with MongoClient(URI, serverSelectionTimeoutMS=4000) as cliente:
+            cliente.admin.command("ping")
+            imprimir_parte(cliente)
+    except PyMongoError as exc:
+        raise SystemExit(
+            f"No se pudo obtener el parte ({type(exc).__name__}). "
+            "Comprueba servicio, red, base y permisos."
+        ) from None
 
 
 if __name__ == "__main__":

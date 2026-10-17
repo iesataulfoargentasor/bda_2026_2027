@@ -1370,6 +1370,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda la nota)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidencias-y-limites-de-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias y límites de la práctica
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1946,6 +1963,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Para practicar (Moodle manda la nota)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidencias-y-limites-de-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias y límites de la práctica
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2055,10 +2089,11 @@
 <h1 id="23-hdfs">2.3. HDFS<a class="headerlink" href="#23-hdfs" title="Permanent link">&para;</a></h1>
 <p>El <strong>Hadoop Distributed File System</strong> es la capa de almacenamiento de Hadoop: un sistema de ficheros <strong>repartido</strong> y <strong>tolerante a fallos</strong> que guarda grandes cantidades de datos, <strong>crece</strong> enchufando servidores y <strong>sobrevive</strong> a discos muertos sin perder el lago. Se basa en el artículo de Google sobre el <em>Google File System</em> (2003).</p>
 <p>Cumple de golpe varios criterios del RA2: <strong>deposita cualquier fichero</strong> (a), <strong>tolera</strong> que se muera un disco (c), <strong>guarda ahora y lees después</strong> (d) y <strong>crece</strong> añadiendo <em>datanodes</em> (e). El <a href="../ecosistema/">2.2</a> os dejó el clúster y YARN; aquí el oficio es <strong>el disco del hotel</strong>.</p>
-<p>HDFS <strong>reparte</strong> los ficheros entre todos los nodos: los corta en <strong>bloques</strong> (por defecto <strong>128 MB</strong>) y guarda <strong>copias</strong> en máquinas distintas. El valor de fábrica del <strong>factor de réplica</strong> es <strong>3</strong>.</p>
-<p>Añadir un servidor incrementa el tamaño <strong>de forma lineal</strong>: el nodo nuevo suma <strong>capacidad</strong> y <strong>redundancia</strong>. No reescribís el programa de reservas.</p>
+<p>HDFS <strong>reparte</strong> los ficheros entre todos los nodos: los corta en <strong>bloques</strong> (por defecto <strong>128 MiB</strong>) y guarda <strong>copias</strong> en máquinas distintas. El valor de fábrica del <strong>factor de réplica</strong> es <strong>3</strong>.</p>
+<p>Añadir un DataNode aporta capacidad física. La capacidad útil depende de la replicación, el espacio reservado y el equilibrio entre nodos. El factor de réplica no aumenta automáticamente: un nodo nuevo permite alojar bloques y redistribuirlos, pero hay que comprobar el balanceo.</p>
 <p>El diseño es <strong>append</strong>: escribís el fichero (a mano con <code>hdfs dfs -put</code>, o desde Spark, Flume o Sqoop; <a href="../../ut1/ingesta/">1.6</a>), podéis <strong>añadir al final</strong> y podéis <strong>borrarlo</strong>. No editáis el byte 17 del medio. En clase se resume como <strong>WORM</strong> (<em>write once, read many</em>): un bloque cerrado se lee muchas veces y no se reescribe. Añadir al final no es un <code>UPDATE</code> de una fila.</p>
 <h2 id="que-no-hace-bien-y-que-si">Qué no hace bien (y qué sí)<a class="headerlink" href="#que-no-hace-bien-y-que-si" title="Permanent link">&para;</a></h2>
+<p>Relacionad el acceso con la herramienta. El informe nocturno recorre muchos registros secuencialmente: encaja en HDFS. Recepción busca y modifica una reserva concreta en milisegundos: necesita un motor de base de datos. HDFS conserva los ficheros sobre los que ese motor o un procesamiento analítico puede trabajar; no ofrece por sí solo consultas por <code>id_reserva</code>.</p>
 <p>No ofrece buen rendimiento para:</p>
 <ul>
 <li><strong>Accesos de baja latencia.</strong> No es la caja de recepción. Guarda <em>inputs</em> para procesos de cómputo.</li>
@@ -2073,15 +2108,17 @@
 </div>
 <p><strong>No</strong> es el sitio para el clic de recepción, ni para diez escritores sobre el mismo CSV, ni para un JSON de 2 KB por cada reserva suelta (juntadlos).</p>
 <h2 id="bloques">Bloques<a class="headerlink" href="#bloques" title="Permanent link">&para;</a></h2>
-<p>Un <strong>bloque</strong> es la cantidad <strong>mínima</strong> que HDFS lee o escribe. El tamaño por defecto es <strong>128 MB</strong> porque Hadoop está pensado para ficheros <strong>grandes</strong>.</p>
-<p>Todos los ficheros se parten. Subís <code>reservas_2024.parquet</code> de <strong>600 MB</strong> → <strong>5</strong> bloques (4 × 128 MB + un resto). Esos bloques se <strong>reparten</strong> por los DataNodes.</p>
-<p>Si el fichero es <strong>menor</strong> de 128 MB, ocupa <strong>un</strong> bloque <strong>lógico</strong>, pero en disco solo los <strong>bytes reales</strong>. Un archivo de 1 MB ocupa <strong>1 MB</strong> en disco, no 128. El “hueco” de 127 MB no se reserva.</p>
-<p>Con factor de réplica <strong>3</strong>, el de 600 MB (5 bloques) se materializa en <strong>15</strong> copias de bloque en el clúster.</p>
+<p>Si guardamos un fichero de 600 MiB con bloques de 128 MiB, se divide en cuatro bloques de 128 MiB y uno de 88 MiB. Con replicación 3 se solicitan tres copias de cada bloque: aproximadamente 1800 MiB de contenido físico, más metadatos y otros costes. El último bloque no reserva necesariamente 128 MiB completos para almacenar solo 88 MiB.</p>
+<p>Una réplica no es un fragmento diferente: cada copia permite reconstruir <strong>el mismo bloque</strong>. Para leer el fichero completo necesitamos una copia accesible de <strong>cada</strong> bloque.</p>
+<p>Un <strong>bloque</strong> es la unidad en que HDFS organiza la ubicación y replicación de un fichero. El tamaño habitual por defecto es <strong>128 MiB</strong> (134 217 728 bytes). No es la cantidad mínima de una lectura: un cliente puede pedir solo parte de un bloque. Los paquetes de transferencia y los fragmentos usados para checksum son unidades distintas.</p>
+<p>Todos los ficheros se parten. Subís <code>reservas_2024.parquet</code> de <strong>600 MiB</strong> → <strong>5</strong> bloques (4 × 128 MiB + un resto). Esos bloques se <strong>reparten</strong> por los DataNodes.</p>
+<p>Si el fichero es <strong>menor</strong> de 128 MiB, ocupa <strong>un</strong> bloque <strong>lógico</strong>, pero en disco solo los <strong>bytes reales</strong>. Un archivo de 1 MB almacena aproximadamente <strong>1 MB por réplica</strong>, más metadatos y checksums; no reserva un bloque completo de 128 MiB.</p>
+<p>Con factor de réplica <strong>3</strong>, el de 600 MiB (5 bloques) se materializa en <strong>15</strong> copias de bloque en el clúster.</p>
 <pre class="mermaid"><code>flowchart LR
-  F["reservas_2024.parquet 600 MB"] --&gt; B1[Bloque 1 128 MB]
-  F --&gt; B2[Bloque 2 128 MB]
-  F --&gt; B3[Bloque 3 128 MB]
-  F --&gt; B4[Bloque 4 128 MB]
+  F["reservas_2024.parquet 600 MiB"] --&gt; B1[Bloque 1 128 MiB]
+  F --&gt; B2[Bloque 2 128 MiB]
+  F --&gt; B3[Bloque 3 128 MiB]
+  F --&gt; B4[Bloque 4 128 MiB]
   F --&gt; B5[Bloque 5 resto]
   B1 --&gt; R1[3 réplicas]
   B2 --&gt; R2[3 réplicas]
@@ -2130,15 +2167,22 @@
   CLI --&gt; DN1</code></pre>
 <p>Con réplica 3, HDFS suele dejar <strong>dos</strong> copias en un rack y <strong>una</strong> en <strong>otro</strong>. Si se cae el <em>switch</em> del armario de Laredo, queda una copia en Potes.</p>
 <h2 id="trabajando-con-hdfs-hdfs-dfs">Trabajando con HDFS (<code>hdfs dfs</code>)<a class="headerlink" href="#trabajando-con-hdfs-hdfs-dfs" title="Permanent link">&para;</a></h2>
+<p>Distinguid el sistema local del contenedor y el sistema distribuido. En <code>hdfs dfs -put reservas.csv /user/bda/</code>, el primer argumento es un fichero local; el segundo es una ruta HDFS. En <code>-cp</code>, ambos argumentos son HDFS. En <code>-get</code>, copiamos de HDFS al entorno local desde el que ejecutamos el comando.</p>
+<p>En el Compose, <code>/practicas</code> está montado solo para lectura. Para las descargas y pruebas que escriben ficheros locales, preparad un directorio de trabajo escribible en el Bash del NameNode:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/practica-hdfs
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cp<span class="w"> </span>/practicas/reservas.csv<span class="w"> </span>/practicas/opiniones.txt<span class="w"> </span>/tmp/practica-hdfs/
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>/tmp/practica-hdfs
+</span></code></pre></div>
+<p>Los ficheros de <code>/tmp</code> no son los del host. Si queréis conservar una descarga fuera del contenedor, usad <code>docker compose cp namenode:/tmp/practica-hdfs/fichero .</code> desde el host, sustituyendo <code>fichero</code> por su nombre real.</p>
 <p>Desde el terminal se usa el comando <code>hdfs</code> y un segundo parámetro. Ante la duda: <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html">documentación oficial de la <em>shell</em></a>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>hdfs comando
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hdfs comando
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">hadoop fs frente a hdfs dfs</p>
 <p><code>hadoop fs</code> habla con un sistema de ficheros <strong>genérico</strong> (local, HDFS, FTP, S3…). En versiones viejas existía <code>hadoop dfs</code>; hoy está <strong>obsoleto</strong> a favor de <strong><code>hdfs dfs</code></strong>. En el aula, para HDFS: <code>hdfs dfs</code>.</p>
 </div>
 <p><code>dfs</code> pide otro argumento (con guion): un gesto al estilo de la <em>shell</em> de Linux.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hdfs dfs -ls /
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hdfs dfs -ls /
 </span></code></pre></div>
 <p>Sin ruta, <code>-ls</code> lista el directorio de trabajo del usuario (a menudo <code>/user/&lt;quien&gt;</code>); no siempre es la raíz. Por eso en clase escribimos la ruta <strong>completa</strong>.</p>
 <h3 id="los-comandos-que-mas-usareis">Los comandos que más usaréis<a class="headerlink" href="#los-comandos-que-mas-usareis" title="Permanent link">&para;</a></h3>
@@ -2189,18 +2233,18 @@
 </tbody>
 </table>
 <p>Borrado <strong>recursivo</strong> (carpeta y todo lo de dentro). Es el gesto de cada vez que un job MapReduce se queja de que la salida <strong>ya existe</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hdfs dfs -rm -r /user/bda/salida_wc
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hdfs dfs -rm -r /user/bda/salida_wc
 </span></code></pre></div>
 <h3 id="recorrido-de-aula-explicad-cada-linea">Recorrido de aula (explicad cada línea)<a class="headerlink" href="#recorrido-de-aula-explicad-cada-linea" title="Permanent link">&para;</a></h3>
 <p>Ficheros: <a href="../../assets/practicas/hotel-hadoop/reservas.csv">reservas.csv</a> y <a href="../../assets/practicas/hotel-hadoop/opiniones.txt">opiniones.txt</a>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hdfs dfs -mkdir -p /user/bda/datos
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>hdfs dfs -put reservas.csv /user/bda/datos/
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>hdfs dfs -put reservas.csv /user/bda/datos/reservas_copia.csv
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>hdfs dfs -ls /user/bda/datos
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>hdfs dfs -count /user/bda/datos
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>hdfs dfs -mv /user/bda/datos/reservas_copia.csv /user/bda/datos/reservas_backup.csv
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>hdfs dfs -head /user/bda/datos/reservas_backup.csv
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>hdfs dfs -get /user/bda/datos/reservas_backup.csv ./reservas_local.csv
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hdfs dfs -mkdir -p /user/bda/datos
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>hdfs dfs -put reservas.csv /user/bda/datos/
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>hdfs dfs -put reservas.csv /user/bda/datos/reservas_copia.csv
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>hdfs dfs -ls /user/bda/datos
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>hdfs dfs -count /user/bda/datos
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>hdfs dfs -mv /user/bda/datos/reservas_copia.csv /user/bda/datos/reservas_backup.csv
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>hdfs dfs -head /user/bda/datos/reservas_backup.csv
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>hdfs dfs -get /user/bda/datos/reservas_backup.csv ./reservas_local.csv
 </span></code></pre></div>
 <table>
 <thead>
@@ -2236,7 +2280,7 @@
 </tr>
 <tr>
 <td><code>-head</code></td>
-<td>Primeras líneas; no tragáis un Parquet de 8 TB</td>
+<td>Primeros 1024 bytes; útil para texto, no para interpretar un Parquet binario</td>
 </tr>
 <tr>
 <td><code>-get</code></td>
@@ -2246,10 +2290,10 @@
 </table>
 <p><code>hdfs dfs -cat /user/bda/datos/reservas.csv | more</code> pagina en el terminal. <code>-text</code> intenta mostrar también formatos que <code>-cat</code> deja crudos.</p>
 <h3 id="crc-el-viaje-no-corrompio">CRC: el viaje no corrompió<a class="headerlink" href="#crc-el-viaje-no-corrompio" title="Permanent link">&para;</a></h3>
-<p>Al bajar podéis pedir el fichero de <em>checksum</em> <strong>CRC</strong> para comprobar que los bytes del DataNode coinciden con los del portátil:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hdfs dfs -get -crc /user/bda/datos/reservas.csv reservas_local.csv
+<p>Las lecturas HDFS comprueban checksums de forma habitual. La opción <code>-crc</code> de una descarga conserva además un fichero local de checksum; no es lo que activa por primera vez la verificación:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hdfs dfs -get -crc /user/bda/datos/reservas.csv reservas_local.csv
 </span></code></pre></div>
-<p>Aparece un <code>.crc</code> junto a la copia. Si no cuadra, el viaje (o el disco) mintió. El DataNode <strong>ya</strong> guarda un CRC de cada bloque; esto es la comprobación <strong>en el cliente</strong>.</p>
+<p>Aparece un fichero oculto de nombre semejante a <code>.reservas.csv.crc</code> junto a la copia. HDFS mantiene checksums de fragmentos del contenido y puede detectar corrupción. El checksum detecta diferencias; no permite reconstruir por sí solo los bytes correctos: para eso necesitamos una réplica sana.</p>
 <h2 id="namenode-y-datanode-en-profundidad">NameNode y DataNode (en profundidad)<a class="headerlink" href="#namenode-y-datanode-en-profundidad" title="Permanent link">&para;</a></h2>
 <h3 id="namenode">NameNode<a class="headerlink" href="#namenode" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2261,8 +2305,9 @@
 <li>Si se cae <strong>sin</strong> HA, <strong>no hay HDFS</strong>. Copias de seguridad del metadato: <strong>críticas</strong>.</li>
 </ul>
 <p>Cuando un cliente quiere leer o escribir, el NameNode le dice <strong>en qué nodos</strong> está el bloque. También vigila que los nodos <strong>no estén caídos</strong> y que la réplica se <strong>mantenga</strong>.</p>
-<p>Orden de magnitud de industria (para situar, no para memorizar): un clúster publicado de Facebook anduvo por <strong>1 100</strong> máquinas, <strong>8 800</strong> nodos y del orden de <strong>12 PB</strong>. El hotel de aula no es eso; el <strong>oficio</strong> del NameNode sí.</p>
+<p>La memoria del NameNode depende especialmente del número de ficheros y bloques, no solo de los terabytes. Un millón de ficheros diminutos puede exigir muchos más metadatos que unos pocos ficheros grandes con los mismos bytes. Por eso agrupar eventos en ficheros razonables forma parte del diseño.</p>
 <h3 id="secondary-namenode">Secondary NameNode<a class="headerlink" href="#secondary-namenode" title="Permanent link">&para;</a></h3>
+<p>El nombre induce a error: <strong>no es un NameNode de reserva que tome el mando automáticamente</strong>. Su función de checkpoint combina la imagen de metadatos y las operaciones acumuladas. La alta disponibilidad utiliza NameNodes activo y standby con configuración específica. Confundir ambos mecanismos llevaría a atribuir al laboratorio una recuperación que no tiene.</p>
 <ul>
 <li>Guarda copias de trabajo de <strong><code>fsimage</code></strong> (foto del árbol) y <strong><code>edits</code></strong> (diario de cambios, <em>deltas</em>).</li>
 <li><strong>No</strong> es un nodo de respaldo en caliente. Si el NameNode muere, el Secondary <strong>no</strong> toma el relevo solo.</li>
@@ -2275,11 +2320,12 @@
 <li>Almacena y lee bloques. Los clientes (y el NameNode) los <strong>recuperan</strong> por dirección.</li>
 <li><strong>Reportan</strong> al NameNode la lista de bloques que tienen (<em>block report</em>) y un <em>heartbeat</em> (“sigo vivo”).</li>
 <li>Pueden usar <strong>varios discos</strong> (JBOD, <a href="../ecosistema/">2.2</a>).</li>
-<li>Guardan un <strong>checksum (CRC)</strong> de cada bloque. Si no cuadra al leer, el cliente prueba <strong>otra</strong> réplica y se informa al maestro.</li>
+<li>Guardan <strong>checksums (CRC)</strong> de fragmentos del contenido de los bloques. Si no cuadra al leer, el cliente prueba <strong>otra</strong> réplica y se informa al maestro.</li>
 </ul>
 <h3 id="racks">Racks<a class="headerlink" href="#racks" title="Permanent link">&para;</a></h3>
 <p>Los DataNodes se organizan en <strong>racks</strong> (armarios). Rack 1: nodos de Laredo y Noja; rack 2: Potes y Comillas. Colocar réplicas en <strong>racks distintos</strong> evita perder el bloque si se cae un <em>switch</em> entero. Eso es tolerancia a fallos (c) a escala de <strong>edificio</strong>, no solo de disco.</p>
 <h2 id="proceso-de-lectura">Proceso de lectura<a class="headerlink" href="#proceso-de-lectura" title="Permanent link">&para;</a></h2>
+<p>Separad el <strong>camino de metadatos</strong> del <strong>camino de datos</strong>. El NameNode informa de qué bloques componen el fichero y dónde hay copias. Los bytes viajan directamente desde los DataNodes al cliente. Así el coordinador no tiene que transportar todas las lecturas del clúster.</p>
 <p>Los bytes <strong>no</strong> pasan por el NameNode. El cliente lee <strong>directo</strong> del DataNode. Por eso HDFS <strong>escala</strong>: el tráfico se <strong>reparte</strong>.</p>
 <pre class="mermaid"><code>sequenceDiagram
   participant C as Cliente
@@ -2306,6 +2352,8 @@
 <p>El maestro da el <strong>mapa</strong>. Si imagináis que 8 TB de reservas “atraviesan” el NameNode, el dibujo está mal y el clúster no escalaría.</p>
 </div>
 <h2 id="proceso-de-escritura">Proceso de escritura<a class="headerlink" href="#proceso-de-escritura" title="Permanent link">&para;</a></h2>
+<p>El cliente solicita crear el fichero y recibe destinos para el primer bloque. Envía paquetes al primer DataNode y estos se propagan por la cadena de réplicas. Las confirmaciones vuelven hacia el cliente. El NameNode decide ubicación y mantiene metadatos; no es una estación intermedia por la que pasan todos los bytes.</p>
+<p>Si un miembro de la cadena falla, el sistema intenta continuar con los destinos disponibles y recuperar el nivel de réplica. Eso requiere nodos sanos y espacio: solicitar factor 3 con un único DataNode no crea tres máquinas ni garantiza tres copias independientes.</p>
 <p>La creación, la tubería de réplicas y el cierre:</p>
 <pre class="mermaid"><code>sequenceDiagram
   participant C as Cliente
@@ -2330,11 +2378,12 @@
 </ol>
 <p>Si un nodo de la tubería muere, HDFS <strong>elige otro</strong> y sigue. No “se pierde la reserva de las 03:00” porque el primero del pipeline pestañeó.</p>
 <h2 id="hdfs-por-dentro-metadatos">HDFS por dentro (metadatos)<a class="headerlink" href="#hdfs-por-dentro-metadatos" title="Permanent link">&para;</a></h2>
+<p>La imagen del sistema de ficheros y el registro de operaciones permiten reconstruir nombres, permisos y asociación con bloques. Los informes de los DataNodes permiten conocer las ubicaciones actuales. Por eso copiar solo un directorio de bloques no equivale a tener una copia utilizable de todo el sistema: los metadatos también importan.</p>
 <p>Los cambios del clúster viven en ficheros del NameNode. La carpeta se configura en <code>$HADOOP_HOME/etc/hadoop/hdfs-site.xml</code> (en el <a href="../../assets/practicas/hotel-hadoop/config.env">compose del 2.2</a> el espíritu es el mismo: <code>dfs.namenode.name.dir</code>).</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;property&gt;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>file:///opt/hadoop-data/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">&lt;/property&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;property&gt;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>file:///opt/hadoop-data/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">&lt;/property&gt;</span>
 </span></code></pre></div>
 <p>(En textos viejos veréis <code>dfs.name.dir</code>: mismo oficio.) Dentro hay un <code>current/</code> con prefijos:</p>
 <table>
@@ -2362,29 +2411,31 @@
 <p>Al <strong>arrancar</strong>, HDFS carga en RAM el último <code>fsimage</code> más los <code>edits</code> que aún no se han fusionado. El Secondary, cuando el diario crece, <strong>sincroniza</strong>: nuevo <code>fsimage</code> + nuevo <code>edits</code> limpio. Cada reinicio del NameNode hace el <strong>merge</strong> <em>fsimage</em> + <em>edit log</em>. Por eso un diario enorme sin <em>checkpoints</em> = arranque eterno.</p>
 <p><code>VERSION</code> en esa carpeta identifica el <strong>clusterID</strong> / <em>block pool</em>. Os servirá al bajar al disco del DataNode.</p>
 <h3 id="bloques-en-disco-fsck-y-el-blk_">Bloques en disco: <code>fsck</code> y el <code>blk_*</code><a class="headerlink" href="#bloques-en-disco-fsck-y-el-blk_" title="Permanent link">&para;</a></h3>
-<p>Para <strong>ver</strong> bloques hace falta un fichero que <strong>ocupe más de 128 MB</strong>. El <a href="../../assets/practicas/hotel-hadoop/reservas.csv">reservas.csv</a> de aula cabe en <strong>un</strong> bloque: útil para comandos, pobre para <code>fsck</code>. Generad uno grande en local (no va a git) con <a href="../../assets/practicas/hotel-hadoop/generar_reservas_grandes.py">generar_reservas_grandes.py</a> o usad un Parquet de prácticas que ya pese.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>hdfs dfs -mkdir -p /user/bda/prueba-hdfs
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hdfs dfs -put reservas_grandes.csv /user/bda/prueba-hdfs
+<p><code>fsck</code> inspecciona salud y ubicación; no sustituye una copia de seguridad ni repara cualquier problema. <strong>Under-replicated</strong> significa que hay menos copias que las solicitadas, pero puede seguir habiendo una legible. <strong>Missing</strong> indica que faltan copias disponibles de algún bloque. Anotad cuál de las dos situaciones aparece antes de concluir que se perdió el fichero.</p>
+<p>Los identificadores y rutas que siguen son ejemplos de una instalación. En el Compose consultad <code>hdfs getconf -confKey dfs.datanode.data.dir</code>; la ruta configurada es <code>/tmp/hadoop-root/dfs/data</code>. No editéis directamente <code>blk_*</code>: usad la API de HDFS.</p>
+<p>Para <strong>ver varios bloques</strong> con el tamaño predeterminado hace falta un fichero que <strong>ocupe más de 128 MiB</strong>. El <a href="../../assets/practicas/hotel-hadoop/reservas.csv">reservas.csv</a> de aula cabe en <strong>un</strong> bloque: útil para comandos, pobre para <code>fsck</code>. Generad uno grande en local (no va a git) con <a href="../../assets/practicas/hotel-hadoop/generar_reservas_grandes.py">generar_reservas_grandes.py</a> o usad un Parquet de prácticas que ya pese. En el host, desde <code>docs/assets/practicas/hotel-hadoop</code>, podéis ejecutar <code>python generar_reservas_grandes.py --lineas 4500000</code>. Anotad el tamaño que imprime; ajustad las filas si necesitáis más bloques. Dentro del NameNode, el fichero estará en <code>/practicas/reservas_grandes.csv</code>: ejecutad el siguiente <code>-put</code> desde <code>/practicas</code> o utilizad esa ruta absoluta.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hdfs dfs -mkdir -p /user/bda/prueba-hdfs
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>hdfs dfs -put reservas_grandes.csv /user/bda/prueba-hdfs
 </span></code></pre></div>
 <p><code>fsck</code> comprueba la <strong>salud</strong> del sistema. Con <code>-files</code> y <code>-blocks</code> lista ficheros y bloques:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hdfs fsck /user/bda/prueba-hdfs -files -blocks
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hdfs fsck /user/bda/prueba-hdfs -files -blocks
 </span></code></pre></div>
 <p>Una traza de aula (un solo DataNode, réplica 1, ~650 MB → <strong>6</strong> bloques) se parece a esto. Los <code>blk_</code> <strong>cambian</strong> en cada format; los <strong>oficios</strong> no:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Connecting to namenode via http://namenode:9870/fsck?ugi=root&amp;files=1&amp;blocks=1&amp;path=%2Fuser%2Fbda%2Fprueba-hdfs
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>FSCK started ...
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>/user/bda/prueba-hdfs &lt;dir&gt;
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/user/bda/prueba-hdfs/reservas_grandes.csv 678260987 bytes, replicated: replication=1, 6 block(s):  OK
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>0. BP-481169443-172.18.0.2-1710000000000:blk_1073750565_9750 len=134217728 Live_repl=1
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>1. BP-481169443-172.18.0.2-1710000000000:blk_1073750566_9751 len=134217728 Live_repl=1
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>2. BP-481169443-172.18.0.2-1710000000000:blk_1073750567_9752 len=134217728 Live_repl=1
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>3. BP-481169443-172.18.0.2-1710000000000:blk_1073750568_9753 len=134217728 Live_repl=1
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>4. BP-481169443-172.18.0.2-1710000000000:blk_1073750569_9754 len=134217728 Live_repl=1
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>5. BP-481169443-172.18.0.2-1710000000000:blk_1073750570_9755 len=7172347 Live_repl=1
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Status: HEALTHY
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a> Number of data-nodes:  1
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a> Number of racks:       1
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Connecting to namenode via http://namenode:9870/fsck?ugi=root&amp;files=1&amp;blocks=1&amp;path=%2Fuser%2Fbda%2Fprueba-hdfs
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>FSCK started ...
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/user/bda/prueba-hdfs &lt;dir&gt;
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/user/bda/prueba-hdfs/reservas_grandes.csv 678260987 bytes, replicated: replication=1, 6 block(s):  OK
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>0. BP-481169443-172.18.0.2-1710000000000:blk_1073750565_9750 len=134217728 Live_repl=1
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>1. BP-481169443-172.18.0.2-1710000000000:blk_1073750566_9751 len=134217728 Live_repl=1
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>2. BP-481169443-172.18.0.2-1710000000000:blk_1073750567_9752 len=134217728 Live_repl=1
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>3. BP-481169443-172.18.0.2-1710000000000:blk_1073750568_9753 len=134217728 Live_repl=1
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>4. BP-481169443-172.18.0.2-1710000000000:blk_1073750569_9754 len=134217728 Live_repl=1
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>5. BP-481169443-172.18.0.2-1710000000000:blk_1073750570_9755 len=7172347 Live_repl=1
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>Status: HEALTHY
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a> Number of data-nodes:  1
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a> Number of racks:       1
 </span></code></pre></div>
 <p>Lectura:</p>
 <ul>
@@ -2395,13 +2446,13 @@
 <li><code>HEALTHY</code>: no hay bloques <strong>faltantes</strong> ni <strong>corruptos</strong>.</li>
 </ul>
 <p>En la UI del NameNode (<strong>9870</strong> → <em>Utilities</em> / explorador) el mismo fichero muestra <em>Block information</em> y el <em>Block Pool ID</em>. Debe <strong>coincidir</strong> con la carpeta del DataNode:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ls /opt/hadoop-data/hdfs/datanode/current
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a># BP-481169443-172.18.0.2-1710000000000
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a># VERSION
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ls /opt/hadoop-data/hdfs/datanode/current
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a># BP-481169443-172.18.0.2-1710000000000
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a># VERSION
 </span></code></pre></div>
 <p>Dentro: <code>current/finalized/subdir0/subdir…</code>. Hadoop parte los bloques en subcarpetas para no tener un directorio de un millón de entradas. El fichero del primer bloque se llama <code>blk_1073750565</code> (más un <code>.meta</code> con el CRC).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>find /opt/hadoop-data/hdfs/datanode -name 'blk_1073750565'
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>head /opt/hadoop-data/hdfs/datanode/.../blk_1073750565
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>find /opt/hadoop-data/hdfs/datanode -name 'blk_1073750565'
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>head /opt/hadoop-data/hdfs/datanode/.../blk_1073750565
 </span></code></pre></div>
 <p><code>head</code> del primer bloque debe mostrar la <strong>cabecera</strong> del CSV (<code>id_reserva,hotel,canal,…</code>). Eso cierra el círculo: el “fichero” de HDFS es <strong>una lista de <code>blk_*</code> en discos distintos</strong>.</p>
 <p>En Docker del <a href="../ecosistema/">2.2</a>: <code>docker compose exec datanode bash</code> y exploráis esa ruta (el <em>mount</em> puede ser <code>/tmp/hadoop-root/dfs/data</code> según la imagen; <code>hdfs-site</code> y <code>fsck</code> os dan la pista).</p>
@@ -2435,15 +2486,15 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 <li><strong>Limpieza.</strong> El <em>reducer</em> avisa al AM: “tarea ok”. El AM, cuando no quedan tareas: “job hecho” al RM. El RM pide a los NM que <strong>maten</strong> contenedores (se libera RAM/CPU). El AM avisa al cliente y <strong>se apaga</strong>.</li>
 <li><strong>Comprobación.</strong> El cliente al NameNode: “¿dónde está <code>salida_noches/*</code>?”. El NameNode da réplicas. El cliente lee un <code>part-00000</code> de un DataNode (el más cercano) y contrasta con un <code>GROUP BY</code> local (<a href="../computacion-distribuida/">2.4</a>).</li>
 </ol>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>YARN (recursos)                     HDFS (almacén)
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>================                    ================
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>ResourceManager                     NameNode
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Scheduler                           mapa de bloques
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  ApplicationsManager
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>NodeManager                         DataNode
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  contenedores                        blk_* + CRC
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ApplicationMaster (por job)
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>  coordina maps / reduces
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>YARN (recursos)                     HDFS (almacén)
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>================                    ================
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ResourceManager                     NameNode
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  Scheduler                           mapa de bloques
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  ApplicationsManager
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>NodeManager                         DataNode
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  contenedores                        blk_* + CRC
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ApplicationMaster (por job)
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  coordina maps / reduces
 </span></code></pre></div>
 <table>
 <thead>
@@ -2488,6 +2539,7 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 </tbody>
 </table>
 <h2 id="administracion">Administración<a class="headerlink" href="#administracion" title="Permanent link">&para;</a></h2>
+<p>Antes de cambiar parámetros, recoged una línea base: DataNodes vivos, capacidad disponible y bloques con réplica insuficiente. Después de añadir un nodo, comparad esos valores. El nodo aporta capacidad; el reparto de datos existentes puede requerir balanceo. Un factor de replicación mayor consume más espacio, y no puede satisfacerse si no hay suficientes destinos independientes.</p>
 <table>
 <thead>
 <tr>
@@ -2524,111 +2576,116 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 </table>
 <p>El modo seguro se usa para <strong>checkpoints</strong> a mano o cuando el NameNode arranca y aún <strong>no</strong> ha oído a bastante DataNodes. Escribir en safemode <strong>falla</strong>. En la UI veréis <em>Safe mode is ON</em>.</p>
 <p>Checkpoint <strong>manual</strong> (lab de metadatos; no lo hagáis en un clúster de producción a ciegas):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>hdfs dfsadmin -safemode enter
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>hdfs dfsadmin -saveNamespace
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>hdfs dfsadmin -safemode leave
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hdfs dfsadmin -safemode enter
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>hdfs dfsadmin -saveNamespace
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>hdfs dfsadmin -safemode leave
 </span></code></pre></div>
 <p><code>saveNamespace</code> fuerza un <code>fsimage</code> nuevo. Después, en <code>dfs.namenode.name.dir/current/</code>, deberíais ver un <code>fsimage_…</code> <strong>más reciente</strong> que el de antes. Eso es el oficio del Secondary, disparado <strong>a mano</strong>. Mientras <em>Safe mode is ON</em>, un <code>-put</code> debe fallar: es la prueba de que el modo <strong>impide</strong> cambios.</p>
 <h3 id="snapshots-foto-del-lago">Snapshots (foto del lago)<a class="headerlink" href="#snapshots-foto-del-lago" title="Permanent link">&para;</a></h3>
-<p>Una <em>snapshot</em> guarda <strong>cómo estaba</strong> una carpeta en un instante (copia de seguridad lógica, no un zip en el armario). Primero se <strong>habilita</strong> sobre la carpeta; luego se <strong>crea</strong> la foto.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hdfs dfsadmin -allowSnapshot /user/bda/datos
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>hdfs dfs -createSnapshot /user/bda/datos foto1
+<p>Una <em>snapshot</em> conserva la vista de una carpeta en un instante mediante referencias a bloques. Permite recuperar cambios y borrados mientras se conserva el almacenamiento, pero <strong>no es una copia independiente del clúster</strong>: perder sus discos puede hacer perder también las snapshots. Primero se <strong>habilita</strong> sobre la carpeta; luego se <strong>crea</strong> la foto.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>hdfs dfsadmin -allowSnapshot /user/bda/datos
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>hdfs dfs -createSnapshot /user/bda/datos foto1
 </span></code></pre></div>
 <p>La captura vive en una carpeta oculta:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/user/bda/datos/.snapshot/foto1/
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/user/bda/datos/.snapshot/foto1/
 </span></code></pre></div>
 <p>Borráis un fichero “de verdad” y <strong>sigue</strong> en la foto:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>hdfs dfs -rm /user/bda/datos/reservas.csv
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>hdfs dfs -ls /user/bda/datos
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>hdfs dfs -cp /user/bda/datos/.snapshot/foto1/reservas.csv /user/bda/datos/
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>hdfs dfs -rm /user/bda/datos/reservas.csv
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>hdfs dfs -ls /user/bda/datos
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>hdfs dfs -cp /user/bda/datos/.snapshot/foto1/reservas.csv /user/bda/datos/
 </span></code></pre></div>
 <p>Carpetas que admiten instantáneas:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>hdfs lsSnapshottableDir
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>hdfs lsSnapshottableDir
 </span></code></pre></div>
 <p>Para desactivar: <strong>borrar</strong> las fotos y luego <code>disallowSnapshot</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>hdfs dfs -deleteSnapshot /user/bda/datos foto1
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>hdfs dfsadmin -disallowSnapshot /user/bda/datos
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>hdfs dfs -deleteSnapshot /user/bda/datos foto1
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>hdfs dfsadmin -disallowSnapshot /user/bda/datos
 </span></code></pre></div>
 <p>Criterio <strong>c)</strong> en versión “me equivoqué al borrar”, no solo “se fundió un disco”.</p>
 <h2 id="ui-del-namenode-puerto-9870">UI del NameNode (puerto 9870)<a class="headerlink" href="#ui-del-namenode-puerto-9870" title="Permanent link">&para;</a></h2>
+<p>La UI sirve para inspeccionar estado y metadatos. Poder abrirla no demuestra que podamos leer bloques desde el navegador: las operaciones WebHDFS pueden redirigir al DataNode. En este Compose sus nombres y puertos son internos. Para los ejercicios de lectura y escritura utilizad <code>hdfs dfs</code> dentro de la red del laboratorio.</p>
+<p>Los cambios de propietario siguientes los ejecuta el administrador HDFS. Deben adaptarse al usuario que realiza la operación; no se resuelve un problema de permisos dando escritura universal a todos.</p>
 <p>El explorador (<code>http://localhost:9870/explorer.html#/</code>) navega el árbol. Si creáis o borrais <strong>desde el navegador</strong> y sale:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Permission denied: user=dr.who, access=WRITE, inode="/":...:supergroup:drwxr-xr-x
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Permission denied: user=dr.who, access=WRITE, inode="/":...:supergroup:drwxr-xr-x
 </span></code></pre></div>
-<p>el usuario HTTP por defecto es <strong><code>dr.who</code></strong>, no el vuestro. Dos salidas de aula:</p>
+<p>el usuario HTTP estático habitual es <strong><code>dr.who</code></strong>. Para que las operaciones de la UI utilicen <code>bda</code>, el administrador debe preparar la carpeta y configurar ese usuario:</p>
 <ol>
-<li>Una carpeta <strong>escribible</strong> para prácticas web:</li>
+<li>Preparar una carpeta propiedad de <code>bda</code>:</li>
 </ol>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>hdfs dfs -mkdir -p /user/bda/pruebas
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>hdfs dfs -chmod 777 /user/bda/pruebas
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>hdfs dfs -mkdir -p /user/bda/pruebas
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>hdfs dfs -chown bda /user/bda/pruebas
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>hdfs dfs -chmod 750 /user/bda/pruebas
 </span></code></pre></div>
 <ol>
-<li>O fijar el usuario estático en <code>core-site.xml</code> y <strong>reiniciar</strong>:</li>
+<li>Fijar el usuario estático en <code>core-site.xml</code> y reiniciar el servicio correspondiente:</li>
 </ol>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">&lt;property&gt;</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>hadoop.http.staticuser.user<span class="nt">&lt;/name&gt;</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>bda<span class="nt">&lt;/value&gt;</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nt">&lt;/property&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">&lt;property&gt;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>hadoop.http.staticuser.user<span class="nt">&lt;/name&gt;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>bda<span class="nt">&lt;/value&gt;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">&lt;/property&gt;</span>
 </span></code></pre></div>
-<p>(El valor es el usuario de <strong>vuestra</strong> VM, no el de otro ciclo.) Las operaciones web las hace ese usuario, grupo <code>supergroup</code>.</p>
+<p>El usuario y sus grupos efectivos deben coincidir con los permisos de la carpeta. Este cambio de identidad no resuelve por sí solo la conectividad con los DataNodes ni sustituye autenticación en un despliegue real.</p>
 <p>La UI sirve para <em>ver</em> bloques y réplicas. El examen oral se aguanta <strong>sin</strong> ella; el lab, no.</p>
 <h2 id="hdfs-y-python">HDFS y Python<a class="headerlink" href="#hdfs-y-python" title="Permanent link">&para;</a></h2>
 <p>Dos librerías habituales. El oficio es el de <a href="../../ut1/formatos/">1.7</a>: la <strong>L</strong> del ETL aterriza en <code>hdfs://…</code>, no en <code>C:\Users\…</code>.</p>
 <h3 id="hdfscli-webhdfs-puerto-9870">HdfsCLI (WebHDFS, puerto <strong>9870</strong>)<a class="headerlink" href="#hdfscli-webhdfs-puerto-9870" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip install hdfs
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>pip install hdfs
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">hdfs</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureClient</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">InsecureClient</span><span class="p">(</span><span class="s2">"http://localhost:9870"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"bda"</span><span class="p">)</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="k">with</span> <span class="n">cliente</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"/user/bda/opiniones.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="n">texto</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">[:</span><span class="mi">200</span><span class="p">])</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="n">cliente</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"/user/bda/mini.csv"</span><span class="p">,</span> <span class="s2">"hotel,noches</span><span class="se">\n</span><span class="s2">Laredo,3</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">hdfs</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureClient</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">cliente</span> <span class="o">=</span> <span class="n">InsecureClient</span><span class="p">(</span><span class="s2">"http://namenode:9870"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"bda"</span><span class="p">)</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">with</span> <span class="n">cliente</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"/user/bda/opiniones.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">texto</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">texto</span><span class="p">[:</span><span class="mi">200</span><span class="p">])</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="n">cliente</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"/user/bda/mini.csv"</span><span class="p">,</span> <span class="s2">"hotel,noches</span><span class="se">\n</span><span class="s2">Laredo,3</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Sin Kerberos: <code>InsecureClient</code>. El <em>host</em> es el del aula (en Docker, <code>localhost</code> desde el Windows si publicasteis <strong>9870</strong>).</p>
+<p>Sin Kerberos usamos <code>InsecureClient</code> en una red de aula controlada. Este código debe ejecutarse en un entorno que resuelva y alcance tanto <code>namenode:9870</code> como los DataNodes a los que redirige WebHDFS. <strong>Publicar solo 9870 en Windows no basta para leer o escribir datos</strong>. El usuario <code>bda</code> debe tener permisos sobre la ruta. El docente puede proporcionar un entorno cliente conectado a la red Docker; no se presupone que el host tenga esa configuración.</p>
 <h3 id="pyarrow-rpc-nativo">PyArrow (RPC nativo)<a class="headerlink" href="#pyarrow-rpc-nativo" title="Permanent link">&para;</a></h3>
+<p>Esta ampliación requiere más que <code>pip install</code>: el entorno necesita Java, bibliotecas Hadoop como <code>libhdfs</code>, classpath y conectividad con NameNode y DataNodes. Utilizad un entorno de cliente Hadoop preparado por el docente. Un error al cargar <code>libhdfs</code> indica una dependencia local; uno de conexión indica red o servicio. Son diagnósticos diferentes.</p>
 <p>Es la vía más usada cuando Python <strong>ve</strong> las librerías de Hadoop: rendimiento y Parquet/Avro. <a href="../../assets/practicas/hotel-hadoop/hdfs_hotel.py">hdfs_hotel.py</a>.</p>
 <p>Desde el Windows del aula, con el compose de este módulo, el camino que funciona es el <strong>WebHDFS</strong> de arriba (puerto <strong>9870</strong>). <code>HadoopFileSystem</code> habla el RPC. En <a href="../../assets/practicas/hotel-hadoop/config.env"><code>config.env</code></a> ese RPC es <code>namenode:8020</code>. El compose <strong>no</strong> publica el 8020, y el NameNode anuncia el hostname <code>namenode</code>, que el portátil no resuelve. El <strong>9000</strong> sale en otras guías; en este Docker no está.</p>
 <p>Usad el bloque de abajo cuando el profesor os dé una máquina donde <code>namenode</code> resuelve y Hadoop está en el <code>CLASSPATH</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>pip install pyarrow pandas
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath --glob)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>pip install pyarrow pandas
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath --glob)
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Este compose: namenode:8020. Otras guías usan 9000. La UI sigue en el 9870.</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"namenode"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8020</span><span class="p">)</span>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="s2">"/user/bda/opiniones.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
-</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)[:</span><span class="mi">200</span><span class="p">])</span>
-</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
-</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="p">{</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"Potes"</span><span class="p">],</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"web"</span><span class="p">,</span> <span class="s2">"ota"</span><span class="p">]}</span>
-</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="p">)</span>
-</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">"/user/bda/noches_resumen.parquet"</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="kn">import</span> <span class="n">fs</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Este compose: namenode:8020. Otras guías usan 9000. La UI sigue en el 9870.</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="n">hdfs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">HadoopFileSystem</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"namenode"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8020</span><span class="p">)</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="k">with</span> <span class="n">hdfs</span><span class="o">.</span><span class="n">open_input_stream</span><span class="p">(</span><span class="s2">"/user/bda/opiniones.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">))</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>    <span class="p">{</span><span class="s2">"hotel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"Potes"</span><span class="p">],</span> <span class="s2">"noches"</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"web"</span><span class="p">,</span> <span class="s2">"ota"</span><span class="p">]}</span>
+</span><span id="__span-25-12"><a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="p">)</span>
+</span><span id="__span-25-13"><a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">"/user/bda/noches_resumen.parquet"</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span></code></pre></div>
 <p>El puerto del RPC <strong>no</strong> es el 9870 de la UI. Mezclarlos es el error de la tarde.</p>
 <p>Sin Pandas, el mismo Parquet con PyArrow puro:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">tabla</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
-</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="p">{</span>
-</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>        <span class="s2">"hotel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"Potes"</span><span class="p">,</span> <span class="s2">"Noja"</span><span class="p">],</span>
-</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>        <span class="s2">"apellidos_recepcion"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"García"</span><span class="p">,</span> <span class="s2">"Ruiz"</span><span class="p">,</span> <span class="s2">"Sainz"</span><span class="p">],</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>        <span class="s2">"edad_lab"</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
-</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>    <span class="p">}</span>
-</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="p">)</span>
-</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="s2">"/user/bda/hoteles.parquet"</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">tabla</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="p">{</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>        <span class="s2">"hotel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Laredo"</span><span class="p">,</span> <span class="s2">"Potes"</span><span class="p">,</span> <span class="s2">"Noja"</span><span class="p">],</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>        <span class="s2">"apellidos_recepcion"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"García"</span><span class="p">,</span> <span class="s2">"Ruiz"</span><span class="p">,</span> <span class="s2">"Sainz"</span><span class="p">],</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>        <span class="s2">"edad_lab"</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>    <span class="p">}</span>
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="p">)</span>
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="s2">"/user/bda/hoteles.parquet"</span><span class="p">,</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">hdfs</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Otras librerías (las citáis, no las certificáis): <strong>mrjob</strong> (MapReduce en local / clúster / EMR), <strong>Pydoop</strong> (API HDFS + Avro). En este módulo el gesto evaluable es <strong>un script que lee y escribe</strong> en HDFS, no un <em>framework</em> nuevo.</p>
 <h2 id="hue">Hue<a class="headerlink" href="#hue" title="Permanent link">&para;</a></h2>
+<p>Hue añade una interfaz web para personas; no reemplaza el sistema de almacenamiento ni aumenta sus garantías. Una operación que falla por permisos desde consola puede fallar también desde Hue. Al observar una pantalla, identificad siempre qué servicio ejecuta la consulta y con qué usuario.</p>
 <p><strong>Hue</strong> (<em>Hadoop User Experience</em>) es un front-end web: HDFS, Hive, jobs… más amable que la <em>shell</em>. En muchas VM de ciclo viene instalado (<code>/opt/hue-…</code>); arranque típico:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>./build/env/bin/hue runserver
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>./build/env/bin/hue runserver
 </span></code></pre></div>
 <p>Imagen Docker oficial:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>docker run -it -p 8888:8888 gethue/hue:latest
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>docker run -it -p 8888:8888 gethue/hue:latest
 </span></code></pre></div>
 <p>La URL y el usuario os los da el <strong>profesor</strong> (suele ser <code>:8000</code> o <code>:8888</code>). No uses las credenciales de otro centro. Sirve para <strong>ver</strong> el mismo <code>/user/bda</code> que <code>hdfs dfs -ls</code>, subir un CSV a golpes de ratón y, si Hive está enchufado, lanzar un <code>SELECT</code> sin abrir Beeline.</p>
 <p>Hue <strong>no</strong> sustituye a <code>fsck</code> ni a entender la tubería. Es el <em>front</em> para no asustar a gerencia; el RA2 se demuestra en el terminal.</p>
@@ -2637,7 +2694,7 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 <p>Dejáis el bruto en <code>/user/bda/crudo/</code>. En 2027 Spark lee solo <code>hotel</code> e <code>importe</code>. No fijasteis un esquema rígido el día 1: <strong>esquema al leer</strong>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Comprobar tolerancia (c)</p>
-<p>En un lab <strong>controlado</strong> y con permiso: subid un fichero, mirad <code>hdfs fsck</code> o la UI, <strong>parad</strong> un DataNode de prueba y verificad que el fichero <strong>sigue leyéndose</strong> (réplica ≥ 2). Con réplica 1 (Docker de un nodo) <strong>no</strong> podéis demostrar eso: el bloque se queda <em>under-replicated</em> o se pierde. Decidlo en voz alta.</p>
+<p>En un lab <strong>controlado</strong> y con permiso: subid un fichero, mirad <code>hdfs fsck</code> o la UI, <strong>parad</strong> un DataNode de prueba y verificad que el fichero <strong>sigue leyéndose</strong> (réplica ≥ 2). Con réplica 1 (Docker de un nodo) <strong>no</strong> podéis demostrar eso: al detener el único DataNode, el bloque queda inaccesible; si además se pierde su almacenamiento, puede perderse el contenido. Decidlo en voz alta.</p>
 </div>
 <h2 id="relacion-con-el-ra2">Relación con el RA2<a class="headerlink" href="#relacion-con-el-ra2" title="Permanent link">&para;</a></h2>
 <table>
@@ -2679,6 +2736,10 @@ Si un <em>heartbeat</em> falta, el maestro <strong>asume</strong> la muerte y re
 <li><strong>Por dentro (opcional).</strong> Leed <code>hdfs-site.xml</code> (carpeta del NameNode). Listad <code>current/</code>. Mirad el id de <code>VERSION</code>. <code>safemode enter</code> → comprobad la UI → <code>saveNamespace</code> → <code>safemode leave</code> → ¿hay un <code>fsimage</code> nuevo?</li>
 <li><strong>Python.</strong> Con PyArrow (o HdfsCLI si no hay <em>classpath</em>): conectar, leer <code>opiniones.txt</code>, imprimir las primeras 100 letras, crear un <code>DataFrame</code> con tres filas del hotel (vuestro nombre en una) y guardar <strong>Parquet</strong> en <code>/user/bda/hoteles.parquet</code>.</li>
 </ol>
+<h3 id="evidencias-y-limites-de-la-practica">Evidencias y límites de la práctica<a class="headerlink" href="#evidencias-y-limites-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Para cada ejercicio entregad <strong>estado inicial → operación → resultado → explicación</strong>. En comandos, verificad contenido y rutas; en snapshots, comparad antes y después del borrado; en lectura, indicad quién transporta los bytes.</p>
+<p>La tolerancia a fallos de bloques necesita <strong>al menos dos DataNodes y réplicas realmente ubicadas en ambos</strong>. Comprobad las ubicaciones con <code>fsck</code> antes de detener uno. Con el Compose básico, réplica 1, detener el único DataNode deja los datos temporalmente inaccesibles: no demuestra recuperación por réplica. Reiniciarlo con su volumen intacto recupera disponibilidad; perder el volumen puede perder los datos. La prueba de elección de primario se realiza en el <a href="../replicas-shards/">replica set del 2.8</a>.</p>
+<p>Al concluir, distinguíd qué habéis observado y qué comportamiento solo habéis explicado a partir del diseño.</p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">HDFS Architecture</a> y <a href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">FileSystem Shell</a></li>

@@ -2,15 +2,22 @@
 """Genera un CSV de reservas lo bastante grande para ver varios bloques HDFS.
 
 No lo subas a git: es un fichero de laboratorio. En el aula, 3 bloques (~384 MB)
-bastan para ver el corte; cambia LINEAS si el profesor pide más.
+permiten observar el reparto; mide los bytes reales y ajusta --lineas.
 """
+import argparse
 from pathlib import Path
 
 HOTELES = ("Laredo", "Potes", "Santander", "Noja", "Comillas")
 CANALES = ("web", "ota", "recepcion")
-LINEAS = 4_500_000  # ~250–300 MB de texto; ajustad en clase
+parser = argparse.ArgumentParser(description="Genera reservas sintéticas con el contrato CSV de UT2")
+parser.add_argument("--lineas", type=int, default=4_500_000)
+parser.add_argument("--salida", type=Path, default=Path("reservas_grandes.csv"))
+args = parser.parse_args()
+if args.lineas < 1:
+    parser.error("--lineas debe ser positivo")
+LINEAS = args.lineas
 
-destino = Path("reservas_grandes.csv")
+destino = args.salida
 with destino.open("w", encoding="utf-8", newline="\n") as f:
     f.write("id_reserva,hotel,canal,noches,importe\n")
     for i in range(1, LINEAS + 1):

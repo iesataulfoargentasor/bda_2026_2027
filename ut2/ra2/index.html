@@ -994,6 +994,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#evidencias-que-conectan-teoria-y-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias que conectan teoría y práctica
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1349,6 +1360,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#evidencias-que-conectan-teoria-y-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias que conectan teoría y práctica
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1478,12 +1500,51 @@
 </table>
 <h2 id="que-cambia-respecto-a-la-ut1">Qué cambia respecto a la UT1<a class="headerlink" href="#que-cambia-respecto-a-la-ut1" title="Permanent link">&para;</a></h2>
 <p>En la <a href="../../ut1/ra1/">UT1</a> <strong>diseñabas</strong> la solución (dónde guardar, cómo ingerir, en qué formato, cómo presentar). Aquí <strong>gestionas el sistema</strong> que aguanta el volumen: el clúster de ficheros, el modelo <em>map</em> / <em>reduce</em>, las familias NoSQL y cómo se <strong>replican</strong> y <strong>parten</strong>.</p>
-<p>La <a href="../../ut1/tarea-clase/">tarea de los 500 GB</a> era el puente: un portátil no basta; hace falta un almacén que crezca <strong>añadiendo máquinas</strong>.</p>
+<p>La <a href="../../ut1/tarea-clase/">tarea de los 500 GB</a> sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.</p>
 <div class="admonition note">
 <p class="admonition-title">Cómo se evalúa</p>
 <p>Debes poder <strong>decir</strong> por qué HDFS o Mongo, <strong>mostrar</strong> (en el lab) que un nodo caído no pierde el dato, <strong>lanzar</strong> un job que parte el trabajo y <strong>justificar</strong> que mañana se añade un disco o un <em>shard</em> sin rediseñar el hotel. Las entregas siguen en Moodle.</p>
 <p>Para practicar: <a href="../autoevaluacion/">autoevaluación de la UT2</a>.</p>
 </div>
+<h2 id="evidencias-que-conectan-teoria-y-practica">Evidencias que conectan teoría y práctica<a class="headerlink" href="#evidencias-que-conectan-teoria-y-practica" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Evidencia útil</th>
+<th>Conclusión que debe evitarse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a)</td>
+<td>Relacionar formatos, volumen, consultas y plazo del cierre</td>
+<td>«Muchos datos» sin medir ni explicar la carga</td>
+</tr>
+<tr>
+<td>b)</td>
+<td>Job, tareas observadas, resultado contrastado y tiempos comparables</td>
+<td>Una agregación standalone demuestra distribución</td>
+</tr>
+<tr>
+<td>c)</td>
+<td>Estado inicial, fallo concreto, continuidad o interrupción y recuperación</td>
+<td>Tres contenedores protegen frente a perder el ordenador</td>
+</tr>
+<tr>
+<td>d)</td>
+<td>Reutilizar datos conservados con metadatos y lectores compatibles</td>
+<td>Capacidad literalmente infinita o ausencia de reglas</td>
+</tr>
+<tr>
+<td>e)</td>
+<td>Mostrar el recurso añadido y qué capacidad o función aporta</td>
+<td>Añadir cualquier nodo duplica siempre el rendimiento</td>
+</tr>
+</tbody>
+</table>
+<p>El enunciado oficial se conserva arriba. Su aplicación práctica exige concretar recursos, fallos y límites: «sin fallos» no significa que el hardware nunca falle, sino diseñar y probar la respuesta del sistema a los fallos previstos.</p>
+<p>La evaluación reúne explicación y observación. Si una ampliación no puede ejecutarse en el entorno disponible, documenta esa limitación y el experimento necesario; no presentes una predicción como un resultado medido.</p>
 
 
 
