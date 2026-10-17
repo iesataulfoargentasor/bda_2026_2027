@@ -1,0 +1,38 @@
+[
+  {
+    "kind": "hotels",
+    "title": "Cuatro hoteles. Una pregunta.",
+    "label": "Una historia inventada para aprender con un ejemplo cercano.",
+    "narration": "Imaginad que trabajáis para un pequeño grupo de hoteles de Cantabria. Tiene uno en Santander, otro en Laredo, otro en Comillas y otro en Potes. Cada hotel tiene su ritmo. Pero la directora necesita saber lo mismo de todos: ¿cómo nos fue ayer?"
+  },
+  {
+    "kind": "question",
+    "title": "¿Cómo nos fue ayer?",
+    "label": "La directora necesita una visión de conjunto.",
+    "narration": "Pensad en una mañana cualquiera. En recepción están atendiendo a los huéspedes. Mientras tanto, la directora quiere ver cuántas habitaciones estuvieron ocupadas y cuánto dinero se cobró en cada hotel. No quiere ir preguntando uno por uno: necesita un resumen claro en una sola pantalla."
+  },
+  {
+    "kind": "pieces",
+    "title": "Las piezas están en sitios distintos",
+    "label": "Una reserva y un cobro cuentan cosas diferentes.",
+    "narration": "La información ya existe, pero está repartida. Por ejemplo, Ana reserva una habitación en Laredo. El programa de reservas guarda su estancia y el sistema de pagos confirma si ha pagado. Para entender qué ha pasado, hay que juntar esas piezas. Porque reservar no significa haber pagado."
+  },
+  {
+    "kind": "you",
+    "title": "Aquí entráis vosotros",
+    "label": "Reunir → comprobar → resumir",
+    "narration": "Vuestro trabajo es preparar ese resumen. Recogéis una copia de los datos, comprobáis que no haya errores y los organizáis por hotel. Si el mismo cobro aparece dos veces, no podéis sumarlo dos veces. Y todo esto mientras recepción sigue atendiendo con normalidad."
+  },
+  {
+    "kind": "time",
+    "title": "Ayer y ahora son dos preguntas distintas",
+    "label": "Cada información tiene su momento.",
+    "narration": "Cada mañana, a las ocho, la directora consulta el cierre del día anterior. Eso es distinto de saber qué ocurre ahora. Los sensores, por ejemplo, detectan presencia en las habitaciones. Pero si Ana sale a desayunar, su habitación no queda libre para venderla. Hay que interpretar bien cada dato."
+  },
+  {
+    "kind": "end",
+    "title": "De muchos datos a una respuesta útil",
+    "label": "Ese es el sentido del caso hotelero.",
+    "narration": "Esta historia nos acompañará durante el curso. Aprenderemos distintas herramientas para conseguir que la información llegue bien y a tiempo. Quedaos con esta idea: recepción atiende a los clientes, la directora necesita entender cómo va el negocio y vosotros ayudáis a convertir datos dispersos en respuestas fiables."
+  }
+]

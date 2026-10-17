@@ -1,0 +1,14 @@
+EL CASO HOTELERO EN POCAS PALABRAS
+Voz sintética: Ximena (español de España). Narración continua.
+
+Imaginad que empezáis a trabajar para un pequeño grupo de hoteles de Cantabria. Hay uno en Santander, otro en Laredo, otro en Comillas y otro en Potes. Cada uno tiene su ritmo, pero la directora se hace una pregunta muy sencilla: ¿cómo nos fue ayer?
+
+Veámoslo con una mañana cualquiera. En recepción están atendiendo a los huéspedes, y la directora quiere saber dos cosas: cuántas habitaciones estuvieron ocupadas y cuánto dinero se cobró en cada hotel. Lo que necesita es tenerlo todo claro, en una sola pantalla.
+
+¿Dónde está la dificultad? En que las piezas están repartidas. Mirad el caso de Ana: reserva una habitación en Laredo. Un programa guarda su estancia y otro confirma el pago. Hay que reunir ambas cosas, porque tener una reserva no significa que ya se haya cobrado.
+
+¡Y aquí entráis vosotros! Recogéis una copia de esos datos, comprobáis que estén bien y preparáis el resumen por hotel. Por ejemplo, si un cobro aparece repetido, lo contáis una sola vez. Así, la directora puede fiarse del resultado, mientras recepción sigue trabajando con normalidad.
+
+Ahora bien, hay un detalle importante: el informe de las ocho de la mañana cuenta cómo terminó el día anterior. Para saber qué pasa ahora tenemos otras señales, como los sensores de presencia. Pero ojo: si Ana sale a desayunar, su habitación sigue reservada. Un dato necesita contexto para entenderlo bien.
+
+Y esa es la idea que nos acompañará durante el curso. Recepción atiende a los clientes; la directora necesita entender cómo va el negocio; y vosotros conectáis las piezas. Las herramientas las iremos aprendiendo. De momento, quedaos con el objetivo: convertir datos repartidos en información clara, fiable y a tiempo.

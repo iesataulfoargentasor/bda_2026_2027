@@ -12,6 +12,19 @@ Este es el **hilo de las dos unidades**: una cadena pequeña, **inventada**, con
 
 Si entráis directo a [ingesta](ingesta.md){target="_blank" rel="noopener"} o a la [UT2](../ut2/index.md){target="_blank" rel="noopener"}, empezad por esta página.
 
+## El caso en menos de dos minutos
+
+Antes de entrar en los detalles, mira este vídeo: conocerás qué necesita saber la directora de los hoteles y cómo vais a ayudarla a reunir la información. **Duración: 1 minuto y 51 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/caso-hotel-resumen-portada.jpg" aria-label="Resumen del caso hotelero de Cantabria" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/caso-hotel-resumen-voz-fluida.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+
+[Descargar el vídeo](../assets/ut1/caso-hotel-resumen-voz-fluida.mp4) · [Leer la transcripción](../assets/ut1/caso-hotel-resumen-voz-fluida.txt) · [Descargar los subtítulos](../assets/ut1/caso-hotel-resumen-voz-fluida.es.srt)
+
 ## Quiénes son
 
 Cuatro hoteles. Mismo dueño. **Estacionalidades distintas** (playa, ciudad, interior). Por eso un modelo de agosto en Laredo **no** se copia a ciegas a Potes en noviembre.
