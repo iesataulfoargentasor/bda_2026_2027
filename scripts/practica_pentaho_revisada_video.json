@@ -102,10 +102,10 @@
     "title": "El job decide cuándo se puede publicar",
     "label": "Guardad el procedimiento como cierre_hotel.kjb.",
     "active": 2,
-    "heading": "Entradas → dos resultados → dos validaciones → publicación",
-    "body": "Ante un error, detener y registrar la causa.",
-    "takeaway": "Conservad el último informe publicado durante la preparación.",
-    "narration": "Con las cuatro transformaciones preparadas, llega el momento de coordinarlas. El job comprueba primero que estén las tres entradas. Después genera los dos resultados provisionales y ejecuta sus validaciones. Solo si todo termina correctamente copia los archivos a salida y registra éxito. Si falta una entrada o falla una transformación, una validación o una copia, debe detenerse con error. No borréis el último informe publicado al comenzar: un fallo de preparación debe dejarlo intacto. Y recordad un límite: copiar dos archivos no los publica a la vez como una sola operación. Si falla la segunda copia, tampoco podemos anunciar éxito."
+    "heading": "Preparar y validar → copiar ambos archivos → confirmar éxito",
+    "body": "Error al preparar o validar: no iniciar copias. Error al copiar: avisar del posible estado parcial.",
+    "takeaway": "Solo hay éxito cuando ambas copias terminan correctamente.",
+    "narration": "Con las cuatro transformaciones preparadas, llega el momento de coordinarlas. Pensemos en dos momentos distintos. Primero preparamos y comprobamos. El job revisa que estén las tres entradas, genera los dos resultados provisionales y ejecuta sus validaciones. Si falta una entrada o falla esta preparación o la validación, se detiene con error antes de empezar a copiar. Por eso no borramos los informes anteriores al comenzar: en esta fase deben conservarse intactos. Si ambos resultados superan los controles, pasamos al segundo momento: copiarlos a salida. Y aquí hay un límite que conviene entender con calma. Las dos copias no ocurren como una sola operación. Imaginad que el informe de cobros se copia bien, pero falla la copia del listado sin cobro. El primer archivo ya puede ser nuevo, mientras el segundo sigue siendo el anterior o todavía no existe. Detener el job no deshace la primera copia. Por tanto, debemos registrar el fallo y advertir de que la salida puede haber quedado parcialmente actualizada. Solo anunciamos éxito cuando las dos copias terminan correctamente. En esta práctica no se os pide deshacer las copias ni conseguir que los dos archivos se sustituyan a la vez. Se os pide distinguir estos dos momentos y comunicar con claridad lo que ha ocurrido."
   },
   {
     "title": "Probad que funciona también fuera de la ventana de diseño",

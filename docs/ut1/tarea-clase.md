@@ -18,14 +18,14 @@ Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis
 
 ## Vídeo: qué hacer, cómo entregarlo y cómo se evalúa
 
-Antes de empezar, mira esta guía del encargo del hotel: explica los paquetes personales A001–A015, los dos resultados, las validaciones y pruebas, las entregas de avances al finalizar cada sesión, la entrega final en GitHub y la rúbrica sobre **10,00 puntos**, incluidos los **2,00 puntos de la defensa individual**. **Duración: 22 minutos y 12 segundos.**
+Antes de empezar, mira esta guía del encargo del hotel: explica los paquetes personales A001–A015, los dos resultados, las validaciones y pruebas, las entregas de avances al finalizar cada sesión, la entrega final en GitHub y la rúbrica sobre **10,00 puntos**, incluidos los **2,00 puntos de la defensa individual**. **Duración: 22 minutos y 55 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/practica-pentaho-revisada-portada.jpg" aria-label="Práctica integradora de Pentaho: trabajo, entrega en GitHub, rúbrica y defensa individual" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/practica-pentaho-revisada.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Esta versión incorpora los datos personalizados, el trabajo en el aula, los avances por sesión, la entrega en GitHub y la defensa individual. Complementa las instrucciones de los apartados 2, 9 y 10; consultad en Moodle las fechas de entrega.
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Esta versión incorpora los datos personalizados, el trabajo en el aula, los avances por sesión, la entrega en GitHub y la defensa individual. Aclara también qué fallos impiden iniciar la publicación y por qué un error durante las copias puede dejar las salidas parcialmente actualizadas. Complementa las instrucciones de los apartados 2, 7, 9 y 10; consultad en Moodle las fechas de entrega.
 
 [Descargar el vídeo](../assets/ut1/practica-pentaho-revisada.mp4) · [Leer la transcripción](../assets/ut1/practica-pentaho-revisada.txt) · [Descargar los subtítulos](../assets/ut1/practica-pentaho-revisada.es.srt)
 

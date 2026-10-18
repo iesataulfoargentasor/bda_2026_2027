@@ -135,19 +135,19 @@ ni datos suficientes para calcular ocupación.
 00:02:07.559 --> 00:02:11.151
 Indicad cuándo generasteis el resultado, sin confundir ese
 
-00:02:11.165 --> 00:02:14.086
+00:02:11.164 --> 00:02:14.086
 momento con una fecha del negocio que no conocemos.
 
-00:02:15.020 --> 00:02:18.415
+00:02:15.020 --> 00:02:18.414
 Quizá os preguntéis: si cada uno tiene datos diferentes,
 
-00:02:18.625 --> 00:02:21.402
+00:02:18.625 --> 00:02:21.401
 ¿cómo vamos a usar la misma tabla de resultados?
 
-00:02:22.323 --> 00:02:25.086
+00:02:22.322 --> 00:02:25.086
 Pensemos en dos pagos del mismo hotel y canal.
 
-00:02:25.994 --> 00:02:28.967
+00:02:25.993 --> 00:02:28.967
 Si uno aumenta unos céntimos y el otro disminuye
 
 00:02:28.980 --> 00:02:32.138
@@ -156,28 +156,28 @@ esa misma cantidad, el total del grupo se conserva.
 00:02:33.033 --> 00:02:35.454
 Eso es lo que se ha preparado, ajustando
 
-00:02:35.467 --> 00:02:38.494
+00:02:35.467 --> 00:02:38.493
 también los importes de las reservas correspondientes.
 
 00:02:39.401 --> 00:02:41.967
 Además, las filas llegan en otro orden.
 
-00:02:42.875 --> 00:02:45.244
+00:02:42.875 --> 00:02:45.243
 No tenéis que modificar nada vosotros.
 
-00:02:46.151 --> 00:02:48.073
+00:02:46.151 --> 00:02:48.072
 Los dos informes finales deben
 
 00:02:48.086 --> 00:02:50.257
 seguir coincidiendo con la referencia.
 
-00:02:51.178 --> 00:02:53.165
+00:02:51.178 --> 00:02:53.164
 Por tanto, que dos informes sean
 
 00:02:53.178 --> 00:02:55.059
 iguales no demuestra una copia.
 
-00:02:55.980 --> 00:02:58.744
+00:02:55.980 --> 00:02:58.743
 Lo que debéis construir y comprender personalmente
 
 00:02:58.757 --> 00:03:01.217
@@ -186,7 +186,7 @@ es el procedimiento, y eso lo veremos
 00:03:01.230 --> 00:03:03.349
 durante las sesiones y en la defensa.
 
-00:03:04.270 --> 00:03:05.915
+00:03:04.270 --> 00:03:05.914
 Antes de abrir los flujos,
 
 00:03:06.086 --> 00:03:07.928
@@ -222,13 +222,13 @@ GitHub no ejecuta Spoon ni Kitchen.
 00:03:35.204 --> 00:03:37.809
 Dentro de la copia local, entrada guardará
 
-00:03:37.823 --> 00:03:41.454
+00:03:37.822 --> 00:03:41.454
 los tres originales; procesos, las transformaciones y
 
 00:03:41.467 --> 00:03:44.888
 el job; temporal, lo que aún comprobamos; salida,
 
-00:03:45.033 --> 00:03:48.415
+00:03:45.033 --> 00:03:48.414
 los resultados finales; y evidencias, las pruebas.
 
 00:03:49.336 --> 00:03:52.678
@@ -237,10 +237,10 @@ Esa separación nos ayudará a saber qué podemos entregar.
 00:03:53.431 --> 00:03:55.062
 Ya tenemos dónde trabajar.
 
-00:03:55.984 --> 00:03:58.181
+00:03:55.983 --> 00:03:58.181
 Descomprimid vuestro paquete y copiad
 
-00:03:58.194 --> 00:04:00.234
+00:03:58.194 --> 00:04:00.233
 su carpeta entrada al repositorio.
 
 00:04:01.141 --> 00:04:03.773
@@ -258,13 +258,13 @@ Anotad ese código en el README
 00:04:10.891 --> 00:04:13.168
 y comprobad que coincide con el asignado.
 
-00:04:14.076 --> 00:04:15.970
+00:04:14.075 --> 00:04:15.970
 Si falta un archivo o no podéis
 
-00:04:15.984 --> 00:04:18.549
+00:04:15.983 --> 00:04:18.549
 abrirlo, avisad al profesor antes de seguir.
 
-00:04:19.484 --> 00:04:22.694
+00:04:19.483 --> 00:04:22.694
 Después, en Pentaho nueve punto cuatro, comprobad el
 
 00:04:22.707 --> 00:04:26.181
@@ -273,19 +273,19 @@ taller cero y revisad cabeceras, separadores y tipos.
 00:04:27.115 --> 00:04:30.102
 No necesitáis una base de datos ni complementos.
 
-00:04:31.010 --> 00:04:34.313
+00:04:31.010 --> 00:04:34.312
 Antes de arrastrar pasos, dibujad qué pregunta responde
 
-00:04:34.326 --> 00:04:36.786
+00:04:34.325 --> 00:04:36.786
 cada resultado y qué representa cada fila.
 
-00:04:37.694 --> 00:04:41.076
+00:04:37.694 --> 00:04:41.075
 Ese pequeño diseño nos orientará cuando algo no encaje.
 
-00:04:41.984 --> 00:04:44.418
+00:04:41.983 --> 00:04:44.418
 Empezamos con la primera transformación.
 
-00:04:45.326 --> 00:04:50.093
+00:04:45.325 --> 00:04:50.093
 Leed los CSV comprobando separadores y tipos: reservas usa
 
 00:04:50.106 --> 00:04:53.343
@@ -297,13 +297,13 @@ Las claves deben ser compatibles y
 00:04:56.345 --> 00:04:59.148
 los importes deben interpretarse como decimales.
 
-00:05:00.069 --> 00:05:02.701
+00:05:00.069 --> 00:05:02.700
 Ordenad reservas y cobros por identificador de
 
-00:05:02.714 --> 00:05:05.201
+00:05:02.714 --> 00:05:05.200
 reserva y unidlos con una unión interna.
 
-00:05:05.706 --> 00:05:07.929
+00:05:05.705 --> 00:05:07.929
 Deben quedar quince coincidencias.
 
 00:05:08.837 --> 00:05:11.574
@@ -315,7 +315,7 @@ identificador, ordenando de nuevo ambas entradas para esa clave.
 00:05:16.095 --> 00:05:18.503
 Aquí deben mantenerse las quince filas.
 
-00:05:19.411 --> 00:05:21.595
+00:05:19.410 --> 00:05:21.595
 Si cambia el recuento de una forma que
 
 00:05:21.608 --> 00:05:24.700
@@ -327,31 +327,31 @@ La vista previa sirve precisamente para
 00:05:27.937 --> 00:05:29.924
 localizar dónde aparece el problema.
 
-00:05:30.845 --> 00:05:32.990
+00:05:30.845 --> 00:05:32.989
 Con el detalle preparado, ordenad por
 
-00:05:33.003 --> 00:05:34.398
+00:05:33.003 --> 00:05:34.397
 hotel y canal y agrupad.
 
 00:05:34.887 --> 00:05:36.913
 Para cada grupo calculáis el número de
 
-00:05:36.926 --> 00:05:39.190
+00:05:36.926 --> 00:05:39.189
 reservas y la suma del campo cobrado.
 
-00:05:40.098 --> 00:05:42.005
+00:05:40.097 --> 00:05:42.005
 El CSV tendrá las cuatro
 
-00:05:42.019 --> 00:05:43.992
+00:05:42.018 --> 00:05:43.992
 columnas que aparecen en pantalla.
 
-00:05:44.900 --> 00:05:48.361
+00:05:44.900 --> 00:05:48.360
 Usad cabecera, punto y coma, codificación UTF
 
 00:05:48.374 --> 00:05:50.347
 ocho e importes con punto decimal
 
-00:05:50.361 --> 00:05:53.084
+00:05:50.360 --> 00:05:53.084
 y dos decimales, sin separador de miles.
 
 00:05:54.005 --> 00:05:55.834
@@ -372,7 +372,7 @@ En estos datos hay como máximo un cobro
 00:06:09.571 --> 00:06:12.834
 por reserva; explicad por qué tendríais que revisar
 
-00:06:12.848 --> 00:06:15.900
+00:06:12.847 --> 00:06:15.900
 el recuento si una reserva admitiera varios pagos.
 
 00:06:16.834 --> 00:06:19.558
@@ -381,13 +381,13 @@ El segundo flujo responde a la otra pregunta.
 00:06:20.466 --> 00:06:23.255
 Esta vez queremos conservar todas las reservas al
 
-00:06:23.269 --> 00:06:26.229
+00:06:23.268 --> 00:06:26.229
 cruzarlas con cobros, así que ponemos reservas
 
 00:06:26.242 --> 00:06:28.742
 a la izquierda y usamos una unión izquierda.
 
-00:06:29.275 --> 00:06:31.433
+00:06:29.275 --> 00:06:31.432
 Antes renombramos la clave de la rama de
 
 00:06:31.446 --> 00:06:34.801
@@ -396,10 +396,10 @@ cobros para reconocerla sin confundirla con la original.
 00:06:35.722 --> 00:06:37.893
 Tras el cruce, filtramos las filas
 
-00:06:37.906 --> 00:06:39.841
+00:06:37.906 --> 00:06:39.840
 donde esa clave del pago es nula.
 
-00:06:40.762 --> 00:06:42.512
+00:06:40.761 --> 00:06:42.511
 No buscamos un cobro igual a
 
 00:06:42.525 --> 00:06:45.301
@@ -414,899 +414,947 @@ el identificador, hotel, canal, importe y motivo.
 00:06:52.801 --> 00:06:55.669
 Aquí importe sigue siendo el precio de la reserva.
 
-00:06:56.188 --> 00:06:57.990
+00:06:56.194 --> 00:06:57.996
 El motivo será: sin cobro
 
-00:06:58.003 --> 00:06:59.990
+00:06:58.009 --> 00:06:59.996
 asociado en el archivo recibido.
 
-00:07:00.911 --> 00:07:03.267
+00:07:00.917 --> 00:07:03.273
 Ya tenemos dos archivos provisionales.
 
-00:07:04.188 --> 00:07:07.517
+00:07:04.194 --> 00:07:07.523
 Antes de automatizar, comprobadlos completos y anotad
 
-00:07:07.530 --> 00:07:10.267
+00:07:07.536 --> 00:07:10.273
 qué esperabais, qué obtuvisteis y qué concluís.
 
-00:07:11.174 --> 00:07:14.003
+00:07:11.180 --> 00:07:14.009
 El informe debe tener trece grupos, sumar
 
-00:07:14.017 --> 00:07:16.767
+00:07:14.023 --> 00:07:16.773
 quince reservas y totalizar tres mil novecientos
 
-00:07:16.780 --> 00:07:19.438
+00:07:16.786 --> 00:07:19.444
 sesenta y cinco euros con cincuenta céntimos.
 
-00:07:20.346 --> 00:07:23.267
+00:07:20.352 --> 00:07:23.273
 Laredo, en el canal web, tiene dos reservas
 
-00:07:23.280 --> 00:07:26.714
+00:07:23.286 --> 00:07:26.720
 y cuatrocientos noventa y seis euros con cincuenta céntimos.
 
-00:07:27.648 --> 00:07:29.530
+00:07:27.654 --> 00:07:29.536
 En el listado sin cobro quedan los
 
-00:07:29.543 --> 00:07:33.346
+00:07:29.549 --> 00:07:33.352
 identificadores cuatro, nueve, once, quince y dieciocho.
 
-00:07:34.267 --> 00:07:36.609
+00:07:34.273 --> 00:07:36.615
 Quince reservas cobradas más cinco sin
 
-00:07:36.622 --> 00:07:38.740
+00:07:36.628 --> 00:07:38.746
 cobro recuperan las veinte de entrada.
 
-00:07:39.661 --> 00:07:41.582
+00:07:39.667 --> 00:07:41.588
 Contrastad también cada grupo con la
 
-00:07:41.596 --> 00:07:44.148
+00:07:41.602 --> 00:07:44.154
 tabla de referencia: acertar el total no
 
-00:07:44.161 --> 00:07:46.675
+00:07:44.167 --> 00:07:46.680
 garantiza haber asignado bien cada importe.
 
-00:07:47.400 --> 00:07:51.071
+00:07:47.406 --> 00:07:51.077
 Las comprobaciones manuales os permiten entender el resultado.
 
-00:07:51.993 --> 00:07:55.374
+00:07:51.999 --> 00:07:55.380
 Ahora construiremos dos transformaciones que ayuden al job
 
-00:07:55.387 --> 00:07:57.716
+00:07:55.393 --> 00:07:57.722
 a detenerse cuando una salida no cumpla.
 
-00:07:58.637 --> 00:08:00.769
+00:07:58.643 --> 00:08:00.775
 La primera resume el CSV y
 
-00:08:00.782 --> 00:08:03.808
+00:08:00.788 --> 00:08:03.814
 comprueba sus grupos, reservas e importe total.
 
-00:08:04.729 --> 00:08:07.400
+00:08:04.735 --> 00:08:07.406
 La segunda comprueba los cinco identificadores
 
-00:08:07.414 --> 00:08:09.453
+00:08:07.420 --> 00:08:09.459
 esperados y que no haya duplicados.
 
-00:08:10.348 --> 00:08:12.216
+00:08:10.354 --> 00:08:12.222
 Si una condición falla, debe
 
-00:08:12.229 --> 00:08:14.085
+00:08:12.235 --> 00:08:14.091
 terminar con error mediante Abort.
 
-00:08:15.006 --> 00:08:17.203
+00:08:15.012 --> 00:08:17.209
 Hay un caso que no podéis olvidar: un
 
-00:08:17.216 --> 00:08:20.769
+00:08:17.222 --> 00:08:20.775
 archivo con solo cabecera existe, pero no contiene datos.
 
-00:08:21.690 --> 00:08:23.085
+00:08:21.696 --> 00:08:23.091
 Debe fallar también.
 
-00:08:23.993 --> 00:08:27.111
+00:08:23.999 --> 00:08:27.117
 El enunciado explica cómo tratar la entrada vacía.
 
-00:08:28.032 --> 00:08:30.677
+00:08:28.038 --> 00:08:30.683
 Estos números son referencias del conjunto de
 
-00:08:30.690 --> 00:08:32.585
+00:08:30.696 --> 00:08:32.591
 aula; en un cierre real los
 
-00:08:32.598 --> 00:08:35.335
+00:08:32.604 --> 00:08:35.341
 controles tendrían que adaptarse a sus entradas.
 
-00:08:36.243 --> 00:08:38.585
+00:08:36.249 --> 00:08:38.591
 Con las cuatro transformaciones preparadas,
 
-00:08:38.716 --> 00:08:40.650
+00:08:38.722 --> 00:08:40.656
 llega el momento de coordinarlas.
 
-00:08:41.572 --> 00:08:44.479
-El job comprueba primero que estén las tres entradas.
+00:08:41.578 --> 00:08:43.854
+Pensemos en dos momentos distintos.
 
-00:08:45.400 --> 00:08:47.400
-Después genera los dos resultados
+00:08:44.762 --> 00:08:46.814
+Primero preparamos y comprobamos.
 
-00:08:47.414 --> 00:08:50.058
-provisionales y ejecuta sus validaciones.
+00:08:47.735 --> 00:08:50.156
+El job revisa que estén las tres entradas,
 
-00:08:50.966 --> 00:08:53.348
-Solo si todo termina correctamente copia
+00:08:50.393 --> 00:08:54.420
+genera los dos resultados provisionales y ejecuta sus validaciones.
 
-00:08:53.361 --> 00:08:55.848
-los archivos a salida y registra éxito.
+00:08:55.328 --> 00:08:57.380
+Si falta una entrada o falla esta
 
-00:08:56.769 --> 00:08:59.703
-Si falta una entrada o falla una transformación,
+00:08:57.393 --> 00:08:59.617
+preparación o la validación, se detiene
 
-00:08:59.861 --> 00:09:02.979
-una validación o una copia, debe detenerse con error.
+00:08:59.630 --> 00:09:01.538
+con error antes de empezar a copiar.
 
-00:09:03.887 --> 00:09:06.900
-No borréis el último informe publicado al comenzar:
+00:09:02.446 --> 00:09:04.972
+Por eso no borramos los informes anteriores al
 
-00:09:07.124 --> 00:09:09.664
-un fallo de preparación debe dejarlo intacto.
+00:09:04.985 --> 00:09:08.262
+comenzar: en esta fase deben conservarse intactos.
 
-00:09:10.598 --> 00:09:13.453
-Y recordad un límite: copiar dos archivos no
+00:09:09.170 --> 00:09:11.696
+Si ambos resultados superan los controles,
 
-00:09:13.466 --> 00:09:15.953
-los publica a la vez como una sola operación.
+00:09:11.867 --> 00:09:14.880
+pasamos al segundo momento: copiarlos a salida.
 
-00:09:16.861 --> 00:09:20.664
-Si falla la segunda copia, tampoco podemos anunciar éxito.
+00:09:15.801 --> 00:09:16.933
+Y aquí hay un límite
 
-00:09:21.572 --> 00:09:25.295
+00:09:16.946 --> 00:09:18.735
+que conviene entender con calma.
+
+00:09:19.643 --> 00:09:22.670
+Las dos copias no ocurren como una sola operación.
+
+00:09:23.578 --> 00:09:25.946
+Imaginad que el informe de cobros se copia
+
+00:09:25.959 --> 00:09:28.867
+bien, pero falla la copia del listado sin cobro.
+
+00:09:29.775 --> 00:09:32.643
+El primer archivo ya puede ser nuevo, mientras el
+
+00:09:32.656 --> 00:09:36.324
+segundo sigue siendo el anterior o todavía no existe.
+
+00:09:37.247 --> 00:09:39.800
+Detener el job no deshace la primera copia.
+
+00:09:40.721 --> 00:09:43.563
+Por tanto, debemos registrar el fallo y advertir
+
+00:09:43.576 --> 00:09:46.813
+de que la salida puede haber quedado parcialmente actualizada.
+
+00:09:47.734 --> 00:09:49.497
+Solo anunciamos éxito cuando
+
+00:09:49.511 --> 00:09:51.734
+las dos copias terminan correctamente.
+
+00:09:52.655 --> 00:09:54.471
+En esta práctica no se os pide
+
+00:09:54.484 --> 00:09:56.603
+deshacer las copias ni conseguir que los
+
+00:09:56.616 --> 00:09:58.668
+dos archivos se sustituyan a la vez.
+
+00:09:59.576 --> 00:10:02.076
+Se os pide distinguir estos dos momentos y
+
+00:10:02.090 --> 00:10:04.405
+comunicar con claridad lo que ha ocurrido.
+
+00:10:05.340 --> 00:10:09.063
 Para demostrar que el procedimiento es reproducible, ejecutad
 
-00:09:25.308 --> 00:09:28.137
+00:10:09.076 --> 00:10:11.905
 las transformaciones con Pan y el job con Kitchen.
 
-00:09:29.045 --> 00:09:30.690
+00:10:12.813 --> 00:10:14.458
 No basta con que funcione al
 
-00:09:30.703 --> 00:09:32.124
+00:10:14.471 --> 00:10:15.892
 pulsar el botón de Spoon.
 
-00:09:33.111 --> 00:09:36.811
+00:10:16.879 --> 00:10:20.024
 Primero comprobad una ejecución sin informes previos.
 
-00:09:37.722 --> 00:09:40.261
+00:10:20.945 --> 00:10:23.484
 Después repetidla: los recuentos y los
 
-00:09:40.274 --> 00:09:43.459
+00:10:23.497 --> 00:10:26.682
 totales deben mantenerse, sin duplicados añadidos.
 
-00:09:44.366 --> 00:09:46.287
+00:10:27.590 --> 00:10:29.511
 A continuación probad una ruta de
 
-00:09:46.301 --> 00:09:49.156
+00:10:29.524 --> 00:10:32.379
 entrada inexistente sobre una copia de trabajo.
 
-00:09:50.064 --> 00:09:51.366
+00:10:33.287 --> 00:10:34.590
 El job debe fallar y
 
-00:09:51.380 --> 00:09:53.103
+00:10:34.603 --> 00:10:36.326
 no publicar un informe nuevo.
 
-00:09:54.011 --> 00:09:57.432
+00:10:37.234 --> 00:10:40.655
 Finalmente restaurad la ruta y comprobad la recuperación.
 
-00:09:58.340 --> 00:10:02.314
+00:10:41.563 --> 00:10:45.537
 Para esta práctica basta lanzar Kitchen manualmente; explicad
 
-00:10:02.327 --> 00:10:05.393
+00:10:45.550 --> 00:10:48.616
 que otro programador de tareas lo iniciaría de madrugada.
 
-00:10:05.917 --> 00:10:08.890
+00:10:49.137 --> 00:10:52.111
 El comando por sí solo no establece ese horario.
 
-00:10:09.798 --> 00:10:12.035
+00:10:53.019 --> 00:10:55.255
 Todavía faltan dos pruebas para saber
 
-00:10:12.048 --> 00:10:14.061
+00:10:55.269 --> 00:10:57.282
 si los controles hacen su trabajo.
 
-00:10:14.982 --> 00:10:18.298
+00:10:58.203 --> 00:11:01.519
 En una copia del CSV provisional dejad únicamente
 
-00:10:18.311 --> 00:10:21.824
+00:11:01.532 --> 00:11:05.045
 la cabecera y ejecutad su validación: debe dar error.
 
-00:10:22.759 --> 00:10:25.443
+00:11:05.979 --> 00:11:08.663
 En otra prueba modificad un importe y comprobad
 
-00:10:25.456 --> 00:10:27.390
+00:11:08.677 --> 00:11:10.611
 que el control del total lo detecta.
 
-00:10:28.311 --> 00:10:31.324
+00:11:11.532 --> 00:11:14.545
 Atención al orden: aquí ejecutáis directamente la
 
-00:10:31.338 --> 00:10:34.430
+00:11:14.558 --> 00:11:17.650
 transformación de validación sobre el archivo alterado.
 
-00:10:35.338 --> 00:10:38.417
+00:11:18.558 --> 00:11:21.637
 Si lanzáis primero todo el job, volverá a generar
 
-00:10:38.430 --> 00:10:41.535
+00:11:21.650 --> 00:11:24.755
 el informe y eliminará el defecto que intentabais probar.
 
-00:10:42.456 --> 00:10:45.232
+00:11:25.677 --> 00:11:28.453
 Conservad el registro del fallo, explicad la
 
-00:10:45.246 --> 00:10:47.982
+00:11:28.466 --> 00:11:31.203
 causa y restaurad después el estado correcto.
 
-00:10:48.903 --> 00:10:50.798
+00:11:32.124 --> 00:11:34.019
 Una captura resulta útil cuando
 
-00:10:50.811 --> 00:10:52.601
+00:11:34.032 --> 00:11:35.821
 permite entender lo que ocurrió.
 
-00:10:53.522 --> 00:10:56.693
+00:11:36.742 --> 00:11:39.913
 Hasta aquí hemos recorrido la solución completa, pero
 
-00:10:56.706 --> 00:10:58.680
+00:11:39.927 --> 00:11:41.900
 no tenéis que hacerla de una sola vez.
 
-00:10:59.588 --> 00:11:03.285
+00:11:42.808 --> 00:11:46.505
 La construiremos durante las clases, con ayuda del profesor.
 
-00:11:04.193 --> 00:11:06.982
+00:11:47.413 --> 00:11:50.203
 Como orientación, la primera sesión se dedica
 
-00:11:06.996 --> 00:11:09.232
+00:11:50.216 --> 00:11:52.453
 al paquete, el diseño y el informe.
 
-00:11:10.153 --> 00:11:13.482
+00:11:53.374 --> 00:11:56.703
 La segunda, al listado sin cobro y las validaciones.
 
-00:11:14.403 --> 00:11:16.667
+00:11:57.624 --> 00:11:59.887
 La tercera, al job y las pruebas.
 
-00:11:17.574 --> 00:11:19.114
+00:12:00.795 --> 00:12:02.334
 Si hace falta más tiempo,
 
-00:11:19.259 --> 00:11:21.548
+00:12:02.479 --> 00:12:04.769
 el profesor organizará otras sesiones.
 
-00:11:22.456 --> 00:11:25.496
+00:12:05.677 --> 00:12:08.716
 No trasladéis lo pendiente a casa: una ausencia
 
-00:11:25.509 --> 00:11:28.851
+00:12:08.729 --> 00:12:12.071
 o una incidencia se recuperará en un momento supervisado.
 
-00:11:29.759 --> 00:11:31.324
+00:12:12.979 --> 00:12:14.545
 Podéis comentar dudas con
 
-00:11:31.338 --> 00:11:33.956
+00:12:14.558 --> 00:12:17.177
 compañeros, indicando la ayuda recibida.
 
-00:11:34.877 --> 00:11:37.956
+00:12:18.098 --> 00:12:21.177
 Y en cada sesión guardaremos una pequeña fotografía
 
-00:11:37.969 --> 00:11:41.285
+00:12:21.190 --> 00:12:24.505
 del estado del trabajo, incluso si aún tiene errores.
 
-00:11:42.219 --> 00:11:44.140
+00:12:25.440 --> 00:12:27.361
 Veamos ese cierre con calma.
 
-00:11:45.061 --> 00:11:47.311
+00:12:28.282 --> 00:12:30.532
 Primero guardad los procesos en Spoon.
 
-00:11:48.272 --> 00:11:51.522
+00:12:31.492 --> 00:12:34.742
 Después, en evidencias, escribid el registro de la
 
-00:11:51.535 --> 00:11:54.693
+00:12:34.755 --> 00:12:37.913
 sesión: qué habéis hecho, qué habéis probado, qué
 
-00:11:54.706 --> 00:11:58.127
+00:12:37.927 --> 00:12:41.348
 resultado obtuvisteis, qué falta y qué ayuda recibisteis.
 
-00:11:59.035 --> 00:12:00.903
+00:12:42.255 --> 00:12:44.124
 Mostrad al profesor el avance o
 
-00:12:00.917 --> 00:12:02.338
+00:12:44.137 --> 00:12:45.558
 el error que os bloquea.
 
-00:12:03.259 --> 00:12:05.456
+00:12:46.073 --> 00:12:48.270
 A continuación, cread un commit con
 
-00:12:05.469 --> 00:12:07.706
+00:12:48.284 --> 00:12:50.520
 un mensaje claro y subidlo a GitHub.
 
-00:12:08.204 --> 00:12:10.769
+00:12:51.020 --> 00:12:53.586
 Comprobad en el navegador que está disponible.
 
-00:12:11.690 --> 00:12:13.993
+00:12:54.507 --> 00:12:56.809
 Por último, entregad en Moodle el número
 
-00:12:14.006 --> 00:12:16.454
+00:12:56.822 --> 00:12:59.270
 de sesión, el enlace del repositorio
 
-00:12:16.467 --> 00:12:18.822
+00:12:59.283 --> 00:13:01.638
 y el identificador completo de ese commit.
 
-00:12:19.756 --> 00:12:22.243
+00:13:02.572 --> 00:13:05.059
 No hace falta que todo funcione todavía.
 
-00:12:23.164 --> 00:12:25.217
+00:13:05.980 --> 00:13:08.033
 Lo importante es registrar el estado
 
-00:12:25.230 --> 00:12:27.941
+00:13:08.046 --> 00:13:10.757
 real y dejar claro desde dónde continuaremos.
 
-00:12:28.862 --> 00:12:32.690
+00:13:11.678 --> 00:13:15.507
 Al comenzar la siguiente clase, retomad la versión registrada.
 
-00:12:33.612 --> 00:12:36.730
+00:13:16.428 --> 00:13:19.546
 Si hay diferencias, explicadlas al profesor antes de
 
-00:12:36.743 --> 00:12:40.454
+00:13:19.559 --> 00:13:23.270
 continuar; no borréis ni reescribáis los avances anteriores.
 
-00:12:41.362 --> 00:12:43.190
+00:13:24.178 --> 00:13:26.007
 ¿Y si al terminar falla Internet?
 
-00:12:44.112 --> 00:12:46.204
+00:13:26.928 --> 00:13:29.020
 Mostrad el trabajo antes de salir.
 
-00:12:47.125 --> 00:12:50.033
+00:13:29.941 --> 00:13:32.849
 El profesor registrará la incidencia y conservará
 
-00:12:50.046 --> 00:12:51.993
+00:13:32.862 --> 00:13:34.809
 una copia o acordará cómo subir
 
-00:12:52.006 --> 00:12:54.769
+00:13:34.822 --> 00:13:37.586
 ese mismo avance en la siguiente sesión.
 
-00:12:55.717 --> 00:12:58.006
+00:13:38.533 --> 00:13:40.822
 No hace falta resolverlo desde casa.
 
-00:12:58.914 --> 00:13:01.533
+00:13:41.730 --> 00:13:44.349
 Recordad también que GitHub no demuestra por
 
-00:13:01.546 --> 00:13:03.769
+00:13:44.362 --> 00:13:46.586
 sí solo dónde se editaron los archivos.
 
-00:13:04.677 --> 00:13:06.335
+00:13:47.493 --> 00:13:49.151
 El seguimiento se apoya en el
 
-00:13:06.348 --> 00:13:09.848
+00:13:49.164 --> 00:13:52.664
 trabajo observado, las evidencias y vuestra explicación.
 
-00:13:10.756 --> 00:13:12.901
+00:13:53.572 --> 00:13:55.717
 Estas entregas no añaden puntos a la
 
-00:13:12.914 --> 00:13:15.954
+00:13:55.730 --> 00:13:58.770
 nota: forman parte del criterio de repositorio.
 
-00:13:16.848 --> 00:13:18.980
+00:13:59.664 --> 00:14:01.796
 La defensa individual se mantiene.
 
-00:13:19.901 --> 00:13:23.243
+00:14:02.717 --> 00:14:06.059
 Una vez superadas las pruebas, toca preparar la entrega.
 
-00:13:24.151 --> 00:13:26.506
+00:14:06.967 --> 00:14:09.322
 Volvamos a la directora: no le serviría
 
-00:13:26.519 --> 00:13:29.309
+00:14:09.336 --> 00:14:12.125
 un informe cuyo origen nadie pudiera explicar.
 
-00:13:30.230 --> 00:13:33.177
+00:14:13.046 --> 00:14:15.993
 Al profesor tampoco le basta una captura de Spoon.
 
-00:13:34.098 --> 00:13:37.822
+00:14:16.914 --> 00:14:21.142
 Por eso el repositorio incluirá los tres CSV originales
 
-00:13:37.835 --> 00:13:41.112
+00:14:21.156 --> 00:14:24.090
 de vuestro paquete y su archivo de asignación, las
 
-00:13:41.125 --> 00:13:44.796
+00:14:24.103 --> 00:14:28.092
 cuatro transformaciones, el job y los dos resultados finales.
 
-00:13:45.717 --> 00:13:48.230
+00:14:29.000 --> 00:14:31.514
 Añadid los registros de sesión, la tabla
 
-00:13:48.243 --> 00:13:50.954
+00:14:31.527 --> 00:14:34.237
 de comprobaciones y las seis pruebas comentadas.
 
-00:13:51.862 --> 00:13:54.217
+00:14:35.145 --> 00:14:37.500
 Para orientar a quien lo abra, preparad un
 
-00:13:54.230 --> 00:13:58.085
+00:14:37.514 --> 00:14:41.369
 README, es decir, el documento de presentación e instrucciones.
 
-00:13:58.628 --> 00:14:01.457
+00:14:41.909 --> 00:14:44.738
 Contad el objetivo, el recorrido de los datos,
 
-00:14:01.628 --> 00:14:04.720
+00:14:44.909 --> 00:14:48.001
 las versiones utilizadas y cómo ejecutar el trabajo.
 
-00:14:05.628 --> 00:14:07.930
+00:14:48.909 --> 00:14:51.212
 Indicad también el cierre de aula, las
 
-00:14:07.943 --> 00:14:10.167
+00:14:51.225 --> 00:14:53.449
 unidades, la fecha de generación y
 
-00:14:10.180 --> 00:14:12.575
+00:14:53.462 --> 00:14:55.857
 las ayudas o fuentes que habéis utilizado.
 
-00:14:13.496 --> 00:14:15.720
+00:14:56.778 --> 00:14:59.001
 Ese README tiene dos destinatarios.
 
-00:14:16.628 --> 00:14:18.009
+00:14:59.909 --> 00:15:01.291
 Una parte ayuda a otra
 
-00:14:18.022 --> 00:14:20.128
+00:15:01.304 --> 00:15:03.409
 persona a ejecutar los procesos.
 
-00:14:21.049 --> 00:14:23.799
+00:15:04.330 --> 00:15:06.501
 Pero también necesitamos un párrafo para
 
-00:14:23.812 --> 00:14:26.207
+00:15:06.515 --> 00:15:08.949
 gerencia, sin nombres de pasos de Spoon.
 
-00:14:27.131 --> 00:14:28.947
+00:15:09.857 --> 00:15:11.672
 Imaginad que la directora abre el
 
-00:14:28.960 --> 00:14:31.447
+00:15:11.686 --> 00:15:14.172
 resultado y os pregunta qué puede concluir.
 
-00:14:32.381 --> 00:14:35.920
+00:15:15.107 --> 00:15:18.646
 Explicadle que representa el cierre de aula acordado, que
 
-00:14:35.933 --> 00:14:38.315
+00:15:18.659 --> 00:15:21.041
 los importes están en euros y que hay quince
 
-00:14:38.328 --> 00:14:40.460
+00:15:21.054 --> 00:15:23.186
 reservas con cobro por un total de tres
 
-00:14:40.473 --> 00:14:44.486
+00:15:23.199 --> 00:15:27.212
 mil novecientos sesenta y cinco euros con cincuenta céntimos.
 
-00:14:45.394 --> 00:14:48.947
+00:15:28.120 --> 00:15:31.672
 Las cinco reservas sin cobro asociado necesitan revisión;
 
-00:14:49.183 --> 00:14:51.249
+00:15:31.909 --> 00:15:33.975
 no demuestran por sí solas un impago.
 
-00:14:52.157 --> 00:14:55.486
+00:15:34.883 --> 00:15:38.212
 Tampoco podemos calcular ocupación con estos archivos.
 
-00:14:56.394 --> 00:14:59.289
+00:15:39.120 --> 00:15:42.015
 Para hacerlo pediríamos habitaciones disponibles y
 
-00:14:59.302 --> 00:15:01.447
+00:15:42.028 --> 00:15:44.172
 ocupadas durante un periodo definido.
 
-00:15:02.368 --> 00:15:05.578
+00:15:45.093 --> 00:15:48.304
 Indicad además cuándo generasteis el resultado, sin
 
-00:15:05.591 --> 00:15:07.723
+00:15:48.317 --> 00:15:50.449
 confundir esa fecha con la del cierre.
 
-00:15:08.657 --> 00:15:10.618
+00:15:51.383 --> 00:15:53.344
 Así la cifra llega acompañada de
 
-00:15:10.631 --> 00:15:12.499
+00:15:53.357 --> 00:15:55.225
 su significado y sus límites.
 
-00:15:13.433 --> 00:15:16.631
+00:15:56.159 --> 00:15:59.357
 Pero escribir instrucciones no garantiza que funcionen.
 
-00:15:17.552 --> 00:15:20.815
+00:16:00.278 --> 00:16:03.541
 Hagamos una comprobación sencilla: descargad o
 
-00:15:20.828 --> 00:15:23.341
+00:16:03.554 --> 00:16:06.067
 clonad vuestro repositorio en otra carpeta e
 
-00:15:23.354 --> 00:15:25.986
+00:16:06.080 --> 00:16:08.712
 intentad ejecutarlo siguiendo solo el README.
 
-00:15:26.933 --> 00:15:28.723
+00:16:09.659 --> 00:16:11.449
 Si busca un archivo en vuestro
 
-00:15:28.736 --> 00:15:32.091
+00:16:11.462 --> 00:16:14.817
 escritorio antiguo, hemos encontrado algo que corregir.
 
-00:15:32.999 --> 00:15:35.210
+00:16:15.725 --> 00:16:17.936
 El enunciado explica las variables para
 
-00:15:35.223 --> 00:15:38.289
+00:16:17.949 --> 00:16:21.015
 construir rutas relativas a los procesos guardados.
 
-00:15:39.197 --> 00:15:42.841
+00:16:21.922 --> 00:16:25.567
 Recordad que Git no conserva carpetas vacías: indicad que
 
-00:15:42.854 --> 00:15:45.552
+00:16:25.580 --> 00:16:28.278
 hay que crear temporal y salida antes de ejecutar.
 
-00:15:46.473 --> 00:15:49.473
+00:16:29.199 --> 00:16:32.199
 Excluid los provisionales con el archivo gitignore,
 
-00:15:49.723 --> 00:15:52.841
+00:16:32.449 --> 00:16:35.567
 pero incluid los dos CSV finales comprobados.
 
-00:15:53.749 --> 00:15:57.539
+00:16:36.475 --> 00:16:40.265
 Tampoco subáis la instalación de Pentaho, Java o contraseñas.
 
-00:15:58.447 --> 00:16:00.460
+00:16:41.172 --> 00:16:43.186
 Queremos compartir vuestro trabajo,
 
-00:16:00.578 --> 00:16:02.578
+00:16:43.304 --> 00:16:45.304
 con lo necesario para reproducirlo.
 
-00:16:03.486 --> 00:16:05.499
+00:16:46.212 --> 00:16:48.225
 Con los avances registrados, ya
 
-00:16:05.512 --> 00:16:07.499
+00:16:48.238 --> 00:16:50.225
 podemos preparar la entrega final.
 
-00:16:08.407 --> 00:16:10.999
+00:16:51.133 --> 00:16:53.725
 A lo largo del trabajo, registrad avances
 
-00:16:11.012 --> 00:16:13.697
+00:16:53.738 --> 00:16:56.422
 con mensajes que expliquen qué habéis conseguido.
 
-00:16:14.618 --> 00:16:17.762
+00:16:57.343 --> 00:17:00.488
 Cada registro, o commit, identifica una versión.
 
-00:16:18.670 --> 00:16:21.552
+00:17:01.396 --> 00:17:04.278
 Al terminar, subid los cambios y abrid GitHub
 
-00:16:21.565 --> 00:16:24.525
+00:17:04.291 --> 00:17:07.251
 en el navegador para comprobar que realmente están allí.
 
-00:16:25.433 --> 00:16:26.973
+00:17:08.159 --> 00:17:09.699
 Guardar en Spoon no los sube,
 
-00:16:27.131 --> 00:16:28.894
+00:17:09.857 --> 00:17:11.620
 y hacer un commit local tampoco.
 
-00:16:29.802 --> 00:16:32.776
+00:17:12.528 --> 00:17:15.501
 En Moodle entregaréis el enlace del repositorio y el
 
-00:16:32.789 --> 00:16:36.144
+00:17:15.515 --> 00:17:18.870
 identificador completo del commit final revisado en el aula.
 
-00:16:36.315 --> 00:16:39.183
+00:17:19.041 --> 00:17:21.909
 Así todos sabemos qué versión estamos revisando.
 
-00:16:40.104 --> 00:16:42.657
+00:17:22.830 --> 00:17:25.383
 El repositorio puede ser privado: en ese
 
-00:16:42.670 --> 00:16:46.026
+00:17:25.396 --> 00:17:28.751
 caso, añadid como colaborador al usuario que indique
 
-00:16:46.039 --> 00:16:48.236
+00:17:28.765 --> 00:17:30.962
 el profesor y comprobad que ha aceptado.
 
-00:16:49.144 --> 00:16:50.894
+00:17:31.870 --> 00:17:33.620
 No hace falta publicar vuestro
 
-00:16:50.907 --> 00:16:52.631
+00:17:33.633 --> 00:17:35.357
 trabajo para obtener la nota.
 
-00:16:53.539 --> 00:16:55.197
+00:17:36.265 --> 00:17:37.922
 Llegamos a la evaluación.
 
-00:16:56.104 --> 00:16:59.091
+00:17:38.830 --> 00:17:41.817
 La nota suma diez puntos, y podemos entenderla
 
-00:16:59.104 --> 00:17:01.512
+00:17:41.830 --> 00:17:44.238
 siguiendo el mismo recorrido que hemos hecho.
 
-00:17:02.407 --> 00:17:06.249
+00:17:45.133 --> 00:17:48.975
 El repositorio reproducible, con vuestro paquete y los avances
 
-00:17:06.262 --> 00:17:09.591
+00:17:48.988 --> 00:17:52.317
 por sesión, vale un punto; justificar el diseño y
 
-00:17:09.604 --> 00:17:12.789
+00:17:52.330 --> 00:17:55.515
 explicar el resultado a gerencia en el README, otro.
 
-00:17:13.710 --> 00:17:16.802
+00:17:56.436 --> 00:17:59.528
 Construir correctamente el informe de cobros vale dos,
 
-00:17:16.947 --> 00:17:19.289
+00:17:59.672 --> 00:18:02.015
 y el listado de reservas sin cobro, uno.
 
-00:17:20.210 --> 00:17:21.868
+00:18:02.936 --> 00:18:04.593
 Hasta aquí llevamos cinco.
 
-00:17:22.775 --> 00:17:25.236
+00:18:05.501 --> 00:18:07.962
 Asegurar el procedimiento mediante el job
 
-00:17:25.249 --> 00:17:27.236
+00:18:07.975 --> 00:18:09.962
 y sus validaciones vale dos más.
 
-00:17:28.144 --> 00:17:29.933
+00:18:10.870 --> 00:18:12.659
 Documentar las seis pruebas con
 
-00:17:29.947 --> 00:17:32.183
+00:18:12.672 --> 00:18:14.909
 evidencias e interpretación vale otro.
 
-00:17:33.091 --> 00:17:35.947
+00:18:15.817 --> 00:18:18.672
 Esos son los ocho puntos del trabajo entregado.
 
-00:17:36.868 --> 00:17:39.183
+00:18:19.593 --> 00:18:21.909
 Fijaos en la idea: se valora tanto el
 
-00:17:39.197 --> 00:17:42.039
+00:18:21.922 --> 00:18:24.765
 resultado como el camino que permite confiar en él.
 
-00:17:42.947 --> 00:17:44.697
+00:18:25.672 --> 00:18:27.422
 Antes de pasar a los dos puntos
 
-00:17:44.710 --> 00:17:47.157
+00:18:27.436 --> 00:18:29.883
 de la defensa, aclaremos cómo se valora
 
-00:17:47.170 --> 00:17:49.631
+00:18:29.896 --> 00:18:32.357
 ese punto que une diseño y comunicación.
 
-00:17:50.539 --> 00:17:53.065
+00:18:33.265 --> 00:18:35.791
 Pensemos en dos partes del mismo criterio.
 
-00:17:53.973 --> 00:17:55.973
+00:18:36.699 --> 00:18:38.699
 La primera demuestra que el recorrido
 
-00:17:55.986 --> 00:17:57.960
+00:18:38.712 --> 00:18:40.686
 y las reglas están justificados.
 
-00:17:58.868 --> 00:18:01.249
+00:18:41.593 --> 00:18:43.975
 La segunda demuestra que podéis comunicar el
 
-00:18:01.262 --> 00:18:03.525
+00:18:43.988 --> 00:18:46.251
 resultado a alguien que no conoce Pentaho.
 
-00:18:04.486 --> 00:18:06.052
+00:18:47.212 --> 00:18:48.778
 Si ambas están completas y
 
-00:18:06.065 --> 00:18:08.210
+00:18:48.791 --> 00:18:50.936
 son correctas, obtenéis un punto.
 
-00:18:09.118 --> 00:18:11.341
+00:18:51.843 --> 00:18:54.067
 Si solo se demuestra una de ellas, o
 
-00:18:11.354 --> 00:18:15.183
+00:18:54.080 --> 00:18:57.909
 hay errores u omisiones relevantes, corresponde medio punto.
 
-00:18:16.091 --> 00:18:18.512
+00:18:58.817 --> 00:19:01.238
 Si no se demuestra ninguna, son cero.
 
-00:18:19.420 --> 00:18:22.065
+00:19:02.146 --> 00:19:06.142
 Por ejemplo, un diseño bien explicado que no
 
-00:18:22.078 --> 00:18:25.723
+00:19:06.155 --> 00:19:09.813
 incluya el párrafo para gerencia deja ese criterio incompleto.
 
-00:18:26.644 --> 00:18:28.591
+00:19:10.349 --> 00:19:12.297
 No se exige un gráfico ni otra
 
-00:18:28.604 --> 00:18:31.749
+00:19:12.310 --> 00:19:15.455
 herramienta: queremos una explicación clara del cierre,
 
-00:18:31.881 --> 00:18:34.960
+00:19:15.586 --> 00:19:18.665
 las unidades, los resultados y sus límites.
 
-00:18:35.868 --> 00:18:38.828
+00:19:19.573 --> 00:19:22.534
 Esta precisión no cambia el total de diez puntos.
 
-00:18:39.736 --> 00:18:43.289
+00:19:23.441 --> 00:19:26.994
 Tampoco sustituye la defensa individual, que conserva sus
 
-00:18:43.302 --> 00:18:46.262
+00:19:27.007 --> 00:19:29.968
 dos puntos y evalúa vuestra comprensión personal.
 
-00:18:46.995 --> 00:18:48.955
+00:19:30.700 --> 00:19:32.661
 Imaginad que el profesor se sienta
 
-00:18:48.968 --> 00:18:51.152
+00:19:32.674 --> 00:19:34.858
 a vuestro lado y abre vuestro proyecto.
 
-00:18:52.073 --> 00:18:54.113
+00:19:35.779 --> 00:19:37.818
 Durante unos ocho o diez minutos,
 
-00:18:54.258 --> 00:18:57.205
+00:19:37.963 --> 00:19:40.911
 orientativamente, le enseñaréis cómo funciona.
 
-00:18:58.113 --> 00:19:00.797
+00:19:41.818 --> 00:19:44.503
 Esta primera parte de la defensa vale un punto.
 
-00:19:01.731 --> 00:19:05.466
+00:19:45.437 --> 00:19:48.687
 Podéis empezar por una reserva concreta: de qué archivo
 
-00:19:05.480 --> 00:19:08.574
+00:19:48.700 --> 00:19:51.858
 sale, cómo encuentra su cobro, cómo recibe el
 
-00:19:08.588 --> 00:19:11.074
+00:19:51.871 --> 00:19:54.358
 nombre del hotel y dónde termina en el informe.
 
-00:19:11.995 --> 00:19:13.930
+00:19:55.279 --> 00:19:57.213
 Después mostrad qué ocurre con una
 
-00:19:13.943 --> 00:19:15.680
+00:19:57.226 --> 00:19:58.963
 reserva que no encuentra pago.
 
-00:19:16.588 --> 00:19:19.666
+00:19:59.871 --> 00:20:02.950
 Ese pequeño recorrido conecta las piezas mucho mejor
 
-00:19:19.680 --> 00:19:22.101
+00:20:02.963 --> 00:20:05.384
 que recitar todos los nombres de los pasos.
 
-00:19:23.035 --> 00:19:25.522
+00:20:06.318 --> 00:20:08.805
 Explicad por qué elegisteis cada operación
 
-00:19:25.535 --> 00:19:27.561
+00:20:08.818 --> 00:20:10.845
 y cómo comprobasteis el resultado.
 
-00:19:28.482 --> 00:19:29.995
+00:20:11.766 --> 00:20:13.279
 Es una conversación sobre
 
-00:19:30.009 --> 00:19:32.548
+00:20:13.292 --> 00:20:15.832
 vuestra solución, con vuestras palabras.
 
-00:19:33.482 --> 00:19:35.561
+00:20:16.766 --> 00:20:18.845
 A partir de esa explicación, el
 
-00:19:35.574 --> 00:19:38.864
+00:20:18.858 --> 00:20:22.147
 profesor planteará las preguntas que considere necesarias.
 
-00:19:39.785 --> 00:19:42.022
+00:20:23.068 --> 00:20:25.305
 Esta segunda parte vale otro punto.
 
-00:19:42.930 --> 00:19:45.430
+00:20:26.213 --> 00:20:28.713
 Quizá pregunte por qué ordenáis antes de unir,
 
-00:19:45.574 --> 00:19:47.916
+00:20:28.858 --> 00:20:31.200
 por qué hay trece grupos y no veinte, o
 
-00:19:47.930 --> 00:19:50.351
+00:20:31.213 --> 00:20:33.634
 por qué sumáis cobrado en lugar de importe.
 
-00:19:51.285 --> 00:19:53.101
+00:20:34.568 --> 00:20:36.384
 También puede pedir que mostréis la
 
-00:19:53.114 --> 00:19:54.588
+00:20:36.397 --> 00:20:37.871
 rama que detiene el job o que
 
-00:19:54.601 --> 00:19:56.469
+00:20:37.884 --> 00:20:39.753
 comprobéis un fallo en una copia.
 
-00:19:57.403 --> 00:19:59.851
+00:20:40.687 --> 00:20:43.134
 Tomad un momento para pensar, explicad qué
 
-00:19:59.864 --> 00:20:02.140
+00:20:43.147 --> 00:20:45.424
 esperáis y contrastadlo con lo que sucede.
 
-00:20:02.661 --> 00:20:04.793
+00:20:45.939 --> 00:20:48.071
 No se trata de memorizar botones.
 
-00:20:05.740 --> 00:20:08.030
+00:20:49.018 --> 00:20:51.308
 Se trata de comprender y saber comprobar.
 
-00:20:08.977 --> 00:20:11.398
+00:20:52.255 --> 00:20:54.676
 Estos ejemplos no son una lista cerrada.
 
-00:20:12.306 --> 00:20:14.424
+00:20:55.584 --> 00:20:57.702
 Y la defensa es individual, aunque
 
-00:20:14.437 --> 00:20:17.319
+00:20:57.716 --> 00:21:00.597
 hayáis compartido dudas o ideas con compañeros.
 
-00:20:18.227 --> 00:20:20.661
+00:21:01.505 --> 00:21:03.939
 Para que sepáis cómo se asignan los puntos,
 
-00:20:20.858 --> 00:20:23.832
+00:21:04.137 --> 00:21:07.110
 la rúbrica utiliza la misma regla en cada criterio.
 
-00:20:24.727 --> 00:20:26.464
+00:21:08.005 --> 00:21:09.742
 Si está completo y correcto,
 
-00:20:26.582 --> 00:20:27.977
+00:21:09.860 --> 00:21:11.255
 se obtiene todo su valor.
 
-00:20:28.898 --> 00:20:32.108
+00:21:12.176 --> 00:21:15.387
 Si está demostrado parcialmente, pero quedan errores
 
-00:20:32.122 --> 00:20:34.806
+00:21:15.400 --> 00:21:18.084
 u omisiones relevantes, se obtiene la mitad.
 
-00:20:35.727 --> 00:20:37.437
+00:21:19.005 --> 00:21:20.716
 Si no se aporta evidencia o
 
-00:20:37.451 --> 00:20:39.608
+00:21:20.729 --> 00:21:22.887
 no se demuestra, son cero puntos.
 
-00:20:40.516 --> 00:20:42.911
+00:21:23.795 --> 00:21:26.189
 Por ejemplo, en un criterio que vale dos,
 
-00:20:43.043 --> 00:20:45.714
+00:21:26.321 --> 00:21:28.992
 esas posibilidades son dos, uno o cero.
 
-00:20:46.622 --> 00:20:48.898
+00:21:29.900 --> 00:21:32.176
 Al final se suman los ocho criterios y
 
-00:20:48.911 --> 00:20:51.214
+00:21:32.189 --> 00:21:34.492
 la nota se expresa con dos decimales.
 
-00:20:52.122 --> 00:20:54.727
+00:21:35.400 --> 00:21:38.005
 El repositorio y sus evidencias se valoran
 
-00:20:54.740 --> 00:20:57.003
+00:21:38.018 --> 00:21:40.281
 en los seis primeros; vuestra comprensión
 
-00:20:57.016 --> 00:20:59.385
+00:21:40.295 --> 00:21:42.663
 personal, en los dos de la defensa.
 
-00:21:00.319 --> 00:21:03.240
+00:21:43.597 --> 00:21:46.518
 La presentación escrita para gerencia se valora en
 
-00:21:03.253 --> 00:21:05.635
+00:21:46.531 --> 00:21:48.913
 el criterio de diseño; no se vuelve a
 
-00:21:05.648 --> 00:21:08.872
+00:21:48.926 --> 00:21:52.150
 puntuar como presentación del README durante la defensa.
 
-00:21:09.793 --> 00:21:12.043
+00:21:53.071 --> 00:21:55.321
 Allí comprobamos que entendéis lo que habéis
 
-00:21:12.056 --> 00:21:14.806
+00:21:55.334 --> 00:21:58.084
 construido y sabéis razonar ante las preguntas.
 
-00:21:15.714 --> 00:21:17.306
+00:21:58.992 --> 00:22:00.584
 Usad la rúbrica como guía
 
-00:21:17.319 --> 00:21:18.793
+00:22:00.597 --> 00:22:02.071
 para revisar lo que falta.
 
-00:21:19.701 --> 00:21:22.240
+00:22:02.979 --> 00:22:05.518
 Volvamos al encargo del hotel para terminar.
 
-00:21:23.161 --> 00:21:26.464
+00:22:06.439 --> 00:22:09.742
 Hemos pasado de tres archivos a dos resultados útiles,
 
-00:21:26.635 --> 00:21:29.793
+00:22:09.913 --> 00:22:13.071
 con controles para no dar por bueno cualquier CSV.
 
-00:21:30.740 --> 00:21:32.490
+00:22:14.018 --> 00:22:15.768
 La habéis construido en el aula,
 
-00:21:32.661 --> 00:21:34.701
+00:22:15.939 --> 00:22:17.979
 dejando constancia de los avances.
 
-00:21:35.608 --> 00:21:37.924
+00:22:18.887 --> 00:22:21.202
 Ahora esa solución queda organizada en
 
-00:21:37.937 --> 00:21:41.358
+00:22:21.216 --> 00:22:24.637
 vuestro repositorio, otra persona puede reproducirla
 
-00:21:41.372 --> 00:21:43.911
+00:22:24.650 --> 00:22:27.189
 y vosotros podéis explicar las decisiones.
 
-00:21:44.832 --> 00:21:47.951
+00:22:28.110 --> 00:22:31.229
 Antes de entregar, comprobad tres cosas con calma:
 
-00:21:48.122 --> 00:21:50.398
+00:22:31.400 --> 00:22:33.676
 que los resultados son correctos, que la
 
-00:21:50.411 --> 00:21:53.108
+00:22:33.689 --> 00:22:36.387
 copia descargada funciona y que sabéis recorrer
 
-00:21:53.122 --> 00:21:55.569
+00:22:36.400 --> 00:22:38.847
 el proceso sin limitaros a leer un texto.
 
-00:21:56.503 --> 00:21:58.266
+00:22:39.781 --> 00:22:41.545
 Consultad en Moodle la fecha y
 
-00:21:58.280 --> 00:22:00.595
+00:22:41.558 --> 00:22:43.874
 entregad el enlace y la versión elegida.
 
-00:22:01.516 --> 00:22:03.556
+00:22:44.795 --> 00:22:46.834
 Con esta base cerramos la unidad.
 
-00:22:04.073 --> 00:22:07.810
+00:22:47.351 --> 00:22:51.088
 Después llegará la tarea de los quinientos gigabytes: estudiar
 
-00:22:07.823 --> 00:22:10.941
+00:22:51.101 --> 00:22:54.220
 qué cambia cuando crece una solución que ya entendemos.
