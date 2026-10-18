@@ -1,0 +1,128 @@
+[
+  {
+    "title": "El hotel os encarga una solución completa",
+    "label": "Guía de la práctica integradora que cierra la UT1.",
+    "active": 0,
+    "heading": "Preparar dos resultados y demostrar que son fiables",
+    "body": "Informe de cobros para dirección + reservas sin cobro para revisión.",
+    "takeaway": "Las instrucciones detalladas están en el enunciado de la práctica.",
+    "narration": "Imaginad que la directora del hotel os llama después de los talleres. Ya habéis aprendido a leer, unir y resumir datos con Pentaho. Ahora os pide algo completo: un informe de lo cobrado por hotel y canal, y un listado de las reservas que todavía no tienen cobro asociado. Además, quiere poder repetir el procedimiento y saber cuándo ha fallado. Ese es el encargo de esta práctica. Vamos a recorrer qué tenéis que construir, cómo comprobarlo y qué entregar. El enunciado os acompañará con los pasos concretos; este vídeo os ayudará a entender cómo encajan."
+  },
+  {
+    "title": "Dos resultados que responden a preguntas distintas",
+    "label": "Las reservas sin cobro no se suman al informe principal.",
+    "active": 0,
+    "heading": "Dirección: ¿cuánto se ha cobrado?",
+    "body": "Control interno: ¿qué reservas no tienen un cobro en el archivo recibido?",
+    "takeaway": "Sin cobro asociado no demuestra, por sí solo, un impago.",
+    "narration": "Empecemos por separar las dos preguntas. El informe principal incluye reservas con cobro y resume su dinero por hotel y canal. El segundo resultado sirve para revisar las que no tienen un pago asociado en los archivos recibidos. No significa automáticamente que sean impagos: podrían tener otro plazo de pago o faltar información. Pensad en Ana. Su reserva y la confirmación de su pago son cosas distintas. Para el informe sumaremos el campo cobrado, no el precio previsto de la estancia. Y si no encontramos el pago, conservaremos la reserva en el listado de control explicando el motivo."
+  },
+  {
+    "title": "Este conjunto representa un cierre de aula",
+    "label": "Identificad los datos como cierre_aula_01.",
+    "active": 0,
+    "heading": "Tres entradas: reservas, cobros y hoteles",
+    "body": "20 reservas · 15 cobros · 5 hoteles, incluido Noja.",
+    "takeaway": "No hay fechas para seleccionar ayer ni datos para calcular ocupación.",
+    "narration": "Para hacerlo utilizaréis los tres archivos enlazados en esta práctica: reservas, cobros y hoteles de Pentaho. No los cambiéis por los de ingesta o formatos. Contienen veinte reservas, quince cobros y cinco hoteles, incluido Noja como ampliación del grupo. Supondremos que pertenecen a un cierre de aula ya seleccionado. Los identificaréis como cierre aula cero uno. No tienen fechas para seleccionar ayer ni información suficiente para calcular ocupación. En la explicación indicaréis cuándo generasteis el resultado, distinguiendo esa fecha de las fechas del negocio que aquí no conocemos. Así evitamos presentar un dato con un significado que no tiene."
+  },
+  {
+    "title": "Organizad el trabajo antes de abrir los flujos",
+    "label": "Conservad los originales y probad los fallos sobre copias.",
+    "active": 0,
+    "heading": "entrada · procesos · temporal · salida · evidencias",
+    "body": "Separad lo recibido, lo que está en preparación y lo publicado.",
+    "takeaway": "Acordad rutas que funcionen en el equipo del aula.",
+    "narration": "Ahora preparad una carpeta ordenada. En entrada conserváis los originales; en procesos, las transformaciones y el job. Temporal guarda los resultados que aún estáis comprobando. Salida contiene lo que ya se puede entregar, y evidencias recoge las pruebas. Antes de empezar, comprobad que funciona el entorno del taller cero. Después escribid un pequeño diseño: qué necesita dirección, qué representa cada fila, cómo vais a recoger los datos y por qué entregaréis CSV. Es una justificación de vuestras decisiones, no un resumen de todas las definiciones de la unidad. Los talleres de Pentaho os sirven de apoyo técnico."
+  },
+  {
+    "title": "Construid primero el informe de cobros",
+    "label": "Primera transformación: informe_cobros.ktr.",
+    "active": 1,
+    "heading": "Leer → unir por reserva → añadir hotel → agrupar",
+    "body": "Reservas: coma. Cobros y hoteles: punto y coma.",
+    "takeaway": "Antes de cada Merge join, ordenad las dos entradas por su clave.",
+    "narration": "Empezamos con la primera transformación. Leed los CSV comprobando separadores y tipos: reservas usa coma, mientras cobros y hoteles usan punto y coma. Las claves deben ser compatibles y los importes deben interpretarse como decimales. Ordenad reservas y cobros por identificador de reserva y unidlos con una unión interna. Deben quedar quince coincidencias. Después incorporad el nombre del hotel mediante su identificador, ordenando de nuevo ambas entradas para esa clave. Aquí deben mantenerse las quince filas. Si cambia el recuento de una forma que no esperabais, investigad ese paso antes de seguir. La vista previa sirve precisamente para localizar dónde aparece el problema."
+  },
+  {
+    "title": "El informe debe poder entenderse sin Spoon",
+    "label": "Una fila por hotel y canal, con nombres claros.",
+    "active": 1,
+    "heading": "hotel · canal · n_reservas · cobrado_total",
+    "body": "Agrupar, contar reservas y sumar cobrado; escribir primero en temporal.",
+    "takeaway": "Repetir la carga debe sustituir el resultado, sin acumular filas.",
+    "narration": "Con el detalle preparado, ordenad por hotel y canal y agrupad. Para cada grupo calculáis el número de reservas y la suma del campo cobrado. El CSV tendrá las cuatro columnas que aparecen en pantalla. Usad cabecera, punto y coma, codificación UTF ocho e importes con punto decimal y dos decimales, sin separador de miles. Explicad que están en euros. Primero escribimos en temporal, todavía no publicamos. Y configuramos la salida para sustituir el resultado anterior, no para añadirlo debajo. En estos datos hay como máximo un cobro por reserva; explicad por qué tendríais que revisar el recuento si una reserva admitiera varios pagos."
+  },
+  {
+    "title": "Ahora buscamos las reservas que no encontraron pago",
+    "label": "Segunda transformación: reservas_sin_cobro.ktr.",
+    "active": 1,
+    "heading": "Unión izquierda → clave de cobro nula → listado de control",
+    "body": "Conservar id_reserva, hotel, canal, importe y motivo.",
+    "takeaway": "Comprobad ausencia de clave; no confundáis nulo con cero.",
+    "narration": "El segundo flujo responde a la otra pregunta. Esta vez queremos conservar todas las reservas al cruzarlas con cobros, así que ponemos reservas a la izquierda y usamos una unión izquierda. Antes renombramos la clave de la rama de cobros para reconocerla sin confundirla con la original. Tras el cruce, filtramos las filas donde esa clave del pago es nula. No buscamos un cobro igual a cero: buscamos que no exista coincidencia. Añadimos el nombre del hotel y escribimos el identificador, hotel, canal, importe y motivo. Aquí importe sigue siendo el precio de la reserva. El motivo será: sin cobro asociado en el archivo recibido."
+  },
+  {
+    "title": "Comprobad que las piezas vuelven a encajar",
+    "label": "Registrad esperado, obtenido y conclusión.",
+    "active": 2,
+    "heading": "13 grupos · 15 reservas cobradas · 3965.50 €",
+    "body": "Sin cobro: 4, 9, 11, 15 y 18. Quince más cinco son veinte.",
+    "takeaway": "Revisad cada grupo: un total correcto puede ocultar una mala asignación.",
+    "narration": "Ya tenemos dos archivos provisionales. Antes de automatizar, comprobadlos completos y anotad qué esperabais, qué obtuvisteis y qué concluís. El informe debe tener trece grupos, sumar quince reservas y totalizar tres mil novecientos sesenta y cinco euros con cincuenta céntimos. Laredo, en el canal web, tiene dos reservas y cuatrocientos noventa y seis euros con cincuenta céntimos. En el listado sin cobro quedan los identificadores cuatro, nueve, once, quince y dieciocho. Quince reservas cobradas más cinco sin cobro recuperan las veinte de entrada. Contrastad también cada grupo con la tabla de referencia: acertar el total no garantiza haber asignado bien cada importe."
+  },
+  {
+    "title": "Enseñad al proceso a detectar una salida incorrecta",
+    "label": "Dos transformaciones más: las validaciones.",
+    "active": 2,
+    "heading": "validar_informe.ktr + validar_sin_cobro.ktr",
+    "body": "Comprobar recuentos, totales, identificadores y duplicados.",
+    "takeaway": "Un archivo con solo cabecera debe provocar un error.",
+    "narration": "Las comprobaciones manuales os permiten entender el resultado. Ahora construiremos dos transformaciones que ayuden al job a detenerse cuando una salida no cumpla. La primera resume el CSV y comprueba sus grupos, reservas e importe total. La segunda comprueba los cinco identificadores esperados y que no haya duplicados. Si una condición falla, debe terminar con error mediante Abort. Hay un caso que no podéis olvidar: un archivo con solo cabecera existe, pero no contiene datos. Debe fallar también. El enunciado explica cómo tratar la entrada vacía. Estos números son referencias del conjunto de aula; en un cierre real los controles tendrían que adaptarse a sus entradas."
+  },
+  {
+    "title": "El job decide cuándo se puede publicar",
+    "label": "Guardad el procedimiento como cierre_hotel.kjb.",
+    "active": 2,
+    "heading": "Entradas → dos resultados → dos validaciones → publicación",
+    "body": "Ante un error, detener y registrar la causa.",
+    "takeaway": "Conservad el último informe publicado durante la preparación.",
+    "narration": "Con las cuatro transformaciones preparadas, llega el momento de coordinarlas. El job comprueba primero que estén las tres entradas. Después genera los dos resultados provisionales y ejecuta sus validaciones. Solo si todo termina correctamente copia los archivos a salida y registra éxito. Si falta una entrada o falla una transformación, una validación o una copia, debe detenerse con error. No borréis el último informe publicado al comenzar: un fallo de preparación debe dejarlo intacto. Y recordad un límite: copiar dos archivos no los publica a la vez como una sola operación. Si falla la segunda copia, tampoco podemos anunciar éxito."
+  },
+  {
+    "title": "Probad que funciona también fuera de la ventana de diseño",
+    "label": "Spoon diseña; Pan ejecuta transformaciones; Kitchen ejecuta el job.",
+    "active": 2,
+    "heading": "Primera ejecución → repetición → fallo → recuperación",
+    "body": "Comprobar las salidas y guardar el registro de cada prueba.",
+    "takeaway": "Kitchen no programa por sí solo una hora de ejecución.",
+    "narration": "Para demostrar que el procedimiento es reproducible, ejecutad las transformaciones con Pan y el job con Kitchen. No basta con que funcione al pulsar el botón de Spoon. Primero comprobad una ejecución sin informes previos. Después repetidla: los recuentos y los totales deben mantenerse, sin duplicados añadidos. A continuación probad una ruta de entrada inexistente sobre una copia de trabajo. El job debe fallar y no publicar un informe nuevo. Finalmente restaurad la ruta y comprobad la recuperación. Para esta práctica basta lanzar Kitchen manualmente; explicad que otro programador de tareas lo iniciaría de madrugada. El comando por sí solo no establece ese horario."
+  },
+  {
+    "title": "Probad también los controles de calidad",
+    "label": "Una validación útil debe rechazar un resultado defectuoso.",
+    "active": 2,
+    "heading": "Prueba 1: solo cabecera · Prueba 2: importe alterado",
+    "body": "Ejecutad la validación directamente sobre la copia modificada.",
+    "takeaway": "No regeneréis primero el archivo que queréis poner a prueba.",
+    "narration": "Todavía faltan dos pruebas para saber si los controles hacen su trabajo. En una copia del CSV provisional dejad únicamente la cabecera y ejecutad su validación: debe dar error. En otra prueba modificad un importe y comprobad que el control del total lo detecta. Atención al orden: aquí ejecutáis directamente la transformación de validación sobre el archivo alterado. Si lanzáis primero todo el job, volverá a generar el informe y eliminará el defecto que intentabais probar. Conservad el registro del fallo, explicad la causa y restaurad después el estado correcto. Una captura resulta útil cuando permite entender lo que ocurrió."
+  },
+  {
+    "title": "La entrega tiene cuatro partes",
+    "label": "Preparad una carpeta o ZIP que otra persona pueda utilizar.",
+    "active": 3,
+    "heading": "Procesos + resultados + explicación + evidencias",
+    "body": "4 transformaciones y 1 job; 2 CSV finales; diseño y guía; pruebas comentadas.",
+    "takeaway": "Fechas, calificación y entrega formal: lo que indique Moodle.",
+    "narration": "Vamos a reunir la entrega. Primera parte: las cuatro transformaciones y el job. Segunda: los dos CSV finales, el informe por hotel y canal y las reservas sin cobro. Tercera: una explicación breve del diseño, las reglas, el cierre de aula, la fecha de generación, las unidades y cómo ejecutar el procedimiento. Justificad el formato y sus límites. Cuarta: la tabla de comprobaciones y las evidencias de las pruebas, explicando los errores y la recuperación. Añadid vuestro nombre y la pregunta de cada proceso en el lienzo. Revisad las rutas y abrid los resultados fuera de Spoon. Moodle concreta fechas, calificación y lugar de entrega."
+  },
+  {
+    "title": "El objetivo es cerrar el recorrido de la UT1",
+    "label": "Construir, explicar, comprobar y entregar.",
+    "active": 3,
+    "heading": "Diseño → ingesta → formato → procesamiento → presentación",
+    "body": "Podéis trabajar individualmente o por parejas según la organización del aula.",
+    "takeaway": "La actividad de los 500 GB viene después, como transición a la UT2.",
+    "narration": "Ya podéis organizar el trabajo por etapas: primero diseño e informe, después listado de control y validaciones, y finalmente job, pruebas y entrega. El enunciado propone tres sesiones, ampliables si necesitáis más tiempo para completar los controles. No se trata solo de producir archivos. Debéis poder explicar por qué hay trece grupos, qué dinero estáis sumando, qué significa una reserva sin cobro y qué impide publicar un resultado defectuoso. Así conectáis toda la unidad con un encargo concreto del hotel. Después llegará la pregunta de los quinientos gigabytes. Primero construimos una solución que entendemos y comprobamos; luego estudiaremos qué cambia cuando crece."
+  }
+]

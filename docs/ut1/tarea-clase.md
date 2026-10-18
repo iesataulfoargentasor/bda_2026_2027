@@ -16,6 +16,19 @@ Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis
 !!! info "Dos actividades con funciones diferentes"
     Esta práctica construye y comprueba una solución con datos pequeños. Después, la [transición a la UT2: 500 GB y un portátil](transicion-ut2.md) plantea qué revisaríamos al aumentar el volumen. No necesitáis Spark, nube ni una base de datos para completar esta práctica.
 
+## Vídeo: qué hacer y qué entregar
+
+Antes de empezar, mira esta guía del encargo del hotel: explica los dos resultados que debéis preparar, las validaciones, la ejecución con Kitchen, las pruebas de fallo y el contenido de la entrega. **Duración: 10 minutos y 36 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/practica-pentaho-portada.jpg" aria-label="Práctica integradora de Pentaho: qué hacer y qué entregar" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/practica-pentaho.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las instrucciones detalladas de esta práctica; Moodle concreta las fechas, la calificación y la entrega formal.
+
+[Descargar el vídeo](../assets/ut1/practica-pentaho.mp4) · [Leer la transcripción](../assets/ut1/practica-pentaho.txt) · [Descargar los subtítulos](../assets/ut1/practica-pentaho.es.srt)
+
 ## 1. El encargo de dirección
 
 > «Necesito conocer el importe cobrado y el número de reservas cobradas por hotel y canal. Quiero recibir un CSV claro del cierre y saber qué reservas todavía no tienen un cobro asociado. El procedimiento debe poder repetirse y avisar si no puede generar el informe».
