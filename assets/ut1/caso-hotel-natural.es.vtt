@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:02.389
+Imaginad que hoy empezáis a trabajar con
+
+00:00:02.403 --> 00:00:04.666
+un pequeño grupo de hoteles de Cantabria.
+
+00:00:05.589 --> 00:00:08.050
+Es una empresa inventada, pero el problema
+
+00:00:08.063 --> 00:00:10.326
+que vamos a resolver es muy reconocible.
+
+00:00:11.247 --> 00:00:14.708
+Tiene hoteles en Santander, Laredo, Comillas y Potes.
+
+00:00:15.655 --> 00:00:17.589
+En recepción empieza otra mañana
+
+00:00:17.603 --> 00:00:19.813
+de llegadas, llamadas y reservas.
+
+00:00:20.734 --> 00:00:22.932
+Mientras tanto, la directora abre su
+
+00:00:22.945 --> 00:00:25.405
+ordenador y pregunta: ¿cómo nos fue ayer?
+
+00:00:25.941 --> 00:00:28.389
+Esa pregunta será el hilo de esta unidad.
+
+00:00:28.882 --> 00:00:31.355
+Vamos a conocer la historia antes de aprender
+
+00:00:31.368 --> 00:00:34.026
+las herramientas que nos ayudarán a responderla.
+
+00:00:34.766 --> 00:00:37.187
+La directora quiere saber qué ocupación tuvo
+
+00:00:37.200 --> 00:00:39.174
+cada hotel y cuánto dinero se cobró.
+
+00:00:40.082 --> 00:00:42.516
+Con esa información puede organizar mejor el
+
+00:00:42.529 --> 00:00:45.082
+trabajo y detectar algo que necesita revisar.
+
+00:00:46.003 --> 00:00:48.753
+Pero hay que interpretar las cifras con contexto.
+
+00:00:49.661 --> 00:00:51.595
+Un hotel de costa en agosto y uno
+
+00:00:51.608 --> 00:00:54.779
+de interior en noviembre pueden tener ritmos muy diferentes.
+
+00:00:55.687 --> 00:00:57.476
+Que compartan dueño y programa de
+
+00:00:57.490 --> 00:00:59.792
+reservas no hace que se comporten igual.
+
+00:01:00.700 --> 00:01:03.805
+Nuestra primera tarea será entender qué pregunta queremos
+
+00:01:03.819 --> 00:01:06.503
+responder y qué datos hacen falta, antes
+
+00:01:06.516 --> 00:01:08.779
+de elegir un programa o empezar a sumar.
+
+00:01:09.687 --> 00:01:11.779
+Pongámosle una cara a los datos.
+
+00:01:12.687 --> 00:01:14.819
+Ana reserva tres noches en Laredo.
+
+00:01:15.740 --> 00:01:18.069
+El programa del hotel guarda su reserva y,
+
+00:01:18.240 --> 00:01:21.437
+cuando paga, el sistema de pagos confirma el cobro.
+
+00:01:22.345 --> 00:01:25.003
+Son piezas relacionadas, pero distintas.
+
+00:01:25.950 --> 00:01:28.200
+Para reunirlas necesitamos reconocer a
+
+00:01:28.213 --> 00:01:30.200
+qué reserva corresponde cada pago.
+
+00:01:31.108 --> 00:01:32.713
+Si solo miramos el precio de
+
+00:01:32.726 --> 00:01:35.516
+la estancia, podríamos contar como cobrado un
+
+00:01:35.529 --> 00:01:37.332
+dinero que todavía no ha llegado.
+
+00:01:38.253 --> 00:01:40.437
+Por eso acompañaremos a Ana durante los
+
+00:01:40.450 --> 00:01:43.805
+siguientes vídeos: su reserva nos permitirá entender
+
+00:01:43.819 --> 00:01:46.016
+para qué sirve cada paso del recorrido.
+
+00:01:46.950 --> 00:01:48.766
+Mientras preparamos el informe,
+
+00:01:48.911 --> 00:01:50.963
+recepción tiene que seguir atendiendo.
+
+00:01:51.871 --> 00:01:53.700
+Utiliza un programa de gestión del
+
+00:01:53.713 --> 00:01:55.976
+hotel que también llamaremos PMS.
+
+00:01:56.924 --> 00:01:59.542
+Es el programa, no el nombre de un servidor.
+
+00:02:00.450 --> 00:02:02.148
+No vamos a sustituirlo ni a
+
+00:02:02.161 --> 00:02:04.069
+introducir otra vez las reservas.
+
+00:02:05.003 --> 00:02:07.437
+Recogemos una copia de la información para
+
+00:02:07.450 --> 00:02:10.450
+trabajar sin interrumpir las operaciones del mostrador.
+
+00:02:11.358 --> 00:02:14.226
+Esa separación es importante: atender a Ana
+
+00:02:14.240 --> 00:02:17.292
+y analizar muchas reservas son trabajos diferentes.
+
+00:02:18.200 --> 00:02:21.226
+Nosotros conectaremos los datos que ya existen con
+
+00:02:21.240 --> 00:02:23.871
+el lugar donde la directora podrá consultarlos.
+
+00:02:24.792 --> 00:02:27.042
+Ahora imaginad que Ana paga una parte
+
+00:02:27.055 --> 00:02:28.805
+al reservar y el resto al llegar.
+
+00:02:29.726 --> 00:02:31.950
+Tenemos una reserva y dos pagos.
+
+00:02:32.884 --> 00:02:35.253
+Podemos sumar ambos importes, pero no
+
+00:02:35.266 --> 00:02:37.424
+contar dos estancias por ese motivo.
+
+00:02:38.332 --> 00:02:41.279
+También debemos distinguir los cobros de la ocupación.
+
+00:02:41.806 --> 00:02:44.069
+Para calcular un porcentaje de ocupación
+
+00:02:44.082 --> 00:02:47.477
+necesitamos saber cuántas habitaciones estaban disponibles y
+
+00:02:47.490 --> 00:02:50.714
+cuántas estuvieron ocupadas durante el periodo.
+
+00:02:51.635 --> 00:02:53.872
+Contar reservas cobradas no basta.
+
+00:02:54.780 --> 00:02:57.069
+No tenéis que dominar aún los cálculos.
+
+00:02:57.977 --> 00:02:59.845
+Quedaos con la idea: antes de
+
+00:02:59.859 --> 00:03:03.227
+producir una cifra, necesitamos saber qué representa
+
+00:03:03.240 --> 00:03:05.227
+y cómo comprobaremos que es correcta.
+
+00:03:06.135 --> 00:03:08.016
+Ya sabemos qué queremos calcular.
+
+00:03:08.951 --> 00:03:10.674
+Falta acordar para cuándo.
+
+00:03:11.595 --> 00:03:14.345
+En nuestro caso, finanzas fija el cierre del
+
+00:03:14.359 --> 00:03:15.898
+día a las once de la noche.
+
+00:03:16.832 --> 00:03:19.095
+De madrugada recogemos y preparamos la
+
+00:03:19.109 --> 00:03:20.977
+información, y a las ocho de la
+
+00:03:20.990 --> 00:03:23.398
+mañana la directora consulta ese cierre.
+
+00:03:24.332 --> 00:03:26.951
+Está viendo cómo terminó el día anterior, no
+
+00:03:26.964 --> 00:03:28.859
+todo lo que sucede en ese instante.
+
+00:03:29.780 --> 00:03:32.135
+Si llega un dato tarde, necesitamos una
+
+00:03:32.148 --> 00:03:34.872
+regla para incorporarlo o corregir el resultado.
+
+00:03:35.780 --> 00:03:37.727
+Por eso el informe debe indicar su
+
+00:03:37.740 --> 00:03:39.924
+fecha de cierre y cuándo se actualizó.
+
+00:03:40.832 --> 00:03:42.372
+Mientras la directora mira el
+
+00:03:42.385 --> 00:03:44.437
+informe, Ana sale a desayunar.
+
+00:03:45.372 --> 00:03:47.990
+El sensor puede dejar de detectar presencia en
+
+00:03:48.003 --> 00:03:50.701
+su habitación y enviar una señal al poco tiempo.
+
+00:03:51.622 --> 00:03:55.030
+¿Significa que podemos vender esa habitación a otra persona?
+
+00:03:55.937 --> 00:03:57.727
+No: Ana sigue alojada.
+
+00:03:58.246 --> 00:04:00.798
+El dato del sensor necesita contexto.
+
+00:04:01.706 --> 00:04:03.969
+Estos avisos sirven para un indicador
+
+00:04:03.982 --> 00:04:06.575
+operativo que se actualiza con poco retraso.
+
+00:04:07.509 --> 00:04:09.811
+Es otro recorrido, con otro plazo.
+
+00:04:10.719 --> 00:04:14.522
+Así tendremos dos necesidades bien diferenciadas: preparar el
+
+00:04:14.535 --> 00:04:18.285
+cierre para dirección y atender señales recientes para recepción.
+
+00:04:19.206 --> 00:04:20.325
+A lo largo del tema
+
+00:04:20.338 --> 00:04:22.377
+aprenderemos a organizar cada una.
+
+00:04:23.087 --> 00:04:25.350
+Con la historia situada, el recorrido
+
+00:04:25.364 --> 00:04:27.548
+de la unidad empieza a tener sentido.
+
+00:04:28.086 --> 00:04:30.428
+Primero veremos por qué importan el tamaño de
+
+00:04:30.441 --> 00:04:32.901
+los datos, la rapidez con que llegan, su
+
+00:04:32.914 --> 00:04:36.375
+variedad, su fiabilidad y la utilidad del resultado.
+
+00:04:37.283 --> 00:04:39.836
+Después preguntaremos si una máquina basta o
+
+00:04:39.849 --> 00:04:42.997
+si conviene repartir el trabajo entre varias.
+
+00:04:43.934 --> 00:04:46.368
+Tener cuatro hoteles no obliga por sí solo
+
+00:04:46.381 --> 00:04:49.144
+a usar un clúster: habrá que medir la necesidad.
+
+00:04:50.065 --> 00:04:52.631
+A continuación decidiremos dónde guardar cada
+
+00:04:52.644 --> 00:04:55.684
+cosa, distinguiendo las operaciones de recepción
+
+00:04:55.697 --> 00:04:58.210
+del histórico que utilizaremos para analizar.
+
+00:04:59.131 --> 00:05:02.684
+Una vez elegidos los recursos y el almacenamiento, veremos
+
+00:05:02.697 --> 00:05:05.342
+cómo procesar los datos: qué puede esperar al
+
+00:05:05.355 --> 00:05:08.697
+trabajo nocturno y qué necesita una respuesta más rápida.
+
+00:05:09.631 --> 00:05:12.737
+El apartado de arquitectura nos ayudará a organizar las
+
+00:05:12.750 --> 00:05:16.908
+responsabilidades para que todo encaje, también cuando algo falle.
+
+00:05:17.454 --> 00:05:20.243
+Después entraremos en la ingesta, es decir,
+
+00:05:20.362 --> 00:05:22.980
+cómo incorporamos los datos desde sus fuentes.
+
+00:05:23.888 --> 00:05:26.467
+En lugar de memorizar tres temas aislados,
+
+00:05:26.651 --> 00:05:28.743
+pensad en tres preguntas sobre el mismo
+
+00:05:28.757 --> 00:05:32.428
+viaje: cómo calculamos, cómo coordinamos las piezas
+
+00:05:32.441 --> 00:05:34.730
+y cómo llega hasta ellas la información.
+
+00:05:35.625 --> 00:05:38.257
+Nos faltarán dos decisiones muy prácticas.
+
+00:05:39.178 --> 00:05:41.901
+En formatos veremos cómo escribir los datos para
+
+00:05:41.915 --> 00:05:44.941
+que el siguiente programa pueda leerlos de forma adecuada.
+
+00:05:45.901 --> 00:05:48.651
+Y con Pentaho construiremos recorridos que leen,
+
+00:05:48.796 --> 00:05:51.757
+filtran, unen y resumen información, hasta
+
+00:05:51.770 --> 00:05:54.362
+entregar un fichero o una tabla comprensible.
+
+00:05:55.270 --> 00:05:57.546
+Las prácticas avanzan poco a poco.
+
+00:05:58.454 --> 00:06:01.757
+Algunas seleccionan reservas y otras calculan importes
+
+00:06:01.770 --> 00:06:03.665
+por hotel y canal; no todas
+
+00:06:03.678 --> 00:06:06.730
+construyen el panel completo ni calculan ocupación.
+
+00:06:07.651 --> 00:06:09.454
+Lo importante será entender qué
+
+00:06:09.467 --> 00:06:11.783
+parte estamos resolviendo y comprobarla.
+
+00:06:12.704 --> 00:06:15.125
+Así llegaremos a la siguiente unidad con una
+
+00:06:15.138 --> 00:06:17.836
+historia conocida sobre la que seguir trabajando.
+
+00:06:18.757 --> 00:06:20.862
+Volvamos a aquella primera mañana.
+
+00:06:21.783 --> 00:06:23.915
+La directora pregunta cómo fue ayer y
+
+00:06:23.928 --> 00:06:26.125
+ahora sabemos que responder exige algo
+
+00:06:26.138 --> 00:06:28.309
+más que poner números en una pantalla.
+
+00:06:28.507 --> 00:06:31.757
+Hay que reunir las piezas, entender su significado,
+
+00:06:31.888 --> 00:06:34.546
+respetar los plazos y comprobar el resultado.
+
+00:06:35.467 --> 00:06:37.638
+Esa será vuestra misión en la unidad.
+
+00:06:38.145 --> 00:06:41.105
+Cuando aparezca una herramienta nueva, preguntaos
+
+00:06:41.119 --> 00:06:43.237
+qué problema del hotel ayuda a resolver.
+
+00:06:44.145 --> 00:06:45.829
+No hace falta conocer todos
+
+00:06:45.842 --> 00:06:47.513
+los nombres desde el principio.
+
+00:06:48.421 --> 00:06:51.395
+Iremos aprendiendo lo necesario mientras acompañamos
+
+00:06:51.408 --> 00:06:53.658
+la reserva de Ana hasta una información
+
+00:06:53.671 --> 00:06:56.395
+clara, fiable y disponible a tiempo.
