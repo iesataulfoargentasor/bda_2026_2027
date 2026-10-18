@@ -82,12 +82,12 @@
   },
   {
     "title": "A las ocho, la directora abre el panel",
-    "label": "El cálculo previo facilita responder mientras consulta.",
+    "label": "Organizar el análisis por dimensiones no obliga a precalcularlo todo.",
     "active": 2,
-    "heading": "Filtrar por Laredo, fecha o canal de reserva",
-    "body": "Los resúmenes preparados permiten explorar los datos sin recalcular todo el histórico.",
+    "heading": "Cubo OLAP: medidas y dimensiones para analizar",
+    "body": "Resúmenes precalculados o calculados al consultar. Un bucket de S3 contiene objetos identificados por claves.",
     "takeaway": "Consulta interactiva no significa datos en tiempo real.",
-    "narration": "Llega la mañana y el informe está listo. La directora abre el panel y selecciona Laredo. Ahora quiere que la consulta responda mientras lo está mirando: ese uso es interactivo. Podemos preparar resúmenes por fecha, hotel y canal para facilitarlo. Organizar el análisis según esas dimensiones es la idea de un cubo OLAP. El nombre puede confundir, pero no es el cubo de objetos donde guardábamos archivos. Y otra distinción importante: hacer clic a las once no actualiza el histórico por sí solo. Si los datos corresponden al cierre anterior, el filtro sigue consultando ese cierre."
+    "narration": "Llega la mañana y el informe está listo. La directora abre el panel y selecciona Laredo. Ahora quiere que la consulta responda mientras lo está mirando: ese uso es interactivo. Podemos preparar resúmenes por fecha, hotel y canal para facilitarlo. Organizar el análisis según esas dimensiones es la idea de un cubo OLAP. En nuestro ejemplo hemos preparado algunos resúmenes para responder más rápido. Pero detengámonos un momento: eso no significa que un cubo OLAP tenga que guardar todas las respuestas de antemano. Según el motor, puede calcularlas cuando se consulta o aprovechar agregados ya preparados. El nombre también puede confundirnos con el cubo de objetos. Un bucket de S3 cumple otra función: es un contenedor de objetos, cada uno identificado por su clave. Uno organiza el análisis; el otro contiene los archivos que guardamos. Y antes de seguir, recordemos otra distinción: hacer clic a las once no actualiza el histórico por sí solo. Si los datos corresponden al cierre anterior, el filtro sigue consultando ese cierre."
   },
   {
     "title": "Mientras la directora consulta, Ana sale a desayunar",

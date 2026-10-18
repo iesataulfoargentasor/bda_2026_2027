@@ -151,12 +151,12 @@
   },
   {
     "title": "La decisión se demuestra con una prueba justa",
-    "label": "Primero comprobamos los datos; después medimos el rendimiento.",
+    "label": "El taller 3 prepara la comparación: conservad laredo.avro.",
     "active": 3,
     "heading": "Mismas filas, columnas, tipos y consulta",
     "body": "Registrar tamaño, compresión, escritura, lectura y cálculo. Repetir las medidas.",
-    "takeaway": "El Avro de Laredo se compara con el mismo subconjunto.",
-    "narration": "Con el contrato ya comprobado, podemos hacer una comparación justa entre formatos. Antes de cronometrar, verificamos las mismas filas, columnas y tipos, además de los valores y las posiciones de los nulos. No cambiamos tipos ni rellenamos ausencias a ciegas para que una comprobación pase. Después medimos escritura, lectura y cálculo por separado, dejando las comprobaciones fuera de esos tiempos. Anotamos también compresión y tamaño. Repetimos las medidas, porque la caché puede acelerar una segunda lectura. Y recordad otra precaución: el Avro del taller solo contiene Laredo y cinco columnas. Lo comparamos con CSV y Parquet del mismo subconjunto. Un archivo más pequeño porque perdió datos no demuestra una mejora.",
+    "takeaway": "Taller 3: práctica guiada. Comparar el mismo subconjunto de Laredo.",
+    "narration": "Con el contrato ya comprobado, podemos hacer una comparación justa entre formatos. Antes de cronometrar, verificamos las mismas filas, columnas y tipos, además de los valores y las posiciones de los nulos. No cambiamos tipos ni rellenamos ausencias a ciegas para que una comprobación pase. Después medimos escritura, lectura y cálculo por separado, dejando las comprobaciones fuera de esos tiempos. Anotamos también compresión y tamaño. Repetimos las medidas, porque la caché puede acelerar una segunda lectura. Y recordad otra precaución: el Avro del taller solo contiene Laredo y cinco columnas. Ese archivo lo preparáis en el taller tres, que forma parte de la práctica guiada. Conservadlo al terminar, porque lo necesitaréis después en este taller medido. Así conectamos la preparación con la comparación: tomamos esas mismas filas y columnas y las guardamos también en CSV y Parquet. Entonces sí podemos comparar los tres formatos sobre el mismo subconjunto. Un archivo más pequeño porque perdió datos no demuestra una mejora.",
     "kind": "normal"
   },
   {
