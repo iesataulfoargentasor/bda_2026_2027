@@ -9,6 +9,19 @@ tags:
 
 # 1.8. Pentaho: procesar y presentar
 
+## Vídeo: del dato al informe del hotel con Pentaho
+
+Sigue el trabajo del hotel para comprender cómo preparar los datos, unir reservas y cobros, construir informes y automatizar su entrega con Pentaho. El recorrido conecta los talleres y distingue Spoon, Pan y Kitchen, con ejemplos de validación y tratamiento de errores. **Duración: 13 minutos y 34 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/pentaho-natural-portada.jpg" aria-label="Pentaho: del dato al informe del hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/pentaho-natural.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
+
+[Descargar el vídeo](../assets/ut1/pentaho-natural.mp4) · [Leer la transcripción](../assets/ut1/pentaho-natural.txt) · [Descargar los subtítulos](../assets/ut1/pentaho-natural.es.srt)
+
 ## Cómo se conectan los talleres con la unidad
 
 Pentaho Data Integration permite expresar visualmente las operaciones estudiadas: leer un origen, comprobar tipos, filtrar, unir, agregar y escribir un resultado. Cada paso recibe filas y entrega filas a los pasos siguientes. El objetivo es comprender ese cambio, además de aprender dónde se encuentra cada opción.
