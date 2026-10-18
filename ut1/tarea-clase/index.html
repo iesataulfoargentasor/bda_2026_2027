@@ -1988,7 +1988,7 @@
 <li>Producir una fila por combinación de <code>hotel</code> y <code>canal</code>, con <code>n_reservas</code> y <code>cobrado_total</code>.</li>
 <li>Conservar las reservas sin cobro en un listado separado, sin inventar importes ni descartarlas sin explicación.</li>
 <li>Repetir la ejecución sobre las mismas entradas sin acumular filas en los archivos de salida.</li>
-<li>No anunciar éxito ni publicar un resultado nuevo cuando una entrada requerida falta o el proceso falla.</li>
+<li>No iniciar la publicación si falta una entrada requerida o falla la preparación o validación de las salidas. Si falla una copia durante la publicación, marcar el job como fallido y advertir de que puede haber quedado un resultado parcial. No anunciar éxito hasta que terminen correctamente las dos copias.</li>
 </ol>
 <h2 id="2-preparad-el-entorno-y-las-entradas">2. Preparad el entorno y las entradas<a class="headerlink" href="#2-preparad-el-entorno-y-las-entradas" title="Permanent link">&para;</a></h2>
 <p>Comprobad primero que funciona el <a href="../pentaho/#taller-0-que-spoon-hable">taller 0 de Pentaho</a>. Utilizad <strong>Pentaho Data Integration Community 9.4.0.0-343</strong>, la versión de los talleres, con el entorno Java indicado por el aula. Estos archivos se leen localmente: no necesitáis una base de datos, controladores JDBC, servicios de pago ni plugins adicionales.</p>
@@ -2199,9 +2199,9 @@
 <li>Ejecutad <code>informe_cobros.ktr</code> y, solo si termina correctamente, <code>reservas_sin_cobro.ktr</code>.</li>
 <li>Comprobad que existen ambas salidas provisionales. Ejecutad las dos transformaciones de validación.</li>
 <li>Solo si ambas validaciones terminan correctamente, copiad los dos CSV de <code>temporal</code> a <code>salida</code>, sustituyendo las versiones anteriores. Podéis usar una entrada de copia de archivos del job; verificad sus opciones de sobrescritura.</li>
-<li>Registrad éxito únicamente después de que la publicación termine. Cualquier error de transformación, validación o copia debe seguir una rama de error y terminar como fallo.</li>
+<li>Registrad éxito únicamente después de que terminen correctamente las dos copias. Los errores de preparación o validación deben detener el job antes de iniciar la publicación. Si falla una copia, seguid una rama de error que termine como fallo y avise de un posible estado parcial en <code>salida</code>.</li>
 </ol>
-<p>No borréis el último informe publicado al empezar. Un fallo de lectura o validación debe dejarlo intacto. <strong>Copiar dos archivos no es una publicación atómica del conjunto</strong>: si falla la segunda copia, el job debe avisar y no anunciar éxito. Como ampliación se puede publicar una carpeta versionada completa y señalar qué versión está disponible.</p>
+<p>No borréis el último informe publicado al empezar. Un fallo de preparación o validación debe dejarlo intacto, porque todavía no se ha iniciado la publicación. <strong>Copiar dos archivos no es una publicación atómica del conjunto</strong>: la primera copia puede completarse y fallar la segunda. En ese caso, <code>salida</code> puede contener un archivo nuevo y otro anterior o ausente; el job debe terminar con error y advertir de ese posible estado parcial, sin anunciar éxito. Esta práctica no exige deshacer las copias ni garantizar que ambos archivos se sustituyan a la vez. Como ampliación se puede diseñar una publicación por versiones, con un mecanismo que solo señale la nueva versión cuando esté completa.</p>
 <p>Utilizad <strong>Pan</strong> para probar cada <code>.ktr</code> y <strong>Kitchen</strong> para ejecutar el <code>.kjb</code> sin depender de Spoon. Adaptad las rutas a vuestro entorno:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pan.bat /file="C:/ruta/procesos/informe_cobros.ktr" /level:Basic
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kitchen.bat /file="C:/ruta/procesos/cierre_hotel.kjb" /level:Basic
@@ -2250,7 +2250,7 @@
 </tr>
 </tbody>
 </table>
-<p>Para las dos pruebas de validación, ejecutad directamente la transformación de control sobre la copia alterada: si ejecutáis primero el job completo, regenerará el archivo y eliminará el fallo que queríais probar. Conservad también el log que demuestra que las ramas de error del job no continúan hacia publicación.</p>
+<p>Para las dos pruebas de validación, ejecutad directamente la transformación de control sobre la copia alterada: si ejecutáis primero el job completo, regenerará el archivo y eliminará el fallo que queríais probar. Conservad también el log que demuestra que las ramas de error de preparación o validación del job impiden iniciar la publicación. Si se produce un error durante las copias, el log debe indicar el fallo y advertir del posible estado parcial; no debe registrar éxito.</p>
 <h2 id="9-que-entregais">9. Qué entregáis<a class="headerlink" href="#9-que-entregais" title="Permanent link">&para;</a></h2>
 <p>Entregad en Moodle <strong>la URL de vuestro repositorio personal y el identificador del commit que queréis evaluar</strong>. Ese commit identifica la versión concreta entregada. Comprobad que los últimos cambios se han subido a GitHub; guardar en Spoon o hacer un commit local no los publica por sí solo.</p>
 <p>El repositorio debe contener:</p>
@@ -2305,7 +2305,7 @@
 <tr>
 <td>Job y validaciones automáticas</td>
 <td style="text-align: right;">2,00</td>
-<td>Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo.</td>
+<td>Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo, incluido el posible estado parcial si falla una copia. No se exige publicación atómica.</td>
 </tr>
 <tr>
 <td>Pruebas y evidencias</td>
@@ -2421,7 +2421,7 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Qué ayuda he recibido y cómo la he utilizado:
 </span></code></pre></div>
 <p>Las entregas de avance forman parte del seguimiento y del criterio de repositorio de la rúbrica; <strong>no añaden puntos ni cambian el total de 10,00</strong>. La entrega final del apartado 9 debe identificar la versión final revisada en el aula. El profesor comprobará el paquete utilizado y podrá elegir preguntas relacionadas con lo observado durante las sesiones.</p>
-<p>Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos <code>cobrado</code>?, ¿qué demuestra la repetición?, ¿qué fallo impide publicar?, ¿por qué este informe no mide ocupación?</p>
+<p>Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos <code>cobrado</code>?, ¿qué demuestra la repetición?, ¿qué fallos impiden iniciar la publicación y qué puede ocurrir si falla una copia?, ¿por qué este informe no mide ocupación?</p>
 <p>La siguiente pregunta es: <strong>¿seguiría cumpliendo el plazo este procedimiento si el histórico creciera hasta 500 GB?</strong> Continuad con la <a href="../transicion-ut2/">actividad de transición a la UT2</a>. Allí justificaréis recursos y alternativas a partir de las necesidades, sin asumir que un tamaño grande obliga siempre a utilizar un clúster.</p>
 
 
