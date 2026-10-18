@@ -1,0 +1,128 @@
+[
+  {
+    "title": "Los datos de Ana ya están guardados. ¿Y ahora?",
+    "label": "Un día en el hotel para entender cómo se procesan.",
+    "active": 0,
+    "heading": "Guardar es el punto de partida",
+    "body": "Procesar permite registrar cambios, calcular resultados y responder preguntas.",
+    "takeaway": "Mismo hotel, distintos trabajos y plazos.",
+    "narration": "En el vídeo anterior acompañamos la reserva de Ana y vimos dónde guardar sus datos. Ahora vamos a continuar la historia. Ana llega a recepción, paga su estancia y sigue con su día. Más tarde, ese cobro ayudará a preparar el informe de dirección. Al mismo tiempo, los sensores del hotel seguirán enviando señales. En todos esos momentos se procesan datos, pero no se hace el mismo trabajo ni se espera el mismo tiempo. Vamos a recorrerlos despacio para entender qué cambia en cada caso."
+  },
+  {
+    "title": "Ana está en recepción y necesita una respuesta",
+    "label": "El primer trabajo consiste en atender una operación concreta.",
+    "active": 0,
+    "heading": "Confirmar esta operación, sin hacer esperar al huésped",
+    "body": "El programa consulta o modifica pocos registros y debe responder con rapidez.",
+    "takeaway": "OLTP: procesar las operaciones del día a día.",
+    "narration": "Empecemos por recepción. Ana tiene la tarjeta en la mano y espera que el programa confirme la operación. Aquí trabajamos con unos pocos registros: su reserva, su cobro y los cambios relacionados. Este trabajo del día a día se llama OLTP. Lo importante es atender la operación con rapidez y con las garantías adecuadas. Recordad lo que vimos en almacenamiento: responder pronto no garantiza que los cambios se hayan confirmado correctamente. Necesitamos ambas cosas. Una vez atendida Ana, su pago queda registrado y podrá utilizarse después para otro tipo de trabajo."
+  },
+  {
+    "title": "Mientras atendemos a Ana, hay más tareas en marcha",
+    "label": "Primero distinguimos alternar tareas de ejecutarlas a la vez.",
+    "active": 0,
+    "heading": "Concurrente: varias tareas avanzan durante el mismo periodo",
+    "body": "Un núcleo puede alternarlas. Varios núcleos pueden ejecutar trabajo simultáneamente.",
+    "takeaway": "Paralelo significa simultaneidad real.",
+    "narration": "Mientras tanto, el ordenador no está dedicado únicamente a Ana. Atiende otras reservas, comunica datos y ejecuta más programas. ¿Significa eso que todo ocurre exactamente al mismo instante? No necesariamente. Un solo núcleo puede ir alternando tareas, de modo que todas avanzan durante el mismo periodo. Eso es concurrencia. Si varios núcleos ejecutan trabajo realmente a la vez, hablamos de paralelismo. Son ideas relacionadas, pero distintas. Y un detalle al mirar las características del equipo: cuatro núcleos con ocho hilos de hardware comparten recursos; no equivalen a ocho núcleos físicos."
+  },
+  {
+    "title": "Termina el día: ahora queremos ver el conjunto",
+    "label": "Pasamos de una operación a muchas operaciones registradas.",
+    "active": 1,
+    "heading": "Dirección pregunta cuánto se cobró por hotel",
+    "body": "Analizar implica reunir, resumir y comparar muchos datos.",
+    "takeaway": "OLAP: analizar los hechos registrados.",
+    "narration": "Dejemos ahora el mostrador y avancemos hasta el final del día. Dirección pregunta cuánto se ha cobrado en cada hotel. Fijaos en el cambio: ya no estamos registrando el pago de Ana, sino reuniéndolo con muchos otros para obtener un resumen. Ese trabajo de análisis se llama OLAP. Si lo hacemos con consultas muy pesadas sobre el sistema de recepción, podemos dificultar la atención a los huéspedes. Por eso nos sirven las copias y el almacén de informes del apartado anterior. El análisis utiliza lo que produce la operación; cada uno tiene su cometido."
+  },
+  {
+    "title": "El cierre de hoy será el informe de mañana",
+    "label": "El plazo de entrega define cómo organizamos el trabajo.",
+    "active": 1,
+    "heading": "23:00: cierre → madrugada: cálculo → 08:00: panel",
+    "body": "El conjunto de datos tiene un límite y el proceso debe terminar dentro del plazo.",
+    "takeaway": "Procesamiento por lotes: un conjunto delimitado.",
+    "narration": "Para preparar ese resumen necesitamos fijar qué datos entran. En nuestro caso, finanzas cierra a las once de la noche. A partir de ese cierre, el proceso de madrugada calcula el informe que dirección abrirá a las ocho. Estamos trabajando por lotes: tomamos un conjunto delimitado y lo procesamos. Que sea por lotes no significa que pueda acabar a cualquier hora; tenemos una entrega comprometida. Tampoco tiene que ser siempre de noche. Lo que define el lote es ese conjunto cerrado. El panel de la mañana describe el cierre anterior, no cada cambio que está ocurriendo ahora."
+  },
+  {
+    "title": "¿Cómo conseguimos terminar el cálculo a tiempo?",
+    "label": "Repartimos solo lo que se puede calcular de forma independiente.",
+    "active": 1,
+    "heading": "Cada parte calcula una suma; después reunimos los resultados",
+    "body": "Varios núcleos pueden trabajar en paralelo dentro de un solo ordenador.",
+    "takeaway": "Más recursos ayudan si el programa puede aprovecharlos.",
+    "narration": "Bien, ya sabemos qué cobros vamos a utilizar y cuándo debe terminar el trabajo. Ahora podemos preguntarnos cómo calcularlos. Para obtener una suma, podemos dividirlos en grupos, sumar cada grupo y reunir los resultados. Si las partes son independientes, varios núcleos del mismo ordenador pueden avanzar a la vez. Así aprovechamos el paralelismo. Pero imaginad que cada paso necesita conocer el resultado del anterior: en ese caso habrá que esperar. Añadir núcleos no elimina esa dependencia. Antes de repartir, necesitamos entender el cálculo y qué información debe conservar cada parte."
+  },
+  {
+    "title": "Repartir bien también exige combinar bien",
+    "label": "Una media necesita conservar la suma y el número de cobros.",
+    "active": 1,
+    "heading": "Dos cobros con media 100 € y ocho con media 200 €",
+    "body": "Total: 1.800 €. Recuento: 10 cobros. Media global: 180 €, no 150 €.",
+    "takeaway": "No promediamos sin más las medias de grupos desiguales.",
+    "narration": "Veámoslo con una media, porque aquí es fácil equivocarse. Un hotel tiene dos cobros cuya media es de cien euros. Otro tiene ocho cobros con una media de doscientos. Podríamos pensar: cien más doscientos, dividido entre dos, da ciento cincuenta. Pero detengámonos. Estaríamos dando el mismo peso a dos cobros que a ocho. En realidad, el primer grupo suma doscientos euros y el segundo, mil seiscientos. Juntos son mil ochocientos entre diez cobros: ciento ochenta euros de media. Por eso cada trabajador debe conservar la suma y el recuento. Repartir el cálculo no debe cambiar la respuesta."
+  },
+  {
+    "title": "Si una máquina no basta, colaboran varias",
+    "label": "El mismo cálculo puede repartirse entre nodos conectados por red.",
+    "active": 1,
+    "heading": "Distribuido: el trabajo se ejecuta entre varias máquinas",
+    "body": "Hay que coordinar datos, comunicaciones y recuperación ante fallos.",
+    "takeaway": "El resultado no debe publicarse incompleto ni duplicado.",
+    "narration": "Supongamos que hacemos bien ese reparto, pero nuestro ordenador sigue sin llegar al plazo. Si la medición lo justifica, podemos dar partes del cálculo a varias máquinas. Ahora el procesamiento es distribuido, y esas máquinas también pueden trabajar en paralelo. Es lo que vimos en clústeres, aplicado al informe. Sin embargo, comunicarse cuesta tiempo y los datos no están en una única memoria. Además, un trabajador puede fallar. Si repetimos su tarea, debemos reconocer el resultado válido para no contarlo dos veces. Queremos un cierre correcto, no simplemente muchos equipos trabajando."
+  },
+  {
+    "title": "Antes de mover los datos, medimos el coste",
+    "label": "La ubicación de los datos influye en el tiempo del cálculo.",
+    "active": 1,
+    "heading": "Calcular cerca del dato o leerlo por red",
+    "body": "Ambos diseños necesitan medir lectura, cálculo y comunicación.",
+    "takeaway": "Un lote puede ser analítico y distribuido a la vez.",
+    "narration": "Ese coste de comunicación nos lleva a otra decisión: dónde están los datos que cada trabajador necesita. Si ya guarda una parte del histórico, puede convenir enviarle la tarea. Así movemos la instrucción en lugar de mover todos los datos. En otro diseño, los archivos permanecen en almacenamiento de objetos y los trabajadores los leen por red. Ambas opciones tienen sentido según el caso. Aprovechemos para ordenar lo aprendido: nuestro informe puede ser analítico, por lotes y distribuido a la vez. Una palabra describe para qué trabajamos; otra, el ritmo; y otra, dónde se ejecuta."
+  },
+  {
+    "title": "A las ocho, la directora abre el panel",
+    "label": "El cálculo previo facilita responder mientras consulta.",
+    "active": 2,
+    "heading": "Filtrar por Laredo, fecha o canal de reserva",
+    "body": "Los resúmenes preparados permiten explorar los datos sin recalcular todo el histórico.",
+    "takeaway": "Consulta interactiva no significa datos en tiempo real.",
+    "narration": "Llega la mañana y el informe está listo. La directora abre el panel y selecciona Laredo. Ahora quiere que la consulta responda mientras lo está mirando: ese uso es interactivo. Podemos preparar resúmenes por fecha, hotel y canal para facilitarlo. Organizar el análisis según esas dimensiones es la idea de un cubo OLAP. El nombre puede confundir, pero no es el cubo de objetos donde guardábamos archivos. Y otra distinción importante: hacer clic a las once no actualiza el histórico por sí solo. Si los datos corresponden al cierre anterior, el filtro sigue consultando ese cierre."
+  },
+  {
+    "title": "Mientras la directora consulta, Ana sale a desayunar",
+    "label": "Los sensores responden a otra necesidad del mismo hotel.",
+    "active": 3,
+    "heading": "Las señales llegan continuamente",
+    "body": "El indicador operativo se actualiza con nuevas lecturas, separado del cierre nocturno.",
+    "takeaway": "Streaming: procesar una secuencia que continúa creciendo.",
+    "narration": "Mientras dirección consulta el informe, Ana sale a desayunar. Un sensor deja de detectar presencia en su habitación. Esta señal interesa ahora, así que esperar al cierre de la noche no resolvería la necesidad. Podemos procesar una secuencia de eventos conforme llegan: eso es streaming. También podemos reunirlos durante intervalos cortos y procesar pequeños grupos, llamados microlotes. Cambia el ritmo respecto al informe. Pero no cambia la obligación de interpretar bien el dato: no detectar personas no significa que la habitación se pueda vender. La reserva de Ana sigue vigente."
+  },
+  {
+    "title": "¿Y si el aviso llega tarde?",
+    "label": "La hora del hecho y la hora de llegada pueden ser distintas.",
+    "active": 3,
+    "heading": "El sensor mide a las 10:00, pero el mensaje llega a las 10:03",
+    "body": "Definimos cuánto esperar y si corregimos resultados ya publicados.",
+    "takeaway": "El indicador debe tener una regla clara y recuperarse ante fallos.",
+    "narration": "Y ahora imaginad que ese sensor tiene un problema de conexión. Mide a las diez, pero entrega el mensaje a las diez y tres. ¿A qué momento pertenece la señal? Al momento en que ocurrió, aunque nosotros la conozcamos después. Si estamos calculando un indicador del primer minuto, debemos decidir cuánto esperar y si corregiremos el resultado cuando llegue tarde. Esa regla forma parte de lo que significa la cifra. Además, necesitamos recuperar el estado del cálculo si falla una máquina. Por eso trabajar en flujo exige algo más que ejecutar muy deprisa el lote de la noche."
+  },
+  {
+    "title": "La rapidez se diseña según la pregunta",
+    "label": "Con recursos limitados, revisamos plazo, precisión y volumen.",
+    "active": -1,
+    "heading": "SCV ayuda a razonar sobre los compromisos del análisis",
+    "body": "Preparar resúmenes, mejorar el cálculo, añadir recursos o limitar el análisis tienen costes distintos.",
+    "takeaway": "Una aproximación debe indicarse; no equivale a un cierre confirmado.",
+    "narration": "Los dos recorridos, el cierre y los sensores, nos devuelven a una pregunta común: ¿qué resultado necesitamos y cuánto podemos esperar? En el apartado aparece SCV como guía para pensar en velocidad, precisión y volumen. No es una ley que obligue siempre a sacrificar una de las tres. Si una consulta tarda demasiado, podemos preparar resúmenes, mejorar el cálculo, añadir recursos o limitar el periodo. También podemos aceptar una aproximación, explicando su error. Por ejemplo, un total diario ya preparado puede consultarse rápido y ser exacto para ese día. El trabajo se hizo antes; no ha desaparecido."
+  },
+  {
+    "title": "La historia completa cabe en tres preguntas",
+    "label": "El objetivo manda; las herramientas vienen después.",
+    "active": -1,
+    "heading": "¿Para qué? ¿Cuándo? ¿Dónde?",
+    "body": "Operar o analizar. Lote o flujo. Una máquina o varias, con el paralelismo que proceda.",
+    "takeaway": "Definir el cálculo, el plazo y cómo comprobar el resultado.",
+    "narration": "Volvamos a recorrer el día de Ana. Primero atendimos su pago. Después lo incorporamos al cierre, y dirección pudo consultar el resultado. Al mismo tiempo, los sensores alimentaron otro indicador con un ritmo diferente. Para describir cada trabajo, haced tres preguntas: ¿para qué lo ejecutamos?, ¿cuándo debe producir un resultado?, ¿dónde lo calculamos? Así las etiquetas encuentran su sitio y pueden combinarse sin confusión. Y antes de darlo por terminado, comprobad que el resultado conserva el significado de los datos. Procesar es conectar lo que hemos guardado con una necesidad concreta del hotel."
+  }
+]

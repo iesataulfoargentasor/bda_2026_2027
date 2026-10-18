@@ -1,0 +1,586 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:02.718
+En el vídeo anterior acompañamos la reserva de
+
+00:00:02.732 --> 00:00:04.995
+Ana y vimos dónde guardar sus datos.
+
+00:00:05.905 --> 00:00:08.116
+Ahora vamos a continuar la historia.
+
+00:00:09.037 --> 00:00:11.050
+Ana llega a recepción, paga su
+
+00:00:11.063 --> 00:00:12.866
+estancia y sigue con su día.
+
+00:00:13.774 --> 00:00:15.747
+Más tarde, ese cobro ayudará a
+
+00:00:15.761 --> 00:00:17.563
+preparar el informe de dirección.
+
+00:00:18.471 --> 00:00:20.366
+Al mismo tiempo, los sensores
+
+00:00:20.379 --> 00:00:22.497
+del hotel seguirán enviando señales.
+
+00:00:23.405 --> 00:00:25.932
+En todos esos momentos se procesan datos,
+
+00:00:26.182 --> 00:00:27.300
+pero no se hace el mismo
+
+00:00:27.313 --> 00:00:29.405
+trabajo ni se espera el mismo tiempo.
+
+00:00:30.313 --> 00:00:32.813
+Vamos a recorrerlos despacio para entender
+
+00:00:32.826 --> 00:00:34.261
+qué cambia en cada caso.
+
+00:00:35.182 --> 00:00:36.839
+Empecemos por recepción.
+
+00:00:37.747 --> 00:00:39.629
+Ana tiene la tarjeta en la mano y
+
+00:00:39.642 --> 00:00:42.103
+espera que el programa confirme la operación.
+
+00:00:43.011 --> 00:00:45.760
+Aquí trabajamos con unos pocos registros: su
+
+00:00:45.774 --> 00:00:48.642
+reserva, su cobro y los cambios relacionados.
+
+00:00:49.550 --> 00:00:52.550
+Este trabajo del día a día se llama OLTP.
+
+00:00:53.109 --> 00:00:55.201
+Lo importante es atender la operación
+
+00:00:55.214 --> 00:00:57.635
+con rapidez y con las garantías adecuadas.
+
+00:00:58.543 --> 00:01:02.320
+Recordad lo que vimos en almacenamiento: responder pronto
+
+00:01:02.333 --> 00:01:05.859
+no garantiza que los cambios se hayan confirmado correctamente.
+
+00:01:06.793 --> 00:01:08.662
+Necesitamos ambas cosas.
+
+00:01:09.583 --> 00:01:12.530
+Una vez atendida Ana, su pago queda registrado
+
+00:01:12.543 --> 00:01:15.570
+y podrá utilizarse después para otro tipo de trabajo.
+
+00:01:16.477 --> 00:01:18.438
+Mientras tanto, el ordenador no
+
+00:01:18.451 --> 00:01:20.346
+está dedicado únicamente a Ana.
+
+00:01:21.267 --> 00:01:25.359
+Atiende otras reservas, comunica datos y ejecuta más programas.
+
+00:01:26.293 --> 00:01:29.977
+¿Significa eso que todo ocurre exactamente al mismo instante?
+
+00:01:30.898 --> 00:01:32.293
+No necesariamente.
+
+00:01:33.227 --> 00:01:36.004
+Un solo núcleo puede ir alternando tareas, de
+
+00:01:36.017 --> 00:01:38.688
+modo que todas avanzan durante el mismo periodo.
+
+00:01:39.609 --> 00:01:41.096
+Eso es concurrencia.
+
+00:01:42.017 --> 00:01:44.806
+Si varios núcleos ejecutan trabajo realmente
+
+00:01:44.820 --> 00:01:46.820
+a la vez, hablamos de paralelismo.
+
+00:01:47.741 --> 00:01:50.412
+Son ideas relacionadas, pero distintas.
+
+00:01:51.346 --> 00:01:53.741
+Y un detalle al mirar las características del
+
+00:01:53.754 --> 00:01:56.662
+equipo: cuatro núcleos con ocho hilos de hardware
+
+00:01:56.675 --> 00:02:00.701
+comparten recursos; no equivalen a ocho núcleos físicos.
+
+00:02:01.622 --> 00:02:03.951
+Dejemos ahora el mostrador y avancemos
+
+00:02:03.964 --> 00:02:05.254
+hasta el final del día.
+
+00:02:06.188 --> 00:02:09.227
+Dirección pregunta cuánto se ha cobrado en cada hotel.
+
+00:02:10.149 --> 00:02:12.333
+Fijaos en el cambio: ya no estamos
+
+00:02:12.346 --> 00:02:15.109
+registrando el pago de Ana, sino reuniéndolo
+
+00:02:15.122 --> 00:02:17.398
+con muchos otros para obtener un resumen.
+
+00:02:18.306 --> 00:02:20.609
+Ese trabajo de análisis se llama OLAP.
+
+00:02:21.517 --> 00:02:23.359
+Si lo hacemos con consultas muy
+
+00:02:23.372 --> 00:02:26.267
+pesadas sobre el sistema de recepción, podemos
+
+00:02:26.280 --> 00:02:28.517
+dificultar la atención a los huéspedes.
+
+00:02:29.425 --> 00:02:31.214
+Por eso nos sirven las copias y
+
+00:02:31.227 --> 00:02:33.754
+el almacén de informes del apartado anterior.
+
+00:02:34.688 --> 00:02:36.701
+El análisis utiliza lo que produce
+
+00:02:36.714 --> 00:02:39.293
+la operación; cada uno tiene su cometido.
+
+00:02:40.201 --> 00:02:43.780
+Para preparar ese resumen necesitamos fijar qué datos entran.
+
+00:02:44.701 --> 00:02:46.859
+En nuestro caso, finanzas cierra a
+
+00:02:46.872 --> 00:02:48.070
+las once de la noche.
+
+00:02:48.977 --> 00:02:51.754
+A partir de ese cierre, el proceso de madrugada
+
+00:02:51.767 --> 00:02:54.688
+calcula el informe que dirección abrirá a las ocho.
+
+00:02:55.596 --> 00:02:58.280
+Estamos trabajando por lotes: tomamos un
+
+00:02:58.293 --> 00:03:00.596
+conjunto delimitado y lo procesamos.
+
+00:03:01.517 --> 00:03:03.820
+Que sea por lotes no significa que pueda
+
+00:03:03.833 --> 00:03:07.254
+acabar a cualquier hora; tenemos una entrega comprometida.
+
+00:03:07.812 --> 00:03:09.930
+Tampoco tiene que ser siempre de noche.
+
+00:03:10.851 --> 00:03:13.641
+Lo que define el lote es ese conjunto cerrado.
+
+00:03:14.562 --> 00:03:16.733
+El panel de la mañana describe el cierre
+
+00:03:16.746 --> 00:03:19.641
+anterior, no cada cambio que está ocurriendo ahora.
+
+00:03:20.536 --> 00:03:22.680
+Bien, ya sabemos qué cobros vamos a
+
+00:03:22.694 --> 00:03:25.180
+utilizar y cuándo debe terminar el trabajo.
+
+00:03:26.088 --> 00:03:28.851
+Ahora podemos preguntarnos cómo calcularlos.
+
+00:03:29.759 --> 00:03:32.825
+Para obtener una suma, podemos dividirlos en grupos,
+
+00:03:33.009 --> 00:03:35.549
+sumar cada grupo y reunir los resultados.
+
+00:03:36.457 --> 00:03:39.641
+Si las partes son independientes, varios núcleos del
+
+00:03:39.654 --> 00:03:41.851
+mismo ordenador pueden avanzar a la vez.
+
+00:03:42.786 --> 00:03:44.904
+Así aprovechamos el paralelismo.
+
+00:03:45.812 --> 00:03:48.483
+Pero imaginad que cada paso necesita conocer el
+
+00:03:48.496 --> 00:03:51.628
+resultado del anterior: en ese caso habrá que esperar.
+
+00:03:52.575 --> 00:03:55.325
+Añadir núcleos no elimina esa dependencia.
+
+00:03:56.246 --> 00:03:59.378
+Antes de repartir, necesitamos entender el cálculo
+
+00:03:59.391 --> 00:04:01.891
+y qué información debe conservar cada parte.
+
+00:04:02.812 --> 00:04:06.457
+Veámoslo con una media, porque aquí es fácil equivocarse.
+
+00:04:07.378 --> 00:04:09.101
+Un hotel tiene dos cobros cuya
+
+00:04:09.115 --> 00:04:10.496
+media es de cien euros.
+
+00:04:11.404 --> 00:04:14.299
+Otro tiene ocho cobros con una media de doscientos.
+
+00:04:15.207 --> 00:04:18.417
+Podríamos pensar: cien más doscientos, dividido
+
+00:04:18.430 --> 00:04:20.457
+entre dos, da ciento cincuenta.
+
+00:04:21.365 --> 00:04:22.641
+Pero detengámonos.
+
+00:04:23.562 --> 00:04:25.549
+Estaríamos dando el mismo peso a
+
+00:04:25.562 --> 00:04:26.825
+dos cobros que a ocho.
+
+00:04:27.733 --> 00:04:29.838
+En realidad, el primer grupo suma
+
+00:04:29.851 --> 00:04:32.851
+doscientos euros y el segundo, mil seiscientos.
+
+00:04:33.759 --> 00:04:35.930
+Juntos son mil ochocientos entre diez
+
+00:04:35.944 --> 00:04:38.351
+cobros: ciento ochenta euros de media.
+
+00:04:39.246 --> 00:04:41.365
+Por eso cada trabajador debe conservar
+
+00:04:41.378 --> 00:04:42.746
+la suma y el recuento.
+
+00:04:43.654 --> 00:04:46.707
+Repartir el cálculo no debe cambiar la respuesta.
+
+00:04:47.628 --> 00:04:50.299
+Supongamos que hacemos bien ese reparto, pero
+
+00:04:50.312 --> 00:04:53.276
+nuestro ordenador sigue sin llegar al plazo.
+
+00:04:54.186 --> 00:04:56.436
+Si la medición lo justifica, podemos
+
+00:04:56.450 --> 00:04:58.765
+dar partes del cálculo a varias máquinas.
+
+00:04:59.673 --> 00:05:02.147
+Ahora el procesamiento es distribuido, y
+
+00:05:02.160 --> 00:05:04.884
+esas máquinas también pueden trabajar en paralelo.
+
+00:05:05.805 --> 00:05:08.805
+Es lo que vimos en clústeres, aplicado al informe.
+
+00:05:09.726 --> 00:05:12.423
+Sin embargo, comunicarse cuesta tiempo y los
+
+00:05:12.436 --> 00:05:14.594
+datos no están en una única memoria.
+
+00:05:15.502 --> 00:05:17.818
+Además, un trabajador puede fallar.
+
+00:05:18.726 --> 00:05:21.371
+Si repetimos su tarea, debemos reconocer el
+
+00:05:21.384 --> 00:05:24.029
+resultado válido para no contarlo dos veces.
+
+00:05:24.950 --> 00:05:26.463
+Queremos un cierre correcto,
+
+00:05:26.594 --> 00:05:28.936
+no simplemente muchos equipos trabajando.
+
+00:05:29.844 --> 00:05:32.173
+Ese coste de comunicación nos lleva a otra
+
+00:05:32.186 --> 00:05:35.936
+decisión: dónde están los datos que cada trabajador necesita.
+
+00:05:36.844 --> 00:05:38.371
+Si ya guarda una parte del
+
+00:05:38.384 --> 00:05:40.963
+histórico, puede convenir enviarle la tarea.
+
+00:05:41.884 --> 00:05:43.910
+Así movemos la instrucción en lugar
+
+00:05:43.923 --> 00:05:45.489
+de mover todos los datos.
+
+00:05:46.397 --> 00:05:49.818
+En otro diseño, los archivos permanecen en almacenamiento
+
+00:05:49.831 --> 00:05:52.568
+de objetos y los trabajadores los leen por red.
+
+00:05:53.476 --> 00:05:56.292
+Ambas opciones tienen sentido según el caso.
+
+00:05:57.200 --> 00:06:00.634
+Aprovechemos para ordenar lo aprendido: nuestro informe puede
+
+00:06:00.647 --> 00:06:03.608
+ser analítico, por lotes y distribuido a la vez.
+
+00:06:04.529 --> 00:06:07.436
+Una palabra describe para qué trabajamos; otra,
+
+00:06:07.555 --> 00:06:10.068
+el ritmo; y otra, dónde se ejecuta.
+
+00:06:10.976 --> 00:06:13.502
+Llega la mañana y el informe está listo.
+
+00:06:14.410 --> 00:06:17.200
+La directora abre el panel y selecciona Laredo.
+
+00:06:17.726 --> 00:06:20.278
+Ahora quiere que la consulta responda mientras
+
+00:06:20.292 --> 00:06:22.936
+lo está mirando: ese uso es interactivo.
+
+00:06:23.844 --> 00:06:26.068
+Podemos preparar resúmenes por fecha,
+
+00:06:26.239 --> 00:06:28.081
+hotel y canal para facilitarlo.
+
+00:06:29.002 --> 00:06:31.726
+Organizar el análisis según esas dimensiones
+
+00:06:31.739 --> 00:06:33.305
+es la idea de un cubo OLAP.
+
+00:06:34.213 --> 00:06:36.410
+El nombre puede confundir, pero no es
+
+00:06:36.423 --> 00:06:39.134
+el cubo de objetos donde guardábamos archivos.
+
+00:06:40.055 --> 00:06:42.923
+Y otra distinción importante: hacer clic a las
+
+00:06:42.936 --> 00:06:45.423
+once no actualiza el histórico por sí solo.
+
+00:06:46.331 --> 00:06:48.331
+Si los datos corresponden al cierre
+
+00:06:48.344 --> 00:06:51.423
+anterior, el filtro sigue consultando ese cierre.
+
+00:06:52.344 --> 00:06:56.120
+Mientras dirección consulta el informe, Ana sale a desayunar.
+
+00:06:57.068 --> 00:07:00.344
+Un sensor deja de detectar presencia en su habitación.
+
+00:07:01.252 --> 00:07:04.199
+Esta señal interesa ahora, así que esperar al
+
+00:07:04.213 --> 00:07:06.686
+cierre de la noche no resolvería la necesidad.
+
+00:07:07.594 --> 00:07:09.976
+Podemos procesar una secuencia de eventos
+
+00:07:09.989 --> 00:07:12.055
+conforme llegan: eso es streaming.
+
+00:07:12.976 --> 00:07:15.963
+También podemos reunirlos durante intervalos cortos
+
+00:07:15.976 --> 00:07:19.081
+y procesar pequeños grupos, llamados microlotes.
+
+00:07:20.002 --> 00:07:22.173
+Cambia el ritmo respecto al informe.
+
+00:07:23.081 --> 00:07:25.305
+Pero no cambia la obligación de interpretar
+
+00:07:25.318 --> 00:07:27.778
+bien el dato: no detectar personas no
+
+00:07:27.792 --> 00:07:30.107
+significa que la habitación se pueda vender.
+
+00:07:31.028 --> 00:07:33.147
+La reserva de Ana sigue vigente.
+
+00:07:34.068 --> 00:07:36.068
+Y ahora imaginad que ese sensor
+
+00:07:36.081 --> 00:07:37.739
+tiene un problema de conexión.
+
+00:07:38.242 --> 00:07:40.111
+Mide a las diez, pero entrega
+
+00:07:40.124 --> 00:07:41.848
+el mensaje a las diez y tres.
+
+00:07:42.756 --> 00:07:44.703
+¿A qué momento pertenece la señal?
+
+00:07:45.624 --> 00:07:47.124
+Al momento en que ocurrió,
+
+00:07:47.256 --> 00:07:49.466
+aunque nosotros la conozcamos después.
+
+00:07:50.374 --> 00:07:52.900
+Si estamos calculando un indicador del primer
+
+00:07:52.913 --> 00:07:55.505
+minuto, debemos decidir cuánto esperar y
+
+00:07:55.519 --> 00:07:58.334
+si corregiremos el resultado cuando llegue tarde.
+
+00:07:58.879 --> 00:08:00.379
+Esa regla forma parte de
+
+00:08:00.392 --> 00:08:01.892
+lo que significa la cifra.
+
+00:08:02.800 --> 00:08:05.471
+Además, necesitamos recuperar el estado del
+
+00:08:05.484 --> 00:08:07.274
+cálculo si falla una máquina.
+
+00:08:08.195 --> 00:08:10.590
+Por eso trabajar en flujo exige algo más
+
+00:08:10.603 --> 00:08:13.077
+que ejecutar muy deprisa el lote de la noche.
+
+00:08:14.037 --> 00:08:16.300
+Los dos recorridos, el cierre y los
+
+00:08:16.313 --> 00:08:19.090
+sensores, nos devuelven a una pregunta común:
+
+00:08:19.313 --> 00:08:22.313
+¿qué resultado necesitamos y cuánto podemos esperar?
+
+00:08:23.234 --> 00:08:25.866
+En el apartado aparece SCV como guía
+
+00:08:25.879 --> 00:08:28.695
+para pensar en velocidad, precisión y volumen.
+
+00:08:29.616 --> 00:08:31.011
+No es una ley que obligue
+
+00:08:31.024 --> 00:08:33.063
+siempre a sacrificar una de las tres.
+
+00:08:33.984 --> 00:08:37.840
+Si una consulta tarda demasiado, podemos preparar resúmenes,
+
+00:08:37.998 --> 00:08:41.827
+mejorar el cálculo, añadir recursos o limitar el periodo.
+
+00:08:42.748 --> 00:08:46.577
+También podemos aceptar una aproximación, explicando su error.
+
+00:08:47.498 --> 00:08:50.248
+Por ejemplo, un total diario ya preparado puede
+
+00:08:50.261 --> 00:08:53.169
+consultarse rápido y ser exacto para ese día.
+
+00:08:53.679 --> 00:08:56.639
+El trabajo se hizo antes; no ha desaparecido.
+
+00:08:57.560 --> 00:08:59.652
+Volvamos a recorrer el día de Ana.
+
+00:09:00.560 --> 00:09:02.205
+Primero atendimos su pago.
+
+00:09:03.113 --> 00:09:05.468
+Después lo incorporamos al cierre, y
+
+00:09:05.481 --> 00:09:07.731
+dirección pudo consultar el resultado.
+
+00:09:08.652 --> 00:09:11.297
+Al mismo tiempo, los sensores alimentaron
+
+00:09:11.310 --> 00:09:13.508
+otro indicador con un ritmo diferente.
+
+00:09:14.416 --> 00:09:16.810
+Para describir cada trabajo, haced tres
+
+00:09:16.823 --> 00:09:19.758
+preguntas: ¿para qué lo ejecutamos?, ¿cuándo debe
+
+00:09:19.771 --> 00:09:22.700
+producir un resultado?, ¿dónde lo calculamos?
+
+00:09:23.621 --> 00:09:25.897
+Así las etiquetas encuentran su sitio
+
+00:09:25.910 --> 00:09:27.989
+y pueden combinarse sin confusión.
+
+00:09:28.897 --> 00:09:31.516
+Y antes de darlo por terminado, comprobad que
+
+00:09:31.529 --> 00:09:34.489
+el resultado conserva el significado de los datos.
+
+00:09:35.410 --> 00:09:37.397
+Procesar es conectar lo que hemos
+
+00:09:37.694 --> 00:09:40.299
+guardado con una necesidad concreta del hotel.
