@@ -69,8 +69,18 @@ df = pd.DataFrame({
     "regimen": rng.choice(["SA", "AD", "MP"], n),
     "comentarios": rng.choice(["ok", "vista mar", ""], n),
 })
-df.to_csv("reservas.csv", index=False)
+# Contrato del taller: enteros int32, importe float64 y texto como object.
+# entrada se conserva como texto; no se interpreta como datetime al leer.
+TIPOS = {
+    "id_reserva": "int32", "entrada": "object", "hotel": "object",
+    "noches": "int32", "importe": "float64", "canal": "object",
+    "regimen": "object", "comentarios": "object",
+}
+df = df.astype(TIPOS)
+df.to_csv("reservas.csv", index=False, encoding="utf-8")
 ```
+
+El generador contiene cadenas vacías (`""`) en `comentarios`, pero no valores nulos. Son estados distintos: una cadena vacía es un texto de longitud cero; un nulo indica ausencia de valor. Para recuperar estos datos desde CSV, utilizad el [contrato de lectura del taller medido](#contrato-csv-del-taller), sin dejar los tipos y los nulos a la inferencia.
 
 Con `n = 200_000` ya notáis tamaño y tiempo. Subid a un millón si la máquina lo aguanta. `regimen` y `comentarios` están para que veáis **lo que el informe no debe leer**.
 
@@ -330,7 +340,7 @@ tabla = pa.Table.from_pydict(
 print(tabla)
 ```
 
-En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra.
+En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra. Esta llamada ilustra las opciones del lector; no sustituye el [contrato CSV del taller](#contrato-csv-del-taller). Si probáis otro motor o backend, verificad qué opciones admite y documentad las diferencias de representación antes de comparar.
 
 **Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
 
@@ -498,7 +508,70 @@ Para que la comparación sea válida, utilizad las mismas filas, columnas y tipo
 
 Repetid cada medida y explicad si los datos podían estar en caché. No comparéis una lectura completa de CSV con una consulta de dos columnas sobre Parquet sin aclarar que se están midiendo dos patrones de acceso. Además del tiempo, contrastad el resultado: recuentos, nulos y sumas deben coincidir dentro de la tolerancia numérica acordada.
 
-Abrid un cuaderno **en blanco**. Generad el `df` (`n ≥ 200_000`). Cronometrad y anotad tamaños (`os.path.getsize`) de:
+### Contrato de lectura del CSV { #contrato-csv-del-taller }
+
+Ejecutad el generador inicial, incluido `TIPOS`, antes de comparar. En este taller acordamos separador coma, codificación UTF-8, punto decimal, columnas en el orden del generador y **ningún nulo en el conjunto original**. `entrada` sigue siendo texto e `id_reserva` y `noches` siguen siendo `int32`. Usamos `object` para las columnas de texto de este ejemplo; no es una obligación para otros proyectos.
+
+Una lectura predeterminada de pandas puede interpretar las cadenas vacías como nulos e inferir `int64` para los enteros. Esto cambia la interpretación o el tipo recuperado, no demuestra por sí solo que el archivo haya perdido los valores originales. La [documentación de `pandas.read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) describe `dtype`, `keep_default_na` y `na_values`.
+
+```python
+# df y TIPOS proceden del generador del principio de la página.
+# Cronometrad la lectura; dejad las comprobaciones fuera de ese tiempo.
+import time
+from pandas.testing import assert_frame_equal
+
+t0 = time.perf_counter()
+recuperado_csv = pd.read_csv(
+    "reservas.csv",
+    sep=",", encoding="utf-8", decimal=".",
+    dtype=TIPOS,
+    keep_default_na=False,  # "" sigue siendo texto vacío, no un nulo
+    engine="c", float_precision="round_trip",
+)
+segundos_csv = time.perf_counter() - t0
+
+print("lectura CSV s:", segundos_csv)
+print("tipos:", recuperado_csv.dtypes)
+print("nulos por columna:", recuperado_csv.isna().sum())
+print("comentarios vacíos:", recuperado_csv["comentarios"].eq("").sum())
+assert_frame_equal(df, recuperado_csv, check_dtype=True, check_exact=True)
+```
+
+`float_precision="round_trip"` utiliza el conversor del motor C que permite recuperar los valores `float64` escritos en este ejemplo. No convierte los importes en decimales exactos: para este conjunto sintético conservamos su representación original. Con `n = 200_000` y la semilla del generador se esperan **66.695 comentarios vacíos y cero nulos** en esa columna; si cambiáis el tamaño o el generador, calculad la referencia desde `df`, no copiéis ese recuento.
+
+Para cada formato, comprobad filas, orden de columnas, tipos, valores y posiciones de los nulos contra el `df` original. Si se altera el orden de las filas, ordenad ambos conjuntos por `id_reserva` antes de compararlos. No sustituyáis nulos por cadenas vacías ni cambiéis tipos a ciegas para que la comprobación pase. Si un lector devuelve otra representación, registradla y justificad cualquier normalización sin pérdida antes de medirla por separado. El subconjunto Avro se compara con su propia referencia, no con todo `df`.
+
+### Si añadís nulos reales al experimento
+
+No utilicéis la misma representación para un texto vacío y un nulo. Trabajad sobre una copia, reservad un marcador que no aparezca como texto legítimo y acordad qué columnas admiten ausencia. Este ejemplo añade un nulo solo a `comentarios`, sin cambiar el conjunto principal del taller:
+
+```python
+con_nulo = df.copy()
+MARCADOR_NULO = "__AUSENTE__"
+assert not con_nulo.isin([MARCADOR_NULO]).any().any()
+con_nulo.loc[0, "comentarios"] = None
+con_nulo.to_csv(
+    "reservas_con_nulo.csv", index=False, encoding="utf-8",
+    na_rep=MARCADOR_NULO,
+)
+recuperado_nulo = pd.read_csv(
+    "reservas_con_nulo.csv", dtype=TIPOS, encoding="utf-8",
+    keep_default_na=False, na_values={"comentarios": [MARCADOR_NULO]},
+    engine="c", float_precision="round_trip",
+)
+assert_frame_equal(con_nulo.isna(), recuperado_nulo.isna())
+assert con_nulo["comentarios"].eq("").sum() == recuperado_nulo["comentarios"].eq("").sum()
+assert_frame_equal(
+    con_nulo.fillna(MARCADOR_NULO), recuperado_nulo.fillna(MARCADOR_NULO),
+    check_dtype=True, check_exact=True,
+)
+```
+
+Aquí `keep_default_na=False` conserva los textos vacíos y `na_values` reconoce únicamente el marcador acordado en `comentarios`. No añadáis `na_filter=False`: desactivaría también ese reconocimiento. Si introducís ausencias en enteros, acordad un tipo que las admita, como `Int32` de pandas, y aplicadlo tanto al original como a la lectura; el `int32` de NumPy del generador no admite nulos. Este contrato acompaña al CSV: el archivo no lo incorpora como un esquema tipado.
+
+### Medir después de comprobar
+
+Abrid un cuaderno **en blanco**. Generad el `df` (`n ≥ 200_000`) con su contrato y comprobad las lecturas. Cronometrad y anotad tamaños (`os.path.getsize`) de:
 
 1. `reservas.csv`
 2. `reservas.parquet` y `reservas_zstd.parquet`
