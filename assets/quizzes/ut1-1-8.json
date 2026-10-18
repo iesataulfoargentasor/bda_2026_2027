@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Qué es PDI",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "En el aula usáis una ETL visual (PDI / Kettle). ¿Sustituye a Spark o al sistema del día a día?",
       "code": "",
       "options": [
@@ -15,11 +15,11 @@
         "El XML `.ktr` es el catálogo de negocio del 1.5 (qué significa cada campo)."
       ],
       "answer": 0,
-      "explain": "Procesáis una **copia**. El e) es el CSV, el JSON o la tabla, no un informe del servidor de Pentaho. No bajéis el editor de metadatos (`pme-ce`): eso es otro programa."
+      "explain": "PDI permite construir y validar flujos. El criterio e) requiere resultados interpretables para su destinatario, no solo un archivo creado. El editor de metadatos pme-ce es otro programa."
     },
     {
       "topic": "Spoon, Pan, Kitchen",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Tres ejecutables que se confunden. ¿Quién diseña, quién lanza una transformación, quién un job?",
       "code": "",
       "options": [
@@ -29,11 +29,11 @@
         "Los tres lanzan el mismo `.ktr`."
       ],
       "answer": 2,
-      "explain": "Spoon es clase y diseño. En producción (o en la entrega “como en empresa”) lanzáis Pan o Kitchen. Si solo funciona al pulsar Play, el procedimiento no está cerrado. PDI 9.x espera **Java 8**; si Spoon no arranca, `java -version`."
+      "explain": "Usad la combinación de PDI 9.4 y Java indicada en el entorno del aula. Spoon diseña y prueba; Kitchen ejecuta el job, pero no lo programa a una hora por sí solo."
     },
     {
       "topic": "Transformación o job",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Habéis diseñado un solo flujo leer → filtrar → CSV. En el servidor **sin ventana**, ¿Pan o Kitchen?",
       "code": "",
       "options": [
@@ -47,35 +47,35 @@
     },
     {
       "topic": "Filter rows",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Filter rows, ¿cuántas salidas tiene y a cuál unís el siguiente paso?",
       "code": "",
       "options": [
         "Una: las que cumplen.",
         "Tres: cumple, no cumple y nulos.",
         "Ninguna: el filtro se hace “en la cabeza” y no en un paso.",
-        "Dos: la que **cumple** (Main output) y la que no. El siguiente paso va a la que cumple; un Dummy cierra la otra."
+        "Dos ramas: condición verdadera y falsa. Configurad explícitamente qué paso recibe cada una."
       ],
       "answer": 3,
-      "explain": "Filtrar “en la cabeza” no es reproducible. El texto de la condición tiene que coincidir con el del fichero."
+      "explain": "La rama falsa no es lo mismo que la gestión de errores de un paso. Verificad ambas con datos que cumplan y que no cumplan la condición."
     },
     {
       "topic": "Criterios d y e",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Habéis procesado un informe. ¿Qué le dejáis a quien no abre Spoon?",
       "code": "",
       "options": [
         "El `.ktr`: así abren Spoon.",
         "Da igual: el e) es el diseñador de informes del servidor.",
-        "El **CSV** (o JSON o tabla). El cliente no abre Spoon. e) = cabeceras claras que ya entienden.",
+        "Una salida legible con cabeceras, unidades y alcance, acompañada de una explicación de resultados y limitaciones para el cliente.",
         "El `.kjb`: Kitchen es el informe."
       ],
       "answer": 2,
-      "explain": "Habéis procesado (d) cuando la salida **no** es la entrada. Cerrad Spoon y abrid el fichero como empresa. Si preguntan qué es un `id` interno, el e) no está cerrado."
+      "explain": "d) exige ejecutar y comprobar las reglas; e) exige presentar resultados interpretables. Generar un CSV o cambiar su número de filas no basta por sí solo."
     },
     {
       "topic": "Inner join",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Merge join INNER entre dos orígenes. Una fila del primero no tiene pareja. ¿Sale? ¿Hace falta ordenar?",
       "code": "",
       "options": [
@@ -89,7 +89,7 @@
     },
     {
       "topic": "Group by",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Group by: SUM y COUNT. ¿Quién nombra los campos de salida?",
       "code": "",
       "options": [
@@ -103,7 +103,7 @@
     },
     {
       "topic": "Java Filter y nulos",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "Java Filter sobre un campo que puede ser nulo, **sin** If field value is null. ¿Qué pasa?",
       "code": "",
       "options": [
@@ -117,7 +117,7 @@
     },
     {
       "topic": "Secretos",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "El CSV acaba en un cubo de objetos o en una carpeta. ¿Dónde van las credenciales de la nube?",
       "code": "",
       "options": [
@@ -127,11 +127,11 @@
         "Copiadas de un PDF de prácticas."
       ],
       "answer": 1,
-      "explain": "Un cubo abierto al mundo no es diseño de empresa. Sin cubo, CSV en carpeta: d) y e) ya están. El PDF de prácticas sirve para **reconocer menús**, no para copiar ficheros ni credenciales."
+      "explain": "Las credenciales no se incluyen en procesos ni repositorios. La carpeta local permite completar el taller; d) y e) se demuestran validando y explicando sus resultados."
     },
     {
       "topic": "Job",
-      "href": "",
+      "href": "../pentaho/",
       "prompt": "De madrugada: si el CSV de un paso **no** apareció, ¿seguís y dais el resultado por bueno?",
       "code": "",
       "options": [

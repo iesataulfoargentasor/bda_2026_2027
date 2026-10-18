@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Base relacional",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "¿Qué es una base de datos relacional y para qué encaja?",
       "code": "",
       "options": [
@@ -19,7 +19,7 @@
     },
     {
       "topic": "NoSQL",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "“NoSQL”, ¿qué es?",
       "code": "",
       "options": [
@@ -33,21 +33,21 @@
     },
     {
       "topic": "Data warehouse",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "¿Qué es un data warehouse (almacén de informes)?",
       "code": "",
       "options": [
-        "Un sitio **central** para informes e histórico. Los datos **se copian**, no se pican. Las columnas se fijan **al guardar**.",
+        "Un entorno analítico que integra datos e histórico para consultas e informes con definiciones acordadas.",
         "El sitio donde se opera cada cobro.",
         "Un disco sucio con JSON bruto.",
         "Un recorte por departamento, más estrecho que el almacén."
       ],
       "answer": 0,
-      "explain": "Es una **foto** periódica para inteligencia de negocio, no la caja. Si mañana llega un campo nuevo, hay que **cambiar el modelo**. Snowflake o BigQuery son este oficio, no el lago."
+      "explain": "Puede actualizarse por lotes o con frecuencia alta. En el hotel usamos cierres diarios, pero esa periodicidad no define todos los warehouses."
     },
     {
       "topic": "Data mart",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "¿Qué es un data mart?",
       "code": "",
       "options": [
@@ -61,21 +61,21 @@
     },
     {
       "topic": "Data lake",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "¿En qué se diferencia un data lake de un warehouse?",
       "code": "",
       "options": [
         "En el lago las columnas se fijan al guardar, como en el warehouse.",
-        "Lago: el dato **como llegó**; las columnas se interpretan **al leer**. Warehouse: dato limpio, columnas al **guardar**.",
+        "El lago puede conservar originales y datos preparados; el warehouse organiza datos integrados para su consulta analítica.",
         "Los dos son el mismo sitio con dos logos.",
         "El lago sustituye siempre al warehouse."
       ],
       "answer": 1,
-      "explain": "El lago encaja cuando **aún no** sabéis qué preguntaréis, o el bruto es de muchos tipos. Sin catálogo ni calidad se vuelve **ciénaga**. En la práctica suele haber **los dos**. El mart es recorte del warehouse, no un tercer sitio para el JSON."
+      "explain": "No son sinónimos de datos sucios frente a limpios. En ambos hacen falta calidad, catálogo y permisos. Un data mart se orienta a un ámbito y puede tener distintos orígenes."
     },
     {
       "topic": "Bloque, objeto, lakehouse",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "Volumen accesible por bloques, objetos identificados por claves y arquitectura de tablas sobre un lago: ¿cómo se llaman?",
       "code": "",
       "options": [
@@ -89,7 +89,7 @@
     },
     {
       "topic": "Transacción",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "Transferir 50 € de A a B son dos cambios. Si el sistema se cae a mitad, ¿qué tiene que pasar?",
       "code": "",
       "options": [
@@ -103,35 +103,35 @@
     },
     {
       "topic": "ACID",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "En ACID, ¿qué pide cada letra y qué es la C?",
       "code": "",
       "options": [
         "A = responder siempre; C = el mismo valor en todos los nodos (CAP).",
         "Las cuatro letras son lo mismo que BASE.",
         "C es la precisión del análisis (SCV).",
-        "**A** todo o nada; **C** se cumplen las **reglas** (un saldo no queda prohibido); **I** nadie ve el paquete a medias; **D** lo confirmado no se pierde. Esa C **no** es la de CAP."
+        "A: todo o nada; C: reglas definidas; I: coordinación de operaciones concurrentes según el nivel de aislamiento; D: persistencia de lo confirmado."
       ],
       "answer": 3,
-      "explain": "Hay **tres C** distintas: reglas (ACID), valor reciente en los nodos (CAP) y precisión del análisis (SCV, en 1.4). ACID se pide donde el negocio no puede verse a medias."
+      "explain": "ACID-C se refiere a reglas; CAP-C a consistencia fuerte entre operaciones. El aislamiento tiene niveles: serializable busca el efecto de una ejecución en serie."
     },
     {
       "topic": "CAP",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "Se corta la red entre dos nodos de un clúster. Un nodo acaba de escribir un valor. El otro, ¿qué puede hacer según CAP?",
       "code": "",
       "options": [
         "Tener C, A y P a la vez: en un clúster las tres se cumplen siempre.",
-        "**CP**: no responder antes que dar un valor viejo. **AP**: responder aunque el valor no sea el último. En un clúster **P no es opcional**.",
+        "Durante la partición, el diseño debe elegir qué operaciones rechaza para mantener consistencia fuerte o cuáles atiende admitiendo datos desactualizados.",
         "Solo CA: es lo habitual en un clúster partido.",
         "CAP no aplica si hay SQL."
       ],
       "answer": 1,
-      "explain": "Durante una partición no pueden garantizarse simultáneamente consistencia fuerte y disponibilidad para todas las operaciones. La elección depende del comportamiento del sistema, no de que utilice SQL o documentos."
+      "explain": "No se garantizan simultáneamente consistencia fuerte y disponibilidad para todas las operaciones durante una partición. CA no es una forma de evitar ese compromiso."
     },
     {
       "topic": "BASE y cómo elegir",
-      "href": "",
+      "href": "../almacenamiento/",
       "prompt": "¿Qué debéis determinar antes de elegir cómo almacenar una operación de cobro?",
       "code": "",
       "options": [

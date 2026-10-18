@@ -1661,11 +1661,11 @@
 <td>Entrar en aws.amazon.com con el correo del instituto y una tarjeta</td>
 </tr>
 <tr>
-<td>Sesión de <strong>unas 4 horas</strong> (se puede <strong>Start Lab</strong> otra vez para alargar)</td>
+<td>Sesión con duración indicada en vuestro <strong>Readme</strong> y temporizador; consultad allí cómo renovarla</td>
 <td>Dejar EC2 “por si acaso”: come crédito aunque no estéis delante</td>
 </tr>
 <tr>
-<td><strong>End Lab</strong>: para instancias; el cubo S3 <strong>sigue</strong></td>
+<td><strong>End Lab</strong>: termina la sesión; la conservación y parada de recursos dependen del laboratorio</td>
 <td><strong>Reset</strong>: borra <strong>toda</strong> la cuenta de prácticas. No tiene deshacer</td>
 </tr>
 <tr>
@@ -1674,7 +1674,7 @@
 </tr>
 </tbody>
 </table>
-<p>El disco (S3) y el cálculo (un job, un clúster) <strong>no tienen por qué vivir juntos</strong>. Eso es el diseño nube de <a href="../clusters/" rel="noopener" target="_blank">1.2</a>: el dato en el cubo; la CPU donde haga falta.</p>
+<p>El disco (S3) y el cálculo (un job, un clúster) <strong>no tienen por qué vivir juntos</strong>. Es uno de los diseños posibles, también fuera de la nube, explicado en de <a href="../clusters/" rel="noopener" target="_blank">1.2</a>: el dato en el cubo; la CPU donde haga falta.</p>
 <h2 id="1-entrar">1. Entrar<a class="headerlink" href="#1-entrar" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Abrid el correo de <strong>invitación</strong> (el que os ha mandado el profesor, no un enlace de un compañero).</li>
@@ -1691,9 +1691,9 @@
 <ol>
 <li>Buscad <strong>S3</strong> → <strong>Create bucket</strong>.</li>
 <li>
-<p><strong>Nombre</strong> (tiene que ser único en todo Amazon, en minúsculas):</p>
-<p><code>bda-ut1-cantabria-&lt;apellidos&gt;</code></p>
-<p>Ejemplo: <code>bda-ut1-cantabria-lopez-garcia</code>. Sin espacios, sin tildes, sin <code>Ñ</code>. Si está ocupado, añadid el aula (<code>-a1</code>).
+<p><strong>Nombre</strong> (para un cubo de propósito general en el espacio de nombres compartido: único dentro de la partición de AWS y en minúsculas):</p>
+<p><code>bda-ut1-aula-&lt;codigo&gt;-&lt;sufijo&gt;</code></p>
+<p>Ejemplo: <code>bda-ut1-aula-a01-7f3a</code>. Usad el código asignado y un sufijo; no incluyáis nombres, apellidos ni otros datos personales en el nombre del cubo. Sin espacios, tildes ni <code>Ñ</code>. Si está ocupado, cambiad el sufijo.
 3. Dejad <strong>ACLs disabled</strong>.
 4. <strong>Block all public access</strong>: <strong>activado</strong>. No lo desmarcáis “para probar el enlace”.
 5. Cifrado por defecto: el que venga. No hace falta versionado el primer día.
@@ -1773,7 +1773,7 @@
 <li><strong>End Lab</strong>. No pulseis <strong>Reset</strong>.</li>
 <li>Consultad las instrucciones del laboratorio sobre conservación de recursos. End Lab termina la sesión, pero no debe interpretarse como una garantía universal de borrado o conservación. Guardad fuera del laboratorio los archivos de práctica necesarios.</li>
 </ol>
-<p>Si lanzáis una máquina EC2 “a ver qué es” y os vais, <strong>sigue cobrando</strong> hasta que la paréis o hagáis End Lab. S3 de unos KB no os va a dejar sin crédito; un clúster olvidado, sí.</p>
+<p>Los recursos pueden consumir crédito mientras se conservan, aunque no tengáis abierta la consola. Revisad el saldo y las instrucciones del laboratorio; End Lab no sustituye a comprobar qué recursos permanecen y qué costes generan.</p>
 <h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
 <p>No puntúa en Moodle. Una línea de por qué.</p>
 <ol>

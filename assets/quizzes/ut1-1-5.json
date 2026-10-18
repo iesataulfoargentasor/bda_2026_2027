@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Por qué capas",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "¿Por qué un sistema Big Data no es “un programa que lo hace todo” (ingesta, limpieza, modelos y el informe en el mismo script)?",
       "code": "",
       "options": [
@@ -19,21 +19,21 @@
     },
     {
       "topic": "Tres numeraciones",
-      "href": "",
-      "prompt": "En el ciclo el 4 es la entrega; en el edificio el 4 es el job; en el 1.6 el 4 será el panel. ¿Qué hay que hacer?",
+      "href": "../arquitectura/",
+      "prompt": "¿Qué debemos comparar entre un ciclo del dato y un esquema de arquitectura?",
       "code": "",
       "options": [
-        "Usar siempre el 4 como “el panel”.",
-        "Memorizar que capa 4 = unificar nombres (`web` y `WEB`).",
-        "No mezclar los números: ciclo = fases; edificio = ocho capas; el 1.6 aún no hace falta.",
-        "Son el mismo 4 con tres nombres."
+        "Que el número de cada fase coincida con el de cada capa.",
+        "Que cada responsabilidad utilice un producto diferente.",
+        "Las responsabilidades y el recorrido del dato, no la coincidencia entre números de esquemas distintos.",
+        "Que todas las herramientas estén instaladas en máquinas distintas."
       ],
       "answer": 2,
-      "explain": "Los números pertenecen a esquemas distintos. Explicad la responsabilidad y el recorrido del dato; normalizar nombres también es una transformación de integración."
+      "explain": "El ciclo describe fases; la arquitectura distribuye responsabilidades. Integración y procesamiento pueden compartir transformaciones."
     },
     {
       "topic": "Ciclo y lago",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "Tras transformar, ¿qué suele pasar con el resultado en el lago? Si hay que retirar un identificador personal, ¿editáis el fichero a mano?",
       "code": "",
       "options": [
@@ -43,11 +43,11 @@
         "No hace falta transformar: el consumidor lee el bruto."
       ],
       "answer": 0,
-      "explain": "Las tecnologías cambian; las fases del ciclo no: generación, ingesta, transformación, entrega, consumo. El detalle del formato está en el 1.7."
+      "explain": "Un lago puede tener originales y tablas preparadas. Añadir, sustituir o actualizar requiere una política; borrar una versión actual no elimina automáticamente sus copias históricas."
     },
     {
       "topic": "Capa 2 frente a capa 4",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "¿Cómo se relacionan integración y transformación?",
       "code": "",
       "options": [
@@ -61,7 +61,7 @@
     },
     {
       "topic": "Visualización",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "Un flujo de ETL y un Parquet crudo, ¿son la capa 6 (visualización)?",
       "code": "",
       "options": [
@@ -75,7 +75,7 @@
     },
     {
       "topic": "Capas transversales",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "En un flujo CSV → filtro → Excel, ¿qué dos responsabilidades transversales hay que contemplar también?",
       "code": "",
       "options": [
@@ -89,7 +89,7 @@
     },
     {
       "topic": "Sobreingeniería",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "El fichero cabe en un PC. ¿Montáis cola + clúster + tres nubes “porque es Big Data”?",
       "code": "",
       "options": [
@@ -103,21 +103,21 @@
     },
     {
       "topic": "Lote y flujo",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "Un cierre diario preciso frente a eventos que no acaban. ¿Qué camino es cada uno, y “tiempo real” significa instantáneo?",
       "code": "",
       "options": [
         "Los dos son tiempo real si hay Spark.",
         "Flujo = el informe de la mañana; lote = el evento continuo.",
         "Tiempo real = instantáneo; si tarda 1 s ya no vale.",
-        "Lote = principio y fin, preciso, tarda. Flujo = no acaba, a menudo una ventana. Tiempo real = plazo **finito y útil**, no “cero milisegundos”."
+        "Un lote trata un conjunto delimitado; un flujo trata eventos continuos. Ambos requieren un plazo útil y políticas de exactitud y corrección."
       ],
       "answer": 3,
-      "explain": "El 1.4 ya distinguió los ritmos; aquí es **cómo se combinan** en el edificio. No montéis flujo “por si acaso” si solo hace falta un lote."
+      "explain": "Lote no implica lentitud ni flujo implica aproximación. Las garantías dependen de las reglas, los recursos y el tratamiento de datos tardíos."
     },
     {
       "topic": "Lambda y Kappa",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
@@ -131,7 +131,7 @@
     },
     {
       "topic": "Temperatura y paisaje",
-      "href": "",
+      "href": "../arquitectura/",
       "prompt": "Dato que se consulta sin parar, de vez en cuando, o casi nunca. Un póster con cientos de logos. ¿Qué es cierto?",
       "code": "",
       "options": [

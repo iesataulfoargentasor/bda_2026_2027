@@ -1737,7 +1737,7 @@
 <p>No se entrega en Moodle salvo que el profesor lo indique. Se trabaja <strong>en clase</strong> (individual o por parejas) y se comenta al final.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
-<p>Primero el <strong>caso</strong> (500 GB del <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>, un portátil). Luego un <strong>repaso</strong> de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después <strong>siete preguntas</strong>. El número tiene que servir para el <strong>panel de las 8</strong> (cierre de <strong>ayer</strong>).</p>
+<p>Primero el <strong>caso</strong> (500 GB del <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>, un portátil). Luego un <strong>repaso</strong> de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después <strong>siete preguntas</strong>. El resultado tiene que servir para el <strong>panel de las 8</strong> (cierre de <strong>ayer</strong>).</p>
 </div>
 <h2 id="video-del-informe-del-hotel-a-los-500-gb">Vídeo: del informe del hotel a los 500 GB<a class="headerlink" href="#video-del-informe-del-hotel-a-los-500-gb" title="Permanent link">&para;</a></h2>
 <p>Esta guía continúa la historia de la práctica de Pentaho: el histórico crece y debemos comparar cómo procesarlo dentro del plazo. Explica los límites del portátil, la lectura por bloques, el paralelismo local, la distribución y las preguntas que debéis responder para justificar vuestra propuesta. <strong>Duración: 10 minutos y 55 segundos.</strong></p>
@@ -1749,7 +1749,7 @@
 <p>El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa el enunciado: la actividad pide una propuesta razonada, sin descargar 500 GB ni instalar un clúster.</p>
 <p><a href="../../assets/ut1/transicion-500gb.mp4">Descargar el vídeo</a> · <a href="../../assets/ut1/transicion-500gb.txt">Leer la transcripción</a> · <a href="../../assets/ut1/transicion-500gb.es.srt">Descargar los subtítulos</a></p>
 <h2 id="el-caso-500-gb-y-un-portatil">El caso: 500 GB y un portátil<a class="headerlink" href="#el-caso-500-gb-y-un-portatil" title="Permanent link">&para;</a></h2>
-<p>Sois técnicos de la cadena. Os piden <strong>un número</strong> sobre un fichero de <strong>500 GB</strong> (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el <strong>panel de las 8</strong>. <strong>No</strong> picáis en el <a href="../caso-hotel/" rel="noopener" target="_blank">PMS</a>. <strong>No</strong> copiáis los 500 GB al informe.</p>
+<p>Sois técnicos de la cadena. Debéis procesar un histórico de <strong>500 GB</strong> (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. Elegid la operación indicada por el profesor: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.</p>
 <p>El fichero está en la <strong>red de la empresa</strong> (una URL interna o una carpeta compartida), no en vuestro disco.</p>
 <p><strong>Operación</strong> (elegid <strong>una</strong>): media, desviación típica, o <em>normalizar</em> un campo (dejarlo en una escala comparable, p. ej. 0–1).</p>
 <p><strong>Destino del resultado</strong> (elegid <strong>uno</strong>, el que diga el profesor): cubo <strong>S3</strong>, <strong>Azure</strong> (Blob / Data Lake) o <strong>carpeta del aula</strong>. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa <strong>casi nada</strong>; no lo confundáis con mover los 500 GB.</p>
@@ -1775,20 +1775,36 @@
 </tr>
 <tr>
 <td>CPU</td>
-<td>i7, <strong>10 núcleos / 20 hilos</strong></td>
+<td>CPU hipotética, <strong>10 núcleos / 20 hilos</strong></td>
 <td>Hay paralelismo <em>local</em>, no un clúster</td>
 </tr>
 <tr>
 <td>GPU</td>
-<td>RTX 4060, 6 GB</td>
+<td>GPU hipotética de 6 GB</td>
 <td>¿Ayuda a <em>esta</em> media o no?</td>
 </tr>
 </tbody>
 </table>
-<p><img alt="500 GB del histórico no caben en el portátil (300 GB libres, 32 GB de RAM). El panel de las 8 necesita el número, unos bytes" src="../../assets/ut1/tarea-portatil-500gb.png" /></p>
+<pre class="mermaid"><code>flowchart TD
+ H[Histórico: 500 GB] --&gt; B[Lectura por bloques desde el origen]
+ B --&gt; M[Media: acumular suma y recuento]
+ B --&gt; N[Normalización: calcular límites y transformar filas]
+ M --&gt; S[Resumen pequeño]
+ N --&gt; D[Dataset transformado: puede seguir siendo grande]
+ S --&gt; V[Validar y guardar en destino acordado]
+ D --&gt; V
+ H --&gt; R[Medir red, disco, RAM y tiempo antes de elegir recursos]</code></pre>
+<p>No cabe una copia completa en 300 GB libres ni un DataFrame completo en 32 GB de RAM. Leer remotamente por bloques sí puede ser viable, si cumple el plazo.</p>
 <h2 id="concurrente-paralelo-y-distribuido-repaso">Concurrente, paralelo y distribuido (repaso)<a class="headerlink" href="#concurrente-paralelo-y-distribuido-repaso" title="Permanent link">&para;</a></h2>
 <p>Tres palabras que en el pasillo se usan como sinónimos. <strong>No</strong> lo son. El detalle está en el <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>; aquí basta para no mezclar el i7 con un clúster.</p>
-<p><img alt="Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster" src="../../assets/ut1/paralelo-distribuido.png" /></p>
+<pre class="mermaid"><code>flowchart TD
+ T[Organización del cálculo] --&gt; U[Una máquina]
+ T --&gt; V[Varias máquinas que se comunican: distribuido]
+ U --&gt; S[Un recurso alterna tareas: concurrencia sin paralelismo]
+ U --&gt; P[Varios recursos a la vez: paralelo local]
+ V --&gt; D[Nodos calculando a la vez: distribuido y paralelo]
+ V --&gt; E[Nodos esperando dependencias: sin paralelismo en esa fase]</code></pre>
+<p>Son dos preguntas distintas: dónde se ejecuta y si hay simultaneidad. La concurrencia permite que varias tareas progresen durante un intervalo.</p>
 <table>
 <thead>
 <tr>
@@ -1816,10 +1832,18 @@
 </tbody>
 </table>
 <p><strong>Spark en modo local sigue siendo el portátil:</strong> varios núcleos, <strong>una</strong> máquina. No lo presentéis como la opción 3.</p>
-<p><img alt="Secuencial por trozos, paralelo en el i7, distribuido en los cuatro nodos-hotel" src="../../assets/ut1/tarea-tres-modos.png" /></p>
+<pre class="mermaid"><code>flowchart TD
+ O[Operación y plazo acordados] --&gt; S[Local secuencial: bloques sucesivos]
+ O --&gt; P[Local paralelo: varios recursos del portátil]
+ O --&gt; D[Distribuido: varios nodos conectados]
+ S --&gt; M[Medir tiempo, memoria, red y recuperación]
+ P --&gt; M
+ D --&gt; M
+ M --&gt; E[Elegir la alternativa suficiente y justificar costes]</code></pre>
+<p>Las tres opciones se comparan con la misma operación y plazo. Distribuido también puede ser paralelo; Spark en modo local sigue usando una sola máquina.</p>
 <div class="admonition tip">
 <p class="admonition-title">Las tres pueden convivir</p>
-<p>Un plan honesto suele mezclarlas: no bajar el fichero; si exploráis, paralelo <strong>local</strong> sobre una muestra; el histórico de verdad, <strong>distribuido</strong>. No elijáis “la palabra más moderna”.</p>
+<p>Comparad alternativas con medidas: explorar una muestra, leer el histórico remoto por bloques o repartir el cálculo. El procesamiento local completo puede ser viable si cumple el plazo y los recursos; distribuido requiere justificar su coste y coordinación. Evitar una copia local completa no evita transferir bytes cuando se lee por red.</p>
 </div>
 <h2 id="que-teneis-que-entregar-en-clase">Qué tenéis que entregar (en clase)<a class="headerlink" href="#que-teneis-que-entregar-en-clase" title="Permanent link">&para;</a></h2>
 <p>Responded por escrito (o en un pad) a <strong>todas</strong> las preguntas. No hace falta código que compile; sí un razonamiento que se pueda defender en voz alta.</p>
@@ -1832,7 +1856,7 @@
 <p>Hablad al menos de: <strong>espacio en disco</strong>, <strong>RAM</strong>, <strong>entrada/salida de disco</strong> (leer y escribir es lento) y <strong>red</strong> (bajar 500 GB por la wifi del aula no es “un rato”).</p>
 <div class="admonition example">
 <p class="admonition-title">Pista, no la respuesta</p>
-<p>Libres ≈ 300 GB &lt; 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de <strong>red y disco</strong>, no de la RTX.</p>
+<p>Libres ≈ 300 GB &lt; 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de <strong>red y disco</strong>, no de la GPU.</p>
 </div>
 <h3 id="2-opcion-1-local-secuencial-por-trozos">2. Opción 1 — Local secuencial (por trozos)<a class="headerlink" href="#2-opcion-1-local-secuencial-por-trozos" title="Permanent link">&para;</a></h3>
 <p>La lectura por bloques evita mantener todo el archivo en memoria. El tamaño del bloque debe dejar espacio para los datos convertidos y las operaciones intermedias. Si el archivo está en red, sigue siendo necesario transferir sus bytes al proceso lector, aunque no se guarden permanentemente en el disco local.</p>
@@ -1850,7 +1874,7 @@
 <p>El plan debe limitar cuántos bloques están en memoria simultáneamente. Diez procesos con bloques grandes pueden agotar los 32 GB aunque cada bloque, por separado, quepa. Además, varias lecturas pueden competir por la misma conexión de red. Comparad la tasa de lectura antes y después de aumentar trabajadores.</p>
 <p>¿Cómo aprovecháis los <strong>10 núcleos / 20 hilos</strong>?</p>
 <p>Comentad una vía: Spark <strong>en modo local</strong>, <strong>Dask</strong> o <code>multiprocessing</code>. Hoy no hace falta instalarlas: el oficio es el diseño.</p>
-<p>Qué <strong>mejora</strong> respecto a la opción 1 (varios trozos a la vez) y qué <strong>sigue igual</strong> (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). El panel de las 8 <strong>no</strong> puede depender de ese portátil.</p>
+<p>Qué <strong>mejora</strong> respecto a la opción 1 (varios trozos a la vez) y qué <strong>sigue igual</strong> (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). Si el panel dependiera de ese portátil, habría que justificar disponibilidad, recuperación y plazo; una máquina de alumno no ofrece esas garantías por el mero hecho de ejecutar el cálculo.</p>
 <h3 id="4-opcion-3-distribuido">4. Opción 3 — Distribuido<a class="headerlink" href="#4-opcion-3-distribuido" title="Permanent link">&para;</a></h3>
 <p>Explicad cómo se combinan los resultados parciales. Para una media, cada trabajador devuelve suma y recuento y el coordinador divide las sumas globales. Guardar solo medias locales pierde la ponderación por tamaño.</p>
 <p>El diseño también debe indicar dónde se ejecuta cada tarea, cómo se identifica una partición terminada y qué ocurre si se repite. Tener varios nodos no garantiza tolerancia a fallos si la única copia del origen o el coordinador sigue siendo un punto único de fallo.</p>
@@ -1859,13 +1883,13 @@
 <ol>
 <li><strong>Dónde</strong> dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.</li>
 <li><strong>Cómo</strong> lanzáis el cálculo (un <em>job</em>: trabajo programado; de madrugada, para tener el número <strong>antes de las 8</strong>).</li>
-<li>Por qué encaja: <strong>volumen</strong>, <strong>tiempo</strong>, <strong>tolerancia a fallos</strong> (si se funde un disco, el panel no se cae: <a href="../clusters/" rel="noopener" target="_blank">1.2</a>), <strong>crecimiento</strong> (añadir nodos = <a href="../clusters/" rel="noopener" target="_blank">escalado horizontal</a>).</li>
+<li>Por qué encaja: <strong>volumen</strong>, <strong>tiempo</strong>, <strong>tolerancia a fallos</strong> (si se dispone de réplicas y recuperación probada, puede continuarse ante ciertos fallos: <a href="../clusters/" rel="noopener" target="_blank">1.2</a>), <strong>crecimiento</strong> (añadir nodos = <a href="../clusters/" rel="noopener" target="_blank">escalado horizontal</a>).</li>
 </ol>
 <h3 id="5-opcion-4-cargar-y-consultar">5. Opción 4 — Cargar y consultar<a class="headerlink" href="#5-opcion-4-cargar-y-consultar" title="Permanent link">&para;</a></h3>
 <p>Valorad cargar el fichero (o <strong>particionarlo</strong>) en un almacén de informes / <em>lakehouse</em> o, si el aula lo usa, MongoDB, y hacer la media con una <strong>consulta</strong>.</p>
 <p>¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: <strong>modelo de datos</strong>, <strong>coste</strong> (¡a menudo pagáis por lo <strong>escaneado</strong>!, <a href="../formatos/" rel="noopener" target="_blank">1.7</a>), <strong>curva de aprendizaje</strong>.</p>
 <h3 id="6-y-la-gpu">6. ¿Y la GPU?<a class="headerlink" href="#6-y-la-gpu" title="Permanent link">&para;</a></h3>
-<p>¿La RTX 4060 <strong>cambia de verdad</strong> este problema (una estadística sobre un campo de un CSV/JSON de reservas)?</p>
+<p>¿La GPU <strong>cambia de verdad</strong> este problema (una estadística sobre un campo de un CSV/JSON de reservas)?</p>
 <p>Decid en qué tareas de datos <strong>sí</strong> suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser <strong>leer bytes de red/disco</strong>, no multiplicar matrices.</p>
 <h3 id="7-eleccion-final">7. Elección final<a class="headerlink" href="#7-eleccion-final" title="Permanent link">&para;</a></h3>
 <p>Presentad una recomendación con supuestos verificables: formato y ubicación del origen, ancho de banda disponible, plazo, frecuencia de repetición y tamaño de la salida. Una media puntual puede justificar un plan distinto de un informe que debe regenerarse cada mañana.</p>
@@ -1910,7 +1934,7 @@
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Qué se espera</p>
-<p>No un clúster montado hoy. Sí una recomendación <strong>argumentada</strong>: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el <strong>número</strong>.</p>
+<p>No un clúster montado hoy. Sí una recomendación <strong>argumentada</strong>: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el <strong>resultado</strong> y cuánto ocupa.</p>
 </div>
 <h2 id="relacion-con-el-modulo">Relación con el módulo<a class="headerlink" href="#relacion-con-el-modulo" title="Permanent link">&para;</a></h2>
 <p>Es el <strong>puente hacia el RA2</strong> (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de <a href="../clusters/" rel="noopener" target="_blank">1.2</a> y <a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>. Os obliga a <strong>elegir y justificar</strong>. El laboratorio de HDFS y Spark es la UT2.</p>

@@ -1991,6 +1991,12 @@
 
 
 <h1 id="15-arquitectura-por-capas-y-paisaje-de-herramientas">1.5. Arquitectura por capas y paisaje de herramientas<a class="headerlink" href="#15-arquitectura-por-capas-y-paisaje-de-herramientas" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> seguir el dato por responsabilidades y reconocer controles transversales.</p>
+<p><strong>Práctica guiada:</strong> dibujar la solución del hotel y justificar cómo se recupera.</p>
+<p><strong>Ampliación:</strong> comparar Lambda y Kappa mediante sus vistas y el reprocesamiento. No sustituye a los conceptos y comprobaciones anteriores.</p>
+</div>
 <h2 id="video-del-cobro-de-ana-al-panel">Vídeo: del cobro de Ana al panel<a class="headerlink" href="#video-del-cobro-de-ana-al-panel" title="Permanent link">&para;</a></h2>
 <p>Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectura, qué controles necesita el recorrido y cómo se recupera ante fallos. La explicación de Lambda y Kappa utiliza el mismo ejemplo numérico y esquemas comparativos para distinguir ambas opciones. <strong>Duración: 12 minutos y 39 segundos.</strong> La comparación de Lambda y Kappa comienza aproximadamente en el <strong>minuto 6:40</strong>.</p>
 <video controls playsinline preload="metadata" poster="../../assets/ut1/arquitectura-natural-portada.jpg" aria-label="Arquitectura: del cobro de Ana al panel, con explicación de Lambda y Kappa" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
@@ -2010,7 +2016,7 @@
 <p>Este apartado es el <strong>mapa del oficio</strong> que en <a href="../por-que-big-data/" rel="noopener" target="_blank">1.1</a> llamamos ingeniería de datos: no el gráfico de las 8, sino que ese gráfico <strong>pueda</strong> hacerse. El hilo es el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
-<p>Primero el <strong>ciclo</strong> (fases: de que nace el dato hasta que gerencia lo usa). Luego el <strong>edificio</strong> (ocho capas: el dato entra abajo y gerencia mira arriba). Después <strong>cómo se combinan</strong> lote y flujo (Lambda / Kappa) con los relojes 23:00 / 8:00 / semáforo. Los logos van al final: se sitúan en una capa; no se recitan.</p>
+<p>Primero el <strong>ciclo</strong> (fases: de que nace el dato hasta que gerencia lo usa). Luego el <strong>edificio</strong> (ocho capas: el dato entra abajo y gerencia mira arriba). Después <strong>cómo se combinan</strong> lote y flujo (Lambda / Kappa) mediante vistas históricas y recientes de los mismos hechos; los dos pipelines independientes del hotel sirven para explicar por qué no toda coexistencia de lote y flujo es Lambda. Los logos van al final: se sitúan en una capa; no se recitan.</p>
 </div>
 <h2 id="el-ciclo-generacion-consumo">El ciclo (generación → consumo)<a class="headerlink" href="#el-ciclo-generacion-consumo" title="Permanent link">&para;</a></h2>
 <p>Antes de los logos, el dato recorre un ciclo. Las tecnologías cambian; <strong>estas fases no</strong>.</p>
@@ -2022,6 +2028,7 @@
 <li><strong>Consumo.</strong> Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado <strong>antes</strong>.</li>
 </ol>
 <p><img alt="Ciclo del dato en el hotel: de PMS y sensores al panel de las 8" src="../../assets/ut1/ciclo-ingenieria.png" /></p>
+<p>La figura resume un ciclo posible. En este caso el cierre usa reservas y cobros; los sensores alimentan un indicador distinto. Ingestar no exige siempre pasar por un lago.</p>
 <p>Sobre el almacén (lago, warehouse, <em>lakehouse</em>, cubo de objetos: <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>) se apoyan ingesta, transformación y entrega. Seguridad y monitorización son <strong>capas</strong> que atraviesan el edificio. Gobierno, DataOps y orquestación son <strong>corrientes</strong> (no una novena capa): van más abajo.</p>
 <h3 id="a-quien-servis">A quién servís<a class="headerlink" href="#a-quien-servis" title="Permanent link">&para;</a></h3>
 <p>No es el mismo reloj.</p>
@@ -2051,16 +2058,13 @@
 </tr>
 </tbody>
 </table>
-<p>A veces el resultado <strong>vuelve al origen</strong>: el modelo etiqueta bien una cancelación y escribís el hecho otra vez en el PMS. Eso se llama <em>reverse ETL</em>. No lo montáis en este módulo; sí sabéis que el ciclo <strong>no es de un solo sentido</strong>.</p>
+<p>A veces se lleva información preparada del entorno analítico a una aplicación operativa: por ejemplo, un segmento de clientes al CRM. Esto se conoce como <strong>reverse ETL</strong>. Una predicción no se convierte por ello en un hecho confirmado: escribir en el PMS exige permisos, validación y reglas del negocio. Aquí basta comprender que puede existir ese retorno controlado.</p>
 <h2 id="las-capas-el-dato-entra-abajo-y-gerencia-mira-arriba">Las capas (el dato entra abajo y gerencia mira arriba)<a class="headerlink" href="#las-capas-el-dato-entra-abajo-y-gerencia-mira-arriba" title="Permanent link">&para;</a></h2>
 <p>El ciclo son <strong>fases</strong> (qué le pasa al dato). Las ocho capas son el <strong>edificio</strong> (dónde vive cada responsabilidad).</p>
-<div class="admonition warning">
-<p class="admonition-title">Tres numeraciones (no las mezcléis)</p>
-<ul>
-<li>El <strong>ciclo</strong> tiene cinco fases. El <strong>4</strong> es la entrega (<em>serving</em>: el dato ya de fiar, listo para el panel o el modelo).</li>
-<li>El <strong>edificio</strong> tiene ocho capas. El <strong>4</strong> es el procesamiento (el job). Unificar <code>web</code> / <code>WEB</code> es la <strong>capa 2</strong>; el cruce reservas ⋈ cobros es la <strong>capa 4</strong>.</li>
-<li>En <a href="../ingesta/" rel="noopener" target="_blank">1.6</a> hay un resumen de <strong>cuatro pisos</strong>. Allí el <strong>4</strong> es el panel. Todavía no hace falta leerlo; cuando lleguéis, <strong>no</strong> reutilicéis estos números.</li>
-</ul>
+<div class="admonition info">
+<p class="admonition-title">Relacionad responsabilidades, no números</p>
+<p>El ciclo describe qué ocurre con el dato. El esquema de esta página organiza seis responsabilidades del recorrido y dos transversales: seguridad y monitorización. Es un mapa didáctico, no una norma de ocho productos obligatorios.</p>
+<p>En 1.6 se resume el recorrido sin añadir otra numeración. Normalizar nombres y unir fuentes son transformaciones de integración; una misma herramienta puede integrar, procesar y escribir resultados. Un job coordina tareas: no es sinónimo de toda la capa de procesamiento.</p>
 </div>
 <p><img alt="Ocho capas en el hotel: el dato entra por la ingesta y gerencia mira el panel" src="../../assets/ut1/capas-hotel.png" /></p>
 <h3 id="1-ingesta">1. Ingesta<a class="headerlink" href="#1-ingesta" title="Permanent link">&para;</a></h3>
@@ -2105,7 +2109,7 @@
 <tbody>
 <tr>
 <td><strong>Escala</strong></td>
-<td>Añadís disco o CPU sin rediseñar</td>
+<td>Aumentáis capacidad dentro de los límites del diseño y comprobáis la mejora</td>
 <td>Abrís Noja y el panel de las 8 sigue saliendo</td>
 </tr>
 <tr>
@@ -2115,7 +2119,7 @@
 </tr>
 <tr>
 <td><strong>Dato repartido</strong></td>
-<td>Nada de un único SPOF (un solo punto que, si cae, cae todo)</td>
+<td>Repartir datos exige revisar también coordinadores, red y orígenes únicos: distribuir no elimina automáticamente todos los puntos únicos de fallo</td>
 <td>No un USB con “el histórico”</td>
 </tr>
 <tr>
@@ -2218,6 +2222,7 @@
 </tbody>
 </table>
 <p><img alt="Temperaturas del dato en el caso hotelero" src="../../assets/ut1/temperatura-dato.png" /></p>
+<p>Aquí el semáforo representa presencia detectada, no disponibilidad comercial. La temperatura depende de frecuencia de acceso y plazo de recuperación; la antigüedad por sí sola no hace frío a un dato.</p>
 <p>El almacenamiento frío suele abaratar la conservación, pero puede introducir costes de recuperación o esperas. Si el informe diario necesita releer un conjunto, ese conjunto debe estar disponible dentro del plazo previsto. La política de almacenamiento se diseña a partir del acceso real.</p>
 <h2 id="gobierno-dataops-y-orquestacion">Gobierno, DataOps y orquestación<a class="headerlink" href="#gobierno-dataops-y-orquestacion" title="Permanent link">&para;</a></h2>
 <p>Estas prácticas se complementan. Si cambia la definición de “reserva cobrada”, el gobierno del dato identifica quién aprueba el significado; DataOps permite probar y versionar el cambio; la orquestación ejecuta las tareas en el orden adecuado. El linaje permite conocer qué informes dependen de esa definición y deben recalcularse.</p>
@@ -2238,7 +2243,7 @@
 <tbody>
 <tr>
 <td>1 Ingesta / mensajería</td>
-<td>Sqoop, Flume, NiFi, Kafka, Kinesis</td>
+<td>NiFi, Kafka, Kinesis; Sqoop como referencia histórica</td>
 <td>¿Cómo entra el dato?</td>
 </tr>
 <tr>
@@ -2253,7 +2258,7 @@
 </tr>
 <tr>
 <td>Orquestación (corriente)</td>
-<td>Oozie, Airflow, <strong>Kitchen</strong> (Pentaho)</td>
+<td>Airflow; jobs de Pentaho ejecutados con <strong>Kitchen</strong>; Oozie como referencia histórica</td>
 <td>¿En qué orden y qué pasa si falla?</td>
 </tr>
 <tr>
@@ -2263,7 +2268,8 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming <strong>en memoria</strong> y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> (Spoon). El criterio <strong>e)</strong> es un fichero o un panel que gerencia entiende: <strong>no</strong> es abrir Report Designer ni Pentaho Server. La cola de Kappa suele ser Kafka; el detalle de ingesta está en <a href="../ingesta/" rel="noopener" target="_blank">1.6</a>.</p>
+<p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming utilizando <strong>memoria y disco</strong> según la operación y los recursos y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> (Spoon). El criterio <strong>e)</strong> es un fichero o un panel que gerencia entiende: <strong>no</strong> es abrir Report Designer ni Pentaho Server. Kappa necesita un registro de eventos retenidos y releíbles, como Kafka configurado para ello; una cola que elimina mensajes tras su confirmación no basta para reconstruir el histórico; el detalle de ingesta está en <a href="../ingesta/" rel="noopener" target="_blank">1.6</a>.</p>
+<p>Sqoop se retiró a <a href="https://attic.apache.org/projects/sqoop.html">Apache Attic en 2021</a> y Oozie en <a href="https://attic.apache.org/timeline.html">2025</a>: ayudan a leer arquitecturas antiguas, no son propuestas para instalar en esta UT. Kitchen ejecuta un job; las dependencias las define ese job y su lanzamiento horario requiere un planificador.</p>
 <p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong> Un mapa reciente que se cita en el ciclo: <a href="https://mad.firstmark.com/" rel="noopener" target="_blank">MAD landscape</a> (orientación, no para recitar).</p>
 <h2 id="big-data-y-cloud">Big Data y cloud<a class="headerlink" href="#big-data-y-cloud" title="Permanent link">&para;</a></h2>
 <p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: seguís decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagáis</strong>. El cubo es almacén de <strong>objetos</strong>; el clúster de cálculo puede <strong>no</strong> vivir en las mismas máquinas (<a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>).</p>

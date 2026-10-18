@@ -1671,6 +1671,12 @@
 
 
 <h1 id="14-procesamiento-de-datos">1.4. Procesamiento de datos<a class="headerlink" href="#14-procesamiento-de-datos" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> distinguir concurrencia, paralelismo, distribución, lote, flujo, OLTP y OLAP.</p>
+<p><strong>Práctica guiada:</strong> elegir el procesamiento del cierre y del indicador de presencia.</p>
+<p><strong>Ampliación:</strong> razonar con SCV como guía, sin tratarlo como teorema. No sustituye a los conceptos y comprobaciones anteriores.</p>
+</div>
 <h2 id="video-un-dia-en-el-hotel">Vídeo: un día en el hotel<a class="headerlink" href="#video-un-dia-en-el-hotel" title="Permanent link">&para;</a></h2>
 <p>Acompaña a Ana desde el pago en recepción hasta el cierre nocturno, las consultas de dirección y las señales de los sensores. Este recorrido conecta las distintas formas de procesar datos y explica qué trabajo hacemos, cuándo necesitamos el resultado y dónde lo calculamos. La narración enlaza las ideas paso a paso y deja pausas para asimilar los ejemplos. <strong>Duración: 9 minutos y 41 segundos.</strong></p>
 <video controls playsinline preload="metadata" poster="../../assets/ut1/procesamiento-natural-portada.jpg" aria-label="Procesamiento de datos: un día en el hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
@@ -1695,7 +1701,7 @@
 <ul>
 <li><strong>Recepción</strong> opera ahora (PMS, cobro). No puede esperar.</li>
 <li><strong>Finanzas</strong> cierra a las <strong>23:00</strong>; de madrugada corre el <strong>lote</strong>; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>.</li>
-<li>Los sensores (~30 s) alimentan el <strong>semáforo</strong> (“¿queda habitación?”), no el cuadro de las 8.</li>
+<li>Los sensores (~30 s) alimentan el <strong>semáforo</strong> (“¿se detecta presencia?”), no el cuadro de las 8.</li>
 </ul>
 <p>En clase lo aplicáis en la <a href="../transicion-ut2/" rel="noopener" target="_blank">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
 <div class="admonition info">
@@ -1734,19 +1740,26 @@
 </tr>
 </tbody>
 </table>
-<p><img alt="Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos-hotel" src="../../assets/ut1/paralelo-distribuido.png" /></p>
-<p><strong>Concurrente.</strong> El sistema operativo <strong>reparte el tiempo</strong> entre programas. Si solo hay <strong>un núcleo</strong>, la “multitarea” es <strong>simulada</strong>: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tenéis la <em>impresión</em> de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notáis.</p>
+<pre class="mermaid"><code>flowchart TD
+ T[Organización del cálculo] --&gt; U[Una máquina]
+ T --&gt; V[Varias máquinas que se comunican: distribuido]
+ U --&gt; S[Un recurso alterna tareas: concurrencia sin paralelismo]
+ U --&gt; P[Varios recursos a la vez: paralelo local]
+ V --&gt; D[Nodos calculando a la vez: distribuido y paralelo]
+ V --&gt; E[Nodos esperando dependencias: sin paralelismo en esa fase]</code></pre>
+<p>Son dos preguntas distintas: dónde se ejecuta y si hay simultaneidad. La concurrencia permite que varias tareas progresen durante un intervalo.</p>
+<p><strong>Concurrente.</strong> Varias tareas progresan durante un mismo intervalo. Con un único recurso de ejecución pueden alternarse: una avanza mientras otra espera. La concurrencia es real, aunque no haya ejecución simultánea. <strong>Paralelo</strong> añade simultaneidad con varios recursos; puede darse dentro de una máquina o entre varias máquinas.</p>
 <p><strong>Paralelo (multinúcleo).</strong> Varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.</p>
 <p><strong>Multihilo de hardware (SMT):</strong> un núcleo comparte recursos entre varios hilos de ejecución. No debe confundirse con crear varios hilos de software, que el sistema operativo planifica sobre los procesadores disponibles. Mientras un hilo espera un dato de memoria, el otro puede multiplicar. Si <strong>los dos</strong> necesitan la misma unidad a la vez, uno espera. Por eso un procesador “4 núcleos / 8 hilos” <strong>no</strong> es lo mismo que 8 núcleos físicos.</p>
 <h3 id="cuando-se-puede-paralelizar">Cuándo se puede paralelizar<a class="headerlink" href="#cuando-se-puede-paralelizar" title="Permanent link">&para;</a></h3>
 <p>Para combinar resultados parciales debemos conservar la información necesaria. La suma total es la suma de las sumas parciales. La media global, en cambio, se obtiene dividiendo la suma total entre el recuento total; no se calcula promediando sin más las medias de grupos de tamaños diferentes.</p>
 <p>Por ejemplo, un hotel tiene 2 cobros con media de 100 € y otro tiene 8 con media de 200 €. La media global es <code>(2 × 100 + 8 × 200) / 10 = 180 €</code>, no 150 €. Un buen reparto conserva en cada nodo la suma y el recuento, y combina ambos al final.</p>
 <p><strong>Sí (independiente):</strong> sumar noches por hotel. Partís en cuatro trozos (Santander, Laredo, Comillas, Potes), cada núcleo (o cada nodo) suma el suyo, al final sumáis cuatro parciales. El último paso es barato.</p>
-<p><strong>No (dependiente):</strong> cada paso necesita el resultado del anterior (si el acumulado va <em>par</em> sumáis, si va <em>impar</em> restáis). Aunque cortéis la lista, el segundo trozo <strong>no sabe</strong> qué hacer hasta que acabe el primero. Más núcleos no acortan ese cuello: es lo que <a href="../clusters/" rel="noopener" target="_blank">1.2</a> llamaba “el clúster no hace magia”.</p>
+<p><strong>Con dependencia en esta implementación:</strong> cada paso necesita el resultado del anterior (si el acumulado va <em>par</em> sumáis, si va <em>impar</em> restáis). Aunque cortéis la lista, el segundo trozo <strong>no sabe</strong> qué hacer hasta que acabe el primero. Sin reformular el algoritmo, más núcleos no acortan ese cuello: es lo que <a href="../clusters/" rel="noopener" target="_blank">1.2</a> llamaba “el clúster no hace magia”.</p>
 <div class="admonition tip">
 <p class="admonition-title">Pregunta para el examen</p>
 <p>“Si solo hay un núcleo y el sistema cambia de programa cada X ms, ¿hace varias tareas al mismo tiempo?”<br />
-<strong>No.</strong> Es multitarea <strong>simulada</strong> (concurrente). El usuario lo percibe como simultáneo; el silicio no.</p>
+<strong>No en el supuesto de un único recurso que alterna tareas.</strong> Hay concurrencia por turnos, no ejecución simultánea de esas tareas.</p>
 </div>
 <h2 id="distribuido-entre-maquinas">Distribuido (entre máquinas)<a class="headerlink" href="#distribuido-entre-maquinas" title="Permanent link">&para;</a></h2>
 <p>El procesamiento <strong>distribuido</strong> reparte trabajo entre máquinas y puede ejecutarlo en paralelo. Además de coordinar tareas, debe afrontar tres dificultades:</p>
@@ -1759,8 +1772,8 @@
 <p>MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber <em>por qué</em> existen. El i7 de la <a href="../transicion-ut2/" rel="noopener" target="_blank">tarea</a> <strong>no</strong> es un clúster.</p>
 <h2 id="estrategias-no-todo-es-tiempo-real">Estrategias: no todo es “tiempo real”<a class="headerlink" href="#estrategias-no-todo-es-tiempo-real" title="Permanent link">&para;</a></h2>
 <p><strong>Lote</strong> significa trabajar con un conjunto delimitado. Aunque pueda ejecutarse de noche, sigue teniendo un plazo de entrega. <strong>Streaming</strong> procesa una secuencia que continúa creciendo. Los <strong>microlotes</strong> agrupan los eventos recibidos durante intervalos cortos y los procesan sucesivamente.</p>
-<p>En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la ocupación de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.</p>
-<p>El <strong>ritmo</strong> del trabajo no es la <a href="../almacenamiento/" rel="noopener" target="_blank">transacción ACID</a> del cobro. ACID es la garantía (todo o nada). Aquí es <strong>cuánto podéis esperar</strong> el número.</p>
+<p>En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la presencia detectada de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.</p>
+<p>La tabla compara situaciones de trabajo, no cuatro categorías excluyentes. Lote y flujo describen el tratamiento de un conjunto acotado o de eventos continuos; interactivo describe la relación con el usuario; transaccional describe operaciones del negocio. Un sistema transaccional suele necesitar baja latencia y garantías ACID (atomicidad, consistencia, aislamiento y durabilidad), pero esas garantías no son una unidad de tiempo.</p>
 <table>
 <thead>
 <tr>
@@ -1783,7 +1796,7 @@
 <tr>
 <td><strong>Interactivo</strong></td>
 <td>Sí, mientras miráis</td>
-<td>A las 11 filtráis Laredo en el almacén: “¿cómo vamos <em>hoy</em>?”. <strong>No</strong> es el panel de las 8</td>
+<td>A las 11 filtráis Laredo en el almacén: “¿cómo fue el cierre de ayer?”. La consulta es interactiva, pero la frescura sigue siendo la del último cierre</td>
 </tr>
 <tr>
 <td><strong>Flujo</strong> (<em>streaming</em>)</td>
@@ -1801,7 +1814,7 @@
   end
   subgraph flujo [Flujo]
     SEN[Sensores cada 30 s]
-    SEM[Semáforo: ¿queda habitación?]
+    SEM[Semáforo: ¿se detecta presencia?]
     SEN --&gt; SEM
   end
   subgraph clic [Clic en recepción]
@@ -1817,7 +1830,7 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el si
 <p><strong>Streaming</strong> añade otra dificultad: las cuentas se actualizan <strong>conforme llegan</strong> los datos. El estado puede mantenerse en memoria y en almacenamiento persistente, según el motor. Hay que dimensionarlo y definir cómo se recupera tras un fallo. No es “un lote, pero más rápido”: es otro contrato. Cómo se <strong>combinan</strong> lote y flujo (Lambda / Kappa) está en <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a>.</p>
 <h2 id="dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico">Dos trabajos: operar el día a día o analizar el histórico<a class="headerlink" href="#dos-trabajos-operar-el-dia-a-dia-o-analizar-el-historico" title="Permanent link">&para;</a></h2>
 <p>En el hotel conviven <strong>dos oficios</strong> que parecen el mismo (“usar el ordenador con datos”) y no lo son.</p>
-<p><strong>Oficio 1 — Operar.</strong> Recepción registra la reserva y el cobro. Muchas personas a la vez, cada una toca <strong>poca</strong> información, y tiene que terminar <strong>en milisegundos</strong>. Si esto se atasca, hay cola en el mostrador.</p>
+<p><strong>Oficio 1 — Operar.</strong> Recepción registra la reserva y el cobro. Muchas personas a la vez, cada una toca <strong>poca</strong> información, y necesita una latencia baja y un plazo acordado según la operación. Si esto se atasca, hay cola en el mostrador.</p>
 <p><strong>Oficio 2 — Analizar.</strong> Gerencia pregunta “ocupación de agosto en Laredo frente a julio” o “importe cobrado por hotel”. Eso recorre <strong>mucho</strong> histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser <strong>defendible</strong>.</p>
 <p>Mezclar los dos en <strong>la misma</strong> tabla “para no duplicar” suele acabar así:</p>
 <ul>
@@ -1828,6 +1841,7 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el si
 <h3 id="como-se-llaman-en-los-libros-oltp-y-olap">Cómo se llaman en los libros: OLTP y OLAP<a class="headerlink" href="#como-se-llaman-en-los-libros-oltp-y-olap" title="Permanent link">&para;</a></h3>
 <p>Cuando leáis documentación o un examen, esos dos oficios aparecen con siglas inglesas. No asumáis que las conocéis: son solo <strong>nombres</strong> de lo de arriba.</p>
 <p><img alt="OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia" src="../../assets/ut1/oltp-olap.png" /></p>
+<p>Porcentajes ficticios para ilustrar el análisis. Los CSV de cruce no permiten calcular ocupación: faltan habitaciones disponibles y ocupadas por periodo.</p>
 <table>
 <thead>
 <tr>
@@ -1859,8 +1873,8 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el si
 </tr>
 <tr>
 <td>Tiempo</td>
-<td>Milisegundos</td>
-<td>Segundos (o el lote de la noche)</td>
+<td>Baja latencia según el servicio</td>
+<td>Respuesta interactiva o plazo del proceso programado</td>
 </tr>
 <tr>
 <td>Usuarios</td>
@@ -1875,7 +1889,7 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el si
 </tbody>
 </table>
 <p><em>Online</em> vuelve a significar “en el sistema, ahora”, no “pago por internet”.</p>
-<p>A veces el almacén de análisis guarda el dato ya <strong>cortado por ejes</strong> (tiempo, hotel, canal). En los libros eso se llama <strong>cubo OLAP</strong>. La idea es simple: el panel de las 8 no tiene que cruzar diez tablas cada vez; el cruce <strong>ya está hecho</strong>. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.</p>
+<p>Un <strong>cubo OLAP</strong> organiza medidas (por ejemplo, importe cobrado) por dimensiones (tiempo, hotel, canal). Permite filtrar y agregar por esos ejes. Puede precalcular agregados o resolver consultas al solicitarlas, según el motor; no implica necesariamente que todos los cruces estén hechos ni que todo resida en RAM.</p>
 <p><strong>No es el cubo de objetos</strong> de <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a> (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es <strong>disco en red</strong>; el otro es un <strong>resumen ya cortado</strong> para el informe.</p>
 <p>En <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a> el <strong>warehouse</strong> es el sitio típico del oficio 2; el PMS relacional es el sitio típico del oficio 1.</p>
 <h2 id="scv">Principio SCV (solo para análisis)<a class="headerlink" href="#scv" title="Permanent link">&para;</a></h2>
@@ -1920,14 +1934,14 @@ La palabra inglesa <em>online</em> aquí solo significa “mientras usáis el si
 <h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
 <p>No puntúa en Moodle. Una línea de por qué.</p>
 <ol>
-<li>El portátil tiene 10 núcleos y sumáis noches de Laredo <strong>en esa máquina</strong>. ¿Paralelo o distribuido?</li>
-<li>El job de madrugada parte el histórico en <strong>cuatro nodos</strong> (un hotel cada uno). ¿Paralelo o distribuido?</li>
+<li>El portátil tiene 10 núcleos y sumáis noches de Laredo <strong>en esa máquina</strong>. ¿Paralelo local o distribuido? Suponed que varios núcleos calculan a la vez.</li>
+<li>El job de madrugada parte el histórico en <strong>cuatro nodos</strong> (una partición por hotel). ¿Por qué es distribuido y cuándo sería también paralelo?</li>
 <li>Recepción cobra una estancia; gerencia abre ocupación por hotel a las 8. ¿OLTP u OLAP en cada caso?</li>
 <li>Una consulta sobre todo el histórico supera el plazo requerido. Proponed dos cambios de diseño y explicad qué coste o limitación introduce cada uno.</li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Comprobación</p>
-<p>Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / con los recursos del supuesto, habrá que reducir el trabajo, aceptar una aproximación o aumentar el tiempo disponible; también se puede revisar la arquitectura y el presupuesto.</p>
+<p>Paralelo local / distribuido, y también paralelo si los nodos calculan simultáneamente / OLTP luego OLAP / con los recursos del supuesto, habrá que reducir el trabajo, aceptar una aproximación o aumentar el tiempo disponible; también se puede revisar la arquitectura y el presupuesto.</p>
 </div>
 <h2 id="autoevaluacion-del-14">Autoevaluación del 1.4<a class="headerlink" href="#autoevaluacion-del-14" title="Permanent link">&para;</a></h2>
 <p>Diez preguntas (A–D, <strong>una</strong> correcta) sobre los conceptos del apartado. No puntúan en Moodle. En <strong>cada</strong> una, <strong>Comprobar respuesta</strong>: si es correcta o no, y una explicación breve. Podéis repetir el test.</p>

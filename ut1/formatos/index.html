@@ -1913,6 +1913,12 @@
 
 
 <h1 id="17-formatos-de-datos">1.7. Formatos de datos<a class="headerlink" href="#17-formatos-de-datos" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> elegir formato según tipos, consultas y consumidores; distinguir archivos, tablas y motores.</p>
+<p><strong>Práctica guiada:</strong> generar los datos y comprobar que las conversiones conservan filas, nulos y valores.</p>
+<p><strong>Ampliación:</strong> comparar tiempos con un experimento controlado; HDFS y Delta requieren otro entorno. No sustituye a los conceptos y comprobaciones anteriores.</p>
+</div>
 <h2 id="video-la-reserva-de-ana-cambia-de-formato">Vídeo: la reserva de Ana cambia de formato<a class="headerlink" href="#video-la-reserva-de-ana-cambia-de-formato" title="Permanent link">&para;</a></h2>
 <p>Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. <strong>Duración: 12 minutos y 24 segundos.</strong></p>
 <video controls playsinline preload="metadata" poster="../../assets/ut1/formatos-natural-portada.jpg" aria-label="Formatos de datos: la reserva de Ana cambia de formato" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
@@ -2032,7 +2038,15 @@
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span><span class="nt">"id_reserva"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"hotel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Potes"</span><span class="p">,</span><span class="w"> </span><span class="nt">"noches"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"importe"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span>
 </span></code></pre></div>
 <p><code>null</code> es JSON. <code>None</code> es <strong>Python</strong>. Mezclarlos tumba el parser.</p>
-<p><img alt="JSON en un solo array: un nodo se lo come. JSONL: una reserva por línea, se trocea" src="../../assets/ut1/json-jsonl.png" /></p>
+<pre class="mermaid"><code>flowchart TD
+ J[Datos JSON] --&gt; A[Un documento: por ejemplo un array de reservas]
+ J --&gt; L[JSONL: un documento completo por línea]
+ A --&gt; P[Lector que reconoce la estructura y los límites]
+ L --&gt; R[Lectura por líneas y reparto de registros más sencillo]
+ P --&gt; C[Memoria y paralelismo dependen del lector]
+ R --&gt; C
+ C --&gt; Z[La compresión también puede limitar la división]</code></pre>
+<p>JSONL delimita cada registro por una línea. Un array JSON también puede leerse incrementalmente con un lector adecuado; no obliga a cargarlo entero en RAM.</p>
 <p><strong>XML.</strong> Sigue en facturas y administraciones. Más verboso; misma duda: ¿se puede trocear?</p>
 <h2 id="una-reserva-junta-o-un-campo-junto">Una reserva junta o un campo junto<a class="headerlink" href="#una-reserva-junta-o-un-campo-junto" title="Permanent link">&para;</a></h2>
 <p>La organización por filas favorece leer muchos campos de cada registro. Sin embargo, un fichero CSV no tiene por defecto un índice que localice directamente la reserva 17: puede ser necesario recorrerlo. La organización columnar favorece seleccionar pocas columnas de muchos registros.</p>
@@ -2046,8 +2060,9 @@
 <p class="admonition-title">A las 8 no hace falta el comentario</p>
 <p>Agregar es resumir. “Importe medio en Laredo” no lee <code>comentarios</code>. Columnar + partición <code>hotel=Laredo</code> = menos disco, menos factura.</p>
 </div>
-<p>En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: <strong>1 TB</strong> de texto plano puede quedar cerca de <strong>un octavo</strong> en columnar comprimido. La cifra exacta cambia; la idea no: <strong>elegir mal el formato en la <a href="../ingesta/" rel="noopener" target="_blank">carga</a> se paga cada consulta</strong>.</p>
+<p>Un archivo columnar comprimido puede ocupar menos que el texto original y permitir leer menos campos. No aplicamos una proporción universal: medimos tamaño, consulta y compresión con nuestros datos. Elegir mal el formato de la <a href="../ingesta/">carga</a> puede aumentar el trabajo de cada consulta.</p>
 <h2 id="comprimir-no-es-gratis">Comprimir no es gratis<a class="headerlink" href="#comprimir-no-es-gratis" title="Permanent link">&para;</a></h2>
+<p>Gzip utiliza Deflate, pero no son nombres de archivo o contenedores intercambiables. En Avro, <code>codec="deflate"</code> no genera un archivo <code>.gz</code>. La tabla orienta: verificad el códec admitido por el escritor y medid el resultado; las etiquetas de velocidad y ahorro no son garantías.</p>
 <p>El algoritmo busca <strong>repeticiones</strong> (<code>Laredo, Laredo, Laredo…</code>) y las recodifica. Viaja menos por la red. A cambio, la CPU <strong>aprieta y destapa</strong>. La reducción depende del contenido: texto repetitivo y datos ya comprimidos pueden responder de forma muy diferente. En Big Data suele ganar el que es <strong>rápido</strong>, no el que más aprieta.</p>
 <table>
 <thead>
@@ -2060,10 +2075,10 @@
 </thead>
 <tbody>
 <tr>
-<td>Gzip / deflate</td>
-<td>Media</td>
-<td>Medio</td>
-<td>Avro, Parquet</td>
+<td>Deflate / Gzip</td>
+<td>Depende del nivel y los datos</td>
+<td>Depende del contenido</td>
+<td>Deflate en Avro; Gzip en Parquet, según el lector</td>
 </tr>
 <tr>
 <td>Bzip2</td>
@@ -2159,12 +2174,12 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"id_reserva"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"int"</span><span class="p">},</span>
 </span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"hotel"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"noches"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"int"</span><span class="p">},</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"importe"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">},</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"importe"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"double"</span><span class="p">},</span>
 </span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"canal"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
 </span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="p">],</span>
 </span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">})</span>
 </span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">laredo</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"hotel"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Laredo"</span><span class="p">][[</span><span class="s2">"id_reserva"</span><span class="p">,</span> <span class="s2">"hotel"</span><span class="p">,</span> <span class="s2">"noches"</span><span class="p">,</span> <span class="s2">"importe"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">]]</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># fastavro rechaza numpy.int32 / numpy.float64: pasad a int y float de Python</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Convertimos explícitamente a tipos de Python compatibles con el esquema</span>
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="n">filas</span> <span class="o">=</span> <span class="p">[</span>
 </span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="p">{</span>
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        <span class="s2">"id_reserva"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">"id_reserva"</span><span class="p">]),</span>
@@ -2182,7 +2197,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <h2 id="arrow-el-dato-en-la-ram">Arrow: el dato <em>en la RAM</em><a class="headerlink" href="#arrow-el-dato-en-la-ram" title="Permanent link">&para;</a></h2>
 <p>El formato en disco responde a cómo conservar y leer bytes; la representación en memoria responde a cómo trabaja el programa con los valores ya disponibles. Arrow organiza columnas con tipos y una representación explícita de los nulos. Esa disposición facilita intercambios entre herramientas compatibles.</p>
 <p>La ausencia de copias no está garantizada en todas las conversiones: cambiar tipos o transformar a estructuras incompatibles puede requerir memoria adicional. En el ejemplo, la segunda fila conserva un importe nulo, y eso debe seguir siendo cierto tras convertir o escribir la tabla.</p>
-<p><a href="https://parquet.apache.org/" rel="noopener" target="_blank">Parquet</a>, <a href="https://avro.apache.org/" rel="noopener" target="_blank">Avro</a> y <a href="https://orc.apache.org/" rel="noopener" target="_blank">ORC</a> viven en <strong>disco</strong>. <strong><a href="https://arrow.apache.org/" rel="noopener" target="_blank">Arrow</a></strong> describe columnas <strong>en memoria</strong> para que Python, R o Java las compartan sin copiarlas (<em>zero-copy</em>) y el procesador calcule en bloque. Docs: <a href="https://arrow.apache.org/docs/python/">PyArrow</a>{target="<strong>la</strong>" rel="noopener"}. Arrow <strong>no</strong> es Avro.</p>
+<p><a href="https://parquet.apache.org/" rel="noopener" target="_blank">Parquet</a>, <a href="https://avro.apache.org/" rel="noopener" target="_blank">Avro</a> y <a href="https://orc.apache.org/" rel="noopener" target="_blank">ORC</a> viven en <strong>disco</strong>. <strong><a href="https://arrow.apache.org/" rel="noopener" target="_blank">Arrow</a></strong> describe columnas <strong>en memoria</strong> para facilitar que herramientas compatibles compartan buffers sin copiarlos (<em>zero-copy</em>) cuando los tipos y la operación lo permiten y el procesador calcule en bloque. Docs: <a href="https://arrow.apache.org/docs/python/">PyArrow</a>{target="<strong>la</strong>" rel="noopener"}. Arrow <strong>no</strong> es Avro.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pyarrow
 </span></code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
@@ -2198,7 +2213,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">)</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">tabla</span><span class="p">)</span>
 </span></code></pre></div>
-<p>pandas 2 puede leer el CSV con motor Arrow (<code>dtype_backend="pyarrow"</code>): textos y nulos suelen ir mejor que con NumPy.</p>
+<p>En pandas, <code>engine="pyarrow"</code> selecciona el lector CSV y <code>dtype_backend="pyarrow"</code> selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: <code>pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")</code>. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra.</p>
 <p><strong>Feather</strong> utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.feather</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">feather</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
@@ -2241,7 +2256,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">"hotel"</span><span class="p">,</span> <span class="s2">"=="</span><span class="p">,</span> <span class="s2">"Laredo"</span><span class="p">)],</span>
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>En HDFS, si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")</code>. En el Docker de la <a href="../../ut2/hdfs/" rel="noopener" target="_blank">UT2</a> ese puerto es el <strong>8020</strong> (<code>namenode</code>), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.</p>
+<p><strong>Ampliación, no requisito del taller local.</strong> La escritura en HDFS requiere el cliente y las bibliotecas de HDFS compatibles con PyArrow, conectividad y permisos; una URL por sí sola no configura el acceso. Si el clúster define <code>fs.defaultFS</code>: <code>df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")</code>. En el Docker de la <a href="../../ut2/hdfs/" rel="noopener" target="_blank">UT2</a> ese puerto es el <strong>8020</strong> (<code>namenode</code>), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.</p>
 <h3 id="preguntar-sin-cargarlo-duckdb">Preguntar sin cargarlo: DuckDB<a class="headerlink" href="#preguntar-sin-cargarlo-duckdb" title="Permanent link">&para;</a></h3>
 <p><a href="https://duckdb.org/" rel="noopener" target="_blank">DuckDB</a> es SQL <strong>dentro</strong> del cuaderno (como SQLite, pensado para resúmenes). Procesa los archivos mediante su motor y no exige convertir previamente el conjunto completo en un DataFrame. Aun así, utiliza memoria y puede necesitar espacio temporal.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip<span class="w"> </span>install<span class="w"> </span>duckdb
@@ -2258,7 +2273,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="s2">"SELECT canal, SUM(importe) AS total FROM df GROUP BY canal"</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">())</span>
 </span></code></pre></div>
-<p>Si particionáis por año: <code>FROM 'reservas/*.parquet'</code>. Por dentro habla Arrow: pasar a pandas es casi sin copia.</p>
+<p>Si las particiones están en subcarpetas como <code>reservas/anio=2026/parte.parquet</code>, usad el patrón recursivo <code>FROM 'reservas/**/*.parquet'</code>. La conversión a pandas puede requerir copias según tipos y representación; compartir Arrow no garantiza siempre <em>zero-copy</em>.</p>
 <h2 id="orc-cuando-el-ecosistema-es-hive">ORC: cuando el ecosistema es Hive<a class="headerlink" href="#orc-cuando-el-ecosistema-es-hive" title="Permanent link">&para;</a></h2>
 <p>ORC también organiza datos por columnas y conserva información que ayuda a evitar lecturas innecesarias. Compararlo con Parquet exige comprobar las operaciones y versiones del motor que se utilizará. La compatibilidad del equipo y de los lectores puede pesar más que una pequeña diferencia de tamaño en una prueba aislada.</p>
 <p><a href="https://orc.apache.org/" rel="noopener" target="_blank">ORC</a> (<em>Optimized Row Columnar</em>) nació para <strong>Hive</strong>. Tiras (<em>stripes</em>) con mín/máx para <strong>no leer</strong> lo que no puede cumplir el filtro. Compresión habitual <code>zlib</code>. pandas <code>to_orc</code> (desde 1.5) sale <strong>sin</strong> comprimir si no lo pides.</p>
@@ -2275,10 +2290,12 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <p>Conservar versiones permite recuperar estados anteriores, pero requiere políticas de mantenimiento. Borrar una fila de la versión actual no implica necesariamente eliminar de inmediato todas sus copias históricas. Hay que distinguir la modificación lógica de la limpieza física de archivos antiguos.</p>
 <p>Un <code>.parquet</code> suelto no os da “borra esta reserva” ni “cómo estaba el domingo”. En muchos pipelines se añaden archivos nuevos. Para actualizar o borrar registros se necesita una estrategia que gestione los archivos afectados y sus versiones. <a href="https://delta.io/" rel="noopener" target="_blank">Delta Lake</a>, <a href="https://iceberg.apache.org/" rel="noopener" target="_blank">Iceberg</a> y <a href="https://hudi.apache.org/" rel="noopener" target="_blank">Hudi</a> gestionan archivos de datos y metadatos de tabla. Los formatos de archivo admitidos y los mecanismos de actualización dependen de cada proyecto.</p>
 <p>Eso permite viajar en el tiempo, un <a href="../almacenamiento/" rel="noopener" target="_blank">ACID</a> de <strong>tabla</strong> (un <code>MERGE</code> no deja la ocupación a medias) y compactar ficheros pequeños. <strong>Eso no cobra en recepción:</strong> el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como <code>format("delta")</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Cuando lleguéis a Spark, sobre el mismo df de reservas</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># df.write.format("delta").save("/ruta/reservas_delta")</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Ampliación: requiere una sesión Spark y Delta Lake configurados.</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># df es pandas; hay que convertirlo antes de usar la API de Spark.</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># spark.createDataFrame(df).write.format("delta").save("/ruta/reservas_delta")</span>
 </span></code></pre></div>
 <h2 id="como-elegir-tarjeta-para-el-examen">Cómo elegir (tarjeta para el examen)<a class="headerlink" href="#como-elegir-tarjeta-para-el-examen" title="Permanent link">&para;</a></h2>
+<p>Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC son formatos de archivo; Arrow describe una representación en memoria; DuckDB es un motor; Delta, Iceberg y Hudi gestionan tablas sobre archivos. No son alternativas intercambiables: un motor puede consultar una tabla cuyos datos están en Parquet.</p>
 <table>
 <thead>
 <tr>
@@ -2299,9 +2316,9 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <td>Fila + esquema que evoluciona</td>
 </tr>
 <tr>
-<td>Entre dos celdas del mismo cuaderno</td>
-<td><strong>Feather</strong></td>
-<td>Velocidad</td>
+<td>Intercambiar tablas entre herramientas compatibles con Arrow</td>
+<td><strong>Feather</strong> (archivo)</td>
+<td>Conserva tipos compatibles y permite persistir la tabla</td>
 </tr>
 <tr>
 <td>Lago + “solo hotel e importe”</td>
@@ -2397,7 +2414,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <ul>
 <li>importe medio por <code>hotel</code> (DuckDB);</li>
 <li>recuento por <code>canal</code>;</li>
-<li>misma media <strong>solo con las columnas</strong> <code>hotel</code> e <code>importe</code> (¿baja el tiempo?).</li>
+<li>comparad la media con una lectura completa en pandas seguida del agrupamiento. La consulta SQL anterior ya proyecta los campos necesarios; repetirla seleccionando esos mismos campos no constituye una nueva optimización. Identificad que comparáis lectura completa frente a consulta con proyección, no solo formatos.</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
