@@ -992,6 +992,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Taller medido: comprobar y justificar la elección">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contrato-csv-del-taller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrato de lectura del CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#si-anadis-nulos-reales-al-experimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Si añadís nulos reales al experimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medir-despues-de-comprobar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medir después de comprobar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1795,6 +1834,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Taller medido: comprobar y justificar la elección">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contrato-csv-del-taller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrato de lectura del CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#si-anadis-nulos-reales-al-experimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Si añadís nulos reales al experimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medir-despues-de-comprobar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medir después de comprobar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1958,8 +2036,17 @@
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="s2">"regimen"</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">"SA"</span><span class="p">,</span> <span class="s2">"AD"</span><span class="p">,</span> <span class="s2">"MP"</span><span class="p">],</span> <span class="n">n</span><span class="p">),</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="s2">"comentarios"</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">"ok"</span><span class="p">,</span> <span class="s2">"vista mar"</span><span class="p">,</span> <span class="s2">""</span><span class="p">],</span> <span class="n">n</span><span class="p">),</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">})</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"reservas.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Contrato del taller: enteros int32, importe float64 y texto como object.</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># entrada se conserva como texto; no se interpreta como datetime al leer.</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">TIPOS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="s2">"id_reserva"</span><span class="p">:</span> <span class="s2">"int32"</span><span class="p">,</span> <span class="s2">"entrada"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span> <span class="s2">"hotel"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="s2">"noches"</span><span class="p">:</span> <span class="s2">"int32"</span><span class="p">,</span> <span class="s2">"importe"</span><span class="p">:</span> <span class="s2">"float64"</span><span class="p">,</span> <span class="s2">"canal"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="s2">"regimen"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span> <span class="s2">"comentarios"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">}</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">TIPOS</span><span class="p">)</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"reservas.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
 </span></code></pre></div>
+<p>El generador contiene cadenas vacías (<code>""</code>) en <code>comentarios</code>, pero no valores nulos. Son estados distintos: una cadena vacía es un texto de longitud cero; un nulo indica ausencia de valor. Para recuperar estos datos desde CSV, utilizad el <a href="#contrato-csv-del-taller">contrato de lectura del taller medido</a>, sin dejar los tipos y los nulos a la inferencia.</p>
 <p>Con <code>n = 200_000</code> ya notáis tamaño y tiempo. Subid a un millón si la máquina lo aguanta. <code>regimen</code> y <code>comentarios</code> están para que veáis <strong>lo que el informe no debe leer</strong>.</p>
 <h2 id="que-tiene-que-cumplir-el-formato">Qué tiene que cumplir el formato<a class="headerlink" href="#que-tiene-que-cumplir-el-formato" title="Permanent link">&para;</a></h2>
 <p>Para evaluar un formato distinguimos <strong>legibilidad</strong>, <strong>tipos</strong>, <strong>evolución del esquema</strong> y <strong>acceso parcial</strong>. Un fichero fácil de abrir a mano puede requerir más trabajo para interpretar números y fechas. Un formato binario puede conservar esa información y permitir al lector omitir partes, pero necesita herramientas compatibles.</p>
@@ -2226,7 +2313,7 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">)</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">tabla</span><span class="p">)</span>
 </span></code></pre></div>
-<p>En pandas, <code>engine="pyarrow"</code> selecciona el lector CSV y <code>dtype_backend="pyarrow"</code> selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: <code>pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")</code>. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra.</p>
+<p>En pandas, <code>engine="pyarrow"</code> selecciona el lector CSV y <code>dtype_backend="pyarrow"</code> selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: <code>pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")</code>. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra. Esta llamada ilustra las opciones del lector; no sustituye el <a href="#contrato-csv-del-taller">contrato CSV del taller</a>. Si probáis otro motor o backend, verificad qué opciones admite y documentad las diferencias de representación antes de comparar.</p>
 <p><strong>Feather</strong> utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.feather</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">feather</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
@@ -2416,7 +2503,57 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <h2 id="taller-medido-comprobar-y-justificar-la-eleccion">Taller medido: comprobar y justificar la elección<a class="headerlink" href="#taller-medido-comprobar-y-justificar-la-eleccion" title="Permanent link">&para;</a></h2>
 <p>Para que la comparación sea válida, utilizad las mismas filas, columnas y tipos en todas las alternativas. Registrad versiones, número de registros, tamaño del archivo, compresión y consulta. Separad el tiempo de escritura del de lectura y del de cálculo.</p>
 <p>Repetid cada medida y explicad si los datos podían estar en caché. No comparéis una lectura completa de CSV con una consulta de dos columnas sobre Parquet sin aclarar que se están midiendo dos patrones de acceso. Además del tiempo, contrastad el resultado: recuentos, nulos y sumas deben coincidir dentro de la tolerancia numérica acordada.</p>
-<p>Abrid un cuaderno <strong>en blanco</strong>. Generad el <code>df</code> (<code>n ≥ 200_000</code>). Cronometrad y anotad tamaños (<code>os.path.getsize</code>) de:</p>
+<h3 id="contrato-csv-del-taller">Contrato de lectura del CSV<a class="headerlink" href="#contrato-csv-del-taller" title="Permanent link">&para;</a></h3>
+<p>Ejecutad el generador inicial, incluido <code>TIPOS</code>, antes de comparar. En este taller acordamos separador coma, codificación UTF-8, punto decimal, columnas en el orden del generador y <strong>ningún nulo en el conjunto original</strong>. <code>entrada</code> sigue siendo texto e <code>id_reserva</code> y <code>noches</code> siguen siendo <code>int32</code>. Usamos <code>object</code> para las columnas de texto de este ejemplo; no es una obligación para otros proyectos.</p>
+<p>Una lectura predeterminada de pandas puede interpretar las cadenas vacías como nulos e inferir <code>int64</code> para los enteros. Esto cambia la interpretación o el tipo recuperado, no demuestra por sí solo que el archivo haya perdido los valores originales. La <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html">documentación de <code>pandas.read_csv</code></a> describe <code>dtype</code>, <code>keep_default_na</code> y <code>na_values</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># df y TIPOS proceden del generador del principio de la página.</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># Cronometrad la lectura; dejad las comprobaciones fuera de ese tiempo.</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pandas.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_frame_equal</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">recuperado_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="s2">"reservas.csv"</span><span class="p">,</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    <span class="n">dtype</span><span class="o">=</span><span class="n">TIPOS</span><span class="p">,</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># "" sigue siendo texto vacío, no un nulo</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>    <span class="n">engine</span><span class="o">=</span><span class="s2">"c"</span><span class="p">,</span> <span class="n">float_precision</span><span class="o">=</span><span class="s2">"round_trip"</span><span class="p">,</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="p">)</span>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="n">segundos_csv</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"lectura CSV s:"</span><span class="p">,</span> <span class="n">segundos_csv</span><span class="p">)</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"tipos:"</span><span class="p">,</span> <span class="n">recuperado_csv</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"nulos por columna:"</span><span class="p">,</span> <span class="n">recuperado_csv</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"comentarios vacíos:"</span><span class="p">,</span> <span class="n">recuperado_csv</span><span class="p">[</span><span class="s2">"comentarios"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">recuperado_csv</span><span class="p">,</span> <span class="n">check_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_exact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>float_precision="round_trip"</code> utiliza el conversor del motor C que permite recuperar los valores <code>float64</code> escritos en este ejemplo. No convierte los importes en decimales exactos: para este conjunto sintético conservamos su representación original. Con <code>n = 200_000</code> y la semilla del generador se esperan <strong>66.695 comentarios vacíos y cero nulos</strong> en esa columna; si cambiáis el tamaño o el generador, calculad la referencia desde <code>df</code>, no copiéis ese recuento.</p>
+<p>Para cada formato, comprobad filas, orden de columnas, tipos, valores y posiciones de los nulos contra el <code>df</code> original. Si se altera el orden de las filas, ordenad ambos conjuntos por <code>id_reserva</code> antes de compararlos. No sustituyáis nulos por cadenas vacías ni cambiéis tipos a ciegas para que la comprobación pase. Si un lector devuelve otra representación, registradla y justificad cualquier normalización sin pérdida antes de medirla por separado. El subconjunto Avro se compara con su propia referencia, no con todo <code>df</code>.</p>
+<h3 id="si-anadis-nulos-reales-al-experimento">Si añadís nulos reales al experimento<a class="headerlink" href="#si-anadis-nulos-reales-al-experimento" title="Permanent link">&para;</a></h3>
+<p>No utilicéis la misma representación para un texto vacío y un nulo. Trabajad sobre una copia, reservad un marcador que no aparezca como texto legítimo y acordad qué columnas admiten ausencia. Este ejemplo añade un nulo solo a <code>comentarios</code>, sin cambiar el conjunto principal del taller:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">con_nulo</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">MARCADOR_NULO</span> <span class="o">=</span> <span class="s2">"__AUSENTE__"</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">assert</span> <span class="ow">not</span> <span class="n">con_nulo</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">MARCADOR_NULO</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">con_nulo</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"comentarios"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="n">con_nulo</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="s2">"reservas_con_nulo.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">na_rep</span><span class="o">=</span><span class="n">MARCADOR_NULO</span><span class="p">,</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="p">)</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="n">recuperado_nulo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="s2">"reservas_con_nulo.csv"</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">TIPOS</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>    <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na_values</span><span class="o">=</span><span class="p">{</span><span class="s2">"comentarios"</span><span class="p">:</span> <span class="p">[</span><span class="n">MARCADOR_NULO</span><span class="p">]},</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>    <span class="n">engine</span><span class="o">=</span><span class="s2">"c"</span><span class="p">,</span> <span class="n">float_precision</span><span class="o">=</span><span class="s2">"round_trip"</span><span class="p">,</span>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="p">)</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">con_nulo</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">recuperado_nulo</span><span class="o">.</span><span class="n">isna</span><span class="p">())</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="k">assert</span> <span class="n">con_nulo</span><span class="p">[</span><span class="s2">"comentarios"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">recuperado_nulo</span><span class="p">[</span><span class="s2">"comentarios"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="n">assert_frame_equal</span><span class="p">(</span>
+</span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>    <span class="n">con_nulo</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">MARCADOR_NULO</span><span class="p">),</span> <span class="n">recuperado_nulo</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">MARCADOR_NULO</span><span class="p">),</span>
+</span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a>    <span class="n">check_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_exact</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-22-19"><a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Aquí <code>keep_default_na=False</code> conserva los textos vacíos y <code>na_values</code> reconoce únicamente el marcador acordado en <code>comentarios</code>. No añadáis <code>na_filter=False</code>: desactivaría también ese reconocimiento. Si introducís ausencias en enteros, acordad un tipo que las admita, como <code>Int32</code> de pandas, y aplicadlo tanto al original como a la lectura; el <code>int32</code> de NumPy del generador no admite nulos. Este contrato acompaña al CSV: el archivo no lo incorpora como un esquema tipado.</p>
+<h3 id="medir-despues-de-comprobar">Medir después de comprobar<a class="headerlink" href="#medir-despues-de-comprobar" title="Permanent link">&para;</a></h3>
+<p>Abrid un cuaderno <strong>en blanco</strong>. Generad el <code>df</code> (<code>n ≥ 200_000</code>) con su contrato y comprobad las lecturas. Cronometrad y anotad tamaños (<code>os.path.getsize</code>) de:</p>
 <ol>
 <li><code>reservas.csv</code></li>
 <li><code>reservas.parquet</code> y <code>reservas_zstd.parquet</code></li>
@@ -2430,13 +2567,13 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <li>recuento por <code>canal</code>;</li>
 <li>comparad la media con una lectura completa en pandas seguida del agrupamiento. La consulta SQL anterior ya proyecta los campos necesarios; repetirla seleccionando esos mismos campos no constituye una nueva optimización. Identificad que comparáis lectura completa frente a consulta con proyección, no solo formatos.</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">"reservas.parquet"</span><span class="p">)</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"escritura s:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"bytes:"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="s2">"reservas.parquet"</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s2">"reservas.parquet"</span><span class="p">)</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"escritura s:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"bytes:"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="s2">"reservas.parquet"</span><span class="p">))</span>
 </span></code></pre></div>
 <p>Explicad los resultados observados, incluso si un formato no fue el más rápido esperado. Relacionad diferencias con columnas leídas, compresión, tipos y tamaño. Justificad también cómo se gestionaría la incorporación de un campo en Avro.</p>
 <p>La entrega, si la hay, es Moodle. No hace falta ningún dataset de otro centro ni compartir el cuaderno fuera.</p>
