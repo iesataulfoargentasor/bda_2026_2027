@@ -1,0 +1,245 @@
+[
+  {
+    "title": "El hotel os encarga una solución completa",
+    "label": "Guía de la práctica integradora que cierra la UT1.",
+    "active": 0,
+    "heading": "Preparar dos resultados y demostrar que son fiables",
+    "body": "Informe de cobros para dirección + reservas sin cobro para revisión.",
+    "takeaway": "Las instrucciones detalladas están en el enunciado de la práctica.",
+    "narration": "Imaginad que la directora del hotel os llama después de los talleres. Ya sabéis leer, unir y resumir datos con Pentaho. Ahora os pide una solución completa: conocer lo cobrado por hotel y canal, revisar las reservas que no tienen un pago asociado y poder repetir el procedimiento con confianza. Ese sigue siendo nuestro encargo. Pero vamos a dar un paso más: cada uno recibirá sus datos, construirá la solución en el aula y guardará sus avances en GitHub. Al final, se sentará con el profesor para explicarla. Vamos con calma. Primero veremos qué construimos; después, cómo lo entregamos y cómo se valorará. El enunciado os acompañará con los pasos concretos."
+  },
+  {
+    "title": "Dos resultados que responden a preguntas distintas",
+    "label": "Las reservas sin cobro no se suman al informe principal.",
+    "active": 0,
+    "heading": "Dirección: ¿cuánto se ha cobrado?",
+    "body": "Control interno: ¿qué reservas no tienen un cobro en el archivo recibido?",
+    "takeaway": "Sin cobro asociado no demuestra, por sí solo, un impago.",
+    "narration": "Empecemos por separar las dos preguntas. El informe principal incluye reservas con cobro y resume su dinero por hotel y canal. El segundo resultado sirve para revisar las que no tienen un pago asociado en los archivos recibidos. No significa automáticamente que sean impagos: podrían tener otro plazo de pago o faltar información. Pensad en Ana. Su reserva y la confirmación de su pago son cosas distintas. Para el informe sumaremos el campo cobrado, no el precio previsto de la estancia. Y si no encontramos el pago, conservaremos la reserva en el listado de control explicando el motivo."
+  },
+  {
+    "title": "Este conjunto representa un cierre de aula",
+    "label": "Un paquete por alumno: A001 a A015; cierre_aula_01.",
+    "active": 0,
+    "heading": "Tres entradas: reservas, cobros y hoteles",
+    "body": "20 reservas · 15 cobros · 5 hoteles, incluido Noja.",
+    "takeaway": "No hay fechas para seleccionar ayer ni datos para calcular ocupación.",
+    "narration": "Para empezar, el profesor asignará a cada uno de los quince alumnos un paquete personal, identificado con un código, desde A cero cero uno hasta A cero quince. Lo recibiréis por Moodle o en el aula. Dentro están los tres archivos de reservas, cobros y hoteles. Utilizad los de vuestro paquete, no los comunes del taller ni los de otro compañero. Seguimos teniendo veinte reservas, quince cobros y cinco hoteles, incluido Noja. Todos representan el mismo cierre de aula seleccionado. No contienen fechas para elegir ayer ni datos suficientes para calcular ocupación. Indicad cuándo generasteis el resultado, sin confundir ese momento con una fecha del negocio que no conocemos."
+  },
+  {
+    "title": "Paquetes distintos, resultados comunes",
+    "label": "Cada paquete tiene detalles distintos y la misma dificultad.",
+    "heading": "Cambian algunos importes y el orden de las filas",
+    "body": "Se mantienen todos los grupos, sus totales y las cinco reservas sin cobro.",
+    "takeaway": "Dos informes finales iguales pueden ser perfectamente correctos.",
+    "narration": "Quizá os preguntéis: si cada uno tiene datos diferentes, ¿cómo vamos a usar la misma tabla de resultados? Pensemos en dos pagos del mismo hotel y canal. Si uno aumenta unos céntimos y el otro disminuye esa misma cantidad, el total del grupo se conserva. Eso es lo que se ha preparado, ajustando también los importes de las reservas correspondientes. Además, las filas llegan en otro orden. No tenéis que modificar nada vosotros. Los dos informes finales deben seguir coincidiendo con la referencia. Por tanto, que dos informes sean iguales no demuestra una copia. Lo que debéis construir y comprender personalmente es el procedimiento, y eso lo veremos durante las sesiones y en la defensa.",
+    "active": 0
+  },
+  {
+    "title": "Organizad el trabajo antes de abrir los flujos",
+    "label": "Repositorio personal: bda-ut1-pentaho-hotel",
+    "active": 0,
+    "heading": "entrada · procesos · temporal · salida · evidencias",
+    "body": "Separad lo recibido, lo que está en preparación y lo publicado.",
+    "takeaway": "Cada alumno trabaja en su propio repositorio de GitHub.",
+    "narration": "Antes de abrir los flujos, preparad vuestra mesa de trabajo. En vuestra cuenta de GitHub cread el repositorio cuyo nombre aparece en pantalla: BDA, UT uno, Pentaho, hotel, separado por guiones. Después clonadlo en el ordenador, con Git o GitHub Desktop. Pensad en dos lugares: en el ordenador construimos y ejecutamos la solución; en GitHub conservamos las versiones que subimos. GitHub no ejecuta Spoon ni Kitchen. Dentro de la copia local, entrada guardará los tres originales; procesos, las transformaciones y el job; temporal, lo que aún comprobamos; salida, los resultados finales; y evidencias, las pruebas. Esa separación nos ayudará a saber qué podemos entregar."
+  },
+  {
+    "title": "Una preparación sencilla evita muchos problemas",
+    "label": "PDI 9.4 y los tres CSV de vuestro paquete personal.",
+    "active": 0,
+    "heading": "Descargar → revisar cabeceras → comprobar tipos",
+    "body": "20 reservas · 15 cobros · 5 hoteles; sin base de datos ni plugins extra.",
+    "takeaway": "Conservad los originales; utilizad copias para provocar fallos.",
+    "narration": "Ya tenemos dónde trabajar. Descomprimid vuestro paquete y copiad su carpeta entrada al repositorio. Conservad también el archivo asignación punto JSON en la raíz: identifica el código y las huellas de los originales. Anotad ese código en el README y comprobad que coincide con el asignado. Si falta un archivo o no podéis abrirlo, avisad al profesor antes de seguir. Después, en Pentaho nueve punto cuatro, comprobad el taller cero y revisad cabeceras, separadores y tipos. No necesitáis una base de datos ni complementos. Antes de arrastrar pasos, dibujad qué pregunta responde cada resultado y qué representa cada fila. Ese pequeño diseño nos orientará cuando algo no encaje."
+  },
+  {
+    "title": "Construid primero el informe de cobros",
+    "label": "Primera transformación: informe_cobros.ktr.",
+    "active": 1,
+    "heading": "Leer → unir por reserva → añadir hotel → agrupar",
+    "body": "Reservas: coma. Cobros y hoteles: punto y coma.",
+    "takeaway": "Antes de cada Merge join, ordenad las dos entradas por su clave.",
+    "narration": "Empezamos con la primera transformación. Leed los CSV comprobando separadores y tipos: reservas usa coma, mientras cobros y hoteles usan punto y coma. Las claves deben ser compatibles y los importes deben interpretarse como decimales. Ordenad reservas y cobros por identificador de reserva y unidlos con una unión interna. Deben quedar quince coincidencias. Después incorporad el nombre del hotel mediante su identificador, ordenando de nuevo ambas entradas para esa clave. Aquí deben mantenerse las quince filas. Si cambia el recuento de una forma que no esperabais, investigad ese paso antes de seguir. La vista previa sirve precisamente para localizar dónde aparece el problema."
+  },
+  {
+    "title": "El informe debe poder entenderse sin Spoon",
+    "label": "Una fila por hotel y canal, con nombres claros.",
+    "active": 1,
+    "heading": "hotel · canal · n_reservas · cobrado_total",
+    "body": "Agrupar, contar reservas y sumar cobrado; escribir primero en temporal.",
+    "takeaway": "Repetir la carga debe sustituir el resultado, sin acumular filas.",
+    "narration": "Con el detalle preparado, ordenad por hotel y canal y agrupad. Para cada grupo calculáis el número de reservas y la suma del campo cobrado. El CSV tendrá las cuatro columnas que aparecen en pantalla. Usad cabecera, punto y coma, codificación UTF ocho e importes con punto decimal y dos decimales, sin separador de miles. Explicad que están en euros. Primero escribimos en temporal, todavía no publicamos. Y configuramos la salida para sustituir el resultado anterior, no para añadirlo debajo. En estos datos hay como máximo un cobro por reserva; explicad por qué tendríais que revisar el recuento si una reserva admitiera varios pagos."
+  },
+  {
+    "title": "Ahora buscamos las reservas que no encontraron pago",
+    "label": "Segunda transformación: reservas_sin_cobro.ktr.",
+    "active": 1,
+    "heading": "Unión izquierda → clave de cobro nula → listado de control",
+    "body": "Conservar id_reserva, hotel, canal, importe y motivo.",
+    "takeaway": "Comprobad ausencia de clave; no confundáis nulo con cero.",
+    "narration": "El segundo flujo responde a la otra pregunta. Esta vez queremos conservar todas las reservas al cruzarlas con cobros, así que ponemos reservas a la izquierda y usamos una unión izquierda. Antes renombramos la clave de la rama de cobros para reconocerla sin confundirla con la original. Tras el cruce, filtramos las filas donde esa clave del pago es nula. No buscamos un cobro igual a cero: buscamos que no exista coincidencia. Añadimos el nombre del hotel y escribimos el identificador, hotel, canal, importe y motivo. Aquí importe sigue siendo el precio de la reserva. El motivo será: sin cobro asociado en el archivo recibido."
+  },
+  {
+    "title": "Comprobad que las piezas vuelven a encajar",
+    "label": "Registrad esperado, obtenido y conclusión.",
+    "active": 2,
+    "heading": "13 grupos · 15 reservas cobradas · 3965.50 €",
+    "body": "Sin cobro: 4, 9, 11, 15 y 18. Quince más cinco son veinte.",
+    "takeaway": "Revisad cada grupo: un total correcto puede ocultar una mala asignación.",
+    "narration": "Ya tenemos dos archivos provisionales. Antes de automatizar, comprobadlos completos y anotad qué esperabais, qué obtuvisteis y qué concluís. El informe debe tener trece grupos, sumar quince reservas y totalizar tres mil novecientos sesenta y cinco euros con cincuenta céntimos. Laredo, en el canal web, tiene dos reservas y cuatrocientos noventa y seis euros con cincuenta céntimos. En el listado sin cobro quedan los identificadores cuatro, nueve, once, quince y dieciocho. Quince reservas cobradas más cinco sin cobro recuperan las veinte de entrada. Contrastad también cada grupo con la tabla de referencia: acertar el total no garantiza haber asignado bien cada importe."
+  },
+  {
+    "title": "Enseñad al proceso a detectar una salida incorrecta",
+    "label": "Dos transformaciones más: las validaciones.",
+    "active": 2,
+    "heading": "validar_informe.ktr + validar_sin_cobro.ktr",
+    "body": "Comprobar recuentos, totales, identificadores y duplicados.",
+    "takeaway": "Un archivo con solo cabecera debe provocar un error.",
+    "narration": "Las comprobaciones manuales os permiten entender el resultado. Ahora construiremos dos transformaciones que ayuden al job a detenerse cuando una salida no cumpla. La primera resume el CSV y comprueba sus grupos, reservas e importe total. La segunda comprueba los cinco identificadores esperados y que no haya duplicados. Si una condición falla, debe terminar con error mediante Abort. Hay un caso que no podéis olvidar: un archivo con solo cabecera existe, pero no contiene datos. Debe fallar también. El enunciado explica cómo tratar la entrada vacía. Estos números son referencias del conjunto de aula; en un cierre real los controles tendrían que adaptarse a sus entradas."
+  },
+  {
+    "title": "El job decide cuándo se puede publicar",
+    "label": "Guardad el procedimiento como cierre_hotel.kjb.",
+    "active": 2,
+    "heading": "Entradas → dos resultados → dos validaciones → publicación",
+    "body": "Ante un error, detener y registrar la causa.",
+    "takeaway": "Conservad el último informe publicado durante la preparación.",
+    "narration": "Con las cuatro transformaciones preparadas, llega el momento de coordinarlas. El job comprueba primero que estén las tres entradas. Después genera los dos resultados provisionales y ejecuta sus validaciones. Solo si todo termina correctamente copia los archivos a salida y registra éxito. Si falta una entrada o falla una transformación, una validación o una copia, debe detenerse con error. No borréis el último informe publicado al comenzar: un fallo de preparación debe dejarlo intacto. Y recordad un límite: copiar dos archivos no los publica a la vez como una sola operación. Si falla la segunda copia, tampoco podemos anunciar éxito."
+  },
+  {
+    "title": "Probad que funciona también fuera de la ventana de diseño",
+    "label": "Spoon diseña; Pan ejecuta transformaciones; Kitchen ejecuta el job.",
+    "active": 2,
+    "heading": "Primera ejecución → repetición → fallo → recuperación",
+    "body": "Comprobar las salidas y guardar el registro de cada prueba.",
+    "takeaway": "Kitchen no programa por sí solo una hora de ejecución.",
+    "narration": "Para demostrar que el procedimiento es reproducible, ejecutad las transformaciones con Pan y el job con Kitchen. No basta con que funcione al pulsar el botón de Spoon. Primero comprobad una ejecución sin informes previos. Después repetidla: los recuentos y los totales deben mantenerse, sin duplicados añadidos. A continuación probad una ruta de entrada inexistente sobre una copia de trabajo. El job debe fallar y no publicar un informe nuevo. Finalmente restaurad la ruta y comprobad la recuperación. Para esta práctica basta lanzar Kitchen manualmente; explicad que otro programador de tareas lo iniciaría de madrugada. El comando por sí solo no establece ese horario."
+  },
+  {
+    "title": "Probad también los controles de calidad",
+    "label": "Una validación útil debe rechazar un resultado defectuoso.",
+    "active": 2,
+    "heading": "Prueba 1: solo cabecera · Prueba 2: importe alterado",
+    "body": "Ejecutad la validación directamente sobre la copia modificada.",
+    "takeaway": "No regeneréis primero el archivo que queréis poner a prueba.",
+    "narration": "Todavía faltan dos pruebas para saber si los controles hacen su trabajo. En una copia del CSV provisional dejad únicamente la cabecera y ejecutad su validación: debe dar error. En otra prueba modificad un importe y comprobad que el control del total lo detecta. Atención al orden: aquí ejecutáis directamente la transformación de validación sobre el archivo alterado. Si lanzáis primero todo el job, volverá a generar el informe y eliminará el defecto que intentabais probar. Conservad el registro del fallo, explicad la causa y restaurad después el estado correcto. Una captura resulta útil cuando permite entender lo que ocurrió."
+  },
+  {
+    "title": "El trabajo avanza dentro del aula",
+    "label": "Tres sesiones orientativas; el profesor puede ampliar el tiempo.",
+    "heading": "Preparar e informar → controlar y validar → coordinar y probar",
+    "body": "Se puede compartir una duda; cada alumno construye y explica su solución.",
+    "takeaway": "El trabajo pendiente se continúa en otra sesión supervisada.",
+    "narration": "Hasta aquí hemos recorrido la solución completa, pero no tenéis que hacerla de una sola vez. La construiremos durante las clases, con ayuda del profesor. Como orientación, la primera sesión se dedica al paquete, el diseño y el informe. La segunda, al listado sin cobro y las validaciones. La tercera, al job y las pruebas. Si hace falta más tiempo, el profesor organizará otras sesiones. No trasladéis lo pendiente a casa: una ausencia o una incidencia se recuperará en un momento supervisado. Podéis comentar dudas con compañeros, indicando la ayuda recibida. Y en cada sesión guardaremos una pequeña fotografía del estado del trabajo, incluso si aún tiene errores.",
+    "active": 3
+  },
+  {
+    "title": "Antes de salir: guardar y entregar el avance",
+    "label": "Reservad los últimos 5–10 minutos de cada sesión.",
+    "heading": "Guardar → explicar → subir → registrar en Moodle",
+    "body": "Número de sesión + URL del repositorio + identificador completo del commit.",
+    "takeaway": "Un avance incompleto, bien explicado, también sirve para recibir ayuda.",
+    "narration": "Veamos ese cierre con calma. Primero guardad los procesos en Spoon. Después, en evidencias, escribid el registro de la sesión: qué habéis hecho, qué habéis probado, qué resultado obtuvisteis, qué falta y qué ayuda recibisteis. Mostrad al profesor el avance o el error que os bloquea. A continuación, cread un commit con un mensaje claro y subidlo a GitHub. Comprobad en el navegador que está disponible. Por último, entregad en Moodle el número de sesión, el enlace del repositorio y el identificador completo de ese commit. No hace falta que todo funcione todavía. Lo importante es registrar el estado real y dejar claro desde dónde continuaremos.",
+    "active": 3
+  },
+  {
+    "title": "Retomar el trabajo sin perder su historia",
+    "label": "Al empezar la siguiente clase, revisad la versión registrada.",
+    "heading": "Conservar avances → explicar diferencias → continuar",
+    "body": "Si falla la conexión, mostrad el trabajo y avisad antes de salir.",
+    "takeaway": "Los avances no añaden puntos: forman parte del criterio de repositorio.",
+    "narration": "Al comenzar la siguiente clase, retomad la versión registrada. Si hay diferencias, explicadlas al profesor antes de continuar; no borréis ni reescribáis los avances anteriores. ¿Y si al terminar falla Internet? Mostrad el trabajo antes de salir. El profesor registrará la incidencia y conservará una copia o acordará cómo subir ese mismo avance en la siguiente sesión. No hace falta resolverlo desde casa. Recordad también que GitHub no demuestra por sí solo dónde se editaron los archivos. El seguimiento se apoya en el trabajo observado, las evidencias y vuestra explicación. Estas entregas no añaden puntos a la nota: forman parte del criterio de repositorio. La defensa individual se mantiene.",
+    "active": 3
+  },
+  {
+    "title": "Preparad una entrega que otra persona pueda ejecutar",
+    "label": "El repositorio debe contar la historia completa del trabajo.",
+    "active": 3,
+    "heading": "Entradas + procesos + resultados + evidencias",
+    "body": "3 CSV originales · 4 transformaciones · 1 job · 2 CSV finales",
+    "takeaway": "El README será la puerta de entrada a vuestra solución.",
+    "narration": "Una vez superadas las pruebas, toca preparar la entrega. Volvamos a la directora: no le serviría un informe cuyo origen nadie pudiera explicar. Al profesor tampoco le basta una captura de Spoon. Por eso el repositorio incluirá los tres CSV originales de vuestro paquete y su archivo de asignación, las cuatro transformaciones, el job y los dos resultados finales. Añadid los registros de sesión, la tabla de comprobaciones y las seis pruebas comentadas. Para orientar a quien lo abra, preparad un README, es decir, el documento de presentación e instrucciones. Contad el objetivo, el recorrido de los datos, las versiones utilizadas y cómo ejecutar el trabajo. Indicad también el cierre de aula, las unidades, la fecha de generación y las ayudas o fuentes que habéis utilizado."
+  },
+  {
+    "title": "El README también habla a gerencia",
+    "label": "Presentar el resultado es explicar qué significa y qué no permite concluir.",
+    "active": 3,
+    "heading": "Cierre de aula · euros · 15 reservas con cobro · 3965.50 €",
+    "body": "Cinco reservas requieren revisión; no podemos calcular ocupación.",
+    "takeaway": "Un párrafo comprensible sin conocer los pasos de Spoon.",
+    "narration": "Ese README tiene dos destinatarios. Una parte ayuda a otra persona a ejecutar los procesos. Pero también necesitamos un párrafo para gerencia, sin nombres de pasos de Spoon. Imaginad que la directora abre el resultado y os pregunta qué puede concluir. Explicadle que representa el cierre de aula acordado, que los importes están en euros y que hay quince reservas con cobro por un total de tres mil novecientos sesenta y cinco euros con cincuenta céntimos. Las cinco reservas sin cobro asociado necesitan revisión; no demuestran por sí solas un impago. Tampoco podemos calcular ocupación con estos archivos. Para hacerlo pediríamos habitaciones disponibles y ocupadas durante un periodo definido. Indicad además cuándo generasteis el resultado, sin confundir esa fecha con la del cierre. Así la cifra llega acompañada de su significado y sus límites."
+  },
+  {
+    "title": "La prueba decisiva: abrirlo en otra carpeta",
+    "label": "No dependáis de rutas particulares de vuestro ordenador.",
+    "active": 3,
+    "heading": "Descargar una copia → leer el README → ejecutar Kitchen",
+    "body": "Cread temporal y salida; comprobad que se generan los dos informes.",
+    "takeaway": "No subáis Pentaho, Java, contraseñas ni archivos provisionales.",
+    "narration": "Pero escribir instrucciones no garantiza que funcionen. Hagamos una comprobación sencilla: descargad o clonad vuestro repositorio en otra carpeta e intentad ejecutarlo siguiendo solo el README. Si busca un archivo en vuestro escritorio antiguo, hemos encontrado algo que corregir. El enunciado explica las variables para construir rutas relativas a los procesos guardados. Recordad que Git no conserva carpetas vacías: indicad que hay que crear temporal y salida antes de ejecutar. Excluid los provisionales con el archivo gitignore, pero incluid los dos CSV finales comprobados. Tampoco subáis la instalación de Pentaho, Java o contraseñas. Queremos compartir vuestro trabajo, con lo necesario para reproducirlo."
+  },
+  {
+    "title": "Entregar es compartir una versión concreta",
+    "label": "En Moodle: URL del repositorio + identificador del commit.",
+    "active": 3,
+    "heading": "Guardar → registrar los cambios → subirlos → comprobar GitHub",
+    "body": "Puede ser público o privado, siempre accesible para el profesor.",
+    "takeaway": "Si es privado, comprobad que el profesor ha aceptado la invitación.",
+    "narration": "Con los avances registrados, ya podemos preparar la entrega final. A lo largo del trabajo, registrad avances con mensajes que expliquen qué habéis conseguido. Cada registro, o commit, identifica una versión. Al terminar, subid los cambios y abrid GitHub en el navegador para comprobar que realmente están allí. Guardar en Spoon no los sube, y hacer un commit local tampoco. En Moodle entregaréis el enlace del repositorio y el identificador completo del commit final revisado en el aula. Así todos sabemos qué versión estamos revisando. El repositorio puede ser privado: en ese caso, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado. No hace falta publicar vuestro trabajo para obtener la nota."
+  },
+  {
+    "title": "Cómo se valoran los ocho puntos del trabajo",
+    "label": "La rúbrica completa suma 10,00 puntos.",
+    "active": 3,
+    "heading": "Preparación: 2,00 · Resultados: 3,00 · Fiabilidad: 3,00",
+    "body": "Repositorio 1 · Diseño y comunicación 1 · Informe 2 · Sin cobro 1 · Job 2 · Pruebas 1",
+    "takeaway": "Los otros 2,00 puntos corresponden a la defensa individual.",
+    "narration": "Llegamos a la evaluación. La nota suma diez puntos, y podemos entenderla siguiendo el mismo recorrido que hemos hecho. El repositorio reproducible, con vuestro paquete y los avances por sesión, vale un punto; justificar el diseño y explicar el resultado a gerencia en el README, otro. Construir correctamente el informe de cobros vale dos, y el listado de reservas sin cobro, uno. Hasta aquí llevamos cinco. Asegurar el procedimiento mediante el job y sus validaciones vale dos más. Documentar las seis pruebas con evidencias e interpretación vale otro. Esos son los ocho puntos del trabajo entregado. Fijaos en la idea: se valora tanto el resultado como el camino que permite confiar en él. Antes de pasar a los dos puntos de la defensa, aclaremos cómo se valora ese punto que une diseño y comunicación."
+  },
+  {
+    "title": "Un punto reúne diseño y explicación a gerencia",
+    "label": "Diseño y comprensión del encargo: máximo 1,00 punto.",
+    "active": 3,
+    "heading": "1,00: ambas partes correctas · 0,50: parcial · 0,00: ninguna",
+    "body": "Se valoran el diseño justificado y el párrafo para gerencia en el README.",
+    "takeaway": "No añade puntos ni reduce los 2,00 de la defensa individual.",
+    "narration": "Pensemos en dos partes del mismo criterio. La primera demuestra que el recorrido y las reglas están justificados. La segunda demuestra que podéis comunicar el resultado a alguien que no conoce Pentaho. Si ambas están completas y son correctas, obtenéis un punto. Si solo se demuestra una de ellas, o hay errores u omisiones relevantes, corresponde medio punto. Si no se demuestra ninguna, son cero. Por ejemplo, un diseño bien explicado que no incluya el párrafo para gerencia deja ese criterio incompleto. No se exige un gráfico ni otra herramienta: queremos una explicación clara del cierre, las unidades, los resultados y sus límites. Esta precisión no cambia el total de diez puntos. Tampoco sustituye la defensa individual, que conserva sus dos puntos y evalúa vuestra comprensión personal."
+  },
+  {
+    "title": "La defensa individual: explicar vuestro recorrido",
+    "label": "Encuentro orientativo de 8–10 minutos con cada alumno.",
+    "active": 3,
+    "heading": "1,00 punto: explicar cómo funciona la solución",
+    "body": "Mostrad entradas, transformaciones, controles y resultados en Spoon.",
+    "takeaway": "Explicad vuestras decisiones con palabras propias.",
+    "narration": "Imaginad que el profesor se sienta a vuestro lado y abre vuestro proyecto. Durante unos ocho o diez minutos, orientativamente, le enseñaréis cómo funciona. Esta primera parte de la defensa vale un punto. Podéis empezar por una reserva concreta: de qué archivo sale, cómo encuentra su cobro, cómo recibe el nombre del hotel y dónde termina en el informe. Después mostrad qué ocurre con una reserva que no encuentra pago. Ese pequeño recorrido conecta las piezas mucho mejor que recitar todos los nombres de los pasos. Explicad por qué elegisteis cada operación y cómo comprobasteis el resultado. Es una conversación sobre vuestra solución, con vuestras palabras."
+  },
+  {
+    "title": "La defensa individual: razonar y comprobar",
+    "label": "1,00 punto: responder a las preguntas del profesor.",
+    "active": 3,
+    "heading": "¿Qué ocurre aquí? → Explicarlo → Comprobarlo",
+    "body": "Podrá pedir una pequeña prueba sobre una copia del trabajo.",
+    "takeaway": "Los ejemplos os orientan; las preguntas no son un cuestionario cerrado.",
+    "narration": "A partir de esa explicación, el profesor planteará las preguntas que considere necesarias. Esta segunda parte vale otro punto. Quizá pregunte por qué ordenáis antes de unir, por qué hay trece grupos y no veinte, o por qué sumáis cobrado en lugar de importe. También puede pedir que mostréis la rama que detiene el job o que comprobéis un fallo en una copia. Tomad un momento para pensar, explicad qué esperáis y contrastadlo con lo que sucede. No se trata de memorizar botones. Se trata de comprender y saber comprobar. Estos ejemplos no son una lista cerrada. Y la defensa es individual, aunque hayáis compartido dudas o ideas con compañeros."
+  },
+  {
+    "title": "La nota refleja lo que se demuestra en cada criterio",
+    "label": "Criterio completo: 100 % · Parcial: 50 % · No demostrado: 0 %.",
+    "active": 3,
+    "heading": "Ejemplo: un criterio de 2,00 puede obtener 2,00, 1,00 o 0,00",
+    "body": "Se suman los ocho criterios; la nota se expresa con dos decimales.",
+    "takeaway": "Revisad la rúbrica antes de entregar, no solo después de recibir la nota.",
+    "narration": "Para que sepáis cómo se asignan los puntos, la rúbrica utiliza la misma regla en cada criterio. Si está completo y correcto, se obtiene todo su valor. Si está demostrado parcialmente, pero quedan errores u omisiones relevantes, se obtiene la mitad. Si no se aporta evidencia o no se demuestra, son cero puntos. Por ejemplo, en un criterio que vale dos, esas posibilidades son dos, uno o cero. Al final se suman los ocho criterios y la nota se expresa con dos decimales. El repositorio y sus evidencias se valoran en los seis primeros; vuestra comprensión personal, en los dos de la defensa. La presentación escrita para gerencia se valora en el criterio de diseño; no se vuelve a puntuar como presentación del README durante la defensa. Allí comprobamos que entendéis lo que habéis construido y sabéis razonar ante las preguntas. Usad la rúbrica como guía para revisar lo que falta."
+  },
+  {
+    "title": "Cerrar la UT1 es construir algo que podéis explicar",
+    "label": "Preparar → construir → comprobar → entregar y defender.",
+    "active": 3,
+    "heading": "Una solución reproducible, documentada y comprendida",
+    "body": "Repositorio propio, versión identificada y explicación individual.",
+    "takeaway": "Después estudiaremos qué cambia al crecer hasta los 500 GB.",
+    "narration": "Volvamos al encargo del hotel para terminar. Hemos pasado de tres archivos a dos resultados útiles, con controles para no dar por bueno cualquier CSV. La habéis construido en el aula, dejando constancia de los avances. Ahora esa solución queda organizada en vuestro repositorio, otra persona puede reproducirla y vosotros podéis explicar las decisiones. Antes de entregar, comprobad tres cosas con calma: que los resultados son correctos, que la copia descargada funciona y que sabéis recorrer el proceso sin limitaros a leer un texto. Consultad en Moodle la fecha y entregad el enlace y la versión elegida. Con esta base cerramos la unidad. Después llegará la tarea de los quinientos gigabytes: estudiar qué cambia cuando crece una solución que ya entendemos."
+  }
+]

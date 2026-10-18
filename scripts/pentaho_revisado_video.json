@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Del cobro de Ana a un informe que se entiende",
+    "label": "Pentaho pone en práctica el recorrido de la UT1.",
+    "active": 0,
+    "heading": "Leer → preparar → comprobar → entregar",
+    "body": "Trabajamos con copias de reservas, cobros y hoteles.",
+    "takeaway": "La directora recibe un resultado, no el diseño del proceso.",
+    "narration": "Volvamos al hotel de Laredo. Ana ha reservado y pagado su estancia. Ya sabemos cómo recoger esos datos, conservarlos y elegir su formato. Ahora vamos a construir el proceso que los convierte en un informe. La directora quiere conocer el importe cobrado y el número de reservas por hotel y canal. No va a abrir nuestra herramienta de trabajo: necesita un fichero claro. Pentaho nos permitirá dibujar los pasos que preparan ese resultado. Seguiremos una jornada de trabajo, desde las primeras comprobaciones hasta la ejecución de madrugada, para entender qué hace cada pieza y por qué la necesitamos."
+  },
+  {
+    "title": "Primero dibujamos qué debe ocurrir",
+    "label": "PDI es la herramienta de integración de datos.",
+    "active": 0,
+    "heading": "Cada paso recibe filas y produce una salida",
+    "body": "Spoon permite configurar lecturas, filtros, uniones y escrituras.",
+    "takeaway": "Trabajamos sobre una copia, sin sustituir recepción.",
+    "narration": "La pieza que utilizamos se llama Pentaho Data Integration, o PDI. En Spoon, su entorno visual, colocamos pasos y los conectamos. Uno lee un fichero, otro filtra y otro escribe. Las conexiones indican hacia dónde pasan los datos. Parece sencillo, pero cada caja necesita reglas concretas: qué columna leer, qué tipo tiene y qué condición aplicar. El motor ejecuta lo que hemos configurado. Por eso, antes de arrastrar pasos, escribimos la entrada, la regla de negocio, la salida y cómo la comprobaremos. Estamos procesando una copia de las operaciones del hotel; no estamos registrando el pago de Ana en recepción."
+  },
+  {
+    "title": "Tres nombres, tres responsabilidades",
+    "label": "Diseñar, ejecutar una transformación y ejecutar un job.",
+    "active": 0,
+    "heading": "Spoon diseña · Pan ejecuta .ktr · Kitchen ejecuta .kjb",
+    "body": "Transformación: tratamiento de filas. Job: tareas y condiciones.",
+    "takeaway": "Una transformación cambia datos; un job organiza el trabajo.",
+    "narration": "Para no perdernos después, distingamos tres nombres. Spoon es donde diseñamos y probamos. Una transformación describe cómo se tratan las filas y se guarda en un archivo con extensión ktr. Pan permite ejecutarla sin abrir la ventana de diseño. Pero nuestra noche de trabajo puede requerir más cosas: comprobar un fichero, lanzar una transformación y detenerse si falla. Esa organización se llama job, se guarda con extensión kjb y se ejecuta con Kitchen. Pensad en dos niveles: dentro de la transformación preparamos los datos; desde el job coordinamos las tareas. Así evitamos confundir el recorrido de las filas con las condiciones de ejecución."
+  },
+  {
+    "title": "Antes del informe, comprobamos el entorno",
+    "label": "El taller 0 separa instalación y datos de negocio.",
+    "active": 0,
+    "heading": "Información del sistema → registro de ejecución",
+    "body": "Ver la versión de PDI y confirmar una ejecución sin errores.",
+    "takeaway": "Si falla esta prueba, todavía no es un problema del CSV.",
+    "narration": "Antes de introducir reservas, hagamos una prueba pequeña. En el taller cero pedimos información del sistema y la enviamos al registro de ejecución. Debe aparecer la versión de PDI y terminar sin errores. Guardamos y volvemos a abrir la transformación. Si no funciona, revisamos la instalación y la versión de Java indicadas por el aula. Todavía no hay un CSV ni una regla del hotel que pueda causar el fallo. Esta separación nos ahorra muchas pruebas a ciegas. Una vez que el entorno responde, ya podemos introducir datos y mirar qué ocurre con las filas."
+  },
+  {
+    "title": "Aprendemos el recorrido con una petición pequeña",
+    "label": "Taller 1: alojamientos de Trasmiera ordenados por código postal.",
+    "active": 0,
+    "heading": "Leer → filtrar Trasmiera → ordenar → escribir",
+    "body": "El filtro cambia el número de filas; ordenar solo cambia su posición.",
+    "takeaway": "El código postal puede necesitar conservarse como texto.",
+    "narration": "Nuestra primera petición será más pequeña que el informe de cobros: un listado de alojamientos de Trasmiera ordenado por código postal. Leemos el CSV y comprobamos nombres y tipos. Después aplicamos el filtro, conectando la salida que cumple la condición con la ordenación. Las filas de otras comarcas siguen la otra rama. Fijaos en los recuentos: filtrar reduce el conjunto; ordenar no debe quitar ni añadir alojamientos. Si necesitamos conservar ceros iniciales del código postal, lo tratamos como texto. Por último escribimos un CSV limpio. La opción de anchura mínima evita espacios de relleno que no necesitamos."
+  },
+  {
+    "title": "Comprobamos cada paso antes de seguir",
+    "label": "Las vistas previas ayudan a localizar el primer fallo.",
+    "active": 0,
+    "heading": "Preview + recuentos + registro de errores",
+    "body": "Campo correcto, tipo correcto y filas esperadas en cada salida.",
+    "takeaway": "Pan debe poder generar el resultado sin abrir Spoon.",
+    "narration": "¿Cómo sabemos que el listado está bien? Usamos la vista previa después de los cambios importantes. Si en la ordenación escribimos un nombre de campo que no existe, el registro nos ayuda a localizarlo. Corregimos ese paso y volvemos a comprobar. Después contrastamos el número de filas filtradas con el CSV final, sin contar su cabecera. También abrimos el fichero fuera de Spoon, como lo hará quien lo reciba. Por último lo ejecutamos con Pan y verificamos que se genera de nuevo. Las rutas deben servir en el equipo de ejecución. Funcionar solo al pulsar un botón en nuestro ordenador todavía no completa el procedimiento."
+  },
+  {
+    "title": "Ahora reunimos reservas y cobros",
+    "label": "Taller 2: solo entran las reservas que tienen cobro.",
+    "active": 1,
+    "heading": "reservas_pdi.csv + cobros_pdi.csv",
+    "body": "Reservas usa coma; cobros y hoteles usan punto y coma.",
+    "takeaway": "Estos archivos son los del taller de Pentaho.",
+    "narration": "Con ese primer recorrido dominado, volvemos a Ana y al informe de dirección. Leemos reservas y cobros desde los archivos de este apartado. Aunque se parecen a los de ingesta, no debemos intercambiarlos: tienen columnas y objetivos distintos. Aquí reservas usa coma como separador; cobros y hoteles usan punto y coma. Antes de unir, comprobamos que las claves tengan tipos compatibles. La regla de negocio pide únicamente reservas con cobro, así que usaremos una unión interna por el identificador de reserva. Si una reserva todavía no tiene pago, queda fuera del informe. Eso es aplicar la petición, no perder una fila por accidente."
+  },
+  {
+    "title": "Una unión necesita entradas preparadas",
+    "label": "Merge join compara flujos ordenados por su clave.",
+    "active": 1,
+    "heading": "Ordenar ambas entradas → Merge join por id_reserva",
+    "body": "Después unimos con hoteles, ordenando por id_hotel.",
+    "takeaway": "Comprobad entradas izquierda y derecha, claves y tipos.",
+    "narration": "Para hacer ese cruce utilizamos Merge join. Este paso necesita que ambas entradas estén ordenadas por la clave de unión. Por eso colocamos una ordenación por identificador de reserva en cada rama antes del cruce. También comprobamos qué entrada figura como izquierda y cuál como derecha; dibujar primero una flecha no sustituye esa configuración. Ahora el flujo contiene el cobro, pero solo conoce el identificador del hotel. Para añadir Laredo o Santander, lo unimos con la tabla de hoteles. La clave ha cambiado, de modo que volvemos a ordenar ambas entradas por identificador de hotel. Cada unión se prepara para su propia clave."
+  },
+  {
+    "title": "El detalle se convierte en un resumen",
+    "label": "La salida tendrá una fila por hotel y canal.",
+    "active": 1,
+    "heading": "Ordenar por hotel y canal → Group by",
+    "body": "SUM(cobrado) → cobrado_total · COUNT(id_reserva) → n_reservas",
+    "takeaway": "Agrupar cambia lo que representa cada fila.",
+    "narration": "Ya tenemos el detalle que necesitábamos. Ahora ordenamos por hotel y canal y lo entregamos al paso Group by. Para cada grupo sumamos cobrado y contamos las reservas. Los nombres de salida deben explicar el resultado, como cobrado total y número de reservas. Detengámonos en un cambio importante: antes cada fila representaba una reserva cobrada; después representa un grupo. El informe ya no conserva todo el detalle. En estos ficheros hay como máximo un cobro por reserva, así que el recuento es adecuado. Si Ana pudiera tener varios pagos, tendríamos que revisar la unión y el modo de contar para no duplicar su reserva."
+  },
+  {
+    "title": "Contrastamos el informe con los datos de origen",
+    "label": "El taller proporciona resultados de referencia.",
+    "active": 1,
+    "heading": "20 reservas → 15 coincidencias → 13 grupos",
+    "body": "El total cobrado debe ser 3.965,50 € con los archivos suministrados.",
+    "takeaway": "Una ejecución sin errores no demuestra que la cifra sea correcta.",
+    "narration": "Antes de entregar, hagamos una comprobación concreta. Con los archivos suministrados partimos de veinte reservas y quince cobros. La unión interna produce quince filas y la agrupación deja trece grupos. El total cobrado debe ser tres mil novecientos sesenta y cinco euros con cincuenta céntimos. Si no coincide, revisamos separadores, claves, tipos y posibles duplicados desde el primer punto donde cambie el resultado. No basta con una luz verde al terminar. Finalmente abrimos el CSV fuera de Spoon: dirección debe reconocer los hoteles, los canales y los importes sin tener que descifrar nuestros pasos de trabajo."
+  },
+  {
+    "title": "Otra salida para otra persona: el escaparate web",
+    "label": "Taller 3: seleccionar alojamientos y entregar JSON.",
+    "active": 2,
+    "heading": "Precio válido < 200 · mínimo de estancia ≤ 4",
+    "body": "Excluir habitación privada. Una puntuación nula no elimina por sí sola.",
+    "takeaway": "Un marcador -1 significa dato inválido, no precio barato.",
+    "narration": "El hotel también necesita preparar alojamientos para su escaparate web. Es otra petición, con otros datos, pero podemos reutilizar la manera de pensar. Seleccionamos columnas, damos nombres comprensibles a las claves y aplicamos las condiciones: precio válido menor de doscientos euros, estancia mínima válida de cuatro noches o menos y un tipo distinto de habitación privada. Cuatro noches sí cumple. Una puntuación ausente no justifica eliminar un alojamiento si cumple el resto. Si usamos menos uno para marcar un precio o unas noches desconocidas, el filtro debe excluirlo. Al escribir JSON configuramos los campos de salida y comprobamos que aparecen los diez alojamientos esperados, no objetos vacíos."
+  },
+  {
+    "title": "Dirección pregunta ahora por costa, ciudad e interior",
+    "label": "Taller 4: volvemos al detalle antes de agregar.",
+    "active": 2,
+    "heading": "Reservas cobradas + hoteles + cadenas",
+    "body": "Sumar noches e importes; después dividir ambos totales.",
+    "takeaway": "Precio por noche = importe total / noches totales.",
+    "narration": "Mientras tanto, dirección plantea una nueva pregunta: cuánto se cobra por noche en costa, ciudad e interior. El informe anterior ya perdió campos que necesitamos, así que volvemos al detalle de reservas cobradas, antes de agrupar. Añadimos la tabla de cadenas mediante su clave y preparamos la ordenación correspondiente. Después sumamos noches e importes para cada ámbito. El precio por noche se obtiene dividiendo ambos totales, siempre que las noches sean mayores que cero. No promediamos directamente precios de estancias con distinta duración: eso daría otro resultado. En costa, por ejemplo, los datos del taller reúnen treinta y cinco noches y dos mil trescientos noventa y cuatro euros con cincuenta céntimos."
+  },
+  {
+    "title": "Entregamos una salida que ya hemos comprobado",
+    "label": "Una carpeta del aula también es un destino válido.",
+    "active": 2,
+    "heading": "CSV local validado → carpeta, S3 o Azure",
+    "body": "Publicar debe conservar los grupos y los totales del resultado.",
+    "takeaway": "Si falla la subida, registramos el fallo y permitimos repetirla.",
+    "narration": "Ya podemos calcular y revisar el informe por ámbitos. El siguiente paso es dejarlo donde lo necesita el centro: una carpeta o, si el laboratorio lo permite, un almacenamiento en la nube. Primero comprobamos el CSV local. Cambiar de destino no debe alterar los grupos ni los totales. Si la subida falla, el proceso debe avisar y conservar una salida que permita repetirla. Las credenciales se configuran por los mecanismos del entorno, no dentro del archivo que entregamos o subimos al repositorio. La idea es sencilla: presentar bien significa entregar datos comprensibles y accesibles en el destino acordado, no obligatoriamente utilizar la nube."
+  },
+  {
+    "title": "El job ejecuta; el planificador fija la hora",
+    "label": "Taller 5: el job coordina las transformaciones.",
+    "active": 3,
+    "heading": "Kitchen ejecuta el .kjb; otro programa establece el horario",
+    "body": "En el taller 5 usamos una carpeta de pruebas y copias de las transformaciones.",
+    "takeaway": "El informe publicado se conserva aparte.",
+    "narration": "Tenemos las transformaciones. Ahora queremos coordinarlas para que puedan trabajar después del cierre de las once. Creamos un job y lo ejecutamos con Kitchen. Detengámonos en una diferencia: Kitchen ejecuta el trabajo, pero no programa por sí solo la hora. Para lanzarlo de madrugada utilizaríamos el programador de tareas del sistema u otro planificador. En el taller cinco vamos a practicar las condiciones del job dentro de una carpeta de pruebas. Preparad copias de las transformaciones para que escriban allí, y guardad aparte cualquier informe válido que necesitéis conservar. Ahora sí podemos experimentar sin confundir una salida de ensayo con el último informe publicado."
+  },
+  {
+    "title": "Probamos las condiciones sobre una copia",
+    "label": "El fichero puede existir y estar incompleto.",
+    "active": 3,
+    "heading": "Copia de pruebas: comprobar → borrar si existe → regenerar",
+    "body": "Si falla la transformación o falta su salida, el job debe detenerse.",
+    "takeaway": "Existir no demuestra que un CSV tenga datos correctos.",
+    "narration": "Dentro de esa carpeta, el job comprueba si existe la copia del informe anterior y, si existe, la borra. Después ejecuta la transformación del informe por hotel. Solo seguimos si termina correctamente y aparece su salida. El informe por ámbitos vuelve a leer las fuentes; no consume el agregado anterior. Probad tres situaciones: que no haya copia previa, que ya exista y que una ruta de entrada sea incorrecta. En la tercera, el job debe detenerse con error. Recordad también que un CSV puede existir y contener solo la cabecera. Comprobar su presencia es un primer control, pero no valida sus filas ni sus importes. Y quitad los mensajes que esperan una respuesta en pantalla cuando ejecutéis sin supervisión."
+  },
+  {
+    "title": "Del ensayo a una publicación fiable",
+    "label": "El fichero puede existir y estar incompleto.",
+    "active": 3,
+    "heading": "Generar en temporal → validar → publicar en salida",
+    "body": "Un fallo de preparación conserva el último informe correcto.",
+    "takeaway": "El borrado previo del ensayo no se aplica al informe publicado.",
+    "narration": "Esa limitación nos lleva al siguiente paso, que aplicaremos en la práctica integradora. Allí no empezamos borrando el informe publicado. Generamos los dos resultados en temporal, comprobamos su contenido y solo después los copiamos a salida. Si la lectura o la validación falla, el resultado anterior sigue disponible. ¿Veis cómo encajan las dos actividades? El taller enseña a configurar condiciones con una copia que podemos borrar; la práctica añade los controles necesarios para publicar con más confianza. Copiar dos archivos tampoco es una operación indivisible: si falla una copia, el job debe avisar y no anunciar éxito. Lo importante es saber qué versión puede utilizar quien recibe el informe."
+  },
+  {
+    "title": "El mismo recorrido llega a una base de datos",
+    "label": "Taller 6, cuando el aula dispone de una base.",
+    "active": 3,
+    "heading": "Lookup consulta · Insert crea · Update modifica",
+    "body": "El campo fecha del CSV se corresponde con fecha_inicio en la tabla.",
+    "takeaway": "Consultar un huésped no equivale a crear una incidencia.",
+    "narration": "Nos queda una situación distinta del mismo hotel. Las incidencias del mostrador llegan en CSV y necesitamos consultar o modificar una base de datos. Un lookup busca información, por ejemplo el nombre del huésped, para añadirla al flujo. Insert crea una fila y Update modifica una fila existente. Son operaciones diferentes. Primero probamos la conexión y comprobamos tipos y correspondencias: la fecha del CSV se escribe como fecha de inicio en la tabla. Si el lookup no encuentra al huésped, debemos decidir qué hacer con esa fila. Trabajamos desde un estado inicial conocido para que una ejecución anterior no confunda las pruebas."
+  },
+  {
+    "title": "Dos filas rechazadas no significan E igual a dos",
+    "label": "Actualizar e insertar no resuelven el mismo problema.",
+    "active": 3,
+    "heading": "Con salida de errores: comprobar las filas 5 y 99",
+    "body": "Sin tratamiento, la ejecución puede detenerse ante la primera clave inexistente.",
+    "takeaway": "Contad las filas rechazadas y consultad los mensajes de ejecución.",
+    "narration": "En este ejemplo, después de la inserción inicial, intentamos actualizar cuatro identificadores. Uno y tres tienen una fase que puede actualizarse. Cinco corresponde a una huésped existente, pero no tiene esa fase; noventa y nueve tampoco encuentra destino. Son dos filas sin correspondencia. Ahora bien, no esperéis necesariamente un contador de ejecución con dos errores. Sin tratamiento, el paso puede detenerse al encontrar la primera. Para observar ambas, restauramos el estado inicial y configuramos la salida de errores hacia el registro, conservando la clave y el motivo del rechazo. Repetimos sin un umbral que detenga antes la prueba. Debemos encontrar allí cinco y noventa y nueve, y comprobar en la tabla las actualizaciones de uno y tres. Una cosa son las filas rechazadas; otra, los errores que detienen la ejecución."
+  },
+  {
+    "title": "Decidimos qué hacer con cada rechazo",
+    "label": "Actualizar e insertar no resuelven el mismo problema.",
+    "active": 3,
+    "heading": "Registrar la causa y decidir si permite continuar",
+    "body": "Insert / Update requiere claves y validación del huésped.",
+    "takeaway": "Gestionar un rechazo no convierte su dato en correcto.",
+    "narration": "Con los rechazos identificados, falta decidir qué hacemos con ellos. En un proceso real, la regla de negocio dirá si apartarlos permite continuar o si hay que detener la publicación. No basta con esconder el error para conseguir una ejecución en verde. Y si cambiamos a Insert Update, podremos insertar cuando no exista la fila, pero seguimos necesitando validar al huésped. Las claves configuradas en el paso tampoco sustituyen las restricciones de la base de datos. Volvamos al objetivo: queremos saber qué se actualizó, qué quedó pendiente y por qué. Esa explicación forma parte del resultado que entregamos."
+  },
+  {
+    "title": "Terminamos con un procedimiento y una entrega",
+    "label": "Procesar y presentar completan el recorrido de la UT1.",
+    "active": -1,
+    "heading": "Entrada → regla → salida → comprobación",
+    "body": "Spoon para diseñar; Pan o Kitchen para ejecutar; CSV, JSON o tabla para consumir.",
+    "takeaway": "El resultado debe entenderse y poder reproducirse.",
+    "narration": "Volvamos a la directora. No recibe las cajas y flechas de Spoon: recibe un informe que responde a su pregunta. Detrás quedan las lecturas, los filtros, las uniones ordenadas, los cálculos y los controles que lo hacen fiable. Hemos empezado con un listado pequeño y terminado con una ejecución que sabe continuar o detenerse. Esa es la conexión entre los talleres. Para explicar vuestra solución, contad qué entra, qué regla aplicáis, qué sale y cómo lo comprobáis. Después ejecutadla sin depender de la ventana de diseño y abrid el resultado como lo haría su destinatario. Así completamos el trabajo: procesar los datos y entregar algo útil y comprensible."
+  }
+]
