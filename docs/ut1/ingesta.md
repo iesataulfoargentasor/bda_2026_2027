@@ -35,16 +35,16 @@ Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifr
 
 ## Vídeo: el viaje de la reserva y el cobro de Ana
 
-Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de distintos sistemas, los relacionamos y publicamos un resultado fiable. El recorrido explica las cargas incrementales, cómo evitar duplicados, las diferencias entre ETL y ELT y el papel de las colas en la entrada de eventos. **Duración: 12 minutos y 32 segundos.**
+Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de distintos sistemas, los relacionamos y publicamos un resultado fiable. El recorrido explica las cargas incrementales, cómo evitar duplicados, las diferencias entre ETL y ELT y el papel de las colas en la entrada de eventos. La comparación utiliza el mismo destino y aclara cuándo publicar un informe validado y qué datos conservar para recalcularlo. **Duración: 14 minutos y 53 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/ingesta-natural-portada.jpg" aria-label="Ingesta: el viaje de la reserva y el cobro de Ana" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/ingesta-natural.mp4" type="video/mp4">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/ingesta-etl-elt-portada.jpg" aria-label="Ingesta: el viaje de la reserva y el cobro de Ana" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/ingesta-etl-elt.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
 El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
 
-[Descargar el vídeo](../assets/ut1/ingesta-natural.mp4) · [Leer la transcripción](../assets/ut1/ingesta-natural.txt) · [Descargar los subtítulos](../assets/ut1/ingesta-natural.es.srt)
+[Descargar el vídeo](../assets/ut1/ingesta-etl-elt.mp4) · [Leer la transcripción](../assets/ut1/ingesta-etl-elt.txt) · [Descargar los subtítulos](../assets/ut1/ingesta-etl-elt.es.srt)
 
 ## Introducción
 
