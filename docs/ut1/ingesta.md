@@ -408,7 +408,17 @@ Para compararlas, ordenad por `id_reserva`, revisad los nombres y tipos de las c
 
 - Analítica: está pensada para leer mucho y agregar (sumar por hotel), no para que recepción pique una reserva.
 - Embebida: no instaláis un servidor. Es una librería (`pip install duckdb`). Corre **dentro** de Python, en vuestro proceso.
-- Habla **SQL** directo sobre ficheros locales (CSV, Parquet, JSON) **sin** cargarlos antes en PostgreSQL. Por dentro es **columnar**: guarda por columnas, así que “importe por hotel” no tiene que leer las doce columnas.
+- Habla **SQL** directo sobre ficheros locales (CSV, Parquet, JSON) **sin** cargarlos antes en PostgreSQL.
+- Su motor procesa datos en bloques de valores y su almacenamiento propio es **columnar**. Eso no cambia la organización física de los archivos externos que consulta: un CSV sigue siendo texto organizado en registros, aunque lo leamos con DuckDB.
+
+Para calcular el **importe por hotel**, distinguimos dos situaciones:
+
+| Archivo consultado | Qué puede ahorrar el motor | Qué implica leer ese formato |
+| --- | --- | --- |
+| **CSV** | Puede evitar convertir o materializar campos que la consulta no necesita; es decir, no tiene que construir todos sus valores para trabajar con ellos | Debe recorrer el texto y reconocer la estructura de los registros, incluidos separadores y comillas. Seleccionar dos columnas no permite saltarse físicamente las demás como en Parquet |
+| **Parquet** | Puede leer las columnas necesarias para la consulta y omitir los bloques de otras columnas | La organización columnar y los metadatos permiten localizar esos bloques; los filtros también pueden evitar leer grupos de filas cuando sus estadísticas permiten descartarlos |
+
+Por tanto, **usar un motor columnar no convierte un CSV en un archivo columnar**. La reducción de trabajo dentro del motor y la reducción de bytes leídos del archivo son cosas distintas. Esta diferencia es la que aplicamos en [Formatos de datos](formatos.md) y su cuestionario. Véase también la [documentación de DuckDB sobre lectura de Parquet](https://duckdb.org/docs/stable/data/parquet/overview).
 
 Para ETL, eso significa: extraes (lees el CSV como tabla), transformas (un `SELECT` con `JOIN` y `WHERE`) y cargas (`COPY` a otro fichero).
 
