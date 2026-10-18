@@ -1,0 +1,1192 @@
+1
+00:00:00,100 --> 00:00:01,955
+Vamos a volver al cobro de Ana.
+
+2
+00:00:02,487 --> 00:00:04,618
+Ella ha pagado su estancia en Laredo
+
+3
+00:00:04,631 --> 00:00:06,947
+y, a la mañana siguiente, la directora ve
+
+4
+00:00:06,960 --> 00:00:08,684
+el importe del hotel en un panel.
+
+5
+00:00:09,605 --> 00:00:12,842
+Entre esos dos momentos han pasado bastantes
+cosas.
+
+6
+00:00:13,789 --> 00:00:15,645
+Ya hemos estudiado cómo guardar
+
+7
+00:00:15,658 --> 00:00:17,447
+los datos y cómo procesarlos.
+
+8
+00:00:18,355 --> 00:00:20,552
+Ahora vamos a conectar esas piezas.
+
+9
+00:00:21,474 --> 00:00:22,776
+¿Quién recoge el pago?
+
+10
+00:00:23,697 --> 00:00:25,552
+¿Quién comprueba su significado?
+
+11
+00:00:26,460 --> 00:00:28,908
+¿Quién calcula y quién presenta el
+resultado?
+
+12
+00:00:29,816 --> 00:00:33,105
+Organizar esa colaboración es diseñar una
+arquitectura.
+
+13
+00:00:34,013 --> 00:00:36,526
+La entenderemos siguiendo el cobro, en lugar
+
+14
+00:00:36,539 --> 00:00:38,631
+de empezar por una lista de programas.
+
+15
+00:00:39,552 --> 00:00:41,421
+El primer paso es acercarnos a
+
+16
+00:00:41,434 --> 00:00:43,631
+los sistemas donde ocurrió la operación.
+
+17
+00:00:44,526 --> 00:00:46,684
+La reserva está en el programa del hotel
+
+18
+00:00:46,697 --> 00:00:48,881
+y el pago puede venir de una pasarela.
+
+19
+00:00:49,829 --> 00:00:52,750
+La ingesta obtiene una copia para nuestro
+trabajo.
+
+20
+00:00:53,671 --> 00:00:56,158
+Pero imaginad que la fuente entrega los
+cobros
+
+21
+00:00:56,171 --> 00:00:58,987
+en varias páginas y solo recogemos la
+primera.
+
+22
+00:00:59,921 --> 00:01:02,131
+El archivo podría parecer correcto y,
+
+23
+00:01:02,289 --> 00:01:04,263
+aun así, faltar el pago de Ana.
+
+24
+00:01:05,171 --> 00:01:07,092
+Por eso comprobamos qué periodo hemos
+
+25
+00:01:07,105 --> 00:01:09,474
+recibido y si la entrega está completa.
+
+26
+00:01:10,395 --> 00:01:13,026
+Antes de calcular nada, necesitamos saber
+
+27
+00:01:13,039 --> 00:01:15,105
+que tenemos los datos que esperábamos.
+
+28
+00:01:16,026 --> 00:01:19,197
+Una vez recibidos, aparece otra pregunta:
+¿cómo
+
+29
+00:01:19,210 --> 00:01:21,973
+reconocemos qué reserva corresponde a cada
+pago?
+
+30
+00:01:22,881 --> 00:01:24,592
+Quizá una fuente llama al hotel
+
+31
+00:01:24,605 --> 00:01:26,631
+Laredo y otra utiliza un código.
+
+32
+00:01:27,526 --> 00:01:30,079
+Incluso el mismo código podría significar
+
+33
+00:01:30,092 --> 00:01:31,960
+algo distinto en dos sistemas.
+
+34
+00:01:32,881 --> 00:01:35,868
+La integración establece esas
+correspondencias.
+
+35
+00:01:36,776 --> 00:01:39,921
+También pone de acuerdo fechas, monedas y
+estados.
+
+36
+00:01:40,829 --> 00:01:43,355
+Pensad en ello como preparar un idioma
+común.
+
+37
+00:01:44,276 --> 00:01:47,329
+No basta con cambiar mayúsculas y
+minúsculas;
+
+38
+00:01:47,605 --> 00:01:49,566
+debemos comprobar que las piezas que
+
+39
+00:01:49,579 --> 00:01:52,197
+vamos a unir representan realmente lo mismo.
+
+40
+00:01:53,105 --> 00:01:54,881
+Así evitamos atribuir a otro
+
+41
+00:01:54,895 --> 00:01:56,145
+hotel el cobro de Ana.
+
+42
+00:01:57,052 --> 00:01:59,974
+Ya sabemos qué hemos recibido y cómo
+interpretarlo.
+
+43
+00:02:00,895 --> 00:02:03,868
+Ahora necesitamos conservarlo para poder
+trabajar
+
+44
+00:02:03,881 --> 00:02:05,987
+y, si hace falta, volver atrás.
+
+45
+00:02:06,921 --> 00:02:09,421
+Guardamos originales con su contexto y
+
+46
+00:02:09,434 --> 00:02:11,868
+organizamos aparte los datos preparados.
+
+47
+00:02:12,776 --> 00:02:15,763
+Recordad el ejemplo del mensaje tardío: la
+
+48
+00:02:15,776 --> 00:02:17,881
+fecha en que recibimos un pago puede ser
+
+49
+00:02:17,895 --> 00:02:19,776
+distinta de la fecha en que ocurrió.
+
+50
+00:02:20,724 --> 00:02:24,605
+Si conservamos ambas, podremos asignarlo al
+cierre adecuado.
+
+51
+00:02:25,513 --> 00:02:28,184
+Esta responsabilidad de almacenamiento
+también
+
+52
+00:02:28,197 --> 00:02:31,250
+incluye permisos, conservación y
+recuperación.
+
+53
+00:02:32,158 --> 00:02:34,145
+El lago y el almacén de informes que
+
+54
+00:02:34,158 --> 00:02:37,592
+vimos antes son opciones para resolver esas
+necesidades.
+
+55
+00:02:38,500 --> 00:02:40,368
+Con ese material podemos preparar
+
+56
+00:02:40,381 --> 00:02:42,000
+la cifra que quiere dirección.
+
+57
+00:02:42,908 --> 00:02:45,552
+Pero antes de sumar, acordamos qué cuenta
+como
+
+58
+00:02:45,566 --> 00:02:49,671
+cobro: pagos confirmados, devoluciones y
+posibles duplicados.
+
+59
+00:02:50,592 --> 00:02:52,987
+El procesamiento aplica esas reglas.
+
+60
+00:02:53,908 --> 00:02:55,460
+Fijaos en que integración y
+
+61
+00:02:55,474 --> 00:02:58,881
+procesamiento pueden realizar
+transformaciones parecidas.
+
+62
+00:02:59,789 --> 00:03:03,210
+Los distinguimos para explicar su propósito,
+no porque
+
+63
+00:03:03,224 --> 00:03:06,487
+cada uno necesite obligatoriamente un
+programa separado.
+
+64
+00:03:07,408 --> 00:03:10,013
+Si mañana repetimos el cálculo con los
+mismos
+
+65
+00:03:10,026 --> 00:03:13,500
+datos y reglas, debemos obtener el resultado
+esperado.
+
+66
+00:03:14,408 --> 00:03:17,776
+Si cambia, necesitamos una razón que podamos
+explicar,
+
+67
+00:03:17,960 --> 00:03:20,250
+no una cifra que varíe sin saber por qué.
+
+68
+00:03:21,171 --> 00:03:24,092
+Llega la mañana y la directora selecciona
+Laredo.
+
+69
+00:03:25,013 --> 00:03:27,052
+La consulta recupera el indicador
+
+70
+00:03:27,066 --> 00:03:28,868
+y la visualización lo presenta.
+
+71
+00:03:29,776 --> 00:03:31,987
+Parece el final del trabajo, pero aún
+
+72
+00:03:32,000 --> 00:03:35,487
+debemos ayudarla a interpretarlo: qué día
+resume, en
+
+73
+00:03:35,500 --> 00:03:37,697
+qué moneda está y cuándo se actualizó.
+
+74
+00:03:38,605 --> 00:03:41,013
+Si faltan los datos de un hotel, mostrar
+
+75
+00:03:41,026 --> 00:03:43,316
+cero daría a entender que no cobró nada.
+
+76
+00:03:44,224 --> 00:03:45,697
+Y si la ocupación baja,
+
+77
+00:03:45,842 --> 00:03:47,934
+quizá haya habitaciones en reforma.
+
+78
+00:03:48,855 --> 00:03:50,645
+El panel muestra el resultado;
+
+79
+00:03:50,789 --> 00:03:53,131
+investigar su causa requiere contexto.
+
+80
+00:03:54,052 --> 00:03:56,118
+Por eso una buena arquitectura también
+
+81
+00:03:56,131 --> 00:03:58,329
+cuida cómo entregamos la información.
+
+82
+00:03:59,047 --> 00:04:01,008
+Ahora detengámonos un momento en
+
+83
+00:04:01,021 --> 00:04:02,587
+quién puede ver esos datos.
+
+84
+00:04:03,494 --> 00:04:06,113
+Para conocer el total cobrado, la directora
+no
+
+85
+00:04:06,126 --> 00:04:08,837
+necesita abrir el documento de identidad de
+Ana.
+
+86
+00:04:09,375 --> 00:04:12,796
+Marketing tampoco necesita todos sus datos
+personales.
+
+87
+00:04:13,718 --> 00:04:16,454
+La seguridad acompaña el recorrido completo:
+
+88
+00:04:16,586 --> 00:04:19,481
+fuentes, archivos, procesos y paneles.
+
+89
+00:04:20,415 --> 00:04:22,757
+Damos a cada tarea los permisos y datos
+
+90
+00:04:22,770 --> 00:04:26,507
+que realmente necesita; eso es aplicar el
+menor privilegio.
+
+91
+00:04:27,415 --> 00:04:30,323
+Si protegemos el panel pero dejamos los
+originales
+
+92
+00:04:30,336 --> 00:04:33,783
+accesibles para cualquiera, la protección
+queda incompleta.
+
+93
+00:04:34,718 --> 00:04:36,178
+No es un último paso que
+
+94
+00:04:36,191 --> 00:04:38,178
+añadimos cuando ya hemos terminado.
+
+95
+00:04:39,099 --> 00:04:42,310
+Además de proteger el recorrido, debemos
+observarlo.
+
+96
+00:04:43,218 --> 00:04:46,020
+Imaginad que el proceso acaba sin errores,
+pero
+
+97
+00:04:46,033 --> 00:04:49,108
+un filtro elimina todos los cobros de
+Laredo.
+
+98
+00:04:50,032 --> 00:04:51,821
+El programa ha terminado; el
+
+99
+00:04:51,834 --> 00:04:54,098
+resultado, sin embargo, está mal.
+
+100
+00:04:54,658 --> 00:04:58,000
+Por eso la monitorización revisa también
+filas recibidas,
+
+101
+00:04:58,131 --> 00:05:01,500
+descartadas y publicadas, además de fechas y
+tiempos.
+
+102
+00:05:02,421 --> 00:05:04,973
+Si algo no cuadra, el linaje nos permite
+
+103
+00:05:04,987 --> 00:05:07,237
+seguir la cifra hacia atrás: del panel
+
+104
+00:05:07,250 --> 00:05:10,237
+al cálculo, y del cálculo al pago original.
+
+105
+00:05:11,158 --> 00:05:14,000
+Así buscamos dónde se produjo el problema,
+en
+
+106
+00:05:14,013 --> 00:05:16,802
+lugar de intentar arreglarlo cambiando el
+gráfico.
+
+107
+00:05:17,710 --> 00:05:19,131
+Para repetir este trabajo
+
+108
+00:05:19,144 --> 00:05:21,894
+cada noche, necesitamos también coordinarlo.
+
+109
+00:05:22,409 --> 00:05:25,436
+No podemos publicar mientras faltan
+validaciones.
+
+110
+00:05:26,357 --> 00:05:28,567
+La orquestación organiza ese orden y
+
+111
+00:05:28,580 --> 00:05:30,738
+decide qué hacer si una tarea falla.
+
+112
+00:05:31,256 --> 00:05:34,150
+Ahora imaginad que cambia la definición de
+cobro.
+
+113
+00:05:35,058 --> 00:05:37,006
+Primero alguien debe acordar el nuevo
+
+114
+00:05:37,019 --> 00:05:40,032
+significado: ahí interviene el gobierno del
+dato.
+
+115
+00:05:40,940 --> 00:05:42,874
+Después probamos y versionamos el
+
+116
+00:05:42,887 --> 00:05:45,045
+cambio, con prácticas de DataOps.
+
+117
+00:05:45,953 --> 00:05:48,664
+Finalmente lo ejecutamos de forma
+controlada.
+
+118
+00:05:49,585 --> 00:05:52,098
+Son responsabilidades que se complementan.
+
+119
+00:05:53,032 --> 00:05:55,979
+Su utilidad se entiende mejor cuando las
+relacionamos
+
+120
+00:05:55,993 --> 00:05:59,006
+con un cambio concreto que el equipo
+necesita realizar.
+
+121
+00:05:59,914 --> 00:06:01,729
+Y como los fallos pueden ocurrir,
+
+122
+00:06:01,900 --> 00:06:04,032
+vamos a preparar uno en nuestro ejemplo.
+
+123
+00:06:04,940 --> 00:06:06,335
+Son las dos de la mañana
+
+124
+00:06:06,348 --> 00:06:07,782
+y una máquina se detiene.
+
+125
+00:06:08,703 --> 00:06:11,308
+¿Cuánto podemos tardar en recuperar el
+servicio?
+
+126
+00:06:12,229 --> 00:06:14,177
+Ese objetivo es el RTO.
+
+127
+00:06:15,098 --> 00:06:17,861
+Otra pregunta distinta es cuánta pérdida de
+datos
+
+128
+00:06:17,874 --> 00:06:21,558
+aceptaríamos, expresada en tiempo: ese es el
+RPO.
+
+129
+00:06:22,479 --> 00:06:25,427
+Necesitamos copias y procedimientos que
+respondan
+
+130
+00:06:25,440 --> 00:06:27,400
+a ambos, y probar que funcionan.
+
+131
+00:06:28,321 --> 00:06:31,335
+Al recuperar, tampoco podemos duplicar el
+cobro de
+
+132
+00:06:31,348 --> 00:06:34,466
+Ana ni presentar un cierre incompleto como
+definitivo.
+
+133
+00:06:35,374 --> 00:06:37,953
+Recuperar bien forma parte del diseño, no
+
+134
+00:06:37,966 --> 00:06:39,966
+de la improvisación del día del fallo.
+
+135
+00:06:40,874 --> 00:06:42,453
+Hasta aquí hemos preparado el
+
+136
+00:06:42,466 --> 00:06:44,111
+cierre anterior para las ocho.
+
+137
+00:06:45,032 --> 00:06:47,953
+Ahora la directora pide algo más: cuánto
+llevamos
+
+138
+00:06:47,966 --> 00:06:50,545
+cobrado hoy, hasta el momento de la
+consulta.
+
+139
+00:06:51,453 --> 00:06:54,321
+Para este nuevo indicador acordamos contar
+desde las
+
+140
+00:06:54,335 --> 00:06:56,111
+doce de la noche que inicia hoy.
+
+141
+00:06:57,019 --> 00:06:59,440
+Es una pregunta distinta del cierre de ayer.
+
+142
+00:07:00,361 --> 00:07:03,111
+Vamos a poner horas y cifras sencillas: los
+
+143
+00:07:03,124 --> 00:07:05,545
+cobros de hoy hasta las diez suman mil
+euros.
+
+144
+00:07:06,466 --> 00:07:07,887
+A las diez y cinco llega
+
+145
+00:07:07,900 --> 00:07:09,821
+el pago de Ana, de cien euros.
+
+146
+00:07:10,756 --> 00:07:12,861
+Para este ejemplo suponemos que no hay
+
+147
+00:07:12,874 --> 00:07:16,150
+otros cobros nuevos, devoluciones ni
+llegadas tardías.
+
+148
+00:07:17,058 --> 00:07:19,058
+Queremos mostrar mil cien euros.
+
+149
+00:07:19,979 --> 00:07:21,835
+Compararemos Lambda y Kappa con ese
+
+150
+00:07:21,848 --> 00:07:24,032
+mismo periodo y esas mismas reglas.
+
+151
+00:07:24,940 --> 00:07:26,493
+Así veremos qué cambia en el
+
+152
+00:07:26,506 --> 00:07:29,164
+recorrido sin cambiar lo que estamos
+calculando.
+
+153
+00:07:30,071 --> 00:07:31,545
+Empecemos por Lambda.
+
+154
+00:07:32,466 --> 00:07:34,545
+Un camino trabaja por lotes sobre los
+
+155
+00:07:34,558 --> 00:07:37,335
+datos conservados y deja una vista
+preparada.
+
+156
+00:07:38,282 --> 00:07:41,243
+Para nuestra consulta, esa vista aporta los
+cobros
+
+157
+00:07:41,256 --> 00:07:43,282
+de hoy hasta las diez: mil euros.
+
+158
+00:07:44,216 --> 00:07:46,993
+El otro camino atiende los eventos
+posteriores a
+
+159
+00:07:47,006 --> 00:07:49,729
+ese corte que el lote todavía no ha
+incorporado.
+
+160
+00:07:50,245 --> 00:07:51,784
+Ahí están los cien de Ana,
+
+161
+00:07:51,942 --> 00:07:53,732
+recibidos a las diez y cinco.
+
+162
+00:07:54,640 --> 00:07:57,153
+Cuando consultamos, combinamos esas dos
+
+163
+00:07:57,166 --> 00:07:58,890
+partes y obtenemos mil cien.
+
+164
+00:07:59,784 --> 00:08:02,416
+Detengámonos en la frontera: mil euros
+
+165
+00:08:02,429 --> 00:08:04,113
+hasta las diez y cien después.
+
+166
+00:08:05,021 --> 00:08:07,640
+Aunque conservemos meses de histórico, esta
+
+167
+00:08:07,653 --> 00:08:10,153
+consulta selecciona solo el periodo de hoy.
+
+168
+00:08:11,061 --> 00:08:13,140
+No sumamos el cierre de ayer ni todo
+
+169
+00:08:13,153 --> 00:08:15,074
+lo acumulado desde que abrió el hotel.
+
+170
+00:08:15,982 --> 00:08:17,482
+El periodo y el corte nos
+
+171
+00:08:17,495 --> 00:08:19,113
+dicen qué aporta cada camino.
+
+172
+00:08:20,034 --> 00:08:21,916
+Ahora dejamos avanzar el tiempo
+
+173
+00:08:21,929 --> 00:08:23,074
+hasta las diez y diez.
+
+174
+00:08:23,995 --> 00:08:27,153
+En este ejemplo ejecutamos otro lote, que
+incorpora
+
+175
+00:08:27,166 --> 00:08:29,008
+el pago de Ana en la vista de hoy.
+
+176
+00:08:29,916 --> 00:08:31,837
+La base pasa a mil cien euros y
+
+177
+00:08:31,850 --> 00:08:33,929
+el corte avanza hasta las diez y diez.
+
+178
+00:08:34,837 --> 00:08:37,929
+¿Seguimos añadiendo los cien desde el camino
+reciente?
+
+179
+00:08:38,850 --> 00:08:41,666
+No: ese pago ya contribuye desde la base.
+
+180
+00:08:42,574 --> 00:08:45,324
+Su aportación reciente a esta consulta deja
+de
+
+181
+00:08:45,337 --> 00:08:48,008
+sumarse, y el total sigue siendo mil cien.
+
+182
+00:08:48,916 --> 00:08:50,324
+No ha llegado dinero nuevo
+
+183
+00:08:50,337 --> 00:08:51,850
+ni hemos cambiado de día.
+
+184
+00:08:52,771 --> 00:08:55,468
+Solo ha cambiado qué camino aporta ese
+cobro.
+
+185
+00:08:55,987 --> 00:08:58,566
+Esto no obliga a borrar el evento original.
+
+186
+00:08:59,487 --> 00:09:02,316
+Lambda necesita coordinar la frontera
+temporal,
+
+187
+00:09:02,540 --> 00:09:05,013
+mantener las mismas reglas y evitar huecos
+
+188
+00:09:05,026 --> 00:09:07,316
+o duplicados al actualizar las vistas.
+
+189
+00:09:08,058 --> 00:09:11,084
+Veamos ahora Kappa desde el mismo punto de
+partida.
+
+190
+00:09:11,614 --> 00:09:13,916
+Conservamos los eventos de cobro: qué
+
+191
+00:09:13,930 --> 00:09:16,272
+ocurrió, cuándo y con qué identificador.
+
+192
+00:09:17,180 --> 00:09:19,101
+Una vía principal los procesa y
+
+193
+00:09:19,114 --> 00:09:21,074
+mantiene una vista para consultar.
+
+194
+00:09:21,995 --> 00:09:23,916
+La vista de hoy, desde las doce de
+
+195
+00:09:23,930 --> 00:09:26,364
+la noche hasta las diez, lleva mil euros.
+
+196
+00:09:27,272 --> 00:09:28,745
+Al leer el evento de Ana de
+
+197
+00:09:28,758 --> 00:09:30,732
+las diez y cinco, incorpora sus
+
+198
+00:09:30,745 --> 00:09:33,064
+cien euros y pasa a mil cien.
+
+199
+00:09:33,987 --> 00:09:36,619
+Aquí no estamos sumando una cuenta histórica
+por
+
+200
+00:09:36,632 --> 00:09:38,816
+lotes y otra reciente como en Lambda.
+
+201
+00:09:39,737 --> 00:09:43,027
+Construimos el resultado a partir del flujo
+de eventos.
+
+202
+00:09:43,935 --> 00:09:46,290
+Ahora bien, para que este diseño sea
+
+203
+00:09:46,303 --> 00:09:49,290
+útil, tenemos que pensar también cómo
+rehacerlo.
+
+204
+00:09:50,211 --> 00:09:52,211
+Supongamos que descubrimos un error
+
+205
+00:09:52,224 --> 00:09:53,540
+en la regla del cálculo.
+
+206
+00:09:54,448 --> 00:09:57,711
+Como guardamos los eventos necesarios,
+podemos volver
+
+207
+00:09:57,724 --> 00:10:00,158
+a leerlos y construir una vista corregida.
+
+208
+00:10:01,066 --> 00:10:02,579
+Eso es hacer un replay.
+
+209
+00:10:03,500 --> 00:10:05,329
+Pensad en releer los apuntes de
+
+210
+00:10:05,343 --> 00:10:07,303
+un cuaderno para rehacer una suma.
+
+211
+00:10:08,224 --> 00:10:10,422
+La nueva cuenta no se añade encima de la
+
+212
+00:10:10,435 --> 00:10:13,764
+antigua: se valida y se sustituye de forma
+controlada.
+
+213
+00:10:14,685 --> 00:10:17,961
+Para hacerlo necesitamos retención
+suficiente, reglas
+
+214
+00:10:17,974 --> 00:10:20,014
+conocidas y control de duplicados.
+
+215
+00:10:20,921 --> 00:10:23,237
+Y conviene separar dos cosas: volver
+
+216
+00:10:23,250 --> 00:10:24,895
+a procesar el evento de Ana no
+
+217
+00:10:24,908 --> 00:10:27,277
+significa volver a cobrarle la tarjeta.
+
+218
+00:10:27,783 --> 00:10:30,112
+Estamos reconstruyendo información.
+
+219
+00:10:31,020 --> 00:10:33,507
+Pongamos ahora los dos esquemas juntos.
+
+220
+00:10:34,415 --> 00:10:36,941
+Para el mismo periodo de consulta, Lambda
+
+221
+00:10:36,954 --> 00:10:38,928
+mantiene una base por lotes y unas
+
+222
+00:10:38,941 --> 00:10:41,823
+novedades posteriores a su corte; la
+consulta
+
+223
+00:10:41,836 --> 00:10:44,020
+combina lo que corresponde de cada parte.
+
+224
+00:10:44,968 --> 00:10:47,007
+Kappa utiliza una vía principal de
+
+225
+00:10:47,020 --> 00:10:49,981
+eventos y, cuando necesita reconstruir una
+vista,
+
+226
+00:10:50,218 --> 00:10:52,797
+vuelve a procesar los eventos conservados.
+
+227
+00:10:53,704 --> 00:10:56,810
+En Lambda debemos mantener coordinados dos
+caminos.
+
+228
+00:10:57,718 --> 00:10:59,652
+En Kappa debemos poder conservar y
+
+229
+00:10:59,665 --> 00:11:02,007
+releer lo necesario a un coste viable.
+
+230
+00:11:02,915 --> 00:11:05,007
+Una vía principal no significa un
+
+231
+00:11:05,020 --> 00:11:07,112
+solo ordenador ni un único informe.
+
+232
+00:11:08,047 --> 00:11:11,152
+Puede haber varias máquinas y distintos
+consumidores.
+
+233
+00:11:12,073 --> 00:11:14,349
+La diferencia está en cómo organizamos
+
+234
+00:11:14,362 --> 00:11:16,244
+el cálculo y su reconstrucción.
+
+235
+00:11:17,152 --> 00:11:19,231
+Con esa comparación, volvamos a lo
+
+236
+00:11:19,244 --> 00:11:20,902
+que el hotel necesita de verdad.
+
+237
+00:11:21,417 --> 00:11:23,641
+Si dirección solo pide el cierre de ayer
+
+238
+00:11:23,654 --> 00:11:26,351
+a las ocho, un proceso por lotes puede
+bastar.
+
+239
+00:11:27,259 --> 00:11:29,180
+No tenemos que construir Lambda o
+
+240
+00:11:29,193 --> 00:11:31,272
+Kappa por haber aprendido sus nombres.
+
+241
+00:11:32,180 --> 00:11:34,969
+Tampoco tener un informe de cobros y un
+indicador
+
+242
+00:11:34,983 --> 00:11:38,022
+de sensores convierte el sistema en Lambda:
+son
+
+243
+00:11:38,035 --> 00:11:41,127
+preguntas distintas, no dos partes de la
+misma cuenta.
+
+244
+00:11:42,035 --> 00:11:45,272
+Estudiaremos cada opción cuando responda al
+requisito.
+
+245
+00:11:46,180 --> 00:11:48,377
+Lo importante es justificar qué queremos
+
+246
+00:11:48,391 --> 00:11:51,496
+consultar y cómo mantendremos fiable ese
+resultado.
+
+247
+00:11:52,417 --> 00:11:56,167
+Una vez elegido el recorrido, podemos
+ajustar sus recursos.
+
+248
+00:11:57,075 --> 00:11:58,312
+No todos los datos se
+
+249
+00:11:58,325 --> 00:12:00,325
+consultan con la misma frecuencia.
+
+250
+00:12:01,246 --> 00:12:04,180
+Un indicador utilizado continuamente se
+considera
+
+251
+00:12:04,193 --> 00:12:06,483
+caliente; un informe periódico puede
+
+252
+00:12:06,496 --> 00:12:09,969
+ser templado; un histórico excepcional,
+frío.
+
+253
+00:12:10,877 --> 00:12:13,877
+Esa temperatura habla del acceso, no de la
+calidad.
+
+254
+00:12:14,364 --> 00:12:16,377
+Guardar en frío puede costar menos,
+
+255
+00:12:16,535 --> 00:12:18,956
+aunque recuperar después tarde o cueste más.
+
+256
+00:12:19,486 --> 00:12:21,829
+A continuación elegimos herramientas para
+
+257
+00:12:21,842 --> 00:12:24,710
+recoger, transformar, coordinar o presentar.
+
+258
+00:12:25,644 --> 00:12:27,565
+En la nube cambia quién opera parte
+
+259
+00:12:27,579 --> 00:12:29,684
+de la infraestructura y cómo pagamos,
+
+260
+00:12:29,881 --> 00:12:32,763
+pero seguimos teniendo que tomar estas
+decisiones.
+
+261
+00:12:33,684 --> 00:12:36,092
+Ya podemos recorrer el camino completo.
+
+262
+00:12:37,000 --> 00:12:39,552
+Recibimos el cobro de Ana, unificamos
+
+263
+00:12:39,565 --> 00:12:42,513
+su significado, lo conservamos y lo
+procesamos.
+
+264
+00:12:43,447 --> 00:12:45,723
+Después lo ponemos a disposición de una
+
+265
+00:12:45,736 --> 00:12:48,500
+consulta y lo mostramos de forma
+comprensible.
+
+266
+00:12:49,421 --> 00:12:52,947
+Seguridad y monitorización acompañan todos
+esos pasos:
+
+267
+00:12:53,236 --> 00:12:56,368
+así encajan las ocho responsabilidades del
+apartado.
+
+268
+00:12:57,276 --> 00:13:00,105
+Una herramienta puede cubrir varias y una
+solución
+
+269
+00:13:00,118 --> 00:13:02,986
+sencilla puede resolverlas sin un gran
+despliegue.
+
+270
+00:13:03,921 --> 00:13:06,960
+Diseñar la arquitectura es poder explicar
+cómo llega
+
+271
+00:13:06,973 --> 00:13:09,131
+la cifra al panel, cómo sabemos que
+
+272
+00:13:09,144 --> 00:13:11,342
+es correcta y qué haremos si algo falla.
+
+273
+00:13:12,263 --> 00:13:14,052
+Ese es el mapa que necesitamos
+
+274
+00:13:14,065 --> 00:13:15,802
+antes de elegir los programas.

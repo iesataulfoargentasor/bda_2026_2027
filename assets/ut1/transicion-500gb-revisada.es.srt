@@ -1,0 +1,977 @@
+1
+00:00:00,100 --> 00:00:02,968
+Imaginad que habéis terminado la práctica de
+Pentaho.
+
+2
+00:00:03,918 --> 00:00:06,260
+El informe del hotel sale bien, lo habéis
+
+3
+00:00:06,274 --> 00:00:09,313
+comprobado y sabéis qué hacer cuando falta
+una entrada.
+
+4
+00:00:10,247 --> 00:00:12,418
+Un tiempo después, la directora os
+
+5
+00:00:12,432 --> 00:00:15,340
+plantea otra petición: quiere una
+estadística del
+
+6
+00:00:15,353 --> 00:00:18,445
+histórico, que ahora ocupa quinientos
+gigabytes.
+
+7
+00:00:19,353 --> 00:00:20,813
+Los datos están en la red de
+
+8
+00:00:20,826 --> 00:00:23,182
+la empresa y vosotros tenéis un portátil.
+
+9
+00:00:24,089 --> 00:00:26,537
+¿Podemos resolverlo con lo que ya sabemos?
+
+10
+00:00:27,458 --> 00:00:29,182
+Esta actividad empieza ahí.
+
+11
+00:00:30,103 --> 00:00:31,997
+No vais a descargar ese archivo
+
+12
+00:00:32,011 --> 00:00:33,432
+ni a montar un clúster hoy.
+
+13
+00:00:34,353 --> 00:00:36,063
+Vais a proponer una solución y
+
+14
+00:00:36,076 --> 00:00:38,905
+explicar qué condiciones necesita para
+funcionar.
+
+15
+00:00:39,826 --> 00:00:42,905
+Antes de hablar de máquinas, concretemos el
+encargo.
+
+16
+00:00:43,813 --> 00:00:46,392
+El profesor indicará la operación o
+permitirá
+
+17
+00:00:46,405 --> 00:00:48,997
+elegir entre una media, una desviación
+
+18
+00:00:49,011 --> 00:00:51,247
+típica y la normalización de un campo.
+
+19
+00:00:52,168 --> 00:00:56,129
+Antes de empezar, confirmad cuál corresponde
+a vuestra propuesta.
+
+20
+00:00:57,037 --> 00:00:59,747
+Para seguir una historia común, pensemos en
+el
+
+21
+00:00:59,761 --> 00:01:02,589
+importe medio de las reservas de un periodo
+definido.
+
+22
+00:01:03,511 --> 00:01:05,432
+Acordamos qué registros entran y
+
+23
+00:01:05,445 --> 00:01:07,563
+cómo tratamos los valores ausentes.
+
+24
+00:01:08,471 --> 00:01:10,168
+Recordad que el importe de una
+
+25
+00:01:10,182 --> 00:01:12,339
+reserva no demuestra que esté cobrada.
+
+26
+00:01:13,261 --> 00:01:15,603
+Una media devuelve un resumen pequeño.
+
+27
+00:01:16,511 --> 00:01:20,024
+En cambio, normalizar cada registro produce
+un conjunto
+
+28
+00:01:20,037 --> 00:01:22,537
+de valores y puede generar una salida
+grande.
+
+29
+00:01:23,484 --> 00:01:26,063
+Explicad desde el principio qué vais a
+calcular
+
+30
+00:01:26,076 --> 00:01:29,721
+y qué entregaréis: esa decisión cambia el
+trabajo necesario.
+
+31
+00:01:30,629 --> 00:01:32,958
+Miremos ahora el equipo del enunciado.
+
+32
+00:01:33,879 --> 00:01:36,168
+Tiene un disco de un terabyte, pero está
+
+33
+00:01:36,182 --> 00:01:40,826
+ocupado al setenta por ciento: quedan
+aproximadamente trescientos gigabytes.
+
+34
+00:01:41,734 --> 00:01:43,761
+El archivo completo no cabe ahí.
+
+35
+00:01:44,682 --> 00:01:46,366
+La memoria RAM es de treinta y
+
+36
+00:01:46,379 --> 00:01:48,839
+dos gigabytes, así que tampoco podemos
+
+37
+00:01:48,853 --> 00:01:51,300
+cargarlo entero como una tabla de pandas.
+
+38
+00:01:52,221 --> 00:01:55,682
+Además, interpretar texto puede necesitar
+más memoria de
+
+39
+00:01:55,695 --> 00:01:57,708
+la que sugiere el tamaño del fichero.
+
+40
+00:01:58,616 --> 00:02:01,576
+La CPU dispone de diez núcleos y veinte
+hilos,
+
+41
+00:02:01,826 --> 00:02:03,971
+pero eso no aumenta el disco ni la RAM.
+
+42
+00:02:04,866 --> 00:02:06,589
+Son recursos distintos.
+
+43
+00:02:07,497 --> 00:02:10,800
+La primera pregunta os pide explicar esos
+límites junto
+
+44
+00:02:10,813 --> 00:02:12,879
+con el coste de leer por red y disco.
+
+45
+00:02:13,774 --> 00:02:15,392
+El resultado de nuestra media
+
+46
+00:02:15,405 --> 00:02:17,260
+puede ocupar apenas unos bytes.
+
+47
+00:02:18,168 --> 00:02:20,682
+Sin embargo, para obtenerlo quizá tengamos
+
+48
+00:02:20,695 --> 00:02:22,761
+que recorrer los quinientos gigabytes.
+
+49
+00:02:23,668 --> 00:02:25,813
+Hagamos una estimación sencilla.
+
+50
+00:02:26,761 --> 00:02:29,761
+Si leemos a cien megabytes por segundo
+sostenidos,
+
+51
+00:02:29,892 --> 00:02:33,063
+con unidades decimales, solo la lectura
+necesita
+
+52
+00:02:33,076 --> 00:02:36,089
+cinco mil segundos: unos ochenta y tres
+minutos.
+
+53
+00:02:37,024 --> 00:02:39,761
+Todavía faltan la interpretación y el
+cálculo.
+
+54
+00:02:40,682 --> 00:02:42,761
+Esa velocidad es un supuesto, no
+
+55
+00:02:42,774 --> 00:02:44,511
+una medida de vuestra conexión.
+
+56
+00:02:45,432 --> 00:02:48,287
+Debéis indicar qué tasa necesitaríais
+comprobar.
+
+57
+00:02:49,221 --> 00:02:51,366
+Antes de prometer que el informe estará
+
+58
+00:02:51,379 --> 00:02:54,405
+a las ocho, necesitamos saber cuándo empieza
+el
+
+59
+00:02:54,418 --> 00:02:56,958
+trabajo y si el tiempo disponible alcanza.
+
+60
+00:02:57,866 --> 00:03:00,234
+Que el archivo no quepa entero no significa
+
+61
+00:03:00,247 --> 00:03:03,129
+que sea imposible calcular la media en una
+máquina.
+
+62
+00:03:04,050 --> 00:03:06,221
+Podemos leer por bloques, sumar los
+
+63
+00:03:06,234 --> 00:03:08,866
+valores válidos y contar cuántos hemos
+visto.
+
+64
+00:03:09,774 --> 00:03:11,037
+Cuando llega el siguiente
+
+65
+00:03:11,050 --> 00:03:13,997
+bloque, actualizamos esos dos acumuladores.
+
+66
+00:03:14,905 --> 00:03:16,484
+Al final dividimos la suma
+
+67
+00:03:16,497 --> 00:03:18,234
+total entre el recuento total.
+
+68
+00:03:19,155 --> 00:03:21,300
+Si no hay valores válidos, debemos
+
+69
+00:03:21,313 --> 00:03:23,537
+indicar que la media no puede calcularse.
+
+70
+00:03:24,458 --> 00:03:27,247
+Dejamos memoria libre para convertir los
+datos y
+
+71
+00:03:27,261 --> 00:03:29,853
+trabajar, sin ocuparla toda con el bloque.
+
+72
+00:03:30,387 --> 00:03:32,716
+Como el origen está en red, los bytes
+
+73
+00:03:32,729 --> 00:03:35,742
+siguen viajando hasta el lector, aunque no
+guardemos
+
+74
+00:03:35,755 --> 00:03:38,229
+una copia completa en el disco del portátil.
+
+75
+00:03:39,163 --> 00:03:40,887
+Si vuestra operación es otra,
+
+76
+00:03:41,045 --> 00:03:42,953
+explicad cómo cambia ese plan.
+
+77
+00:03:43,860 --> 00:03:46,097
+Para la desviación típica necesitamos un
+
+78
+00:03:46,110 --> 00:03:48,926
+algoritmo incremental estable y aclarar si
+queremos
+
+79
+00:03:48,939 --> 00:03:51,650
+la desviación poblacional o la muestral.
+
+80
+00:03:52,571 --> 00:03:53,847
+No basta con decir que
+
+81
+00:03:53,860 --> 00:03:55,374
+sumaremos como en la media.
+
+82
+00:03:56,295 --> 00:03:58,939
+Para normalizar todos los valores entre cero
+y
+
+83
+00:03:58,953 --> 00:04:02,992
+uno, normalmente hacemos una primera pasada
+para conocer mínimo
+
+84
+00:04:03,005 --> 00:04:05,782
+y máximo y otra para transformar cada
+registro.
+
+85
+00:04:06,689 --> 00:04:09,834
+Si ambos coinciden, hay que definir qué
+resultado dar.
+
+86
+00:04:10,755 --> 00:04:13,282
+Aquí también cambia el tamaño de la salida.
+
+87
+00:04:14,216 --> 00:04:16,229
+Trabajad con la operación indicada o
+
+88
+00:04:16,242 --> 00:04:17,689
+con la que el profesor os haya
+
+89
+00:04:17,703 --> 00:04:20,742
+permitido elegir, y explicadla con
+precisión.
+
+90
+00:04:21,650 --> 00:04:23,479
+No se os pide entregar código
+
+91
+00:04:23,492 --> 00:04:26,518
+ejecutable; sí un procedimiento que tenga
+sentido.
+
+92
+00:04:27,426 --> 00:04:29,163
+Podemos preguntarnos ahora si
+
+93
+00:04:29,176 --> 00:04:31,479
+varios núcleos acelerarían el cálculo.
+
+94
+00:04:32,400 --> 00:04:34,979
+Con paralelismo local, varios trabajadores
+
+95
+00:04:34,992 --> 00:04:36,439
+procesan bloques a la vez.
+
+96
+00:04:37,347 --> 00:04:41,185
+Eso puede ayudar cuando hay suficiente
+trabajo de CPU.
+
+97
+00:04:42,121 --> 00:04:44,398
+Pero cada trabajador necesita memoria y
+
+98
+00:04:44,411 --> 00:04:46,529
+todos pueden competir por la misma red.
+
+99
+00:04:47,450 --> 00:04:50,779
+Diez bloques grandes simultáneos podrían
+agotar la RAM.
+
+100
+00:04:51,700 --> 00:04:53,963
+Por eso limitaríamos los trabajadores y
+
+101
+00:04:53,977 --> 00:04:57,069
+compararíamos la velocidad de lectura y
+procesamiento.
+
+102
+00:04:57,977 --> 00:05:00,648
+Podéis citar multiprocessing, Dask o Spark
+en
+
+103
+00:05:00,661 --> 00:05:03,687
+modo local como vías posibles, sin
+instalarlos.
+
+104
+00:05:04,595 --> 00:05:06,227
+Fijaos en lo que no cambia:
+
+105
+00:05:06,411 --> 00:05:08,687
+seguimos dentro del mismo portátil y, si
+
+106
+00:05:08,700 --> 00:05:11,227
+se apaga, esa ejecución se interrumpe.
+
+107
+00:05:12,135 --> 00:05:14,858
+Hagamos una pausa para ordenar el
+vocabulario.
+
+108
+00:05:15,779 --> 00:05:19,200
+Concurrencia significa que varias tareas
+progresan durante un
+
+109
+00:05:19,213 --> 00:05:22,069
+mismo periodo; pueden turnarse en un
+recurso.
+
+110
+00:05:22,977 --> 00:05:24,648
+Paralelismo significa que hay
+
+111
+00:05:24,661 --> 00:05:26,924
+trabajo ejecutándose al mismo tiempo.
+
+112
+00:05:27,819 --> 00:05:30,214
+Distribución añade otra característica:
+
+113
+00:05:30,424 --> 00:05:32,713
+participan varias máquinas conectadas.
+
+114
+00:05:33,621 --> 00:05:35,516
+Las ideas pueden combinarse.
+
+115
+00:05:36,437 --> 00:05:39,740
+Un clúster puede utilizar paralelismo dentro
+de cada nodo.
+
+116
+00:05:40,648 --> 00:05:42,845
+Y un programa que admite distribución
+
+117
+00:05:42,858 --> 00:05:45,753
+puede estar ejecutándose solo en vuestro
+ordenador.
+
+118
+00:05:46,661 --> 00:05:49,385
+Cuando defendáis la propuesta, explicad
+dónde
+
+119
+00:05:49,398 --> 00:05:51,806
+corre cada parte y qué recursos utiliza.
+
+120
+00:05:52,727 --> 00:05:55,832
+Eso dice mucho más que nombrar una
+herramienta conocida.
+
+121
+00:05:56,779 --> 00:05:59,345
+Si la lectura, el plazo o la repetición del
+
+122
+00:05:59,358 --> 00:06:04,345
+informe justifican otros recursos, podemos
+plantear una ejecución distribuida.
+
+123
+00:06:05,279 --> 00:06:06,727
+La idea es procesar en un
+
+124
+00:06:06,740 --> 00:06:10,082
+entorno próximo al almacenamiento del
+histórico, sin
+
+125
+00:06:10,095 --> 00:06:12,108
+hacerlo pasar todo por el portátil.
+
+126
+00:06:13,056 --> 00:06:15,595
+Explicad dónde estarán los datos, cómo se
+
+127
+00:06:15,608 --> 00:06:17,885
+dividirá el trabajo y quién lo ejecutará.
+
+128
+00:06:18,806 --> 00:06:21,950
+Podéis considerar HDFS o almacenamiento de
+
+129
+00:06:21,963 --> 00:06:24,385
+objetos, según el sistema disponible.
+
+130
+00:06:25,306 --> 00:06:27,845
+No deis por hecho que cualquier archivo y
+lector
+
+131
+00:06:27,858 --> 00:06:31,911
+permiten repartirlo igual: importan el
+formato y su organización.
+
+132
+00:06:32,819 --> 00:06:35,924
+La decisión debe apoyarse en medidas y
+requisitos.
+
+133
+00:06:36,832 --> 00:06:39,332
+Quinientos gigabytes, por sí solos, no
+
+134
+00:06:39,345 --> 00:06:41,700
+prueban que un clúster sea imprescindible.
+
+135
+00:06:42,621 --> 00:06:45,003
+Supongamos que repartimos nuestra media.
+
+136
+00:06:45,924 --> 00:06:48,635
+Cada trabajador devuelve su suma y su
+recuento,
+
+137
+00:06:48,845 --> 00:06:51,595
+y combinamos ambos para calcular la media
+global.
+
+138
+00:06:52,529 --> 00:06:54,832
+No promediamos las medias de los bloques sin
+
+139
+00:06:54,845 --> 00:06:58,187
+considerar sus tamaños: un bloque con diez
+reservas
+
+140
+00:06:58,200 --> 00:07:00,042
+no pesa lo mismo que otro con mil.
+
+141
+00:07:00,950 --> 00:07:03,950
+Después preguntamos qué ocurre si una tarea
+falla.
+
+142
+00:07:04,469 --> 00:07:07,338
+Necesitamos identificar las partes
+terminadas y
+
+143
+00:07:07,351 --> 00:07:09,851
+evitar contarlas dos veces al repetirlas.
+
+144
+00:07:10,772 --> 00:07:12,574
+También hay que proteger el origen y
+
+145
+00:07:12,588 --> 00:07:15,114
+estudiar qué sucede si falla el coordinador.
+
+146
+00:07:16,022 --> 00:07:17,982
+Tener varias máquinas no basta para
+
+147
+00:07:17,995 --> 00:07:20,166
+afirmar que el sistema tolera fallos.
+
+148
+00:07:21,074 --> 00:07:23,522
+Debéis explicar qué se recupera y cómo.
+
+149
+00:07:24,430 --> 00:07:27,153
+Hay otra alternativa que también debéis
+valorar.
+
+150
+00:07:28,074 --> 00:07:30,916
+Si el histórico se va a consultar muchas
+veces,
+
+151
+00:07:31,140 --> 00:07:33,995
+quizá compense prepararlo en un almacén de
+informes
+
+152
+00:07:34,009 --> 00:07:37,140
+o un lakehouse y obtener la media mediante
+consultas.
+
+153
+00:07:38,048 --> 00:07:39,351
+Si el aula trabaja con
+
+154
+00:07:39,364 --> 00:07:41,785
+MongoDB, podéis estudiar su encaje.
+
+155
+00:07:42,693 --> 00:07:44,956
+La carga inicial tiene un coste, y el
+
+156
+00:07:44,969 --> 00:07:47,627
+modelo debe servir para las preguntas
+previstas.
+
+157
+00:07:48,548 --> 00:07:50,706
+También importan las columnas leídas,
+
+158
+00:07:50,824 --> 00:07:52,956
+las particiones y el mantenimiento.
+
+159
+00:07:53,864 --> 00:07:55,824
+Guardar un archivo en S3 o en
+
+160
+00:07:55,838 --> 00:07:58,601
+Blob no calcula automáticamente el
+resultado:
+
+161
+00:07:58,877 --> 00:08:00,956
+hace falta un motor que lo procese.
+
+162
+00:08:01,877 --> 00:08:03,877
+Comparad esta opción con un trabajo
+
+163
+00:08:03,890 --> 00:08:06,509
+puntual y explicad cuándo podría compensar.
+
+164
+00:08:07,430 --> 00:08:11,101
+Volvamos al portátil, que también tiene una
+tarjeta gráfica.
+
+165
+00:08:12,009 --> 00:08:14,166
+¿La utilizaríamos para esta media?
+
+166
+00:08:14,685 --> 00:08:16,449
+No podemos responder solo por
+
+167
+00:08:16,462 --> 00:08:17,843
+su nombre o su memoria.
+
+168
+00:08:18,764 --> 00:08:21,633
+Las GPU pueden ayudar en entrenamiento de
+modelos
+
+169
+00:08:21,646 --> 00:08:26,251
+o en ciertos cálculos numéricos intensivos,
+con herramientas compatibles.
+
+170
+00:08:27,172 --> 00:08:29,291
+Pero si aquí pasamos la mayor parte del
+
+171
+00:08:29,304 --> 00:08:31,975
+tiempo esperando datos de la red o
+interpretando el
+
+172
+00:08:31,988 --> 00:08:35,738
+archivo, añadir capacidad de cálculo quizá
+aporte poco.
+
+173
+00:08:36,646 --> 00:08:39,501
+También hay costes de transferencia y
+preparación.
+
+174
+00:08:40,422 --> 00:08:42,251
+La pregunta os pide localizar el
+
+175
+00:08:42,264 --> 00:08:44,791
+cuello de botella y justificar la respuesta.
+
+176
+00:08:45,699 --> 00:08:47,672
+No afirmar que una GPU nunca
+
+177
+00:08:47,685 --> 00:08:50,106
+sirve ni que siempre acelera cualquier
+tarea.
+
+178
+00:08:50,846 --> 00:08:53,188
+Ya podéis construir una recomendación.
+
+179
+00:08:54,109 --> 00:08:56,767
+Indicad el formato y la ubicación del
+origen,
+
+180
+00:08:56,952 --> 00:09:00,307
+la velocidad de lectura que suponéis, el
+plazo, la
+
+181
+00:09:00,320 --> 00:09:03,254
+frecuencia de ejecución y el tamaño del
+resultado.
+
+182
+00:09:04,162 --> 00:09:06,425
+Incluid la estimación mínima de lectura
+
+183
+00:09:06,438 --> 00:09:08,412
+y explicad qué mediciones faltan.
+
+184
+00:09:09,346 --> 00:09:11,912
+Una media puntual puede admitir un plan
+local
+
+185
+00:09:11,925 --> 00:09:15,346
+por bloques; un informe diario con un plazo
+exigente
+
+186
+00:09:15,359 --> 00:09:18,899
+puede necesitar otra organización y
+garantías de recuperación.
+
+187
+00:09:19,412 --> 00:09:23,419
+También podéis combinar opciones, por
+ejemplo explorar una
+
+188
+00:09:23,432 --> 00:09:26,774
+muestra localmente y procesar el histórico
+en otro entorno.
+
+189
+00:09:27,698 --> 00:09:31,211
+Justificad dónde conservaréis el original y
+cómo revisaríais
+
+190
+00:09:31,224 --> 00:09:34,316
+la solución si mañana creciera hasta cinco
+terabytes.
+
+191
+00:09:34,487 --> 00:09:37,540
+Para terminar la actividad, responded por
+escrito o
+
+192
+00:09:37,553 --> 00:09:39,263
+en un pad a las siete preguntas.
+
+193
+00:09:40,198 --> 00:09:43,527
+Explicad los límites del portátil, el plan
+secuencial
+
+194
+00:09:43,540 --> 00:09:46,513
+por bloques, el paralelo local, el
+distribuido,
+
+195
+00:09:46,777 --> 00:09:49,211
+la alternativa de cargar y consultar, el
+
+196
+00:09:49,224 --> 00:09:51,698
+papel de la GPU y vuestra elección final.
+
+197
+00:09:52,606 --> 00:09:54,856
+Usáis la misma operación acordada con
+
+198
+00:09:54,869 --> 00:09:57,908
+el profesor para comparar todas esas
+posibilidades.
+
+199
+00:09:58,816 --> 00:10:02,342
+Si os ha permitido elegirla, indicad cuál
+habéis elegido.
+
+200
+00:10:02,873 --> 00:10:04,900
+No hace falta código que compile.
+
+201
+00:10:05,821 --> 00:10:09,307
+La sesión propone leer el caso, trabajar
+individualmente
+
+202
+00:10:09,321 --> 00:10:11,873
+o por parejas y compartir la recomendación.
+
+203
+00:10:12,781 --> 00:10:14,360
+La entrega en Moodle solo se
+
+204
+00:10:14,373 --> 00:10:16,386
+realiza si el profesor la indica.
+
+205
+00:10:17,307 --> 00:10:19,557
+Lo importante es que podáis defender por
+
+206
+00:10:19,571 --> 00:10:21,992
+qué vuestra propuesta puede cumplir el
+encargo.
+
+207
+00:10:22,900 --> 00:10:25,518
+Esta es la conexión con la siguiente unidad.
+
+208
+00:10:26,021 --> 00:10:29,614
+Con Pentaho hemos construido y comprobado un
+recorrido pequeño.
+
+209
+00:10:30,521 --> 00:10:34,416
+Ahora hemos aprendido a preguntar qué
+recursos, almacenamiento
+
+210
+00:10:34,429 --> 00:10:38,219
+y mecanismos de recuperación necesitaría
+cuando cambia la escala.
+
+211
+00:10:39,140 --> 00:10:41,192
+En la UT2 estudiaremos sistemas y
+
+212
+00:10:41,206 --> 00:10:44,127
+herramientas que permiten abordar esas
+necesidades.
+
+213
+00:10:45,035 --> 00:10:47,456
+Seguimos trabajando para el mismo hotel y el
+
+214
+00:10:47,469 --> 00:10:51,429
+objetivo no cambia: obtener información
+fiable dentro del plazo.
+
+215
+00:10:52,337 --> 00:10:55,245
+Cuando aparezca una tecnología nueva,
+recordad
+
+216
+00:10:55,258 --> 00:10:56,903
+las preguntas de esta tarea.
+
+217
+00:10:57,837 --> 00:10:59,324
+¿Dónde están los datos?
+
+218
+00:11:00,258 --> 00:11:01,219
+¿Quién calcula?
+
+219
+00:11:02,127 --> 00:11:03,653
+¿Qué pasa si algo falla?
+
+220
+00:11:04,574 --> 00:11:05,679
+¿Cómo creceremos?
+
+221
+00:11:06,627 --> 00:11:09,521
+Esas preguntas dan sentido a lo que viene
+después.
