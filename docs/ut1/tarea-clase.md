@@ -11,7 +11,7 @@ tags:
 
 Esta práctica cierra la **UT1**. Vais a preparar una solución para el [grupo hotelero de Cantabria](caso-hotel.md): explicar qué datos necesitáis, procesarlos con Pentaho, comprobar el resultado y entregar un informe que dirección pueda interpretar sin abrir Spoon.
 
-Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis conectar lo aprendido y demostrar que el procedimiento funciona, también cuando se repite o falta una entrada. Podéis trabajar individualmente o por parejas. Las fechas, la calificación y la entrega formal las establece el profesor en Moodle.
+Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis conectar lo aprendido y demostrar que el procedimiento funciona, también cuando se repite o falta una entrada. Cada alumno trabajará en un repositorio de su propia cuenta de GitHub y realizará una defensa individual ante el profesor. Podéis contrastar dudas en clase, pero debéis identificar las ayudas recibidas y comprender todo lo que entregáis. La rúbrica de este apartado suma **10,00 puntos**; Moodle concretará las fechas y recogerá el enlace de entrega.
 
 !!! info "Dos actividades con funciones diferentes"
     Esta práctica construye y comprueba una solución con datos pequeños. Después, la [transición a la UT2: 500 GB y un portátil](transicion-ut2.md) plantea qué revisaríamos al aumentar el volumen. No necesitáis Spark, nube ni una base de datos para completar esta práctica.
@@ -25,7 +25,7 @@ Antes de empezar, mira esta guía del encargo del hotel: explica los dos resulta
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las instrucciones detalladas de esta práctica; Moodle concreta las fechas, la calificación y la entrega formal.
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las instrucciones detalladas de esta práctica. **La entrega se ha actualizado después de grabarlo:** donde el vídeo habla de carpeta o ZIP, entregad ahora el repositorio personal de GitHub según el apartado 9. La evaluación incluye la defensa individual descrita más abajo.
 
 [Descargar el vídeo](../assets/ut1/practica-pentaho.mp4) · [Leer la transcripción](../assets/ut1/practica-pentaho.txt) · [Descargar los subtítulos](../assets/ut1/practica-pentaho.es.srt)
 
@@ -50,7 +50,7 @@ El informe principal responde a dirección. El listado de reservas sin cobro es 
 
 ## 2. Preparad el entorno y las entradas
 
-Comprobad primero que funciona el [taller 0 de Pentaho](pentaho.md#taller-0-que-spoon-hable). Utilizad la instalación indicada por el aula.
+Comprobad primero que funciona el [taller 0 de Pentaho](pentaho.md#taller-0-que-spoon-hable). Utilizad **Pentaho Data Integration Community 9.4.0.0-343**, la versión de los talleres, con el entorno Java indicado por el aula. Estos archivos se leen localmente: no necesitáis una base de datos, controladores JDBC, servicios de pago ni plugins adicionales.
 
 | Archivo | Separador | Contenido esperado |
 | --- | --- | --- |
@@ -60,7 +60,46 @@ Comprobad primero que funciona el [taller 0 de Pentaho](pentaho.md#taller-0-que-
 
 No reutilicéis los CSV de 1.6 o 1.7. Noja representa la ampliación del grupo que aparece en los talleres. Conservad los originales sin modificarlos y utilizad copias para las pruebas de fallo.
 
-Organizad una carpeta de trabajo con `entrada`, `procesos`, `temporal`, `salida` y `evidencias`. Los originales van en `entrada`; las transformaciones y el job, en `procesos`. Acordad la ruta de trabajo con el profesor o utilizad variables. No dejéis rutas que solo funcionen en vuestra cuenta de casa.
+### Descarga y comprobación de los datos
+
+Los tres enlaces anteriores permiten descargar los datos sin iniciar sesión. Si el navegador muestra el contenido, utilizad «Guardar enlace como…» y conservad la extensión `.csv`, no `.html`. Son los **tres únicos archivos de datos necesarios** para esta práctica. No tenéis que inventar ni buscar datos de clientes.
+
+1. Guardad los tres originales en `entrada`, dentro de la copia local de vuestro repositorio.
+2. Abridlos con un editor de texto antes de importarlos: la primera línea debe ser la cabecera de campos, no código de una página web.
+3. En **CSV file input**, activad la cabecera y seleccionad **UTF-8**. Indicad el separador de cada archivo según la tabla; no uséis la misma configuración para los tres.
+4. Revisad los campos con la siguiente tabla. En los importes, estableced punto como símbolo decimal y dejad vacío el separador de miles. Para esta práctica pequeña podéis desactivar **Lazy conversion** y comprobar la conversión al leer.
+5. Ejecutad una vista previa y después una lectura completa: deben aparecer **20, 15 y 5 filas de datos**, respectivamente, sin contar la cabecera ni producir errores de conversión.
+
+| Archivo | Campos de tipo Integer | Campos de tipo String | Campos de tipo BigNumber |
+| --- | --- | --- | --- |
+| `reservas_pdi.csv` | `id_reserva`, `id_hotel`, `noches` | `canal` | `importe` |
+| `cobros_pdi.csv` | `id_reserva` | `medio` | `cobrado` |
+| `hoteles_pdi.csv` | `id_hotel`, `id_cadena` | `hotel`, `comarca` | Ninguno |
+
+No hace falta utilizar `comarca`, `id_cadena` ni `medio` en los informes finales; conservadlos en los originales. Todos los identificadores de hotel tienen correspondencia y todos los cobros remiten a una reserva existente.
+
+### Repositorio y rutas de trabajo
+
+Cread en vuestra cuenta de GitHub un repositorio llamado **`bda-ut1-pentaho-hotel`**. Trabajad con una copia local: GitHub conserva y permite revisar los archivos, pero **no ejecuta Spoon ni Kitchen**. Podéis usar Git o GitHub Desktop para clonar, registrar y subir los cambios.
+
+Organizadlo así:
+
+```text
+bda-ut1-pentaho-hotel/
+├── README.md
+├── .gitignore
+├── entrada/       # Los tres CSV originales
+├── procesos/      # Cuatro .ktr y un .kjb
+├── temporal/      # Resultados provisionales; no se suben
+├── salida/        # Los dos CSV finales comprobados
+└── evidencias/    # Tabla de comprobaciones y pruebas comentadas
+```
+
+Añadid `/temporal/` a `.gitignore`. Git no conserva carpetas vacías: el README debe indicar que hay que crear `temporal` y `salida` antes de ejecutar. Subid los dos resultados finales de referencia, pero no la instalación de Pentaho, Java, archivos de respaldo ni credenciales.
+
+Para evitar rutas propias de vuestro equipo, guardad todos los `.ktr` y el `.kjb` directamente en `procesos`. En las transformaciones, utilizad rutas como `${Internal.Transformation.Filename.Directory}/../entrada/reservas_pdi.csv` y `${Internal.Transformation.Filename.Directory}/../temporal/informe_hotel_canal.csv`. En el job, referenciad una transformación como `${Internal.Job.Filename.Directory}/informe_cobros.ktr`; para las carpetas de datos, emplead `${Internal.Job.Filename.Directory}/../entrada/` y las equivalentes de `temporal` y `salida`. Guardad el proceso antes de probar estas variables.
+
+Registrad avances con mensajes que expliquen lo realizado, por ejemplo «Construyo el informe por hotel y canal» o «Compruebo el fallo por entrada ausente». Antes de entregar, descargad o clonad el repositorio en **otra carpeta**, cread las carpetas necesarias y comprobad que Kitchen puede ejecutarlo siguiendo solo vuestro README.
 
 En **CSV file input**, revisad nombres, separadores y tipos antes de avanzar. Las claves deben tener el mismo tipo en las dos entradas de una unión. Para los importes, utilizad un tipo decimal adecuado, como **BigNumber**, configurando el punto decimal del origen. Una coma mal interpretada no se corrige al agrupar.
 
@@ -144,12 +183,12 @@ Abrid el informe fuera de Spoon con un lector CSV, importando separadores y deci
 Después de la revisión manual, construid `validar_informe.ktr` para que el job pueda detectar una salida incompleta:
 
 1. Leed el CSV provisional con sus tipos numéricos.
-2. Usad **Group by**, sin campos de agrupación, para obtener el recuento de filas y las sumas de `n_reservas` y `cobrado_total`. Activad la opción de producir una fila de resultado aunque la entrada esté vacía, si vuestra versión la ofrece; verificad expresamente el caso de un archivo con solo cabecera.
+2. Usad **Group by**, sin campos de agrupación, para obtener el recuento de filas y las sumas de `n_reservas` y `cobrado_total`. Activad **Always give back a result row**, disponible en Group by de PDI 9.4: produce una fila resumen aunque no lleguen datos. Verificad expresamente el caso de un archivo con solo cabecera.
 3. Comprobad con **Filter rows** que hay 13 grupos, 15 reservas y 3965.50 euros. Un valor nulo tampoco cumple la validación.
 4. En la rama válida escribid un mensaje en el log. En la otra, utilizad **Abort** configurado para detener la transformación con error.
 5. Construid `validar_sin_cobro.ktr` con el mismo patrón: debe haber cinco filas, todas con identificadores de la lista esperada y sin duplicados. Filtrad identificadores inválidos hacia Abort. Para controlar duplicados, ordenad por `id_reserva` y agrupad por esa clave contando filas: cada grupo debe contener una sola. Después resumid esos grupos sin claves y exigid cinco identificadores. Aplicad también la comprobación de entrada vacía.
 
-Si la versión del aula no permite obtener una fila resumen cuando no hay datos, añadid una comprobación explícita de entrada vacía antes de dar por válida la transformación. **No basta con que ninguna fila llegue a Abort**: un CSV con solo cabecera debe hacer fallar la prueba.
+Activad **Always give back a result row** también en el último resumen sin claves de `validar_sin_cobro.ktr`. En ambos controles, utilizad **Number of rows (without field argument)** para contar filas y configurad **Abort** para abortar con error desde la primera fila recibida (umbral 0). **No basta con que ninguna fila llegue a Abort**: un CSV con solo cabecera debe hacer fallar la prueba.
 
 Estos valores son controles del conjunto `cierre_aula_01`. En un cierre real variarían: explicaríais controles de reconciliación con las entradas, no fijaríais todos los días el mismo total.
 
@@ -191,14 +230,48 @@ Para las dos pruebas de validación, ejecutad directamente la transformación de
 
 ## 9. Qué entregáis
 
-Entregad una carpeta o ZIP que otro compañero pueda utilizar con las rutas y la instalación del aula:
+Entregad en Moodle **la URL de vuestro repositorio personal y el identificador del commit que queréis evaluar**. Ese commit identifica la versión concreta entregada. Comprobad que los últimos cambios se han subido a GitHub; guardar en Spoon o hacer un commit local no los publica por sí solo.
 
-- Las cuatro transformaciones `.ktr` y el job `.kjb`.
-- Los dos CSV finales: `informe_hotel_canal.csv` y `reservas_sin_cobro.csv`.
-- Una explicación breve con el diseño, las reglas, la identificación del cierre de aula, la fecha de generación, unidades, separadores y cómo ejecutar el procedimiento. Incluid la justificación del formato y los límites de los datos.
-- La tabla de comprobaciones y las evidencias de las pruebas, con una explicación del error observado y su recuperación. Una captura sin interpretación no basta.
+El repositorio debe contener:
 
-En el lienzo añadid una nota con vuestro nombre y la pregunta que resuelve cada proceso. No incluyáis contraseñas ni dependencias de cuentas personales. La entrega formal se realiza donde indique Moodle.
+- En `entrada`: los tres CSV originales, sin cambios.
+- En `procesos`: `informe_cobros.ktr`, `reservas_sin_cobro.ktr`, `validar_informe.ktr`, `validar_sin_cobro.ktr` y `cierre_hotel.kjb`.
+- En `salida`: `informe_hotel_canal.csv` y `reservas_sin_cobro.csv`, con los resultados comprobados.
+- En `evidencias`: la tabla de esperado/obtenido/conclusión y las seis pruebas del apartado 8, identificadas y comentadas. Las capturas o extractos de log deben permitir entender qué se ejecutó, qué ocurrió y por qué; no basta una captura sin interpretación.
+- Un `README.md` que permita a otra persona preparar y ejecutar el trabajo.
+
+### Qué debe explicar el README
+
+1. Autor, objetivo del encargo y esquema del recorrido de los datos.
+2. Versión de PDI y Java utilizadas, carpetas necesarias y pasos para ejecutar el job con Kitchen desde una copia recién descargada. Indicad dónde aparecerán los resultados.
+3. Procedencia de los tres CSV, sus separadores y tipos; identificación `cierre_aula_01`, fecha y hora de generación de los resultados, unidades en euros y límites de los datos.
+4. Decisiones de diseño: por qué esas uniones, por qué sumar `cobrado`, cómo se detectan reservas sin cobro y por qué se entrega CSV.
+5. Enlaces a las comprobaciones y pruebas de fallo y recuperación; qué ocurre al repetir la ejecución.
+6. Fuentes o ayudas utilizadas y qué habéis adaptado vosotros.
+
+El repositorio puede ser público o privado. Si es privado, añadid como colaborador al usuario que os indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación. **No se exige hacerlo público para obtener la nota.** En el lienzo de cada proceso añadid una nota con vuestro nombre y la pregunta que resuelve. No subáis contraseñas ni datos personales de huéspedes.
+
+### Rúbrica: 10,00 puntos
+
+| Criterio | Máximo | Qué se comprueba |
+| --- | ---: | --- |
+| Repositorio y reproducción del trabajo | 1,00 | Repositorio personal accesible al profesor, estructura y archivos completos, commit identificado, README suficiente y ejecución desde otra carpeta sin cambiar rutas internas. |
+| Diseño y comprensión del encargo | 1,00 | Recorrido coherente, reglas justificadas, cierre y unidades identificados, elección de CSV y límites de los datos explicados. |
+| Informe de cobros | 2,00 | Lecturas y tipos correctos, uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y correspondencia correcta en cada hotel/canal. |
+| Control de reservas sin cobro | 1,00 | Cinco reservas correctas, sin duplicados; distinción entre ausencia de cobro y cobro cero; columnas y motivo claros. |
+| Job y validaciones automáticas | 2,00 | Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo. |
+| Pruebas y evidencias | 1,00 | Las seis pruebas documentadas, comparación esperado/obtenido y explicación de repetición, fallos y recuperación. |
+| Defensa individual: explicar el funcionamiento | 1,00 | El alumno recorre su solución en Spoon y relaciona entradas, pasos y salidas, explicando sus decisiones con claridad y con sus propias palabras. |
+| Defensa individual: responder y comprobar | 1,00 | Responde razonadamente a las preguntas del profesor y realiza o interpreta una pequeña comprobación sobre su trabajo. |
+| **Total** | **10,00** | **La defensa individual representa 2,00 puntos.** |
+
+Para cada criterio se asigna el **100 % de su máximo** si está completo y correcto, el **50 %** si se demuestra parcialmente pero hay errores u omisiones relevantes, y **0 puntos** si no se aporta evidencia o no se demuestra. Se suman los puntos obtenidos y se expresa la nota con dos decimales. Los resultados y las evidencias del repositorio se valoran en los seis primeros criterios; la comprensión demostrada personalmente se valora en los dos últimos.
+
+### Encuentro individual con el profesor
+
+El profesor se sentará con cada alumno, orientativamente durante **8–10 minutos**, con su repositorio y sus procesos abiertos. Primero el alumno explicará el recorrido completo y mostrará los dos informes. Después, el profesor realizará las preguntas que considere necesarias sobre ese trabajo y podrá pedir una pequeña comprobación en una copia, sin modificar los originales entregados.
+
+Por ejemplo: seguir una reserva desde su CSV hasta el informe, explicar por qué se ordena antes de Merge join, justificar por qué hay 13 grupos y no 20, distinguir `importe` de `cobrado`, localizar la rama que impide publicar o mostrar qué ocurre si falta un archivo. Son ejemplos para prepararse, **no un cuestionario cerrado**. No se evalúa memorizar nombres de botones, sino comprender lo construido y saber comprobarlo. La explicación es individual, también cuando se hayan compartido dudas o ideas con compañeros.
 
 ### Cómo se relaciona con el RA1
 
@@ -210,11 +283,11 @@ En el lienzo añadid una nota con vuestro nombre y la pregunta que resuelve cada
 | d) Procesamiento | Uniones, filtrado, agregación y resultados contrastados |
 | e) Presentación | Informe comprensible, periodo identificado y explicación para dirección |
 
-Es una orientación para revisar vuestro trabajo; las ponderaciones y la calificación corresponden al profesor. No se valora solo que «se cree un archivo»: debe responder al encargo y superar las comprobaciones.
+Esta relación ayuda a interpretar las evidencias de la rúbrica anterior. No se valora solo que «se cree un archivo»: debe responder al encargo y superar las comprobaciones.
 
 ## 10. Organización de las sesiones y continuación
 
-Como orientación, reservad **tres sesiones de 55–60 minutos**, ajustables al ritmo del aula: diseño e informe principal; listado de control y validación; job, pruebas y entrega. Si necesitáis más tiempo para los controles automáticos, completadlos en una sesión adicional antes de dar la práctica por terminada.
+Como orientación, reservad **tres sesiones de 55–60 minutos**, ajustables al ritmo del aula: diseño e informe principal; listado de control y validación; job, pruebas y preparación de la entrega en GitHub. El profesor organizará aparte los encuentros individuales. Si necesitáis más tiempo para los controles automáticos, completadlos en una sesión adicional antes de dar la práctica por terminada.
 
 Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos `cobrado`?, ¿qué demuestra la repetición?, ¿qué fallo impide publicar?, ¿por qué este informe no mide ocupación?
 

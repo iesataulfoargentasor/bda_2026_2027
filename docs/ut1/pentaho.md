@@ -77,7 +77,7 @@ Con Spoon, sin escribir el motor:
 | Escala | Local, programada o en un servidor. Petabytes → otro stack |
 
 !!! warning "Versión y Java"
-    Usad la versión de PDI que indique el aula (en las prácticas, **9.4** Community). PDI 9.x espera **Java 8**. Si Spoon no arranca, lo primero es `java -version`, no “reinstalar Windows”. En Windows: descomprimid el zip y lanzad `spoon.bat`. En Linux: `spoon.sh` (puede hacer falta un JDK 8 y, en algunas distros antiguas, una librería WebKit; el profesor os dirá el paquete del lab).
+    Usad la versión de PDI que indique el aula (en las prácticas, **9.4** Community). Utilizad el entorno Java configurado para esa instalación por el aula; no extrapoléis una recomendación a todas las versiones 9.x. Si Spoon no arranca, lo primero es `java -version`, no “reinstalar Windows”. En Windows: descomprimid el zip y lanzad `spoon.bat`. En Linux: `spoon.sh` (el profesor os indicará el JDK y, si hace falta, las bibliotecas del laboratorio).
 
 Descarga Community (Hitachi / el espejo que indique el aula): el zip es `pdi-ce-9.4.0.0-343.zip` (carpeta `data-integration`, con `spoon.bat`). **No** bajéis `pme-ce-…`: eso es otro programa (editor de metadatos), no Spoon.
 
