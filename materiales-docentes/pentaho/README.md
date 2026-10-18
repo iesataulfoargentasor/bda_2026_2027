@@ -6,6 +6,12 @@
 
 Consulta la [guía de reparto y configuración de Moodle](guia-moodle.md): asignación de A001 a A015, entrega individual de los ZIP, tareas de avance por sesión, entrega final, textos para copiar y rúbrica con defensa individual.
 
+## Solución de referencia para el profesor
+
+Consulta la [solución explicada paso a paso](solucion-profesor.md) o descarga el [paquete completo de la solución Pentaho](solucion-profesor-pentaho.zip). Incluye cuatro transformaciones, el job de cierre, los datos A001, los dos informes esperados, las evidencias de 25 pruebas en PDI 9.4 y orientaciones para la rúbrica sobre 10,00 puntos y la defensa individual de 2,00 puntos.
+
+Descomprime el ZIP completo y abre `procesos/cierre_hotel.kjb` en Spoon. La misma solución se ha comprobado con los 15 paquetes personalizados. Este material es una referencia de corrección; al estar en el repositorio público, también puede consultarlo el alumnado. Los avances observados en clase y la defensa individual siguen siendo necesarios para evaluar su comprensión.
+
 ## Antes de la primera sesión
 
 Para cargar la rúbrica con el complemento compatible, consulta las [instrucciones de importación](importar-rubrica.md) y descarga el [CSV de la rúbrica](rubrica-pentaho-importar.csv). Requiere los complementos indicados en la guía; no se importa desde el calificador estándar.
