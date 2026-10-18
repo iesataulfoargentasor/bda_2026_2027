@@ -1,0 +1,152 @@
+[
+  {
+    "title": "El informe de las ocho empieza a llegar tarde",
+    "label": "Continuamos el recorrido del cobro de Ana.",
+    "active": 0,
+    "heading": "La pregunta: ¿cómo terminar el cálculo a tiempo?",
+    "body": "Recepción registra operaciones; el histórico prepara el informe.",
+    "takeaway": "Tener cuatro hoteles no obliga a tener un clúster.",
+    "narration": "Vamos a volver al hotel de Laredo. Ana acaba de pagar su estancia y, por ahora, todo funciona bien: recepción tiene su reserva y el pago está registrado. El problema aparece más tarde. Durante la noche, el grupo reúne los cobros para preparar el informe de dirección. Pero cada vez hay más histórico y el informe empieza a llegar después de las ocho. ¿Cómo podríamos ayudar? Vamos a resolverlo poco a poco, siguiendo ese mismo cobro. Así entenderemos por qué puede interesarnos un clúster.",
+    "kind": "normal"
+  },
+  {
+    "title": "Antes de repartir, localizamos la espera",
+    "label": "El recurso que falta determina la mejora.",
+    "active": 0,
+    "heading": "Leer → calcular → comunicar → combinar",
+    "body": "Medir tiempo de cada fase, uso de memoria, disco y red.",
+    "takeaway": "Más procesadores no arreglan cualquier cuello de botella.",
+    "narration": "Antes de añadir máquinas, conviene detenerse en una pregunta: ¿en qué está empleando el tiempo el ordenador? Imaginad que pasa casi toda la noche esperando a leer un disco. En ese caso, darle más procesadores no resolvería la espera. O quizá le falta memoria y necesita guardar continuamente resultados temporales. Por eso empezamos midiendo. Una vez localizado el problema, ya podemos decidir qué mejorar. Y recordad nuestro objetivo: preparar el informe a tiempo, mientras recepción continúa atendiendo a sus clientes.",
+    "kind": "normal"
+  },
+  {
+    "title": "Dos formas de aumentar la capacidad",
+    "label": "Mejorar una máquina o incorporar más máquinas.",
+    "active": 0,
+    "heading": "Vertical: más recursos en el mismo equipo",
+    "body": "Horizontal: más equipos que colaboran mediante software preparado.",
+    "takeaway": "Vertical = scale-up · Horizontal = scale-out",
+    "narration": "Supongamos que la medición confirma que necesitamos más capacidad. Tenemos dos caminos. El primero es mejorar el ordenador que ya usamos, por ejemplo ampliando su memoria. Eso se llama crecer en vertical. Es una opción perfectamente válida si resuelve el problema. Ahora bien, puede llegar un momento en que esa máquina ya no admita más recursos o resulte demasiado cara. Entonces aparece el segundo camino: incorporar otros ordenadores y hacer que colaboren. A eso lo llamamos crecer en horizontal. Veamos cómo sería esa colaboración.",
+    "kind": "normal"
+  },
+  {
+    "title": "Un clúster es un equipo de ordenadores",
+    "label": "Cada nodo conserva sus propios recursos.",
+    "active": 1,
+    "heading": "Nodos + red + coordinación",
+    "body": "Cada nodo tiene procesador y memoria; los datos pueden estar locales o en otro almacén.",
+    "takeaway": "Varios núcleos en un portátil siguen siendo una sola máquina.",
+    "narration": "Pensad en un equipo que prepara un trabajo entre varias personas. Cada una dispone de su mesa y de sus materiales, pero necesitan ponerse de acuerdo. En un clúster ocurre algo parecido. Cada ordenador, o nodo, tiene su procesador y su memoria; la red les permite comunicarse y un programa organiza el trabajo. Por eso, tener varios núcleos dentro de un portátil es diferente: sigue siendo un solo equipo. Para nuestro informe vamos a imaginar cuatro nodos. No son los ordenadores de recepción, sino los que hemos destinado al histórico.",
+    "kind": "normal"
+  },
+  {
+    "title": "Dividimos los cobros en partes distintas",
+    "label": "Cada registro debe entrar en una sola partición del cálculo.",
+    "active": 1,
+    "heading": "Particionar: repartir datos diferentes",
+    "body": "A contiene unos cobros; B, otros; C y D completan el conjunto.",
+    "takeaway": "Particiones distintas → sumas parciales → total",
+    "narration": "Ahora que tenemos el equipo, vamos a darle una tarea concreta: sumar los cobros de un año. Podemos dividirlos en cuatro grupos y encargar un grupo a cada trabajador. Esos grupos se llaman particiones. Fijaos en el dibujo: cada letra representa una parte distinta. Si sus sumas son cien, doscientos, trescientos y cuatrocientos euros, al reunirlas obtenemos mil. El cobro de Ana estará en una sola de esas partes. Esa es la idea de particionar: repartir el contenido para que cada nodo haga una parte del cálculo.",
+    "kind": "normal"
+  },
+  {
+    "title": "El coordinador sigue el trabajo hasta el final",
+    "label": "Repartir también requiere saber qué está terminado.",
+    "active": 1,
+    "heading": "Asignar tareas → comprobar → combinar → publicar",
+    "body": "Una tarea se puede reintentar; su resultado no debe contarse dos veces.",
+    "takeaway": "La coordinación también necesita un plan de recuperación.",
+    "narration": "Pero falta alguien que organice ese reparto. ¿Quién sabe qué parte ha terminado y cuál sigue pendiente? Esa es la función del coordinador. Asigna las tareas y recoge sus resultados. Ahora imaginad que un trabajador termina, pero pierde la conexión justo antes de avisar. Quizá haya que repetir su tarea. Podemos hacerlo, siempre que su resultado no se sume dos veces. Así que repartir el cálculo también exige llevar un control. Y ese control necesita recuperarse si falla: no basta con proteger a los trabajadores y olvidarnos del coordinador.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cuatro nodos no garantizan cuatro veces más velocidad",
+    "label": "Una parte del recorrido puede seguir siendo secuencial.",
+    "active": 1,
+    "heading": "100 minutos = 20 sin repartir + 80 repartibles",
+    "body": "Con cuatro trabajadores ideales: 20 + 80/4 = 40 minutos.",
+    "takeaway": "A esos 40 minutos todavía se añade la coordinación.",
+    "narration": "Hasta aquí parece que cuatro trabajadores deberían tardar la cuarta parte. Sin embargo, vamos a mirar el cálculo con calma. El trabajo original ocupa cien minutos. De ellos, veinte corresponden a un paso que solo podemos hacer una vez y que no sabemos repartir. Los otros ochenta sí se dividen entre cuatro: quedan veinte minutos por trabajador. ¿Qué ocurre con los primeros veinte? Siguen ahí. Por tanto, sumamos veinte más veinte: cuarenta minutos, y todavía falta la coordinación. Hemos mejorado mucho, pero no cuatro veces. Esa parte que no se puede repartir pone un límite.",
+    "kind": "normal"
+  },
+  {
+    "title": "Repartir por hotel puede dejar un nodo saturado",
+    "label": "Mismo número de archivos no significa mismo esfuerzo.",
+    "active": 1,
+    "heading": "Laredo en agosto puede concentrar muchas más reservas",
+    "body": "Crear particiones de tamaño parecido y asignar tareas a trabajadores libres.",
+    "takeaway": "Equilibrio de carga: repartir el trabajo, no solo los nombres.",
+    "narration": "Además, incluso la parte repartible puede quedar mal distribuida. Imaginad que damos todas las reservas de Laredo a un nodo y las de Potes a otro. En agosto, quizá Laredo tenga muchísimo más trabajo. Los demás terminan y esperan, pero el informe aún no está completo. Para evitarlo, podemos hacer grupos más pequeños y parecidos, y entregar otra tarea al nodo que quede libre. Eso es equilibrar la carga. Lo importante es repartir un esfuerzo parecido, no simplemente dar a cada máquina un archivo o el nombre de un hotel.",
+    "kind": "normal"
+  },
+  {
+    "title": "Un disco falla mientras se calcula el histórico",
+    "label": "Repartir los datos no significa tener copias.",
+    "active": 2,
+    "heading": "Replicar: conservar el mismo dato en otro lugar",
+    "body": "Partición A en un nodo y copia de A en otro nodo independiente.",
+    "takeaway": "Particionar distribuye; replicar permite recuperar datos.",
+    "narration": "Bien, ya hemos repartido mejor el trabajo. Ahora vamos a introducir un problema: se estropea el disco que guardaba la parte de Ana. ¿Nos ayudan automáticamente las otras máquinas? No, porque tenían partes diferentes. Para recuperar esa información necesitamos una copia, o un origen desde el que reconstruirla. Aquí aparece la réplica. Mirad el esquema: A y copia de A contienen lo mismo; B contiene otra parte. Quedaos un momento con esa diferencia. Particionar es repartir datos distintos. Replicar es conservar de nuevo los mismos datos, para poder recuperarlos.",
+    "kind": "normal"
+  },
+  {
+    "title": "Recuperarse exige algo más que una copia",
+    "label": "Detectar el fallo y reasignar el trabajo lleva tiempo.",
+    "active": 2,
+    "heading": "Detectar → localizar datos → repetir → validar",
+    "body": "Servicio disponible y cálculo recuperable son objetivos relacionados, pero distintos.",
+    "takeaway": "No publicar un cierre incompleto como si fuera definitivo.",
+    "narration": "Con la copia disponible, ya tenemos una salida, aunque todavía hay que organizarla. Primero detectamos que el nodo ha dejado de responder. Después buscamos los datos y encargamos la tarea a otro trabajador. Si el cálculo quedó interrumpido, tendrá que repetirse y eso lleva tiempo. Por tanto, conservar los datos y terminar el informe son dos cosas relacionadas, pero distintas. Mientras esperamos, no mostraremos un cierre incompleto como si fuera definitivo. Podemos mantener el último informe válido, indicando su fecha y avisando del retraso. Así dirección sabe exactamente qué está viendo.",
+    "kind": "normal"
+  },
+  {
+    "title": "Una réplica no sustituye a una copia de seguridad",
+    "label": "La continuidad y la recuperación histórica cubren riesgos distintos.",
+    "active": 2,
+    "heading": "Un borrado accidental puede propagarse a las réplicas",
+    "body": "Las copias de seguridad necesitan conservación y pruebas de restauración.",
+    "takeaway": "Más nodos, por sí solos, no garantizan disponibilidad.",
+    "narration": "Y hay un detalle más que merece la pena aclarar antes de seguir. Imaginad que el disco funciona, pero alguien borra un dato por error. Ese borrado podría llegar también a las réplicas. Por eso una réplica no sustituye a una copia de seguridad que permita recuperar un estado anterior. Cada protección responde a un problema diferente. También conviene que las copias no compartan todos los riesgos: si están conectadas a la misma fuente de alimentación, una avería puede afectar a ambas. La recuperación hay que diseñarla y probarla.",
+    "kind": "normal"
+  },
+  {
+    "title": "¿Qué queremos mejorar exactamente?",
+    "label": "Cuatro propiedades ayudan a evaluar el diseño.",
+    "active": 2,
+    "heading": "Rendimiento · Disponibilidad · Equilibrio · Escalabilidad",
+    "body": "Acabar antes · recuperarse · repartir bien · aumentar capacidad.",
+    "takeaway": "Cada objetivo se comprueba con una medida diferente.",
+    "narration": "Si volvemos ahora a lo que hemos hecho, los cuatro conceptos principales se entienden mejor. Al repartir el cálculo, buscábamos terminar antes: rendimiento. Al preparar la recuperación, buscábamos mantener el servicio: disponibilidad. Al dar trabajo a los nodos que estaban libres, mejorábamos el equilibrio de carga. Nos queda la escalabilidad: comprobar cuánto aumenta la capacidad cuando añadimos recursos. Para saberlo, repetimos una prueba con dos, cuatro y ocho nodos. Si apenas mejora, habrá que localizar qué sigue frenando el conjunto. Añadir máquinas es una acción; conseguir más capacidad es el resultado que debemos comprobar.",
+    "kind": "normal"
+  },
+  {
+    "title": "En agosto añadimos capacidad; en noviembre la reducimos",
+    "label": "La elasticidad adapta los recursos a la demanda.",
+    "active": 3,
+    "heading": "Añadir nodos: scale-out · Retirarlos: scale-in",
+    "body": "Antes de retirar un nodo, terminar o redistribuir tareas y conservar los datos.",
+    "takeaway": "Scale-in significa quitar nodos; no es escalado vertical.",
+    "narration": "Esa capacidad tampoco tiene por qué ser igual todo el año. Pensemos en agosto, cuando aumenta la actividad, y en noviembre, cuando quizá sobren recursos. Si podemos añadir trabajadores y retirarlos según la demanda, tenemos elasticidad. En las herramientas veréis scale out para añadir nodos y scale in para quitarlos. Pero quitarlos exige preparar la salida: terminar o mover sus tareas, y conservar sus datos. No queremos ahorrar apagando la única máquina que guarda una parte del histórico. Esto nos lleva a una última decisión: dónde dejamos los datos.",
+    "kind": "normal"
+  },
+  {
+    "title": "El almacenamiento y el cálculo pueden separarse",
+    "label": "Dos diseños posibles para el mismo histórico.",
+    "active": 3,
+    "heading": "Datos junto al cálculo, o almacenamiento compartido aparte",
+    "body": "Acercar el cálculo reduce transferencias; separarlo facilita variar los trabajadores.",
+    "takeaway": "La red, el acceso y las copias siguen necesitando diseño.",
+    "narration": "Hasta ahora hemos imaginado los datos cerca del nodo que calcula. Ese diseño permite llevar la tarea al lugar donde ya está la información, y evita mover grandes cantidades por la red. También podemos guardarlos en un almacén separado, como ocurre en muchos sistemas de nube. Entonces los trabajadores se conectan, calculan y pueden retirarse sin llevarse el histórico. A cambio, necesitan acceder a él por la red. No hay una opción que gane siempre. Elegimos teniendo en cuenta cuánto vamos a mover, cuánto cuesta y cómo mantendremos el acceso.",
+    "kind": "normal"
+  },
+  {
+    "title": "El cobro de Ana llega una sola vez y a tiempo",
+    "label": "El clúster tiene sentido cuando resuelve el problema medido.",
+    "active": -1,
+    "heading": "Medir → repartir → recuperar → ajustar",
+    "body": "El histórico puede usar un clúster mientras recepción conserva su propio sistema.",
+    "takeaway": "¿Se puede repartir? ¿Qué pasa si falla? ¿Compensa el coste?",
+    "narration": "Y con eso podemos regresar al informe de las ocho. El cobro de Ana ha entrado en una partición, se ha sumado junto a otros y ha llegado al resultado una sola vez. Si un trabajador falla, sabemos cómo recuperar su parte. Si cambia la demanda, sabemos qué revisar antes de añadir o retirar recursos. Esa es la utilidad del clúster: conseguir que varias máquinas colaboren de una forma organizada. Antes de elegirlo, preguntad si podéis repartir el trabajo, cómo responderéis a los fallos y si la mejora compensa el coste. El objetivo sigue siendo el mismo: un informe completo, fiable y a tiempo.",
+    "kind": "normal"
+  }
+]

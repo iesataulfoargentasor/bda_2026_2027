@@ -8,18 +8,18 @@ tags:
 
 # 1.2. Clústeres de computadoras
 
-## Vídeo resumen: las ideas esenciales
+## Vídeo: el informe del hotel entre varias máquinas
 
-Empieza con este resumen para entender qué es un clúster, cómo reparte el trabajo y qué necesita para recuperarse de un fallo. El ejemplo del grupo hotelero ayuda a distinguir particiones y réplicas, crecimiento vertical y horizontal, y las ventajas y límites de añadir máquinas. **Duración: 3 minutos y 1 segundo.**
+Sigue el cobro de Ana hasta el informe de las ocho para entender cómo colaboran los nodos de un clúster. La explicación recorre el reparto de tareas, las diferencias entre particiones y réplicas, la recuperación de fallos y los límites de añadir máquinas, con ejemplos paso a paso y pausas para asimilar las ideas. **Duración: 9 minutos y 55 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/clusters-resumen-portada.jpg" aria-label="Resumen de Clústeres de computadoras" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/clusters-resumen.mp4" type="video/mp4">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/clusters-natural-portada.jpg" aria-label="Clústeres: el informe del hotel entre varias máquinas" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/clusters-natural.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las actividades del apartado.
 
-[Descargar el vídeo](../assets/ut1/clusters-resumen.mp4) · [Leer la transcripción](../assets/ut1/clusters-resumen.txt) · [Descargar los subtítulos](../assets/ut1/clusters-resumen.es.srt)
+[Descargar el vídeo](../assets/ut1/clusters-natural.mp4) · [Leer la transcripción](../assets/ut1/clusters-natural.txt) · [Descargar los subtítulos](../assets/ut1/clusters-natural.es.srt)
 
 ## Del problema al reparto del trabajo
 
