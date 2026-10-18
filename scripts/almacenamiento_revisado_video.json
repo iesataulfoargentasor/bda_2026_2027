@@ -6,7 +6,7 @@
     "heading": "Ana reserva tres noches en Laredo",
     "body": "Recepción atiende su estancia. Dirección analizará después los resultados.",
     "takeaway": "El mismo dato puede tener funciones diferentes.",
-    "narration": "Vamos a acompañar otra vez a Ana, que ha reservado tres noches en Laredo. Mientras prepara su llegada, recepción necesita consultar la reserva y registrar los pagos. Más adelante, dirección querrá estudiar los resultados del hotel y marketing revisará sus campañas. Fijaos: partimos de la misma reserva, pero cada persona necesita utilizarla de una manera. Por eso vamos a seguir su recorrido, sin empezar por una lista de tecnologías. En cada paso nos preguntaremos qué necesitamos guardar, para qué lo necesitamos y qué debe ocurrir si algo falla."
+    "narration": "Vamos a acompañar otra vez a Ana, que ha reservado tres noches en Laredo. Mientras prepara su llegada, recepción necesita consultar la reserva y registrar los pagos. Más adelante, dirección querrá estudiar los resultados del hotel y marketing revisará sus campañas. Fijaos: partimos de la misma reserva, pero cada persona necesita utilizarla de una manera. Seguiremos el recorrido elegido para nuestro hotel; otros proyectos pueden organizarlo de otra manera. Por eso vamos a seguir la reserva, sin empezar por una lista de tecnologías. En cada paso nos preguntaremos qué necesitamos guardar, para qué lo necesitamos y qué debe ocurrir si algo falla."
   },
   {
     "title": "Primero: que la reserva esté bien relacionada",
@@ -72,6 +72,15 @@
     "narration": "Pero tener muchos archivos juntos todavía no hace que ese lago sea útil. Si mañana otra persona abre la carpeta, necesitará saber qué contiene cada conjunto, de dónde viene y cuándo se actualizó. Por eso lo acompañamos de un catálogo, responsables y reglas de acceso. Podemos separar originales, datos preparados y resultados publicados. Así sabremos dónde buscar y qué versión utilizar. También fijamos cuánto tiempo conservar cada información. El objetivo es poder trabajar con ella de forma controlada, no guardar cualquier dato para siempre. Con esto ya tenemos materiales que podemos recuperar y entender."
   },
   {
+    "title": "En el mismo lago podemos trabajar de dos maneras",
+    "label": "El esquema depende de la zona y del uso de los datos.",
+    "active": 1,
+    "heading": "Original: interpretar al leer · Tabla preparada: validar al escribir",
+    "body": "Conservar el mensaje recibido puede convivir con tablas de campos y tipos definidos.",
+    "takeaway": "Un lago puede contener originales y tablas preparadas.",
+    "narration": "Detengámonos un momento en esas zonas. Cuando conservamos el mensaje original de la reserva, podemos decidir al leerlo qué campos necesitamos y cómo interpretar sus tipos. Eso no impide comprobar antes que el archivo ha llegado correctamente. Después, si preparamos una tabla de cobros, podemos definir sus columnas y comprobar los tipos al escribirla. Por ejemplo, el importe debe poder tratarse como un número y la fecha como una fecha válida. Las dos formas de trabajo caben en el mismo lago. Así que interpretar al leer es una posibilidad para los originales, no una obligación para todo lo que guardemos allí."
+  },
+  {
     "title": "Del original a una respuesta para dirección",
     "label": "Ahora hay que preparar información comparable.",
     "active": 2,
@@ -79,6 +88,15 @@
     "body": "El warehouse puede tener tablas de preparación; el lago también puede contener resultados.",
     "takeaway": "El tipo de almacén no determina por sí solo ETL o ELT.",
     "narration": "La directora, sin embargo, no quiere recorrer esas carpetas. Su pregunta es más concreta: ¿cuánto se cobró en cada hotel durante el cierre acordado? Para responder, comprobamos pagos confirmados, evitamos duplicados y acordamos qué incluye la cifra. Si Laredo cuenta dinero recibido y Potes el precio de las reservas, sumar ambas columnas no sirve. La información comparable puede organizarse en un almacén analítico, o data warehouse. En nuestro caso publicamos el cierre anterior a las ocho. Pero fijémonos en un matiz: dentro del almacén puede haber tablas de preparación que todavía no son informes validados. Y el lago también puede contener datos preparados y resultados. Por tanto, no son dos cajas donde una solo admite originales y la otra solo datos limpios. Son formas de organizar el trabajo, con zonas y permisos según su finalidad."
+  },
+  {
+    "title": "¿Y si el mensaje incorpora un campo nuevo?",
+    "label": "Conservar una entrada y utilizarla en un informe son pasos distintos.",
+    "active": 2,
+    "heading": "JSON en el almacén → interpretación → indicador validado",
+    "body": "Algunos motores admiten datos semiestructurados, como Snowflake con VARIANT.",
+    "takeaway": "Guardar el campo no lo convierte en una medida fiable.",
+    "narration": "Veámoslo con un cambio pequeño en la reserva de Ana. El canal web añade al mensaje un campo sobre el desayuno. Algunos almacenes analíticos permiten guardar ese mensaje en formato JSON; por ejemplo, Snowflake dispone del tipo Variant. Así podemos conservar el campo nuevo sin añadir inmediatamente una columna al informe de dirección. Ahora bien, para utilizarlo tendremos que entender qué significa, comprobar sus valores y adaptar la transformación o el modelo cuando corresponda. Una cosa es recibir la información y otra convertirla en un indicador fiable. Por eso debemos comprobar las capacidades del motor elegido, en lugar de suponer que todos los warehouses solo admiten tablas ya preparadas."
   },
   {
     "title": "Podemos preparar el mismo informe de dos maneras",
@@ -103,9 +121,9 @@
     "label": "Compartimos definiciones y limitamos el acceso.",
     "active": 3,
     "heading": "Marketing estudia campañas; finanzas revisa cobros",
-    "body": "Cada equipo recibe información adecuada para su trabajo.",
+    "body": "Puede recibir datos del warehouse, de otras fuentes o de ambos.",
     "takeaway": "Data mart: un ámbito analítico concreto.",
-    "narration": "Ahora que la información es comparable, podemos acercársela a cada equipo. Finanzas necesita revisar cobros; marketing quiere estudiar campañas. No tienen por qué ver todas las tablas ni los datos personales de Ana que no necesitan. Un data mart organiza la parte útil para un ámbito concreto. En nuestro ejemplo lo alimentamos desde el almacén común, para compartir definiciones. También hay marts que combinan otras fuentes. Lo importante es documentarlo. Si dos informes difieren, primero revisamos el periodo, las devoluciones o los impuestos que incluye cada uno, antes de concluir que uno está mal."
+    "narration": "Ahora que la información es comparable, podemos acercársela a cada equipo. Finanzas necesita revisar cobros; marketing quiere estudiar campañas. No tienen por qué ver todas las tablas ni los datos personales de Ana que no necesitan. Un data mart organiza la parte útil para un ámbito concreto. En nuestro ejemplo lo alimentamos desde el almacén común, para compartir definiciones. Pero esa es nuestra elección. Un mart también puede alimentarse directamente de otras fuentes, sin pasar por un warehouse, o combinar ambas vías. Por ejemplo, marketing podría preparar su conjunto desde los archivos de campañas y las reservas. Lo que define al mart es el ámbito al que sirve. En cualquier caso, debemos documentar las fuentes y mantener definiciones comparables. Si dos informes difieren, primero revisamos el periodo, las devoluciones o los impuestos que incluye cada uno, antes de concluir que uno está mal."
   },
   {
     "title": "Con el recorrido claro, elegimos las herramientas",

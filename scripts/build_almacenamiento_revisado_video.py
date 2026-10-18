@@ -19,6 +19,7 @@ def render(s,i):
  d.text((1235,25),f'{i+1} / {len(SCENES)}',font=base.font(18),fill=base.MUTED,anchor='ra')
  base.text(d,(44,71),s['title'],35,base.INK,1190,True)
  base.text(d,(46,130),s['label'],23,base.TEAL,1180)
+ base.text(d,(46,173),'Recorrido elegido para nuestro hotel',18,base.MUTED,1180)
  for j,t in enumerate(['RECEPCIÓN','ORIGINALES','INFORMES','DEPARTAMENTOS']):
   x=45+j*310;active=s['active'] in (-1,j)
   d.rounded_rectangle((x,207,x+265,277),radius=12,fill=base.TEAL if active else '#DFE6E3')
