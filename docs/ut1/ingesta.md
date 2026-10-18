@@ -522,7 +522,7 @@ Si el sensor de habitación no puede esperar al informe de las 8, hace falta **d
 
 Una **cola de mensajes** es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.
 
-![Productor, cola y semáforo de recepción: si el semáforo va lento, la cola aguanta](../assets/ut1/cola-mensajes.png)
+![Sensor, cola e indicador de presencia: la cola absorbe picos dentro de su capacidad y retención; no resuelve una sobrecarga permanente](../assets/ut1/cola-mensajes.png)
 
 La cola absorbe retrasos temporales dentro de su capacidad y retención. No resuelve una sobrecarga permanente ni garantiza por sí sola que el indicador siga actualizado.
 

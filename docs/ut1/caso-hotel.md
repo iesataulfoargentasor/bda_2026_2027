@@ -50,7 +50,7 @@ Los cuatro hoteles usan **el mismo** PMS (mismo dueño). Eso no significa que La
 
 Gerencia **no** abre el PMS a las 8 para sumar a mano. Quiere **un panel**: ocupación e importe cobrado **por hotel**.
 
-![Recepción registra ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa](../assets/ut1/caso-pms-y-panel.png)
+![Recepción registra en el PMS; gerencia consulta días completos. Ejemplo ilustrativo con escala de importes de 0 a 15.000 euros en pasos de 5.000. Copiar datos no sustituye el PMS](../assets/ut1/caso-pms-y-panel.png)
 
 La ilustración separa operación y análisis. Las cifras son ficticias, no resultados de los talleres. El paso intermedio incluye extraer, integrar y validar, no únicamente copiar.
 

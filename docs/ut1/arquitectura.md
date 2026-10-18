@@ -234,7 +234,7 @@ La temperatura expresa frecuencia de acceso y plazo de recuperación. No describ
 | Templado | Consultas periódicas | Informes del trimestre. |
 | Frío | Consulta excepcional, recuperación más lenta aceptable | Copias históricas sujetas a una política de conservación. |
 
-![Temperaturas del dato en el caso hotelero](../assets/ut1/temperatura-dato.png)
+![Temperatura según el uso: presencia detectada de consulta frecuente, cierre mensual e histórico poco consultado; presencia no equivale a disponibilidad](../assets/ut1/temperatura-dato.png)
 
 Aquí el semáforo representa presencia detectada, no disponibilidad comercial. La temperatura depende de frecuencia de acceso y plazo de recuperación; la antigüedad por sí sola no hace frío a un dato.
 
