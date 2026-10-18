@@ -1749,10 +1749,10 @@
 <p>El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa el enunciado: la actividad pide una propuesta razonada, sin descargar 500 GB ni instalar un clúster.</p>
 <p><a href="../../assets/ut1/transicion-500gb-revisada.mp4">Descargar el vídeo</a> · <a href="../../assets/ut1/transicion-500gb-revisada.txt">Leer la transcripción</a> · <a href="../../assets/ut1/transicion-500gb-revisada.es.srt">Descargar los subtítulos</a></p>
 <h2 id="el-caso-500-gb-y-un-portatil">El caso: 500 GB y un portátil<a class="headerlink" href="#el-caso-500-gb-y-un-portatil" title="Permanent link">&para;</a></h2>
-<p>Sois técnicos de la cadena. Debéis procesar un histórico de <strong>500 GB</strong> (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. Elegid la operación indicada por el profesor: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.</p>
+<p>Sois técnicos de la cadena. Debéis procesar un histórico de <strong>500 GB</strong> (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. El profesor indicará la operación que debéis analizar: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.</p>
 <p>El fichero está en la <strong>red de la empresa</strong> (una URL interna o una carpeta compartida), no en vuestro disco.</p>
-<p><strong>Operación</strong> (elegid <strong>una</strong>): media, desviación típica, o <em>normalizar</em> un campo (dejarlo en una escala comparable, p. ej. 0–1).</p>
-<p><strong>Destino del resultado</strong> (elegid <strong>uno</strong>, el que diga el profesor): cubo <strong>S3</strong>, <strong>Azure</strong> (Blob / Data Lake) o <strong>carpeta del aula</strong>. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa <strong>casi nada</strong>; no lo confundáis con mover los 500 GB.</p>
+<p><strong>Operación</strong> (el profesor asigna <strong>una</strong> para comparar las propuestas con el mismo encargo): media, desviación típica, o <em>normalizar</em> un campo (dejarlo en una escala comparable, p. ej. 0–1).</p>
+<p><strong>Destino del resultado</strong> (el profesor indica <strong>uno</strong>): cubo <strong>S3</strong>, <strong>Azure</strong> (Blob / Data Lake) o <strong>carpeta del aula</strong>. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa <strong>casi nada</strong>; no lo confundáis con mover los 500 GB.</p>
 <p><strong>Vuestra única máquina (el portátil):</strong></p>
 <table>
 <thead>
@@ -1867,7 +1867,7 @@
 <ul>
 <li>Lectura <strong>línea a línea</strong> o por <strong>bloques</strong> (<em>chunks</em>: trozos que caben en RAM).</li>
 <li>Cálculo <strong>incremental</strong> (una pasada: vais actualizando suma y recuento; la media es <code>suma/n</code> al final).</li>
-<li>Escribís la estadística resumida o el conjunto normalizado, según la operación elegida. Estimad también el tamaño de esa salida.</li>
+<li>Escribís la estadística resumida o el conjunto normalizado, según la operación asignada. Estimad también el tamaño de esa salida.</li>
 </ul>
 <p>Relacionadlo con <strong>secuencial</strong>: un solo proceso que lee y actualiza contadores.</p>
 <h3 id="3-opcion-2-local-paralela">3. Opción 2 — Local <strong>paralela</strong><a class="headerlink" href="#3-opcion-2-local-paralela" title="Permanent link">&para;</a></h3>

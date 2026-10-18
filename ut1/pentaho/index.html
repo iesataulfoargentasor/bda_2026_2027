@@ -2483,12 +2483,12 @@
 <p>Para ver cómo avisa Spoon: escribid <code>CP</code> en vez de <code>codigo_postal</code>. Preview: icono de prohibido, log y métricas con el campo inexistente. Corregid. Así dejáis de “adivinar” el nombre.</p>
 <h3 id="escribir">Escribir<a class="headerlink" href="#escribir" title="Permanent link">&para;</a></h3>
 <p><strong>Output → Text file output.</strong> Conectad desde el <em>Sort</em>. Primera ejecución: a menudo <strong>rellena con espacios</strong> (anchura fija). Pestaña <em>Fields</em> → <strong>Minimal width</strong>. Segunda ejecución: <code>Mirador Laredo;Trasmiera;39770</code> sin cola de blancos.</p>
-<p>Habéis <strong>procesado</strong> (menos filas, ordenadas) y <strong>presentado</strong> (CSV que se abre en Excel).</p>
+<p>Para demostrar el <strong>procesamiento</strong>, comprobad que solo quedan los alojamientos de Trasmiera, que el recuento coincide con el filtro y que están ordenados por código postal. Para <strong>presentar</strong> el resultado, añadid al CSV una explicación de qué contiene, sus campos y su alcance; que se abra en Excel no demuestra por sí solo que el destinatario lo entienda.</p>
 <h3 id="pan-sin-spoon">Pan (sin Spoon)<a class="headerlink" href="#pan-sin-spoon" title="Permanent link">&para;</a></h3>
 <p>Guardad <code>taller1_trasmiera.ktr</code>. Borrad el CSV de salida. En la carpeta de PDI:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file="C:\ruta\taller1_trasmiera.ktr"
 </span></code></pre></div>
-<p>En Linux/macOS: <code>pan.sh /file=...</code>. El log debe terminar en <em>Finished</em> y el fichero debe <strong>reaparecer</strong>. Eso es el procedimiento de madrugada.</p>
+<p>En Linux/macOS: <code>pan.sh /file=...</code>. Revisad que el registro indique una ejecución sin errores y que el fichero vuelva a generarse. Después abridlo y repetid las comprobaciones de filtro, recuento y orden: su existencia por sí sola no demuestra que las reglas se hayan aplicado correctamente. Así ejecutáis el procedimiento sin Spoon; para lanzarlo de madrugada necesitaríais además un programador de tareas.</p>
 <p>Parámetros útiles (también en Kitchen): <code>/level:Basic</code> (o <code>Error</code>, <code>Debug</code>, <code>Rowlevel</code>…) y <code>/param:"nombre=valor"</code> si el flujo espera variables.</p>
 <hr />
 <h2 id="taller-2-unir-dos-origenes-y-agregar">Taller 2 — Unir dos orígenes y agregar<a class="headerlink" href="#taller-2-unir-dos-origenes-y-agregar" title="Permanent link">&para;</a></h2>
@@ -2712,7 +2712,7 @@
 <li><em>Sort</em> por <code>id_cadena</code>, <code>cadena</code> → <strong>Group by:</strong> <code>id_cadena</code>, <code>cadena</code>. En <em>Name</em> del agregado: <code>SUM(noches)</code> → <strong><code>noches_total</code></strong>, <code>SUM(cobrado)</code> → <strong><code>importe_total</code></strong>.</li>
 <li><strong>Transform → Calculator.</strong> Operación <em>A/B</em> (o la equivalente en vuestra versión): <code>importe_total / noches_total</code> → <code>precio_medio_noche</code>. Recorred el desplegable: hay texto, fechas y números; no memoricéis la lista.</li>
 </ol>
-<p>Si el aula <strong>no</strong> tiene cubo, <em>Text file output</em> a <code>informe_cadenas.csv</code> en la carpeta de trabajo y listo: el oficio de d) y e) ya está.</p>
+<p>Si el aula <strong>no</strong> tiene cubo, utilizad <em>Text file output</em> para guardar <code>informe_cadenas.csv</code> en la carpeta de trabajo. El destino local permite trabajar los mismos criterios: para d), ejecutad las reglas y contrastad grupos, recuentos e importes con lo esperado; para e), explicad el alcance, las unidades y el significado del informe.</p>
 <h3 id="destino-s3-si-el-aula-usa-aws">Destino S3 (si el aula usa AWS)<a class="headerlink" href="#destino-s3-si-el-aula-usa-aws" title="Permanent link">&para;</a></h3>
 <p>Antes de publicar, contrastad el resultado del taller 4 con esta tabla. Las medias se muestran redondeadas a dos decimales; mantened la precisión del cálculo hasta la presentación.</p>
 <table>
@@ -2745,7 +2745,7 @@
 </tr>
 </tbody>
 </table>
-<p>El primer cubo se crea en el <a href="../aws-academy-s3/" rel="noopener" target="_blank">taller de AWS Academy</a> (consola, <strong>privado</strong>, sin claves). Este paso de Spoon es <strong>después</strong>, y solo si el profesor lo abre: en Learner Lab a menudo <strong>no</strong> podéis crear un usuario IAM. Si no hay claves, <em>Text file output</em> a carpeta y el oficio de d) y e) ya está.</p>
+<p>El primer cubo se crea en el <a href="../aws-academy-s3/" rel="noopener" target="_blank">taller de AWS Academy</a> (consola, <strong>privado</strong>, sin claves). Este paso de Spoon es <strong>después</strong>, y solo si el profesor lo abre: en Learner Lab a menudo <strong>no</strong> podéis crear un usuario IAM. Si no hay claves, utilizad <em>Text file output</em> a carpeta, verificad el contenido y acompañadlo de la explicación para gerencia. Cambiar de destino no sustituye las comprobaciones de d) ni la interpretación exigida en e).</p>
 <ol>
 <li><em>Bucket</em> del <strong>centro</strong> o el vuestro del lab (el nombre lo da el profesor; no copiéis el de otro ciclo).</li>
 <li>Credenciales por <strong>variables de entorno</strong> (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, y si aplica <code>AWS_SESSION_TOKEN</code>) o el perfil <code>~/.aws/credentials</code>.</li>
@@ -2886,7 +2886,7 @@
 <li>Hop <strong>desde el Merge hacia el origen</strong>: el dato no entra. El hop sale del <em>Sort</em> y entra en el Merge.</li>
 <li>Java Filter + nulos sin <em>If field value is null</em>.</li>
 <li>JSON output sin <em>Get fields</em>.</li>
-<li>Cumplir d) (el fichero se genera) y olvidar e) (nadie entiende las claves).</li>
+<li>Dar por cumplido d) porque se genera un fichero, sin comprobar las reglas y sus resultados; u olvidar e), dejando claves y cifras sin una explicación comprensible.</li>
 <li>Rutas absolutas de vuestra cuenta de casa.</li>
 <li>Seguir el PDF con <code>listings.csv</code> de Madrid o un <code>sports</code> de RDS.</li>
 </ul>

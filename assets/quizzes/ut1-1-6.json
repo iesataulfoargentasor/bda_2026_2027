@@ -90,7 +90,7 @@
     {
       "topic": "E y T",
       "href": "../ingesta/",
-      "prompt": "En la E, ¿qué dos reglas hay? En la T, ¿qué no es transformar?",
+      "prompt": "¿Qué opción combina una extracción respetuosa con el sistema de origen y una transformación válida de los datos?",
       "code": "",
       "options": [
         "Extraer corrigiendo la fuente; transformar aplicando reglas a los hechos extraídos.",
@@ -99,7 +99,7 @@
         "Extraer los agregados finales; transformar descartando originales antes de validarlos."
       ],
       "answer": 2,
-      "explain": "Si colapsa el programa operativo, la empresa pierde dinero operando. Un job en verde con filas cojas envenena el informe: se **aparta**. Una T pesada no va en el mismo milisegundo que el evento."
+      "explain": "Extraer debe evitar interferir con la operación del sistema de origen. Transformar aplica reglas a datos existentes: filtrar, convertir tipos, unir o agregar. Corregir la fuente durante la extracción cambia el origen; rellenar ausencias no las convierte en hechos observados; descartar originales antes de validar dificulta comprobar y reprocesar el resultado."
     },
     {
       "topic": "Snapshot e incremental",
