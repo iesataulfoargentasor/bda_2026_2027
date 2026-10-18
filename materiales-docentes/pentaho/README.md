@@ -8,6 +8,8 @@ Consulta la [guía de reparto y configuración de Moodle](guia-moodle.md): asign
 
 ## Antes de la primera sesión
 
+Para cargar la rúbrica con el complemento compatible, consulta las [instrucciones de importación](importar-rubrica.md) y descarga el [CSV de la rúbrica](rubrica-pentaho-importar.csv). Requiere los complementos indicados en la guía; no se importa desde el calificador estándar.
+
 1. Descomprimir el paquete docente y asignar un código distinto a cada alumno.
 2. Guardar la correspondencia código/alumno en Moodle o en el registro privado del profesor, nunca en este repositorio.
 3. Entregar a cada alumno únicamente su ZIP mediante Moodle o en el aula. No necesita Python para utilizar los CSV.
