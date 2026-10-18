@@ -121,7 +121,7 @@ En S3:
 Abrid un objeto. Apuntad:
 
 - **Key** (clave): `lago/reservas/reservas_pdi.csv` — eso es el “path”.
-- **Size**: unos KB. **No** subáis los 500 GB de la [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"}: el crédito del lab no es un disco infinito y el aula no lo necesita para entender el cubo.
+- **Size**: unos KB. **No** subáis los 500 GB de la [tarea de clase](transicion-ut2.md){target="_blank" rel="noopener"}: el crédito del lab no es un disco infinito y el aula no lo necesita para entender el cubo.
 
 No subáis DNI, fotos de huéspedes ni un Excel con NIF. El lago de clase usa reservas **de práctica**.
 

@@ -510,6 +510,10 @@ Diez preguntas (A–D, **una** correcta) sobre los conceptos del apartado. No pu
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1-1-8.json"></div>
 
+## Cierre de la unidad
+
+Después de los talleres, completad la [práctica integradora: el informe del hotel](tarea-clase.md). Reúne diseño, uniones, control de reservas sin cobro, validación, ejecución con Kitchen y entrega para dirección.
+
 ## Para practicar (Moodle manda)
 
 No sustituye a la entrega. Comprobad que lo sostenéis en voz alta.

@@ -1,175 +1,208 @@
 ---
-title: Tarea para practicar en clase
+title: "Práctica integradora: el informe del hotel con Pentaho"
 tags:
   - Big Data
   - BDA
   - RA1
-  - RA2
+  - Pentaho
 ---
 
-# Tarea para practicar en clase
+# Práctica integradora: el informe del hotel con Pentaho
 
-Esta sesión une [1.2 Clústeres](clusters.md){target="_blank" rel="noopener"} y [1.4 Procesamiento](procesamiento.md){target="_blank" rel="noopener"} con el **RA2**: guardar mucho, calcular en varias máquinas, aguantar que una se caiga y crecer **añadiendo** recursos. Hoy **no** instaláis Spark ni Dask. Sí tenéis que saber **qué tipo de ejecución** estáis pidiendo y **por qué el portátil no es un clúster**.
+Esta práctica cierra la **UT1**. Vais a preparar una solución para el [grupo hotelero de Cantabria](caso-hotel.md): explicar qué datos necesitáis, procesarlos con Pentaho, comprobar el resultado y entregar un informe que dirección pueda interpretar sin abrir Spoon.
 
-No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase** (individual o por parejas) y se comenta al final.
+Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis conectar lo aprendido y demostrar que el procedimiento funciona, también cuando se repite o falta una entrada. Podéis trabajar individualmente o por parejas. Las fechas, la calificación y la entrega formal las establece el profesor en Moodle.
 
-!!! info "Cómo se lee esta página"
-    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}, un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
+!!! info "Dos actividades con funciones diferentes"
+    Esta práctica construye y comprueba una solución con datos pequeños. Después, la [transición a la UT2: 500 GB y un portátil](transicion-ut2.md) plantea qué revisaríamos al aumentar el volumen. No necesitáis Spark, nube ni una base de datos para completar esta práctica.
 
-## El caso: 500 GB y un portátil
+## 1. El encargo de dirección
 
-Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md){target="_blank" rel="noopener"}. **No** copiáis los 500 GB al informe.
+> «Necesito conocer el importe cobrado y el número de reservas cobradas por hotel y canal. Quiero recibir un CSV claro del cierre y saber qué reservas todavía no tienen un cobro asociado. El procedimiento debe poder repetirse y avisar si no puede generar el informe».
 
-El fichero está en la **red de la empresa** (una URL interna o una carpeta compartida), no en vuestro disco.
+El informe principal responde a dirección. El listado de reservas sin cobro es un **control interno para revisar**, no una prueba de impago: una reserva podría tener un pago pendiente o un plazo de pago que estos archivos no describen.
 
-**Operación** (elegid **una**): media, desviación típica, o *normalizar* un campo (dejarlo en una escala comparable, p. ej. 0–1).
+!!! warning "Qué representan estos datos"
+    Para esta práctica, suponemos que los tres archivos pertenecen a **un mismo cierre de aula ya seleccionado**. No tienen fechas para filtrar «ayer». Identificad el conjunto como `cierre_aula_01` y añadid en la explicación la fecha y hora de generación, sin presentarlas como fecha del cobro. Tampoco calculéis ocupación: faltan habitaciones disponibles y ocupadas por periodo.
 
-**Destino del resultado** (elegid **uno**, el que diga el profesor): cubo **S3**, **Azure** (Blob / Data Lake) o **carpeta del aula**. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa **casi nada**; no lo confundáis con mover los 500 GB.
+### Reglas que debe cumplir la solución
 
-**Vuestra única máquina (el portátil):**
+1. Relacionar reservas y cobros por `id_reserva`; añadir el nombre del hotel mediante `id_hotel`.
+2. Incluir en el informe principal solo reservas con cobro asociado.
+3. Sumar **`cobrado`**, no el precio `importe` de la reserva.
+4. Producir una fila por combinación de `hotel` y `canal`, con `n_reservas` y `cobrado_total`.
+5. Conservar las reservas sin cobro en un listado separado, sin inventar importes ni descartarlas sin explicación.
+6. Repetir la ejecución sobre las mismas entradas sin acumular filas en los archivos de salida.
+7. No anunciar éxito ni publicar un resultado nuevo cuando una entrada requerida falta o el proceso falla.
 
-| Recurso | Dato | Qué implica |
+## 2. Preparad el entorno y las entradas
+
+Comprobad primero que funciona el [taller 0 de Pentaho](pentaho.md#taller-0-que-spoon-hable). Utilizad la instalación indicada por el aula.
+
+| Archivo | Separador | Contenido esperado |
 | --- | --- | --- |
-| Disco | 1 TB, **70 % ocupado** → ~**300 GB libres** | 500 GB **no caben** enteros |
-| RAM | **32 GB** | Un `read_csv` / DataFrame de 500 GB **no cabe** |
-| CPU | i7, **10 núcleos / 20 hilos** | Hay paralelismo *local*, no un clúster |
-| GPU | RTX 4060, 6 GB | ¿Ayuda a *esta* media o no? |
+| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv) | Coma | 20 reservas; `id_reserva` único |
+| [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv) | Punto y coma | 15 cobros; como máximo uno por reserva |
+| [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv) | Punto y coma | 5 hoteles; `id_hotel` único |
 
-![500 GB del histórico no caben en el portátil (300 GB libres, 32 GB de RAM). El panel de las 8 necesita el número, unos bytes](../assets/ut1/tarea-portatil-500gb.png)
+No reutilicéis los CSV de 1.6 o 1.7. Noja representa la ampliación del grupo que aparece en los talleres. Conservad los originales sin modificarlos y utilizad copias para las pruebas de fallo.
 
-## Concurrente, paralelo y distribuido (repaso)
+Organizad una carpeta de trabajo con `entrada`, `procesos`, `temporal`, `salida` y `evidencias`. Los originales van en `entrada`; las transformaciones y el job, en `procesos`. Acordad la ruta de trabajo con el profesor o utilizad variables. No dejéis rutas que solo funcionen en vuestra cuenta de casa.
 
-Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detalle está en el [1.4](procesamiento.md){target="_blank" rel="noopener"}; aquí basta para no mezclar el i7 con un clúster.
+En **CSV file input**, revisad nombres, separadores y tipos antes de avanzar. Las claves deben tener el mismo tipo en las dos entradas de una unión. Para los importes, utilizad un tipo decimal adecuado, como **BigNumber**, configurando el punto decimal del origen. Una coma mal interpretada no se corrige al agrupar.
 
-![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster](../assets/ut1/paralelo-distribuido.png)
+## 3. Diseñad antes de arrastrar pasos
 
-| Tipo | Dónde corre | En esta tarea |
-| --- | --- | --- |
-| **Secuencial por bloques** | Un proceso actualiza el cálculo bloque a bloque | Leéis el fichero **por trozos** y actualizáis suma y recuento |
-| **Paralelo local** | Varios **núcleos** de **una** máquina | Los **10 núcleos** del portátil; si se apaga, muere el job |
-| **Distribuido** | **Varias máquinas** en red | El cálculo va **al dato**; réplicas si se funde un disco; acabar **antes de las 8** |
+Escribid una breve propuesta que responda a estas preguntas:
 
-**Spark en modo local sigue siendo el portátil:** varios núcleos, **una** máquina. No lo presentéis como la opción 3.
+- ¿Qué necesita dirección y qué representa cada fila de entrada y de salida?
+- ¿Dónde conservaréis originales, archivos provisionales e informes publicados?
+- ¿Quién inicia la lectura? ¿Por qué encaja un proceso por lotes con este cierre?
+- ¿Qué comprobaremos antes de entregar? ¿Qué sucederá al repetirlo o si falta un archivo?
+- ¿Por qué CSV es adecuado para esta entrega? ¿Qué alternativa estudiaríais para un histórico grande consultado por columnas?
 
-![Secuencial por trozos, paralelo en el i7, distribuido en los cuatro nodos-hotel](../assets/ut1/tarea-tres-modos.png)
+Dibujad el recorrido, por ejemplo:
 
-!!! tip "Las tres pueden convivir"
-    Un plan honesto suele mezclarlas: no bajar el fichero; si exploráis, paralelo **local** sobre una muestra; el histórico de verdad, **distribuido**. No elijáis “la palabra más moderna”.
+```text
+Reservas + cobros + hoteles
+          ↓
+Lectura y comprobación de tipos y claves
+          ↓
+Informe por hotel/canal + listado sin cobro (provisionales)
+          ↓
+Validación de los dos archivos
+          ↓
+Publicación en salida y registro del resultado
+```
 
-## Qué tenéis que entregar (en clase)
+Relacionad vuestra propuesta con almacenamiento (1.3), procesamiento (1.4), arquitectura (1.5), ingesta (1.6) y formatos (1.7). No hace falta instalar esas tecnologías ni repetir las definiciones del tema: justificad las decisiones de esta solución.
 
-Responded por escrito (o en un pad) a **todas** las preguntas. No hace falta código que compile; sí un razonamiento que se pueda defender en voz alta.
+## 4. Construid el informe de cobros
 
-### 1. Limitaciones del portátil
+Guardad una transformación como `informe_cobros.ktr`. Podéis adaptar el taller 2, pero debéis explicar y verificar cada paso.
 
-Explicad por qué **no** es buena idea:
+1. Leed reservas y cobros con sus separadores y tipos correctos.
+2. Ordenad **ambas entradas** por `id_reserva` y configurad un **Merge join INNER**. Revisad explícitamente entrada izquierda, derecha y claves. La salida debe contener 15 filas.
+3. Leed hoteles. Ordenad tanto el flujo anterior como hoteles por `id_hotel` y añadid otro **Merge join INNER**. Deben mantenerse las 15 filas y aparecer los nombres de hotel. Si faltara una correspondencia, no continuéis sin investigar.
+4. Ordenad el resultado por `hotel` y `canal`. Configurad **Group by** con esos campos: `SUM(cobrado)` → `cobrado_total`; recuento de `id_reserva` → `n_reservas`.
+5. Escribid `temporal/informe_hotel_canal.csv`, con cabecera, sin espacios de relleno y **sin añadir al contenido de ejecuciones anteriores**. Dejad las columnas en el orden `hotel;canal;n_reservas;cobrado_total`.
 
-1. Descargar los 500 GB al disco local, y
-2. Cargar **todo** en memoria (por ejemplo, un DataFrame de Pandas).
+Usad punto y coma como separador de salida, UTF-8 e importes con punto decimal y dos decimales, sin separador de miles. Indicad en la explicación que los importes están en euros. Ordenad por hotel y canal para facilitar la revisión.
 
-Hablad al menos de: **espacio en disco**, **RAM**, **entrada/salida de disco** (leer y escribir es lento) y **red** (bajar 500 GB por la wifi del aula no es “un rato”).
+!!! tip "Por qué podemos contar las filas"
+    En estos archivos hay como máximo un cobro por reserva. Si una reserva tuviera dos pagos, el cruce produciría dos filas: sumar cobros y contar reservas requerirían tratamientos distintos. Explicad qué cambiaríais; no alteréis el conjunto de referencia para la entrega básica.
 
-!!! example "Pista, no la respuesta"
-    Libres ≈ 300 GB < 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la RTX.
+## 5. Preparad el control de reservas sin cobro
 
-### 2. Opción 1 — Local secuencial (por trozos)
+Guardad una segunda transformación como `reservas_sin_cobro.ktr`. Este resultado complementa el informe; no lo suméis a las reservas cobradas.
 
-La lectura por bloques evita mantener todo el archivo en memoria. El tamaño del bloque debe dejar espacio para los datos convertidos y las operaciones intermedias. Si el archivo está en red, sigue siendo necesario transferir sus bytes al proceso lector, aunque no se guarden permanentemente en el disco local.
+1. Leed reservas y cobros. En la rama de cobros, usad **Select values** para renombrar `id_reserva` como `id_reserva_cobro`. Así distinguiréis la clave de la reserva de la clave encontrada en el pago.
+2. Ordenad cada rama por su clave. Configurad **Merge join LEFT OUTER**, con reservas a la izquierda y cobros a la derecha, comparando `id_reserva` con `id_reserva_cobro`.
+3. La salida debe conservar las 20 reservas. Aplicad **Filter rows** para quedaros con aquellas cuyo `id_reserva_cobro` sea nulo. No comprobéis `cobrado = 0`: un cobro de cero y un cobro ausente son situaciones distintas.
+4. Incorporad el nombre del hotel por `id_hotel`, ordenando ambas entradas antes del nuevo Merge join.
+5. Seleccionad `id_reserva`, `hotel`, `canal` e `importe`; añadid con **Add constants** el campo `motivo` con el texto `Sin cobro asociado en el archivo recibido`.
+6. Ordenad por `id_reserva` y escribid `temporal/reservas_sin_cobro.csv`, sobrescribiendo el resultado provisional anterior.
 
-Para la **media**, basta mantener suma y recuento de valores válidos. Para la **desviación típica**, se necesita un algoritmo incremental estable y aclarar si se calcula la desviación poblacional o muestral. Para **normalizar cada valor a 0–1**, normalmente se necesitan dos pasadas: una para obtener mínimo y máximo y otra para transformar. Si máximo y mínimo coinciden, debe definirse cómo tratar ese caso.
+Aquí `importe` es el **precio de la reserva**, no dinero cobrado. Debe conservar ese nombre y explicarse en la documentación. No añadáis nombres de huéspedes ni otros datos personales que la tarea no necesita.
 
-La normalización de cada registro produce una salida del tamaño del conjunto transformado, no un único número. Si se pide solo mínimo y máximo, la salida sí es pequeña. Indicad expresamente cuál de los dos resultados vais a entregar.
+## 6. Comprobad antes de publicar
 
-¿Se puede calcular la media / desviación / normalización **sin** guardar el fichero entero ni cargarlo en RAM?
+Primero haced una validación manual. Registrad en una tabla **esperado, obtenido y conclusión**. Las vistas previas ayudan a investigar; la comprobación final debe realizarse sobre los archivos completos escritos.
 
-Describid, a alto nivel, un plan en Python:
-
-- Lectura **línea a línea** o por **bloques** (*chunks*: trozos que caben en RAM).
-- Cálculo **incremental** (una pasada: vais actualizando suma y recuento; la media es `suma/n` al final).
-- Escribís la estadística resumida o el conjunto normalizado, según la operación elegida. Estimad también el tamaño de esa salida.
-
-Relacionadlo con **secuencial**: un solo proceso que lee y actualiza contadores.
-
-### 3. Opción 2 — Local **paralela**
-
-El plan debe limitar cuántos bloques están en memoria simultáneamente. Diez procesos con bloques grandes pueden agotar los 32 GB aunque cada bloque, por separado, quepa. Además, varias lecturas pueden competir por la misma conexión de red. Comparad la tasa de lectura antes y después de aumentar trabajadores.
-
-¿Cómo aprovecháis los **10 núcleos / 20 hilos**?
-
-Comentad una vía: Spark **en modo local**, **Dask** o `multiprocessing`. Hoy no hace falta instalarlas: el oficio es el diseño.
-
-Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). El panel de las 8 **no** puede depender de ese portátil.
-
-### 4. Opción 3 — Distribuido
-
-Explicad cómo se combinan los resultados parciales. Para una media, cada trabajador devuelve suma y recuento y el coordinador divide las sumas globales. Guardar solo medias locales pierde la ponderación por tamaño.
-
-El diseño también debe indicar dónde se ejecuta cada tarea, cómo se identifica una partición terminada y qué ocurre si se repite. Tener varios nodos no garantiza tolerancia a fallos si la única copia del origen o el coordinador sigue siendo un punto único de fallo.
-
-La empresa puede usar un clúster (Hadoop/Spark, propio o en nube) o el servicio que indique el profesor.
-
-Explicad, en general:
-
-1. **Dónde** dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.
-2. **Cómo** lanzáis el cálculo (un *job*: trabajo programado; de madrugada, para tener el número **antes de las 8**).
-3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se funde un disco, el panel no se cae: [1.2](clusters.md){target="_blank" rel="noopener"}), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md){target="_blank" rel="noopener"}).
-
-### 5. Opción 4 — Cargar y consultar
-
-Valorad cargar el fichero (o **particionarlo**) en un almacén de informes / *lakehouse* o, si el aula lo usa, MongoDB, y hacer la media con una **consulta**.
-
-¿Cuándo tiene sentido frente a un job Spark? Ventajas e inconvenientes: **modelo de datos**, **coste** (¡a menudo pagáis por lo **escaneado**!, [1.7](formatos.md){target="_blank" rel="noopener"}), **curva de aprendizaje**.
-
-### 6. ¿Y la GPU?
-
-¿La RTX 4060 **cambia de verdad** este problema (una estadística sobre un campo de un CSV/JSON de reservas)?
-
-Decid en qué tareas de datos **sí** suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser **leer bytes de red/disco**, no multiplicar matrices.
-
-### 7. Elección final
-
-Presentad una recomendación con supuestos verificables: formato y ubicación del origen, ancho de banda disponible, plazo, frecuencia de repetición y tamaño de la salida. Una media puntual puede justificar un plan distinto de un informe que debe regenerarse cada mañana.
-
-Incluid una estimación mínima de lectura: `tiempo = bytes / bytes por segundo`. A 100 MB/s sostenidos, leer 500 GB decimales exige al menos 5.000 segundos —unos 83 minutos—, sin contar interpretación ni cálculo. La cifra no predice el tiempo real; sirve para descartar promesas incompatibles con el límite de entrada/salida.
-
-Recomendad **una opción o una combinación** a gerencia.
-
-Justificadla con los criterios del **RA2**:
-
-| Criterio RA2 (idea) | Cómo se nota en vuestra respuesta |
+| Comprobación | Resultado con las entradas suministradas |
 | --- | --- |
-| Importancia del **almacenamiento** | ¿Dónde vive el fichero? ¿Por qué no en el portátil? |
-| Modelo de **computación distribuida** | ¿Quién ejecuta el cálculo? ¿Acaba antes de las 8? |
-| **Tolerancia a fallos** | ¿Qué pasa si se cuelga una máquina a mitad? |
-| Guardar **mucho** y decidir después | ¿El bruto sigue accesible o lo tirasteis? |
-| **Crecer** añadiendo recursos | ¿Mañana son 5 TB? ¿Una máquina más gorda o más nodos? |
+| Reservas leídas / cobros leídos / hoteles leídos | 20 / 15 / 5 |
+| Claves de cada origen | Sin duplicados en sus identificadores |
+| Filas tras unir reservas y cobros | 15 |
+| Filas tras añadir hoteles | 15 |
+| Filas del informe, sin cabecera | 13 grupos |
+| Suma de `n_reservas` | 15 |
+| Suma de `cobrado_total` | 3965.50 € |
+| Laredo, canal web | 2 reservas; 496.50 € |
+| Reservas sin cobro | 5: identificadores 4, 9, 11, 15 y 18 |
+| Reconciliación de reservas | 15 cobradas + 5 sin cobro = 20 |
 
-## Cómo lo hacemos en el aula
+Contrastad también **cada grupo** con la [tabla de referencia del taller 2](pentaho.md#resultado-de-referencia-del-taller-2). Un total correcto puede ocultar importes asignados al hotel equivocado.
 
-1. 10 minutos: leed el caso y el repaso. Aclarad dudas de vocabulario.
-2. 25–35 minutos: responded 1–7 (parejas bienvenidas).
-3. 10 minutos: puesta en común. El profesor puede contrastar con el [cuaderno Dask de 500 GB](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing){target="_blank" rel="noopener"} o la [demo de GitHub](https://github.com/josedavidmi/demo_dask_500gb-){target="_blank" rel="noopener"}.
+Abrid el informe fuera de Spoon con un lector CSV, importando separadores y decimales correctamente. Confirmad que la cabecera se entiende y que no hay filas vacías ni columnas inesperadas.
 
-!!! success "Qué se espera"
-    No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el **número**.
+### Una comprobación automática mínima
 
-## Relación con el módulo
+Después de la revisión manual, construid `validar_informe.ktr` para que el job pueda detectar una salida incompleta:
 
-Es el **puente hacia el RA2** (almacenamiento masivo y cómputo distribuido), colocada al final de la UT1 porque ya tenéis el vocabulario de [1.2](clusters.md){target="_blank" rel="noopener"} y [1.4](procesamiento.md){target="_blank" rel="noopener"}. Os obliga a **elegir y justificar**. El laboratorio de HDFS y Spark es la UT2.
+1. Leed el CSV provisional con sus tipos numéricos.
+2. Usad **Group by**, sin campos de agrupación, para obtener el recuento de filas y las sumas de `n_reservas` y `cobrado_total`. Activad la opción de producir una fila de resultado aunque la entrada esté vacía, si vuestra versión la ofrece; verificad expresamente el caso de un archivo con solo cabecera.
+3. Comprobad con **Filter rows** que hay 13 grupos, 15 reservas y 3965.50 euros. Un valor nulo tampoco cumple la validación.
+4. En la rama válida escribid un mensaje en el log. En la otra, utilizad **Abort** configurado para detener la transformación con error.
+5. Construid `validar_sin_cobro.ktr` con el mismo patrón: debe haber cinco filas, todas con identificadores de la lista esperada y sin duplicados. Filtrad identificadores inválidos hacia Abort. Para controlar duplicados, ordenad por `id_reserva` y agrupad por esa clave contando filas: cada grupo debe contener una sola. Después resumid esos grupos sin claves y exigid cinco identificadores. Aplicad también la comprobación de entrada vacía.
 
-La entrega formal, si la hay, se indica en Moodle.
+Si la versión del aula no permite obtener una fila resumen cuando no hay datos, añadid una comprobación explícita de entrada vacía antes de dar por válida la transformación. **No basta con que ninguna fila llegue a Abort**: un CSV con solo cabecera debe hacer fallar la prueba.
 
-## Para profundizar (si el profesor lo indica)
+Estos valores son controles del conjunto `cierre_aula_01`. En un cierre real variarían: explicaríais controles de reconciliación con las entradas, no fijaríais todos los días el mismo total.
 
-No es de esta sesión. Si os piden probar código, Dask se parece a Pandas; PySpark es el de libro en clústeres grandes; Ray aparece más en ML. Hoy no hace falta instalarlas.
+## 7. Coordinad el procedimiento con un job
 
-| | **Dask** | **PySpark** | **Ray** |
-| --- | --- | --- | --- |
-| Encaje | Paralelo y distribuido “estilo Pandas” | Volumen masivo en el ecosistema Spark | Cómputo distribuido genérico |
-| Hoy | Solo si el profesor abre el cuaderno | No lo programáis aún ([1.4](procesamiento.md){target="_blank" rel="noopener"}) | Fuera de esta tarea |
+Guardad `cierre_hotel.kjb`. El job organiza las tareas; las transformaciones tratan las filas. Seguid este orden:
 
-- Tutorial Berkeley (Dask y un poco de Ray): [Flexible parallel processing](https://computing.stat.berkeley.edu/tutorial-dask-future/){target="_blank" rel="noopener"}
-- Plan ETL con **Dask** (Colab): [cuaderno](https://colab.research.google.com/drive/1hFZ2G6I6pfz5RSv8OKt28QOJ5v7xfVGb?usp=sharing){target="_blank" rel="noopener"}
-- Plan ETL con **Ray** (Colab): [cuaderno](https://colab.research.google.com/drive/1Hfk8uMndNU6bQIVBNVXsPjiJMlu7xdju?usp=sharing){target="_blank" rel="noopener"}
-- Estudio del profesor: 500 GB con Dask (Colab): [cuaderno](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing){target="_blank" rel="noopener"}
-- Demo en GitHub (Dask, origen remoto → S3, desde un portátil): [josedavidmi/demo_dask_500gb-](https://github.com/josedavidmi/demo_dask_500gb-){target="_blank" rel="noopener"}
+1. **Start** y comprobaciones **File exists** para las tres entradas. Si falta alguna, terminad con **Abort job**, indicando cuál falta.
+2. Ejecutad `informe_cobros.ktr` y, solo si termina correctamente, `reservas_sin_cobro.ktr`.
+3. Comprobad que existen ambas salidas provisionales. Ejecutad las dos transformaciones de validación.
+4. Solo si ambas validaciones terminan correctamente, copiad los dos CSV de `temporal` a `salida`, sustituyendo las versiones anteriores. Podéis usar una entrada de copia de archivos del job; verificad sus opciones de sobrescritura.
+5. Registrad éxito únicamente después de que la publicación termine. Cualquier error de transformación, validación o copia debe seguir una rama de error y terminar como fallo.
+
+No borréis el último informe publicado al empezar. Un fallo de lectura o validación debe dejarlo intacto. **Copiar dos archivos no es una publicación atómica del conjunto**: si falla la segunda copia, el job debe avisar y no anunciar éxito. Como ampliación se puede publicar una carpeta versionada completa y señalar qué versión está disponible.
+
+Utilizad **Pan** para probar cada `.ktr` y **Kitchen** para ejecutar el `.kjb` sin depender de Spoon. Adaptad las rutas a vuestro entorno:
+
+```text
+pan.bat /file="C:/ruta/procesos/informe_cobros.ktr" /level:Basic
+kitchen.bat /file="C:/ruta/procesos/cierre_hotel.kjb" /level:Basic
+```
+
+En Linux utilizad `pan.sh` y `kitchen.sh`. Para la entrega basta ejecutar Kitchen manualmente y explicar que el programador de tareas del sistema lo lanzaría de madrugada. Kitchen no queda programado a una hora por el mero hecho de ejecutar el comando.
+
+## 8. Probad éxito, repetición y fallo
+
+Conservad una evidencia de cada prueba y explicad su resultado. Cambiad rutas o archivos únicamente en una copia de trabajo y restauradlos al terminar.
+
+| Prueba | Qué hacéis | Qué debe ocurrir |
+| --- | --- | --- |
+| Primera ejecución | Ejecutar Kitchen sin informes anteriores | Dos salidas correctas y estado final de éxito |
+| Repetición | Ejecutar otra vez con las mismas entradas | Mismos grupos, filas y totales; sin añadir duplicados |
+| Falta una entrada | Indicar una ruta de cobros inexistente | Job con error; no se publica un informe nuevo |
+| Salida incompleta | Dejar solo la cabecera en una copia provisional y ejecutar su validación | Validación con error, incluso si el CSV existe |
+| Total incorrecto | Modificar un importe del informe provisional y ejecutar su validación | Validación con error |
+| Recuperación | Restaurar las entradas y ejecutar el job completo | Se generan, validan y publican otra vez las salidas correctas |
+
+Para las dos pruebas de validación, ejecutad directamente la transformación de control sobre la copia alterada: si ejecutáis primero el job completo, regenerará el archivo y eliminará el fallo que queríais probar. Conservad también el log que demuestra que las ramas de error del job no continúan hacia publicación.
+
+## 9. Qué entregáis
+
+Entregad una carpeta o ZIP que otro compañero pueda utilizar con las rutas y la instalación del aula:
+
+- Las cuatro transformaciones `.ktr` y el job `.kjb`.
+- Los dos CSV finales: `informe_hotel_canal.csv` y `reservas_sin_cobro.csv`.
+- Una explicación breve con el diseño, las reglas, la identificación del cierre de aula, la fecha de generación, unidades, separadores y cómo ejecutar el procedimiento. Incluid la justificación del formato y los límites de los datos.
+- La tabla de comprobaciones y las evidencias de las pruebas, con una explicación del error observado y su recuperación. Una captura sin interpretación no basta.
+
+En el lienzo añadid una nota con vuestro nombre y la pregunta que resuelve cada proceso. No incluyáis contraseñas ni dependencias de cuentas personales. La entrega formal se realiza donde indique Moodle.
+
+### Cómo se relaciona con el RA1
+
+| Criterio | Evidencia de esta práctica |
+| --- | --- |
+| a) Diseño y almacenamiento | Recorrido justificado y separación de originales, provisionales y resultados |
+| b) Ingesta | Lecturas, tipos, claves, controles de entradas y repetición |
+| c) Formato | CSV configurado y elección razonada frente a otras representaciones |
+| d) Procesamiento | Uniones, filtrado, agregación y resultados contrastados |
+| e) Presentación | Informe comprensible, periodo identificado y explicación para dirección |
+
+Es una orientación para revisar vuestro trabajo; las ponderaciones y la calificación corresponden al profesor. No se valora solo que «se cree un archivo»: debe responder al encargo y superar las comprobaciones.
+
+## 10. Organización de las sesiones y continuación
+
+Como orientación, reservad **tres sesiones de 55–60 minutos**, ajustables al ritmo del aula: diseño e informe principal; listado de control y validación; job, pruebas y entrega. Si necesitáis más tiempo para los controles automáticos, completadlos en una sesión adicional antes de dar la práctica por terminada.
+
+Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos `cobrado`?, ¿qué demuestra la repetición?, ¿qué fallo impide publicar?, ¿por qué este informe no mide ocupación?
+
+La siguiente pregunta es: **¿seguiría cumpliendo el plazo este procedimiento si el histórico creciera hasta 500 GB?** Continuad con la [actividad de transición a la UT2](transicion-ut2.md). Allí justificaréis recursos y alternativas a partir de las necesidades, sin asumir que un tamaño grande obliga siempre a utilizar un clúster.

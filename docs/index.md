@@ -38,7 +38,7 @@ Del problema de negocio al dato usable: las 5 Vs, clústeres, almacenes, ingesta
 - [1.6 Ingesta de datos](ut1/ingesta.md)
 - [1.7 Formatos de datos](ut1/formatos.md)
 - [1.8 Pentaho](ut1/pentaho.md)
-- [Tarea para practicar en clase](ut1/tarea-clase.md)
+- [Práctica integradora con Pentaho](ut1/tarea-clase.md)
 - [Autoevaluación](ut1/autoevaluacion.md)
 
 ### U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
@@ -65,7 +65,7 @@ Hadoop/HDFS, MapReduce y YARN, familias NoSQL, MongoDB, modelado, réplicas y Py
 - La **búsqueda** del encabezado localiza un concepto (`Parquet`, `HDFS`, `Spoon`…).
 
 !!! tip "Cómo estudiar"
-    Lee el apartado, haz la [tarea de clase](ut1/tarea-clase.md) (500 GB, un portátil), responde las autoevaluaciones ([UT1](ut1/autoevaluacion.md), [UT2](ut2/autoevaluacion.md)) y luego practica en Moodle. El test no sustituye a las pruebas del aula.
+    Lee el apartado, completa la [práctica integradora con Pentaho](ut1/tarea-clase.md) y la [transición a la UT2](ut1/transicion-ut2.md) (500 GB, un portátil), responde las autoevaluaciones ([UT1](ut1/autoevaluacion.md), [UT2](ut2/autoevaluacion.md)) y luego practica en Moodle. El test no sustituye a las pruebas del aula.
 
 !!! info "Origen del material"
     Estos apuntes parten del temario de aula (eXeLearning UT1, PDF de Pentaho, ecosistema Hadoop/NoSQL del ciclo; licencia de partida [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) en los paquetes eXe). Se han reorganizado para el curso **2026/2027**.

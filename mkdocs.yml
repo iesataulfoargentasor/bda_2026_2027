@@ -102,10 +102,11 @@ nav:
     - 1.6 Ingesta de datos: ut1/ingesta.md
     - 1.7 Formatos de datos: ut1/formatos.md
     - 1.8 Pentaho: ut1/pentaho.md
-    - Tarea para practicar en clase: ut1/tarea-clase.md
+    - Práctica integradora con Pentaho: ut1/tarea-clase.md
     - Autoevaluación: ut1/autoevaluacion.md
   - U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema:
     - La unidad: ut2/index.md
+    - "Transición desde la UT1: 500 GB": ut1/transicion-ut2.md
     - RA2 y criterios de evaluación: ut2/ra2.md
     - 2.1 Por qué un almacén masivo: ut2/por-que-almacenamiento.md
     - 2.2 Ecosistema Hadoop: ut2/ecosistema.md

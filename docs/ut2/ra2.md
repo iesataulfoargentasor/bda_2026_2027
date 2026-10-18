@@ -27,7 +27,7 @@ Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **507
 
 En la [UT1](../ut1/ra1.md) **diseñabas** la solución (dónde guardar, cómo ingerir, en qué formato, cómo presentar). Aquí **gestionas el sistema** que aguanta el volumen: el clúster de ficheros, el modelo *map* / *reduce*, las familias NoSQL y cómo se **replican** y **parten**.
 
-La [tarea de los 500 GB](../ut1/tarea-clase.md) sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.
+La [tarea de los 500 GB](../ut1/transicion-ut2.md) sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.
 
 !!! note "Cómo se evalúa"
     Debes poder **decir** por qué HDFS o Mongo, **mostrar** (en el lab) que un nodo caído no pierde el dato, **lanzar** un job que parte el trabajo y **justificar** que mañana se añade un disco o un *shard* sin rediseñar el hotel. Las entregas siguen en Moodle.

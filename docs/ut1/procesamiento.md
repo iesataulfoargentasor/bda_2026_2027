@@ -44,7 +44,7 @@ En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya est
 - **Finanzas** cierra a las **23:00**; de madrugada corre el **lote**; a las **8** gerencia abre el panel de **ayer**.
 - Los sensores (~30 s) alimentan el **semáforo** (“¿queda habitación?”), no el cuadro de las 8.
 
-En clase lo aplicáis en la [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"}: concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
+En clase lo aplicáis en la [tarea de los 500 GB](transicion-ut2.md){target="_blank" rel="noopener"}: concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
 
 !!! info "Cómo se lee esta página"
     Primero **dónde** corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el **ritmo** (lote, clic, consulta, flujo). Después los **dos oficios** (operar / informar) y el **SCV** (compromisos entre velocidad, precisión y volumen). Cómo se combinan lote y flujo en el edificio va en [1.5](arquitectura.md){target="_blank" rel="noopener"}, no aquí.
@@ -91,7 +91,7 @@ El procesamiento **distribuido** reparte trabajo entre máquinas y puede ejecuta
 
 En Hadoop de libro la consigna es “**lleva el cálculo al dato**”: copiar 200 GB al portátil para sumarlos es absurdo; mandáis la función al nodo que **ya** tiene el trozo. En un [cubo de objetos](almacenamiento.md){target="_blank" rel="noopener"} a menudo es al revés: el dato vive en el cubo y el motor **lee por red** ([1.2](clusters.md){target="_blank" rel="noopener"}). Las dos frases no se pisan: son **dos diseños**.
 
-MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber *por qué* existen. El i7 de la [tarea](tarea-clase.md){target="_blank" rel="noopener"} **no** es un clúster.
+MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber *por qué* existen. El i7 de la [tarea](transicion-ut2.md){target="_blank" rel="noopener"} **no** es un clúster.
 
 ## Estrategias: no todo es “tiempo real”
 

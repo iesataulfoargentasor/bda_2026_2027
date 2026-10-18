@@ -14,7 +14,7 @@ Antes de 1.1, leed **[el caso: grupo hotelero de Cantabria](caso-hotel.md){targe
 
 Leed cada apartado **en orden**. En todos hay un ejemplo y una pregunta del estilo “¿qué elegiríais y por qué?”. Las siglas (ACID, OLTP, ETL…) se introducen **después** del ejemplo, no se dan por sabidas. Si podéis explicárselo a un compañero sin mirar la tabla, el apartado está asimilado. Tras el 1.3 hay un [taller de AWS Academy y S3](aws-academy-s3.md){target="_blank" rel="noopener"}: el primer cubo privado, no el PMS.
 
-La [tarea de clase](tarea-clase.md){target="_blank" rel="noopener"} aplica eso a 500 GB con un portátil. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [treinta de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (también Comprobar respuesta). Ninguna sustituye a Moodle.
+La [práctica integradora con Pentaho](tarea-clase.md) cierra la UT1 con un informe del hotel comprobado y reproducible. Después, la [transición a la UT2](transicion-ut2.md) plantea el crecimiento del histórico hasta 500 GB. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [treinta de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (también Comprobar respuesta). Ninguna sustituye a Moodle.
 
 ## Cómo se relacionan los apartados
 
@@ -38,5 +38,6 @@ Para estudiar cada apartado, identificad primero el problema, explicad los conce
 | [1.6 Ingesta de datos](ingesta.md){target="_blank" rel="noopener"} | **b)** | Llevar PMS, cobros y sensores al lago o al almacén. El panel de las 8 es el **destino**; no se pinta en Hola ETL. |
 | [1.7 Formatos de datos](formatos.md){target="_blank" rel="noopener"} | **c)** | Dirección solo mira tres números; el CSV de gran tamaño arrastra doce columnas. |
 | [1.8 Pentaho](pentaho.md){target="_blank" rel="noopener"} | **d)** / **e)** | El mismo cruce reservas ⋈ cobros, agregado por hotel y canal. Kitchen de noche; gerencia abre el **CSV**, no Spoon. |
-| [Tarea para practicar en clase](tarea-clase.md){target="_blank" rel="noopener"} | RA1 + **RA2** | 500 GB del histórico del hotel: concurrente, paralelo, distribuido |
+| [Práctica integradora con Pentaho](tarea-clase.md) | **RA1 a–e** | Diseñar, procesar, validar y entregar el informe del hotel |
+| [Transición a la UT2](transicion-ut2.md) | Puente hacia **RA2** | 500 GB del histórico: recursos, plazos y alternativas |
 | [Autoevaluación](autoevaluacion.md){target="_blank" rel="noopener"} | — | Treinta de **toda** la unidad (Comprobar respuesta). Las diez de cada apartado están al final de 1.1–1.8. No puntúa en Moodle. |

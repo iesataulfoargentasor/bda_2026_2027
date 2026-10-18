@@ -38,7 +38,7 @@ Un **clúster** es otro planteamiento: varios ordenadores (**nodos**) unidos por
 
 Hoy se montan sobre **servidores normales** (no hace falta un *mainframe*) más un programa que **reparte** tareas y datos.
 
-No lo confundáis con varios núcleos **dentro** de un portátil. Eso es paralelo en **una** máquina ([1.4](procesamiento.md){target="_blank" rel="noopener"}). El clúster son **varias** máquinas. Lo pondréis a prueba en la [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"}: el i7 no es un clúster.
+No lo confundáis con varios núcleos **dentro** de un portátil. Eso es paralelo en **una** máquina ([1.4](procesamiento.md){target="_blank" rel="noopener"}). El clúster son **varias** máquinas. Lo pondréis a prueba en la [tarea de los 500 GB](transicion-ut2.md){target="_blank" rel="noopener"}: el i7 no es un clúster.
 
 En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que **acabar antes de las 8**. Si solo hincháis *esa* máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta **réplica** para que el panel no se caiga.
 

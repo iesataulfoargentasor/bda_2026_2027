@@ -14,6 +14,8 @@ En la [UT1](../ut1/index.md) elegías almacén, ingesta y formato. Aquí el grup
 
 Lee los apartados **en orden**. El hilo es el mismo **[grupo hotelero de Cantabria](../ut1/caso-hotel.md)**. Las siglas (HDFS, YARN, BSON, *oplog*…) llegan **después** del ejemplo. Si puedes explicar a un compañero *qué ganas al añadir un nodo* y *qué pasa si se apaga uno*, el apartado está asimilado.
 
+Antes del laboratorio, la [transición desde la UT1: 500 GB y un portátil](../ut1/transicion-ut2.md) permite discutir qué cambia respecto al informe construido con Pentaho y qué recursos exige el nuevo escenario.
+
 ## Qué vas a trabajar
 
 | Apartado | Criterio | Qué te llevas |

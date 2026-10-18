@@ -51,4 +51,4 @@ El [RA2](../ut2/ra2.md){target="_blank" rel="noopener"} (UT2) entra en el **sist
 !!! note "Cómo se evalúa"
     Los criterios son el referente. En las prácticas se pide **identificar** la herramienta, **escribir** el flujo (Pentaho u otra), **ejecutarlo** y **comprobar** el resultado. Las entregas formales siguen en Moodle.
 
-    Para practicar por tu cuenta: [autoevaluación de la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (no sustituye a las pruebas del aula). En clase: [tarea de los 500 GB](tarea-clase.md){target="_blank" rel="noopener"} (puente hacia el RA2).
+    Para practicar por tu cuenta: [autoevaluación de la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (no sustituye a las pruebas del aula). Como cierre: [práctica integradora con Pentaho](tarea-clase.md), con evidencias de diseño, ingesta, formato, procesamiento y presentación. Después: [transición de los 500 GB](transicion-ut2.md), puente hacia el RA2.
