@@ -2087,13 +2087,13 @@
 </tr>
 </tbody>
 </table>
-<p>Dos familias, no dos religiones:</p>
+<p>Distinguimos representaciones de texto y binarias, sin asignarlas a destinos exclusivos:</p>
 <table>
 <thead>
 <tr>
 <th></th>
-<th>Lo abre el Bloc de notas</th>
-<th>Lo come el lago</th>
+<th>Formatos de texto</th>
+<th>Formatos binarios</th>
 </tr>
 </thead>
 <tbody>
@@ -2103,22 +2103,28 @@
 <td>Avro, Parquet, ORC</td>
 </tr>
 <tr>
+<td>Inspección</td>
+<td>Se pueden inspeccionar con un editor de texto</td>
+<td>Requieren un lector compatible</td>
+</tr>
+<tr>
 <td>Tamaño</td>
-<td>Grande</td>
-<td>Menor</td>
+<td>Depende del contenido y de la compresión</td>
+<td>La codificación puede reducirlo; hay que medirlo</td>
 </tr>
 <tr>
 <td>Esquema</td>
-<td>A medias o en la cabeza</td>
-<td>Suele ir <strong>dentro</strong> del fichero</td>
+<td>Requieren acuerdos de tipos y estructura; pueden acompañarse de un esquema externo</td>
+<td>Los archivos contenedores de estos ejemplos incluyen información de esquema</td>
 </tr>
 <tr>
-<td>Uso</td>
-<td>API, entrega a un compañero</td>
-<td>Analítica a escala</td>
+<td>Usos habituales</td>
+<td>Intercambio, API o conservación de originales</td>
+<td>Intercambio de registros o consultas analíticas, según el formato</td>
 </tr>
 </tbody>
 </table>
+<p>Un lago puede conservar tanto CSV, JSON y XML como Avro, Parquet y ORC. Elegimos según el contrato de datos, el lector y el trabajo que necesitamos realizar; ser texto o binario no determina el destino.</p>
 <p><strong>CSV.</strong> Universal. <code>01</code> ¿texto o número? Una coma dentro de un campo requiere entrecomillado y escape correctos. Para sumar <em>importe</em> soléis arrastrar <em>canal</em> y <em>comentarios</em>.</p>
 <p><strong>JSON / JSONL.</strong> El JSON “de libro” (un objeto enorme) no se parte bien. <strong>JSON Lines</strong> = <strong>una reserva por línea</strong>:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">"id_reserva"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"hotel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Laredo"</span><span class="p">,</span><span class="w"> </span><span class="nt">"noches"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"importe"</span><span class="p">:</span><span class="w"> </span><span class="mf">186.5</span><span class="p">}</span>
@@ -2396,11 +2402,12 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </span></code></pre></div>
 <h2 id="como-elegir-tarjeta-para-el-examen">Cómo elegir (tarjeta para el examen)<a class="headerlink" href="#como-elegir-tarjeta-para-el-examen" title="Permanent link">&para;</a></h2>
 <p>Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC son formatos de archivo; Arrow describe una representación en memoria; DuckDB es un motor; Delta, Iceberg y Hudi gestionan tablas sobre archivos. No son alternativas intercambiables: un motor puede consultar una tabla cuyos datos están en Parquet.</p>
+<p>La tabla propone opciones habituales, no correspondencias obligatorias. Comprobad que los lectores previstos admiten el formato, que el esquema conserva los datos y que la elección responde al uso.</p>
 <table>
 <thead>
 <tr>
 <th>Situación</th>
-<th>Formato</th>
+<th>Opción que valorar</th>
 <th>Por qué</th>
 </tr>
 </thead>
@@ -2448,10 +2455,10 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 </tbody>
 </table>
 <ul>
-<li>Muchas <strong>escrituras</strong> de registros completos → filas (Avro).</li>
-<li><strong>Lecturas</strong> de tres campos de un millón → columnas.</li>
-<li>Esquema inquieto → Avro. Anidado y subcampos → Parquet.</li>
-<li>Hive → ORC. Spark → Parquet. Cola → Avro.</li>
+<li>Para intercambiar o escribir registros completos, valorad formatos por filas como Avro.</li>
+<li>Para <strong>leer</strong> pocos campos de muchas filas, valorad formatos columnares como Parquet u ORC.</li>
+<li>Si cambia el esquema, Avro ofrece mecanismos de evolución cuya compatibilidad hay que comprobar. Si consultáis subcampos de datos anidados, valorad Parquet y las capacidades del lector.</li>
+<li>ORC con Hive, Parquet con Spark y Avro en una cola son combinaciones habituales, no requisitos. Estas herramientas pueden trabajar con otros formatos; comprobad compatibilidad, consultas, evolución del esquema y rendimiento antes de elegir.</li>
 </ul>
 <table>
 <thead>

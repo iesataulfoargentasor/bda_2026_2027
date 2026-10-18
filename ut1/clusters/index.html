@@ -1776,7 +1776,7 @@
 </tr>
 </tbody>
 </table>
-<p>Estas cuatro se apoyan entre sí. Un clúster “rápido” pero sin réplica es frágil. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.</p>
+<p>Estas cuatro se apoyan entre sí. Un clúster rápido sin mecanismos adecuados de recuperación es frágil. En nuestro ejemplo utilizamos réplicas, detección de fallos y recuperación; otros diseños pueden reconstruir los datos desde un origen conservado. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.</p>
 <h3 id="alto-rendimiento">Alto rendimiento<a class="headerlink" href="#alto-rendimiento" title="Permanent link">&para;</a></h3>
 <p>El tiempo total incluye lectura, cálculo, comunicación y combinación de resultados. Si leer los datos consume la mayor parte del tiempo, añadir CPU apenas ayuda. Primero medimos el cuello de botella y después decidimos qué recurso aumentar.</p>
 <p>Supongamos que un trabajo tarda 100 minutos: 20 corresponden a una fase que no podemos repartir y 80 a tareas independientes. Con cuatro trabajadores ideales, la segunda fase bajaría a 20 minutos; el total sería 40, antes de contar coordinación. El ejemplo explica por qué cuatro nodos no garantizan una aceleración de cuatro veces.</p>
