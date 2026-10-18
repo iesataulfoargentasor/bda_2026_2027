@@ -1707,7 +1707,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> distinguir nodos, particiones, réplicas, recuperación, escalabilidad y elasticidad.</p>
 <p><strong>Práctica guiada:</strong> justificar recursos y recuperación para el cierre del hotel.</p>
-<p><strong>Ampliación:</strong> comparar almacenamiento y cálculo juntos o separados. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Ampliación:</strong> comparar almacenamiento y cálculo juntos o separados. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-el-informe-del-hotel-entre-varias-maquinas">Vídeo: el informe del hotel entre varias máquinas<a class="headerlink" href="#video-el-informe-del-hotel-entre-varias-maquinas" title="Permanent link">&para;</a></h2>
 <p>Sigue el cobro de Ana hasta el informe de las ocho para entender cómo colaboran los nodos de un clúster. La explicación recorre el reparto de tareas, las diferencias entre particiones y réplicas, la recuperación de fallos y los límites de añadir máquinas, con ejemplos paso a paso y pausas para asimilar las ideas. <strong>Duración: 9 minutos y 55 segundos.</strong></p>
@@ -1727,7 +1727,7 @@
 <p>Un <strong>clúster</strong> es otro planteamiento: varios ordenadores (<strong>nodos</strong>) unidos por <strong>red</strong> que se coordinan para un mismo trabajo. <strong>No</strong> son un único PC con mucha RAM: cada nodo tiene su CPU, su disco y su memoria. En Big Data es la pieza que permite crecer <strong>añadiendo máquinas</strong>, no solo agrandando <em>esa</em>.</p>
 <p>Hoy se montan sobre <strong>servidores normales</strong> (no hace falta un <em>mainframe</em>) más un programa que <strong>reparte</strong> tareas y datos.</p>
 <p>No lo confundáis con varios núcleos <strong>dentro</strong> de un portátil. Eso es paralelo en <strong>una</strong> máquina (<a href="../procesamiento/" rel="noopener" target="_blank">1.4</a>). El clúster son <strong>varias</strong> máquinas. Lo pondréis a prueba en la <a href="../transicion-ut2/" rel="noopener" target="_blank">tarea de los 500 GB</a>: el i7 no es un clúster.</p>
-<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que <strong>acabar antes de las 8</strong>. Si solo hincháis <em>esa</em> máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta <strong>réplica</strong> para que el panel no se caiga.</p>
+<p>En el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero</a>: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que <strong>acabar antes de las 8</strong>. Primero medid si ampliar esa máquina permite cumplir el plazo a un coste razonable. Si no basta, estudiad repartir el histórico entre varios nodos. En el diseño de este ejemplo, las <strong>réplicas</strong>, junto con la detección y recuperación de fallos, permiten recuperar datos cuando falla un disco.</p>
 <pre class="mermaid"><code>flowchart LR
   subgraph cluster [Clúster]
     S[Nodo Santander]
@@ -1790,7 +1790,7 @@
 <li>Rearrancar ese nodo o levantar otro.</li>
 <li>Seguir sirviendo desde una <strong>réplica</strong> (una copia <strong>en marcha</strong>, no un ZIP en un cajón).</li>
 </ul>
-<p>Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho <strong>no publica</strong> el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.</p>
+<p>Tener varios ordenadores no garantiza disponibilidad. Debe existir un mecanismo de protección de datos y recuperación: aquí estudiamos réplicas; otros diseños utilizan almacenamiento compartido redundante o codificación de borrado. El job bien hecho <strong>no publica</strong> el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.</p>
 <pre class="mermaid"><code>flowchart TD
  A[Nodo A: datos] --&gt;|replicación configurada| B[Nodo B: réplica]
  F[Fallo del nodo A] --&gt; D[Detectar fallo]
@@ -1813,7 +1813,7 @@
 <h3 id="escalabilidad">Escalabilidad<a class="headerlink" href="#escalabilidad" title="Permanent link">&para;</a></h3>
 <p>La escalabilidad describe cómo cambia la capacidad cuando aumentamos los recursos. Se comprueba midiendo, por ejemplo, registros procesados por segundo con dos, cuatro y ocho nodos. Si duplicamos nodos y apenas mejora el resultado, puede existir una fase centralizada o un límite de red.</p>
 <p>La <strong>elasticidad</strong> añade la posibilidad de ajustar recursos a la demanda: aumentar capacidad en temporada alta y reducirla después. Para aprovecharla, los datos deben seguir disponibles cuando se retiran máquinas de cálculo y las tareas deben poder redistribuirse.</p>
-<p>No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y crecéis. El volumen del hotel <strong>no</strong> se estima bien a priori: si os pasáis de pesimistas, habéis tirado el dinero; si os quedáis cortos, el job no llega a las 8.</p>
+<p>Estimad el tamaño inicial con el histórico, el ritmo de llegada y la retención prevista. Añadid margen y revisad la estimación con medidas reales: el crecimiento tiene incertidumbre. Sobredimensionar aumenta el coste; quedarse corto puede impedir que el job llegue a las 8.</p>
 <p>Añadir nodos <strong>no</strong> convierte solo un Excel de finanzas en clúster: el programa del job tiene que <strong>saber</strong> partirse. El PMS de recepción puede seguir en <strong>un</strong> servidor.</p>
 <h2 id="escalado-vertical-y-horizontal">Escalado vertical y horizontal<a class="headerlink" href="#escalado-vertical-y-horizontal" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD

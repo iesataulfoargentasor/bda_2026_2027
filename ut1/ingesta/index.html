@@ -2129,7 +2129,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> explicar extracción, transformación, carga, ETL/ELT y controles de calidad.</p>
 <p><strong>Práctica guiada:</strong> ejecutar Hola ETL en una carpeta propia y comparar pandas con DuckDB.</p>
-<p><strong>Ampliación:</strong> analizar retención de eventos, colas, CDC y catálogo de herramientas. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Ampliación:</strong> analizar retención de eventos, colas, CDC y catálogo de herramientas. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="que-vamos-a-construir-y-como-comprobarlo">Qué vamos a construir y cómo comprobarlo<a class="headerlink" href="#que-vamos-a-construir-y-como-comprobarlo" title="Permanent link">&para;</a></h2>
 <p>La arquitectura de 1.5 sitúa los componentes. Este apartado explica el recorrido que conecta los sistemas de origen con el lugar donde analizamos los datos. Ingestar consiste en incorporar datos a un destino; un pipeline puede incluir además validaciones, transformaciones y publicación de resultados.</p>
@@ -2824,7 +2824,7 @@
 <p>Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga a pedir otra extracción. Eso duele.</p>
 <h3 id="transformaciones">Transformaciones<a class="headerlink" href="#transformaciones" title="Permanent link">&para;</a></h3>
 <ul>
-<li>¿ETL o ELT? ¿El destino traga bruto (lago / almacén elástico) o exige limpio (warehouse clásico de <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>)?</li>
+<li>¿ETL o ELT respecto a qué destino? Indicad si la transformación ocurre antes de cargar en ese destino o dentro de él. Un lago y un warehouse pueden disponer de zonas de carga y datos preparados; su nombre no determina el orden. En ambos diseños, decidid qué originales conservar para reprocesar.</li>
 <li>¿Hace falta transformar <strong>al recoger</strong>, o puede esperar al procesar?</li>
 <li>En continuo, ¿una T pesada (ocupación %, cruce de veinte fuentes) cabe en el mismo milisegundo que el sensor?</li>
 </ul>
@@ -2846,7 +2846,7 @@
 <p class="admonition-title">Tres supuestos del grupo hotelero</p>
 <ol>
 <li>“A las 02:00, la tabla de reservas → el lago.” → lote <em>pull</em>, no una cola.  </li>
-<li>“El semáforo de habitación libre en recepción, en pocos segundos.” → flujo + cola.  </li>
+<li>“El indicador de presencia detectada en recepción, en pocos segundos.” → flujo + cola.</li>
 <li>“Reservas web ya cobradas → fichero para ver en clase.” → <a href="#hola-etl" rel="noopener" target="_blank">Hola ETL</a>. El informe agregado por hotel y canal es el <a href="../pentaho/" rel="noopener" target="_blank">taller 2 de Pentaho</a>.</li>
 </ol>
 </div>
@@ -2865,11 +2865,11 @@
 <ol>
 <li>Gerencia quiere el panel de las 8. ¿Qué decides <strong>primero</strong>: la herramienta o la pregunta de negocio? Di las tres marchas atrás (destino → transformación → origen).</li>
 <li>Una cola solo guarda altas de reserva, sin limpiar ni cruzar. ¿Es un pipeline? ¿Es una ETL? ¿Por qué?</li>
-<li>El almacén de finanzas <strong>no</strong> admite filas sucias. El lago de ocupación <strong>sí</strong> guarda el bruto. ¿ETL, ELT o los dos? ¿Dónde duele si cambian el indicador?</li>
+<li>Finanzas consulta solo tablas validadas. Se pueden transformar los datos antes de cargarlas, o cargar primero en una zona de preparación del almacén y transformarlos allí. Fijad el destino de referencia y describid una opción ETL y otra ELT. En ambas, explicad dónde conservar los originales y cómo recalcular un indicador.</li>
 <li>Con <code>reservas.csv</code> y <code>cobros.csv</code>: importe <strong>cobrado</strong> por hotel <strong>solo</strong> en canal <code>recepcion</code> (pandas y DuckDB). Cuenta también cuántas reservas de ese canal <strong>aún no</strong> tienen cobro (pista: un <em>left join</em> o un anti-join; el Hola ETL usaba <em>inner</em>).</li>
 <li>Misma transformación del punto 4, <strong>tres cargas</strong>: JSON (verlo), Parquet (lago) y CSV. Anota tamaños y di cuándo usarías cada una. Recuerda: el JSON de pandas (array) no es el JSONL de DuckDB.</li>
 <li>Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job.</li>
-<li>El programa de reservas añade <code>motivo_cancelacion</code>. El job de las 02:00 sigue en verde. ¿Qué falló? ¿ETL o ELT te salva mejor un indicador nuevo de cancelaciones?</li>
+<li>El programa de reservas añade <code>motivo_cancelacion</code>, pero el informe no lo recoge y el job de las 02:00 sigue en verde. ¿Qué comprobación de esquema o de resultado falta? ¿Se extrajo y conservó ese campo? Explicad cómo corregir y reprocesar en ETL y en ELT. Ninguno recupera un dato que nunca se guardó; el color verde por sí solo no acredita el nuevo requisito.</li>
 <li>Misma transformación del punto 4, pero ahora <strong>agrega</strong>: por hotel, número de reservas cobradas y suma de <code>cobrado</code>. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías al recoger o al procesar? ¿Por qué?</li>
 <li>Mañana el canal (OTA) manda un JSON nuevo y los sensores de Potes siguen a 30 s. Del apartado <a href="#consideraciones" rel="noopener" target="_blank">Consideraciones</a>, responded <strong>al menos tres preguntas</strong> de <a href="#origen-y-formato" rel="noopener" target="_blank">Origen y formato</a>, <strong>tres</strong> de <a href="#reloj-latencia" rel="noopener" target="_blank">Reloj / latencia</a> y <strong>tres</strong> de <a href="#calidad-y-personas" rel="noopener" target="_blank">Calidad y personas</a>. Nombrad la <strong>familia</strong> de ingesta, no hace falta un producto. No mezcléis el JSON de la OTA con el semáforo en un solo job.</li>
 </ol>

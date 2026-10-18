@@ -9,12 +9,12 @@
       "prompt": "En el aula usáis una ETL visual (PDI / Kettle). ¿Sustituye a Spark o al sistema del día a día?",
       "code": "",
       "options": [
-        "No. Os deja **ver** un ETL (extraer, filtrar, unir, agregar, cargar) sin programar el motor. No picáis el hecho operativo en Spoon.",
-        "Sí: PDI es el clúster de petabytes.",
-        "Sí: Spoon es el programa donde se opera el cobro.",
-        "El XML `.ktr` es el catálogo de negocio del 1.5 (qué significa cada campo)."
+        "Sustituye al PMS porque una transformación puede escribir una fila en una tabla.",
+        "Permite construir ETL visuales; no reemplaza automáticamente otros motores ni el PMS.",
+        "Sustituye siempre a Spark porque cualquier ETL visual se distribuye automáticamente.",
+        "Sustituye toda base operativa al conservar el diseño de las transformaciones."
       ],
-      "answer": 0,
+      "answer": 1,
       "explain": "PDI permite construir y validar flujos. El criterio e) requiere resultados interpretables para su destinatario, no solo un archivo creado. El editor de metadatos pme-ce es otro programa."
     },
     {
@@ -23,12 +23,12 @@
       "prompt": "Tres ejecutables que se confunden. ¿Quién diseña, quién lanza una transformación, quién un job?",
       "code": "",
       "options": [
-        "Pan diseña. Spoon lanza el job. Kitchen es el CSV.",
-        "Kitchen diseña. Pan es el servidor de informes.",
-        "**Spoon** = el taller (`.ktr` y `.kjb`). **Pan** = una transformación sin ventana. **Kitchen** = el job (orden, abortar).",
-        "Los tres lanzan el mismo `.ktr`."
+        "Spoon diseña; Pan ejecuta transformaciones; Kitchen ejecuta jobs.",
+        "Spoon ejecuta jobs sin interfaz; Pan diseña; Kitchen transforma en el lienzo.",
+        "Spoon diseña; Pan ejecuta jobs; Kitchen ejecuta solo transformaciones.",
+        "Spoon administra la base; Pan sirve informes; Kitchen diseña transformaciones."
       ],
-      "answer": 2,
+      "answer": 0,
       "explain": "Usad la combinación de PDI 9.4 y Java indicada en el entorno del aula. Spoon diseña y prueba; Kitchen ejecuta el job, pero no lo programa a una hora por sí solo."
     },
     {
@@ -37,12 +37,12 @@
       "prompt": "Habéis diseñado un solo flujo leer → filtrar → CSV. En el servidor **sin ventana**, ¿Pan o Kitchen?",
       "code": "",
       "options": [
-        "Kitchen: todo lo que no es Spoon es un job.",
-        "Pan. Transformación = el dato **cambia**. Job = **orquesta** (¿existe el fichero? ¿falló el paso?).",
-        "Da igual: Kitchen sobre el `.ktr`.",
-        "Spoon en el servidor, con un cuadro de diálogo."
+        "Spoon es obligatorio: una transformación nunca se ejecuta fuera del lienzo.",
+        "Kitchen ejecuta directamente cualquier .ktr porque no hay interfaz gráfica.",
+        "Pan ejecuta el .ktr directamente; Kitchen ejecutaría un job que lo llamase.",
+        "Pan necesita convertir primero cada transformación en un archivo .kjb."
       ],
-      "answer": 1,
+      "answer": 2,
       "explain": "Error que se repite: Kitchen sobre un `.ktr` o Pan sobre un `.kjb`. Un lote “si no está el fichero, aborta; si está, lanza dos transformaciones” sí es job → Kitchen."
     },
     {
@@ -51,12 +51,12 @@
       "prompt": "Filter rows, ¿cuántas salidas tiene y a cuál unís el siguiente paso?",
       "code": "",
       "options": [
-        "Una: las que cumplen.",
-        "Tres: cumple, no cumple y nulos.",
-        "Ninguna: el filtro se hace “en la cabeza” y no en un paso.",
-        "Dos ramas: condición verdadera y falsa. Configurad explícitamente qué paso recibe cada una."
+        "Verdadera y falsa: se asigna explícitamente el destino de cada rama.",
+        "Entrada y salida: las filas falsas se borran siempre sin configurar su destino.",
+        "Éxito y error: las filas falsas hacen fallar automáticamente la transformación.",
+        "Dos salidas idénticas: cada fila se duplica independientemente de la condición."
       ],
-      "answer": 3,
+      "answer": 0,
       "explain": "La rama falsa no es lo mismo que la gestión de errores de un paso. Verificad ambas con datos que cumplan y que no cumplan la condición."
     },
     {
@@ -65,12 +65,12 @@
       "prompt": "Habéis procesado un informe. ¿Qué le dejáis a quien no abre Spoon?",
       "code": "",
       "options": [
-        "El `.ktr`: así abren Spoon.",
-        "Da igual: el e) es el diseñador de informes del servidor.",
-        "Una salida legible con cabeceras, unidades y alcance, acompañada de una explicación de resultados y limitaciones para el cliente.",
-        "El `.kjb`: Kitchen es el informe."
+        "Solo el diseño .ktr, porque el cliente puede deducir el resultado al abrirlo.",
+        "Archivo generado y captura de Spoon, sin necesidad de explicar el significado.",
+        "Todas las filas originales juntas, aunque no respondan a la pregunta planteada.",
+        "Salida legible con unidades, alcance y explicación de resultados y límites."
       ],
-      "answer": 2,
+      "answer": 3,
       "explain": "d) exige ejecutar y comprobar las reglas; e) exige presentar resultados interpretables. Generar un CSV o cambiar su número de filas no basta por sí solo."
     },
     {
@@ -79,10 +79,10 @@
       "prompt": "Merge join INNER entre dos orígenes. Una fila del primero no tiene pareja. ¿Sale? ¿Hace falta ordenar?",
       "code": "",
       "options": [
-        "Sí sale: es LEFT JOIN. El orden da igual.",
-        "No. INNER: sin pareja no entra. Si los flujos no están **ordenados por la clave** **antes** del merge, el join miente.",
-        "Sí sale si ordenáis **después** del merge.",
-        "Group by sustituye al join."
+        "No sale sin pareja; Merge join ordena internamente cualquier entrada recibida.",
+        "No sale sin pareja; ambos flujos deben llegar ordenados por las claves de unión.",
+        "Sale duplicada; el orden de los flujos determina únicamente el formato final.",
+        "Sale con nulos; basta con ordenar el resultado después de realizar la unión."
       ],
       "answer": 1,
       "explain": "Ordenad ambas entradas por la clave y comprobad en la configuración cuál es izquierda y derecha. INNER conserva coincidencias; LEFT también conserva las filas de la izquierda sin pareja."
@@ -93,10 +93,10 @@
       "prompt": "Group by: SUM y COUNT. ¿Quién nombra los campos de salida?",
       "code": "",
       "options": [
-        "Vosotros, en la columna Name. Quien decide lee **unas pocas filas** agregadas, no el cruce fila a fila.",
-        "Spoon los inventa.",
-        "El origen operativo al cerrar el día.",
-        "Pan, al lanzar el `.ktr`."
+        "Quien diseña los define en Name, con significado claro para el consumidor.",
+        "El motor conserva siempre todos los nombres originales sin permitir cambios.",
+        "El paso Sort impone los nombres de todos los campos agregados posteriores.",
+        "El destinatario debe renombrarlos manualmente después de cada ejecución."
       ],
       "answer": 0,
       "explain": "El Group by también quiere el flujo **ordenado** por las columnas de agrupación. Sort entre el merge y el grupo."
@@ -107,12 +107,12 @@
       "prompt": "Java Filter sobre un campo que puede ser nulo, **sin** If field value is null. ¿Qué pasa?",
       "code": "",
       "options": [
-        "Trata el nulo como 0 y entra como válido.",
-        "El JSON rellena los nulos solo.",
-        "Da igual: copiad un `< 4` y listo.",
-        "Hay que tratar explícitamente los nulos o usar una condición que los contemple; los valores sentinela deben excluirse cuando representan datos inválidos."
+        "Tratar los nulos en la condición o antes; excluir sentinelas que representen datos inválidos.",
+        "Convertir cualquier nulo en cero y tratarlo como un valor real del indicador.",
+        "Confiar en que una comparación numérica filtra cualquier nulo sin revisarla.",
+        "Eliminar la columna completa para evitar distinguir valores ausentes y reales."
       ],
-      "answer": 3,
+      "answer": 0,
       "explain": "El comportamiento depende de la expresión. Comparad los límites pedidos y verificad los registros que deben incluirse y excluirse."
     },
     {
@@ -121,10 +121,10 @@
       "prompt": "El CSV acaba en un cubo de objetos o en una carpeta. ¿Dónde van las credenciales de la nube?",
       "code": "",
       "options": [
-        "En el `.ktr` que subís a la entrega.",
-        "Variables de entorno (o perfil de credenciales). **Nunca** en el `.ktr` ni en un repo.",
-        "En una captura del password.",
-        "Copiadas de un PDF de prácticas."
+        "En el nombre del archivo de salida, evitando así guardarlas dentro de Spoon.",
+        "En un perfil o mecanismo externo autorizado, sin incluirlas en el repositorio.",
+        "En el .ktr si el repositorio es privado, porque así ya quedan protegidas.",
+        "En el README con permisos de lectura, para que el profesor pueda reproducirlo."
       ],
       "answer": 1,
       "explain": "Las credenciales no se incluyen en procesos ni repositorios. La carpeta local permite completar el taller; d) y e) se demuestran validando y explicando sus resultados."
@@ -135,13 +135,13 @@
       "prompt": "De madrugada: si el CSV de un paso **no** apareció, ¿seguís y dais el resultado por bueno?",
       "code": "",
       "options": [
-        "Sí: Kitchen rellena el hueco.",
-        "Un cuadro de diálogo en el servidor sin ventana y listo.",
-        "No. File exists + **Abort job**. No dais por bueno un resultado vacío. Kitchen sobre el `.kjb`.",
-        "Kitchen sobre el `.ktr` basta."
+        "Crear un CSV con cabecera y aceptar su existencia como prueba suficiente.",
+        "Detener el job; si el archivo existe, comprobar además filas y contenido.",
+        "Publicar el informe anterior como nuevo para no dejar el destino sin archivo.",
+        "Continuar si la transformación terminó sin error, aunque falte su salida."
       ],
-      "answer": 2,
-      "explain": "El job **orquesta** transformaciones. El msgbox estorba en un servidor sin pantalla: en la entrega “empresa” quitadlo. Update e Insert/Update no son el mismo paso; si un id no encaja, Error handling al log."
+      "answer": 1,
+      "explain": "File exists detecta ausencia, no contenido válido. Un CSV con solo cabecera existe: hay que comprobar filas, campos y totales, detener el job si falla la validación y conservar el último informe correcto."
     }
   ]
 }

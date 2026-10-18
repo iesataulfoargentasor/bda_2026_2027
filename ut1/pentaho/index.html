@@ -2268,7 +2268,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> distinguir transformaciones y jobs, claves, tipos, uniones y validación.</p>
 <p><strong>Práctica guiada:</strong> completar los talleres locales y la práctica integradora con PDI 9.4.</p>
-<p><strong>Ampliación:</strong> realizar destinos cloud y el taller SQL solo si el profesor habilita esos entornos. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Ampliación:</strong> realizar destinos cloud y el taller SQL solo si el profesor habilita esos entornos. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-del-dato-al-informe-del-hotel-con-pentaho">Vídeo: del dato al informe del hotel con Pentaho<a class="headerlink" href="#video-del-dato-al-informe-del-hotel-con-pentaho" title="Permanent link">&para;</a></h2>
 <p>Sigue el trabajo del hotel para comprender cómo preparar los datos, unir reservas y cobros, construir informes y automatizar su entrega con Pentaho. El recorrido conecta los talleres y distingue Spoon, Pan y Kitchen, con ejemplos de validación y tratamiento de errores. <strong>Duración: 13 minutos y 34 segundos.</strong></p>
@@ -2288,7 +2288,7 @@
 <p>En el aula usáis <strong>Pentaho Data Integration (PDI / Kettle)</strong>, de Hitachi Vantara. No sustituye a Spark en un clúster de petabytes. Sí os deja <strong>ver</strong> un <a href="../ingesta/" rel="noopener" target="_blank">ETL</a>: extraer, filtrar, unir, agregar y cargar <strong>sin programar el motor</strong>.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
-<p><strong>0</strong> es el entorno. <strong>1–3</strong> se hacen en clase (filtro, cruce, JSON). <strong>4–5</strong> son nube y el job de <strong>madrugada</strong>: si el aula no tiene cubo, el CSV acaba en una carpeta. <strong>6</strong> solo si hay PostgreSQL o MariaDB. Los relojes: finanzas cierra a las <strong>23:00</strong>; Kitchen corre de noche; gerencia a las <strong>8</strong> ve el cierre de <strong>ayer</strong>. El <strong>e)</strong> es el fichero o la tabla, no un informe de Pentaho Server.</p>
+<p><strong>0</strong> es el entorno. <strong>1–3</strong> se hacen en clase (filtro, cruce, JSON). <strong>4–5</strong> son nube y el job de <strong>madrugada</strong>: si el aula no tiene cubo, el CSV acaba en una carpeta. <strong>6</strong> solo si hay PostgreSQL o MariaDB. Los relojes: finanzas cierra a las <strong>23:00</strong>; Kitchen corre de noche; gerencia a las <strong>8</strong> ve el cierre de <strong>ayer</strong>. Para <strong>e)</strong> se entrega un fichero o una tabla con cabeceras, unidades, alcance y explicación para gerencia; no es necesario Pentaho Server.</p>
 </div>
 <p>El PDF de prácticas (<a href="../../assets/originales/Pentaho.pdf" rel="noopener" target="_blank">Pentaho.pdf</a>) sirve para <strong>reconocer menús</strong> (dónde está <em>Filter rows</em>, <em>Minimal width</em>…). <strong>No</strong> copiéis sus ficheros ni sus rutas: allí salen códigos postales de Nueva York, Airbnb de Madrid y un RDS deportivo. Aquí el caso es el <a href="../caso-hotel/" rel="noopener" target="_blank">grupo hotelero de Cantabria</a>. Tampoco copiéis credenciales que aparezcan en capturas.</p>
 <p>Los CSV y el SQL de esta página:</p>
@@ -2324,7 +2324,7 @@
 </table>
 <p>Estos <code>reservas_pdi.csv</code> / <code>cobros_pdi.csv</code> <strong>no</strong> son los que generáis en <a href="../ingesta/#hola-etl" rel="noopener" target="_blank">Hola ETL</a> ni el <code>reservas.csv</code> de <a href="../formatos/" rel="noopener" target="_blank">1.7</a>. Misma <strong>idea</strong> (reservas ⋈ cobros); otras columnas (<code>id_hotel</code>, no el nombre) y otro grano (informe, no JSON fila a fila).</p>
 <h2 id="que-es-pdi-y-que-no">Qué es PDI (y qué no)<a class="headerlink" href="#que-es-pdi-y-que-no" title="Permanent link">&para;</a></h2>
-<p>Pentaho es una plataforma de integración y análisis. <strong>PDI</strong> es la pieza ETL: un lienzo donde arrastráis pasos y el motor mueve las filas. En esta UT no montáis el servidor de informes: el criterio <strong>e)</strong> es el CSV, el JSON o la tabla que gerencia ya entiende.</p>
+<p>Pentaho es una plataforma de integración y análisis. <strong>PDI</strong> es la pieza ETL: un lienzo donde arrastráis pasos y el motor mueve las filas. En esta UT no montáis el servidor de informes: el criterio <strong>e)</strong> se demuestra con una salida interpretable y una explicación de su significado y límites para gerencia.</p>
 <p>En jerga de Kettle se dice herramienta de <strong>metadatos</strong> porque vosotros declaráis <em>qué</em> tiene que ocurrir (leer este CSV, filtrar Trasmiera, escribir allí) y el <em>cómo</em> (buffers, tipos) lo resuelve el motor. Ese XML (<code>.ktr</code> / <code>.kjb</code>) <strong>no</strong> es el catálogo de negocio del <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a> (qué significa <code>canal</code>). Se puede ejecutar igual en vuestro Windows y en un servidor sin pantalla.</p>
 <p>Con Spoon, sin escribir el motor:</p>
 <ul>
@@ -2770,16 +2770,16 @@
 <h2 id="taller-5-un-job-que-no-se-miente">Taller 5 — Un job que no se miente<a class="headerlink" href="#taller-5-un-job-que-no-se-miente" title="Permanent link">&para;</a></h2>
 <p>El job controla dependencias: no debe lanzar una tarea que requiere una salida válida si la tarea anterior ha fallado. Configurad las conexiones condicionales de éxito y error, además de la comprobación de existencia del fichero.</p>
 <p>Probad tres escenarios: primera ejecución sin informe previo, repetición con informe previo y fallo provocado al indicar una ruta de entrada inexistente en una copia de prueba. En el tercero, el job debe detenerse con error y no anunciar una publicación correcta. Restaurad la ruta al terminar.</p>
-<p>La existencia de un CSV es una comprobación inicial, pero no demuestra que sea completo: puede contener solo una cabecera. En una automatización real se comprobarían también filas, totales y fecha del informe. El borrado previo se utiliza aquí para practicar condiciones; publicar una salida validada desde un archivo provisional permite conservar el último informe correcto durante la regeneración.</p>
-<p>Cliente: <em>“A las 23:00 cierra el día. De madrugada: si ya existe el informe del taller 2, bórralo; regenera 2; si ese CSV <strong>no</strong> apareció, <strong>para</strong> (no pintéis el panel de las 8 con un hueco); luego el 4.”</em></p>
-<p>El taller 4 <strong>vuelve a leer</strong> los CSV de reservas; no consume <code>informe_hotel_canal.csv</code>. El <em>File exists</em> del 2 es la <strong>compuerta</strong>: si el cruce falló, no seguís.</p>
+<p>La existencia de un CSV es una comprobación inicial, pero no demuestra que sea completo: puede contener solo una cabecera. En una automatización real se comprobarían también filas, totales y fecha del informe. En este taller limitado se practica el borrado condicional <strong>sobre una copia de trabajo</strong>, sin tratarla como el último informe publicado. En la práctica integradora se evoluciona a un procedimiento que genera en <code>temporal</code>, valida y solo entonces publica en <code>salida</code>. No trasladéis el borrado previo al informe final: debe conservarse si falla la regeneración.</p>
+<p>Encargo de aprendizaje: <em>“En una carpeta de pruebas, regenerad la copia del taller 2 y comprobad las ramas del job. Si falla la transformación o no aparece su salida, detened el proceso antes del taller 4.”</em> Guardad aparte cualquier informe válido que necesitéis conservar.</p>
+<p>El taller 4 <strong>vuelve a leer</strong> los CSV de reservas; no consume <code>informe_hotel_canal.csv</code>. La conexión de éxito de la transformación y el <em>File exists</em> forman las primeras <strong>compuertas</strong>: si el cruce falla o falta su salida, no seguís. La existencia por sí sola no comprueba el cruce.</p>
 <ol>
 <li><em>File → New → Job.</em></li>
 <li><strong>General → Start.</strong></li>
-<li><strong>Conditions → File exists</strong> sobre <code>informe_hotel_canal.csv</code>.</li>
-<li>Si existe: <strong>Delete files</strong> + (opcional en clase) <strong>Display msgbox info</strong> “He borrado el informe viejo”. En un servidor <strong>sin ventana</strong>, el <em>msgbox</em> estorba: en la entrega “empresa” quitadlo.</li>
+<li><strong>Conditions → File exists</strong> sobre <code>informe_hotel_canal.csv</code> <strong>en la carpeta de pruebas</strong>. Configurad las copias de las transformaciones de los talleres 2 y 4 para que sus salidas se escriban allí.</li>
+<li>Si existe: <strong>Delete files</strong> + (opcional en clase) <strong>Display msgbox info</strong> “He borrado la copia de prueba anterior”. En un servidor <strong>sin ventana</strong>, el <em>msgbox</em> estorba: en la entrega “empresa” quitadlo.</li>
 <li><strong>General → Transformation:</strong> el <code>.ktr</code> del taller 2. Unid tanto la rama “no existía” como la de “ya lo borré” a esta transformación.</li>
-<li>Otro <strong>File exists</strong> sobre el CSV que <strong>debe</strong> haber dejado el 2. Si no está: <strong>Utility → Abort job</strong>. Así no dais por bueno un panel vacío.</li>
+<li>Otro <strong>File exists</strong> sobre el CSV que <strong>debe</strong> haber dejado el 2. Si no está: <strong>Utility → Abort job</strong>. Esto detecta una salida ausente. Un CSV existente con solo cabecera exige comprobar filas y contenido, como se hace en la práctica integradora.</li>
 <li>Segunda <strong>Transformation</strong> (taller 4). Si comprobáis objeto en S3/Azure, el mismo <em>File exists</em> admite esquema S3 (URL del <em>bucket</em>) en muchas versiones; si no, un paso <em>Shell</em> / script del aula. Sin cubo: comprobad el CSV local.</li>
 </ol>
 <p>Guardad <code>taller5_noche.kjb</code>.</p>
@@ -2803,7 +2803,7 @@
 <p>La tabla <code>huespedes</code> tiene siempre <code>tipo = huesped</code>. El segundo campo está para practicar una <strong>clave de dos columnas</strong> (en otros oficios no basta el id):</p>
 <ol>
 <li><strong>Transform → Add constants:</strong> <code>tipo_entidad</code> = <code>huesped</code>.</li>
-<li><strong>Lookup → Database lookup:</strong> claves <code>id_huesped</code> + <code>tipo_entidad</code> → <code>nombre</code> (y lo que pidáis).</li>
+<li><strong>Lookup → Database lookup:</strong> mapead la clave <code>id_huesped</code> del flujo a <code>id_huesped</code> de la tabla y <code>tipo_entidad</code> del flujo a <code>tipo</code> de la tabla. Recuperad <code>nombre</code> (y los campos necesarios). El nombre del campo de entrada no tiene por qué coincidir con el de la columna de la tabla.</li>
 </ol>
 <p>Preview: nombres de Ana, Luis… Si un id no existe, los campos salen <strong>nulos</strong>. Marcad <em>Do not pass the row if the lookup fails</em> si no queréis esa fila en el flujo bueno.</p>
 <h3 id="insertar">Insertar<a class="headerlink" href="#insertar" title="Permanent link">&para;</a></h3>
@@ -2820,7 +2820,13 @@
 <li><strong>5</strong> (Eva): está en huéspedes, <strong>no</strong> hay fase previa → el <em>Update</em> falla.</li>
 <li><strong>99</strong>: no hay huésped ni fase → también falla.</li>
 </ul>
-<p>Esperad <strong><code>E=2</code></strong>, no <code>E=1</code>. Clic derecho en el <em>Update</em> → <strong>Error handling…</strong>: rellenad <em>Error description fieldname</em> y <em>Error fields fieldname</em>. Conectad esa salida a <strong>Write to log</strong>. Al repetir veréis <em>qué</em> clave falló, no solo “ha habido un error”.</p>
+<p>Comprobad <strong>dos filas sin correspondencia: 5 y 99</strong>. No las confundáis con el contador <code>E</code> de errores de ejecución.</p>
+<ol>
+<li>Sin salida de errores, el paso puede detener la transformación al encontrar la primera clave inexistente; no esperéis que recorra todas ni que muestre <code>E=2</code>.</li>
+<li>Restaurad el estado inicial de la prueba. Clic derecho en <em>Update</em> → <strong>Error handling…</strong>: elegid el paso destino <strong>Write to log</strong> y rellenad <em>Error description fieldname</em> y <em>Error fields fieldname</em>. Conservad también las claves originales en el registro del log.</li>
+<li>Repetid con la salida de errores conectada y sin un umbral de rechazo que detenga antes la prueba: deben llegar a ella <strong>dos filas</strong>, con identificadores 5 y 99. Las filas 1 y 3 deben actualizarse. Las filas rechazadas se contabilizan separadamente de los errores que detienen la ejecución; no exigimos <code>E=2</code>.</li>
+<li>Contrastad el log y la tabla resultante. Documentad qué ocurre sin tratamiento de errores y qué cambia al habilitarlo. En un proceso real se decide además si esos rechazos permiten publicar o deben hacer fallar el job.</li>
+</ol>
 <h3 id="upsert">Upsert<a class="headerlink" href="#upsert" title="Permanent link">&para;</a></h3>
 <p>Si en vez de fallar queréis <strong>insertar</strong> lo que no exista: <strong>Insert / Update</strong> (no es el mismo paso que <em>Update</em>). En este esquema no hay clave primaria ni restricción única en <code>fases_incidencia</code>: las claves de búsqueda se definen en el paso. Esto sirve para practicar, pero no garantiza ausencia de duplicados ante ejecuciones concurrentes. En una solución real se debe definir una clave adecuada y reforzarla en la base de datos. Tampoco hay una clave foránea hacia huéspedes: el identificador 99 requiere validación explícita si se permite insertar.</p>
 <hr />
@@ -2911,7 +2917,7 @@
 <ol>
 <li>Talleres <strong>0 a 3</strong>: <code>.ktr</code> + captura del lienzo <strong>con nota</strong> (nombre completo + pregunta del cliente). Abrid el CSV/JSON <strong>fuera</strong> de Spoon.</li>
 <li>Talleres <strong>4 y 5</strong>: el informe costa/ciudad/interior en el destino que indique el profesor (S3, Azure o carpeta del aula) y el <code>.kjb</code> lanzado con Kitchen.</li>
-<li>Taller <strong>6</strong> (si el aula tiene BD): lookup + insert + update con el error de las filas <strong>5 y 99</strong> <strong>explicado</strong> (captura del log, <code>E=2</code>).</li>
+<li>Taller <strong>6</strong> (si el aula tiene BD): lookup + insert + update con el error de las filas <strong>5 y 99</strong> <strong>explicado</strong> (captura de las dos filas rechazadas y comprobación de las actualizaciones; no se exige <code>E=2</code>).</li>
 <li>Opcional: el tutorial Community de Hitachi Vantara (lista de correo: limpiar, tipar y cargar un CSV a una tabla). Mismo oficio, otro enunciado.</li>
 </ol>
 <p>Estas indicaciones corresponden a los talleres. La práctica integradora tiene su propio procedimiento: repositorio de GitHub, avances por sesión y entrega final en Moodle, según su enunciado.</p>

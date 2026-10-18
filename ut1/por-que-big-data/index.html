@@ -1951,7 +1951,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> relacionar las 5 V con requisitos medibles y distinguir información, análisis y decisión.</p>
 <p><strong>Práctica guiada:</strong> los cálculos de volumen y de acumulación de eventos.</p>
-<p><strong>Ampliación:</strong> comparar perfiles profesionales y las V adicionales. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Ampliación:</strong> comparar perfiles profesionales y las V adicionales. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-del-cobro-de-ana-a-las-cinco-vs">Vídeo: del cobro de Ana a las cinco Vs<a class="headerlink" href="#video-del-cobro-de-ana-a-las-cinco-vs" title="Permanent link">&para;</a></h2>
 <p>Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo necesitamos Big Data y cómo las cinco Vs ayudan a diagnosticar las dificultades del recorrido. La explicación desarrolla cada V con ejemplos y cálculos sencillos, y conecta el valor de los datos con las analíticas y los roles del equipo. <strong>Duración: 8 minutos y 36 segundos.</strong></p>
@@ -2334,7 +2334,16 @@
 </tbody>
 </table>
 <p>El BI <strong>no</strong> desaparece cuando llega el lago. Gerencia sigue necesitando el “qué pasó”. Big Data <strong>no</strong> es un sinónimo de predicción: a veces el valor es un informe de ayer que llega <strong>a las 8</strong>, no un modelo.</p>
-<p><img alt="Cuatro preguntas de gerencia (izquierda) y el equipo (derecha): el científico no es solo “el modelo”; pregunta, limpia y explica. El ingeniero es este módulo" src="../../assets/ut1/analiticas-roles.png" /></p>
+<pre class="mermaid"><code>flowchart TB
+  N[Necesidad de gerencia: comprender y decidir] --&gt; A[Analista: consultar, interpretar y comunicar]
+  N --&gt; C[Científico: formular preguntas, explorar y validar modelos]
+  N --&gt; I[Ingeniero: ingerir, transformar y mantener datos utilizables]
+  N --&gt; R[Arquitecto: diseñar componentes, acceso y crecimiento]
+  A --&gt; E[Equipo: contrastar resultados, límites y decisiones]
+  C --&gt; E
+  I --&gt; E
+  R --&gt; E</code></pre>
+<p>Las cuatro preguntas de la tabla anterior requieren colaboración. El científico también revisa la calidad e interpreta resultados; el analista necesita comprender el negocio. Estos perfiles describen responsabilidades que pueden solaparse, no departamentos aislados.</p>
 <p>Los perfiles colaboran y pueden solaparse. Predecir no garantiza acertar; una recomendación debe incluir incertidumbre, restricciones del negocio y evaluación de sus efectos.</p>
 <h2 id="quien-hace-que-un-solo-mapa">Quién hace qué (un solo mapa)<a class="headerlink" href="#quien-hace-que-un-solo-mapa" title="Permanent link">&para;</a></h2>
 <p>Los tres oficios de arriba <strong>beben</strong> del dato. Este módulo forma sobre todo a quien <strong>deja ese dato usable</strong>: el <strong>ingeniero</strong>.</p>

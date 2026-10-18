@@ -9,12 +9,12 @@
       "prompt": "Un origen guarda muchas columnas. El informe solo usa dos. Si el lago es un CSV gordo, ¿qué pasa?",
       "code": "",
       "options": [
-        "El motor suele leer **todas** las columnas para pocos números. En cloud a menudo pagáis por lo escaneado.",
-        "El motor lee solo esas dos columnas: el CSV es columnar.",
-        "Da igual el formato: el precio es solo el disco.",
-        "Hay que guardar el cobro operativo en Parquet."
+        "Evita leer las otras columnas siempre que se añada un filtro SQL posterior.",
+        "Lee solo los bytes de esas columnas porque CSV mantiene bloques columnares.",
+        "Utiliza automáticamente un índice por columna creado al guardar el CSV.",
+        "Generalmente debe recorrer el texto, aunque el resultado use pocas columnas."
       ],
-      "answer": 0,
+      "answer": 3,
       "explain": "Elegir mal el formato en la carga se paga **cada** consulta. Fila a fila (este registro) frente a campo a campo (el informe)."
     },
     {
@@ -23,10 +23,10 @@
       "prompt": "Un JSON con un array de diez millones de objetos entre [ y ]. ¿Lo reparte bien un clúster?",
       "code": "",
       "options": [
-        "Sí: el array es el formato más partible.",
-        "Sí, si lo llamáis Parquet.",
-        "Un array grande es menos sencillo de repartir; JSONL facilita localizar registros. Hay que comprobar el lector y la compresión.",
-        "No, porque JSON no existe en analítica."
+        "Un array JSON y JSONL se reparten siempre igual con cualquier lector disponible.",
+        "JSONL garantiza reparto paralelo incluso con cualquier compresión no divisible.",
+        "JSONL facilita delimitar registros; la división efectiva depende del lector y compresión.",
+        "Un array grande nunca puede leerse sin cargar el documento completo en memoria."
       ],
       "answer": 2,
       "explain": "El formato influye en la lectura paralela. Algunos lectores procesan JSON de forma incremental; no se puede afirmar que cualquier array deba cargarse entero en un nodo."
@@ -37,12 +37,12 @@
       "prompt": "¿Qué problema típico tiene el CSV, y qué es JSONL?",
       "code": "",
       "options": [
-        "CSV lleva el esquema dentro. JSONL es un array de 2 GB.",
-        "CSV requiere acordar tipos y escapar delimitadores dentro de campos; JSONL contiene un objeto por línea.",
-        "CSV es el lago del informe. JSONL es la base operativa.",
-        "CSV y Parquet son lo mismo."
+        "CSV guarda tipos en su cabecera; JSONL requiere un array global entre corchetes.",
+        "CSV impide incluir delimitadores en un campo; JSONL no admite valores nulos.",
+        "CSV necesita acuerdos de tipos y escape; JSONL representa un objeto por línea.",
+        "CSV conserva automáticamente tipos; JSONL obliga a repetir siempre las mismas claves."
       ],
-      "answer": 1,
+      "answer": 2,
       "explain": "Una coma dentro de un campo CSV es válida si se entrecomilla correctamente. El formato no fija por sí solo si 01 es texto o número."
     },
     {
@@ -51,10 +51,10 @@
       "prompt": "`{\"campo\": None}` ¿es JSON válido?",
       "code": "",
       "options": [
-        "Sí: None es el nulo de JSON.",
-        "Sí, si el fichero se llama .jsonl.",
-        "Da igual: Avro acepta None en el JSON.",
-        "No. JSON utiliza null para representar un valor nulo; None pertenece a Python."
+        "Sí: JSON y Python utilizan exactamente las mismas constantes para los nulos.",
+        "No: el problema son las comillas dobles, que JSON no permite en las claves.",
+        "Sí: cualquier diccionario escrito como texto constituye un documento JSON válido.",
+        "No: JSON representa ese valor con null; None es una constante de Python."
       ],
       "answer": 3,
       "explain": "Nulo no equivale a cadena vacía ni a cero. Un lector convierte el nulo a la representación adecuada del lenguaje."
@@ -65,10 +65,10 @@
       "prompt": "Leer **un** registro entero frente a sumar **un** campo de un millón. ¿Qué orientación encaja?",
       "code": "",
       "options": [
-        "Un registro = **por filas** (CSV, JSON, Avro en un bus). Un campo de muchos = **por columnas** (Parquet, ORC).",
-        "Las dos en CSV: es lo más rápido en el lago.",
-        "Las dos en Parquet como almacén de la caja.",
-        "Avro es columnar; Parquet va por filas."
+        "Filas para recuperar campos de un registro; columnas para leer un campo de muchos.",
+        "Columnas para escrituras operativas; filas para cualquier consulta de un histórico.",
+        "Columnas para recuperar cualquier registro; filas para sumar un campo de muchos.",
+        "Filas para datos numéricos; columnas para textos, independientemente de la consulta."
       ],
       "answer": 0,
       "explain": "La orientación se elige según el patrón de acceso. Un formato de archivo, sea por filas o columnas, no sustituye por sí solo al gestor transaccional."
@@ -79,12 +79,12 @@
       "prompt": "Avro va por filas y lleva esquema. ¿Sustituye a la base operativa?",
       "code": "",
       "options": [
-        "Sí: Avro es ACID.",
-        "No. Recibir el cobro o el asiento es la tabla del 1.3. Avro es el **mensaje** (p. ej. Kafka): filas + esquema que evoluciona.",
-        "Sí, si comprimís con gzip.",
-        "No, porque Avro no tiene esquema."
+        "Sí: guardar el esquema proporciona por sí solo transacciones entre varias reservas.",
+        "No: únicamente porque Avro no permite almacenar cantidades ni identificadores.",
+        "No: es un formato con esquema, no un sistema que garantice las operaciones del PMS.",
+        "Sí: estar organizado por filas garantiza bloqueos e integridad entre huéspedes."
       ],
-      "answer": 1,
+      "answer": 2,
       "explain": "Un archivo contenedor Avro incluye el esquema. En mensajería puede utilizarse un registro externo de esquemas. El formato no proporciona por sí solo las transacciones de un gestor de bases de datos."
     },
     {
@@ -93,12 +93,12 @@
       "prompt": "Snappy, gzip, zstd… ¿Comprimir es gratis?",
       "code": "",
       "options": [
-        "Sí: más apriete siempre es mejor.",
-        "Sí, porque Bzip2 es el códec del informe.",
-        "No. Puede reducir almacenamiento y transferencia, pero consume CPU; el mejor códec depende de la carga y del lector.",
-        "No hace falta medir: copiad los megas de otro ciclo."
+        "Sí: el mismo códec es óptimo para lectura local y red con independencia de la carga.",
+        "No: ahorra espacio y transferencia a cambio de CPU y requisitos del lector.",
+        "No: comprimir implica perder precisión en los importes incluso con códecs sin pérdida.",
+        "Sí: cualquier compresión reduce a la vez espacio y CPU para cualquier consulta."
       ],
-      "answer": 2,
+      "answer": 1,
       "explain": "Comparad tamaños y tiempos de escritura y lectura conservando los mismos datos. No existe un ganador universal ni una proporción fija de compresión."
     },
     {
@@ -107,12 +107,12 @@
       "prompt": "Arrow describe columnas en RAM. Feather es un fichero. ¿Qué no hay que mezclar?",
       "code": "",
       "options": [
-        "Arrow es Avro en disco. Feather es el lago de tres años.",
-        "Feather sustituye a Delta Lake.",
-        "Arrow cobra en caja.",
-        "Arrow define una representación columnar en memoria; Feather permite persistir e intercambiar tablas mediante Arrow IPC."
+        "Arrow representa columnas en memoria; Feather persiste tablas mediante Arrow IPC.",
+        "Arrow y Feather son dos nombres de Parquet que solo cambian según el lenguaje.",
+        "Arrow describe filas en disco; Feather convierte cada fila en un documento JSON.",
+        "Arrow es una base transaccional; Feather replica sus tablas entre servidores."
       ],
-      "answer": 3,
+      "answer": 0,
       "explain": "Las conversiones no siempre evitan copias. En el lago del caso elegimos Parquet por sus lectores y consultas, no porque Feather sea incapaz de conservar archivos."
     },
     {
@@ -121,10 +121,10 @@
       "prompt": "Escribís Parquet y luego lo leéis entero + un filtro en pandas. ¿Y para un resumen SQL?",
       "code": "",
       "options": [
-        "Sí: Parquet ya recorta solo. SQL no lee Parquet.",
-        "Conviene seleccionar columnas y aplicar filtros en la lectura. DuckDB puede consultar el archivo sin convertirlo completo en un DataFrame.",
-        "Sí, si el fichero se llama .parquet.",
-        "No, porque Parquet no lleva esquema y DuckDB solo lee CSV."
+        "Leer todo en pandas y filtrar después garantiza que se lean menos bytes del disco.",
+        "Seleccionar columnas y filtros al leer; usar DuckDB para consultar el archivo.",
+        "Cargar todo en RAM es obligatorio antes de ejecutar cualquier consulta SQL.",
+        "Convertir primero a CSV permite mantener las ventajas de los bloques columnares."
       ],
       "answer": 1,
       "explain": "El ahorro depende de los datos y de las estadísticas. DuckDB utiliza memoria y puede necesitar almacenamiento temporal; no significa que calcule sin recursos."
@@ -135,13 +135,13 @@
       "prompt": "¿Qué aporta un formato de tabla como Delta o Iceberg sobre los archivos de un lago?",
       "code": "",
       "options": [
-        "Sí: el lago es la caja. CSV en todos.",
-        "Sí el Parquet; Delta sustituye a la operación.",
-        "Conviene gestionar la tabla y sus versiones con mecanismos como Delta, Iceberg o Hudi; el formato de archivo y el motor se eligen según la carga.",
-        "ORC es el mensaje de Kafka. Feather es el archivo del cubo."
+        "Un nuevo códec que sustituye las reglas de consistencia por mayor compresión.",
+        "Una representación que sustituye toda necesidad de motor de consulta.",
+        "Un índice de CPU que convierte automáticamente cada lectura en tiempo real.",
+        "Metadatos y mecanismos para gestionar una tabla y sus versiones sobre archivos."
       ],
-      "answer": 2,
-      "explain": "Un formato de tabla coordina archivos y cambios. Borrar de la versión actual no elimina automáticamente todas las versiones históricas."
+      "answer": 3,
+      "explain": "Delta, Iceberg o Hudi añaden gestión de tablas y versiones sobre archivos. Sus garantías dependen del sistema y de su uso; no son simplemente otro formato de compresión ni eliminan el motor de consulta."
     }
   ]
 }

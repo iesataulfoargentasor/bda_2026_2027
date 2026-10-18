@@ -984,10 +984,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#taller-medido-lo-que-se-examina" class="md-nav__link">
+  <a href="#taller-medido-comprobar-y-justificar-la-eleccion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Taller medido (lo que se examina)
+        Taller medido: comprobar y justificar la elección
       
     </span>
   </a>
@@ -1787,10 +1787,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#taller-medido-lo-que-se-examina" class="md-nav__link">
+  <a href="#taller-medido-comprobar-y-justificar-la-eleccion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Taller medido (lo que se examina)
+        Taller medido: comprobar y justificar la elección
       
     </span>
   </a>
@@ -1917,7 +1917,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> elegir formato según tipos, consultas y consumidores; distinguir archivos, tablas y motores.</p>
 <p><strong>Práctica guiada:</strong> generar los datos y comprobar que las conversiones conservan filas, nulos y valores.</p>
-<p><strong>Ampliación:</strong> comparar tiempos con un experimento controlado; HDFS y Delta requieren otro entorno. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Práctica guiada evaluable:</strong> el taller medido compara tamaño, tipos, resultados y tiempos en el entorno local; se valora el procedimiento y la interpretación, no conseguir una marca de velocidad. <strong>Ampliación:</strong> HDFS y Delta requieren otro entorno. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-la-reserva-de-ana-cambia-de-formato">Vídeo: la reserva de Ana cambia de formato<a class="headerlink" href="#video-la-reserva-de-ana-cambia-de-formato" title="Permanent link">&para;</a></h2>
 <p>Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. <strong>Duración: 12 minutos y 24 segundos.</strong></p>
@@ -2051,7 +2051,20 @@
 <h2 id="una-reserva-junta-o-un-campo-junto">Una reserva junta o un campo junto<a class="headerlink" href="#una-reserva-junta-o-un-campo-junto" title="Permanent link">&para;</a></h2>
 <p>La organización por filas favorece leer muchos campos de cada registro. Sin embargo, un fichero CSV no tiene por defecto un índice que localice directamente la reserva 17: puede ser necesario recorrerlo. La organización columnar favorece seleccionar pocas columnas de muchos registros.</p>
 <p>En Parquet, un <strong>grupo de filas</strong> contiene fragmentos separados por columna. El lector puede seleccionar columnas y, con estadísticas apropiadas, descartar grupos incompatibles con un filtro. Además, particionar el conjunto por fecha puede evitar abrir archivos de otros periodos. Selección de columnas, descarte por estadísticas y particionado son optimizaciones distintas.</p>
-<p><img alt="Por filas: esta reserva (PMS o un mensaje Avro). Por columnas: el panel lee importe (Parquet)" src="../../assets/ut1/filas-columnas.png" /></p>
+<p>Estas son las <strong>mismas tres reservas</strong> representadas de dos formas. La agrupación muestra qué valores se mantienen juntos conceptualmente; no reproduce la codificación binaria de un formato.</p>
+<pre class="mermaid"><code>flowchart TB
+  subgraph filas [Organización por filas: campos de cada reserva juntos]
+    F1[Reserva 1: Laredo / 3 noches / 240 euros]
+    F2[Reserva 2: Potes / 2 noches / 180 euros]
+    F3[Reserva 3: Laredo / 1 noche / 90 euros]
+  end
+  subgraph columnas [Organización por columnas: valores de cada campo juntos]
+    C1[hotel: Laredo / Potes / Laredo]
+    C2[noches: 3 / 2 / 1]
+    C3[importe: 240 / 180 / 90]
+  end
+  C3 --&gt; S[Sumar importes: 510 euros]</code></pre>
+<p>Para reconstruir una reserva hacen falta sus campos. Para sumar importes de muchas reservas, una lectura columnar puede seleccionar la columna <code>importe</code> y evitar leer las demás. El resultado debe ser el mismo: cambia el trabajo de lectura, no el significado de los datos.</p>
 <p>Pensad en mil reservas <code>hotel | noches | importe | comentarios</code>.</p>
 <p><strong>Todo el registro junto</strong> (CSV, JSON; <strong>Avro</strong> en un bus): reconstruir los campos de un registro es directo una vez localizado. Sumar <em>solo</em> importes obliga a saltar el resto mil veces. <strong>Añadir</strong> reservas al final es natural.</p>
 <p>Eso <strong>no</strong> convierte Avro en el PMS. Recibir el cobro en recepción es la tabla del <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a> (ACID). Avro es el <strong>mensaje</strong> (Kafka): también va por filas, con esquema.</p>
@@ -2399,7 +2412,8 @@ Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>ma
 <p class="admonition-title">Serializar</p>
 <p>Memoria → bytes (y al revés). Cada conversión puede <strong>perder el tipo</strong>. Elegid formato en la frontera y no traduzcáis en cada capa.</p>
 </div>
-<h2 id="taller-medido-lo-que-se-examina">Taller medido (lo que se examina)<a class="headerlink" href="#taller-medido-lo-que-se-examina" title="Permanent link">&para;</a></h2>
+<p><a id="taller-medido-lo-que-se-examina"></a></p>
+<h2 id="taller-medido-comprobar-y-justificar-la-eleccion">Taller medido: comprobar y justificar la elección<a class="headerlink" href="#taller-medido-comprobar-y-justificar-la-eleccion" title="Permanent link">&para;</a></h2>
 <p>Para que la comparación sea válida, utilizad las mismas filas, columnas y tipos en todas las alternativas. Registrad versiones, número de registros, tamaño del archivo, compresión y consulta. Separad el tiempo de escritura del de lectura y del de cálculo.</p>
 <p>Repetid cada medida y explicad si los datos podían estar en caché. No comparéis una lectura completa de CSV con una consulta de dos columnas sobre Parquet sin aclarar que se están midiendo dos patrones de acceso. Además del tiempo, contrastad el resultado: recuentos, nulos y sumas deben coincidir dentro de la tolerancia numérica acordada.</p>
 <p>Abrid un cuaderno <strong>en blanco</strong>. Generad el <code>df</code> (<code>n ≥ 200_000</code>). Cronometrad y anotad tamaños (<code>os.path.getsize</code>) de:</p>

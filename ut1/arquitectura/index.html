@@ -1995,7 +1995,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> seguir el dato por responsabilidades y reconocer controles transversales.</p>
 <p><strong>Práctica guiada:</strong> dibujar la solución del hotel y justificar cómo se recupera.</p>
-<p><strong>Ampliación:</strong> comparar Lambda y Kappa mediante sus vistas y el reprocesamiento. No sustituye a los conceptos y comprobaciones anteriores.</p>
+<p><strong>Ampliación:</strong> comparar Lambda y Kappa mediante sus vistas y el reprocesamiento. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-del-cobro-de-ana-al-panel">Vídeo: del cobro de Ana al panel<a class="headerlink" href="#video-del-cobro-de-ana-al-panel" title="Permanent link">&para;</a></h2>
 <p>Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectura, qué controles necesita el recorrido y cómo se recupera ante fallos. La explicación de Lambda y Kappa utiliza el mismo ejemplo numérico y esquemas comparativos para distinguir ambas opciones. <strong>Duración: 12 minutos y 39 segundos.</strong> La comparación de Lambda y Kappa comienza aproximadamente en el <strong>minuto 6:40</strong>.</p>
@@ -2027,7 +2027,21 @@
 <li><strong>Entrega</strong> (<em>serving</em>). El dato <strong>ya es de fiar</strong> y se lo dais a un consumidor: panel, modelo, fichero para el científico.</li>
 <li><strong>Consumo.</strong> Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado <strong>antes</strong>.</li>
 </ol>
-<p><img alt="Ciclo del dato en el hotel: de PMS y sensores al panel de las 8" src="../../assets/ut1/ciclo-ingenieria.png" /></p>
+<pre class="mermaid"><code>flowchart TB
+  subgraph diario [Recorrido del cierre diario]
+    P[PMS y pasarela: reservas y cobros] --&gt; I[Ingesta del cierre acordado]
+    I --&gt; B[Conservar originales y validar]
+    B --&gt; T[Unir, transformar y comprobar]
+    T --&gt; G[Gerencia a las 8: cierre de ayer]
+  end
+  subgraph presencia [Recorrido de presencia]
+    S[Sensores: eventos cada 30 segundos] --&gt; C[Ingesta y cola de eventos]
+    C --&gt; V[Procesar eventos y actualizar estado]
+    V --&gt; R[Recepción: presencia detectada]
+  end
+  X[En ambos: seguridad, gobierno, monitorización y coordinación] -.-&gt; I
+  X -.-&gt; C</code></pre>
+<p>Generación, ingesta, transformación, entrega y consumo se reconocen en ambos recorridos, pero sus fuentes, plazos y resultados son distintos. Este esquema no combina sus vistas y no representa por sí solo una arquitectura Lambda. El indicador de presencia no determina la disponibilidad comercial de una habitación.</p>
 <p>La figura resume un ciclo posible. En este caso el cierre usa reservas y cobros; los sensores alimentan un indicador distinto. Ingestar no exige siempre pasar por un lago.</p>
 <p>Sobre el almacén (lago, warehouse, <em>lakehouse</em>, cubo de objetos: <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>) se apoyan ingesta, transformación y entrega. Seguridad y monitorización son <strong>capas</strong> que atraviesan el edificio. Gobierno, DataOps y orquestación son <strong>corrientes</strong> (no una novena capa): van más abajo.</p>
 <h3 id="a-quien-servis">A quién servís<a class="headerlink" href="#a-quien-servis" title="Permanent link">&para;</a></h3>
@@ -2270,7 +2284,7 @@
 </table>
 <p><strong>Hadoop</strong> fue la plataforma pionera de <strong>lotes</strong> sobre HDFS (un sistema de ficheros <strong>repartido</strong>). <strong>Spark</strong> cubre lotes y streaming utilizando <strong>memoria y disco</strong> según la operación y los recursos y convive con ese ecosistema: por eso aparece en las dos capas de Lambda. <strong>Pentaho</strong> se usa en este módulo para <strong>ETL visual</strong> (Spoon). El criterio <strong>e)</strong> es un fichero o un panel que gerencia entiende: <strong>no</strong> es abrir Report Designer ni Pentaho Server. Kappa necesita un registro de eventos retenidos y releíbles, como Kafka configurado para ello; una cola que elimina mensajes tras su confirmación no basta para reconstruir el histórico; el detalle de ingesta está en <a href="../ingesta/" rel="noopener" target="_blank">1.6</a>.</p>
 <p>Sqoop se retiró a <a href="https://attic.apache.org/projects/sqoop.html">Apache Attic en 2021</a> y Oozie en <a href="https://attic.apache.org/timeline.html">2025</a>: ayudan a leer arquitecturas antiguas, no son propuestas para instalar en esta UT. Kitchen ejecuta un job; las dependencias las define ese job y su lanzamiento horario requiere un planificador.</p>
-<p>Los mapas cambian de año (nace una marca, muere otra). <strong>Las capas no.</strong> Un mapa reciente que se cita en el ciclo: <a href="https://mad.firstmark.com/" rel="noopener" target="_blank">MAD landscape</a> (orientación, no para recitar).</p>
+<p>Los mapas cambian de año (nace una marca, muere otra). Las responsabilidades siguen siendo útiles, pero pueden agruparse de distintas formas: las ocho capas son el mapa didáctico de esta unidad, no una norma universal. Un mapa reciente que se cita en el ciclo: <a href="https://mad.firstmark.com/" rel="noopener" target="_blank">MAD landscape</a> (orientación, no para recitar).</p>
 <h2 id="big-data-y-cloud">Big Data y cloud<a class="headerlink" href="#big-data-y-cloud" title="Permanent link">&para;</a></h2>
 <p>El BOE cita cloud. Un <em>bucket</em> S3 o un Glue no cambian el razonamiento: seguís decidiendo las 5 V, dónde vive el dato, lote o stream y el formato. Cambia <strong>quién</strong> opera los discos y <strong>cómo pagáis</strong>. El cubo es almacén de <strong>objetos</strong>; el clúster de cálculo puede <strong>no</strong> vivir en las mismas máquinas (<a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>).</p>
 <p>En varios servicios analíticos de nube pagáis por <strong>dato escaneado</strong>, no solo por dato guardado. Por eso en <a href="../formatos/" rel="noopener" target="_blank">1.7</a> Parquet no es “un capricho moderno”: es menos euros y menos minutos.</p>
@@ -2289,7 +2303,7 @@
 <p>El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las <strong>8</strong>. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.</p>
 <div class="admonition success">
 <p class="admonition-title">Al terminar 1.5</p>
-<p>Dibujad las <strong>ocho</strong> capas del <a href="../caso-hotel/" rel="noopener" target="_blank">hotel</a>. Poned <strong>una</strong> herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide <strong>Lambda, Kappa o solo lote</strong>. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.</p>
+<p>Dibujad las <strong>ocho</strong> capas del <a href="../caso-hotel/" rel="noopener" target="_blank">hotel</a>. Poned <strong>una</strong> herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si cada necesidad pide <strong>solo lote, flujo, dos pipelines independientes, Lambda o Kappa</strong>. Para el informe nocturno y los sensores, justificad primero sus objetivos distintos. Solo proponed Lambda si una misma consulta combina vistas históricas y recientes; para Kappa, explicad cómo conservar y reproducir los eventos. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.</p>
 </div>
 <h2 id="actividad">Actividad<a class="headerlink" href="#actividad" title="Permanent link">&para;</a></h2>
 <p>No puntúa en Moodle. Justificad cada respuesta con el caso hotelero.</p>

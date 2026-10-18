@@ -9,12 +9,12 @@
       "prompt": "Un job ejecuta tareas simultáneas en varios núcleos de un PC; otro reparte tareas entre nodos. ¿Cómo los describimos?",
       "code": "",
       "options": [
-        "Los dos son un clúster: hay varios núcleos.",
-        "El primero tiene paralelismo local; el segundo es distribuido y también puede ser paralelo si los nodos calculan a la vez.",
-        "Los dos son solo concurrentes: el SO se turna.",
-        "Distribuido es un procesador con muchos hilos."
+        "El primero es paralelo local; el segundo es distribuido y puede ser paralelo.",
+        "El primero es concurrente sin paralelismo; el segundo es siempre paralelo.",
+        "Ambos son distribuidos, porque cada núcleo representa una máquina independiente.",
+        "El primero es paralelo; el segundo no puede ser paralelo por utilizar una red."
       ],
-      "answer": 1,
+      "answer": 0,
       "explain": "Concurrencia significa progreso de varias tareas, no necesariamente simultáneo. Paralelismo significa ejecución simultánea y puede existir en una o varias máquinas. Distribuido implica varias máquinas que se comunican."
     },
     {
@@ -23,12 +23,12 @@
       "prompt": "Un único recurso de ejecución alterna dos tareas sin ejecutarlas simultáneamente. ¿Qué ocurre?",
       "code": "",
       "options": [
-        "Hay paralelismo porque las dos tareas terminan dentro del mismo minuto.",
-        "Concurrencia y paralelismo significan exactamente lo mismo.",
-        "Hay concurrencia por turnos, pero no paralelismo entre esas tareas.",
-        "Las tareas solo pueden progresar si se añade otra máquina."
+        "Secuencialidad exclusiva: no puede haber concurrencia con un solo recurso.",
+        "Concurrencia sin paralelismo entre esas tareas: progresan alternando turnos.",
+        "Distribución: cada cambio de turno convierte la tarea en un nodo diferente.",
+        "Paralelismo entre esas tareas: compartir un intervalo equivale a simultaneidad."
       ],
-      "answer": 2,
+      "answer": 1,
       "explain": "Concurrencia describe progreso de varias tareas en un intervalo; paralelismo añade ejecución simultánea. No necesitamos llamar simulada a la concurrencia."
     },
     {
@@ -37,12 +37,12 @@
       "prompt": "Un procesador “4 núcleos / 8 hilos”, ¿es lo mismo que 8 núcleos físicos?",
       "code": "",
       "options": [
-        "Sí: 8 hilos = 8 CPU de verdad.",
-        "No. Un núcleo **comparte** recursos entre hilos. Si los dos piden la misma unidad, uno espera.",
-        "Sí, si el sistema operativo lo anuncia así.",
-        "No, porque los hilos solo existen en el clúster."
+        "No: los hilos adicionales solo pueden utilizarse conectando otra máquina.",
+        "Sí: ocho hilos duplican siempre la velocidad de cualquier tarea de cuatro núcleos.",
+        "Sí: cada hilo lógico incorpora un núcleo físico con recursos completos.",
+        "No: los hilos lógicos comparten recursos de los cuatro núcleos físicos."
       ],
-      "answer": 1,
+      "answer": 3,
       "explain": "Multihilo no duplica el silicio. Mientras un hilo espera memoria, el otro puede calcular; no es magia de 8 núcleos."
     },
     {
@@ -51,10 +51,10 @@
       "prompt": "En la implementación actual, unas tareas son independientes y otras esperan el resultado anterior. ¿Qué cabe esperar al añadir núcleos?",
       "code": "",
       "options": [
-        "Las dos: más núcleos siempre acortan.",
-        "Ninguna: el clúster no hace magia nunca.",
-        "Solo el acumulado dependiente.",
-        "Las tareas independientes pueden repartirse; la cadena dependiente conserva su cuello de botella mientras no se reformule."
+        "Ninguna puede acelerarse mientras el programa contenga alguna dependencia.",
+        "Se aceleran todas por igual, aunque cada tarea necesite la salida anterior.",
+        "Solo se aceleran las dependientes, porque comparten resultados intermedios.",
+        "Se benefician las tareas independientes; las dependencias limitan la mejora."
       ],
       "answer": 3,
       "explain": "Hay que estudiar el algoritmo y sus dependencias. Añadir recursos no elimina automáticamente la parte secuencial."
@@ -65,12 +65,12 @@
       "prompt": "Repartís el job a nodos de un clúster. ¿Qué problemas aparecen que en un solo PC no teníais?",
       "code": "",
       "options": [
-        "Los datos no están todos en la misma RAM, la red tarda o falla, y un nodo puede caer a mitad: no hay que publicar un resultado a medias.",
-        "Ninguno: es paralelo con otro nombre.",
-        "Solo que SQL deja de existir.",
-        "Que hay que copiar todos los petabytes a un portátil para sumarlos."
+        "Garantía de resultados completos aunque uno de los nodos deje de responder.",
+        "Acceso automático a una RAM compartida físicamente por todas las máquinas.",
+        "Comunicación por red y fallos parciales que requieren coordinar la recuperación.",
+        "Desaparición de esperas de entrada y salida porque cada nodo tiene memoria."
       ],
-      "answer": 0,
+      "answer": 2,
       "explain": "Las máquinas se comunican por red y pueden fallar de manera independiente. El cálculo distribuido puede ser paralelo, pero necesita coordinar datos, tareas y recuperación."
     },
     {
@@ -79,10 +79,10 @@
       "prompt": "Un job de madrugada deja un informe para la mañana siguiente. ¿Eso es tiempo real?",
       "code": "",
       "options": [
-        "Sí: todo lo que corre de noche es flujo.",
-        "Sí, porque “online” significa pago por internet.",
-        "No. Es procesamiento por lotes sobre un conjunto delimitado, con el plazo de entrega de la mañana.",
-        "Es transaccional: el informe cobra al cliente."
+        "No: solo sería tiempo real si leyera el mismo fichero usando más núcleos.",
+        "Sí: cualquier proceso automático que termina antes de las ocho es tiempo real.",
+        "No: procesa un conjunto delimitado con un plazo de entrega para la mañana.",
+        "Sí: ejecutarse sin intervención humana convierte un lote en procesamiento continuo."
       ],
       "answer": 2,
       "explain": "Batch no significa que el resultado no urja: incumplir las 8:00 puede ser un fallo del servicio. La periodicidad y el plazo forman parte del contrato."
@@ -93,10 +93,10 @@
       "prompt": "¿Qué diferencia hay entre procesar operaciones de recepción y exigir garantías ACID?",
       "code": "",
       "options": [
-        "ACID exige que toda operación termine en menos de un milisegundo.",
-        "La operación transaccional describe el trabajo del negocio; ACID describe sus garantías y no fija una latencia concreta.",
-        "ACID solo se aplica a pagos por internet.",
-        "Una operación transaccional no procesa datos."
+        "Lo transaccional excluye concurrencia; ACID exige ejecutar en un único servidor.",
+        "Lo transaccional describe operaciones; ACID sus garantías, sin fijar una latencia.",
+        "Lo transaccional impone milisegundos; ACID impone procesamiento exclusivamente nocturno.",
+        "Lo transaccional significa flujo de sensores; ACID significa consultas históricas."
       ],
       "answer": 1,
       "explain": "Una operación puede exigir baja latencia y atomicidad a la vez. ACID incluye también consistencia, aislamiento y durabilidad; no significa solo todo o nada."
@@ -107,10 +107,10 @@
       "prompt": "Los datos llegan al ritmo (p. ej. sensores) y las cuentas se actualizan conforme llegan. ¿El streaming es “un lote, pero más rápido”?",
       "code": "",
       "options": [
-        "Sí: mismo contrato, menos minutos.",
-        "Sí, y por eso todo informe de la mañana es streaming.",
-        "No, porque el streaming solo existe en Lambda (1.5).",
-        "No. Procesa una secuencia creciente y mantiene el estado necesario, con políticas de tiempo, recuperación y recursos."
+        "Repite un lote completo tras cada evento sin conservar ningún estado.",
+        "Garantiza respuestas instantáneas porque cada evento ocupa muy pocos bytes.",
+        "Procesa solo muestras y renuncia necesariamente a resultados exactos.",
+        "Trata una secuencia creciente y mantiene estado, tiempos y recuperación."
       ],
       "answer": 3,
       "explain": "El estado puede utilizar memoria y almacenamiento persistente. Hay que definir cómo se tratan eventos tardíos; no existe un límite universal basado solo en RAM."
@@ -121,10 +121,10 @@
       "prompt": "Recepción registra operaciones y gerencia consulta el histórico. ¿Qué son OLTP y OLAP, y por qué valorar su separación?",
       "code": "",
       "options": [
-        "OLTP opera; OLAP analiza. Separarlos puede evitar que la carga analítica perjudique a recepción, según las medidas y requisitos.",
-        "OLAP en la caja; OLTP en el informe.",
-        "Las dos son OLTP porque hay una tarjeta.",
-        "Da igual un solo disco: es más barato y más rápido."
+        "OLTP opera y OLAP analiza; se valora separarlos si la carga o requisitos lo justifican.",
+        "OLTP opera y OLAP analiza; utilizar SQL impide separar sus cargas de trabajo.",
+        "OLTP conserva históricos y OLAP confirma reservas; separarlos es siempre obligatorio.",
+        "OLTP y OLAP son formatos de archivo; se eligen según el tamaño del disco."
       ],
       "answer": 0,
       "explain": "No es imposible compartir un sistema. La decisión depende de la carga. Un cubo OLAP organiza medidas por dimensiones; S3 almacena objetos identificados por clave."
@@ -135,12 +135,12 @@
       "prompt": "¿Cómo utilizamos SCV para razonar sobre un análisis con recursos limitados?",
       "code": "",
       "options": [
-        "Sí: las tres C son la misma letra y S+C+V es el diseño habitual.",
-        "Es la C de CAP: el mismo valor en todos los nodos.",
-        "Como una guía para valorar velocidad, precisión y volumen, no como un teorema que impida siempre lograr las tres.",
-        "Es la velocidad de las 5 V; las tres se cumplen con más RAM."
+        "Como guía para valorar velocidad, precisión y volumen con recursos limitados.",
+        "Como teorema que prohíbe alcanzar las tres propiedades en cualquier problema.",
+        "Como fórmula que permite deducir el número exacto de nodos sin medir cargas.",
+        "Como garantía de precisión si se sacrifica velocidad, sin comprobar los datos."
       ],
-      "answer": 2,
+      "answer": 0,
       "explain": "Se pueden revisar recursos, formato, agregados previos o alcance. Una ventana puede dar resultados exactos para su periodo; SCV no equivale a CAP."
     }
   ]
