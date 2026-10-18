@@ -1,0 +1,162 @@
+[
+  {
+    "title": "El cobro de Ana tiene que llegar al informe",
+    "label": "Una pregunta sencilla pone en marcha todo el recorrido.",
+    "active": 0,
+    "heading": "¿Cuánto hemos cobrado en cada hotel?",
+    "body": "Ana reserva y paga en Laredo. Dirección necesita un cierre fiable.",
+    "takeaway": "Empezamos por la necesidad, antes de elegir herramientas.",
+    "narration": "Ana reserva una habitación en Laredo y paga su estancia. Recepción ve la reserva y el sistema de pagos confirma el cobro. A la mañana siguiente, dirección quiere saber cuánto se ha cobrado en cada hotel. Parece una pregunta sencilla, pero obliga a reunir datos, relacionarlos y comprobarlos. Vamos a seguir ese cobro hasta el informe. Por el camino entenderemos cuándo aparece un problema de Big Data y para qué sirven las cinco uves. No como una lista para memorizar, sino como preguntas que ayudan a diseñar.",
+    "kind": "normal"
+  },
+  {
+    "title": "Al principio, una máquina puede bastar",
+    "label": "El tamaño del proyecto no se decide por el nombre del programa.",
+    "active": 0,
+    "heading": "Medir: tiempo, capacidad y coste",
+    "body": "Si el sistema cumple, no necesitamos complicarlo por tener más datos.",
+    "takeaway": "No existe una frontera universal de terabytes.",
+    "narration": "Al principio, un ordenador puede atender las reservas y preparar el cierre sin dificultad. Las técnicas para ordenar, limpiar y relacionar datos ya son útiles, aunque trabajemos con pocos registros. Después crece la cadena: Santander, Laredo, Comillas y Potes generan reservas, mensajes de sensores y actividad de la web. Eso no obliga automáticamente a montar un clúster. Primero medimos si el sistema cumple los plazos, soporta la carga y tiene un coste razonable. No existe una cantidad universal de terabytes que convierta un proyecto en Big Data.",
+    "kind": "normal"
+  },
+  {
+    "title": "Un número necesita contexto",
+    "label": "El cobro debe conservar su significado durante el viaje.",
+    "active": 0,
+    "heading": "186,50 → euros → cobro confirmado → Ana → Laredo",
+    "body": "Identificador, fecha, moneda, origen y estado permiten interpretar el importe.",
+    "takeaway": "El precio de una reserva no demuestra que se haya cobrado.",
+    "narration": "Volvamos al pago. El número ciento ochenta y seis con cincuenta, aislado, dice muy poco. Necesitamos saber la moneda, la fecha, la reserva y si representa un precio previsto o un cobro confirmado. Esa información que describe el dato forma parte de sus metadatos. Primero ocurre el evento: Ana paga. Después queda un registro. Cuando relacionamos cobros con reservas y hoteles, obtenemos información que podemos consultar. Si confundimos el precio con el dinero realmente recibido, el informe ya nace equivocado, aunque el cálculo sea rápido.",
+    "kind": "normal"
+  },
+  {
+    "title": "Del informe a una decisión que ayuda",
+    "label": "Encontrar un patrón es un comienzo, no una garantía.",
+    "active": 0,
+    "heading": "Evento → dato → información → conocimiento → contexto → valor",
+    "body": "Observar una bajada, investigarla y comprobar el efecto de una actuación.",
+    "takeaway": "La sabiduría consiste en saber cuándo aplicar lo aprendido.",
+    "narration": "Al reunir muchos días, vemos que algunos martes quedan más habitaciones vacías. Investigar ese patrón puede producir conocimiento. Aplicarlo con criterio, lo que aquí llamamos sabiduría, exige contexto: una pauta de Laredo en agosto quizá no sirva en Potes en noviembre. Después podemos probar una oferta y comprobar si mejora la ocupación sin perjudicar demasiado el margen. Ahí aparece el valor. El recorrido no es una escalera automática: si faltan datos o la interpretación falla, volvemos atrás. Guardar registros y dibujar un gráfico no garantizan una buena decisión.",
+    "kind": "normal"
+  },
+  {
+    "title": "El mismo problema admite trabajos distintos",
+    "label": "Los datos preparados alimentan minería, ciencia de datos e IA.",
+    "active": 1,
+    "heading": "Descubrir patrones · plantear y explicar · construir un sistema",
+    "body": "Las disciplinas se solapan; no son nombres distintos de Big Data.",
+    "takeaway": "Se puede hacer ciencia de datos con pocos registros.",
+    "narration": "Para estudiar los martes vacíos podemos hacer trabajos distintos. La minería de datos busca patrones, grupos o anomalías en lo guardado. La ciencia de datos plantea la pregunta, prepara los datos, analiza, modela cuando hace falta y explica el resultado. La inteligencia artificial permite construir sistemas que reconocen, recomiendan o responden, como un servicio que estima el riesgo de cancelación. Estos campos se solapan; no forman una escalera donde uno se convierte en otro. Podemos hacer un estudio útil con doscientas filas y sin un clúster.",
+    "kind": "normal"
+  },
+  {
+    "title": "Del estudio a un servicio hay más trabajo",
+    "label": "Un modelo necesita datos actuales, controles y supervisión.",
+    "active": 1,
+    "heading": "Modelo + entrada fiable + decisión + seguimiento",
+    "body": "El aprendizaje automático utiliza ejemplos; la IA también puede emplear reglas.",
+    "takeaway": "El modelo no sustituye al recorrido que lo alimenta.",
+    "narration": "El aprendizaje automático aprende patrones a partir de ejemplos y puede intervenir en esos trabajos. Pero la inteligencia artificial también incluye sistemas basados en reglas. Incluso un mismo modelo puede utilizarse para comprender un patrón o incorporarse a un servicio que evalúa reservas nuevas. En el segundo caso hacen falta entradas fiables, una acción definida y supervisión. Si un asistente del hotel responde sobre habitaciones disponibles con información antigua, el problema no se arregla cambiando de algoritmo. Necesitamos cuidar el recorrido de los datos que recibe.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cinco preguntas para diagnosticar el recorrido",
+    "label": "El hotel crece y debemos saber qué dificultad resolver.",
+    "active": 2,
+    "heading": "Volumen · Velocidad · Variedad · Veracidad · Valor",
+    "body": "Cuánto · a qué ritmo y para cuándo · de qué tipos · con qué calidad · para qué.",
+    "takeaway": "Las cinco Vs no son una prueba automática para comprar un clúster.",
+    "narration": "Ahora crece la actividad y el cierre empieza a llegar tarde. Antes de comprar máquinas, preguntamos dónde está la dificultad. Las cinco uves nos ayudan a diagnosticarla. Volumen: cuánto acumulamos. Velocidad: a qué ritmo entra y cuándo debe estar listo. Variedad: qué estructuras y significados tenemos que integrar. Veracidad: cuánto podemos fiarnos. Valor: qué mejora conseguimos. No tienen que pesar todas por igual. Tampoco una lista de cinco casillas decide la arquitectura. Hay que medir el problema concreto y comprobar qué solución lo resuelve.",
+    "kind": "normal"
+  },
+  {
+    "title": "Volumen: contar lo que guardamos y durante cuánto tiempo",
+    "label": "Reservas, sensores e histórico se acumulan.",
+    "active": 2,
+    "heading": "1.000 sensores × 2.880 registros/día × 200 bytes",
+    "body": "576 MB diarios antes de metadatos, copias, índices y margen de crecimiento.",
+    "takeaway": "Una cantidad manejable hoy puede cambiar al conservar años.",
+    "narration": "Para estimar volumen contamos registros, tamaño y tiempo de conservación. Mil sensores que envían doscientos bytes cada treinta segundos producen unos quinientos setenta y seis megabytes diarios. Esa cifra por sí sola puede ser manejable. Pero faltan metadatos, copias, índices y otros archivos; además, quizá conservemos años de histórico. La compresión puede ayudar, pero se mide. También hay que distinguir unidades decimales y binarias: un terabyte anunciado equivale aproximadamente a novecientos treinta y un gibibytes. No ha desaparecido espacio; se está contando de otra manera.",
+    "kind": "normal"
+  },
+  {
+    "title": "Velocidad: llegar rápido y responder a tiempo",
+    "label": "La tasa de entrada y la latencia son medidas diferentes.",
+    "active": 2,
+    "heading": "Entran 1.000/s · procesamos 800/s → quedan 200/s",
+    "body": "En un minuto se acumulan 12.000 eventos pendientes.",
+    "takeaway": "Una cola absorbe picos; no arregla una sobrecarga permanente.",
+    "narration": "Aunque todo quepa en disco, los datos siguen llegando. La tasa de entrada cuenta eventos por segundo. La latencia mide cuánto tarda un dato en estar disponible para usarlo. Si entran mil eventos por segundo y procesamos ochocientos, quedan doscientos pendientes cada segundo: doce mil en un minuto. Una cola ayuda a absorber un pico temporal, pero no resuelve esa diferencia si continúa. Comprar un disco mayor permite acumular más pendientes; no hace que se procesen antes. La capacidad debe responder al ritmo y al plazo que necesita el hotel.",
+    "kind": "normal"
+  },
+  {
+    "title": "No todo necesita la misma urgencia",
+    "label": "Un informe financiero y una señal de presencia tienen relojes distintos.",
+    "active": 2,
+    "heading": "23:00 cierre → madrugada cálculo → 08:00 panel de ayer",
+    "body": "Las señales de sensores pueden necesitar una respuesta mucho más rápida.",
+    "takeaway": "Sin presencia detectada no significa disponible para vender.",
+    "narration": "En nuestro caso, finanzas cierra a las once de la noche, el proceso trabaja de madrugada y gerencia consulta a las ocho los datos de ayer. Ese informe no necesita actualizarse con cada clic. Una señal de presencia, en cambio, puede requerir una reacción mucho más rápida. Además, ausencia de personas no significa que la habitación esté disponible para vender: también importan la reserva y su estado operativo. Separar estas necesidades evita gastar recursos en una urgencia que nadie ha pedido o entregar demasiado tarde un dato que sí era urgente.",
+    "kind": "normal"
+  },
+  {
+    "title": "Variedad: integrar también significa entender",
+    "label": "La diferencia no está solo en la extensión del archivo.",
+    "active": 2,
+    "heading": "Tabla de reservas · JSON del canal · fotografía",
+    "body": "Incluso dos tablas pueden usar fechas, monedas o códigos distintos.",
+    "takeaway": "No estructurado no significa sin formato ni metadatos.",
+    "narration": "El cobro de Ana tiene que relacionarse con fuentes distintas. Una tabla de reservas tiene filas y columnas; un mensaje JSON contiene claves que pueden variar; una fotografía no se consulta directamente como una tabla. Hablamos de datos estructurados, semiestructurados y no estructurados. Una imagen sí tiene formato y metadatos: lo que falta es una tabla con el significado de su contenido. Incluso dos hojas de cálculo pueden usar monedas o códigos de hotel diferentes. Integrarlas exige acordar qué significan sus campos, no solo conseguir abrir los archivos.",
+    "kind": "normal"
+  },
+  {
+    "title": "Veracidad: que el cobro de Ana no se cuente dos veces",
+    "label": "La calidad se convierte en comprobaciones concretas.",
+    "active": 2,
+    "heading": "¿Falta algo? ¿Es válido? ¿Está duplicado? ¿Es coherente?",
+    "body": "Comprobar también el periodo y registrar el origen de cada cifra.",
+    "takeaway": "Un dato ausente no es cero; un error repetido no se compensa.",
+    "narration": "Supongamos que recibimos dos veces el mismo cobro de Ana. Si sumamos ambas copias, dirección verá ingresos que no existen. Veracidad significa aplicar controles: identificadores completos, fechas válidas, duplicados, coherencia entre entrada y salida, y datos del periodo anunciado. Un registro dudoso puede apartarse para revisión, conservando el motivo y su origen. No lo convertimos silenciosamente en cero. Tampoco muchos datos compensan un error sistemático: si todos los sensores de un hotel fallan igual, repetir sus lecturas refuerza el problema.",
+    "kind": "normal"
+  },
+  {
+    "title": "Valor: comprobar qué mejora el hotel",
+    "label": "El éxito se mide en resultados, no en terabytes.",
+    "active": 2,
+    "heading": "Preparar el cierre: de 2 horas a 10 minutos",
+    "body": "Comparar el beneficio con almacenamiento, cálculo, mantenimiento y trabajo humano.",
+    "takeaway": "Viabilidad: poder mantenerlo. Visualización: poder interpretarlo.",
+    "narration": "Con el dato fiable podemos evaluar el valor. Reducir la preparación del cierre de dos horas a diez minutos es un objetivo medible. Tener un lago más grande no demuestra ninguna mejora. Comparamos el beneficio con los costes, y comprobamos que el informe no ralentice las reservas. Algunas clasificaciones añaden viabilidad y visualización. Nos recuerdan dos preguntas prácticas: ¿el equipo puede mantener la solución?, ¿dirección entiende el indicador y lo recibe a tiempo? Un gráfico claro debe mostrar qué mide y a qué periodo corresponde.",
+    "kind": "normal"
+  },
+  {
+    "title": "Cuatro preguntas sobre los mismos martes vacíos",
+    "label": "La pregunta determina el tipo de análisis.",
+    "active": 3,
+    "heading": "Qué pasó → por qué → qué podría pasar → qué hacer",
+    "body": "Descriptiva · Diagnóstica · Predictiva · Prescriptiva",
+    "takeaway": "Una asociación no prueba una causa; una predicción tiene incertidumbre.",
+    "narration": "Con esa base podemos hacer cuatro análisis conectados. La descriptiva muestra que bajó la ocupación. La diagnóstica investiga si cambiaron el calendario, las tarifas o los canales. La predictiva estima qué podría ocurrir el próximo martes. La prescriptiva compara actuaciones, como una promoción, dentro del presupuesto y la capacidad del hotel. Que un canal cancele más no demuestra que el canal sea la causa. Y una previsión conserva incertidumbre. La inteligencia de negocio sigue siendo útil: a veces basta un informe fiable del pasado, sin desarrollar inteligencia artificial.",
+    "kind": "normal"
+  },
+  {
+    "title": "Quién consigue que el informe llegue bien",
+    "label": "El equipo comparte el objetivo, con responsabilidades distintas.",
+    "active": 3,
+    "heading": "Arquitectura → ingeniería → análisis y ciencia de datos",
+    "body": "Diseñar el conjunto · preparar y entregar datos · interpretar y comunicar.",
+    "takeaway": "En este módulo trabajamos especialmente la ingeniería de datos.",
+    "narration": "Para que esto funcione, el arquitecto diseña cómo crecerá el sistema y cómo se controlarán acceso y trazabilidad. El ingeniero construye y mantiene la recogida, transformación y entrega de los datos. El analista prepara consultas e indicadores comprensibles. El científico plantea estudios y modelos y comunica sus límites. Colaboran y sus responsabilidades pueden solaparse. Si el panel llega a las once y los cobros no cuadran, hay que revisar la preparación y la calidad antes de cambiar los colores del gráfico. Esa base es el centro de este módulo.",
+    "kind": "normal"
+  },
+  {
+    "title": "Volvemos al cobro de Ana: elegir con motivos",
+    "label": "Las herramientas llegan después de entender el problema.",
+    "active": -1,
+    "heading": "Necesidad → datos → dificultades → solución → comprobación",
+    "body": "Medir las Vs y justificar qué hace falta cambiar.",
+    "takeaway": "Big Data busca información útil a tiempo y con un coste viable.",
+    "narration": "Terminamos donde empezamos: el cobro de Ana debe llegar una sola vez, con su significado correcto, al informe que dirección necesita. Si una máquina cumple, puede seguir siendo la solución. Si los límites de cantidad, ritmo, integración o coste lo impiden, los métodos de Big Data ayudan a replantear la captura, el almacenamiento y el procesamiento. Repartir el trabajo entre máquinas será una posible respuesta en el siguiente apartado. Antes, debemos justificar qué dificultad existe y cómo sabremos que la mejora funciona. Esa explicación vale más que recitar cinco nombres.",
+    "kind": "normal"
+  }
+]

@@ -8,18 +8,18 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
-## Vídeo resumen: las ideas esenciales
+## Vídeo: del cobro de Ana a las cinco Vs
 
-Empieza con este resumen para entender cuándo necesitamos Big Data, qué significan las cinco V y cómo los datos ayudan a tomar decisiones. Los ejemplos del grupo hotelero conectan estas ideas con vuestro trabajo en el módulo. **Duración: 3 minutos y 12 segundos.**
+Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo necesitamos Big Data y cómo las cinco Vs ayudan a diagnosticar las dificultades del recorrido. La explicación desarrolla cada V con ejemplos y cálculos sencillos, y conecta el valor de los datos con las analíticas y los roles del equipo. **Duración: 8 minutos y 36 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/por-que-big-data-resumen-portada.jpg" aria-label="Resumen de Por qué Big Data y las cinco V" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/por-que-big-data-resumen.mp4" type="video/mp4">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/bigdata-historia-portada.jpg" aria-label="Por qué Big Data: del cobro de Ana a las cinco Vs" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/bigdata-historia.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las actividades del apartado.
 
-[Descargar el vídeo](../assets/ut1/por-que-big-data-resumen.mp4) · [Leer la transcripción](../assets/ut1/por-que-big-data-resumen.txt) · [Descargar los subtítulos](../assets/ut1/por-que-big-data-resumen.es.srt)
+[Descargar el vídeo](../assets/ut1/bigdata-historia.mp4) · [Leer la transcripción](../assets/ut1/bigdata-historia.txt) · [Descargar los subtítulos](../assets/ut1/bigdata-historia.es.srt)
 
 ## Punto de partida: de una necesidad a una solución
 
