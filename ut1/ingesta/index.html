@@ -2169,7 +2169,7 @@
  S[Sensores: presencia cada 30 s] --&gt; Q[Recepción y tratamiento de eventos]
  Q --&gt; O[Indicador de presencia reciente]
  O --&gt; N[No determina disponibilidad comercial]</code></pre>
-<p>Dos recorridos con fuentes y objetivos distintos. El panel requiere datos adicionales de habitaciones para calcular ocupación.</p>
+<p>Dos recorridos con fuentes y objetivos distintos. El panel requiere datos adicionales de habitaciones para calcular ocupación. El recorrido superior ilustra una transformación previa a la carga del cierre. También podemos cargar las entradas en una zona de preparación del almacén y transformarlas allí, como veremos al comparar ETL y ELT.</p>
 <p>Hasta que el dato no entra, el resto de la <a href="../arquitectura/" rel="noopener" target="_blank">arquitectura</a> está vacía. Un buen proceso de ingesta tiene que ser:</p>
 <ul>
 <li><strong>Flexible:</strong> mañana aparece otra fuente (una OTA —web tipo Booking que vende habitaciones—, un Excel de un hotel nuevo) y no tiráis el diseño.</li>
@@ -2184,7 +2184,8 @@
 <li>¿El dato vive en el programa de reservas, en la pasarela, en una carpeta FTP (un sitio en red donde se dejan ficheros) o en los sensores? (origen)</li>
 </ol>
 <p>Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabéis cuándo termina.</p>
-<p>El sitio típico al que llega lo ingerido <strong>en bruto</strong> es el <strong>lago de datos</strong> (<em>data lake</em>). El <strong>almacén de informes</strong> (<em>data warehouse</em>) es otro sitio: ahí el dato ya va limpio, pensado para el panel. En <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a> se distinguen; aquí basta: la ingesta suele aterrizar primero en el lago.</p>
+<p>Los datos extraídos pueden llegar a una carpeta de trabajo, a una zona de entrada de un <strong>lago de datos</strong> (<em>data lake</em>) o a tablas de preparación de un <strong>almacén analítico</strong> (<em>data warehouse</em>). Un lago puede conservar originales y resultados preparados; un warehouse puede incluir una zona de carga y otra con tablas validadas para informes. Son las finalidades explicadas en <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>, no una regla que obligue a pasar primero por un lago.</p>
+<p>Para distinguir ETL y ELT fijaremos el <strong>entorno de destino</strong>: ¿transformamos antes de cargar en él o después, dentro de él? Independientemente de esa elección, gerencia debe consultar una salida validada. Guardar una entrada no significa que ya esté lista para tomar decisiones.</p>
 <h2 id="pipeline-de-datos">Pipeline de datos<a class="headerlink" href="#pipeline-de-datos" title="Permanent link">&para;</a></h2>
 <p>Un <strong>pipeline</strong> (tubería) es una forma de organizar el trabajo en <strong>fases</strong>. No es un producto que compráis. Describe los pasos y, si hace falta, las tecnologías entre un origen y un destino.</p>
 <p>En lo más simple: recoger, guardar, procesar y <strong>dejar algo útil</strong>. El panel de las 8 enseña el cierre de <strong>ayer</strong>, no un pronóstico.</p>
@@ -2207,17 +2208,17 @@
 <ol>
 <li><strong>Recoger.</strong> Copiáis el hecho fuera de recepción: un fichero, una consulta a la base de datos, un mensaje.</li>
 <li><strong>Guardar un colchón.</strong> Si el panel va lento, el dato no se pierde. Puede ser una carpeta, una zona bruta o una cola de mensajes.</li>
-<li><strong>Procesar.</strong> Filtras, cruzas, sumas. Aquí se limpia de verdad.</li>
+<li><strong>Procesar.</strong> Filtráis, unís y agregáis según las reglas del informe. Los controles de calidad también se aplican al recibir datos y antes de publicar el resultado.</li>
 <li><strong>Dejar algo útil.</strong> El panel, un Excel, una base de informes.</li>
 </ol>
 <p>Un mismo <strong>job</strong> (trabajo programado: “a las 02:00, lanza esta tubería”) que “lo hace todo” parece más simple el día 1. El martes que el programa de reservas añade una columna, se rompe recoger, cruzar y pintar a la vez.</p>
 <p>Las fuentes no hablan igual. Un canal llega como <code>web</code> y otro como <code>WEB</code>. Un número llega como texto <code>"10"</code>. Hay huecos.</p>
 <p>Dejar el dato <strong>listo</strong> para usarlo se llama <strong>data wrangling</strong> (preparación o limpieza de datos). No es un programa: es el oficio de pasar del bruto al dato que ya tiene sentido.</p>
 <h3 id="pipeline-iterativo">Pipeline iterativo<a class="headerlink" href="#pipeline-iterativo" title="Permanent link">&para;</a></h3>
-<p>Este proceso de recoger, guardar, procesar y analizar <strong>se itera</strong>. Gerencia pregunta: “¿cancelan más los del viernes?”. Si ese campo no está, vuelves al origen, ingestes otra vez e integras. No es un acto único el día 1.</p>
-<p>Sobre una hipótesis de negocio se comprueba lo ya almacenado. Si falta información, se recogen datos nuevos, pasan por todo el pipeline y se integran con lo existente. Si en analítica no sale lo esperado, se vuelve a la ingesta. Así, hasta producir el resultado que el hotel necesita.</p>
+<p>Este proceso de recoger, guardar, procesar y analizar <strong>se itera</strong>. Gerencia pregunta: “¿cancelan más los del viernes?”. Primero comprobáis si las fechas y cancelaciones necesarias están en las entradas conservadas o en otras tablas del entorno. Si están, podéis recalcular sin extraerlas otra vez; si faltan, revisáis si la fuente permite recuperarlas. Esto se aplica tanto a ETL como a ELT.</p>
+<p>Sobre una hipótesis de negocio se comprueba lo ya almacenado. Si falta información y puede obtenerse, se incorpora y se integra con lo existente. Si el problema está en una regla de cálculo, se corrige esa transformación y se valida de nuevo. Volver a ingerir solo tiene sentido cuando hacen falta datos que no se conservaron o deben actualizarse; un histórico que la fuente ya no guarda puede ser irrecuperable.</p>
 <h2 id="etl">ETL<a class="headerlink" href="#etl" title="Permanent link">&para;</a></h2>
-<p>Una <strong>ETL</strong> es un proceso que lleva información de un punto A a un punto B en tres fases. Las siglas vienen del inglés:</p>
+<p>Una <strong>ETL</strong> lleva datos desde unas fuentes hasta un <strong>destino de referencia acordado</strong>, transformándolos antes de cargarlos en ese destino. Puede conservar una copia de las entradas en una zona de trabajo previa; esa copia no convierte por sí sola el proceso en ELT respecto al destino acordado. Las siglas vienen del inglés:</p>
 <ol>
 <li><strong>E</strong> — <em>Extract</em> (extraer)</li>
 <li><strong>T</strong> — <em>Transform</em> (transformar)</li>
@@ -2232,7 +2233,7 @@
  E --&gt; T[Transformar: validar, unir y calcular]
  T --&gt; L[Cargar]
  L --&gt; D[Archivo o almacén de destino]</code></pre>
-<p>Todos los orígenes se extraen antes de transformarlos. La carga escribe el resultado en el destino acordado.</p>
+<p>El esquema muestra el orden lógico: extraer, transformar y cargar en el destino acordado. No obliga a terminar de extraer todas las fuentes antes de procesar una fila: las fases pueden solaparse por bloques. La copia de originales, si se necesita, debe tener permisos y una política de conservación definidos.</p>
 <h3 id="extraccion">Extracción<a class="headerlink" href="#extraccion" title="Permanent link">&para;</a></h3>
 <p>Antes de extraer, documentad un pequeño contrato de entrada: campos obligatorios, tipos, identificadores y periodo esperado. Si la fuente es una API paginada, una sola respuesta puede contener únicamente parte de las reservas. Si es un fichero, debe estar completo antes de leerlo.</p>
 <p>Una extracción incremental necesita reconocer altas, cambios y, cuando proceda, borrados. Puede utilizar una fecha de modificación o mecanismos de captura de cambios (<strong>CDC</strong>). Guardad el punto de avance solo después de una carga correcta. Si lo adelantáis antes de escribir, un fallo puede hacer que os saltéis registros en el siguiente intento.</p>
@@ -2343,60 +2344,70 @@
 <p>Una carga completa copia el conjunto acordado; una incremental incorpora altas, cambios y, si procede, borrados desde el punto de control. Para datos pequeños, una recarga completa puede ser más sencilla y suficiente. Para históricos grandes, suele convenir una carga inicial y posteriores incrementales. Elegid según volumen, coste y capacidad de detectar cambios; no confundáis la fecha de extracción con la fecha del hecho.</p>
 <p>El <strong>formato</strong> de lo que escribís (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del <a href="#hola-etl" rel="noopener" target="_blank">Hola ETL</a>, cuando ya tenéis un <code>cruce</code>. El catálogo completo está en <a href="../formatos/" rel="noopener" target="_blank">1.7</a>.</p>
 <h2 id="elt">ELT<a class="headerlink" href="#elt" title="Permanent link">&para;</a></h2>
-<p>La diferencia se entiende fijando el destino del que estamos hablando. En ETL, los datos se transforman antes de cargarlos en el destino analítico acordado. En ELT, primero se cargan en ese entorno y después se transforman allí. Ambos pueden conservar copias originales y ambos necesitan controles de acceso y calidad.</p>
-<p>Por ejemplo, podemos extraer un CSV, guardarlo en una zona restringida del almacén y ejecutar SQL para producir una tabla validada. Aunque el bruto ya esté cargado, dirección debe consultar la tabla publicada. “Disponible para ingeniería” y “apto para tomar decisiones” son estados distintos.</p>
-<p><strong>ELT</strong> cambia las letras: extraer → <strong>cargar</strong> → transformar.</p>
-<p>En ELT se cargan los datos de entrada en un entorno autorizado y se transforman allí. Puede ser un lago con motor de cálculo o una zona de preparación de un warehouse, local o en la nube. La tabla publicada para gerencia debe estar validada en ambos casos. Tener un warehouse no obliga a ETL: lo decisivo es dónde se realiza la transformación respecto al destino acordado.</p>
-<p>La transformación la hace después el destino: SQL, un notebook, o <a href="https://spark.apache.org/" rel="noopener" target="_blank"><strong>Apache Spark</strong></a> (un motor que reparte el cálculo entre varios ordenadores; <a href="https://spark.apache.org/docs/latest/api/python/" rel="noopener" target="_blank"><strong>PySpark</strong></a> es Spark usado desde Python).</p>
+<p><strong>ELT</strong> sigue el orden extraer → <strong>cargar</strong> → transformar. La diferencia con ETL se entiende fijando el <strong>mismo entorno de destino</strong> en las dos alternativas: en ETL transformamos antes de cargar en él; en ELT cargamos las entradas en ese entorno y después las transformamos allí. Una tabla final del informe es una salida dentro del entorno, no un nuevo destino que debamos cambiar a mitad de la comparación.</p>
+<p>Imaginad que el destino acordado es el almacén analítico del hotel y que finanzas necesita el mismo informe de cobros:</p>
+<ul>
+<li><strong>Opción ETL:</strong> extraemos reservas y cobros, conservamos si procede una copia en una zona previa, los unimos y agregamos fuera del almacén —por ejemplo, con un script o con Pentaho— y cargamos el resultado validado en el almacén.</li>
+<li><strong>Opción ELT:</strong> extraemos las mismas fuentes, las cargamos en tablas de preparación de ese almacén y utilizamos su motor SQL para unirlas y agregarlas. Tras comprobar el resultado, publicamos las tablas del informe.</li>
+</ul>
+<p>En ambos casos finanzas recibe el mismo resultado validado. <strong>Estar cargado en preparación y estar publicado para gerencia son estados distintos.</strong> La zona de preparación tiene acceso restringido; no se convierte en un informe fiable por haber terminado la carga.</p>
+<p>ELT puede utilizar un warehouse o un lago con un motor de cálculo, en instalaciones propias o en la nube. En un lago, los archivos por sí solos no transforman: un motor asociado, como <a href="https://spark.apache.org/"><strong>Apache Spark</strong></a>, ejecuta el cálculo. <a href="https://spark.apache.org/docs/latest/api/python/"><strong>PySpark</strong></a> permite utilizar Spark desde Python. Un notebook puede coordinar esas operaciones, pero su presencia tampoco determina si el recorrido es ETL o ELT.</p>
 <table>
 <thead>
 <tr>
-<th></th>
+<th>Decisión</th>
 <th><strong>ETL</strong></th>
 <th><strong>ELT</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Orden</td>
-<td>Extraer → <strong>transformar</strong> → cargar</td>
-<td>Extraer → <strong>cargar</strong> → transformar</td>
+<td>Orden respecto al destino acordado</td>
+<td>Extraer → transformar → cargar en ese destino</td>
+<td>Extraer → cargar en ese destino → transformar allí</td>
 </tr>
 <tr>
-<td>Dónde se limpia</td>
-<td>Un motor en medio (script, <a href="../pentaho/" rel="noopener" target="_blank">Pentaho</a>, <a href="https://www.talend.com/" rel="noopener" target="_blank">Talend</a>)</td>
-<td>El motor del entorno de destino, local o en la nube</td>
+<td>Dónde se transforma</td>
+<td>En un motor previo a la carga: script, <a href="../pentaho/">Pentaho</a> u otra herramienta</td>
+<td>En el motor del entorno de destino, local o en la nube</td>
 </tr>
 <tr>
-<td>Cuándo</td>
-<td>El destino <strong>no</strong> debe tragar basura</td>
-<td>El destino aguanta bruto y hay <strong>varios</strong> consumidores</td>
+<td>Cuándo valorar esta opción</td>
+<td>Cuando conviene aplicar las reglas fuera del destino, por sus requisitos de entrada, recursos o integración</td>
+<td>Cuando el entorno permite cargar entradas en preparación y dispone de recursos y permisos para transformarlas allí</td>
+</tr>
+<tr>
+<td>Calidad y publicación</td>
+<td>Comprobar entradas, transformaciones y carga; publicar una salida validada</td>
+<td>Comprobar entradas y carga, transformar y validar; publicar una salida validada</td>
 </tr>
 <tr>
 <td>Conservar el original</td>
-<td>Puede guardarse en una zona previa</td>
-<td>Se carga antes de transformar</td>
+<td>Guardarlo en una zona previa si se necesita y está permitido; definir versiones y retención</td>
+<td>Conservar las entradas cargadas si se necesitan y está permitido; evitar sobrescribirlas sin el historial requerido</td>
 </tr>
 <tr>
-<td>Si gerencia cambia la pregunta</td>
-<td>Retocas la T <strong>antes</strong> de recargar</td>
-<td>Consulta nueva <strong>si</strong> esas columnas ya estaban en el bruto</td>
+<td>Si cambia la pregunta</td>
+<td>Reutilizar entradas conservadas y ajustar la transformación previa cuando haga falta</td>
+<td>Reutilizar entradas conservadas y ajustar las transformaciones del entorno cuando haga falta</td>
 </tr>
 </tbody>
 </table>
-<p>ELT no es “ETL al revés para quedar moderno”. Cambia <strong>quién</strong> trabaja y <strong>cuándo</strong> se ve el dato:</p>
+<p>La elección depende del recorrido y de los recursos disponibles. El nombre del producto, el tipo de almacén y el número de consumidores no bastan para decidirla. Además, una consulta nueva puede usar resultados ya preparados sin cambiar la ingesta. Si requiere datos que no están, en <strong>ambos</strong> diseños habrá que buscar otra fuente o una nueva extracción, si todavía es posible.</p>
 <pre class="mermaid"><code>flowchart TD
- E[ETL: extraer] --&gt; T[Transformar fuera del destino analítico]
- T --&gt; L[Cargar resultado validado en el destino]
- E2[ELT: extraer] --&gt; L2[Cargar entrada en zona restringida del destino]
- L2 --&gt; T2[Transformar con el motor del destino]
- T2 --&gt; P2[Publicar tabla validada para gerencia]</code></pre>
-<p>El destino de referencia debe quedar fijado. ETL y ELT pueden utilizar entornos locales o en la nube; ambos publican datos validados.</p>
+ E[ETL: extraer entradas] --&gt; T[Transformar antes del entorno de destino]
+ E -.-&gt; O[Copia previa si se acuerda conservarla]
+ T --&gt; L[Cargar y validar en el entorno de destino]
+ L --&gt; P[Publicar informe validado]
+ E2[ELT: extraer entradas] --&gt; L2[Cargar en preparación del mismo entorno de destino]
+ L2 --&gt; T2[Transformar con el motor del entorno]
+ T2 --&gt; P2[Validar y publicar informe]</code></pre>
+<p>En el esquema, los dos recorridos son alternativas para el mismo encargo. En ELT también hay que decidir si las tablas de preparación conservan originales o se sustituyen con cada carga. <strong>Cargar primero no garantiza conservar el histórico</strong>, igual que transformar primero no obliga a perderlo.</p>
 <ul>
-<li>El ingeniero deja el bruto <strong>pronto</strong>. Finanzas y ciencia de datos pueden mirarlo antes del cruce perfecto.</li>
-<li>La limpieza la puede hacer quien conoce el negocio, no solo el equipo de tuberías.</li>
+<li>Ingeniería puede preparar las entradas para su exploración por personas autorizadas. El acceso al bruto depende de los permisos y de su finalidad; finanzas no debe usarlo como informe validado.</li>
+<li>Quien conoce el negocio ayuda a definir y comprobar las reglas de limpieza en ambos diseños. La ubicación de la transformación no determina quién puede participar.</li>
 </ul>
-<p>El mercado en la nube empuja ELT (el almacén es potente). <strong>ETL sigue</strong> cuando el destino es rígido, o cuando en aula usáis Pentaho. En una cadena hotelera real <strong>conviven</strong>: el cierre de facturación suele ser ETL; el lago de ocupación, ELT.</p>
+<p>Una plataforma en la nube puede facilitar ELT por su capacidad de cálculo, pero también puede ejecutar ETL. Pentaho puede transformar antes de cargar o participar en la carga y coordinación de tareas que transforman en el destino. En el aula lo utilizamos para el primer recorrido; <strong>usar Pentaho no define por sí solo la arquitectura</strong>. El cierre de facturación y el análisis de ocupación admiten distintas soluciones: justificamos cada una por sus requisitos, no por el nombre del departamento o por llamar «lago» al almacenamiento.</p>
 <h2 id="herramientas-etl">Herramientas ETL<a class="headerlink" href="#herramientas-etl" title="Permanent link">&para;</a></h2>
 <p>No hace falta una herramienta con las letras “ETL” en el nombre: un script también extrae, transforma y carga. Cuando el volumen y las fuentes crecen, conviene un programa que ya traiga conectores, planificación y registro de errores.</p>
 <p>En Big Data no vale “cualquier copiar y pegar”. Tiene que:</p>
@@ -2452,7 +2463,7 @@
 </ul>
 <p>Sin planificación y sin registro de errores, da igual la herramienta.</p>
 <h2 id="hola-etl">Hola ETL<a class="headerlink" href="#hola-etl" title="Permanent link">&para;</a></h2>
-<p>Este taller enseña las <strong>tres letras</strong>, no pinta el panel de ocupación de las 8. El objetivo es más pequeño: reservas del canal <code>web</code> <strong>con cobro</strong>, y una etiqueta <code>hotel (web)</code>. En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> el mismo cruce se vuelve informe agregado por hotel y canal.</p>
+<p>Este taller enseña las <strong>tres letras</strong>, no pinta el panel de ocupación de las 8. El objetivo es más pequeño: reservas del canal <code>web</code> <strong>con cobro</strong>, y una etiqueta <code>hotel (web)</code>. Aquí fijamos como destino el archivo de salida: pandas o DuckDB transforman los datos antes de escribirlo, por eso hablamos de ETL. Que DuckDB ejecute SQL no convierte este recorrido en ELT. En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> el mismo cruce se vuelve informe agregado por hotel y canal.</p>
 <p>Necesitáis un cuaderno de Python:</p>
 <ul>
 <li><strong><a href="https://jupyter.org/" rel="noopener" target="_blank">Jupyter</a>:</strong> en el PC, mezcla texto y código, celda a celda.</li>
@@ -2547,7 +2558,7 @@
 <li>pandas (<code>orient="records"</code>) escribe un <strong>array</strong> <code>[ {...}, {...} ]</code>.</li>
 <li>DuckDB (<code>FORMAT JSON</code>) suele escribir <strong>JSONL</strong>: una reserva por línea.</li>
 </ul>
-<p>Para <strong>verlos</strong> en clase valen los dos. Para el lago, el formato de la L no es este JSON: es Parquet (siguiente apartado). En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> veréis el <strong>mismo cruce</strong> en Spoon, pero el cliente pide un informe agregado, no este JSON.</p>
+<p>Para <strong>verlos</strong> en clase valen los dos. Para una salida preparada del lago que se consulte por columnas, en este taller elegimos Parquet (siguiente apartado); un lago también puede conservar los JSON originales. El formato no determina si el recorrido es ETL o ELT. En <a href="../pentaho/" rel="noopener" target="_blank">1.8</a> veréis el <strong>mismo cruce</strong> en Spoon, pero el cliente pide un informe agregado, no este JSON.</p>
 <h3 id="la-l-formato-de-la-carga">La L: formato de la carga<a class="headerlink" href="#la-l-formato-de-la-carga" title="Permanent link">&para;</a></h3>
 <p>Escribir “un fichero” no basta. Aquí solo la decisión de la <strong>L</strong>, ahora que ya tenéis un <code>cruce</code>. Avro, ORC, Feather y los códecs están en <a href="../formatos/" rel="noopener" target="_blank">1.7</a>.</p>
 <table>
@@ -2565,9 +2576,9 @@
 <td>Se depura; un array <code>[...]</code> enorme no se parte bien</td>
 </tr>
 <tr>
-<td>Lago / informe de las 8</td>
+<td>Salida preparada para consulta columnar en el lago</td>
 <td><strong>Parquet</strong></td>
-<td>Lee hotel e importe, no las doce columnas</td>
+<td>Permite seleccionar hotel e importe sin leer todas las columnas</td>
 </tr>
 <tr>
 <td>El PMS de recepción</td>
@@ -2722,7 +2733,7 @@
  S[Seguridad, gobierno y monitorización] -.-&gt; I
  S -.-&gt; T
  S -.-&gt; C</code></pre>
-<p>Este esquema resume el recorrido; no establece otra numeración de capas. El almacenamiento puede conservar originales y resultados preparados.</p>
+<p>Este esquema resume responsabilidades; no establece otra numeración de capas ni clasifica por sí solo el recorrido como ELT. El almacenamiento de entradas puede ser una zona previa a una ETL o una zona de preparación dentro del destino de una ELT. Para distinguirlas, delimitad el entorno de destino y señalad dónde se transforma. En ambos casos puede haber originales y resultados preparados.</p>
 <p>Puede ser una parte importante del esfuerzo del proyecto, según las fuentes y los controles necesarios. El día 1:</p>
 <ol>
 <li><strong>Priorizáis</strong> las fuentes (no todas importan igual).</li>
@@ -2745,7 +2756,7 @@
 <li><strong><a href="https://www.rabbitmq.com/" rel="noopener" target="_blank">RabbitMQ</a>:</strong> cola clásica productor-consumidor.</li>
 <li><strong><a href="https://aws.amazon.com/kinesis/" rel="noopener" target="_blank">Kinesis</a> / <a href="https://azure.microsoft.com/products/event-hubs/" rel="noopener" target="_blank">Event Hubs</a> / <a href="https://cloud.google.com/pubsub" rel="noopener" target="_blank">Pub/Sub</a>:</strong> lo mismo en AWS, Azure y Google.</li>
 </ul>
-<p>Finalmente, hay conectores que facilitan llevar <strong>SaaS</strong> (software que usáis por internet: el PMS en la nube, el CRM, la pasarela) hacia el lago, sin programar cada API:</p>
+<p>Finalmente, hay conectores que facilitan llevar datos de <strong>SaaS</strong> (software que usáis por internet: el PMS en la nube, el CRM, la pasarela) a un lago o a un warehouse, según los destinos admitidos, sin programar cada API:</p>
 <ul>
 <li><strong><a href="https://www.fivetran.com/" rel="noopener" target="_blank">Fivetran</a>:</strong> plataforma comercial con cientos de conectores; mueve datos casi “enchufar y listo”.</li>
 <li><strong><a href="https://airbyte.com/" rel="noopener" target="_blank">Airbyte</a>:</strong> la misma idea, con versión <strong>open source</strong> (<a href="https://github.com/airbytehq/airbyte" rel="noopener" target="_blank">GitHub</a>) y otra gestionada en cloud.</li>
@@ -2790,12 +2801,13 @@
 <td>Kafka, RabbitMQ, Kinesis, Event Hubs, Pub/Sub</td>
 </tr>
 <tr>
-<td>Cientos de aplicaciones hacia el lago</td>
-<td>Conectores ELT</td>
+<td>Muchas aplicaciones hacia un lago o un warehouse</td>
+<td>Conectores de extracción y carga, utilizables en recorridos ELT</td>
 <td>Airbyte, Fivetran</td>
 </tr>
 </tbody>
 </table>
+<p>El conector resuelve una parte del recorrido. Para describir la solución completa como ETL o ELT hay que indicar también dónde se realizan las transformaciones respecto al destino elegido.</p>
 <h2 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">&para;</a></h2>
 <p>En un supuesto de aula o de examen, claváis <strong>estas</strong> decisiones y las justificáis. Las preguntas de cada bloque son las que usa la <a href="#actividades" rel="noopener" target="_blank">actividad 9</a>.</p>
 <h3 id="origen-y-formato">Origen y formato<a class="headerlink" href="#origen-y-formato" title="Permanent link">&para;</a></h3>
@@ -2817,11 +2829,11 @@
 <h3 id="actualizaciones">Actualizaciones<a class="headerlink" href="#actualizaciones" title="Permanent link">&para;</a></h3>
 <p>El martes el programa de reservas añade <code>motivo_cancelacion</code>:</p>
 <ul>
-<li><strong>¿Quién te avisa?</strong> Si nadie, el job sigue “bien” y el campo nuevo se pierde.</li>
+<li><strong>¿Quién te avisa?</strong> Comprobad cambios de esquema y campos extraídos. El job puede seguir en verde aunque no incorpore la nueva columna; otras herramientas pueden copiarla sin que el informe la utilice. Hay que verificar ambas cosas.</li>
 <li><strong>¿Guardas historial o sobrescribes?</strong> Sobrescribir o borrar e insertar no conserva por sí solo el estado anterior. Para mantener historial hacen falta versiones, auditoría o un registro de cambios.</li>
-<li><strong>¿Reprocesas?</strong> Si gerencia cambia el indicador, a veces basta una consulta nueva sobre el bruto (ELT). A veces hay que <strong>volver a ingerir</strong>. Reusar lo ya cargado evita tragarte otra vez tres años de SQL.</li>
+<li><strong>¿Reprocesas?</strong> Buscad los campos y periodos necesarios en los resultados preparados y en las entradas conservadas. En ETL podéis volver a ejecutar la transformación previa con esas entradas; en ELT, las transformaciones del destino. Si basta consultar una tabla preparada, no hace falta repetir la carga. Solo volved a extraer cuando falte información o deba actualizarse.</li>
 </ul>
-<p>Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga a pedir otra extracción. Eso duele.</p>
+<p>Si el nuevo indicador necesita un campo descartado y ninguna copia lo conserva, habrá que intentar recuperarlo del origen. Puede suceder tanto en ETL como en ELT: sobrescribir una tabla de preparación también puede perder historial. Si el origen ya no lo conserva, documentad la limitación; una nueva extracción no reconstruye hechos desaparecidos.</p>
 <h3 id="transformaciones">Transformaciones<a class="headerlink" href="#transformaciones" title="Permanent link">&para;</a></h3>
 <ul>
 <li>¿ETL o ELT respecto a qué destino? Indicad si la transformación ocurre antes de cargar en ese destino o dentro de él. Un lago y un warehouse pueden disponer de zonas de carga y datos preparados; su nombre no determina el orden. En ambos diseños, decidid qué originales conservar para reprocesar.</li>
@@ -2852,7 +2864,7 @@
 </div>
 <div class="admonition success">
 <p class="admonition-title">Criterio b) en un examen</p>
-<p>Origen + push/pull/poll + reloj + ETL o ELT + destino + formato de la carga + <strong>por qué no</strong> el de al lado. Un nombre de producto solo no puntúa.</p>
+<p>Origen + push/pull/poll + reloj + entorno de destino + lugar de la transformación (ETL o ELT, si corresponde) + conservación y reprocesamiento + formato y controles de publicación. Justificad las decisiones: ni el nombre de una herramienta ni la etiqueta «lago» o «warehouse» determinan el recorrido.</p>
 </div>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
@@ -2865,11 +2877,11 @@
 <ol>
 <li>Gerencia quiere el panel de las 8. ¿Qué decides <strong>primero</strong>: la herramienta o la pregunta de negocio? Di las tres marchas atrás (destino → transformación → origen).</li>
 <li>Una cola solo guarda altas de reserva, sin limpiar ni cruzar. ¿Es un pipeline? ¿Es una ETL? ¿Por qué?</li>
-<li>Finanzas consulta solo tablas validadas. Se pueden transformar los datos antes de cargarlas, o cargar primero en una zona de preparación del almacén y transformarlos allí. Fijad el destino de referencia y describid una opción ETL y otra ELT. En ambas, explicad dónde conservar los originales y cómo recalcular un indicador.</li>
+<li>Finanzas consulta solo tablas validadas. Se pueden transformar los datos antes de cargarlas, o cargar primero en una zona de preparación del almacén y transformarlos allí. Usad el <strong>mismo almacén como entorno de destino de referencia</strong> en ambas alternativas y describid una opción ETL y otra ELT. En ambas, explicad dónde conservar los originales, durante cuánto tiempo, quién puede acceder y cómo recalcular un indicador. La salida para finanzas debe tener el mismo significado y superar las mismas comprobaciones.</li>
 <li>Con <code>reservas.csv</code> y <code>cobros.csv</code>: importe <strong>cobrado</strong> por hotel <strong>solo</strong> en canal <code>recepcion</code> (pandas y DuckDB). Cuenta también cuántas reservas de ese canal <strong>aún no</strong> tienen cobro (pista: un <em>left join</em> o un anti-join; el Hola ETL usaba <em>inner</em>).</li>
 <li>Misma transformación del punto 4, <strong>tres cargas</strong>: JSON (verlo), Parquet (lago) y CSV. Anota tamaños y di cuándo usarías cada una. Recuerda: el JSON de pandas (array) no es el JSONL de DuckDB.</li>
-<li>Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job.</li>
-<li>El programa de reservas añade <code>motivo_cancelacion</code>, pero el informe no lo recoge y el job de las 02:00 sigue en verde. ¿Qué comprobación de esquema o de resultado falta? ¿Se extrajo y conservó ese campo? Explicad cómo corregir y reprocesar en ETL y en ELT. Ninguno recupera un dato que nunca se guardó; el color verde por sí solo no acredita el nuevo requisito.</li>
+<li>Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, entorno de destino, formato y lugar de las transformaciones que propongáis. Justificad ETL o ELT respecto a ese destino; si describís solo transporte sin transformación, indicad que esa parte no constituye por sí sola un ETL completo. Mantened separados los objetivos y contratos de ambos recorridos.</li>
+<li>El programa de reservas añade <code>motivo_cancelacion</code>, pero el informe no lo recoge y el job de las 02:00 sigue en verde. ¿Qué comprobación de esquema o de resultado falta? ¿Se extrajo y conservó ese campo? Explicad cómo corregir y reprocesar en ETL y en ELT. Distinguid entre un campo conservado pero no utilizado, uno disponible solo en el origen y un histórico que ya no se conserva en ningún sitio. ETL y ELT permiten reprocesar lo conservado, pero ninguno recupera un dato que nunca se guardó; el color verde por sí solo no acredita el nuevo requisito.</li>
 <li>Misma transformación del punto 4, pero ahora <strong>agrega</strong>: por hotel, número de reservas cobradas y suma de <code>cobrado</code>. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías al recoger o al procesar? ¿Por qué?</li>
 <li>Mañana el canal (OTA) manda un JSON nuevo y los sensores de Potes siguen a 30 s. Del apartado <a href="#consideraciones" rel="noopener" target="_blank">Consideraciones</a>, responded <strong>al menos tres preguntas</strong> de <a href="#origen-y-formato" rel="noopener" target="_blank">Origen y formato</a>, <strong>tres</strong> de <a href="#reloj-latencia" rel="noopener" target="_blank">Reloj / latencia</a> y <strong>tres</strong> de <a href="#calidad-y-personas" rel="noopener" target="_blank">Calidad y personas</a>. Nombrad la <strong>familia</strong> de ingesta, no hace falta un producto. No mezcléis el JSON de la OTA con el semáforo en un solo job.</li>
 </ol>
