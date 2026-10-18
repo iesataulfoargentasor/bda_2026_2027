@@ -2694,7 +2694,7 @@
 <p>En este caso separamos el CSV de cierre y los sensores porque tienen objetivos y plazos distintos. No es una prohibición universal: una plataforma puede gestionar ambas cargas si mantiene sus contratos separados.</p>
 <p>Si el sensor de habitación no puede esperar al informe de las 8, hace falta <strong>desacoplar</strong> al que produce el dato del que lo consume: cada uno trabaja a su ritmo. El <strong>panel de las 8</strong> sigue siendo un lote nocturno. La cola es para el <strong>semáforo</strong> de recepción, no para ese panel.</p>
 <p>Una <strong>cola de mensajes</strong> es un buzón intermedio. No es una base de datos de informes: solo guarda avisos un rato.</p>
-<p><img alt="Productor, cola y semáforo de recepción: si el semáforo va lento, la cola aguanta" src="../../assets/ut1/cola-mensajes.png" /></p>
+<p><img alt="Sensor, cola e indicador de presencia: la cola absorbe picos dentro de su capacidad y retención; no resuelve una sobrecarga permanente" src="../../assets/ut1/cola-mensajes.png" /></p>
 <p>La cola absorbe retrasos temporales dentro de su capacidad y retención. No resuelve una sobrecarga permanente ni garantiza por sí sola que el indicador siga actualizado.</p>
 <ul>
 <li>Un <strong>productor</strong> deja el evento (la habitación se ocupó).</li>
