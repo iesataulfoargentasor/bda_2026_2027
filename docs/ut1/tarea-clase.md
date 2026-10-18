@@ -46,7 +46,7 @@ El informe principal responde a dirección. El listado de reservas sin cobro es 
 4. Producir una fila por combinación de `hotel` y `canal`, con `n_reservas` y `cobrado_total`.
 5. Conservar las reservas sin cobro en un listado separado, sin inventar importes ni descartarlas sin explicación.
 6. Repetir la ejecución sobre las mismas entradas sin acumular filas en los archivos de salida.
-7. No anunciar éxito ni publicar un resultado nuevo cuando una entrada requerida falta o el proceso falla.
+7. No iniciar la publicación si falta una entrada requerida o falla la preparación o validación de las salidas. Si falla una copia durante la publicación, marcar el job como fallido y advertir de que puede haber quedado un resultado parcial. No anunciar éxito hasta que terminen correctamente las dos copias.
 
 ## 2. Preparad el entorno y las entradas
 
@@ -211,9 +211,9 @@ Guardad `cierre_hotel.kjb`. El job organiza las tareas; las transformaciones tra
 2. Ejecutad `informe_cobros.ktr` y, solo si termina correctamente, `reservas_sin_cobro.ktr`.
 3. Comprobad que existen ambas salidas provisionales. Ejecutad las dos transformaciones de validación.
 4. Solo si ambas validaciones terminan correctamente, copiad los dos CSV de `temporal` a `salida`, sustituyendo las versiones anteriores. Podéis usar una entrada de copia de archivos del job; verificad sus opciones de sobrescritura.
-5. Registrad éxito únicamente después de que la publicación termine. Cualquier error de transformación, validación o copia debe seguir una rama de error y terminar como fallo.
+5. Registrad éxito únicamente después de que terminen correctamente las dos copias. Los errores de preparación o validación deben detener el job antes de iniciar la publicación. Si falla una copia, seguid una rama de error que termine como fallo y avise de un posible estado parcial en `salida`.
 
-No borréis el último informe publicado al empezar. Un fallo de lectura o validación debe dejarlo intacto. **Copiar dos archivos no es una publicación atómica del conjunto**: si falla la segunda copia, el job debe avisar y no anunciar éxito. Como ampliación se puede publicar una carpeta versionada completa y señalar qué versión está disponible.
+No borréis el último informe publicado al empezar. Un fallo de preparación o validación debe dejarlo intacto, porque todavía no se ha iniciado la publicación. **Copiar dos archivos no es una publicación atómica del conjunto**: la primera copia puede completarse y fallar la segunda. En ese caso, `salida` puede contener un archivo nuevo y otro anterior o ausente; el job debe terminar con error y advertir de ese posible estado parcial, sin anunciar éxito. Esta práctica no exige deshacer las copias ni garantizar que ambos archivos se sustituyan a la vez. Como ampliación se puede diseñar una publicación por versiones, con un mecanismo que solo señale la nueva versión cuando esté completa.
 
 Utilizad **Pan** para probar cada `.ktr` y **Kitchen** para ejecutar el `.kjb` sin depender de Spoon. Adaptad las rutas a vuestro entorno:
 
@@ -237,7 +237,7 @@ Conservad una evidencia de cada prueba y explicad su resultado. Cambiad rutas o 
 | Total incorrecto | Modificar un importe del informe provisional y ejecutar su validación | Validación con error |
 | Recuperación | Restaurar las entradas y ejecutar el job completo | Se generan, validan y publican otra vez las salidas correctas |
 
-Para las dos pruebas de validación, ejecutad directamente la transformación de control sobre la copia alterada: si ejecutáis primero el job completo, regenerará el archivo y eliminará el fallo que queríais probar. Conservad también el log que demuestra que las ramas de error del job no continúan hacia publicación.
+Para las dos pruebas de validación, ejecutad directamente la transformación de control sobre la copia alterada: si ejecutáis primero el job completo, regenerará el archivo y eliminará el fallo que queríais probar. Conservad también el log que demuestra que las ramas de error de preparación o validación del job impiden iniciar la publicación. Si se produce un error durante las copias, el log debe indicar el fallo y advertir del posible estado parcial; no debe registrar éxito.
 
 ## 9. Qué entregáis
 
@@ -272,7 +272,7 @@ El repositorio puede ser público o privado. Si es privado, añadid como colabor
 | Diseño y comprensión del encargo | 1,00 | Recorrido y reglas justificados; elección de CSV razonada. Explicación para gerencia en el README: cierre, unidades, 15 reservas con cobro, 3965.50 euros y límites de los datos, sin confundir ausencia de cobro con impago ni calcular ocupación. |
 | Informe de cobros | 2,00 | Lecturas y tipos correctos, uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y correspondencia correcta en cada hotel/canal. |
 | Control de reservas sin cobro | 1,00 | Cinco reservas correctas, sin duplicados; distinción entre ausencia de cobro y cobro cero; columnas y motivo claros. |
-| Job y validaciones automáticas | 2,00 | Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo. |
+| Job y validaciones automáticas | 2,00 | Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo, incluido el posible estado parcial si falla una copia. No se exige publicación atómica. |
 | Pruebas y evidencias | 1,00 | Las seis pruebas documentadas, comparación esperado/obtenido y explicación de repetición, fallos y recuperación. |
 | Defensa individual: explicar el funcionamiento | 1,00 | El alumno recorre su solución en Spoon y relaciona entradas, pasos y salidas, explicando sus decisiones con claridad y con sus propias palabras. |
 | Defensa individual: responder y comprobar | 1,00 | Responde razonadamente a las preguntas del profesor y realiza o interpreta una pequeña comprobación sobre su trabajo. |
@@ -342,6 +342,6 @@ Qué ayuda he recibido y cómo la he utilizado:
 
 Las entregas de avance forman parte del seguimiento y del criterio de repositorio de la rúbrica; **no añaden puntos ni cambian el total de 10,00**. La entrega final del apartado 9 debe identificar la versión final revisada en el aula. El profesor comprobará el paquete utilizado y podrá elegir preguntas relacionadas con lo observado durante las sesiones.
 
-Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos `cobrado`?, ¿qué demuestra la repetición?, ¿qué fallo impide publicar?, ¿por qué este informe no mide ocupación?
+Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos `cobrado`?, ¿qué demuestra la repetición?, ¿qué fallos impiden iniciar la publicación y qué puede ocurrir si falla una copia?, ¿por qué este informe no mide ocupación?
 
 La siguiente pregunta es: **¿seguiría cumpliendo el plazo este procedimiento si el histórico creciera hasta 500 GB?** Continuad con la [actividad de transición a la UT2](transicion-ut2.md). Allí justificaréis recursos y alternativas a partir de las necesidades, sin asumir que un tamaño grande obliga siempre a utilizar un clúster.
