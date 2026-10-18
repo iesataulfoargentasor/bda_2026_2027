@@ -946,7 +946,7 @@
   <span class="md-ellipsis">
     
   
-    Tarea para practicar en clase
+    Práctica integradora con Pentaho
   
 
     
@@ -1062,6 +1062,34 @@
     
   
     La unidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transicion-ut2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transición desde la UT1: 500 GB
   
 
     
@@ -1669,7 +1697,7 @@
 <li><strong>Finanzas</strong> cierra a las <strong>23:00</strong>; de madrugada corre el <strong>lote</strong>; a las <strong>8</strong> gerencia abre el panel de <strong>ayer</strong>.</li>
 <li>Los sensores (~30 s) alimentan el <strong>semáforo</strong> (“¿queda habitación?”), no el cuadro de las 8.</li>
 </ul>
-<p>En clase lo aplicáis en la <a href="../tarea-clase/" rel="noopener" target="_blank">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
+<p>En clase lo aplicáis en la <a href="../transicion-ut2/" rel="noopener" target="_blank">tarea de los 500 GB</a>: concurrente, paralelo y distribuido, con un portátil que <strong>no</strong> puede tragarse el fichero.</p>
 <div class="admonition info">
 <p class="admonition-title">Cómo se lee esta página</p>
 <p>Primero <strong>dónde</strong> corre el cálculo (un núcleo, varios núcleos, varias máquinas). Luego el <strong>ritmo</strong> (lote, clic, consulta, flujo). Después los <strong>dos oficios</strong> (operar / informar) y el <strong>SCV</strong> (compromisos entre velocidad, precisión y volumen). Cómo se combinan lote y flujo en el edificio va en <a href="../arquitectura/" rel="noopener" target="_blank">1.5</a>, no aquí.</p>
@@ -1728,7 +1756,7 @@
 <li>Un nodo puede caer <strong>a mitad</strong> del trabajo (si se funde el disco de Potes, el job tiene que <strong>reintentar</strong>, no publicar el panel a medias).</li>
 </ul>
 <p>En Hadoop de libro la consigna es “<strong>lleva el cálculo al dato</strong>”: copiar 200 GB al portátil para sumarlos es absurdo; mandáis la función al nodo que <strong>ya</strong> tiene el trozo. En un <a href="../almacenamiento/" rel="noopener" target="_blank">cubo de objetos</a> a menudo es al revés: el dato vive en el cubo y el motor <strong>lee por red</strong> (<a href="../clusters/" rel="noopener" target="_blank">1.2</a>). Las dos frases no se pisan: son <strong>dos diseños</strong>.</p>
-<p>MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber <em>por qué</em> existen. El i7 de la <a href="../tarea-clase/" rel="noopener" target="_blank">tarea</a> <strong>no</strong> es un clúster.</p>
+<p>MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún; sí debéis saber <em>por qué</em> existen. El i7 de la <a href="../transicion-ut2/" rel="noopener" target="_blank">tarea</a> <strong>no</strong> es un clúster.</p>
 <h2 id="estrategias-no-todo-es-tiempo-real">Estrategias: no todo es “tiempo real”<a class="headerlink" href="#estrategias-no-todo-es-tiempo-real" title="Permanent link">&para;</a></h2>
 <p><strong>Lote</strong> significa trabajar con un conjunto delimitado. Aunque pueda ejecutarse de noche, sigue teniendo un plazo de entrega. <strong>Streaming</strong> procesa una secuencia que continúa creciendo. Los <strong>microlotes</strong> agrupan los eventos recibidos durante intervalos cortos y los procesan sucesivamente.</p>
 <p>En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la ocupación de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.</p>
