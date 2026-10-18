@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Por qué el formato",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Un origen guarda muchas columnas. El informe solo usa dos. Si el lago es un CSV gordo, ¿qué pasa?",
       "code": "",
       "options": [
@@ -19,7 +19,7 @@
     },
     {
       "topic": "Trocear",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Un JSON con un array de diez millones de objetos entre [ y ]. ¿Lo reparte bien un clúster?",
       "code": "",
       "options": [
@@ -33,7 +33,7 @@
     },
     {
       "topic": "CSV y JSONL",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "¿Qué problema típico tiene el CSV, y qué es JSONL?",
       "code": "",
       "options": [
@@ -47,21 +47,21 @@
     },
     {
       "topic": "null y None",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "`{\"campo\": None}` ¿es JSON válido?",
       "code": "",
       "options": [
         "Sí: None es el nulo de JSON.",
         "Sí, si el fichero se llama .jsonl.",
         "Da igual: Avro acepta None en el JSON.",
-        "No. En JSON el vacío es **null**. None es **Python**. Mezclarlos tumba el parser."
+        "No. JSON utiliza null para representar un valor nulo; None pertenece a Python."
       ],
       "answer": 3,
-      "explain": "En Avro, al leer en Python veréis None; en el fichero el nulo es Avro, no el texto None."
+      "explain": "Nulo no equivale a cadena vacía ni a cero. Un lector convierte el nulo a la representación adecuada del lenguaje."
     },
     {
       "topic": "Filas y columnas",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Leer **un** registro entero frente a sumar **un** campo de un millón. ¿Qué orientación encaja?",
       "code": "",
       "options": [
@@ -71,11 +71,11 @@
         "Avro es columnar; Parquet va por filas."
       ],
       "answer": 0,
-      "explain": "Añadir registros al final es natural en filas. Cambiar una fila en columnar duele: se parte por fecha o por clave. Columnar **no** es el almacén de la operación."
+      "explain": "La orientación se elige según el patrón de acceso. Un formato de archivo, sea por filas o columnas, no sustituye por sí solo al gestor transaccional."
     },
     {
       "topic": "Avro",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Avro va por filas y lleva esquema. ¿Sustituye a la base operativa?",
       "code": "",
       "options": [
@@ -89,21 +89,21 @@
     },
     {
       "topic": "Comprimir",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Snappy, gzip, zstd… ¿Comprimir es gratis?",
       "code": "",
       "options": [
         "Sí: más apriete siempre es mejor.",
         "Sí, porque Bzip2 es el códec del informe.",
-        "No. Viaja menos por la red; la CPU aprieta y destapa. En Big Data suele ganar el **rápido** (Snappy, zstd), no el que más aprieta.",
+        "No. Puede reducir almacenamiento y transferencia, pero consume CPU; el mejor códec depende de la carga y del lector.",
         "No hace falta medir: copiad los megas de otro ciclo."
       ],
       "answer": 2,
-      "explain": "Medid el vuestro. Sobre 100 GB, “media” y “alta” no son el mismo tiempo de lectura."
+      "explain": "Comparad tamaños y tiempos de escritura y lectura conservando los mismos datos. No existe un ganador universal ni una proporción fija de compresión."
     },
     {
       "topic": "Arrow y Feather",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Arrow describe columnas en RAM. Feather es un fichero. ¿Qué no hay que mezclar?",
       "code": "",
       "options": [
@@ -117,7 +117,7 @@
     },
     {
       "topic": "Parquet y DuckDB",
-      "href": "",
+      "href": "../formatos/",
       "prompt": "Escribís Parquet y luego lo leéis entero + un filtro en pandas. ¿Y para un resumen SQL?",
       "code": "",
       "options": [
@@ -131,8 +131,8 @@
     },
     {
       "topic": "Lago y cómo elegir",
-      "href": "",
-      "prompt": "Hay que retirar un identificador. ¿Editáis el Parquet a mano? Hive frente a Spark; cola; entre celdas. ¿Qué formato?",
+      "href": "../formatos/",
+      "prompt": "¿Qué aporta un formato de tabla como Delta o Iceberg sobre los archivos de un lago?",
       "code": "",
       "options": [
         "Sí: el lago es la caja. CSV en todos.",

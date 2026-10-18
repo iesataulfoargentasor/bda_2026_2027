@@ -16,6 +16,14 @@ Leed cada apartado **en orden**. En todos hay un ejemplo y una pregunta del esti
 
 La [práctica integradora con Pentaho](tarea-clase.md) cierra la UT1 con un informe del hotel comprobado y reproducible. Después, la [transición a la UT2](transicion-ut2.md) plantea el crecimiento del histórico hasta 500 GB. Al final de **cada** 1.1–1.8 hay **diez** preguntas (Comprobar respuesta); al cierre, [treinta de toda la UT1](autoevaluacion.md){target="_blank" rel="noopener"} (también Comprobar respuesta). Ninguna sustituye a Moodle.
 
+## Cómo trabajar la unidad
+
+En cada apartado hay una ruta que distingue conceptos esenciales, práctica guiada y ampliación. Leed primero el caso hotelero y mantened una hoja de decisiones: problema, datos de entrada, periodo, resultado esperado y comprobación. Cada apartado añade una decisión a esa misma solución.
+
+Para los talleres de Python conviene reconocer variables, tablas de pandas, filtros y lectura de archivos; para SQL, `SELECT`, `WHERE`, `JOIN` y agrupaciones. Los ejemplos se recorren en clase paso a paso. Usad carpetas separadas para 1.6, 1.7 y Pentaho: algunos archivos comparten nombre, pero no estructura. No es necesario instalar toda la lista de tecnologías citadas.
+
+Al terminar una actividad, explicad primero qué necesita gerencia y después la herramienta elegida. La comprobación no termina cuando el programa deja de dar errores: contrastad filas, importes, unidades y alcance del resultado.
+
 ## Cómo se relacionan los apartados
 
 La unidad sigue una secuencia de decisiones. Primero identificamos el problema y sus requisitos (1.1); después estudiamos los recursos de cálculo (1.2) y la organización del almacenamiento (1.3). A continuación elegimos cómo procesar (1.4) y conectamos los componentes en una arquitectura (1.5). Finalmente construimos el recorrido de los datos (1.6), seleccionamos su representación (1.7) y practicamos el proceso con Pentaho (1.8).

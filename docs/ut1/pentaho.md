@@ -9,6 +9,13 @@ tags:
 
 # 1.8. Pentaho: procesar y presentar
 
+!!! info "Ruta de estudio"
+    **Esencial:** distinguir transformaciones y jobs, claves, tipos, uniones y validación.
+
+    **Práctica guiada:** completar los talleres locales y la práctica integradora con PDI 9.4.
+
+    **Ampliación:** realizar destinos cloud y el taller SQL solo si el profesor habilita esos entornos. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: del dato al informe del hotel con Pentaho
 
 Sigue el trabajo del hotel para comprender cómo preparar los datos, unir reservas y cobros, construir informes y automatizar su entrega con Pentaho. El recorrido conecta los talleres y distingue Spoon, Pan y Kitchen, con ejemplos de validación y tratamiento de errores. **Duración: 13 minutos y 34 segundos.**
@@ -65,7 +72,7 @@ Con Spoon, sin escribir el motor:
 - conectar orígenes (CSV, Excel, XML, JSON, SQL, APIs);
 - filtrar, limpiar, tipar, *lookup*, *merge join*, agregar, fórmulas;
 - cargar a fichero, tabla o nube;
-- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): el hecho es la estancia y la dimensión es el hotel. No montáis el almacén entero.
+- **esbozar** hechos y dimensiones (reservas ⋈ hoteles): el grano del hecho es una reserva en estos archivos y la dimensión es el hotel. No montáis el almacén entero.
 
 **No** es el programa de recepción: no picáis la reserva en PDI. Procesáis una **copia**.
 
@@ -83,7 +90,18 @@ Descarga Community (Hitachi / el espejo que indique el aula): el zip es `pdi-ce-
 
 ## Tres ejecutables que se confunden
 
-![Spoon diseña; Pan lanza una transformación; Kitchen orquesta el job de las 23:00 al panel de las 8](../assets/ut1/spoon-pan-kitchen.png)
+```mermaid
+flowchart TD
+ S[Spoon: diseñar y probar] --> T[Transformación .ktr]
+ S --> J[Job .kjb: dependencias y condiciones]
+ T --> P[Pan: ejecutar transformación]
+ J --> K[Kitchen: ejecutar job]
+ H[Planificador del sistema] -->|cuando corresponda| K
+ K --> V[Validar y publicar resultado]
+ P --> V
+```
+
+Spoon diseña; Pan y Kitchen ejecutan. Un planificador externo puede lanzar Kitchen a una hora acordada.
 
 | Pieza | Analogía | Qué lanza | Fichero |
 | --- | --- | --- | --- |
@@ -95,17 +113,17 @@ Spoon es para **clase y diseño**. En producción (o en la entrega “como en em
 
 !!! example "Regla"
     ¿Un solo flujo leer → filtrar → escribir? → transformación → **Pan**.  
-    ¿“Si no está el CSV, aborta; si está, borra el informe viejo y lanza dos transformaciones”? → job → **Kitchen**. Eso es el lote de **después de las 23:00**.
+    ¿“Si no está el CSV, aborta; si está, genera una salida provisional, valídala y publica el informe”? → job → **Kitchen**. Eso es el lote de **después de las 23:00**.
 
 En PDI hay **dos** tipos de diseño:
 
-- **Transformación:** el dato **cambia** (filas in, filas out).
+- **Transformación:** procesa filas; sus pasos pueden trabajar concurrentemente mientras circulan datos. Las flechas transportan filas, no obligan a que un paso termine entero antes de arrancar el siguiente.
 - **Job:** **orquesta** (¿existe el fichero? ¿falló el paso anterior?).
 
 Al conectar dos pasos, Spoon pregunta a menudo:
 
-- **Main output of step:** el camino bueno (en *Filter rows*, la rama que **cumple**).
-- **Error handling of step:** qué hacéis si *este* paso revienta.
+- **Main output of step:** salida normal del paso. En *Filter rows*, configurad por separado el destino de la condición verdadera y el de la falsa; la falsa no es un error técnico.
+- **Error handling of step:** ruta de errores de los pasos que la admiten; no equivale a la rama falsa de un filtro.
 
 *Filter rows* tiene **dos** salidas: la que cumple y la que no. Unid el *Sort* a la que cumple. El *Dummy* cierra la otra.
 
@@ -113,14 +131,16 @@ El lienzo (árbol de categorías a la izquierda, zona de trabajo, panel de *Logg
 
 ## Criterio d) y criterio e)
 
-Habéis **procesado** (d) cuando la salida **no es** la entrada: menos filas, columnas con nombre de negocio, un agregado, un JSON que otra app entiende.
+Habéis **procesado** (d) cuando ejecutáis las reglas requeridas y comprobáis su resultado. Por ejemplo: menos filas, columnas con nombre de negocio, un agregado, un JSON que otra app entiende.
 
 El cliente **no** abre Spoon. “Fácil de interpretar” (e) es:
 
 - un CSV con **cabeceras claras** y solo las columnas pedidas,
-- un JSON coherente,
+- un JSON coherente si el consumidor es otra aplicación, acompañado de una explicación comprensible para la persona responsable,
 - una **tabla** que Power BI o un informe ya entienden,
 - un **agregado** (importe por hotel y canal) en lugar de veinte mil reservas crudas.
+
+Una salida técnicamente válida no acredita por sí sola el criterio e). Añadid periodo o alcance, unidades, significado de cada medida y limitaciones. El cliente debe poder explicar qué concluye de esos números sin conocer los pasos de Spoon.
 
 !!! tip "Prueba del cliente"
     Cerrad Spoon. Abrid el fichero como lo abriría alguien de empresa: Excel, un visor JSON, una consulta SQL. Si tiene que preguntaros “¿qué es `id_cadena`?”, el **e)** no está cerrado.
@@ -130,7 +150,7 @@ El cliente **no** abre Spoon. “Fácil de interpretar” (e) es:
 1. Escribid en una **nota** del lienzo (botón derecho → *New Note*) la pregunta del cliente y **vuestro nombre**.
 2. Marcad origen, la T **mínima** y el destino. Si no cabe en una frase, el flujo está sobrado o incompleto.
 3. **Preview** (ojo de la barra o clic derecho): 1000 filas por defecto. Ahí cazáis el nulo y el tipo raro. *Stop* para cortar.
-4. Mirad las métricas. En el log veréis letras del estilo `I` (input), `O` (output), `R` (read), `W` (written), `U` (updated), `E` (errors). `E=1` no es un detalle: es una fila que no hizo lo que pedisteis.
+4. Mirad las métricas. En el log veréis letras del estilo `I` (input), `O` (output), `R` (read), `W` (written), `U` (updated), `E` (errors). `E>0` indica errores registrados; consultad el mensaje para saber su causa. Ese contador no siempre equivale al número de filas rechazadas: los rechazos deben contarse en su rama de salida.
 5. Volved a ejecutar con **Pan** o **Kitchen**.
 6. Abrid el artefacto **sin Spoon**.
 
@@ -218,11 +238,26 @@ Cliente: *“Importe cobrado y número de reservas **por hotel y canal**. Las qu
 
 Es la **misma idea** que el [Hola ETL](ingesta.md#hola-etl){target="_blank" rel="noopener"} (reservas ⋈ cobros, solo cobradas). **No** reutilicéis aquellos CSV: aquí el hotel va por `id_hotel`, el cobro va con **punto y coma**, y gerencia quiere un **agregado**, no el JSON de una fila.
 
-![Reservas y cobros se cruzan; sin cobro no entra; gerencia a las 8 ve el cierre de ayer](../assets/ut1/pdi-cruce-hotel.png)
+```mermaid
+flowchart TD
+ R[Reservas CSV] --> SR[Sort: id_reserva]
+ C[Cobros CSV] --> SC[Sort: id_reserva]
+ SR --> J[Merge join INNER: id_reserva]
+ SC --> J
+ J --> SJ[Sort: id_hotel]
+ H[Hoteles CSV] --> SH[Sort: id_hotel]
+ SJ --> JH[Merge join INNER: id_hotel]
+ SH --> JH
+ JH --> SG[Sort: hotel y canal]
+ SG --> G[Group by: suma de cobrado y recuento de reservas]
+ G --> O[CSV: hotel, canal, cobrado_total, n_reservas]
+```
+
+Cada Merge join recibe dos entradas ordenadas por su clave; Group by recibe filas ordenadas por hotel y canal.
 
 | Fichero | Separador | Rol |
 | --- | --- | --- |
-| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv){target="_blank" rel="noopener"} | coma | Hecho (estancia) |
+| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv){target="_blank" rel="noopener"} | coma | Hecho (reserva) |
 | [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv){target="_blank" rel="noopener"} | **punto y coma** | Cobro |
 | [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv){target="_blank" rel="noopener"} | punto y coma | Dimensión (Laredo, Santander, Potes, Comillas; Noja es extra) |
 
@@ -523,4 +558,4 @@ No sustituye a la entrega. Comprobad que lo sostenéis en voz alta.
 3. Taller **6** (si el aula tiene BD): lookup + insert + update con el error de las filas **5 y 99** **explicado** (captura del log, `E=2`).
 4. Opcional: el tutorial Community de Hitachi Vantara (lista de correo: limpiar, tipar y cargar un CSV a una tabla). Mismo oficio, otro enunciado.
 
-La entrega, si la hay, es Moodle. No hace falta compartir el `.ktr` fuera del centro.
+Estas indicaciones corresponden a los talleres. La práctica integradora tiene su propio procedimiento: repositorio de GitHub, avances por sesión y entrega final en Moodle, según su enunciado.

@@ -7,7 +7,7 @@ tags:
 
 # Resultado de aprendizaje 1 (RA1)
 
-Esta unidad desarrolla el **RA1** del módulo *Big Data aplicado* (código **5075**), según el Real Decreto 279/2021.
+Esta unidad desarrolla el **RA1** del módulo *Big Data aplicado* (código **5075**), según el Real Decreto 279/2021 y el currículo de Cantabria establecido en la [Orden EDU/48/2024, de 8 de octubre, anexo VI](https://boc.cantabria.es/boces/verAnuncioAction.do?idAnuBlob=410716). El RA1 y sus criterios se recogen en el bloque del módulo 5075 (BOC de 16 de octubre de 2024, páginas 31060–31062). Las 190 horas del currículo corresponden al módulo completo, no solo a esta unidad.
 
 ## Enunciado
 
@@ -23,9 +23,11 @@ Esta unidad desarrolla el **RA1** del módulo *Big Data aplicado* (código **507
 | **d)** | Se han procesado los datos almacenados. | [1.4](procesamiento.md){target="_blank" rel="noopener"} y [1.8 Pentaho](pentaho.md){target="_blank" rel="noopener"} |
 | **e)** | Se han presentado los resultados y las soluciones al cliente final en una forma fácil de interpretar. | [1.8 Pentaho](pentaho.md){target="_blank" rel="noopener"} (salidas, informes) y capa de visualización en [1.5](arquitectura.md){target="_blank" rel="noopener"} |
 
-## Contenidos básicos del BOE que toca esta UT
+## Contenidos y evidencias del currículo
 
 ### Cómo demostrar el aprendizaje
+
+La teoría permite justificar decisiones, pero no acredita por sí sola los criterios prácticos. La práctica integradora aporta ejecución y validación para d), y una explicación de los resultados para gerencia para e). El cuestionario es una comprobación conceptual, no sustituye esas evidencias.
 
 La siguiente correspondencia es una orientación didáctica, no un criterio oficial adicional:
 

@@ -260,6 +260,8 @@ El repositorio debe contener:
 5. Enlaces a las comprobaciones y pruebas de fallo y recuperación; qué ocurre al repetir la ejecución.
 6. Fuentes o ayudas utilizadas y qué habéis adaptado vosotros.
 
+Dentro de la explicación del objetivo y de los límites, añadid un párrafo **para gerencia**, sin nombres de pasos de Spoon: qué representa el cierre `cierre_aula_01`, cuántas reservas tienen cobro, cuánto suman y qué queda fuera. Por ejemplo, los cinco registros sin cobro asociado requieren revisión; no demuestran por sí solos un impago. No calculéis ocupación con estos datos: faltan habitaciones disponibles y ocupadas por periodo. Explicad qué información adicional pediríais para responder a esa pregunta. Esta aclaración concreta la presentación del criterio e); no añade puntos ni cambia los resultados o la rúbrica.
+
 El repositorio puede ser público o privado. Si es privado, añadid como colaborador al usuario que os indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación. **No se exige hacerlo público para obtener la nota.** En el lienzo de cada proceso añadid una nota con vuestro nombre y la pregunta que resuelve. No subáis contraseñas ni datos personales de huéspedes.
 
 ### Rúbrica: 10,00 puntos

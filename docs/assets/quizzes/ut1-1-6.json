@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Qué es ingerir",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "¿Qué es ingerir datos?",
       "code": "",
       "options": [
@@ -19,7 +19,7 @@
     },
     {
       "topic": "Hacia atrás",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "Antes de elegir un programa, ¿en qué orden diseñáis?",
       "code": "",
       "options": [
@@ -33,7 +33,7 @@
     },
     {
       "topic": "Pipeline y ETL",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "Una cola guarda altas, sin cruzar ni cargar un almacén. ¿Es pipeline? ¿Es ETL?",
       "code": "",
       "options": [
@@ -47,35 +47,35 @@
     },
     {
       "topic": "Cuatro pisos",
-      "href": "",
-      "prompt": "En este apartado el dibujo tiene cuatro pisos y el 4 es el destino útil. En el 1.5 el 4 era el job. ¿Qué pasa?",
+      "href": "../ingesta/",
+      "prompt": "¿Qué conecta la ingesta con la consulta del informe del hotel?",
       "code": "",
       "options": [
-        "Aquí el 4 es dejar algo útil; allí el 4 es el procesamiento. No reutilicéis los números.",
-        "Son el mismo 4: el informe es el job.",
-        "Hay que olvidar el 1.5.",
-        "El 4 es siempre unificar nombres."
+        "Incorporar las fuentes, almacenar lo recibido, integrar y procesar, validar y publicar una salida interpretable.",
+        "Copiar archivos y publicarlos sin revisar su contenido.",
+        "Sustituir el PMS por el panel antes de extraer los datos.",
+        "Dibujar las capas garantiza que el resultado sea correcto."
       ],
       "answer": 0,
-      "explain": "Este dibujo es un **resumen**. El edificio de ocho capas está en el 1.5. La ingesta es la capa de abajo: **lleva** el dato; las fuentes no son la capa."
+      "explain": "Son responsabilidades del recorrido, no una numeración que deba memorizarse. La seguridad y la monitorización afectan a todas ellas."
     },
     {
       "topic": "Separar oficios",
-      "href": "",
-      "prompt": "Sumar importes de mil filas **sobre** el sistema que opera el día a día. ¿Por qué se copia el hecho a otro sitio?",
+      "href": "../ingesta/",
+      "prompt": "¿Cuándo conviene separar las consultas analíticas del sistema de recepción?",
       "code": "",
       "options": [
         "Para no pagar SQL.",
         "Para que quien opera pique también el informe.",
-        "Si lanzáis el cálculo sobre el programa que cobra o reserva, ese programa espera. El pipeline **separa** operar e informar.",
+        "Cuando la carga analítica interfiere con la operación o los requisitos justifican un entorno separado; hay que medirlo.",
         "Porque el origen no puede guardar filas."
       ],
       "answer": 2,
-      "explain": "OLTP / OLAP ya están en el 1.4. Aquí la tubería los **separa** para que el informe no tumbe la operación."
+      "explain": "Sumar mil filas no es necesariamente costoso. Importan volumen, índices, concurrencia, recursos y plazo del servicio."
     },
     {
       "topic": "Push, pull, poll",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "El origen envía cada evento; el destino va a buscar a una hora fija; el destino mira de vez en cuando y, si hay cambio, tira. ¿Quién inicia en cada caso?",
       "code": "",
       "options": [
@@ -85,11 +85,11 @@
         "Poll, pull, push."
       ],
       "answer": 1,
-      "explain": "No hay uno “más Big Data”. Conviven. Push encaja con el flujo; pull y poll, con el lote. Primero claváis quién da el primer paso."
+      "explain": "Quién inicia y cómo se procesa son dimensiones distintas. Push puede enviar un fichero diario y un consumidor de flujo puede solicitar mensajes mediante pull."
     },
     {
       "topic": "E y T",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "En la E, ¿qué dos reglas hay? En la T, ¿qué no es transformar?",
       "code": "",
       "options": [
@@ -103,35 +103,35 @@
     },
     {
       "topic": "Snapshot e incremental",
-      "href": "",
-      "prompt": "El día 1 volcáis años de histórico. El martes, ¿pedís otra vez todo?",
+      "href": "../ingesta/",
+      "prompt": "Después de una primera carga completa, ¿es obligatorio usar siempre carga incremental?",
       "code": "",
       "options": [
-        "Sí: cada noche es un snapshot. Da igual el tamaño.",
-        "Sí, porque ELT prohíbe incrementales.",
-        "No hace falta cargar: el informe lee el origen operativo.",
-        "No. El día 1 es **snapshot** (foto de todo). El martes es **incremental** (solo lo nuevo o lo que cambió)."
+        "Sí, aunque una recarga completa pequeña resulte más sencilla y cumpla el plazo.",
+        "Sí, porque ELT prohíbe las cargas completas.",
+        "No hace falta diseñar cargas: cualquier informe debe consultar directamente el PMS.",
+        "No. Se elige según volumen, coste y capacidad de identificar cambios; una recarga completa puede ser adecuada para datos pequeños."
       ],
       "answer": 3,
-      "explain": "Mezclarlas es un error caro. Índices, partición y tamaño de transacción también tiran una carga grande si las ignoráis."
+      "explain": "Una incremental debe contemplar altas, modificaciones y, cuando proceda, borrados. El punto de avance se confirma después de una carga correcta."
     },
     {
       "topic": "ETL y ELT",
-      "href": "",
-      "prompt": "Un destino rígido no admite filas sucias. Un lago sí guarda el bruto. ¿ETL, ELT o los dos?",
+      "href": "../ingesta/",
+      "prompt": "¿Qué distingue ETL de ELT si fijamos el mismo destino analítico?",
       "code": "",
       "options": [
-        "Solo ELT: ETL ya no se usa.",
-        "Solo ETL: el lago también exige limpio.",
-        "**Conviven**: destino rígido suele ser ETL; el lago, ELT.",
-        "Ni uno ni otro: hace falta Kappa."
+        "ETL solo funciona en local y ELT solo en la nube.",
+        "ETL no puede conservar los originales, mientras ELT no necesita validarlos.",
+        "ETL transforma antes de cargar en ese destino; ELT carga y transforma dentro del entorno de destino.",
+        "ELT transforma antes de extraer; ETL carga antes de transformar."
       ],
       "answer": 2,
-      "explain": "ETL limpia **antes** de cargar. ELT deja el bruto pronto y transforma en el destino. Si cambia la pregunta, ELT salva **si** las columnas ya estaban en el bruto."
+      "explain": "Un warehouse puede utilizar ambos patrones, localmente o en la nube. En ambos casos gerencia debe consultar resultados validados, no cualquier entrada bruta."
     },
     {
       "topic": "Cola y examen",
-      "href": "",
+      "href": "../ingesta/",
       "prompt": "El consumidor no puede esperar al lote. La cola aguanta; a veces se frena al productor. ¿Para qué es la cola y qué no es contrapresión?",
       "code": "",
       "options": [
@@ -141,7 +141,7 @@
         "Sin contrapresión el lote nocturno no corre."
       ],
       "answer": 1,
-      "explain": "Un CSV por lotes y un sensor en continuo **no** van por el mismo tubo. Citas la **familia**, no el logo. Un job “en verde” que pierde un campo nuevo es un fallo de esquema: apartar el lote; ELT ayuda si el bruto ya lo traía."
+      "explain": "El búfer es limitado y no resuelve una sobrecarga permanente. Hay que definir confirmaciones, reintentos, retención y recuperación. En el hotel separamos dos recorridos por sus objetivos y plazos."
     }
   ]
 }

@@ -8,6 +8,13 @@ tags:
 
 # 1.6. Ingesta de datos
 
+!!! info "Ruta de estudio"
+    **Esencial:** explicar extracción, transformación, carga, ETL/ELT y controles de calidad.
+
+    **Práctica guiada:** ejecutar Hola ETL en una carpeta propia y comparar pandas con DuckDB.
+
+    **Ampliación:** analizar retención de eventos, colas, CDC y catálogo de herramientas. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Qué vamos a construir y cómo comprobarlo
 
 La arquitectura de 1.5 sitúa los componentes. Este apartado explica el recorrido que conecta los sistemas de origen con el lugar donde analizamos los datos. Ingestar consiste en incorporar datos a un destino; un pipeline puede incluir además validaciones, transformaciones y publicación de resultados.
@@ -24,7 +31,7 @@ Este apartado es el criterio **b)** del [RA1](ra1.md){target="_blank" rel="noope
 Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifra queda bien presentada y es mentira.
 
 !!! info "Cómo se lee esta página"
-    Primero la **teoría** (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller **Hola ETL** (las tres letras; **no** es el panel de las 8). Después **colas y examen** (semáforo ≠ cuadro de gerencia). Los **logos**, al final: familia, no producto. El vídeo de abajo resume; si una figura y el MP4 no coinciden, **manda el texto**.
+    Primero la **teoría** (qué es ingerir, pipeline, ETL/ELT, quién inicia). Luego el taller **Hola ETL** (las tres letras; **no** es el panel de las 8). Después **colas y examen** (semáforo ≠ cuadro de gerencia). Los **logos**, al final: familia, no producto. El vídeo ofrece un recorrido introductorio; los talleres fijan las reglas concretas de cada ejercicio.
 
 ## Vídeo: el viaje de la reserva y el cobro de Ana
 
@@ -47,12 +54,23 @@ El contexto es el **[caso del grupo hotelero](caso-hotel.md){target="_blank" rel
 
 - Recepción registra las reservas en el **programa de reservas** del hotel (en la jerga, PMS: *Property Management System*).
 - La pasarela de pago sabe qué estancias se han cobrado.
-- En las habitaciones hay sensores de ocupación.
+- En las habitaciones hay sensores de presencia.
 - Dirección quiere, cada mañana a las 8, **ocupación e importe cobrado por hotel**.
 
 Esos datos **ya existen**. No están, de entrada, en el sitio donde gerencia los mira. Llevarlos de un sitio al otro es ingesta.
 
-![Dos tubos: lote nocturno (PMS y pasarela) al panel de las 8; sensores al semáforo, no al panel](../assets/ut1/ingesta-hotel.png)
+```mermaid
+flowchart TD
+ R[PMS: reservas] --> I[Integrar por clave y validar]
+ C[Pasarela: cobros] --> I
+ I --> A[Almacén: cierre de las 23:00]
+ A --> P[Informe publicado a las 8:00 del día siguiente]
+ S[Sensores: presencia cada 30 s] --> Q[Recepción y tratamiento de eventos]
+ Q --> O[Indicador de presencia reciente]
+ O --> N[No determina disponibilidad comercial]
+```
+
+Dos recorridos con fuentes y objetivos distintos. El panel requiere datos adicionales de habitaciones para calcular ocupación.
 
 Hasta que el dato no entra, el resto de la [arquitectura](arquitectura.md){target="_blank" rel="noopener"} está vacía. Un buen proceso de ingesta tiene que ser:
 
@@ -66,7 +84,7 @@ Finanzas cierra el día a las **23:00**. Los sensores publican cada medio minuto
 Antes de elegir un programa, diseñáis **hacia atrás**:
 
 1. ¿Qué tiene que ver gerencia a las 8? (destino)
-2. ¿Hay que cruzar reservas con cobros, quitar canceladas, unificar el nombre del canal? (transformación)
+2. ¿Hay que cruzar reservas con cobros, seleccionar los estados que requiere el informe sin perder las cancelaciones necesarias para otros análisis, unificar el nombre del canal? (transformación)
 3. ¿El dato vive en el programa de reservas, en la pasarela, en una carpeta FTP (un sitio en red donde se dejan ficheros) o en los sensores? (origen)
 
 Sin esa pregunta de negocio, unificar veinte fuentes es un proyecto largo que no sabéis cuándo termina.
@@ -88,11 +106,13 @@ Aunque a menudo se intercambian los términos, **pipeline** y **ETL** no son lo 
 
 ### Fases del pipeline
 
-Sumar importes de mil reservas es caro para la máquina. Si lanzáis ese cálculo **sobre el programa que cobra**, el mostrador espera.
+Sumar mil reservas no suele ser una carga grande por sí sola. El riesgo aparece cuando consultas analíticas, volúmenes o concurrencia compiten con la operación de recepción. Medimos esa interferencia antes de decidir si separar el entorno analítico.
 
 Por eso se **copia** el hecho a otro sitio. Operar en recepción frente a informar a gerencia (OLTP / OLAP) ya está en [1.4](procesamiento.md){target="_blank" rel="noopener"}: el pipeline los **separa** para que uno no tumbe al otro.
 
 ![OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia](../assets/ut1/oltp-olap.png)
+
+La imagen ilustra las finalidades, con porcentajes ficticios. El taller de esta página produce detalle de reservas con cobro, no esos porcentajes de ocupación.
 
 ```mermaid
 flowchart LR
@@ -131,7 +151,17 @@ Se puede hacer con un script, con Python o con una herramienta visual. En Big Da
 
 Unificar veinte fuentes **gasta** el proyecto. La veracidad del dato se cuida aquí: si entra basura, el panel miente.
 
-![Esquema ETL](../assets/ut1/etl.png)
+```mermaid
+flowchart TD
+ R[CSV de reservas] --> E[Extraer]
+ C[Tabla de cobros] --> E
+ A[API: otra fuente posible] --> E
+ E --> T[Transformar: validar, unir y calcular]
+ T --> L[Cargar]
+ L --> D[Archivo o almacén de destino]
+```
+
+Todos los orígenes se extraen antes de transformarlos. La carga escribe el resultado en el destino acordado.
 
 ### Extracción
 
@@ -157,7 +187,16 @@ Comprobáis que el lote **trae lo que dice traer** (columnas, tipos). Si no, se 
 
 Hay tres formas de iniciar el movimiento. No son tres productos.
 
-![Push, pull y poll: quién inicia el movimiento del dato](../assets/ut1/push-pull-poll.png)
+```mermaid
+flowchart TD
+ P[Push: origen] -->|envía datos| D[Destino]
+ D2[Pull: destino] -->|solicita datos| O2[Origen]
+ O2 -->|responde con datos| D2
+ D3[Poll: destino] -->|consulta periódicamente| O3[Origen]
+ O3 -->|responde; se recogen cambios si existen| D3
+```
+
+Las flechas indican peticiones y datos. Quién inicia el intercambio no determina si el procesamiento es por lotes o continuo.
 
 | | **Push** (empujar) | **Pull** (tirar) | **Poll** (preguntar) |
 | --- | --- | --- | --- |
@@ -209,7 +248,7 @@ Cada destino tiene su vía rápida. Tres palancas que, si las ignoras, tiran una
 
 Cien filas de práctica **no** demuestran la carga.
 
-Tampoco es lo mismo el tamaño el día 1 y el martes. La **primera carga** (*snapshot*) es una foto de todo: tres años de reservas. El job del martes es **incremental**: solo lo nuevo o lo que cambió. Mezclarlas es un error caro. Eso también cambia cuánto **extraes**: no pides tres años cada noche.
+Una carga completa copia el conjunto acordado; una incremental incorpora altas, cambios y, si procede, borrados desde el punto de control. Para datos pequeños, una recarga completa puede ser más sencilla y suficiente. Para históricos grandes, suele convenir una carga inicial y posteriores incrementales. Elegid según volumen, coste y capacidad de detectar cambios; no confundáis la fecha de extracción con la fecha del hecho.
 
 El **formato** de lo que escribís (CSV, JSON, Parquet…) es parte de esta L: lo vemos justo después del [Hola ETL](#hola-etl){target="_blank" rel="noopener"}, cuando ya tenéis un `cruce`. El catálogo completo está en [1.7](formatos.md){target="_blank" rel="noopener"}.
 
@@ -221,21 +260,30 @@ Por ejemplo, podemos extraer un CSV, guardarlo en una zona restringida del almac
 
 **ELT** cambia las letras: extraer → **cargar** → transformar.
 
-Los datos se dejan primero **aún sin limpiar**. El sitio típico es el [lago](almacenamiento.md){target="_blank" rel="noopener"}. En la nube a veces es un almacén **elástico** ([Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"}, BigQuery…), que sí puede tragar bruto y transformar después. El *data warehouse* clásico de [1.3](almacenamiento.md){target="_blank" rel="noopener"} —pasillos fijos, columnas acordadas— suele querer el dato **ya limpio**: ahí encaja ETL, no ELT.
+En ELT se cargan los datos de entrada en un entorno autorizado y se transforman allí. Puede ser un lago con motor de cálculo o una zona de preparación de un warehouse, local o en la nube. La tabla publicada para gerencia debe estar validada en ambos casos. Tener un warehouse no obliga a ETL: lo decisivo es dónde se realiza la transformación respecto al destino acordado.
 
 La transformación la hace después el destino: SQL, un notebook, o [**Apache Spark**](https://spark.apache.org/){target="_blank" rel="noopener"} (un motor que reparte el cálculo entre varios ordenadores; [**PySpark**](https://spark.apache.org/docs/latest/api/python/){target="_blank" rel="noopener"} es Spark usado desde Python).
 
 | | **ETL** | **ELT** |
 | --- | --- | --- |
 | Orden | Extraer → **transformar** → cargar | Extraer → **cargar** → transformar |
-| Dónde se limpia | Un motor en medio (script, [Pentaho](pentaho.md){target="_blank" rel="noopener"}, [Talend](https://www.talend.com/){target="_blank" rel="noopener"}) | El lago o un almacén **elástico** en la nube |
+| Dónde se limpia | Un motor en medio (script, [Pentaho](pentaho.md){target="_blank" rel="noopener"}, [Talend](https://www.talend.com/){target="_blank" rel="noopener"}) | El motor del entorno de destino, local o en la nube |
 | Cuándo | El destino **no** debe tragar basura | El destino aguanta bruto y hay **varios** consumidores |
 | Conservar el original | Puede guardarse en una zona previa | Se carga antes de transformar |
 | Si gerencia cambia la pregunta | Retocas la T **antes** de recargar | Consulta nueva **si** esas columnas ya estaban en el bruto |
 
 ELT no es “ETL al revés para quedar moderno”. Cambia **quién** trabaja y **cuándo** se ve el dato:
 
-![ETL frente a ELT: cambia cuándo se limpia el dato](../assets/ut1/etl-vs-elt.png)
+```mermaid
+flowchart TD
+ E[ETL: extraer] --> T[Transformar fuera del destino analítico]
+ T --> L[Cargar resultado validado en el destino]
+ E2[ELT: extraer] --> L2[Cargar entrada en zona restringida del destino]
+ L2 --> T2[Transformar con el motor del destino]
+ T2 --> P2[Publicar tabla validada para gerencia]
+```
+
+El destino de referencia debe quedar fijado. ETL y ELT pueden utilizar entornos locales o en la nube; ambos publican datos validados.
 
 - El ingeniero deja el bruto **pronto**. Finanzas y ciencia de datos pueden mirarlo antes del cruce perfecto.
 - La limpieza la puede hacer quien conoce el negocio, no solo el equipo de tuberías.
@@ -328,7 +376,7 @@ Leed el código como una secuencia de tablas. `df_r` contiene todas las reservas
 
 En estos datos sintéticos, `id_reserva` es único en ambos ficheros. Podéis comprobarlo con `df_r["id_reserva"].is_unique` y `df_c["id_reserva"].is_unique`. Tras el cruce, verificad que todos los canales son `web`, que no aparecen claves ajenas a los cobros y que el fichero se puede volver a leer. El resultado no es un agregado por hotel: mantiene el detalle de las reservas seleccionadas.
 
-Leemos CSV, filtramos, cruzamos y escribimos JSON. `merge(..., how="inner")` es un **inner join**: solo las reservas que **sí** tienen cobro. Un `left` (*left join*) dejaría reservas web sin `medio`: útil para ver impagados; no es el objetivo de este taller.
+Leemos CSV, filtramos, cruzamos y escribimos JSON. `merge(..., how="inner", validate="one_to_one")` es un **inner join**: solo las reservas que **sí** tienen cobro. Un `left` (*left join*) dejaría reservas web sin `medio`: útil para detectar reservas sin cobro asociado en esta extracción; eso no demuestra por sí solo que estén vencidas o impagadas; no es el objetivo de este taller.
 
 ```python
 # E
@@ -337,7 +385,7 @@ df_c = pd.read_csv("cobros.csv")
 
 # T
 web = df_r[df_r["canal"] == "web"]
-cruce = web.merge(df_c, on="id_reserva", how="inner")
+cruce = web.merge(df_c, on="id_reserva", how="inner", validate="one_to_one")
 cruce["etiqueta"] = cruce["hotel"] + " (web)"
 
 # L
@@ -370,8 +418,11 @@ COPY (
     SELECT
         r.id_reserva,
         r.hotel,
+        r.canal,
+        r.noches,
         r.importe,
         c.medio,
+        c.cobrado,
         r.hotel || ' (web)' AS etiqueta
     FROM read_csv('reservas.csv', header=true) AS r
     INNER JOIN read_csv('cobros.csv', header=true) AS c
@@ -409,7 +460,8 @@ Si solo usasteis DuckDB, no existe `cruce`. Entonces:
 ```python
 duckdb.sql("""
 COPY (
-    SELECT r.id_reserva, r.hotel, r.importe, c.medio
+    SELECT r.id_reserva, r.hotel, r.canal, r.noches, r.importe,
+           c.medio, c.cobrado, r.hotel || ' (web)' AS etiqueta
     FROM read_csv('reservas.csv', header=true) AS r
     INNER JOIN read_csv('cobros.csv', header=true) AS c
         USING (id_reserva)
@@ -448,7 +500,7 @@ Cuatro preguntas que recuerdan a las [5 V](por-que-big-data.md){target="_blank" 
 | ¿Lote, trozo o continuo? | Finanzas frente a recepción |
 | ¿Tabla, JSON, imagen del DNI? | Formato (el DNI, a menudo, **no** se ingiere) |
 
-Un CSV de canales y un sensor cada 30 segundos **no** van por el mismo tubo.
+En este caso separamos el CSV de cierre y los sensores porque tienen objetivos y plazos distintos. No es una prohibición universal: una plataforma puede gestionar ambas cargas si mantiene sus contratos separados.
 
 Si el sensor de habitación no puede esperar al informe de las 8, hace falta **desacoplar** al que produce el dato del que lo consume: cada uno trabaja a su ritmo. El **panel de las 8** sigue siendo un lote nocturno. La cola es para el **semáforo** de recepción, no para ese panel.
 
@@ -456,17 +508,19 @@ Una **cola de mensajes** es un buzón intermedio. No es una base de datos de inf
 
 ![Productor, cola y semáforo de recepción: si el semáforo va lento, la cola aguanta](../assets/ut1/cola-mensajes.png)
 
+La cola absorbe retrasos temporales dentro de su capacidad y retención. No resuelve una sobrecarga permanente ni garantiza por sí sola que el indicador siga actualizado.
+
 - Un **productor** deja el evento (la habitación se ocupó).
 - Un **consumidor** lo recoge cuando puede (el semáforo de recepción, un script).
 - Si el consumidor va lento, la cola **aguanta** un rato: es un **búfer**.
 - Si además el sistema **frena al productor** para que no siga empujando, eso es *contrapresión* (*back pressure*). No son lo mismo: el búfer absorbe; la contrapresión pide que se afloje.
 
-En muchas colas clásicas, al recoger el mensaje **desaparece**. En sistemas repartidos en varios ordenadores (varios PCs colaborando) el orden entre canales no está garantizado: hay que contar con que un nodo falle.
+Con confirmación manual, una cola clásica conserva el mensaje entregado hasta que el consumidor confirma su procesamiento (**ack**). Si este falla antes, el mensaje puede volver a entregarse. La confirmación automática tiene otras consecuencias ante fallos. El orden también depende de las particiones, consumidores y reintentos: no supongáis un orden global entre todos los canales.
 
 Herramientas de este oficio (el catálogo de familias va más abajo):
 
 - **Apache Kafka:** un “bus” de mensajes. Sitio oficial: [kafka.apache.org](https://kafka.apache.org/){target="_blank" rel="noopener"}. Muchos productores publican en un canal (*topic*, como un tablón con nombre: `reservas.altas`) y muchos consumidores se suscriben. El mensaje no tiene por qué desaparecer al leerlo.
-- **RabbitMQ:** una cola más clásica ([rabbitmq.com](https://www.rabbitmq.com/){target="_blank" rel="noopener"}): el productor deja el recado, el consumidor lo recoge y, en general, se borra.
+- **RabbitMQ:** un intermediario de mensajería con colas y confirmaciones. En una cola clásica con confirmación manual, la eliminación sigue a la confirmación del consumidor, no a la mera lectura. Véase la [documentación de confirmaciones](https://www.rabbitmq.com/docs/confirms).
 - En la nube hay equivalentes: [**Kinesis**](https://aws.amazon.com/kinesis/){target="_blank" rel="noopener"} (Amazon), [**Event Hubs**](https://azure.microsoft.com/products/event-hubs/){target="_blank" rel="noopener"} (Azure), [**Pub/Sub**](https://cloud.google.com/pubsub){target="_blank" rel="noopener"} (Google).
 
 En voz alta: “desacoplar al sensor del semáforo de recepción” → familia **mensajería**, no el volcado nocturno del panel de las 8.
@@ -481,9 +535,9 @@ El detalle de ritmos está en [1.4](procesamiento.md){target="_blank" rel="noope
 
 | | **Lote** (*batch*) | **Micro-lote** | **Continuo** (*streaming*) |
 | --- | --- | --- | --- |
-| Cuándo | Cada X horas o al llegar un fichero | Cada pocos minutos, un bloque pequeño | En cuanto aparece el dato |
-| Retraso | Horas; a menudo da igual | Compromiso | Segundos o menos |
-| Encaja | Cierre a las 23:00, **panel de las 8** | Una consulta a las **11**, no el cuadro de gerencia | Sensores → **semáforo** |
+| Cuándo | Conjunto delimitado, al activarse el proceso | Eventos agrupados en intervalos cortos configurados | Procesamiento continuado de eventos |
+| Retraso | El plazo acordado; aquí antes de las 8 | Intervalo más tiempo de proceso | Objetivo de latencia definido por el servicio |
+| Encaja | Cierre a las 23:00, **panel de las 8** | Actualizar un indicador con lotes breves; una consulta a las 11 no es por sí sola un microlote | Sensores → **semáforo** |
 
 **Síncrono:** esperáis a que el destino confirme. **Asíncrono:** soltáis el mensaje y seguís.
 
@@ -491,11 +545,23 @@ Familias: lote (Sqoop, script, Pentaho de noche); flujo (Kafka, NiFi). Spark cub
 
 ### Arquitectura
 
-Si os basáis en la arquitectura por capas, la ingesta es la de **abajo**: **lleva** el dato desde las fuentes; las fuentes no *son* la capa. El dibujo de esta página es el **resumen de cuatro pisos**. El edificio completo (ocho capas) está en [1.5](arquitectura.md){target="_blank" rel="noopener"}. Los números de aquí **no** son los de allí: aquí el 4 es el panel; allí el 4 es el job.
+En la arquitectura, la ingesta incorpora datos desde las fuentes; las fuentes son los sistemas de origen. El siguiente esquema resume el recorrido del hotel. Comparad sus responsabilidades con las de [1.5](arquitectura.md), no los números de los dibujos: integración y procesamiento pueden compartir operaciones, y el almacenamiento interviene antes y después de transformar.
 
-![La ingesta es la capa de abajo: el dato sube hacia el panel](../assets/ut1/capas-ingesta.png)
+```mermaid
+flowchart TD
+ O[Fuentes: PMS, pasarela o sensores] --> I[Ingesta]
+ I --> A[Almacenamiento de entradas]
+ A --> T[Integración y procesamiento]
+ T --> V[Validar y almacenar resultados]
+ V --> C[Consulta y presentación]
+ S[Seguridad, gobierno y monitorización] -.-> I
+ S -.-> T
+ S -.-> C
+```
 
-Es el paso más pesado, por tiempo y por recursos. El día 1:
+Este esquema resume el recorrido; no establece otra numeración de capas. El almacenamiento puede conservar originales y resultados preparados.
+
+Puede ser una parte importante del esfuerzo del proyecto, según las fuentes y los controles necesarios. El día 1:
 
 1. **Priorizáis** las fuentes (no todas importan igual).
 2. **Validáis** cada lote o fichero por separado.
@@ -507,7 +573,7 @@ Citas la **familia**. El producto concreto cambia de año. No memoricéis logos;
 
 Las herramientas de ingesta para ecosistemas Big Data se agrupan así:
 
-- **[Apache Sqoop](https://sqoop.apache.org/){target="_blank" rel="noopener"}:** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**[HBase](https://hbase.apache.org/){target="_blank" rel="noopener"}** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. Es una herramienta del ecosistema histórico de Hadoop: la *idea* (volcado nocturno *pull*) sigue; el binario concreto, no siempre.
+- **[Apache Sqoop](https://sqoop.apache.org/){target="_blank" rel="noopener"}:** puente **SQL ↔ Hadoop**. Copia tablas enteras (o incrementales) hacia HDFS/Hive/**[HBase](https://hbase.apache.org/){target="_blank" rel="noopener"}** (base NoSQL sobre Hadoop) y al revés. Se usa sobre todo por **comandos**. Es una herramienta del ecosistema histórico de Hadoop: la *idea* (volcado nocturno *pull*) sigue; el proyecto se retiró a [Apache Attic en 2021](https://attic.apache.org/projects/sqoop.html). No se instala en esta unidad.
 - **[Apache Flume](https://flume.apache.org/){target="_blank" rel="noopener"}:** tubería de **logs y eventos** hacia HDFS o HBase, en flujo. Encaja con clics o sensores, no con “toda la tabla de reservas”.
 - **[Apache NiFi](https://nifi.apache.org/){target="_blank" rel="noopener"}:** pantalla con **cajas y flechas** (un grafo). Cargas de un origen, pasas por procesos y vuelcas a otro. Vale lote y flujo.
 - **[Logstash](https://www.elastic.co/logstash){target="_blank" rel="noopener"}** (Elastic): nació para meter logs en **[Elasticsearch](https://www.elastic.co/elasticsearch){target="_blank" rel="noopener"}** (un motor de búsqueda de documentos/texto, no una base de reservas). Hoy admite muchas entradas y salidas, también nube.
@@ -526,8 +592,8 @@ Finalmente, hay conectores que facilitan llevar **SaaS** (software que usáis po
 
 | Necesidad | Familia | Ejemplos |
 | --- | --- | --- |
-| Tabla SQL grande, de noche, hacia el lago | Puente por lotes (*pull*) | Sqoop, job Spark, Pentaho |
-| Logs o clics que tienen que verse ya | Flujo (*push*) | Flume, Kafka + consumidor, NiFi |
+| Tabla SQL grande, de noche, hacia el lago | Puente por lotes (*pull*) | Job Spark, Pentaho; Sqoop solo como referencia histórica |
+| Logs o clics que tienen que verse ya | Flujo; transferencia push o pull según el sistema | Flume, Kafka + consumidor, NiFi |
 | Varias fuentes y un grafo en pantalla | ETL visual | NiFi, [Pentaho](pentaho.md){target="_blank" rel="noopener"} |
 | Logs hacia un buscador | Tubería de logs | Logstash |
 | ETL gestionado en un proveedor | Servicio cloud | Glue (AWS) |
@@ -549,7 +615,7 @@ En un supuesto de aula o de examen, claváis **estas** decisiones y las justific
 ### Reloj / latencia
 
 - ¿Quién inicia: push, pull o poll?
-- ¿El dato que llega tarde sigue valiendo? El cierre de ayer sí; el semáforo de habitación libre, no.
+- ¿El dato que llega tarde sigue valiendo? El cierre de ayer sí; un indicador de presencia debe mostrar la antigüedad de la lectura y detectar sensores sin datos recientes.
 - ¿Lote, micro-lote o continuo?
 - ¿Síncrono (esperáis confirmación) o asíncrono (soltáis y seguís)?
 - Si llega tarde, ¿hasta cuándo se considera válido?
@@ -559,7 +625,7 @@ En un supuesto de aula o de examen, claváis **estas** decisiones y las justific
 El martes el programa de reservas añade `motivo_cancelacion`:
 
 - **¿Quién te avisa?** Si nadie, el job sigue “bien” y el campo nuevo se pierde.
-- **¿Guardas historial o pitas encima?** Sobrescribir o borrar e insertar no conserva por sí solo el estado anterior. Para mantener historial hacen falta versiones, auditoría o un registro de cambios.
+- **¿Guardas historial o sobrescribes?** Sobrescribir o borrar e insertar no conserva por sí solo el estado anterior. Para mantener historial hacen falta versiones, auditoría o un registro de cambios.
 - **¿Reprocesas?** Si gerencia cambia el indicador, a veces basta una consulta nueva sobre el bruto (ELT). A veces hay que **volver a ingerir**. Reusar lo ya cargado evita tragarte otra vez tres años de SQL.
 
 Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga a pedir otra extracción. Eso duele.

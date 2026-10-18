@@ -5,12 +5,12 @@
   "questions": [
     {
       "topic": "Concurrente, paralelo, distribuido",
-      "href": "",
-      "prompt": "Un job usa varios núcleos del mismo PC. Otro parte el trabajo en varios nodos. ¿Qué es cada uno?",
+      "href": "../procesamiento/",
+      "prompt": "Un job ejecuta tareas simultáneas en varios núcleos de un PC; otro reparte tareas entre nodos. ¿Cómo los describimos?",
       "code": "",
       "options": [
         "Los dos son un clúster: hay varios núcleos.",
-        "El primero es **paralelo** (una máquina). El segundo es **distribuido** (varias máquinas).",
+        "El primero tiene paralelismo local; el segundo es distribuido y también puede ser paralelo si los nodos calculan a la vez.",
         "Los dos son solo concurrentes: el SO se turna.",
         "Distribuido es un procesador con muchos hilos."
       ],
@@ -19,21 +19,21 @@
     },
     {
       "topic": "Concurrente",
-      "href": "",
-      "prompt": "Solo hay un núcleo y el sistema cambia de programa cada X ms. ¿Hace varias tareas al mismo tiempo?",
+      "href": "../procesamiento/",
+      "prompt": "Un único recurso de ejecución alterna dos tareas sin ejecutarlas simultáneamente. ¿Qué ocurre?",
       "code": "",
       "options": [
-        "Sí: si lo percibís a la vez, el silicio también.",
-        "Sí, porque concurrente y paralelo son sinónimos.",
-        "No. Es multitarea **simulada** (concurrente): el núcleo se turna.",
-        "No, porque un núcleo no puede ejecutar ningún programa."
+        "Hay paralelismo porque las dos tareas terminan dentro del mismo minuto.",
+        "Concurrencia y paralelismo significan exactamente lo mismo.",
+        "Hay concurrencia por turnos, pero no paralelismo entre esas tareas.",
+        "Las tareas solo pueden progresar si se añade otra máquina."
       ],
       "answer": 2,
-      "explain": "La impresión de simultáneo no es paralelismo real. Un núcleo atiende un rato a cada uno."
+      "explain": "Concurrencia describe progreso de varias tareas en un intervalo; paralelismo añade ejecución simultánea. No necesitamos llamar simulada a la concurrencia."
     },
     {
       "topic": "Núcleos e hilos",
-      "href": "",
+      "href": "../procesamiento/",
       "prompt": "Un procesador “4 núcleos / 8 hilos”, ¿es lo mismo que 8 núcleos físicos?",
       "code": "",
       "options": [
@@ -47,21 +47,21 @@
     },
     {
       "topic": "Cuándo paralelizar",
-      "href": "",
-      "prompt": "Sumar trozos independientes frente a un acumulado que depende del paso anterior. ¿Cuál se paraleliza de verdad?",
+      "href": "../procesamiento/",
+      "prompt": "En la implementación actual, unas tareas son independientes y otras esperan el resultado anterior. ¿Qué cabe esperar al añadir núcleos?",
       "code": "",
       "options": [
         "Las dos: más núcleos siempre acortan.",
         "Ninguna: el clúster no hace magia nunca.",
         "Solo el acumulado dependiente.",
-        "La de trozos independientes. En la dependiente el segundo trozo espera al primero."
+        "Las tareas independientes pueden repartirse; la cadena dependiente conserva su cuello de botella mientras no se reformule."
       ],
       "answer": 3,
-      "explain": "Si cada paso necesita el anterior, más núcleos no acortan el cuello. Es lo mismo que en el 1.2: el clúster no hace magia."
+      "explain": "Hay que estudiar el algoritmo y sus dependencias. Añadir recursos no elimina automáticamente la parte secuencial."
     },
     {
       "topic": "Distribuido",
-      "href": "",
+      "href": "../procesamiento/",
       "prompt": "Repartís el job a nodos de un clúster. ¿Qué problemas aparecen que en un solo PC no teníais?",
       "code": "",
       "options": [
@@ -75,63 +75,63 @@
     },
     {
       "topic": "Lote y ritmo",
-      "href": "",
+      "href": "../procesamiento/",
       "prompt": "Un job de madrugada deja un informe para la mañana siguiente. ¿Eso es tiempo real?",
       "code": "",
       "options": [
         "Sí: todo lo que corre de noche es flujo.",
         "Sí, porque “online” significa pago por internet.",
-        "No. Es **lote** (batch): el ritmo **no urge** el número. Tiempo real no es sinónimo de “hay un job”.",
+        "No. Es procesamiento por lotes sobre un conjunto delimitado, con el plazo de entrega de la mañana.",
         "Es transaccional: el informe cobra al cliente."
       ],
       "answer": 2,
-      "explain": "Las estrategias de este apartado son **cuánto podéis esperar** el número, no la garantía ACID. Interactivo urge **mientras miráis**. El clic (muy por debajo de 1 s) es otro reloj."
+      "explain": "Batch no significa que el resultado no urja: incumplir las 8:00 puede ser un fallo del servicio. La periodicidad y el plazo forman parte del contrato."
     },
     {
       "topic": "Clic y ACID",
-      "href": "",
-      "prompt": "Procesar “por transacciones” (el clic, milisegundos). ¿Eso es lo mismo que ACID?",
+      "href": "../procesamiento/",
+      "prompt": "¿Qué diferencia hay entre procesar operaciones de recepción y exigir garantías ACID?",
       "code": "",
       "options": [
-        "Sí: transacción y ACID son sinónimos en este apartado.",
-        "No. Aquí es el **ritmo**. ACID es la **garantía** (todo o nada) del 1.3.",
-        "Sí, porque online significa “pago por internet”.",
-        "No, porque operar no procesa nada."
+        "ACID exige que toda operación termine en menos de un milisegundo.",
+        "La operación transaccional describe el trabajo del negocio; ACID describe sus garantías y no fija una latencia concreta.",
+        "ACID solo se aplica a pagos por internet.",
+        "Una operación transaccional no procesa datos."
       ],
       "answer": 1,
-      "explain": "Un cobro ocurre en tiempo real (quien pica no espera). Un **análisis** en tiempo real no es lo mismo: estáis consultando o resumiendo, no confirmando el paquete. Online = “mientras usáis el sistema”."
+      "explain": "Una operación puede exigir baja latencia y atomicidad a la vez. ACID incluye también consistencia, aislamiento y durabilidad; no significa solo todo o nada."
     },
     {
       "topic": "Streaming",
-      "href": "",
+      "href": "../procesamiento/",
       "prompt": "Los datos llegan al ritmo (p. ej. sensores) y las cuentas se actualizan conforme llegan. ¿El streaming es “un lote, pero más rápido”?",
       "code": "",
       "options": [
         "Sí: mismo contrato, menos minutos.",
         "Sí, y por eso todo informe de la mañana es streaming.",
         "No, porque el streaming solo existe en Lambda (1.5).",
-        "No. Es **otro contrato**: se actualiza al llegar; suele haber un techo en memoria. Cómo se combinan lote y flujo va en el 1.5."
+        "No. Procesa una secuencia creciente y mantiene el estado necesario, con políticas de tiempo, recuperación y recursos."
       ],
       "answer": 3,
-      "explain": "Flujo = al ritmo en que llegan. Interactivo = mientras miráis la pantalla. No mezcléis esas consultas con el cierre por lotes."
+      "explain": "El estado puede utilizar memoria y almacenamiento persistente. Hay que definir cómo se tratan eventos tardíos; no existe un límite universal basado solo en RAM."
     },
     {
       "topic": "OLTP y OLAP",
-      "href": "",
-      "prompt": "Operar el día a día (pocas filas, milisegundos) frente a analizar el histórico (muchas filas, resúmenes). ¿Qué siglas son y por qué no mezclarlos en la misma tabla?",
+      "href": "../procesamiento/",
+      "prompt": "Recepción registra operaciones y gerencia consulta el histórico. ¿Qué son OLTP y OLAP, y por qué valorar su separación?",
       "code": "",
       "options": [
-        "**OLTP** = operar. **OLAP** = analizar. Mezclarlos atasca el clic o eterniza el informe. El segundo se **alimenta** del primero (se copia); no lo sustituye.",
+        "OLTP opera; OLAP analiza. Separarlos puede evitar que la carga analítica perjudique a recepción, según las medidas y requisitos.",
         "OLAP en la caja; OLTP en el informe.",
         "Las dos son OLTP porque hay una tarjeta.",
         "Da igual un solo disco: es más barato y más rápido."
       ],
       "answer": 0,
-      "explain": "Online = “en el sistema, ahora”, no “pago por internet”. Un **cubo OLAP** es un resumen ya cortado por ejes; **no** es el cubo de objetos (S3: un fichero con una clave)."
+      "explain": "No es imposible compartir un sistema. La decisión depende de la carga. Un cubo OLAP organiza medidas por dimensiones; S3 almacena objetos identificados por clave."
     },
     {
       "topic": "SCV",
-      "href": "",
+      "href": "../procesamiento/",
       "prompt": "¿Cómo utilizamos SCV para razonar sobre un análisis con recursos limitados?",
       "code": "",
       "options": [

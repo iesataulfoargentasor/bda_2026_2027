@@ -5,7 +5,7 @@
   "questions": [
     {
       "topic": "Qué es un clúster",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "¿Qué es un clúster de computadoras?",
       "code": "",
       "options": [
@@ -19,7 +19,7 @@
     },
     {
       "topic": "Clúster ≠ una máquina",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Un i7 con varios núcleos, ¿es un clúster?",
       "code": "",
       "options": [
@@ -29,11 +29,11 @@
         "Solo si instaláis Hadoop en el portátil."
       ],
       "answer": 2,
-      "explain": "Núcleos en un solo equipo = paralelo local. El clúster son ordenadores **distintos** en red."
+      "explain": "Tener varios núcleos permite paralelismo local si el programa los aprovecha. Un clúster coordina varios nodos, no solo varios núcleos."
     },
     {
       "topic": "Alta disponibilidad",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Un nodo desaparece (luz, disco, red) y el servicio **sigue**. ¿Qué propiedad es?",
       "code": "",
       "options": [
@@ -43,39 +43,39 @@
         "Escalabilidad: habéis añadido máquinas."
       ],
       "answer": 0,
-      "explain": "Rendimiento es partir el trabajo y acabarlo antes. Equilibrio es no mandar todo al mismo nodo. Escalabilidad es añadir (o quitar) máquinas cuando cambia el volumen."
+      "explain": "Alta disponibilidad busca mantener el servicio mediante detección y recuperación. Escalabilidad es capacidad de crecer; elasticidad es ajustar recursos a la demanda. Son objetivos diferentes."
     },
     {
       "topic": "Réplica",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "¿Qué es una réplica en el clúster?",
       "code": "",
       "options": [
         "Un ZIP del histórico en un cajón.",
         "Más RAM en la misma máquina.",
         "El Excel que alguien descarga al acabar el job.",
-        "Una copia **en marcha** en otro nodo."
+        "Una copia de los mismos datos mantenida en otro nodo, según la política de replicación."
       ],
       "answer": 3,
-      "explain": "Sin réplica, varios ordenadores son más potencia, no más seguridad. Un ZIP del viernes no salva el servicio a las 8:02. El job bien hecho **no publica** un resultado a medias: acaba, reintenta o deja el anterior."
+      "explain": "La réplica puede facilitar recuperación, pero no sustituye detección de fallos, conmutación ni copias de seguridad. Un borrado puede propagarse a todas las réplicas."
     },
     {
       "topic": "Alto rendimiento",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Pasáis de 1 a 8 nodos. El job tardaba 8 horas. ¿Acaba en 1 hora?",
       "code": "",
       "options": [
         "Sí: 8 nodos dividen el tiempo por 8 siempre.",
-        "No: la red, el reparto y el trozo que no se puede partir se comen tiempo. A veces rinde como 6 o 7; a veces casi como 1.",
+        "No se puede asegurar: depende del trabajo divisible, el reparto, la red y la coordinación.",
         "Sí, si no hay réplica.",
         "No, porque un clúster nunca acelera un job."
       ],
       "answer": 1,
-      "explain": "Ocho nodos no son magia lineal. El clúster brilla si el trabajo se puede **trocear**. La idea clásica es llevar el cálculo al dato: mejor mover una función que petabytes hacia una sola CPU."
+      "explain": "Más nodos no garantizan una aceleración lineal. Medimos el tiempo y localizamos la fase limitante; incluso puede empeorar una carga pequeña."
     },
     {
       "topic": "Escalado vertical",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Añadís CPU, RAM o disco **en la misma máquina**. ¿Qué escalado es?",
       "code": "",
       "options": [
@@ -85,11 +85,11 @@
         "No es escalado: solo vale en un mainframe."
       ],
       "answer": 0,
-      "explain": "Vertical = agrandar una máquina (techo de catálogo y de precio). Horizontal = más máquinas. El vertical sigue existiendo (p. ej. una base en un solo servidor); en Big Data **no basta solo** con eso."
+      "explain": "El escalado vertical puede ser suficiente si cumple los requisitos. El horizontal añade nodos y requiere una carga que pueda aprovecharlos; ninguno gana por definición."
     },
     {
       "topic": "Horizontal y scale-in",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Añadís dos máquinas al clúster. Más adelante apagáis dos porque sobra capacidad. ¿Cómo se llama cada cosa?",
       "code": "",
       "options": [
@@ -103,7 +103,7 @@
     },
     {
       "topic": "Equilibrio de carga",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Mandáis todos los jobs al nodo que “siempre ha ido bien”. El resto está de brazos cruzados. ¿Qué falla?",
       "code": "",
       "options": [
@@ -117,7 +117,7 @@
     },
     {
       "topic": "Cuando el clúster no hace magia",
-      "href": "",
+      "href": "../clusters/",
       "prompt": "Cada paso del job depende del resultado del anterior. Añadís nodos. ¿Qué pasa?",
       "code": "",
       "options": [
@@ -131,17 +131,17 @@
     },
     {
       "topic": "Cálculo y disco",
-      "href": "",
-      "prompt": "Hadoop “de libro” pega el fichero al nodo que calcula. En la nube el dato suele vivir en un cubo de objetos y el clúster de cálculo crece o se apaga por su cuenta. ¿Qué es cierto?",
+      "href": "../clusters/",
+      "prompt": "¿Separar almacenamiento y cálculo es una propiedad exclusiva de la nube?",
       "code": "",
       "options": [
         "Son el mismo diseño con dos logos.",
         "En la nube ya no hay clúster.",
-        "Son **dos diseños**: clásico = dato y CPU en el mismo nodo; nube = dato en el cubo, CPU donde haga falta.",
+        "No. Juntos o separados son dos diseños que pueden desplegarse en instalaciones propias o en la nube.",
         "El cubo de objetos sustituye a cualquier garantía de la base operativa."
       ],
       "answer": 2,
-      "explain": "Ganáis réplica y disco barato; pagáis red. Un clúster para el histórico **no** sustituye a que una operación crítica (un cobro, un asiento) no se vea a medias: eso es otra decisión de almacenamiento. El sistema operativo puede seguir en un servidor."
+      "explain": "Separarlos permite ajustar recursos de forma independiente, pero exige planificar acceso por red, rendimiento y recuperación. La ubicación no garantiza réplicas ni bajo coste."
     }
   ]
 }

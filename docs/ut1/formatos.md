@@ -8,6 +8,13 @@ tags:
 
 # 1.7. Formatos de datos
 
+!!! info "Ruta de estudio"
+    **Esencial:** elegir formato según tipos, consultas y consumidores; distinguir archivos, tablas y motores.
+
+    **Práctica guiada:** generar los datos y comprobar que las conversiones conservan filas, nulos y valores.
+
+    **Ampliación:** comparar tiempos con un experimento controlado; HDFS y Delta requieren otro entorno. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: la reserva de Ana cambia de formato
 
 Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. **Duración: 12 minutos y 24 segundos.**
@@ -106,7 +113,18 @@ Dos familias, no dos religiones:
 
 `null` es JSON. `None` es **Python**. Mezclarlos tumba el parser.
 
-![JSON en un solo array: un nodo se lo come. JSONL: una reserva por línea, se trocea](../assets/ut1/json-jsonl.png)
+```mermaid
+flowchart TD
+ J[Datos JSON] --> A[Un documento: por ejemplo un array de reservas]
+ J --> L[JSONL: un documento completo por línea]
+ A --> P[Lector que reconoce la estructura y los límites]
+ L --> R[Lectura por líneas y reparto de registros más sencillo]
+ P --> C[Memoria y paralelismo dependen del lector]
+ R --> C
+ C --> Z[La compresión también puede limitar la división]
+```
+
+JSONL delimita cada registro por una línea. Un array JSON también puede leerse incrementalmente con un lector adecuado; no obliga a cargarlo entero en RAM.
 
 **XML.** Sigue en facturas y administraciones. Más verboso; misma duda: ¿se puede trocear?
 
@@ -129,15 +147,17 @@ Eso **no** convierte Avro en el PMS. Recibir el cobro en recepción es la tabla 
 !!! example "A las 8 no hace falta el comentario"
     Agregar es resumir. “Importe medio en Laredo” no lee `comentarios`. Columnar + partición `hotel=Laredo` = menos disco, menos factura.
 
-En servicios tipo Athena o BigQuery el orden de magnitud que veréis citado es: **1 TB** de texto plano puede quedar cerca de **un octavo** en columnar comprimido. La cifra exacta cambia; la idea no: **elegir mal el formato en la [carga](ingesta.md){target="_blank" rel="noopener"} se paga cada consulta**.
+Un archivo columnar comprimido puede ocupar menos que el texto original y permitir leer menos campos. No aplicamos una proporción universal: medimos tamaño, consulta y compresión con nuestros datos. Elegir mal el formato de la [carga](ingesta.md) puede aumentar el trabajo de cada consulta.
 
 ## Comprimir no es gratis
+
+Gzip utiliza Deflate, pero no son nombres de archivo o contenedores intercambiables. En Avro, `codec="deflate"` no genera un archivo `.gz`. La tabla orienta: verificad el códec admitido por el escritor y medid el resultado; las etiquetas de velocidad y ahorro no son garantías.
 
 El algoritmo busca **repeticiones** (`Laredo, Laredo, Laredo…`) y las recodifica. Viaja menos por la red. A cambio, la CPU **aprieta y destapa**. La reducción depende del contenido: texto repetitivo y datos ya comprimidos pueden responder de forma muy diferente. En Big Data suele ganar el que es **rápido**, no el que más aprieta.
 
 | Códec | Velocidad | Ahorro | Típico en |
 | --- | --- | --- | --- |
-| Gzip / deflate | Media | Medio | Avro, Parquet |
+| Deflate / Gzip | Depende del nivel y los datos | Depende del contenido | Deflate en Avro; Gzip en Parquet, según el lector |
 | Bzip2 | Lenta | Alto | Archivado |
 | Snappy | Alta | Medio | Avro, Parquet, ORC |
 | Zstandard (zstd) | Alta | Alto | Parquet reciente |
@@ -244,12 +264,12 @@ schema = parse_schema({
         {"name": "id_reserva", "type": "int"},
         {"name": "hotel", "type": "string"},
         {"name": "noches", "type": "int"},
-        {"name": "importe", "type": "float"},
+        {"name": "importe", "type": "double"},
         {"name": "canal", "type": "string"},
     ],
 })
 laredo = df[df["hotel"] == "Laredo"][["id_reserva", "hotel", "noches", "importe", "canal"]]
-# fastavro rechaza numpy.int32 / numpy.float64: pasad a int y float de Python
+# Convertimos explícitamente a tipos de Python compatibles con el esquema
 filas = [
     {
         "id_reserva": int(fila["id_reserva"]),
@@ -272,7 +292,7 @@ El formato en disco responde a cómo conservar y leer bytes; la representación 
 
 La ausencia de copias no está garantizada en todas las conversiones: cambiar tipos o transformar a estructuras incompatibles puede requerir memoria adicional. En el ejemplo, la segunda fila conserva un importe nulo, y eso debe seguir siendo cierto tras convertir o escribir la tabla.
 
-[Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"}, [Avro](https://avro.apache.org/){target="_blank" rel="noopener"} y [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} viven en **disco**. **[Arrow](https://arrow.apache.org/){target="_blank" rel="noopener"}** describe columnas **en memoria** para que Python, R o Java las compartan sin copiarlas (*zero-copy*) y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/){target="_blank" rel="noopener"}. Arrow **no** es Avro.
+[Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"}, [Avro](https://avro.apache.org/){target="_blank" rel="noopener"} y [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} viven en **disco**. **[Arrow](https://arrow.apache.org/){target="_blank" rel="noopener"}** describe columnas **en memoria** para facilitar que herramientas compatibles compartan buffers sin copiarlos (*zero-copy*) cuando los tipos y la operación lo permiten y el procesador calcule en bloque. Docs: [PyArrow](https://arrow.apache.org/docs/python/){target="_blank" rel="noopener"}. Arrow **no** es Avro.
 
 ```bash
 pip install pyarrow
@@ -293,7 +313,7 @@ tabla = pa.Table.from_pydict(
 print(tabla)
 ```
 
-pandas 2 puede leer el CSV con motor Arrow (`dtype_backend="pyarrow"`): textos y nulos suelen ir mejor que con NumPy.
+En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra.
 
 **Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
 
@@ -358,7 +378,7 @@ solo_laredo = pd.read_parquet(
 )
 ```
 
-En HDFS, si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.
+**Ampliación, no requisito del taller local.** La escritura en HDFS requiere el cliente y las bibliotecas de HDFS compatibles con PyArrow, conectividad y permisos; una URL por sí sola no configura el acceso. Si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.
 
 ### Preguntar sin cargarlo: DuckDB
 
@@ -385,7 +405,7 @@ print(duckdb.sql(
 ).df())
 ```
 
-Si particionáis por año: `FROM 'reservas/*.parquet'`. Por dentro habla Arrow: pasar a pandas es casi sin copia.
+Si las particiones están en subcarpetas como `reservas/anio=2026/parte.parquet`, usad el patrón recursivo `FROM 'reservas/**/*.parquet'`. La conversión a pandas puede requerir copias según tipos y representación; compartir Arrow no garantiza siempre *zero-copy*.
 
 ## ORC: cuando el ecosistema es Hive
 
@@ -417,17 +437,20 @@ Un `.parquet` suelto no os da “borra esta reserva” ni “cómo estaba el dom
 Eso permite viajar en el tiempo, un [ACID](almacenamiento.md){target="_blank" rel="noopener"} de **tabla** (un `MERGE` no deja la ocupación a medias) y compactar ficheros pequeños. **Eso no cobra en recepción:** el cobro sigue en el PMS. En esta UT basta la idea. En Spark lo veréis como `format("delta")`.
 
 ```python
-# Cuando lleguéis a Spark, sobre el mismo df de reservas
-# df.write.format("delta").save("/ruta/reservas_delta")
+# Ampliación: requiere una sesión Spark y Delta Lake configurados.
+# df es pandas; hay que convertirlo antes de usar la API de Spark.
+# spark.createDataFrame(df).write.format("delta").save("/ruta/reservas_delta")
 ```
 
 ## Cómo elegir (tarjeta para el examen)
+
+Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC son formatos de archivo; Arrow describe una representación en memoria; DuckDB es un motor; Delta, Iceberg y Hudi gestionan tablas sobre archivos. No son alternativas intercambiables: un motor puede consultar una tabla cuyos datos están en Parquet.
 
 | Situación | Formato | Por qué |
 | --- | --- | --- |
 | Lo tiene que leer un humano o una API | CSV / JSON | Se depura |
 | Kafka, campos nuevos el mes que viene | **Avro** | Fila + esquema que evoluciona |
-| Entre dos celdas del mismo cuaderno | **Feather** | Velocidad |
+| Intercambiar tablas entre herramientas compatibles con Arrow | **Feather** (archivo) | Conserva tipos compatibles y permite persistir la tabla |
 | Lago + “solo hotel e importe” | **Parquet** | Menos escaneo |
 | Tablas Hive | **ORC** | Encaje Hive |
 | Explorar en el portátil | **DuckDB** (motor) | SQL sin 500 GB en RAM |
@@ -468,7 +491,7 @@ Luego, **sin** cargar el Parquet entero en pandas (como el taller 6):
 
 - importe medio por `hotel` (DuckDB);
 - recuento por `canal`;
-- misma media **solo con las columnas** `hotel` e `importe` (¿baja el tiempo?).
+- comparad la media con una lectura completa en pandas seguida del agrupamiento. La consulta SQL anterior ya proyecta los campos necesarios; repetirla seleccionando esos mismos campos no constituye una nueva optimización. Identificad que comparáis lectura completa frente a consulta con proyección, no solo formatos.
 
 ```python
 import os

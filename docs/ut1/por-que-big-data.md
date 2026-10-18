@@ -8,6 +8,13 @@ tags:
 
 # 1.1. Por qué Big Data y las 5 Vs
 
+!!! info "Ruta de estudio"
+    **Esencial:** relacionar las 5 V con requisitos medibles y distinguir información, análisis y decisión.
+
+    **Práctica guiada:** los cálculos de volumen y de acumulación de eventos.
+
+    **Ampliación:** comparar perfiles profesionales y las V adicionales. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: del cobro de Ana a las cinco Vs
 
 Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo necesitamos Big Data y cómo las cinco Vs ayudan a diagnosticar las dificultades del recorrido. La explicación desarrolla cada V con ejemplos y cálculos sencillos, y conecta el valor de los datos con las analíticas y los roles del equipo. **Duración: 8 minutos y 36 segundos.**
@@ -32,9 +39,9 @@ A lo largo del apartado seguiremos tres pasos: comprender cómo un registro se c
 
 En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} esto se ve pronto: un servidor, el programa de reservas y un informe por la noche. Durante años basta. El disco no se llena, recepción registra sin esperar y las reservas tienen las mismas columnas.
 
-Un día hay cuatro hoteles, sensores, logs de la web cada segundo y marketing quiere cruzar todo *ahora*. El servidor no “se pone un poco lento”: **deja de ser el diseño adecuado**. Ahí entran las metodologías de **macrodatos** / **Big Data**.
+Un día hay cuatro hoteles, sensores, logs de la web y marketing pide nuevos cruces con plazos más cortos. Si las medidas muestran que el diseño disponible ya no cumple los requisitos de forma viable, habrá que revisarlo. Ahí pueden ser necesarias metodologías de **macrodatos o Big Data**; el crecimiento por sí solo no demuestra que haga falta un clúster.
 
-**Big Data no es “tener muchos Excel”.** Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos que **un sistema de una sola máquina, al estilo clásico, no puede** tratar con garantías de tiempo, coste o variedad.
+**Big Data no es “tener muchos Excel”.** Es un conjunto de métodos y tecnologías para capturar, almacenar, procesar y presentar datos cuyos requisitos superan la capacidad viable del diseño convencional disponible para tratarlos con garantías de tiempo, coste o variedad.
 
 No hay una ley que diga “a partir de X terabytes ya es Big Data”. El criterio práctico es este: **el sistema tradicional no escala** en volumen, velocidad o variedad (o el coste de agrandar *esa* máquina es inasumible).
 
@@ -52,7 +59,17 @@ A los seis meses hay cuatro hoteles, sensores cada 30 s, logs de la web y fotos 
 
 Se dice a menudo que los datos son el petróleo. La analogía se queda corta: el crudo sin refinar no mueve el coche. Guardar por guardar, en la década de 2020, **no** basta. Hay que **conocer** el dato y **cuidarlo** (calidad, linaje, permiso). Si no, gerencia decide con un número bonito y falso.
 
-![Un PC en recepción de Laredo frente a la cadena completa, que ya no cabe en un servidor](../assets/ut1/small-vs-big.png)
+```mermaid
+flowchart TD
+ A[Reservas, cobros, sensores y logs] --> B[Medir volumen, ritmo, calidad y plazo]
+ B --> C{¿Cumple la solución actual?}
+ C -->|Sí| D[Mantener y supervisar]
+ C -->|No| E[Localizar el cuello de botella]
+ E --> F[Comparar optimización, más recursos y distribución]
+ F --> G[Elegir por medidas, coste y garantías]
+```
+
+La escala se decide midiendo requisitos, no contando hoteles.
 
 ## De los eventos al valor
 
@@ -65,13 +82,15 @@ Antes de hablar de clústeres, Parquet o Pentaho, hay que ver **el viaje del dat
 Pensad en el grupo en agosto (Laredo ayuda a imaginar temporada alta):
 
 1. **Evento.** Ocurre algo en el mundo: un huésped reserva, un sensor de ocupación cambia, alguien paga con tarjeta.
-2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto del DNI, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.
+2. **Dato.** Ese hecho queda registrado: una fila, un JSON, una foto de una habitación, una línea de log. Todavía no “significa” nada por sí solo; solo está guardado.
 3. **Información.** Organizáis esos datos: reservas del día en una tabla, fotos en carpetas por fecha. Ya podéis *consultar* (“¿cuántas llegadas hay mañana?”).
 4. **Conocimiento.** Encajáis patrones: “los que reservan el viernes por la tarde cancelan más”. Eso ya no es una fila: es una regla o un modelo.
 5. **Sabiduría.** Sabéis *cuándo* aplicar esa regla. El modelo de cancelaciones de Laredo en agosto **no** se copia ciego a Potes en noviembre.
 6. **Valor.** Tomáis una decisión que **mejora** el resultado: overbooking más fino, menos habitaciones vacías, una oferta a tiempo. La diferencia entre actuar con esos datos y actuar a ciegas **es el valor**.
 
 ![Escalera del dato en Laredo: del evento al valor](../assets/ut1/evento-valor.png)
+
+Este recorrido es una guía para razonar. Encontrar un patrón no prueba su causa ni garantiza valor; hay que validar la decisión y medir su efecto.
 
 | Escalón | Qué es | Ejemplo del hotel |
 | --- | --- | --- |
@@ -144,7 +163,7 @@ No hay una receta única. Un trabajo de ciencia de datos casi siempre recorre es
 
 1. **Objetivo.** Gerencia quiere menos habitaciones vacías los martes.
 2. **Recuperación.** PMS, pasarela, sensores, un Excel de Comillas. Sale **bruto**.
-3. **Preparación.** Unificáis `web` y `WEB`, quitáis canceladas, cruzáis reserva con cobro (eso, en [1.6](ingesta.md){target="_blank" rel="noopener"}, es la T de un ETL: extraer, transformar, cargar).
+3. **Preparación.** Unificáis `web` y `WEB`, conserváis el estado de cancelación y cruzáis reserva con cobro (eso, en [1.6](ingesta.md){target="_blank" rel="noopener"}, es la T de un ETL: extraer, transformar, cargar). Conservad las canceladas para estudiar la cancelación; no son lo mismo que los *no-show*.
 4. **Exploración.** El viernes por la web cancela más.
 5. **Modelado.** Estima el riesgo de que no se presente (*no-show*) o el cupo.
 6. **Presentación y vuelta.** El gráfico o el panel de las 8. Si no cuadra, **volvéis al paso 2**.
@@ -156,7 +175,7 @@ En el [curso de especialización](../index.md){target="_blank" rel="noopener"} o
 
 ## Las V: un diagnóstico, no una lista para recitar
 
-Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Luego **valor** y **veracidad** (cinco). En algunos textos, **viabilidad** y **visualización** (siete). No memoricéis el recuento: **pasad revista** al hotel. Si varias duelen a la vez, casi seguro necesitáis un diseño de Big Data. Si solo os duele una y el resto cabe en el sistema de siempre, a lo mejor no.
+Al principio se usaban **tres V**: **volumen**, **velocidad** y **variedad**. Luego **valor** y **veracidad** (cinco). En algunos textos, **viabilidad** y **visualización** (siete). No memoricéis el recuento: **pasad revista** al hotel. No contéis cuántas V aparecen para decidir. Una sola puede imponer un requisito difícil; varias pueden resolverse con una solución sencilla. Medid la carga y el plazo y justificad la respuesta.
 
 ![Las V aplicadas al grupo hotelero: cinco de diagnóstico y dos que a veces se añaden](../assets/ut1/cinco-vs-hotel.png)
 
@@ -180,7 +199,7 @@ Es la cantidad de **bytes**. Hoy se habla con naturalidad de terabytes y petabyt
 
 En informática también existen KiB, MiB, GiB (potencias de 2: 1 KiB = 1024 bytes). El fabricante anuncia 1 TB como **1000 GB** (base 10). El explorador suele mostrar **cerca de 931 GB** porque cuenta GiB y a veces los llama “GB”. El disco no está roto: **cuentan distinto**.
 
-En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habitación y del DNI. Fuera veréis lo mismo a otra escala: redes, genómica, satélites.
+En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habitaciones. Fuera veréis lo mismo a otra escala: redes, genómica, satélites.
 
 !!! example "Un cálculo para notar la escala"
     Si guardáis **4 bytes al día** (un número: el peso) por cada persona del planeta (~8·10⁹) durante un año:
@@ -281,6 +300,8 @@ La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guar
 El BI **no** desaparece cuando llega el lago. Gerencia sigue necesitando el “qué pasó”. Big Data **no** es un sinónimo de predicción: a veces el valor es un informe de ayer que llega **a las 8**, no un modelo.
 
 ![Cuatro preguntas de gerencia (izquierda) y el equipo (derecha): el científico no es solo “el modelo”; pregunta, limpia y explica. El ingeniero es este módulo](../assets/ut1/analiticas-roles.png)
+
+Los perfiles colaboran y pueden solaparse. Predecir no garantiza acertar; una recomendación debe incluir incertidumbre, restricciones del negocio y evaluación de sus efectos.
 
 ## Quién hace qué (un solo mapa)
 

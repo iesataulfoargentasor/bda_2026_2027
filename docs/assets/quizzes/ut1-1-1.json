@@ -5,35 +5,35 @@
   "questions": [
     {
       "topic": "Qué es Big Data",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "¿Qué es Big Data?",
       "code": "",
       "options": [
         "Tener muchos Excel, o superar 1 TB: lo dice la norma.",
         "Instalar Hadoop o Spark, da igual el tamaño del problema.",
-        "Métodos y tecnologías para capturar, almacenar, procesar y presentar datos que un sistema clásico de **una** máquina no puede tratar con garantías de tiempo, coste o variedad.",
+        "Métodos y tecnologías para gestionar datos cuyos requisitos de volumen, ritmo o variedad superan la capacidad viable del diseño convencional disponible.",
         "Cualquier proyecto donde haya un científico de datos."
       ],
       "answer": 2,
-      "explain": "No es “muchos Excel” ni el logo de una herramienta. Tampoco hay un umbral legal en terabytes: el criterio es de **diseño**."
+      "explain": "No existe un umbral universal en TB ni un número de hoteles que lo determine. Medimos capacidad, plazo, calidad y coste antes de cambiar la solución."
     },
     {
       "topic": "¿Es un problema de Big Data?",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "“¿Esto es un problema de Big Data?” ¿Cómo se responde?",
       "code": "",
       "options": [
-        "Mirando si el diseño de siempre (un servidor, un esquema fijo, un lote) **sigue siendo viable**.",
+        "Contrastando los requisitos con medidas de capacidad, tiempos, calidad y coste de la solución disponible.",
         "Contando si hay más de un millón de filas.",
         "Comprobando si ya hay un clúster instalado.",
         "Si el disco del fabricante pone “1 TB” y el explorador “931 GB”."
       ],
       "answer": 0,
-      "explain": "La pregunta no se contesta con un logo. Si volumen, velocidad o variedad (o el coste de agrandar esa máquina) ya no se sostienen, hay que cambiar el diseño. Small Data sigue existiendo: cabe en un PC."
+      "explain": "Una sola V puede imponer un cambio importante; contar cuántas V aparecen no es una prueba. Distribuir es una alternativa que también tiene costes."
     },
     {
       "topic": "Viaje del dato",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "¿Cuál es el orden del viaje del dato?",
       "code": "",
       "options": [
@@ -43,11 +43,11 @@
         "El modelo genera el evento; luego se guarda el dato."
       ],
       "answer": 1,
-      "explain": "Primero **ocurre** el hecho, se registra, se organiza, se extrae una regla o un modelo, se sabe **cuándo** usarlo y la decisión **mejora** el resultado. Guardar sin decidir no es valor."
+      "explain": "Es un recorrido didáctico: registrar, organizar, interpretar y decidir. El valor no está garantizado por almacenar o predecir; se comprueba midiendo el efecto de la decisión."
     },
     {
       "topic": "Tres oficios, no una escalera",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "«La IA contiene a la ciencia de datos, que contiene a la minería.» ¿Qué hay que responder?",
       "code": "",
       "options": [
@@ -61,7 +61,7 @@
     },
     {
       "topic": "Minería, ciencia de datos, IA",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "¿Qué distingue a minería de datos, ciencia de datos e inteligencia artificial?",
       "code": "",
       "options": [
@@ -75,7 +75,7 @@
     },
     {
       "topic": "Volumen y velocidad",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "Misma cantidad de bytes: 10 TB históricos que cargáis **una vez** al mes, frente a 10 TB **al día** que hay que integrar ahora. ¿Qué V duele en cada caso?",
       "code": "",
       "options": [
@@ -89,7 +89,7 @@
     },
     {
       "topic": "Variedad",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "Una tabla SQL con las mismas columnas en todas las filas, un JSON cuyas claves pueden variar, y una foto o un PDF. ¿Qué tipos son, en ese orden?",
       "code": "",
       "options": [
@@ -99,11 +99,11 @@
         "Los tres exigen un data warehouse."
       ],
       "answer": 1,
-      "explain": "La variedad es la V que más sorprende a quien solo ha visto SQL: **no todo es tabla**. Un almacén de informes espera columnas **antes** de guardar; un lago acepta el dato como llega y decide al **leer**."
+      "explain": "La clasificación describe la representación del ejemplo. Un lago puede contener originales y tablas preparadas; un warehouse puede admitir campos semiestructurados según el motor."
     },
     {
       "topic": "Veracidad y valor",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "«Como hay muchos datos, el error se compensa» y «guardamos todo por si acaso, sin saber qué decisión mejorar». ¿Qué falla?",
       "code": "",
       "options": [
@@ -117,7 +117,7 @@
     },
     {
       "topic": "Cuatro analíticas",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "Descriptiva, diagnóstica, predictiva y prescriptiva. ¿Qué pregunta hace cada una, en ese orden?",
       "code": "",
       "options": [
@@ -127,11 +127,11 @@
         "Descriptiva es IA; prescriptiva es solo un gráfico de BI."
       ],
       "answer": 0,
-      "explain": "La inteligencia de negocio (BI) responde sobre el **pasado** y no desaparece. Big Data **no** es sinónimo de predicción: a veces el valor es un informe de ayer a tiempo."
+      "explain": "Son preguntas orientativas: una predicción expresa incertidumbre y un análisis diagnóstico no demuestra causalidad por sí solo. BI puede apoyar decisiones con información histórica o reciente; Big Data no equivale a predicción."
     },
     {
       "topic": "Roles (este módulo)",
-      "href": "",
+      "href": "../por-que-big-data/",
       "prompt": "En este módulo, ¿quién deja el dato usable (extraer, transformar, cargar y guardar)?",
       "code": "",
       "options": [

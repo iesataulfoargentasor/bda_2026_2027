@@ -52,13 +52,15 @@ Gerencia **no** abre el PMS a las 8 para sumar a mano. Quiere **un panel**: ocup
 
 ![Recepción registra ahora en el programa de reservas; gerencia mira el panel de ayer. Vosotros copiáis el dato; no sustituís el programa](../assets/ut1/caso-pms-y-panel.png)
 
+La ilustración separa operación y análisis. Las cifras son ficticias, no resultados de los talleres. El paso intermedio incluye extraer, integrar y validar, no únicamente copiar.
+
 ## Qué hacéis vosotros (punto de partida)
 
 Seguiremos una reserva desde su registro hasta el informe. El PMS identifica la reserva y su hotel; el sistema de pagos aporta el importe confirmado. La clave de reserva permite relacionarlos. La fecha del cobro y la fecha de la estancia pueden diferir: cada indicador debe indicar cuál utiliza.
 
 Para calcular un **porcentaje de ocupación** también necesitamos las habitaciones disponibles y las ocupadas durante el periodo. Contar reservas cobradas no equivale a medir ocupación. Los talleres de cruce calculan importes y recuentos con datos simplificados; no contienen todos los campos necesarios para construir el panel completo.
 
-El dato **ya está** en los programas del día a día. Vosotros **no lo inventáis** y **no picáis reservas**. El oficio de este módulo es **copiarlo** a un sitio pensado para informes, **a tiempo**, y **sin falsear** el número.
+El dato **ya está** en los programas del día a día. Vosotros **no lo inventáis** y **no picáis reservas**. El oficio de este módulo es **extraerlo, integrarlo y validarlo** en un sitio pensado para informes, **a tiempo**, y **sin falsear** el número.
 
 De dónde sale (tres orígenes):
 
@@ -72,11 +74,22 @@ A dónde lo lleváis (un destino para gerencia):
 
 **Sin falsear** quiere decir: no coléis como cobrado lo que no se ha cobrado; no presentéis a las 8:05 del martes el martes como si ya hubiera cerrado; no mezcléis el semáforo de recepción con el cuadro de mando.
 
-![Dos tubos: lote nocturno al panel de las 8; sensores al semáforo de recepción, no al panel](../assets/ut1/caso-que-haceis.png)
+```mermaid
+flowchart TD
+ R[PMS: reservas] --> I[Integrar por clave y validar]
+ C[Pasarela: cobros] --> I
+ I --> A[Almacén: cierre de las 23:00]
+ A --> P[Informe publicado a las 8:00 del día siguiente]
+ S[Sensores: presencia cada 30 s] --> Q[Recepción y tratamiento de eventos]
+ Q --> O[Indicador de presencia reciente]
+ O --> N[No determina disponibilidad comercial]
+```
+
+Dos recorridos con fuentes y objetivos distintos. El panel requiere datos adicionales de habitaciones para calcular ocupación.
 
 ## Dos relojes (no los mezcléis)
 
-En el ejemplo, “cierre” es el corte de negocio fijado a las 23:00. Los registros posteriores se asignan al siguiente cierre o se tratan como correcciones según una regla acordada. Un informe debe indicar fecha de cierre y hora de actualización para no confundirse con el estado actual.
+En el ejemplo, “cierre” es el corte de negocio fijado a las 23:00. Los registros posteriores se asignan al siguiente cierre o se tratan como correcciones según una regla acordada. Un informe debe indicar fecha de cierre y hora de actualización para no confundirse con el estado actual. Por ejemplo, el cierre del martes comprende desde las 23:00 del lunes (incluidas) hasta las 23:00 del martes (excluidas), en la zona Europe/Madrid. Se publica el miércoles a las 8:00. No es el día natural de 00:00 a 24:00. Si llega una corrección posterior, identificamos la nueva versión y su hora de publicación; no cambiamos el periodo sin avisar.
 
 Los sensores indican presencia, no disponibilidad comercial. Una habitación sin personas puede estar reservada o pendiente de limpieza. El semáforo es una simplificación didáctica de un indicador operativo; para decidir si una habitación se puede vender habría que combinar el PMS y otros estados del hotel.
 
@@ -84,10 +97,10 @@ Los sensores indican presencia, no disponibilidad comercial. Una habitación sin
 | --- | --- |
 | **Ahora** | Recepción registra en el PMS. No espera al informe. |
 | Cada cobro | La pasarela anota si se ha cobrado. |
-| Cada ~**30 s** | Los sensores alimentan el **semáforo** (“¿queda habitación?”). **No** es el panel de las 8. |
+| Cada ~**30 s** | Los sensores alimentan el **semáforo** (“¿se detecta presencia?”). **No** es el panel de las 8. |
 | **23:00** | Finanzas **cierra el día**. Hasta entonces el importe del martes no está cerrado. |
 | De madrugada | Corre la **copia** (el *job*): cruza reservas y cobros y deja el informe. |
-| **8:00** | Gerencia abre el panel. Si pedís el dato a las 8:05 **del mismo día**, o no está o es de **ayer**. |
+| **8:00** | Gerencia abre el panel. A las 8:05 sigue mostrando ese mismo cierre, salvo que se publique una corrección identificada; no muestra automáticamente el día en curso. |
 
 Las 8:00 **no** son tiempo real. El semáforo **sí** va casi al momento. En [1.6](ingesta.md){target="_blank" rel="noopener"} veréis por qué eso son **dos tubos**, no uno.
 
@@ -99,11 +112,11 @@ Con este caso en la cabeza, cada apartado pregunta una cosa:
 2. **[1.2](clusters.md){target="_blank" rel="noopener"}** — El programa de reservas de Laredo cabe en **un** servidor. El trabajo de madrugada debe medirse para decidir si necesita repartirse. Si se funde un disco, el panel de las 8 no puede caerse.
 3. **[1.3](almacenamiento.md){target="_blank" rel="noopener"}** — El cobro tiene que quedar bien en el PMS. El histórico de gerencia va a **otro** sitio. Fotos y JSON, a un lago.
 4. **[1.4](procesamiento.md){target="_blank" rel="noopener"}** — Recepción **opera** ahora. Gerencia **informa** (lote de las 8). El semáforo es **otro** reloj.
-5. **[1.5](arquitectura.md){target="_blank" rel="noopener"}** — Panel de las 8 y semáforo: **dos caminos** o **una cola**.
+5. **[1.5](arquitectura.md){target="_blank" rel="noopener"}** — Cómo se conectan los componentes y qué controles comparten. Lambda y Kappa se estudian como alternativas para reconstruir vistas, no como nombres de estos dos pipelines independientes.
 6. **[1.6](ingesta.md){target="_blank" rel="noopener"}** — Cómo se **copian** PMS, cobros y sensores. El panel de las 8 es el **destino**; no se pinta en el primer taller.
 7. **[1.7](formatos.md){target="_blank" rel="noopener"}** — Dirección solo mira tres números; el fichero completo arrastra doce columnas.
 8. **[1.8](pentaho.md){target="_blank" rel="noopener"}** — El mismo cruce reservas y cobros, agregado por hotel y canal. Gerencia abre el **CSV**, no Spoon.
 9. **[UT2](../ut2/index.md){target="_blank" rel="noopener"}** — El martes el CSV ya no abre en Excel. Hay que depositar y procesar **en el sitio**, y acabar **antes de las 8**.
 
 !!! tip "Frase para no perderos"
-    Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**. Vosotros **copiáis**; no picáis.
+    Recepción **opera**. Gerencia **informa**. Las 23:00 cierran el día. Las 8:00 enseñan el cierre de **ayer**. Vosotros **integráis, validáis y preparáis los resultados** a partir de los registros del negocio.

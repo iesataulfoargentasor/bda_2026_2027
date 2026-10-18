@@ -34,11 +34,11 @@ AWS Academy os presta una **cuenta de prácticas** mientras dura el curso del pr
 | Esto | No es esto |
 | --- | --- |
 | Invitación del profesor → LMS de Academy → **Start Lab** | Entrar en aws.amazon.com con el correo del instituto y una tarjeta |
-| Sesión de **unas 4 horas** (se puede **Start Lab** otra vez para alargar) | Dejar EC2 “por si acaso”: come crédito aunque no estéis delante |
-| **End Lab**: para instancias; el cubo S3 **sigue** | **Reset**: borra **toda** la cuenta de prácticas. No tiene deshacer |
+| Sesión con duración indicada en vuestro **Readme** y temporizador; consultad allí cómo renovarla | Dejar EC2 “por si acaso”: come crédito aunque no estéis delante |
+| **End Lab**: termina la sesión; la conservación y parada de recursos dependen del laboratorio | **Reset**: borra **toda** la cuenta de prácticas. No tiene deshacer |
 | Cubo **privado** (Block Public Access) | Cubo abierto al mundo (`Principal: *`) ni web pública |
 
-El disco (S3) y el cálculo (un job, un clúster) **no tienen por qué vivir juntos**. Eso es el diseño nube de [1.2](clusters.md){target="_blank" rel="noopener"}: el dato en el cubo; la CPU donde haga falta.
+El disco (S3) y el cálculo (un job, un clúster) **no tienen por qué vivir juntos**. Es uno de los diseños posibles, también fuera de la nube, explicado en de [1.2](clusters.md){target="_blank" rel="noopener"}: el dato en el cubo; la CPU donde haga falta.
 
 ## 1. Entrar
 
@@ -59,11 +59,11 @@ Usad la región autorizada por el laboratorio. Los cubos tienen una región asoc
 ## 3. Crear el cubo
 
 1. Buscad **S3** → **Create bucket**.
-2. **Nombre** (tiene que ser único en todo Amazon, en minúsculas):
+2. **Nombre** (para un cubo de propósito general en el espacio de nombres compartido: único dentro de la partición de AWS y en minúsculas):
 
-    `bda-ut1-cantabria-<apellidos>`
+    `bda-ut1-aula-<codigo>-<sufijo>`
 
-    Ejemplo: `bda-ut1-cantabria-lopez-garcia`. Sin espacios, sin tildes, sin `Ñ`. Si está ocupado, añadid el aula (`-a1`).
+    Ejemplo: `bda-ut1-aula-a01-7f3a`. Usad el código asignado y un sufijo; no incluyáis nombres, apellidos ni otros datos personales en el nombre del cubo. Sin espacios, tildes ni `Ñ`. Si está ocupado, cambiad el sufijo.
 3. Dejad **ACLs disabled**.
 4. **Block all public access**: **activado**. No lo desmarcáis “para probar el enlace”.
 5. Cifrado por defecto: el que venga. No hace falta versionado el primer día.
@@ -143,7 +143,7 @@ Cuando acabéis:
 2. **End Lab**. No pulseis **Reset**.
 3. Consultad las instrucciones del laboratorio sobre conservación de recursos. End Lab termina la sesión, pero no debe interpretarse como una garantía universal de borrado o conservación. Guardad fuera del laboratorio los archivos de práctica necesarios.
 
-Si lanzáis una máquina EC2 “a ver qué es” y os vais, **sigue cobrando** hasta que la paréis o hagáis End Lab. S3 de unos KB no os va a dejar sin crédito; un clúster olvidado, sí.
+Los recursos pueden consumir crédito mientras se conservan, aunque no tengáis abierta la consola. Revisad el saldo y las instrucciones del laboratorio; End Lab no sustituye a comprobar qué recursos permanecen y qué costes generan.
 
 ## Actividad
 

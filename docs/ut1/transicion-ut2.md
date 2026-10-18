@@ -16,7 +16,7 @@ Esta sesión une [1.2 Clústeres](clusters.md){target="_blank" rel="noopener"} y
 No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase** (individual o por parejas) y se comenta al final.
 
 !!! info "Cómo se lee esta página"
-    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}, un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
+    Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}, un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El resultado tiene que servir para el **panel de las 8** (cierre de **ayer**).
 
 ## Vídeo: del informe del hotel a los 500 GB
 
@@ -33,7 +33,7 @@ El vídeo incluye subtítulos visibles y narración con voz sintética en españ
 
 ## El caso: 500 GB y un portátil
 
-Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md){target="_blank" rel="noopener"}. **No** copiáis los 500 GB al informe.
+Sois técnicos de la cadena. Debéis procesar un histórico de **500 GB** (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. Elegid la operación indicada por el profesor: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.
 
 El fichero está en la **red de la empresa** (una URL interna o una carpeta compartida), no en vuestro disco.
 
@@ -47,16 +47,38 @@ El fichero está en la **red de la empresa** (una URL interna o una carpeta comp
 | --- | --- | --- |
 | Disco | 1 TB, **70 % ocupado** → ~**300 GB libres** | 500 GB **no caben** enteros |
 | RAM | **32 GB** | Un `read_csv` / DataFrame de 500 GB **no cabe** |
-| CPU | i7, **10 núcleos / 20 hilos** | Hay paralelismo *local*, no un clúster |
-| GPU | RTX 4060, 6 GB | ¿Ayuda a *esta* media o no? |
+| CPU | CPU hipotética, **10 núcleos / 20 hilos** | Hay paralelismo *local*, no un clúster |
+| GPU | GPU hipotética de 6 GB | ¿Ayuda a *esta* media o no? |
 
-![500 GB del histórico no caben en el portátil (300 GB libres, 32 GB de RAM). El panel de las 8 necesita el número, unos bytes](../assets/ut1/tarea-portatil-500gb.png)
+```mermaid
+flowchart TD
+ H[Histórico: 500 GB] --> B[Lectura por bloques desde el origen]
+ B --> M[Media: acumular suma y recuento]
+ B --> N[Normalización: calcular límites y transformar filas]
+ M --> S[Resumen pequeño]
+ N --> D[Dataset transformado: puede seguir siendo grande]
+ S --> V[Validar y guardar en destino acordado]
+ D --> V
+ H --> R[Medir red, disco, RAM y tiempo antes de elegir recursos]
+```
+
+No cabe una copia completa en 300 GB libres ni un DataFrame completo en 32 GB de RAM. Leer remotamente por bloques sí puede ser viable, si cumple el plazo.
 
 ## Concurrente, paralelo y distribuido (repaso)
 
 Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detalle está en el [1.4](procesamiento.md){target="_blank" rel="noopener"}; aquí basta para no mezclar el i7 con un clúster.
 
-![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos. El portátil no es un clúster](../assets/ut1/paralelo-distribuido.png)
+```mermaid
+flowchart TD
+ T[Organización del cálculo] --> U[Una máquina]
+ T --> V[Varias máquinas que se comunican: distribuido]
+ U --> S[Un recurso alterna tareas: concurrencia sin paralelismo]
+ U --> P[Varios recursos a la vez: paralelo local]
+ V --> D[Nodos calculando a la vez: distribuido y paralelo]
+ V --> E[Nodos esperando dependencias: sin paralelismo en esa fase]
+```
+
+Son dos preguntas distintas: dónde se ejecuta y si hay simultaneidad. La concurrencia permite que varias tareas progresen durante un intervalo.
 
 | Tipo | Dónde corre | En esta tarea |
 | --- | --- | --- |
@@ -66,10 +88,21 @@ Tres palabras que en el pasillo se usan como sinónimos. **No** lo son. El detal
 
 **Spark en modo local sigue siendo el portátil:** varios núcleos, **una** máquina. No lo presentéis como la opción 3.
 
-![Secuencial por trozos, paralelo en el i7, distribuido en los cuatro nodos-hotel](../assets/ut1/tarea-tres-modos.png)
+```mermaid
+flowchart TD
+ O[Operación y plazo acordados] --> S[Local secuencial: bloques sucesivos]
+ O --> P[Local paralelo: varios recursos del portátil]
+ O --> D[Distribuido: varios nodos conectados]
+ S --> M[Medir tiempo, memoria, red y recuperación]
+ P --> M
+ D --> M
+ M --> E[Elegir la alternativa suficiente y justificar costes]
+```
+
+Las tres opciones se comparan con la misma operación y plazo. Distribuido también puede ser paralelo; Spark en modo local sigue usando una sola máquina.
 
 !!! tip "Las tres pueden convivir"
-    Un plan honesto suele mezclarlas: no bajar el fichero; si exploráis, paralelo **local** sobre una muestra; el histórico de verdad, **distribuido**. No elijáis “la palabra más moderna”.
+    Comparad alternativas con medidas: explorar una muestra, leer el histórico remoto por bloques o repartir el cálculo. El procesamiento local completo puede ser viable si cumple el plazo y los recursos; distribuido requiere justificar su coste y coordinación. Evitar una copia local completa no evita transferir bytes cuando se lee por red.
 
 ## Qué tenéis que entregar (en clase)
 
@@ -85,7 +118,7 @@ Explicad por qué **no** es buena idea:
 Hablad al menos de: **espacio en disco**, **RAM**, **entrada/salida de disco** (leer y escribir es lento) y **red** (bajar 500 GB por la wifi del aula no es “un rato”).
 
 !!! example "Pista, no la respuesta"
-    Libres ≈ 300 GB < 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la RTX.
+    Libres ≈ 300 GB < 500 GB. Una lectura completa con pandas intenta crear todo el DataFrame, que puede ocupar más RAM que el fichero. La lectura por bloques permite otro planteamiento. Aunque el disco llegara, la RAM no. Y copiar 500 GB es un cuello de **red y disco**, no de la GPU.
 
 ### 2. Opción 1 — Local secuencial (por trozos)
 
@@ -113,7 +146,7 @@ El plan debe limitar cuántos bloques están en memoria simultáneamente. Diez p
 
 Comentad una vía: Spark **en modo local**, **Dask** o `multiprocessing`. Hoy no hace falta instalarlas: el oficio es el diseño.
 
-Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). El panel de las 8 **no** puede depender de ese portátil.
+Qué **mejora** respecto a la opción 1 (varios trozos a la vez) y qué **sigue igual** (el disco no ha crecido, la red sigue siendo vuestra, si se apaga el portátil el job muere). Si el panel dependiera de ese portátil, habría que justificar disponibilidad, recuperación y plazo; una máquina de alumno no ofrece esas garantías por el mero hecho de ejecutar el cálculo.
 
 ### 4. Opción 3 — Distribuido
 
@@ -127,7 +160,7 @@ Explicad, en general:
 
 1. **Dónde** dejáis el fichero (HDFS, S3, Blob…) — “llevar el cálculo al dato”, no el dato al portátil.
 2. **Cómo** lanzáis el cálculo (un *job*: trabajo programado; de madrugada, para tener el número **antes de las 8**).
-3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se funde un disco, el panel no se cae: [1.2](clusters.md){target="_blank" rel="noopener"}), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md){target="_blank" rel="noopener"}).
+3. Por qué encaja: **volumen**, **tiempo**, **tolerancia a fallos** (si se dispone de réplicas y recuperación probada, puede continuarse ante ciertos fallos: [1.2](clusters.md){target="_blank" rel="noopener"}), **crecimiento** (añadir nodos = [escalado horizontal](clusters.md){target="_blank" rel="noopener"}).
 
 ### 5. Opción 4 — Cargar y consultar
 
@@ -137,7 +170,7 @@ Valorad cargar el fichero (o **particionarlo**) en un almacén de informes / *la
 
 ### 6. ¿Y la GPU?
 
-¿La RTX 4060 **cambia de verdad** este problema (una estadística sobre un campo de un CSV/JSON de reservas)?
+¿La GPU **cambia de verdad** este problema (una estadística sobre un campo de un CSV/JSON de reservas)?
 
 Decid en qué tareas de datos **sí** suele ayudar (entrenar un modelo, álgebra pesada) y por qué aquí el cuello puede ser **leer bytes de red/disco**, no multiplicar matrices.
 
@@ -166,7 +199,7 @@ Justificadla con los criterios del **RA2**:
 3. 10 minutos: puesta en común. El profesor puede contrastar con el [cuaderno Dask de 500 GB](https://colab.research.google.com/drive/1DWyILxlyHpWqjcC9EItymv30OESSmaCE?usp=sharing){target="_blank" rel="noopener"} o la [demo de GitHub](https://github.com/josedavidmi/demo_dask_500gb-){target="_blank" rel="noopener"}.
 
 !!! success "Qué se espera"
-    No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el **número**.
+    No un clúster montado hoy. Sí una recomendación **argumentada**: qué no hacer con el portátil, qué aporta lo paralelo local, cuándo pasar a distribuido (job de madrugada, panel de las 8) y dónde acaba el **resultado** y cuánto ocupa.
 
 ## Relación con el módulo
 

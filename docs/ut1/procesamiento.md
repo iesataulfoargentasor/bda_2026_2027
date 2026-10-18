@@ -8,6 +8,13 @@ tags:
 
 # 1.4. Procesamiento de datos
 
+!!! info "Ruta de estudio"
+    **Esencial:** distinguir concurrencia, paralelismo, distribución, lote, flujo, OLTP y OLAP.
+
+    **Práctica guiada:** elegir el procesamiento del cierre y del indicador de presencia.
+
+    **Ampliación:** razonar con SCV como guía, sin tratarlo como teorema. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: un día en el hotel
 
 Acompaña a Ana desde el pago en recepción hasta el cierre nocturno, las consultas de dirección y las señales de los sensores. Este recorrido conecta las distintas formas de procesar datos y explica qué trabajo hacemos, cuándo necesitamos el resultado y dónde lo calculamos. La narración enlaza las ideas paso a paso y deja pausas para asimilar los ejemplos. **Duración: 9 minutos y 41 segundos.**
@@ -42,7 +49,7 @@ En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya est
 
 - **Recepción** opera ahora (PMS, cobro). No puede esperar.
 - **Finanzas** cierra a las **23:00**; de madrugada corre el **lote**; a las **8** gerencia abre el panel de **ayer**.
-- Los sensores (~30 s) alimentan el **semáforo** (“¿queda habitación?”), no el cuadro de las 8.
+- Los sensores (~30 s) alimentan el **semáforo** (“¿se detecta presencia?”), no el cuadro de las 8.
 
 En clase lo aplicáis en la [tarea de los 500 GB](transicion-ut2.md){target="_blank" rel="noopener"}: concurrente, paralelo y distribuido, con un portátil que **no** puede tragarse el fichero.
 
@@ -59,9 +66,19 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 | **Paralelo** | Varios recursos de cálculo, en una o varias máquinas | Sí | Diez núcleos suman noches de **Laredo** |
 | **Distribuido** | **Varias máquinas** en red | Sí, en general (más red y fallos) | Un nodo por hotel: Santander, Laredo, Comillas, Potes |
 
-![Concurrente: un núcleo se turna. Paralelo: varios núcleos en el mismo PC. Distribuido: cuatro nodos-hotel](../assets/ut1/paralelo-distribuido.png)
+```mermaid
+flowchart TD
+ T[Organización del cálculo] --> U[Una máquina]
+ T --> V[Varias máquinas que se comunican: distribuido]
+ U --> S[Un recurso alterna tareas: concurrencia sin paralelismo]
+ U --> P[Varios recursos a la vez: paralelo local]
+ V --> D[Nodos calculando a la vez: distribuido y paralelo]
+ V --> E[Nodos esperando dependencias: sin paralelismo en esa fase]
+```
 
-**Concurrente.** El sistema operativo **reparte el tiempo** entre programas. Si solo hay **un núcleo**, la “multitarea” es **simulada**: el procesador atiende un rato a cada uno (ventanas de milisegundos). Tenéis la *impresión* de que el vídeo, el editor y el antivirus van a la vez; en realidad se turnan tan rápido que no lo notáis.
+Son dos preguntas distintas: dónde se ejecuta y si hay simultaneidad. La concurrencia permite que varias tareas progresen durante un intervalo.
+
+**Concurrente.** Varias tareas progresan durante un mismo intervalo. Con un único recurso de ejecución pueden alternarse: una avanza mientras otra espera. La concurrencia es real, aunque no haya ejecución simultánea. **Paralelo** añade simultaneidad con varios recursos; puede darse dentro de una máquina o entre varias máquinas.
 
 **Paralelo (multinúcleo).** Varios núcleos físicos, cada uno una CPU de verdad. Ahí sí hay paralelismo real.
 
@@ -75,11 +92,11 @@ Por ejemplo, un hotel tiene 2 cobros con media de 100 € y otro tiene 8 con med
 
 **Sí (independiente):** sumar noches por hotel. Partís en cuatro trozos (Santander, Laredo, Comillas, Potes), cada núcleo (o cada nodo) suma el suyo, al final sumáis cuatro parciales. El último paso es barato.
 
-**No (dependiente):** cada paso necesita el resultado del anterior (si el acumulado va *par* sumáis, si va *impar* restáis). Aunque cortéis la lista, el segundo trozo **no sabe** qué hacer hasta que acabe el primero. Más núcleos no acortan ese cuello: es lo que [1.2](clusters.md){target="_blank" rel="noopener"} llamaba “el clúster no hace magia”.
+**Con dependencia en esta implementación:** cada paso necesita el resultado del anterior (si el acumulado va *par* sumáis, si va *impar* restáis). Aunque cortéis la lista, el segundo trozo **no sabe** qué hacer hasta que acabe el primero. Sin reformular el algoritmo, más núcleos no acortan ese cuello: es lo que [1.2](clusters.md){target="_blank" rel="noopener"} llamaba “el clúster no hace magia”.
 
 !!! tip "Pregunta para el examen"
     “Si solo hay un núcleo y el sistema cambia de programa cada X ms, ¿hace varias tareas al mismo tiempo?”  
-    **No.** Es multitarea **simulada** (concurrente). El usuario lo percibe como simultáneo; el silicio no.
+    **No en el supuesto de un único recurso que alterna tareas.** Hay concurrencia por turnos, no ejecución simultánea de esas tareas.
 
 ## Distribuido (entre máquinas)
 
@@ -97,15 +114,15 @@ MapReduce y Spark viven aquí. En este módulo no tenéis que programarlos aún;
 
 **Lote** significa trabajar con un conjunto delimitado. Aunque pueda ejecutarse de noche, sigue teniendo un plazo de entrega. **Streaming** procesa una secuencia que continúa creciendo. Los **microlotes** agrupan los eventos recibidos durante intervalos cortos y los procesan sucesivamente.
 
-En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la ocupación de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.
+En flujo distinguimos la hora del evento de la hora de llegada. Un sensor puede medir a las 10:00 y entregar el mensaje a las 10:03. Si calculamos la presencia detectada de 10:00 a 10:01, debemos decidir cuánto esperamos y si corregimos el resultado cuando llega el dato tardío. Esta política forma parte del significado del indicador.
 
-El **ritmo** del trabajo no es la [transacción ACID](almacenamiento.md){target="_blank" rel="noopener"} del cobro. ACID es la garantía (todo o nada). Aquí es **cuánto podéis esperar** el número.
+La tabla compara situaciones de trabajo, no cuatro categorías excluyentes. Lote y flujo describen el tratamiento de un conjunto acotado o de eventos continuos; interactivo describe la relación con el usuario; transaccional describe operaciones del negocio. Un sistema transaccional suele necesitar baja latencia y garantías ACID (atomicidad, consistencia, aislamiento y durabilidad), pero esas garantías no son una unidad de tiempo.
 
 | Estrategia | ¿Urge el resultado? | En el hotel |
 | --- | --- | --- |
 | **Por lotes** (*batch*) | Hay un plazo acordado; no se responde a cada evento | Finanzas cierra a las 23:00; el job de madrugada; el **panel de las 8** (ayer) |
 | **Por transacciones** | Normalmente baja latencia, según la operación | Picar el cobro en el **PMS**. Es el reloj del clic, no “ACID” |
-| **Interactivo** | Sí, mientras miráis | A las 11 filtráis Laredo en el almacén: “¿cómo vamos *hoy*?”. **No** es el panel de las 8 |
+| **Interactivo** | Sí, mientras miráis | A las 11 filtráis Laredo en el almacén: “¿cómo fue el cierre de ayer?”. La consulta es interactiva, pero la frescura sigue siendo la del último cierre |
 | **Flujo** (*streaming*) | Sí, **al ritmo** en que llegan | Sensores cada ~30 s → **semáforo** de recepción |
 
 ```mermaid
@@ -118,7 +135,7 @@ flowchart TB
   end
   subgraph flujo [Flujo]
     SEN[Sensores cada 30 s]
-    SEM[Semáforo: ¿queda habitación?]
+    SEM[Semáforo: ¿se detecta presencia?]
     SEN --> SEM
   end
   subgraph clic [Clic en recepción]
@@ -138,7 +155,7 @@ flowchart TB
 
 En el hotel conviven **dos oficios** que parecen el mismo (“usar el ordenador con datos”) y no lo son.
 
-**Oficio 1 — Operar.** Recepción registra la reserva y el cobro. Muchas personas a la vez, cada una toca **poca** información, y tiene que terminar **en milisegundos**. Si esto se atasca, hay cola en el mostrador.
+**Oficio 1 — Operar.** Recepción registra la reserva y el cobro. Muchas personas a la vez, cada una toca **poca** información, y necesita una latencia baja y un plazo acordado según la operación. Si esto se atasca, hay cola en el mostrador.
 
 **Oficio 2 — Analizar.** Gerencia pregunta “ocupación de agosto en Laredo frente a julio” o “importe cobrado por hotel”. Eso recorre **mucho** histórico, resume, compara. Nadie está esperando con la tarjeta en la mano, pero el número tiene que ser **defendible**.
 
@@ -155,19 +172,21 @@ Cuando leáis documentación o un examen, esos dos oficios aparecen con siglas i
 
 ![OLTP opera en recepción; OLAP informa a gerencia: el hecho se copia](../assets/ut1/oltp-olap.png)
 
+Porcentajes ficticios para ilustrar el análisis. Los CSV de cruce no permiten calcular ocupación: faltan habitaciones disponibles y ocupadas por periodo.
+
 | | **OLTP** | **OLAP** |
 | --- | --- | --- |
 | Significa | *Online Transaction Processing*: procesar **operaciones** del día a día | *Online Analytical Processing*: procesar **consultas de análisis** |
 | En el hotel | PMS: cobrar, reservar, check-in | Panel de las 8, ocupación por hotel |
 | Pregunta típica | “Cobra *esta* estancia” | “Ocupación e importe por hotel” |
 | Cuánto toca cada vez | Pocas filas | Muchas filas, resúmenes |
-| Tiempo | Milisegundos | Segundos (o el lote de la noche) |
+| Tiempo | Baja latencia según el servicio | Respuesta interactiva o plazo del proceso programado |
 | Usuarios | Recepción, web | Gerencia, analistas |
 | Relación | **Produce** los hechos | **Lee** esos hechos ya copiados e integrados |
 
 *Online* vuelve a significar “en el sistema, ahora”, no “pago por internet”.
 
-A veces el almacén de análisis guarda el dato ya **cortado por ejes** (tiempo, hotel, canal). En los libros eso se llama **cubo OLAP**. La idea es simple: el panel de las 8 no tiene que cruzar diez tablas cada vez; el cruce **ya está hecho**. Si además cabe en RAM, va rapidísimo… y tiene un límite de tamaño.
+Un **cubo OLAP** organiza medidas (por ejemplo, importe cobrado) por dimensiones (tiempo, hotel, canal). Permite filtrar y agregar por esos ejes. Puede precalcular agregados o resolver consultas al solicitarlas, según el motor; no implica necesariamente que todos los cruces estén hechos ni que todo resida en RAM.
 
 **No es el cubo de objetos** de [1.3](almacenamiento.md){target="_blank" rel="noopener"} (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es **disco en red**; el otro es un **resumen ya cortado** para el informe.
 
@@ -199,13 +218,13 @@ El panel nocturno dispone de varias horas para validar el cierre. Un indicador c
 
 No puntúa en Moodle. Una línea de por qué.
 
-1. El portátil tiene 10 núcleos y sumáis noches de Laredo **en esa máquina**. ¿Paralelo o distribuido?
-2. El job de madrugada parte el histórico en **cuatro nodos** (un hotel cada uno). ¿Paralelo o distribuido?
+1. El portátil tiene 10 núcleos y sumáis noches de Laredo **en esa máquina**. ¿Paralelo local o distribuido? Suponed que varios núcleos calculan a la vez.
+2. El job de madrugada parte el histórico en **cuatro nodos** (una partición por hotel). ¿Por qué es distribuido y cuándo sería también paralelo?
 3. Recepción cobra una estancia; gerencia abre ocupación por hotel a las 8. ¿OLTP u OLAP en cada caso?
 4. Una consulta sobre todo el histórico supera el plazo requerido. Proponed dos cambios de diseño y explicad qué coste o limitación introduce cada uno.
 
 !!! tip "Comprobación"
-    Paralelo (una máquina) / distribuido (varias) / OLTP luego OLAP / con los recursos del supuesto, habrá que reducir el trabajo, aceptar una aproximación o aumentar el tiempo disponible; también se puede revisar la arquitectura y el presupuesto.
+    Paralelo local / distribuido, y también paralelo si los nodos calculan simultáneamente / OLTP luego OLAP / con los recursos del supuesto, habrá que reducir el trabajo, aceptar una aproximación o aumentar el tiempo disponible; también se puede revisar la arquitectura y el presupuesto.
 
 ## Autoevaluación del 1.4
 

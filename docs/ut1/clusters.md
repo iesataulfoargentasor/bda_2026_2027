@@ -8,6 +8,13 @@ tags:
 
 # 1.2. Clústeres de computadoras
 
+!!! info "Ruta de estudio"
+    **Esencial:** distinguir nodos, particiones, réplicas, recuperación, escalabilidad y elasticidad.
+
+    **Práctica guiada:** justificar recursos y recuperación para el cierre del hotel.
+
+    **Ampliación:** comparar almacenamiento y cálculo juntos o separados. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: el informe del hotel entre varias máquinas
 
 Sigue el cobro de Ana hasta el informe de las ocho para entender cómo colaboran los nodos de un clúster. La explicación recorre el reparto de tareas, las diferencias entre particiones y réplicas, la recuperación de fallos y los límites de añadir máquinas, con ejemplos paso a paso y pausas para asimilar las ideas. **Duración: 9 minutos y 55 segundos.**
@@ -96,7 +103,18 @@ Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:
 
 Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho **no publica** el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.
 
-![Si se funde el disco de Potes, una copia en marcha deja el panel de las 8 en pie](../assets/ut1/replica-potes.png)
+```mermaid
+flowchart TD
+ A[Nodo A: datos] -->|replicación configurada| B[Nodo B: réplica]
+ F[Fallo del nodo A] --> D[Detectar fallo]
+ D --> R[Recuperar servicio o reasignar tarea]
+ B --> R
+ R --> V[Validar resultado y cumplir plazo]
+ C[Copias de seguridad independientes] --> E[Recuperar ante borrado o corrupción]
+ E --> V
+```
+
+La continuidad exige copias útiles y recuperación probada. Los nodos del clúster no tienen que ubicarse en los edificios de los hoteles.
 
 ### Equilibrio de carga
 
@@ -124,7 +142,16 @@ Añadir nodos **no** convierte solo un Excel de finanzas en clúster: el program
 
 ## Escalado vertical y horizontal
 
-![Vertical: más RAM en el PMS. Horizontal: más máquinas. En noviembre se apagan nodos](../assets/ut1/vertical-horizontal.png)
+```mermaid
+flowchart TD
+ C[Capacidad insuficiente medida] --> V[Vertical: más CPU o RAM en una máquina]
+ C --> H[Horizontal: añadir nodos de cálculo]
+ H --> R[Repartir tareas y medir mejora]
+ R --> E[Demanda baja: retirar nodos si es viable]
+ E --> P[Conservar datos, réplicas y tareas pendientes]
+```
+
+Escalabilidad es capacidad de crecer; elasticidad es ajustar los recursos a la demanda. Retirar nodos requiere conservar datos y capacidad suficiente.
 
 | | Vertical (*scale-up*) | Horizontal (*scale-out*) |
 | --- | --- | --- |
@@ -142,7 +169,7 @@ Añadir nodos **no** convierte solo un Excel de finanzas en clúster: el program
 
     En clase decimos **vertical** y **horizontal** y no hay duda.
 
-El vertical **sigue existiendo** (un nodo de informes de mayor capacidad, un PMS más RAM). En Big Data **no basta solo** con eso: hay un techo de catálogo y un precio absurdo cerca de ese techo. El horizontal es el que encaja cuando el volumen no para de crecer.
+El escalado vertical sigue siendo una opción si cumple capacidad, plazo y coste. Tiene límites de hardware y puede encarecerse. El horizontal permite repartir cargas divisibles, pero añade coordinación y red: se elige a partir de medidas, no solo porque llamemos Big Data al proyecto.
 
 ## Cuándo un clúster no hace magia
 
@@ -156,7 +183,7 @@ También hay coste de **coordinación**: la red, quien reparte, el momento de ju
 
 El Hadoop “de libro” **pegaba** el fichero al nodo que lo procesaba (“lleva el cálculo al dato”). En la nube suele ser al revés: los datos viven en un **cubo de objetos** (un almacén de ficheros en red; el detalle en [1.3](almacenamiento.md){target="_blank" rel="noopener"}) y el clúster de cálculo **crece o se apaga** por su cuenta. Ganáis réplica y disco barato; pagáis red.
 
-Las dos frases no se pisan: son **dos diseños**. Clúster clásico = dato y CPU en el mismo nodo. Nube = dato en el cubo, CPU donde haga falta.
+Son dos diseños: almacenamiento y cálculo en los mismos nodos, o almacenamiento separado del cálculo. Ambos pueden desplegarse en instalaciones propias o en la nube. La ubicación no determina por sí sola la arquitectura ni sus garantías de recuperación.
 
 ## Relación con el RA1
 

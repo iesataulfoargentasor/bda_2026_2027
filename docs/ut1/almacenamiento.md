@@ -8,6 +8,13 @@ tags:
 
 # 1.3. Conceptos de almacenamiento
 
+!!! info "Ruta de estudio"
+    **Esencial:** distinguir finalidad del almacén, modelo de datos y soporte; elegir garantías por operación.
+
+    **Práctica guiada:** justificar dónde guardar el cobro, el histórico y el informe.
+
+    **Ampliación:** profundizar en CAP, BASE y gestión de tablas del lakehouse. No sustituye a los conceptos y comprobaciones anteriores.
+
 ## Vídeo: el recorrido de la reserva de Ana
 
 Sigue una reserva desde recepción hasta los informes de dirección. Esta explicación conecta las transacciones y sus garantías con la conservación de originales, el lago de datos, el almacén de informes y los datos que necesita cada departamento. La narración enlaza cada decisión con el caso de Ana y deja pausas para asimilar los conceptos. **Duración: 10 minutos y 45 segundos.**
@@ -47,7 +54,7 @@ En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"} eso ya est
 El PMS no tiene por qué estar diseñado para integrar todos los JSON, sensores y fotografías, aunque un gestor relacional pueda almacenar algunos de esos datos. El histórico de los cuatro hoteles **tampoco** es el disco de Laredo.
 
 !!! info "Cómo se lee esta página"
-    Primero **dónde** guardáis (PMS, lago, almacén de informes, *data mart*). Luego **cómo** (bloque, cubo, *lakehouse*). Al final **qué pasa si se cae o se parte la red** (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.
+    Primero **dónde** guardáis (PMS, lago, almacén de informes, *data mart*). Luego el **acceso al almacenamiento** (bloques u objetos) y cómo un *lakehouse* añade gestión de tablas sobre un lago. Al final **qué pasa si se cae o se parte la red** (transacción, ACID, CAP, BASE). Los relojes: 23:00 / job / panel de las 8.
 
 ```mermaid
 flowchart LR
@@ -95,7 +102,7 @@ Nacen para **volumen**, **variedad** y crecer **añadiendo máquinas**. “NoSQL
 | --- | --- | --- |
 | Documento | Un registro parece un JSON; no todos tienen los mismos campos | Reserva del canal web (un extra que otro no trae) |
 | Clave-valor | Guardar y recuperar muy rápido con una clave (`sesion:17`) | Sesión de la web de reservas |
-| *Wide-column* | Filas con **muchas** columnas, a menudo vacías; bien para series | Lecturas de sensores cada 30 s |
+| *Wide-column* | Datos organizados por claves de partición y columnas o familias; el diseño depende de las consultas y del gestor | Lecturas de sensores cada 30 s |
 | Grafo | Puntos unidos por relaciones | La misma tarjeta en dos hoteles (fraude) |
 
 ***Wide-column* no es Parquet.** Cassandra o HBase guardan **filas** con familias de columnas. Un fichero **columnar** (Parquet) es otra cosa: guarda *columnas* juntas para el informe. Eso va en [1.7](formatos.md){target="_blank" rel="noopener"}.
@@ -112,7 +119,7 @@ Ese nivel de detalle se denomina **granularidad** o **grano**. Una fila puede re
 
 En un modelo dimensional, los **hechos** contienen medidas —importe, noches— y las **dimensiones** aportan contexto —hotel, fecha, canal—. Así podemos consultar la misma medida desde diferentes perspectivas. La frecuencia de actualización se diseña según la necesidad: en este caso es nocturna, aunque un warehouse también puede recibir cargas frecuentes.
 
-Es un sitio **central**, pensado para **informes y decisiones** (inteligencia de negocio, *BI*), con **histórico**. Los datos **no se pican** ahí: **se copian** desde el PMS, la pasarela y, si hace falta, el lago. Es una **foto** periódica, no el sitio donde recepción cobra.
+Es un sitio **central**, pensado para **informes y decisiones** (inteligencia de negocio, *BI*), con **histórico**. Los datos **no se pican** ahí: **se copian** desde el PMS, la pasarela y, si hace falta, el lago. En nuestro caso se actualiza con cada cierre; otros almacenes reciben cargas frecuentes o continuas. No es el sitio donde recepción cobra.
 
 Las columnas se deciden **antes** de guardar: si mañana el canal añade un campo, hay que **cambiar el modelo**. A cambio, gerencia encuentra tablas limpias (ocupación, importe, hotel), listas para el panel de las **8**.
 
@@ -126,9 +133,20 @@ La independencia de un mart no lo convierte automáticamente en incorrecto: el r
 
 El almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Un **data mart** es el **mismo oficio** (tablas limpias, pregunta ya conocida, se copia, no se pica), pero **más estrecho**: un departamento o un hotel.
 
-No es el PMS. No es el [lago](#data-lake){target="_blank" rel="noopener"}. Es un trozo del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
+No es el PMS. No es el [lago](#data-lake){target="_blank" rel="noopener"}. En este caso es un recorte del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
 
-![El almacén de la cadena alimenta tres marts; un Excel suelto en Comillas no cuadra con gerencia](../assets/ut1/data-mart-hotel.png)
+```mermaid
+flowchart TD
+ W[Warehouse del grupo: datos integrados] --> F[Mart de finanzas: cobros por cierre]
+ W --> M[Mart de marketing: canales sin identificadores personales]
+ W --> H[Mart de un hotel: su actividad]
+ F --> R[Mismas definiciones y periodos]
+ M --> R
+ H --> R
+ R --> P[Publicación a las 8:00; cierre a las 23:00]
+```
+
+En el hotel elegimos marts dependientes del warehouse. También existen marts independientes; el riesgo es usar definiciones incompatibles sin coordinación.
 
 En el hotel:
 
@@ -154,7 +172,7 @@ Para que el lago resulte utilizable, suele organizarse en zonas: **originales** 
 
 Conservar el original permite repetir una transformación corregida sin volver al sistema operativo. Esta conservación tiene límites: se deben definir periodos de retención y procedimientos de eliminación. “Guardar el bruto” no significa conservar cualquier dato indefinidamente ni permitir que todos lo consulten.
 
-El **data lake** (lago de datos) guarda el dato **como llegó**: JSON del canal, log de la web, foto de habitación, CSV de Comillas, serie del sensor. Encaja cuando **aún no** sabéis qué preguntaréis mañana, o cuando el bruto es de muchos tipos.
+El **data lake** (lago de datos) puede conservar originales y zonas de datos preparados. En su zona bruta guarda el dato **como llegó**: JSON del canal, log de la web, foto de habitación, CSV de Comillas, serie del sensor. Encaja cuando **aún no** sabéis qué preguntaréis mañana, o cuando el bruto es de muchos tipos.
 
 Esa colección que tiene sentido tratar junta (reservas de agosto, lecturas de Potes) es un **dataset**: es *qué* vais a procesar, no *en qué motor* está.
 
@@ -162,15 +180,15 @@ El “cómo se interpreta” se aplica **al leer**, no al guardar. El riesgo cl�
 
 | | Data warehouse | Data lake |
 | --- | --- | --- |
-| Oficio | El panel de las 8 | Guardar el original |
-| Dato | Limpio, modelado | Bruto o poco curado |
-| Cuándo fijáis las columnas | Al **guardar** | Al **leer** |
+| Oficio | Consulta analítica con definiciones comunes | Conservar originales y conjuntos preparados para distintos usos |
+| Dato | Integrado y modelado para el análisis | Zonas de originales, datos validados y resultados |
+| Esquema | Definido para las tablas analíticas | Puede aplicarse al leer el original y fijarse en tablas preparadas |
 | Quién lo usa | Gerencia, informes | Ingeniería y ciencia de datos |
 | Pregunta | Ya la conocéis (ocupación / importe) | Puede aparecer después |
 
-En la práctica el grupo suele tener **los dos**: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. El *data mart* es un **recorte** de ese warehouse, no un tercer sitio para el JSON. No elegís uno “para siempre”: elegís **para cada pregunta**.
+En la práctica el grupo suele tener **los dos**: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. En este diseño, el *data mart* es un **recorte** de ese warehouse, no un tercer sitio para el JSON. No elegís uno “para siempre”: elegís **para cada pregunta**.
 
-## Cómo se guarda (bloque, objeto, lakehouse)
+## Acceso al almacenamiento y arquitectura lakehouse { #como-se-guarda-bloque-objeto-lakehouse }
 
 Una vez decidida la función del almacén, debemos distinguir el modo de acceso al almacenamiento de la organización analítica que construimos sobre él.
 
@@ -184,7 +202,16 @@ Un objeto puede leerse completo o por rangos de bytes si el servicio lo permite.
 
 El **lakehouse** pertenece a otro nivel: es una arquitectura que incorpora gestión de tablas sobre un lago. Formatos de tabla como Delta Lake o Apache Iceberg registran qué archivos forman una versión de la tabla y coordinan cambios. El apartado [1.7](formatos.md) desarrolla esta relación entre archivos y tablas.
 
-![Almacenamiento utilizado en el caso hotelero](../assets/ut1/donde-vive-dato.png)
+```mermaid
+flowchart TD
+ B[Almacenamiento por bloques] --> D[Volumen usado por un sistema de archivos y una base de datos]
+ O[Almacenamiento de objetos] --> F[Archivos identificados por clave]
+ F --> L[Lago: originales y datos preparados]
+ L --> T[Gestión de tablas, versiones y transacciones]
+ T --> H[Arquitectura lakehouse]
+```
+
+Bloques y objetos describen acceso al almacenamiento. Lakehouse describe una arquitectura que puede apoyarse en almacenamiento de objetos.
 
 En el [taller de S3](aws-academy-s3.md) crearemos un cubo privado con prefijos para originales e informes. Crear esos prefijos no construye por sí solo un warehouse o un lakehouse: faltan modelos, procesos y controles.
 
@@ -214,7 +241,7 @@ Son las cuatro garantías que se piden a una base usada para esas transacciones 
 | --- | --- | --- | --- |
 | **A** | Atomicidad | Todo o nada | Se resta en A y no se suma en B |
 | **C** | Consistencia | Se cumplen las reglas (un saldo no puede quedar “prohibido”) | Queda escrito un saldo negativo que el banco no admite |
-| **I** | Aislamiento | Nadie ve el paquete a medias | Otra persona lee A ya descontada y B aún no ingresada |
+| **I** | Aislamiento | Las operaciones concurrentes se coordinan según el nivel de aislamiento | Una lectura o actualización concurrente observa un estado que el nivel elegido debería impedir |
 | **D** | Durabilidad | Lo confirmado **no se pierde** | Tras confirmar, un corte de luz borra el ingreso |
 
 Los gestores pueden combinar bloqueos, versiones de las filas y registros de recuperación. Estas técnicas tienen costes, pero permiten coordinar accesos y recuperar operaciones confirmadas. El rendimiento debe compararse para una carga y unas garantías concretas; ACID no significa simplemente “base lenta”.
@@ -229,13 +256,13 @@ Hasta ahora imaginabais **un** servidor. En un [clúster](clusters.md){target="_
 - **A**vailability (disponibilidad): toda solicitud recibida por un nodo que no ha fallado obtiene una respuesta de la operación; un error que rechaza la operación no satisface esta garantía.
 - **P**artition tolerance: el diseño contempla que la red pueda impedir la comunicación entre grupos de nodos. Durante esa partición debe resolver el compromiso entre consistencia y disponibilidad.
 
-Esta **C no es la C de ACID**. ACID-C son las **reglas** (un saldo no queda prohibido). CAP-C es **el mismo valor reciente en los nodos**, no uno viejo. En [1.4](procesamiento.md#scv){target="_blank" rel="noopener"} hay una tercera C (precisión del análisis): tampoco es esta.
+Esta **C no es la C de ACID**. ACID-C son las **reglas** (un saldo no queda prohibido). CAP-C es una garantía de **consistencia fuerte (linealizabilidad)**: las operaciones se comportan como sobre una única copia actualizada, respetando el orden temporal de las operaciones completadas. No exige que todos los discos cambien físicamente a la vez. En [1.4](procesamiento.md#scv){target="_blank" rel="noopener"} hay una tercera C (precisión del análisis): tampoco es esta.
 
 En un clúster real **P no es opcional**: un cable se corta, un *switch* se cuelga, Potes pierde enlace con Santander. La decisión de diseño suele ser:
 
 | Tipo | Prioriza | En una frase de aula |
 | --- | --- | --- |
-| **CP** | C + P | “Prefiero no responder a enseñar un saldo mentira.” |
+| **CP** | C + P | “Rechazo una operación si no puedo garantizar una lectura o escritura consistente.” |
 | **AP** | A + P | “Prefiero responder; ya se pondrán de acuerdo los nodos.” |
 | **CA** | C + A sin partición | Puede mantenerse cuando no hay partición de red; no es una tercera solución que evite el compromiso durante una partición |
 
@@ -275,11 +302,11 @@ La elección se hace por operación y por requisito. Un catálogo, una reseña y
 Recorred las preguntas **en este orden**, con el hotel:
 
 1. ¿Hay cambios que deban confirmarse conjuntamente? → exigid transacciones y garantías adecuadas. En este caso las proporciona el PMS relacional.
-2. ¿El volumen o la variedad rompen un solo servidor (cuatro hoteles, JSON, fotos, sensores)? → **clúster** + NoSQL o ficheros repartidos.
+2. ¿La carga incumple capacidad o plazo? → medid el cuello de botella y comparad optimizar consultas, mejorar una máquina, separar análisis y operación o distribuir. Ni cuatro hoteles obligan a usar un clúster, ni un clúster obliga a usar NoSQL.
 3. ¿La pregunta ya está clara y se repetirá cada mañana a las 8 (ocupación e importe)? → **warehouse**.
 4. ¿Solo un departamento o un hotel necesita ese recorte (marketing, Laredo) y no toda gerencia? → **data mart**, alimentado del warehouse. No montéis un segundo almacén a escondidas.
 5. ¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → **lake**, y luego curáis hacia el warehouse.
-6. ¿Necesitáis el bruto **y** tablas que se puedan actualizar o borrar (un NIF que hay que retirar)? → **lakehouse**, o lago + warehouse a la vez.
+6. ¿Necesitáis gestionar tablas y versiones sobre archivos del lago? → valorad un **lakehouse**. Un warehouse también permite actualizar o borrar: esa necesidad aislada no decide la arquitectura. Una eliminación lógica no borra automáticamente históricos y copias; hay que definir su conservación y limpieza.
 
 En [1.4](procesamiento.md){target="_blank" rel="noopener"} veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar en recepción frente a informar a gerencia).
 
@@ -290,13 +317,13 @@ Si podéis justificar esas frases con el [caso](caso-hotel.md){target="_blank" r
 No puntúa en Moodle. Una línea de por qué.
 
 1. El PMS debe confirmar conjuntamente dos cambios locales relacionados con una fianza. ¿Qué garantía necesita y por qué una copia en el lago no la sustituye?
-2. El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Warehouse (columnas al guardar) o lago (columnas al leer)?
+2. El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Dónde conservaríais el original y dónde prepararíais los campos del informe? Justificad la elección: un JSON también puede transformarse y cargarse en un warehouse.
 3. Gerencia quiere ocupación e importe **a las 8**, siempre las mismas columnas. ¿Warehouse o lago?
 4. Marketing quiere campañas **sin** NIF, y finanzas no tiene que ver ese recorte. ¿Lago, warehouse entero o data mart?
 5. Se corta la red Santander–Potes. Potes **niega** el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?
 
 !!! tip "Comprobación"
-    ACID (cobro) / lago / warehouse / mart (recorte del almacén) / CP (no servir dato dudoso).
+    ACID para los cambios locales / lago para conservar originales y una tabla preparada para el informe; otras soluciones justificadas son válidas / warehouse para el informe repetido / mart para el departamento / CP ante la partición descrita.
 
 ## Autoevaluación del 1.3
 
