@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** los cálculos de volumen y de acumulación de eventos.
 
-    **Ampliación:** comparar perfiles profesionales y las V adicionales. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** comparar perfiles profesionales y las V adicionales. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: del cobro de Ana a las cinco Vs
 
@@ -299,7 +299,19 @@ La **inteligencia de negocio** (*business intelligence*, **BI**) coge lo ya guar
 
 El BI **no** desaparece cuando llega el lago. Gerencia sigue necesitando el “qué pasó”. Big Data **no** es un sinónimo de predicción: a veces el valor es un informe de ayer que llega **a las 8**, no un modelo.
 
-![Cuatro preguntas de gerencia (izquierda) y el equipo (derecha): el científico no es solo “el modelo”; pregunta, limpia y explica. El ingeniero es este módulo](../assets/ut1/analiticas-roles.png)
+```mermaid
+flowchart TB
+  N[Necesidad de gerencia: comprender y decidir] --> A[Analista: consultar, interpretar y comunicar]
+  N --> C[Científico: formular preguntas, explorar y validar modelos]
+  N --> I[Ingeniero: ingerir, transformar y mantener datos utilizables]
+  N --> R[Arquitecto: diseñar componentes, acceso y crecimiento]
+  A --> E[Equipo: contrastar resultados, límites y decisiones]
+  C --> E
+  I --> E
+  R --> E
+```
+
+Las cuatro preguntas de la tabla anterior requieren colaboración. El científico también revisa la calidad e interpreta resultados; el analista necesita comprender el negocio. Estos perfiles describen responsabilidades que pueden solaparse, no departamentos aislados.
 
 Los perfiles colaboran y pueden solaparse. Predecir no garantiza acertar; una recomendación debe incluir incertidumbre, restricciones del negocio y evaluación de sus efectos.
 

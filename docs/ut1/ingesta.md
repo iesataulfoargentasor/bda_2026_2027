@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** ejecutar Hola ETL en una carpeta propia y comparar pandas con DuckDB.
 
-    **Ampliación:** analizar retención de eventos, colas, CDC y catálogo de herramientas. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** analizar retención de eventos, colas, CDC y catálogo de herramientas. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Qué vamos a construir y cómo comprobarlo
 
@@ -632,7 +632,7 @@ Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga
 
 ### Transformaciones
 
-- ¿ETL o ELT? ¿El destino traga bruto (lago / almacén elástico) o exige limpio (warehouse clásico de [1.3](almacenamiento.md){target="_blank" rel="noopener"})?
+- ¿ETL o ELT respecto a qué destino? Indicad si la transformación ocurre antes de cargar en ese destino o dentro de él. Un lago y un warehouse pueden disponer de zonas de carga y datos preparados; su nombre no determina el orden. En ambos diseños, decidid qué originales conservar para reprocesar.
 - ¿Hace falta transformar **al recoger**, o puede esperar al procesar?
 - En continuo, ¿una T pesada (ocupación %, cruce de veinte fuentes) cabe en el mismo milisegundo que el sensor?
 
@@ -652,7 +652,7 @@ Si transformaste al vuelo y tiraste el original, el cambio de pregunta te obliga
 
 !!! example "Tres supuestos del grupo hotelero"
     1. “A las 02:00, la tabla de reservas → el lago.” → lote *pull*, no una cola.  
-    2. “El semáforo de habitación libre en recepción, en pocos segundos.” → flujo + cola.  
+    2. “El indicador de presencia detectada en recepción, en pocos segundos.” → flujo + cola.
     3. “Reservas web ya cobradas → fichero para ver en clase.” → [Hola ETL](#hola-etl){target="_blank" rel="noopener"}. El informe agregado por hotel y canal es el [taller 2 de Pentaho](pentaho.md){target="_blank" rel="noopener"}.
 
 !!! success "Criterio b) en un examen"
@@ -670,11 +670,11 @@ No sustituye a Moodle. Comprueba que lo sostienes en voz alta.
 
 1. Gerencia quiere el panel de las 8. ¿Qué decides **primero**: la herramienta o la pregunta de negocio? Di las tres marchas atrás (destino → transformación → origen).
 2. Una cola solo guarda altas de reserva, sin limpiar ni cruzar. ¿Es un pipeline? ¿Es una ETL? ¿Por qué?
-3. El almacén de finanzas **no** admite filas sucias. El lago de ocupación **sí** guarda el bruto. ¿ETL, ELT o los dos? ¿Dónde duele si cambian el indicador?
+3. Finanzas consulta solo tablas validadas. Se pueden transformar los datos antes de cargarlas, o cargar primero en una zona de preparación del almacén y transformarlos allí. Fijad el destino de referencia y describid una opción ETL y otra ELT. En ambas, explicad dónde conservar los originales y cómo recalcular un indicador.
 4. Con `reservas.csv` y `cobros.csv`: importe **cobrado** por hotel **solo** en canal `recepcion` (pandas y DuckDB). Cuenta también cuántas reservas de ese canal **aún no** tienen cobro (pista: un *left join* o un anti-join; el Hola ETL usaba *inner*).
 5. Misma transformación del punto 4, **tres cargas**: JSON (verlo), Parquet (lago) y CSV. Anota tamaños y di cuándo usarías cada una. Recuerda: el JSON de pandas (array) no es el JSONL de DuckDB.
 6. Dos procedimientos en el mismo hotel: (a) sensores cada 30 s para el semáforo de recepción; (b) cierre de cobros a las 23:00 para finanzas. Para cada uno: quién inicia, reloj, ETL/ELT, destino y formato. No mezcles los dos en un solo job.
-7. El programa de reservas añade `motivo_cancelacion`. El job de las 02:00 sigue en verde. ¿Qué falló? ¿ETL o ELT te salva mejor un indicador nuevo de cancelaciones?
+7. El programa de reservas añade `motivo_cancelacion`, pero el informe no lo recoge y el job de las 02:00 sigue en verde. ¿Qué comprobación de esquema o de resultado falta? ¿Se extrajo y conservó ese campo? Explicad cómo corregir y reprocesar en ETL y en ELT. Ninguno recupera un dato que nunca se guardó; el color verde por sí solo no acredita el nuevo requisito.
 8. Misma transformación del punto 4, pero ahora **agrega**: por hotel, número de reservas cobradas y suma de `cobrado`. pandas y DuckDB. El resultado, un CSV. ¿Esa agregación la harías al recoger o al procesar? ¿Por qué?
 9. Mañana el canal (OTA) manda un JSON nuevo y los sensores de Potes siguen a 30 s. Del apartado [Consideraciones](#consideraciones){target="_blank" rel="noopener"}, responded **al menos tres preguntas** de [Origen y formato](#origen-y-formato){target="_blank" rel="noopener"}, **tres** de [Reloj / latencia](#reloj-latencia){target="_blank" rel="noopener"} y **tres** de [Calidad y personas](#calidad-y-personas){target="_blank" rel="noopener"}. Nombrad la **familia** de ingesta, no hace falta un producto. No mezcléis el JSON de la OTA con el semáforo en un solo job.
 

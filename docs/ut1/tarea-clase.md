@@ -260,7 +260,7 @@ El repositorio debe contener:
 5. Enlaces a las comprobaciones y pruebas de fallo y recuperación; qué ocurre al repetir la ejecución.
 6. Fuentes o ayudas utilizadas y qué habéis adaptado vosotros.
 
-Dentro de la explicación del objetivo y de los límites, añadid un párrafo **para gerencia**, sin nombres de pasos de Spoon: qué representa el cierre `cierre_aula_01`, cuántas reservas tienen cobro, cuánto suman y qué queda fuera. Por ejemplo, los cinco registros sin cobro asociado requieren revisión; no demuestran por sí solos un impago. No calculéis ocupación con estos datos: faltan habitaciones disponibles y ocupadas por periodo. Explicad qué información adicional pediríais para responder a esa pregunta. Esta aclaración concreta la presentación del criterio e); no añade puntos ni cambia los resultados o la rúbrica.
+Dentro de la explicación del objetivo y de los límites, añadid un párrafo **para gerencia**, sin nombres de pasos de Spoon: qué representa el cierre `cierre_aula_01`, cuántas reservas tienen cobro, cuánto suman y qué queda fuera. Por ejemplo, los cinco registros sin cobro asociado requieren revisión; no demuestran por sí solos un impago. No calculéis ocupación con estos datos: faltan habitaciones disponibles y ocupadas por periodo. Explicad qué información adicional pediríais para responder a esa pregunta. Esta explicación es la evidencia del criterio e) y se valora dentro de **Diseño y comprensión del encargo (1,00 punto)**, junto con la justificación del diseño. No añade puntos ni cambia los resultados esperados.
 
 El repositorio puede ser público o privado. Si es privado, añadid como colaborador al usuario que os indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación. **No se exige hacerlo público para obtener la nota.** En el lienzo de cada proceso añadid una nota con vuestro nombre y la pregunta que resuelve. No subáis contraseñas ni datos personales de huéspedes.
 
@@ -269,7 +269,7 @@ El repositorio puede ser público o privado. Si es privado, añadid como colabor
 | Criterio | Máximo | Qué se comprueba |
 | --- | ---: | --- |
 | Repositorio y reproducción del trabajo | 1,00 | Repositorio personal accesible al profesor, paquete asignado y archivos completos, avances por sesión con sus commits identificados, README suficiente y ejecución desde otra carpeta sin cambiar rutas internas. |
-| Diseño y comprensión del encargo | 1,00 | Recorrido coherente, reglas justificadas, cierre y unidades identificados, elección de CSV y límites de los datos explicados. |
+| Diseño y comprensión del encargo | 1,00 | Recorrido y reglas justificados; elección de CSV razonada. Explicación para gerencia en el README: cierre, unidades, 15 reservas con cobro, 3965.50 euros y límites de los datos, sin confundir ausencia de cobro con impago ni calcular ocupación. |
 | Informe de cobros | 2,00 | Lecturas y tipos correctos, uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y correspondencia correcta en cada hotel/canal. |
 | Control de reservas sin cobro | 1,00 | Cinco reservas correctas, sin duplicados; distinción entre ausencia de cobro y cobro cero; columnas y motivo claros. |
 | Job y validaciones automáticas | 2,00 | Orden y ramas correctos, validación de ambos CSV, rechazo de salida vacía o incorrecta, publicación solo tras validar y aviso de fallo. |
@@ -279,6 +279,9 @@ El repositorio puede ser público o privado. Si es privado, añadid como colabor
 | **Total** | **10,00** | **La defensa individual representa 2,00 puntos.** |
 
 Para cada criterio se asigna el **100 % de su máximo** si está completo y correcto, el **50 %** si se demuestra parcialmente pero hay errores u omisiones relevantes, y **0 puntos** si no se aporta evidencia o no se demuestra. Se suman los puntos obtenidos y se expresa la nota con dos decimales. Los resultados y las evidencias del repositorio se valoran en los seis primeros criterios; la comprensión demostrada personalmente se valora en los dos últimos.
+
+
+**Cómo se puntúa la comunicación a gerencia (CE e).** Dentro de «Diseño y comprensión del encargo», se concede **1,00** cuando tanto el diseño como la explicación para gerencia están completos y son correctos; **0,50** cuando se demuestra solo una de esas partes o hay errores relevantes; **0,00** cuando no se demuestra ninguna. No se exige un gráfico ni otra herramienta: se comprueba que una persona ajena a Spoon entienda el periodo, las unidades, el resultado y sus límites. La defensa conserva sus **2,00 puntos** y evalúa la comprensión personal; no sustituye esta evidencia escrita ni se vuelve a puntuar en ella la presentación del README.
 
 ### Encuentro individual con el profesor
 

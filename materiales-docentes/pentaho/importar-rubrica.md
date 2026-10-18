@@ -66,3 +66,9 @@ Una vez creada la rúbrica en Moodle, se puede reutilizar mediante las funciones
 - Máximo global 10 y máximo de defensa 2.
 
 Se han verificado la estructura y las puntuaciones del archivo. La importación efectiva y la presentación deben comprobarse en el Moodle de destino. Fuentes: [código del importador](https://github.com/ingrichardrangel/moodle-local_customgradingform_renderer/blob/main/import.php) y [rúbricas en Moodle](https://docs.moodle.org/en/Rubrics).
+
+## Aclaración de la presentación a gerencia
+
+**Cómo se puntúa la comunicación a gerencia (CE e).** Dentro de «Diseño y comprensión del encargo», se concede **1,00** cuando tanto el diseño como la explicación para gerencia están completos y son correctos; **0,50** cuando se demuestra solo una de esas partes o hay errores relevantes; **0,00** cuando no se demuestra ninguna. No se exige un gráfico ni otra herramienta: se comprueba que una persona ajena a Spoon entienda el periodo, las unidades, el resultado y sus límites. La defensa conserva sus **2,00 puntos** y evalúa la comprensión personal; no sustituye esta evidencia escrita ni se vuelve a puntuar en ella la presentación del README.
+
+Al actualizar una rúbrica ya creada, revise los descriptores del criterio de diseño en Moodle. El CSV actualizado no modifica automáticamente las rúbricas existentes ni las calificaciones previas.

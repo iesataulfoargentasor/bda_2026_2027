@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** generar los datos y comprobar que las conversiones conservan filas, nulos y valores.
 
-    **Ampliación:** comparar tiempos con un experimento controlado; HDFS y Delta requieren otro entorno. No sustituye a los conceptos y comprobaciones anteriores.
+    **Práctica guiada evaluable:** el taller medido compara tamaño, tipos, resultados y tiempos en el entorno local; se valora el procedimiento y la interpretación, no conseguir una marca de velocidad. **Ampliación:** HDFS y Delta requieren otro entorno. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: la reserva de Ana cambia de formato
 
@@ -134,7 +134,24 @@ La organización por filas favorece leer muchos campos de cada registro. Sin emb
 
 En Parquet, un **grupo de filas** contiene fragmentos separados por columna. El lector puede seleccionar columnas y, con estadísticas apropiadas, descartar grupos incompatibles con un filtro. Además, particionar el conjunto por fecha puede evitar abrir archivos de otros periodos. Selección de columnas, descarte por estadísticas y particionado son optimizaciones distintas.
 
-![Por filas: esta reserva (PMS o un mensaje Avro). Por columnas: el panel lee importe (Parquet)](../assets/ut1/filas-columnas.png)
+Estas son las **mismas tres reservas** representadas de dos formas. La agrupación muestra qué valores se mantienen juntos conceptualmente; no reproduce la codificación binaria de un formato.
+
+```mermaid
+flowchart TB
+  subgraph filas [Organización por filas: campos de cada reserva juntos]
+    F1[Reserva 1: Laredo / 3 noches / 240 euros]
+    F2[Reserva 2: Potes / 2 noches / 180 euros]
+    F3[Reserva 3: Laredo / 1 noche / 90 euros]
+  end
+  subgraph columnas [Organización por columnas: valores de cada campo juntos]
+    C1[hotel: Laredo / Potes / Laredo]
+    C2[noches: 3 / 2 / 1]
+    C3[importe: 240 / 180 / 90]
+  end
+  C3 --> S[Sumar importes: 510 euros]
+```
+
+Para reconstruir una reserva hacen falta sus campos. Para sumar importes de muchas reservas, una lectura columnar puede seleccionar la columna `importe` y evitar leer las demás. El resultado debe ser el mismo: cambia el trabajo de lectura, no el significado de los datos.
 
 Pensad en mil reservas `hotel | noches | importe | comentarios`.
 
@@ -473,7 +490,9 @@ Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC s
 !!! tip "Serializar"
     Memoria → bytes (y al revés). Cada conversión puede **perder el tipo**. Elegid formato en la frontera y no traduzcáis en cada capa.
 
-## Taller medido (lo que se examina)
+<a id="taller-medido-lo-que-se-examina"></a>
+
+## Taller medido: comprobar y justificar la elección
 
 Para que la comparación sea válida, utilizad las mismas filas, columnas y tipos en todas las alternativas. Registrad versiones, número de registros, tamaño del archivo, compresión y consulta. Separad el tiempo de escritura del de lectura y del de cálculo.
 

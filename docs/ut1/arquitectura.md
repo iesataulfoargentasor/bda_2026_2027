@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** dibujar la solución del hotel y justificar cómo se recupera.
 
-    **Ampliación:** comparar Lambda y Kappa mediante sus vistas y el reprocesamiento. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** comparar Lambda y Kappa mediante sus vistas y el reprocesamiento. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: del cobro de Ana al panel
 
@@ -58,7 +58,24 @@ Antes de los logos, el dato recorre un ciclo. Las tecnologías cambian; **estas 
 4. **Entrega** (*serving*). El dato **ya es de fiar** y se lo dais a un consumidor: panel, modelo, fichero para el científico.
 5. **Consumo.** Gerencia a las 8, un analista, un entrenamiento. Si el consumidor no confía, el ciclo ha fallado **antes**.
 
-![Ciclo del dato en el hotel: de PMS y sensores al panel de las 8](../assets/ut1/ciclo-ingenieria.png)
+```mermaid
+flowchart TB
+  subgraph diario [Recorrido del cierre diario]
+    P[PMS y pasarela: reservas y cobros] --> I[Ingesta del cierre acordado]
+    I --> B[Conservar originales y validar]
+    B --> T[Unir, transformar y comprobar]
+    T --> G[Gerencia a las 8: cierre de ayer]
+  end
+  subgraph presencia [Recorrido de presencia]
+    S[Sensores: eventos cada 30 segundos] --> C[Ingesta y cola de eventos]
+    C --> V[Procesar eventos y actualizar estado]
+    V --> R[Recepción: presencia detectada]
+  end
+  X[En ambos: seguridad, gobierno, monitorización y coordinación] -.-> I
+  X -.-> C
+```
+
+Generación, ingesta, transformación, entrega y consumo se reconocen en ambos recorridos, pero sus fuentes, plazos y resultados son distintos. Este esquema no combina sus vistas y no representa por sí solo una arquitectura Lambda. El indicador de presencia no determina la disponibilidad comercial de una habitación.
 
 La figura resume un ciclo posible. En este caso el cierre usa reservas y cobros; los sensores alimentan un indicador distinto. Ingestar no exige siempre pasar por un lago.
 
@@ -251,7 +268,7 @@ Si buscáis esa expresión veréis pósters con cientos de logos. **No los memor
 
 Sqoop se retiró a [Apache Attic en 2021](https://attic.apache.org/projects/sqoop.html) y Oozie en [2025](https://attic.apache.org/timeline.html): ayudan a leer arquitecturas antiguas, no son propuestas para instalar en esta UT. Kitchen ejecuta un job; las dependencias las define ese job y su lanzamiento horario requiere un planificador.
 
-Los mapas cambian de año (nace una marca, muere otra). **Las capas no.** Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/){target="_blank" rel="noopener"} (orientación, no para recitar).
+Los mapas cambian de año (nace una marca, muere otra). Las responsabilidades siguen siendo útiles, pero pueden agruparse de distintas formas: las ocho capas son el mapa didáctico de esta unidad, no una norma universal. Un mapa reciente que se cita en el ciclo: [MAD landscape](https://mad.firstmark.com/){target="_blank" rel="noopener"} (orientación, no para recitar).
 
 ## Big Data y cloud
 
@@ -277,7 +294,7 @@ La ingeniería de datos y el desarrollo de producto colaboran y pueden solaparse
 El hotel es el hilo. El edificio se parece fuera: una comercializadora (o un ayuntamiento con contadores) no quiere perder lecturas, detectar un consumo raro y un panel a las **8**. Mismas ocho capas; otras fuentes. No hace falta cambiar de caso para entender el plano.
 
 !!! success "Al terminar 1.5"
-    Dibujad las **ocho** capas del [hotel](caso-hotel.md){target="_blank" rel="noopener"}. Poned **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si pide **Lambda, Kappa o solo lote**. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
+    Dibujad las **ocho** capas del [hotel](caso-hotel.md){target="_blank" rel="noopener"}. Poned **una** herramienta o responsabilidad en cada una y justificad la de almacenamiento. Decid si cada necesidad pide **solo lote, flujo, dos pipelines independientes, Lambda o Kappa**. Para el informe nocturno y los sensores, justificad primero sus objetivos distintos. Solo proponed Lambda si una misma consulta combina vistas históricas y recientes; para Kappa, explicad cómo conservar y reproducir los eventos. Si podéis explicarlo a un compañero que no ha leído el tema, el apartado está entendido.
 
 ## Actividad
 

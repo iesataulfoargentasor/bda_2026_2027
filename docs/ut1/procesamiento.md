@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** elegir el procesamiento del cierre y del indicador de presencia.
 
-    **Ampliación:** razonar con SCV como guía, sin tratarlo como teorema. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** razonar con SCV como guía, sin tratarlo como teorema. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: un día en el hotel
 
@@ -64,7 +64,7 @@ Tres palabras que en el pasillo se usan como sinónimos. No lo son. Si las mezcl
 | --- | --- | --- | --- |
 | **Concurrente** | Una o varias máquinas | **No necesariamente** | Un núcleo que se **turna**: el job y el antivirus |
 | **Paralelo** | Varios recursos de cálculo, en una o varias máquinas | Sí | Diez núcleos suman noches de **Laredo** |
-| **Distribuido** | **Varias máquinas** en red | Sí, en general (más red y fallos) | Un nodo por hotel: Santander, Laredo, Comillas, Potes |
+| **Distribuido** | **Varias máquinas** en red | Puede haberla; distribuir no exige simultaneidad | Un nodo por hotel: Santander, Laredo, Comillas, Potes |
 
 ```mermaid
 flowchart TD

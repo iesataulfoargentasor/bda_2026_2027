@@ -9,12 +9,12 @@
       "prompt": "¿Qué es una base de datos relacional y para qué encaja?",
       "code": "",
       "options": [
-        "Un fichero JSON sin columnas fijas.",
-        "El único almacén cuando hay terabytes: crece solo en horizontal.",
-        "Tablas con **esquema** (columnas y reglas **antes** de guardar) y SQL. Encaja en operaciones cortas que tienen que quedar **bien hechas**.",
-        "Un clúster Hadoop con otro nombre."
+        "Organiza datos en tablas relacionadas y permite definir reglas de integridad.",
+        "Guarda documentos sin relaciones y elimina la necesidad de definir reglas.",
+        "Organiza archivos por carpetas y garantiza transacciones al usar nombres únicos.",
+        "Conserva únicamente históricos agregados y excluye operaciones de recepción."
       ],
-      "answer": 2,
+      "answer": 0,
       "explain": "El modelo relacional organiza tablas, claves y restricciones. SQL permite consultarlas. La escala y las garantías dependen del gestor y del diseño; también existen sistemas relacionales distribuidos."
     },
     {
@@ -23,12 +23,12 @@
       "prompt": "“NoSQL”, ¿qué es?",
       "code": "",
       "options": [
-        "Un producto: Mongo cubre todas las familias.",
-        "Una **familia** (documento, clave-valor, wide-column, grafo). Elegir “NoSQL” sin decir cuál es como decir “voy en vehículo”.",
-        "Lo mismo que Parquet: ambos son “columnar”.",
-        "El recambio obligatorio de toda relacional."
+        "Una familia de modelos: documento, clave-valor, columnas anchas y grafo.",
+        "Una alternativa que mejora cualquier consulta por evitar relaciones entre tablas.",
+        "Un modelo único que almacena todos los datos como documentos JSON.",
+        "Un conjunto de bases que carecen de cualquier regla o garantía de integridad."
       ],
-      "answer": 1,
+      "answer": 0,
       "explain": "NoSQL agrupa modelos como documentos, clave-valor, wide-column y grafos. Las garantías dependen del gestor y su configuración; algunos ofrecen transacciones ACID. Wide-column y un archivo columnar como Parquet son conceptos diferentes."
     },
     {
@@ -37,10 +37,10 @@
       "prompt": "¿Qué es un data warehouse (almacén de informes)?",
       "code": "",
       "options": [
-        "Un entorno analítico que integra datos e histórico para consultas e informes con definiciones acordadas.",
-        "El sitio donde se opera cada cobro.",
-        "Un disco sucio con JSON bruto.",
-        "Un recorte por departamento, más estrecho que el almacén."
+        "Entorno analítico con datos integrados e histórico para consultas acordadas.",
+        "Formato de archivo que comprime automáticamente cualquier tabla del hotel.",
+        "Repositorio que exige conservar todas las fuentes sin ninguna transformación.",
+        "Sistema operativo dedicado a confirmar reservas individuales en recepción."
       ],
       "answer": 0,
       "explain": "Puede actualizarse por lotes o con frecuencia alta. En el hotel usamos cierres diarios, pero esa periodicidad no define todos los warehouses."
@@ -51,10 +51,10 @@
       "prompt": "¿Qué es un data mart?",
       "code": "",
       "options": [
-        "Otro nombre del data lake.",
-        "El warehouse entero de la organización.",
-        "Un clúster de cuatro nodos.",
-        "Un conjunto analítico orientado a un departamento o ámbito; puede depender del warehouse o alimentarse de otras fuentes."
+        "Área obligatoria del lago que conserva únicamente los datos sin procesar.",
+        "Tabla operativa que registra todas las transacciones de todos los departamentos.",
+        "Copia de seguridad completa del warehouse destinada a recuperar operaciones.",
+        "Conjunto analítico para un ámbito, alimentado por un warehouse u otras fuentes."
       ],
       "answer": 3,
       "explain": "Compartir un warehouse facilita definiciones comunes. Un mart independiente requiere coordinación para evitar discrepancias, pero no es incorrecto por definición."
@@ -65,10 +65,10 @@
       "prompt": "¿En qué se diferencia un data lake de un warehouse?",
       "code": "",
       "options": [
-        "En el lago las columnas se fijan al guardar, como en el warehouse.",
-        "El lago puede conservar originales y datos preparados; el warehouse organiza datos integrados para su consulta analítica.",
-        "Los dos son el mismo sitio con dos logos.",
-        "El lago sustituye siempre al warehouse."
+        "El lago admite únicamente datos sin estructura; el warehouse únicamente CSV.",
+        "El lago admite originales y preparados; el warehouse organiza datos para análisis.",
+        "El lago garantiza calidad al cargar; el warehouse conserva datos sin validar.",
+        "El lago exige ELT; el warehouse exige ETL y nunca puede transformar internamente."
       ],
       "answer": 1,
       "explain": "No son sinónimos de datos sucios frente a limpios. En ambos hacen falta calidad, catálogo y permisos. Un data mart se orienta a un ámbito y puede tener distintos orígenes."
@@ -79,12 +79,12 @@
       "prompt": "Volumen accesible por bloques, objetos identificados por claves y arquitectura de tablas sobre un lago: ¿cómo se llaman?",
       "code": "",
       "options": [
-        "Lakehouse, bloque, objeto.",
-        "Los tres son el warehouse.",
-        "Bloques, objetos y lakehouse, respectivamente; el tercero describe una arquitectura, no otro modo físico de acceso.",
-        "Objeto, ACID, BASE."
+        "Bloques, archivos y data mart: el tercero identifica un disco distribuido.",
+        "Objetos, bloques y warehouse: los tres describen formatos binarios de archivo.",
+        "Archivos, bloques y lakehouse: los tres son modos equivalentes de acceso físico.",
+        "Bloques, objetos y lakehouse: este último es una arquitectura de gestión de tablas."
       ],
-      "answer": 2,
+      "answer": 3,
       "explain": "Un NAS suele ofrecer acceso a ficheros. Un servicio de objetos puede permitir lecturas por rangos. Un lakehouse añade gestión de tablas y metadatos sobre el lago."
     },
     {
@@ -93,10 +93,10 @@
       "prompt": "Transferir 50 € de A a B son dos cambios. Si el sistema se cae a mitad, ¿qué tiene que pasar?",
       "code": "",
       "options": [
-        "El paquete es **todo o nada**: o se hacen los dos cambios o no se hace ninguno.",
-        "Dejar el que haya llegado: alguien ya vio la pantalla.",
-        "Publicar el informe con el movimiento a medias.",
-        "Pasar a BASE para no silenciar al cliente."
+        "Confirmar ambos cambios o ninguno, según la atomicidad de la transacción.",
+        "Confirmar el cambio disponible y dar por completada toda la transferencia.",
+        "Guardar ambos cambios en nodos distintos sin coordinarlos como transacción.",
+        "Confirmar el débito primero y dejar el abono para una reparación manual."
       ],
       "answer": 0,
       "explain": "En bases de datos, transacción **no** es “un pago” en la calle: es un paquete de cambios. Si termina bien, se **confirma**. Si falla, se **deshace** todo."
@@ -107,10 +107,10 @@
       "prompt": "En ACID, ¿qué pide cada letra y qué es la C?",
       "code": "",
       "options": [
-        "A = responder siempre; C = el mismo valor en todos los nodos (CAP).",
-        "Las cuatro letras son lo mismo que BASE.",
-        "C es la precisión del análisis (SCV).",
-        "A: todo o nada; C: reglas definidas; I: coordinación de operaciones concurrentes según el nivel de aislamiento; D: persistencia de lo confirmado."
+        "Atomicidad, compresión, aislamiento y distribución; D exige varias máquinas.",
+        "Disponibilidad, reglas de integridad, indexación y durabilidad; I significa índices.",
+        "Atomicidad, igualdad inmediata entre réplicas, aislamiento y durabilidad; C es CAP.",
+        "Atomicidad, reglas de integridad, aislamiento y durabilidad; C se refiere a las reglas."
       ],
       "answer": 3,
       "explain": "ACID-C se refiere a reglas; CAP-C a consistencia fuerte entre operaciones. El aislamiento tiene niveles: serializable busca el efecto de una ejecución en serie."
@@ -121,10 +121,10 @@
       "prompt": "Se corta la red entre dos nodos de un clúster. Un nodo acaba de escribir un valor. El otro, ¿qué puede hacer según CAP?",
       "code": "",
       "options": [
-        "Tener C, A y P a la vez: en un clúster las tres se cumplen siempre.",
-        "Durante la partición, el diseño debe elegir qué operaciones rechaza para mantener consistencia fuerte o cuáles atiende admitiendo datos desactualizados.",
-        "Solo CA: es lo habitual en un clúster partido.",
-        "CAP no aplica si hay SQL."
+        "Elegir una propiedad para siempre, incluso cuando la red funciona normalmente.",
+        "Rechazar ciertas operaciones para preservar consistencia o atenderlas sin garantizarla.",
+        "Mantener consistencia y disponibilidad usando transacciones en cada nodo aislado.",
+        "Garantizar ambas propiedades durante cualquier corte añadiendo una réplica local."
       ],
       "answer": 1,
       "explain": "No se garantizan simultáneamente consistencia fuerte y disponibilidad para todas las operaciones durante una partición. CA no es una forma de evitar ese compromiso."
@@ -135,12 +135,12 @@
       "prompt": "¿Qué debéis determinar antes de elegir cómo almacenar una operación de cobro?",
       "code": "",
       "options": [
-        "Sí BASE: más nodos, más seguro el cobro. Primero el logo de NoSQL.",
-        "Sí, si el producto está en modo “estricto”. Primero el lakehouse.",
-        "Qué cambios deben confirmarse conjuntamente y qué garantías necesita la operación; BASE no sustituye esas garantías.",
-        "BASE es la C de ACID. Primero el lago."
+        "Qué base ofrece más velocidad, posponiendo la integridad hasta el informe diario.",
+        "Qué opción declara BASE, porque sustituye las garantías de una transacción.",
+        "Qué modelo tiene más réplicas, porque eso garantiza por sí solo la atomicidad.",
+        "Qué cambios deben confirmarse juntos y qué garantías necesita la operación."
       ],
-      "answer": 2,
+      "answer": 3,
       "explain": "BASE admite convergencia eventual bajo las condiciones del sistema. Las transacciones y la consistencia de las réplicas se analizan por ámbito, no solo por la etiqueta del producto."
     }
   ]

@@ -14,6 +14,8 @@ Si falláis, volved al apartado indicado y construid un ejemplo propio con el ho
 
 El test comprueba conceptos; la capacidad de diseñar, ejecutar y validar un flujo se demuestra también en las actividades prácticas.
 
+Esta selección reutiliza 30 preguntas de los apartados: sirve para repasar el conjunto, no es una prueba independiente con preguntas nuevas. Algunas recuperan ideas de ampliación; para la evaluación formal se aplica el recorrido anunciado por el profesor.
+
 Treinta preguntas (A–D, **una** correcta) sobre los conceptos más importantes de la unidad. No puntúan en Moodle. En **cada** una, **Comprobar respuesta**: si es correcta o no, y una explicación breve. Si falláis, *Repasar…* os lleva al apartado. Podéis repetir el test.
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut1.json"></div>

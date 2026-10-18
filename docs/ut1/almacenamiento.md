@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** justificar dónde guardar el cobro, el histórico y el informe.
 
-    **Ampliación:** profundizar en CAP, BASE y gestión de tablas del lakehouse. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** profundizar en CAP, BASE y gestión de tablas del lakehouse. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: el recorrido de la reserva de Ana
 

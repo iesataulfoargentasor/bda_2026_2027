@@ -27,7 +27,7 @@ Esta unidad desarrolla el **RA1** del módulo *Big Data aplicado* (código **507
 
 ### Cómo demostrar el aprendizaje
 
-La teoría permite justificar decisiones, pero no acredita por sí sola los criterios prácticos. La práctica integradora aporta ejecución y validación para d), y una explicación de los resultados para gerencia para e). El cuestionario es una comprobación conceptual, no sustituye esas evidencias.
+La teoría permite justificar decisiones, pero no acredita por sí sola los criterios prácticos. La práctica integradora aporta ejecución y validación para d), y una explicación de los resultados para gerencia para e). Esta última se valora explícitamente en «Diseño y comprensión del encargo» de su rúbrica, sin aumentar los 10,00 puntos ni reducir los 2,00 de defensa individual. El cuestionario es una comprobación conceptual, no sustituye esas evidencias.
 
 La siguiente correspondencia es una orientación didáctica, no un criterio oficial adicional:
 

@@ -2,9 +2,9 @@ criterion,level,level_description,score
 Repositorio y reproducción del trabajo,1,No demostrado. No aporta evidencia suficiente del repositorio y de la reproducción del trabajo.,0
 Repositorio y reproducción del trabajo,2,Parcial. Presenta parte de la organización o de los avances pero hay omisiones relevantes. La documentación o las rutas requieren correcciones para reproducir el trabajo.,0.5
 Repositorio y reproducción del trabajo,3,Completo. Repositorio personal accesible al profesor. Incluye el paquete asignado y todos los archivos. Registra avances por sesión con commits identificados. El README permite ejecutar desde otra carpeta sin modificar rutas internas.,1
-Diseño y comprensión del encargo,1,No demostrado. No aporta un diseño explicado o no demuestra comprender el encargo.,0
-Diseño y comprensión del encargo,2,Parcial. Explica parte del diseño pero omite o confunde decisiones relevantes sobre las reglas o el significado de los datos.,0.5
-Diseño y comprensión del encargo,3,Completo. Justifica el recorrido y las reglas. Identifica el cierre y las unidades. Explica la elección de CSV y los límites de los datos.,1
+Diseño y comprensión del encargo,1,No demostrado. No demuestra el diseño ni aporta una explicación interpretable para gerencia.,0
+Diseño y comprensión del encargo,2,Parcial. Demuestra solo el diseño o la explicación para gerencia. También corresponde este nivel si hay errores u omisiones relevantes en cualquiera de esas partes.,0.5
+Diseño y comprensión del encargo,3,Completo. Justifica recorrido y reglas y la elección de CSV. En el README explica a gerencia el cierre y las unidades: 15 reservas con cobro y 3965.50 euros. Explica los límites: ausencia de cobro no demuestra impago y estos datos no permiten calcular ocupación.,1
 Informe de cobros,1,No demostrado. No aporta un informe evaluable ni evidencia suficiente de su construcción.,0
 Informe de cobros,2,Parcial. Construye parte del informe pero presenta errores u omisiones relevantes en lecturas o uniones o agrupación o resultados.,1
 Informe de cobros,3,Completo. Configura correctamente lecturas y tipos. Justifica uniones y agrupación. Obtiene 13 grupos y 15 reservas con 3965.50 euros. Cada hotel y canal recibe las cantidades correctas.,2

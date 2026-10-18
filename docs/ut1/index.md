@@ -18,7 +18,7 @@ La [práctica integradora con Pentaho](tarea-clase.md) cierra la UT1 con un info
 
 ## Cómo trabajar la unidad
 
-En cada apartado hay una ruta que distingue conceptos esenciales, práctica guiada y ampliación. Leed primero el caso hotelero y mantened una hoja de decisiones: problema, datos de entrada, periodo, resultado esperado y comprobación. Cada apartado añade una decisión a esa misma solución.
+En cada apartado hay una ruta que distingue conceptos esenciales, práctica guiada y ampliación. **Los conceptos esenciales y las prácticas guiadas forman el recorrido común evaluable.** Las ampliaciones ayudan a profundizar; su ejecución o detalle adicional solo se exige si el profesor lo anuncia antes. Las autoevaluaciones incluyen algunas preguntas de ampliación como repaso, no fijan por sí solas el contenido de una prueba calificada. En 1.7, el taller medido local pertenece a la práctica guiada. Leed primero el caso hotelero y mantened una hoja de decisiones: problema, datos de entrada, periodo, resultado esperado y comprobación. Cada apartado añade una decisión a esa misma solución.
 
 Para los talleres de Python conviene reconocer variables, tablas de pandas, filtros y lectura de archivos; para SQL, `SELECT`, `WHERE`, `JOIN` y agrupaciones. Los ejemplos se recorren en clase paso a paso. Usad carpetas separadas para 1.6, 1.7 y Pentaho: algunos archivos comparten nombre, pero no estructura. No es necesario instalar toda la lista de tecnologías citadas.
 

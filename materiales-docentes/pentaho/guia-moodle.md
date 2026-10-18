@@ -185,7 +185,7 @@ Usar el separador decimal que acepte el formulario. Si una instalación exige pu
 | Criterio | Evidencias para valorar |
 | --- | --- |
 | Repositorio y reproducción | Acceso del profesor, paquete asignado, archivos completos, avances y commits identificados, README suficiente y ejecución desde otra carpeta |
-| Diseño | Recorrido coherente, reglas justificadas, cierre y unidades identificados, elección de CSV y límites de los datos |
+| Diseño | Recorrido y reglas justificados, elección de CSV y explicación para gerencia del cierre, unidades, resultados y límites de los datos |
 | Informe de cobros | Lecturas y tipos correctos; uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y asignación correcta a cada hotel/canal |
 | Reservas sin cobro | Cinco reservas correctas y sin duplicados; diferencia entre ausencia de cobro y cero; columnas y motivo claros |
 | Job y validaciones | Orden y ramas correctos; validación de ambos CSV; rechazo de salida vacía o incorrecta; publicación tras validar y aviso de fallo |
@@ -218,3 +218,9 @@ El profesor puede recoger durante la conversación qué pregunta formuló, qué 
 - [ ] Están previstos el cierre de cada sesión, las incidencias y las defensas.
 
 **Límite del control horario:** Moodle cierra las entregas en las horas configuradas, pero no bloquea GitHub ni la edición local. Evaluar la versión registrada y apoyar la comprobación de autoría en el trabajo observado, las evidencias y la defensa individual. Las fechas internas de los commits no acreditan por sí solas trabajo presencial.
+
+## Aclaración de la presentación a gerencia
+
+**Cómo se puntúa la comunicación a gerencia (CE e).** Dentro de «Diseño y comprensión del encargo», se concede **1,00** cuando tanto el diseño como la explicación para gerencia están completos y son correctos; **0,50** cuando se demuestra solo una de esas partes o hay errores relevantes; **0,00** cuando no se demuestra ninguna. No se exige un gráfico ni otra herramienta: se comprueba que una persona ajena a Spoon entienda el periodo, las unidades, el resultado y sus límites. La defensa conserva sus **2,00 puntos** y evalúa la comprensión personal; no sustituye esta evidencia escrita ni se vuelve a puntuar en ella la presentación del README.
+
+Al actualizar una rúbrica ya creada, revise los descriptores del criterio de diseño en Moodle. El CSV actualizado no modifica automáticamente las rúbricas existentes ni las calificaciones previas.

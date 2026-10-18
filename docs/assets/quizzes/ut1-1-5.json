@@ -6,15 +6,15 @@
     {
       "topic": "Por qué capas",
       "href": "../arquitectura/",
-      "prompt": "¿Por qué un sistema Big Data no es “un programa que lo hace todo” (ingesta, limpieza, modelos y el informe en el mismo script)?",
+      "prompt": "¿Por qué separar responsabilidades de ingesta, procesamiento y presentación, aunque el prototipo use un único script?",
       "code": "",
       "options": [
-        "Porque una norma obliga a ocho logos.",
-        "Porque separar responsabilidades facilita probar, mantener y sustituir componentes, incluso si el prototipo usa un único script.",
-        "Porque SQL deja de existir.",
-        "Porque hay que picar el informe a mano."
+        "Cualquier script que incluya varias fases pierde automáticamente integridad.",
+        "Cada responsabilidad exige siempre un producto distinto y una máquina dedicada.",
+        "Separar responsabilidades facilita probar y mantener, aunque el prototipo sea un script.",
+        "Usar un único lenguaje impide combinar ingesta, transformación y almacenamiento."
       ],
-      "answer": 1,
+      "answer": 2,
       "explain": "Cada capa tiene **una** responsabilidad. Este apartado es el mapa para que el informe **pueda** hacerse, no el gráfico en sí."
     },
     {
@@ -23,10 +23,10 @@
       "prompt": "¿Qué debemos comparar entre un ciclo del dato y un esquema de arquitectura?",
       "code": "",
       "options": [
-        "Que el número de cada fase coincida con el de cada capa.",
-        "Que cada responsabilidad utilice un producto diferente.",
-        "Las responsabilidades y el recorrido del dato, no la coincidencia entre números de esquemas distintos.",
-        "Que todas las herramientas estén instaladas en máquinas distintas."
+        "El número de flechas: debe coincidir para demostrar que no faltan transformaciones.",
+        "La numeración: una capa cuatro debe equivaler siempre a la cuarta fase del ciclo.",
+        "Las responsabilidades y el recorrido, aunque los esquemas agrupen fases distintas.",
+        "La cantidad de productos: ambos esquemas deben contener los mismos programas."
       ],
       "answer": 2,
       "explain": "El ciclo describe fases; la arquitectura distribuye responsabilidades. Integración y procesamiento pueden compartir transformaciones."
@@ -37,12 +37,12 @@
       "prompt": "Tras transformar, ¿qué suele pasar con el resultado en el lago? Si hay que retirar un identificador personal, ¿editáis el fichero a mano?",
       "code": "",
       "options": [
-        "El resultado suele **añadirse**. Retirar un dato no es editar el fichero a mano.",
-        "El lago se pisa como un Excel.",
-        "Spark pisa el bruto siempre.",
-        "No hace falta transformar: el consumidor lee el bruto."
+        "Se añade una versión y con ello queda garantizada la eliminación de las anteriores.",
+        "Se pueden añadir resultados; retirar un dato exige un procedimiento controlado.",
+        "Se añaden resultados y la retirada se resuelve editando cualquier archivo a mano.",
+        "Se sobrescribe siempre el original y así desaparecen todas las copias anteriores."
       ],
-      "answer": 0,
+      "answer": 1,
       "explain": "Un lago puede tener originales y tablas preparadas. Añadir, sustituir o actualizar requiere una política; borrar una versión actual no elimina automáticamente sus copias históricas."
     },
     {
@@ -51,12 +51,12 @@
       "prompt": "¿Cómo se relacionan integración y transformación?",
       "code": "",
       "options": [
-        "Los dos son ingesta (capa 1).",
-        "Los dos son visualización (capa 6).",
-        "El cruce es capa 2; unificar nombres es el panel.",
-        "Unificar nombres y unir fuentes son transformaciones utilizadas para integrar; las capas separan responsabilidades, no operaciones excluyentes."
+        "Integrar puede incluir transformar nombres y unir fuentes; no son operaciones excluyentes.",
+        "Integrar y transformar son dos nombres para exactamente la misma responsabilidad.",
+        "Integrar solo transporta archivos y nunca puede modificar nombres de columnas.",
+        "Transformar solo agrega números y no puede combinar datos de varias fuentes."
       ],
-      "answer": 3,
+      "answer": 0,
       "explain": "El esquema destaca la armonización en integración y el cálculo en procesamiento, aunque una herramienta o transformación puede cubrir ambas responsabilidades."
     },
     {
@@ -65,12 +65,12 @@
       "prompt": "Un flujo de ETL y un Parquet crudo, ¿son la capa 6 (visualización)?",
       "code": "",
       "options": [
-        "Sí: si sale de un ETL ya es el criterio e).",
-        "Sí, porque el motor de proceso visualiza.",
-        "No. La capa 6 es lo que el consumidor **entiende** (informe o panel). El e) no es abrir el motor ETL ni el servidor de informes.",
-        "No, porque la capa 6 es solo una base documento."
+        "Sí: cualquier archivo generado es una visualización aunque nadie lo entienda.",
+        "No: visualizar implica una salida que el consumidor pueda interpretar.",
+        "Sí: observar el lienzo de ETL equivale a presentar resultados a gerencia.",
+        "No: solo puede ser visualización un panel alojado en un servidor de informes."
       ],
-      "answer": 2,
+      "answer": 1,
       "explain": "En este módulo el ETL visual deja el dato listo. El criterio e) es un fichero o un panel interpretable, no abrir el motor."
     },
     {
@@ -79,12 +79,12 @@
       "prompt": "En un flujo CSV → filtro → Excel, ¿qué dos responsabilidades transversales hay que contemplar también?",
       "code": "",
       "options": [
-        "Ingesta y almacén.",
-        "**Seguridad** y **monitorización** (transversales): quién lee datos sensibles y si el job acabó a tiempo.",
-        "Lambda y Kappa.",
-        "Spark y Hadoop."
+        "Replicación y particionado: son obligatorios incluso en cualquier CSV pequeño.",
+        "Entrenamiento y predicción: todo recorrido necesita un modelo estadístico.",
+        "Compresión y cifrado: sustituyen los controles de permisos y de ejecución.",
+        "Seguridad y monitorización: controlar acceso y comprobar la ejecución."
       ],
-      "answer": 1,
+      "answer": 3,
       "explain": "En un caso real existen aunque sean simples: una carpeta con permisos y un log. Sin monitorización el prototipo **miente** en producción."
     },
     {
@@ -93,10 +93,10 @@
       "prompt": "El fichero cabe en un PC. ¿Montáis cola + clúster + tres nubes “porque es Big Data”?",
       "code": "",
       "options": [
-        "No. Primero la **pregunta** del negocio; luego el edificio.",
-        "Sí: el paisaje de logos lo pide.",
-        "Sí, si el temario cita cloud.",
-        "No, porque las colas no existen fuera de internet."
+        "No sin justificarlo: se comparan requisitos, capacidad, plazo y coste.",
+        "Sí: una cola elimina por sí sola todos los problemas de calidad del fichero.",
+        "Sí: trabajar con Big Data exige esas herramientas aunque el equipo sea suficiente.",
+        "No: un fichero que hoy cabe nunca puede requerir otro diseño en el futuro."
       ],
       "answer": 0,
       "explain": "Escala, aguantar fallos y dato repartido importan cuando el volumen duele. Un único USB con “el histórico” es un SPOF. **RTO** = cuánto tardáis en recuperar el servicio. **RPO** = hasta qué punto de los datos aceptáis **perder**."
@@ -107,10 +107,10 @@
       "prompt": "Un cierre diario preciso frente a eventos que no acaban. ¿Qué camino es cada uno, y “tiempo real” significa instantáneo?",
       "code": "",
       "options": [
-        "Los dos son tiempo real si hay Spark.",
-        "Flujo = el informe de la mañana; lote = el evento continuo.",
-        "Tiempo real = instantáneo; si tarda 1 s ya no vale.",
-        "Un lote trata un conjunto delimitado; un flujo trata eventos continuos. Ambos requieren un plazo útil y políticas de exactitud y corrección."
+        "Lote para datos históricos; flujo para cualquier consulta SQL ejecutada durante el día.",
+        "Lote para una máquina; flujo para varias, con independencia de cómo llegan los datos.",
+        "Lote para resultados aproximados; flujo para resultados siempre exactos e instantáneos.",
+        "Lote para conjuntos delimitados; flujo para eventos continuos, ambos con plazo útil."
       ],
       "answer": 3,
       "explain": "Lote no implica lentitud ni flujo implica aproximación. Las garantías dependen de las reglas, los recursos y el tratamiento de datos tardíos."
@@ -121,27 +121,27 @@
       "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
-        "Siempre Lambda: más caminos es más Big Data.",
-        "Lambda combina vistas por lotes y recientes; Kappa utiliza una vía principal de eventos que permite reconstruir vistas mediante replay.",
-        "Siempre Kappa: el lote ya no existe.",
-        "Lambda y Kappa son logos de Hadoop."
+        "Lambda conserva eventos; Kappa elimina cada evento en cuanto lo procesa una vez.",
+        "Lambda usa sensores y Kappa cobros; se distinguen únicamente por el origen del dato.",
+        "Lambda combina vistas histórica y reciente; Kappa permite reconstruir vistas desde eventos.",
+        "Lambda exige dos nubes; Kappa exige una sola máquina para evitar duplicados."
       ],
-      "answer": 1,
+      "answer": 2,
       "explain": "Lambda necesita conciliar los caminos sin duplicar hechos. Kappa requiere retención y reprocesamiento controlado. Dos pipelines independientes no bastan para definir Lambda."
     },
     {
       "topic": "Temperatura y paisaje",
       "href": "../arquitectura/",
-      "prompt": "Dato que se consulta sin parar, de vez en cuando, o casi nunca. Un póster con cientos de logos. ¿Qué es cierto?",
+      "prompt": "¿Qué relación hay entre temperatura del dato y catálogos de herramientas?",
       "code": "",
       "options": [
-        "Todo en SSD: así es más Big Data. Hay que recitar los logos.",
-        "La temperatura es la C de ACID. El orquestador transforma el dato.",
-        "**Caliente / templado / frío**. No paguéis SSD por archivo que casi no se toca. No memoricéis logos: situad **la capa**. Orquestación **coordina**; no transforma.",
-        "Hadoop = flujo; Spark solo sirve para el lote."
+        "Temperatura depende del formato; un catálogo permite elegir sin medir necesidades.",
+        "Temperatura depende de la calidad; un catálogo sustituye el diseño del recorrido.",
+        "Temperatura depende del acceso; un catálogo ayuda a situar responsabilidades.",
+        "Temperatura depende solo de la edad; un catálogo fija una arquitectura obligatoria."
       ],
       "answer": 2,
-      "explain": "La temperatura depende de frecuencia de acceso y plazo de recuperación. Un histórico que se consulta a diario debe estar accesible dentro del plazo requerido. Gobierno y orquestación afectan a todo el recorrido."
+      "explain": "La temperatura expresa frecuencia de acceso y plazo de recuperación. El catálogo ayuda a reconocer responsabilidades; no sustituye requisitos ni medidas. Orquestar coordina tareas, mientras transformar modifica los datos."
     }
   ]
 }

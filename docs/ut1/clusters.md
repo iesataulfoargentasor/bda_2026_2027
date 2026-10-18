@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** justificar recursos y recuperación para el cierre del hotel.
 
-    **Ampliación:** comparar almacenamiento y cálculo juntos o separados. No sustituye a los conceptos y comprobaciones anteriores.
+    **Ampliación:** comparar almacenamiento y cálculo juntos o separados. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## Vídeo: el informe del hotel entre varias máquinas
 
@@ -47,7 +47,7 @@ Hoy se montan sobre **servidores normales** (no hace falta un *mainframe*) más 
 
 No lo confundáis con varios núcleos **dentro** de un portátil. Eso es paralelo en **una** máquina ([1.4](procesamiento.md){target="_blank" rel="noopener"}). El clúster son **varias** máquinas. Lo pondréis a prueba en la [tarea de los 500 GB](transicion-ut2.md){target="_blank" rel="noopener"}: el i7 no es un clúster.
 
-En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que **acabar antes de las 8**. Si solo hincháis *esa* máquina, el techo llega pronto. Cuatro nodos (o más) parten el histórico; si se funde el disco de Potes, hace falta **réplica** para que el panel no se caiga.
+En el [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}: el PMS de Laredo cabe en un servidor. El job de madrugada (ocupación e importe de los cuatro hoteles) tiene que **acabar antes de las 8**. Primero medid si ampliar esa máquina permite cumplir el plazo a un coste razonable. Si no basta, estudiad repartir el histórico entre varios nodos. En el diseño de este ejemplo, las **réplicas**, junto con la detección y recuperación de fallos, permiten recuperar datos cuando falla un disco.
 
 ```mermaid
 flowchart LR
@@ -101,7 +101,7 @@ Los nodos se vigilan. Si uno desaparece (luz, disco, red), el sistema puede:
 - Rearrancar ese nodo o levantar otro.
 - Seguir sirviendo desde una **réplica** (una copia **en marcha**, no un ZIP en un cajón).
 
-Sin réplica, “varios ordenadores” solo es más potencia, no más seguridad. El job bien hecho **no publica** el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.
+Tener varios ordenadores no garantiza disponibilidad. Debe existir un mecanismo de protección de datos y recuperación: aquí estudiamos réplicas; otros diseños utilizan almacenamiento compartido redundante o codificación de borrado. El job bien hecho **no publica** el panel a medias: o acaba, o se reintenta, o gerencia ve el de ayer.
 
 ```mermaid
 flowchart TD
@@ -136,7 +136,7 @@ La escalabilidad describe cómo cambia la capacidad cuando aumentamos los recurs
 
 La **elasticidad** añade la posibilidad de ajustar recursos a la demanda: aumentar capacidad en temporada alta y reducirla después. Para aprovecharla, los datos deben seguir disponibles cuando se retiran máquinas de cálculo y las tareas deben poder redistribuirse.
 
-No hace falta acertar el tamaño el día 1. Empezáis con lo que podéis pagar y crecéis. El volumen del hotel **no** se estima bien a priori: si os pasáis de pesimistas, habéis tirado el dinero; si os quedáis cortos, el job no llega a las 8.
+Estimad el tamaño inicial con el histórico, el ritmo de llegada y la retención prevista. Añadid margen y revisad la estimación con medidas reales: el crecimiento tiene incertidumbre. Sobredimensionar aumenta el coste; quedarse corto puede impedir que el job llegue a las 8.
 
 Añadir nodos **no** convierte solo un Excel de finanzas en clúster: el programa del job tiene que **saber** partirse. El PMS de recepción puede seguir en **un** servidor.
 

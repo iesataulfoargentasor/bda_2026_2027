@@ -38,7 +38,7 @@ AWS Academy os presta una **cuenta de prácticas** mientras dura el curso del pr
 | **End Lab**: termina la sesión; la conservación y parada de recursos dependen del laboratorio | **Reset**: borra **toda** la cuenta de prácticas. No tiene deshacer |
 | Cubo **privado** (Block Public Access) | Cubo abierto al mundo (`Principal: *`) ni web pública |
 
-El disco (S3) y el cálculo (un job, un clúster) **no tienen por qué vivir juntos**. Es uno de los diseños posibles, también fuera de la nube, explicado en de [1.2](clusters.md){target="_blank" rel="noopener"}: el dato en el cubo; la CPU donde haga falta.
+El disco (S3) y el cálculo (un job, un clúster) **no tienen por qué vivir juntos**. Es uno de los diseños posibles, también fuera de la nube, explicado en [1.2](clusters.md){target="_blank" rel="noopener"}: el dato en el cubo; la CPU donde haga falta.
 
 ## 1. Entrar
 
