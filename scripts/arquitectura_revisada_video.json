@@ -1,0 +1,180 @@
+[
+  {
+    "title": "¿Cómo llega el cobro de Ana al panel?",
+    "label": "La arquitectura conecta las piezas que ya conocemos.",
+    "active": 0,
+    "heading": "Una cifra visible depende de todo un recorrido",
+    "body": "Origen, entrada, preparación y consulta deben encajar.",
+    "takeaway": "Una arquitectura reparte responsabilidades.",
+    "narration": "Vamos a volver al cobro de Ana. Ella ha pagado su estancia en Laredo y, a la mañana siguiente, la directora ve el importe del hotel en un panel. Entre esos dos momentos han pasado bastantes cosas. Ya hemos estudiado cómo guardar los datos y cómo procesarlos. Ahora vamos a conectar esas piezas. ¿Quién recoge el pago? ¿Quién comprueba su significado? ¿Quién calcula y quién presenta el resultado? Organizar esa colaboración es diseñar una arquitectura. La entenderemos siguiendo el cobro, en lugar de empezar por una lista de programas."
+  },
+  {
+    "title": "La primera responsabilidad es recoger lo que existe",
+    "label": "La reserva y el cobro nacen en sistemas diferentes.",
+    "active": 1,
+    "heading": "Ingesta: recibir los datos y comprobar su cobertura",
+    "body": "Registramos fuente, momento de extracción y periodo recibido.",
+    "takeaway": "No recibir un dato no significa que su valor sea cero.",
+    "narration": "El primer paso es acercarnos a los sistemas donde ocurrió la operación. La reserva está en el programa del hotel y el pago puede venir de una pasarela. La ingesta obtiene una copia para nuestro trabajo. Pero imaginad que la fuente entrega los cobros en varias páginas y solo recogemos la primera. El archivo podría parecer correcto y, aun así, faltar el pago de Ana. Por eso comprobamos qué periodo hemos recibido y si la entrega está completa. Antes de calcular nada, necesitamos saber que tenemos los datos que esperábamos."
+  },
+  {
+    "title": "Recibir las piezas no basta: deben entenderse",
+    "label": "Ahora comprobamos que los códigos y los significados coincidan.",
+    "active": 1,
+    "heading": "Integración: reconocer el mismo hotel y la misma reserva",
+    "body": "Unificamos identificadores, estados, unidades y fechas según reglas conocidas.",
+    "takeaway": "Igual formato no garantiza igual significado.",
+    "narration": "Una vez recibidos, aparece otra pregunta: ¿cómo reconocemos qué reserva corresponde a cada pago? Quizá una fuente llama al hotel Laredo y otra utiliza un código. Incluso el mismo código podría significar algo distinto en dos sistemas. La integración establece esas correspondencias. También pone de acuerdo fechas, monedas y estados. Pensad en ello como preparar un idioma común. No basta con cambiar mayúsculas y minúsculas; debemos comprobar que las piezas que vamos a unir representan realmente lo mismo. Así evitamos atribuir a otro hotel el cobro de Ana."
+  },
+  {
+    "title": "Conservamos el material para poder revisarlo",
+    "label": "El almacenamiento sostiene el trabajo de preparación.",
+    "active": 2,
+    "heading": "Originales y resultados preparados tienen usos distintos",
+    "body": "Organizamos fechas, permisos, conservación y recuperación.",
+    "takeaway": "La fecha de llegada puede diferir de la fecha del cobro.",
+    "narration": "Ya sabemos qué hemos recibido y cómo interpretarlo. Ahora necesitamos conservarlo para poder trabajar y, si hace falta, volver atrás. Guardamos originales con su contexto y organizamos aparte los datos preparados. Recordad el ejemplo del mensaje tardío: la fecha en que recibimos un pago puede ser distinta de la fecha en que ocurrió. Si conservamos ambas, podremos asignarlo al cierre adecuado. Esta responsabilidad de almacenamiento también incluye permisos, conservación y recuperación. El lago y el almacén de informes que vimos antes son opciones para resolver esas necesidades."
+  },
+  {
+    "title": "Ahora calculamos la cifra que necesita dirección",
+    "label": "Procesar exige reglas explícitas, no solo sumar columnas.",
+    "active": 2,
+    "heading": "¿Qué cuenta como importe cobrado?",
+    "body": "Decidimos cómo tratar pagos confirmados, devoluciones y registros repetidos.",
+    "takeaway": "Misma entrada y mismas reglas deben producir el resultado esperado.",
+    "narration": "Con ese material podemos preparar la cifra que quiere dirección. Pero antes de sumar, acordamos qué cuenta como cobro: pagos confirmados, devoluciones y posibles duplicados. El procesamiento aplica esas reglas. Fijaos en que integración y procesamiento pueden realizar transformaciones parecidas. Los distinguimos para explicar su propósito, no porque cada uno necesite obligatoriamente un programa separado. Si mañana repetimos el cálculo con los mismos datos y reglas, debemos obtener el resultado esperado. Si cambia, necesitamos una razón que podamos explicar, no una cifra que varíe sin saber por qué."
+  },
+  {
+    "title": "La cifra debe poder consultarse y entenderse",
+    "label": "Llegamos al panel que abre la directora.",
+    "active": 3,
+    "heading": "Consulta y visualización cumplen funciones distintas",
+    "body": "Seleccionar Laredo es consultar; mostrar periodo, unidades y filtros permite interpretar.",
+    "takeaway": "Un dato pendiente no debe aparecer como un cero confirmado.",
+    "narration": "Llega la mañana y la directora selecciona Laredo. La consulta recupera el indicador y la visualización lo presenta. Parece el final del trabajo, pero aún debemos ayudarla a interpretarlo: qué día resume, en qué moneda está y cuándo se actualizó. Si faltan los datos de un hotel, mostrar cero daría a entender que no cobró nada. Y si la ocupación baja, quizá haya habitaciones en reforma. El panel muestra el resultado; investigar su causa requiere contexto. Por eso una buena arquitectura también cuida cómo entregamos la información."
+  },
+  {
+    "title": "Ana no debe perder el control de sus datos",
+    "label": "La seguridad acompaña todo el recorrido.",
+    "active": -1,
+    "heading": "Menor privilegio: cada persona accede a lo necesario",
+    "body": "Aplicamos controles desde la entrada hasta los informes.",
+    "takeaway": "Seguridad no es un permiso añadido al final.",
+    "narration": "Ahora detengámonos un momento en quién puede ver esos datos. Para conocer el total cobrado, la directora no necesita abrir el documento de identidad de Ana. Marketing tampoco necesita todos sus datos personales. La seguridad acompaña el recorrido completo: fuentes, archivos, procesos y paneles. Damos a cada tarea los permisos y datos que realmente necesita; eso es aplicar el menor privilegio. Si protegemos el panel pero dejamos los originales accesibles para cualquiera, la protección queda incompleta. No es un último paso que añadimos cuando ya hemos terminado."
+  },
+  {
+    "title": "¿Y si el proceso termina, pero la cifra está mal?",
+    "label": "Monitorizar también significa observar los datos.",
+    "active": -1,
+    "heading": "No basta con que el programa diga que terminó bien",
+    "body": "Controlamos tiempos, errores, filas recibidas, descartadas y publicadas.",
+    "takeaway": "Linaje: poder seguir la cifra hasta sus fuentes y reglas.",
+    "narration": "Además de proteger el recorrido, debemos observarlo. Imaginad que el proceso acaba sin errores, pero un filtro elimina todos los cobros de Laredo. El programa ha terminado; el resultado, sin embargo, está mal. Por eso la monitorización revisa también filas recibidas, descartadas y publicadas, además de fechas y tiempos. Si algo no cuadra, el linaje nos permite seguir la cifra hacia atrás: del panel al cálculo, y del cálculo al pago original. Así buscamos dónde se produjo el problema, en lugar de intentar arreglarlo cambiando el gráfico."
+  },
+  {
+    "title": "Las tareas tienen que ejecutarse en el orden correcto",
+    "label": "El recorrido también necesita coordinación y reglas compartidas.",
+    "active": -1,
+    "heading": "Gobierno, DataOps y orquestación se complementan",
+    "body": "Acordar significados, probar cambios y coordinar tareas son responsabilidades distintas.",
+    "takeaway": "El orquestador coordina; los procesos realizan las transformaciones.",
+    "narration": "Para repetir este trabajo cada noche, necesitamos también coordinarlo. No podemos publicar mientras faltan validaciones. La orquestación organiza ese orden y decide qué hacer si una tarea falla. Ahora imaginad que cambia la definición de cobro. Primero alguien debe acordar el nuevo significado: ahí interviene el gobierno del dato. Después probamos y versionamos el cambio, con prácticas de DataOps. Finalmente lo ejecutamos de forma controlada. Son responsabilidades que se complementan. Su utilidad se entiende mejor cuando las relacionamos con un cambio concreto que el equipo necesita realizar."
+  },
+  {
+    "title": "A las dos de la mañana, una máquina falla",
+    "label": "Diseñar también es preparar cómo recuperarse.",
+    "active": 2,
+    "heading": "¿Cuánto podemos tardar y cuántos datos podemos perder?",
+    "body": "RTO: objetivo de tiempo de recuperación. RPO: pérdida de datos tolerable medida en tiempo.",
+    "takeaway": "Reintentar sin duplicar y publicar solo resultados validados.",
+    "narration": "Y como los fallos pueden ocurrir, vamos a preparar uno en nuestro ejemplo. Son las dos de la mañana y una máquina se detiene. ¿Cuánto podemos tardar en recuperar el servicio? Ese objetivo es el RTO. Otra pregunta distinta es cuánta pérdida de datos aceptaríamos, expresada en tiempo: ese es el RPO. Necesitamos copias y procedimientos que respondan a ambos, y probar que funcionan. Al recuperar, tampoco podemos duplicar el cobro de Ana ni presentar un cierre incompleto como definitivo. Recuperar bien forma parte del diseño, no de la improvisación del día del fallo."
+  },
+  {
+    "kind": "normal",
+    "title": "Una nueva pregunta: ¿cuánto llevamos cobrado hoy?",
+    "label": "Vamos a resolver exactamente el mismo ejemplo de dos maneras.",
+    "active": 3,
+    "heading": "Mismo periodo: desde las 00:00 de hoy hasta la consulta",
+    "body": "A las 10:00: 1.000 €. Ana paga 100 € a las 10:05.",
+    "takeaway": "Este indicador es distinto del cierre de ayer.",
+    "narration": "Hasta aquí hemos preparado el cierre anterior para las ocho. Ahora la directora pide algo más: cuánto llevamos cobrado hoy, hasta el momento de la consulta. Para este nuevo indicador acordamos contar desde las doce de la noche que inicia hoy. Es una pregunta distinta del cierre de ayer. Vamos a poner horas y cifras sencillas: los cobros de hoy hasta las diez suman mil euros. A las diez y cinco llega el pago de Ana, de cien euros. Para este ejemplo suponemos que no hay otros cobros nuevos, devoluciones ni llegadas tardías. Queremos mostrar mil cien euros. Compararemos Lambda y Kappa con ese mismo periodo y esas mismas reglas. Así veremos qué cambia en el recorrido sin cambiar lo que estamos calculando."
+  },
+  {
+    "kind": "lambda",
+    "title": "Lambda: dos caminos que se complementan",
+    "label": "Base de hoy hasta las 10:00 + cobros posteriores al corte.",
+    "active": 3,
+    "heading": "",
+    "body": "",
+    "takeaway": "El histórico consultado y las novedades pertenecen al mismo periodo.",
+    "narration": "Empecemos por Lambda. Un camino trabaja por lotes sobre los datos conservados y deja una vista preparada. Para nuestra consulta, esa vista aporta los cobros de hoy hasta las diez: mil euros. El otro camino atiende los eventos posteriores a ese corte que el lote todavía no ha incorporado. Ahí están los cien de Ana, recibidos a las diez y cinco. Cuando consultamos, combinamos esas dos partes y obtenemos mil cien. Detengámonos en la frontera: mil euros hasta las diez y cien después. Aunque conservemos meses de histórico, esta consulta selecciona solo el periodo de hoy. No sumamos el cierre de ayer ni todo lo acumulado desde que abrió el hotel. El periodo y el corte nos dicen qué aporta cada camino."
+  },
+  {
+    "kind": "lambda_update",
+    "title": "Lambda: avanzamos el corte hasta las 10:10",
+    "label": "El siguiente lote incorpora el cobro de Ana en la misma vista de hoy.",
+    "active": 3,
+    "heading": "",
+    "body": "",
+    "takeaway": "No sumamos 1.100 € + 100 €: contaríamos dos veces el mismo cobro.",
+    "narration": "Ahora dejamos avanzar el tiempo hasta las diez y diez. En este ejemplo ejecutamos otro lote, que incorpora el pago de Ana en la vista de hoy. La base pasa a mil cien euros y el corte avanza hasta las diez y diez. ¿Seguimos añadiendo los cien desde el camino reciente? No: ese pago ya contribuye desde la base. Su aportación reciente a esta consulta deja de sumarse, y el total sigue siendo mil cien. No ha llegado dinero nuevo ni hemos cambiado de día. Solo ha cambiado qué camino aporta ese cobro. Esto no obliga a borrar el evento original. Lambda necesita coordinar la frontera temporal, mantener las mismas reglas y evitar huecos o duplicados al actualizar las vistas."
+  },
+  {
+    "kind": "kappa",
+    "title": "Kappa: una vía principal sobre eventos guardados",
+    "label": "El resultado se actualiza a medida que se procesan los eventos.",
+    "active": 3,
+    "heading": "",
+    "body": "",
+    "takeaway": "El historial conserva eventos; la vista conserva el resultado del cálculo.",
+    "narration": "Veamos ahora Kappa desde el mismo punto de partida. Conservamos los eventos de cobro: qué ocurrió, cuándo y con qué identificador. Una vía principal los procesa y mantiene una vista para consultar. La vista de hoy, desde las doce de la noche hasta las diez, lleva mil euros. Al leer el evento de Ana de las diez y cinco, incorpora sus cien euros y pasa a mil cien. Aquí no estamos sumando una cuenta histórica por lotes y otra reciente como en Lambda. Construimos el resultado a partir del flujo de eventos. Ahora bien, para que este diseño sea útil, tenemos que pensar también cómo rehacerlo."
+  },
+  {
+    "kind": "kappa_replay",
+    "title": "Kappa: ¿y si necesitamos rehacer el resultado?",
+    "label": "Replay significa volver a procesar eventos que ya conservamos.",
+    "active": 3,
+    "heading": "",
+    "body": "",
+    "takeaway": "Releer un cobro reconstruye información: no vuelve a cobrar al huésped.",
+    "narration": "Supongamos que descubrimos un error en la regla del cálculo. Como guardamos los eventos necesarios, podemos volver a leerlos y construir una vista corregida. Eso es hacer un replay. Pensad en releer los apuntes de un cuaderno para rehacer una suma. La nueva cuenta no se añade encima de la antigua: se valida y se sustituye de forma controlada. Para hacerlo necesitamos retención suficiente, reglas conocidas y control de duplicados. Y conviene separar dos cosas: volver a procesar el evento de Ana no significa volver a cobrarle la tarjeta. Estamos reconstruyendo información."
+  },
+  {
+    "kind": "compare",
+    "title": "La diferencia está en cómo construyen la respuesta",
+    "label": "Misma pregunta, misma cifra; distinta organización del trabajo.",
+    "active": 3,
+    "heading": "",
+    "body": "",
+    "takeaway": "Dos caminos coordinados frente a una vía principal que puede repetirse.",
+    "narration": "Pongamos ahora los dos esquemas juntos. Para el mismo periodo de consulta, Lambda mantiene una base por lotes y unas novedades posteriores a su corte; la consulta combina lo que corresponde de cada parte. Kappa utiliza una vía principal de eventos y, cuando necesita reconstruir una vista, vuelve a procesar los eventos conservados. En Lambda debemos mantener coordinados dos caminos. En Kappa debemos poder conservar y releer lo necesario a un coste viable. Una vía principal no significa un solo ordenador ni un único informe. Puede haber varias máquinas y distintos consumidores. La diferencia está en cómo organizamos el cálculo y su reconstrucción."
+  },
+  {
+    "kind": "normal",
+    "title": "¿Cuál necesita nuestro hotel?",
+    "label": "La necesidad del usuario decide si esta complejidad compensa.",
+    "active": 3,
+    "heading": "Solo el cierre de ayer: un proceso por lotes puede bastar",
+    "body": "Un informe de cobros y un indicador independiente de sensores no definen Lambda.",
+    "takeaway": "No hay que elegir Lambda o Kappa si una solución sencilla basta.",
+    "narration": "Con esa comparación, volvamos a lo que el hotel necesita de verdad. Si dirección solo pide el cierre de ayer a las ocho, un proceso por lotes puede bastar. No tenemos que construir Lambda o Kappa por haber aprendido sus nombres. Tampoco tener un informe de cobros y un indicador de sensores convierte el sistema en Lambda: son preguntas distintas, no dos partes de la misma cuenta. Estudiaremos cada opción cuando responda al requisito. Lo importante es justificar qué queremos consultar y cómo mantendremos fiable ese resultado."
+  },
+  {
+    "title": "El acceso real orienta los recursos y las herramientas",
+    "label": "El diseño debe encajar con el uso y con el presupuesto.",
+    "active": -1,
+    "heading": "Caliente, templado y frío describen frecuencia y plazo de acceso",
+    "body": "Guardamos cada conjunto donde pueda recuperarse a tiempo y con un coste adecuado.",
+    "takeaway": "Primero la responsabilidad; después la herramienta.",
+    "narration": "Una vez elegido el recorrido, podemos ajustar sus recursos. No todos los datos se consultan con la misma frecuencia. Un indicador utilizado continuamente se considera caliente; un informe periódico puede ser templado; un histórico excepcional, frío. Esa temperatura habla del acceso, no de la calidad. Guardar en frío puede costar menos, aunque recuperar después tarde o cueste más. A continuación elegimos herramientas para recoger, transformar, coordinar o presentar. En la nube cambia quién opera parte de la infraestructura y cómo pagamos, pero seguimos teniendo que tomar estas decisiones."
+  },
+  {
+    "title": "Ya tenemos el plano que conecta todas las piezas",
+    "label": "Las capas son responsabilidades; el ciclo es el recorrido del dato.",
+    "active": -1,
+    "heading": "Ingesta · integración · almacenamiento · procesamiento",
+    "body": "Consulta y visualización entregan el resultado; seguridad y monitorización atraviesan todo.",
+    "takeaway": "La arquitectura se justifica por el resultado que debe garantizar.",
+    "narration": "Ya podemos recorrer el camino completo. Recibimos el cobro de Ana, unificamos su significado, lo conservamos y lo procesamos. Después lo ponemos a disposición de una consulta y lo mostramos de forma comprensible. Seguridad y monitorización acompañan todos esos pasos: así encajan las ocho responsabilidades del apartado. Una herramienta puede cubrir varias y una solución sencilla puede resolverlas sin un gran despliegue. Diseñar la arquitectura es poder explicar cómo llega la cifra al panel, cómo sabemos que es correcta y qué haremos si algo falla. Ese es el mapa que necesitamos antes de elegir los programas."
+  }
+]

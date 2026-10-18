@@ -1,0 +1,712 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:02.126
+Vamos a acompañar otra vez a Ana,
+
+00:00:02.297 --> 00:00:04.389
+que ha reservado tres noches en Laredo.
+
+00:00:04.918 --> 00:00:07.773
+Mientras prepara su llegada, recepción necesita
+
+00:00:07.786 --> 00:00:10.496
+consultar la reserva y registrar los pagos.
+
+00:00:11.457 --> 00:00:14.746
+Más adelante, dirección querrá estudiar los resultados
+
+00:00:14.760 --> 00:00:17.273
+del hotel y marketing revisará sus campañas.
+
+00:00:18.233 --> 00:00:21.168
+Fijaos: partimos de la misma reserva, pero
+
+00:00:21.181 --> 00:00:23.944
+cada persona necesita utilizarla de una manera.
+
+00:00:24.852 --> 00:00:26.931
+Por eso vamos a seguir su recorrido,
+
+00:00:27.062 --> 00:00:29.431
+sin empezar por una lista de tecnologías.
+
+00:00:30.352 --> 00:00:32.220
+En cada paso nos preguntaremos qué
+
+00:00:32.233 --> 00:00:35.049
+necesitamos guardar, para qué lo necesitamos y
+
+00:00:35.062 --> 00:00:36.865
+qué debe ocurrir si algo falla.
+
+00:00:37.773 --> 00:00:41.075
+Empecemos por la necesidad más cercana: que recepción
+
+00:00:41.089 --> 00:00:44.062
+sepa a quién corresponde cada reserva y cada cobro.
+
+00:00:44.970 --> 00:00:46.918
+Podemos organizarlo en tablas.
+
+00:00:47.839 --> 00:00:51.062
+Una contiene hoteles, otra reservas y otra pagos.
+
+00:00:51.983 --> 00:00:54.852
+La reserva de Ana lleva el identificador de Laredo,
+
+00:00:55.062 --> 00:00:57.878
+y su pago incluye el identificador de la reserva.
+
+00:00:58.786 --> 00:01:00.720
+Son referencias que permiten unir
+
+00:01:00.733 --> 00:01:02.773
+la información sin repetirlo todo.
+
+00:01:03.681 --> 00:01:05.681
+Por ejemplo, no hace falta copiar
+
+00:01:05.694 --> 00:01:07.733
+la dirección del hotel en cada reserva.
+
+00:01:08.628 --> 00:01:11.233
+Esta organización es el modelo relacional.
+
+00:01:12.154 --> 00:01:13.760
+Cuando queremos consultar los
+
+00:01:13.773 --> 00:01:16.852
+datos relacionados, podemos utilizar SQL.
+
+00:01:17.760 --> 00:01:20.641
+Ya tenemos un sitio donde registrar la estancia.
+
+00:01:21.562 --> 00:01:24.404
+Ahora bien, guardar las relaciones correctamente
+
+00:01:24.418 --> 00:01:26.312
+no resuelve todos los problemas.
+
+00:01:27.246 --> 00:01:30.010
+Imaginad que recepción aplica cincuenta euros de
+
+00:01:30.023 --> 00:01:31.839
+una fianza a un cargo de Ana.
+
+00:01:32.383 --> 00:01:34.527
+Hay que reducir la fianza disponible
+
+00:01:34.540 --> 00:01:36.698
+y dejar registrada esa aplicación.
+
+00:01:37.606 --> 00:01:39.422
+¿Qué pasaría si el programa hiciera
+
+00:01:39.435 --> 00:01:40.988
+solo una de las dos cosas?
+
+00:01:41.562 --> 00:01:43.273
+Las cuentas no cuadrarían.
+
+00:01:44.194 --> 00:01:47.707
+Por eso agrupamos esos cambios locales en una transacción.
+
+00:01:48.615 --> 00:01:51.496
+Si todo termina bien, se confirman juntos.
+
+00:01:52.430 --> 00:01:55.588
+Si falla antes de confirmar, se deshace el paquete.
+
+00:01:56.509 --> 00:01:58.799
+A esta garantía la llamamos atomicidad:
+
+00:01:59.036 --> 00:02:01.549
+dentro de esa transacción, todo o nada.
+
+00:02:02.483 --> 00:02:05.023
+Esa atomicidad es la primera letra de ACID.
+
+00:02:05.930 --> 00:02:07.996
+Las demás completan la protección.
+
+00:02:08.904 --> 00:02:11.838
+La consistencia exige respetar las reglas que hemos
+
+00:02:11.852 --> 00:02:15.549
+definido, como impedir referencias a reservas inexistentes.
+
+00:02:16.470 --> 00:02:19.023
+El aislamiento regula cómo interfieren dos
+
+00:02:19.036 --> 00:02:22.088
+operaciones simultáneas, según el nivel elegido.
+
+00:02:23.009 --> 00:02:26.207
+Y la durabilidad protege los cambios confirmados frente
+
+00:02:26.220 --> 00:02:28.286
+a los fallos previstos por el sistema.
+
+00:02:28.818 --> 00:02:30.186
+Quedaos con la idea de que
+
+00:02:30.200 --> 00:02:32.463
+cada garantía cubre un problema distinto.
+
+00:02:33.357 --> 00:02:36.278
+Además, tienen un alcance: si una pasarela
+
+00:02:36.292 --> 00:02:39.607
+externa ya ha cobrado la tarjeta, deshacer nuestra
+
+00:02:39.621 --> 00:02:43.015
+transacción local no devuelve automáticamente ese dinero.
+
+00:02:43.923 --> 00:02:47.239
+Debemos comprobar el pago externo y evitar repetirlo.
+
+00:02:48.147 --> 00:02:49.936
+Hasta aquí hemos pensado en los
+
+00:02:49.950 --> 00:02:51.555
+cambios dentro de una base.
+
+00:02:52.476 --> 00:02:55.160
+Demos ahora un paso más: tenemos copias en
+
+00:02:55.173 --> 00:02:58.134
+varias máquinas, como vimos al hablar de clústeres.
+
+00:02:59.055 --> 00:03:01.278
+Una confirma una reserva y, justo
+
+00:03:01.292 --> 00:03:03.950
+después, se corta la comunicación con otra.
+
+00:03:04.857 --> 00:03:07.713
+La segunda puede quedarse sin conocer ese cambio.
+
+00:03:08.621 --> 00:03:10.673
+¿Qué debería hacer si alguien pregunta?
+
+00:03:11.581 --> 00:03:14.476
+Durante ese corte, no podemos garantizar a
+
+00:03:14.489 --> 00:03:16.634
+la vez que todas las operaciones reciban
+
+00:03:16.647 --> 00:03:19.910
+respuesta y que ninguna use información desactualizada.
+
+00:03:20.134 --> 00:03:22.331
+Ese es el compromiso que explica CAP.
+
+00:03:23.239 --> 00:03:25.410
+Aquí la consistencia trata de la visión
+
+00:03:25.423 --> 00:03:27.989
+actual de los datos; en ACID hablábamos
+
+00:03:28.002 --> 00:03:30.305
+de respetar las reglas de la transacción.
+
+00:03:31.226 --> 00:03:34.015
+Para decidir entre esas respuestas, pensemos
+
+00:03:34.028 --> 00:03:35.805
+en algo que el hotel pueda valorar.
+
+00:03:36.778 --> 00:03:39.305
+Si cambia la descripción del desayuno y otra
+
+00:03:39.318 --> 00:03:42.976
+copia tarda en mostrarla, quizá el retraso sea aceptable.
+
+00:03:43.897 --> 00:03:47.252
+Pero si estamos vendiendo la última habitación, trabajar
+
+00:03:47.265 --> 00:03:50.910
+con una disponibilidad antigua puede tener consecuencias graves.
+
+00:03:51.831 --> 00:03:55.015
+En ese caso puede ser necesario rechazar temporalmente
+
+00:03:55.028 --> 00:03:58.081
+alguna operación para conservar la garantía elegida.
+
+00:03:58.615 --> 00:04:01.892
+BASE describe un enfoque que admite diferencias temporales
+
+00:04:01.905 --> 00:04:04.536
+entre copias y busca que terminen convergiendo.
+
+00:04:05.457 --> 00:04:08.497
+Eso requiere recuperar la comunicación y resolver los
+
+00:04:08.510 --> 00:04:11.694
+cambios según unas reglas; no promete un plazo fijo.
+
+00:04:12.602 --> 00:04:14.813
+Elegimos según la operación, no solo
+
+00:04:14.826 --> 00:04:16.089
+por el nombre de la base.
+
+00:04:17.010 --> 00:04:18.642
+Bien, volvamos a Ana.
+
+00:04:19.563 --> 00:04:21.563
+Su reserva ya está registrada
+
+00:04:21.576 --> 00:04:23.615
+y recepción puede seguir atendiendo.
+
+00:04:24.536 --> 00:04:28.300
+Ahora queremos estudiarla junto con otras reservas, mensajes
+
+00:04:28.313 --> 00:04:30.181
+de la web y lecturas de sensores.
+
+00:04:31.102 --> 00:04:33.786
+Para ese trabajo podemos conservar copias de los
+
+00:04:33.800 --> 00:04:35.984
+datos recibidos en un lago de datos.
+
+00:04:36.905 --> 00:04:38.536
+¿Por qué guardar el original?
+
+00:04:39.457 --> 00:04:41.786
+Imaginad que interpretamos mal una fecha
+
+00:04:41.800 --> 00:04:44.347
+y descubrimos el error después.
+
+00:04:45.271 --> 00:04:48.060
+Si conservamos la entrada, podemos corregir
+
+00:04:48.074 --> 00:04:50.337
+la transformación y repetir el cálculo.
+
+00:04:51.245 --> 00:04:53.692
+Esta copia cumple una función distinta:
+
+00:04:53.902 --> 00:04:56.166
+nos permite volver a trabajar los datos.
+
+00:04:57.074 --> 00:04:58.587
+La reserva con la que opera
+
+00:04:58.600 --> 00:05:00.416
+recepción sigue en su sistema.
+
+00:05:01.350 --> 00:05:03.731
+Pero tener muchos archivos juntos todavía
+
+00:05:03.745 --> 00:05:05.468
+no hace que ese lago sea útil.
+
+00:05:06.402 --> 00:05:08.758
+Si mañana otra persona abre la carpeta,
+
+00:05:08.929 --> 00:05:11.468
+necesitará saber qué contiene cada conjunto,
+
+00:05:11.771 --> 00:05:14.047
+de dónde viene y cuándo se actualizó.
+
+00:05:14.955 --> 00:05:16.521
+Por eso lo acompañamos de un
+
+00:05:16.534 --> 00:05:19.324
+catálogo, responsables y reglas de acceso.
+
+00:05:20.258 --> 00:05:22.416
+Podemos separar originales, datos
+
+00:05:22.429 --> 00:05:24.666
+preparados y resultados publicados.
+
+00:05:25.587 --> 00:05:28.468
+Así sabremos dónde buscar y qué versión utilizar.
+
+00:05:29.389 --> 00:05:32.653
+También fijamos cuánto tiempo conservar cada información.
+
+00:05:33.560 --> 00:05:35.863
+El objetivo es poder trabajar con ella de
+
+00:05:35.876 --> 00:05:39.231
+forma controlada, no guardar cualquier dato para siempre.
+
+00:05:40.139 --> 00:05:41.876
+Con esto ya tenemos materiales
+
+00:05:41.889 --> 00:05:43.639
+que podemos recuperar y entender.
+
+00:05:44.534 --> 00:05:48.245
+La directora, sin embargo, no quiere recorrer esas carpetas.
+
+00:05:49.152 --> 00:05:51.850
+Su pregunta es más concreta: ¿cuánto se cobró
+
+00:05:51.863 --> 00:05:54.113
+en cada hotel durante el cierre acordado?
+
+00:05:55.021 --> 00:05:58.705
+Para responder, comprobamos pagos confirmados, evitamos
+
+00:05:58.718 --> 00:06:01.389
+duplicados y acordamos qué incluye la cifra.
+
+00:06:02.310 --> 00:06:04.837
+Si Laredo cuenta dinero recibido y Potes el
+
+00:06:04.850 --> 00:06:08.231
+precio de las reservas, sumar ambas columnas no sirve.
+
+00:06:09.152 --> 00:06:11.771
+La información comparable puede organizarse en
+
+00:06:11.784 --> 00:06:14.245
+un almacén analítico, o data warehouse.
+
+00:06:15.166 --> 00:06:16.863
+En nuestro caso publicamos el
+
+00:06:16.876 --> 00:06:18.376
+cierre anterior a las ocho.
+
+00:06:19.284 --> 00:06:21.679
+Pero fijémonos en un matiz: dentro
+
+00:06:21.692 --> 00:06:24.060
+del almacén puede haber tablas de preparación
+
+00:06:24.074 --> 00:06:26.284
+que todavía no son informes validados.
+
+00:06:27.231 --> 00:06:28.468
+Y el lago también puede
+
+00:06:28.481 --> 00:06:30.929
+contener datos preparados y resultados.
+
+00:06:31.837 --> 00:06:34.139
+Por tanto, no son dos cajas donde una
+
+00:06:34.152 --> 00:06:37.337
+solo admite originales y la otra solo datos limpios.
+
+00:06:38.245 --> 00:06:40.363
+Son formas de organizar el trabajo,
+
+00:06:40.468 --> 00:06:42.863
+con zonas y permisos según su finalidad.
+
+00:06:43.544 --> 00:06:46.202
+Con esa distinción, imaginemos dos maneras
+
+00:06:46.215 --> 00:06:47.807
+de preparar el mismo informe.
+
+00:06:48.715 --> 00:06:50.899
+Si un proceso externo transforma los
+
+00:06:50.912 --> 00:06:53.044
+datos y después carga el resultado en
+
+00:06:53.057 --> 00:06:55.912
+el almacén acordado, hablamos de ETL.
+
+00:06:56.847 --> 00:06:59.031
+Si cargamos primero las entradas en su
+
+00:06:59.044 --> 00:07:01.518
+zona de preparación y utilizamos el motor del
+
+00:07:01.531 --> 00:07:05.044
+almacén para transformarlas allí, hablamos de ELT.
+
+00:07:05.978 --> 00:07:07.136
+En los dos casos la
+
+00:07:07.149 --> 00:07:09.649
+directora consulta una salida comprobada.
+
+00:07:10.583 --> 00:07:12.399
+También en los dos debemos decidir
+
+00:07:12.412 --> 00:07:15.149
+qué entradas conservar para repetir los cálculos.
+
+00:07:16.057 --> 00:07:18.254
+No hace falta pasar antes por un lago,
+
+00:07:18.412 --> 00:07:21.702
+y cargar primero tampoco garantiza conservar el histórico.
+
+00:07:22.221 --> 00:07:26.287
+Más adelante, en Ingesta, veremos estos recorridos con detalle.
+
+00:07:27.208 --> 00:07:29.708
+Por ahora, lo importante es distinguir
+
+00:07:29.721 --> 00:07:32.050
+el lugar donde trabajamos de la información
+
+00:07:32.063 --> 00:07:33.865
+que ya está lista para consultar.
+
+00:07:34.787 --> 00:07:36.865
+Al preparar ese almacén aparece otra
+
+00:07:36.879 --> 00:07:39.050
+pregunta: ¿qué representa cada fila?
+
+00:07:39.958 --> 00:07:42.181
+Podemos guardar cada cobro individual o
+
+00:07:42.194 --> 00:07:43.944
+solo un total por hotel y día.
+
+00:07:44.469 --> 00:07:46.430
+Detengámonos en la diferencia.
+
+00:07:47.351 --> 00:07:50.087
+Con el detalle podemos investigar el pago de Ana.
+
+00:07:51.022 --> 00:07:53.127
+Con el total diario sabemos cuánto se
+
+00:07:53.140 --> 00:07:55.548
+cobró, pero no podemos reconstruir los
+
+00:07:55.561 --> 00:07:57.982
+pagos individuales a partir de esa suma.
+
+00:07:58.890 --> 00:08:01.403
+Ese nivel de detalle se llama granularidad.
+
+00:08:01.890 --> 00:08:04.153
+El importe es una medida, y el hotel,
+
+00:08:04.285 --> 00:08:06.548
+la fecha o el canal le dan contexto.
+
+00:08:07.456 --> 00:08:10.495
+Elegir bien este nivel permite responder las preguntas
+
+00:08:10.508 --> 00:08:13.535
+de hoy y conservar el detalle que necesitaremos mañana.
+
+00:08:14.456 --> 00:08:16.679
+Ahora que la información es comparable,
+
+00:08:16.824 --> 00:08:18.916
+podemos acercársela a cada equipo.
+
+00:08:19.824 --> 00:08:21.982
+Finanzas necesita revisar cobros;
+
+00:08:22.232 --> 00:08:24.337
+marketing quiere estudiar campañas.
+
+00:08:25.245 --> 00:08:27.219
+No tienen por qué ver todas las tablas
+
+00:08:27.232 --> 00:08:29.956
+ni los datos personales de Ana que no necesitan.
+
+00:08:30.496 --> 00:08:32.233
+Un data mart organiza la parte
+
+00:08:32.246 --> 00:08:34.010
+útil para un ámbito concreto.
+
+00:08:34.931 --> 00:08:37.102
+En nuestro ejemplo lo alimentamos desde
+
+00:08:37.115 --> 00:08:39.996
+el almacén común, para compartir definiciones.
+
+00:08:40.904 --> 00:08:43.378
+También hay marts que combinan otras fuentes.
+
+00:08:44.286 --> 00:08:46.220
+Lo importante es documentarlo.
+
+00:08:47.141 --> 00:08:50.588
+Si dos informes difieren, primero revisamos el periodo,
+
+00:08:50.733 --> 00:08:53.352
+las devoluciones o los impuestos que incluye cada
+
+00:08:53.365 --> 00:08:56.154
+uno, antes de concluir que uno está mal.
+
+00:08:57.075 --> 00:08:59.023
+Ya vemos para qué sirve cada lugar.
+
+00:08:59.957 --> 00:09:02.036
+Con esa idea clara, resulta más
+
+00:09:02.049 --> 00:09:04.562
+fácil elegir cómo representar los datos.
+
+00:09:05.470 --> 00:09:08.628
+En recepción nos han servido las tablas relacionadas.
+
+00:09:09.549 --> 00:09:11.799
+En otros casos puede encajar un modelo de
+
+00:09:11.812 --> 00:09:15.773
+documentos, por ejemplo para reservas web con extras diferentes.
+
+00:09:16.681 --> 00:09:19.417
+Una sesión puede recuperarse por una clave, y
+
+00:09:19.431 --> 00:09:23.207
+un grafo permite explorar relaciones entre tarjetas y reservas.
+
+00:09:24.128 --> 00:09:26.274
+Son opciones de la familia
+
+00:09:26.287 --> 00:09:28.774
+NoSQL, no una única herramienta.
+
+00:09:29.684 --> 00:09:32.868
+Tampoco significa que carezcan de transacciones: hay
+
+00:09:32.881 --> 00:09:35.500
+que comprobar las garantías del gestor concreto.
+
+00:09:36.408 --> 00:09:38.381
+Elegimos el modelo pensando en las
+
+00:09:38.395 --> 00:09:40.855
+consultas y los cambios que necesitamos.
+
+00:09:41.789 --> 00:09:43.579
+Nos queda una última capa del
+
+00:09:43.592 --> 00:09:46.750
+recorrido: cómo accede el programa al almacenamiento.
+
+00:09:47.658 --> 00:09:50.158
+Podemos darle un volumen de bloques, como
+
+00:09:50.171 --> 00:09:52.474
+un disco sobre el que organizar archivos.
+
+00:09:53.408 --> 00:09:56.895
+Podemos trabajar con ficheros y carpetas mediante rutas.
+
+00:09:57.842 --> 00:10:01.092
+O podemos usar objetos, identificados por una clave
+
+00:10:01.105 --> 00:10:03.289
+y accesibles a través de un servicio.
+
+00:10:04.197 --> 00:10:06.553
+Estas opciones no compiten con la idea de
+
+00:10:06.566 --> 00:10:09.960
+lago o almacén de informes: responden a otra pregunta.
+
+00:10:10.855 --> 00:10:12.447
+Por ejemplo, el lago puede
+
+00:10:12.460 --> 00:10:14.895
+conservar archivos Parquet como objetos.
+
+00:10:15.803 --> 00:10:18.868
+El lago describe la organización; Parquet, el
+
+00:10:18.881 --> 00:10:21.066
+formato; y el servicio de objetos,
+
+00:10:21.316 --> 00:10:23.934
+dónde y cómo se conservan esos archivos.
+
+00:10:24.842 --> 00:10:27.671
+Con esa diferencia clara, podemos entender el
+
+00:10:27.684 --> 00:10:30.197
+lakehouse sin imaginar otro tipo de disco.
+
+00:10:31.105 --> 00:10:34.368
+Supongamos que sobre los archivos del lago queremos gestionar
+
+00:10:34.381 --> 00:10:37.829
+tablas y controlar qué versión deben consultar los lectores.
+
+00:10:38.026 --> 00:10:40.684
+Un lakehouse incorpora esa gestión, con
+
+00:10:40.697 --> 00:10:43.316
+mecanismos que coordinan archivos y cambios.
+
+00:10:44.237 --> 00:10:45.579
+No basta con crear una
+
+00:10:45.592 --> 00:10:47.474
+carpeta y ponerle ese nombre.
+
+00:10:48.012 --> 00:10:51.815
+Además, el almacenamiento puede permanecer mientras retiramos las
+
+00:10:51.828 --> 00:10:55.367
+máquinas que usamos para calcular, como vimos en clústeres.
+
+00:10:56.328 --> 00:10:59.157
+Eso permite ajustar recursos, aunque debemos
+
+00:10:59.170 --> 00:11:00.828
+planificar el acceso por red.
+
+00:11:01.736 --> 00:11:03.486
+Son decisiones que se combinan
+
+00:11:03.499 --> 00:11:05.328
+para sostener el mismo recorrido.
+
+00:11:06.262 --> 00:11:09.354
+Volvamos al principio y recorrámoslo una vez más.
+
+00:11:10.275 --> 00:11:12.538
+Recepción registra la reserva de Ana
+
+00:11:12.552 --> 00:11:14.907
+con relaciones y garantías adecuadas.
+
+00:11:15.841 --> 00:11:19.709
+Conservamos originales cuando necesitamos volver a procesarlos.
+
+00:11:20.617 --> 00:11:23.788
+Preparamos cifras comparables para dirección y acercamos
+
+00:11:23.802 --> 00:11:26.617
+a cada departamento la información que utiliza.
+
+00:11:27.552 --> 00:11:29.354
+Debajo están los modelos y los
+
+00:11:29.367 --> 00:11:32.091
+servicios de almacenamiento que permiten hacerlo.
+
+00:11:33.025 --> 00:11:36.104
+Por eso, antes de elegir un nombre, preguntad para
+
+00:11:36.117 --> 00:11:38.854
+qué guardamos el dato, con qué detalle, quién
+
+00:11:38.867 --> 00:11:41.499
+lo consultará y qué debe pasar si algo falla.
+
+00:11:42.420 --> 00:11:46.644
+Cuando respondemos esas preguntas, cada concepto encuentra su lugar
+
+00:11:46.657 --> 00:11:49.552
+y el conjunto resulta mucho más fácil de entender.
