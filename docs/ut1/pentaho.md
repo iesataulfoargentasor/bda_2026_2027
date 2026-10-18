@@ -18,7 +18,7 @@ tags:
 
 ## Vídeo: del dato al informe del hotel con Pentaho
 
-Sigue el trabajo del hotel para comprender cómo preparar los datos, unir reservas y cobros, construir informes y automatizar su entrega con Pentaho. El recorrido conecta los talleres y distingue Spoon, Pan y Kitchen, con ejemplos de validación y tratamiento de errores. **Duración: 15 minutos y 18 segundos.**
+Sigue el trabajo del hotel para comprender cómo preparar los datos, unir reservas y cobros, construir informes y automatizar su entrega con Pentaho. El recorrido conecta los talleres y distingue Spoon, Pan y Kitchen, con ejemplos de validación y tratamiento de errores. **Duración: 15 minutos y 38 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/pentaho-revisado-portada.jpg" aria-label="Pentaho: del dato al informe del hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/pentaho-revisado.mp4" type="video/mp4">

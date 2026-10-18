@@ -36,7 +36,7 @@ el número de reservas por hotel y canal.
 No va a abrir nuestra herramienta
 
 10
-00:00:23,527 --> 00:00:25,961
+00:00:23,526 --> 00:00:25,961
 de trabajo: necesita un fichero claro.
 
 11
@@ -62,1258 +62,1288 @@ madrugada, para entender qué
 hace cada pieza y por qué la necesitamos.
 
 16
-00:00:41,796 --> 00:00:43,651
+00:00:41,798 --> 00:00:43,653
 La pieza que utilizamos se llama
 
 17
-00:00:43,664 --> 00:00:45,836
+00:00:43,666 --> 00:00:45,837
 Pentaho Data Integration, o PDI.
 
 18
-00:00:46,783 --> 00:00:48,836
+00:00:46,784 --> 00:00:48,837
 En Spoon, su entorno visual,
 
 19
-00:00:48,980 --> 00:00:51,099
+00:00:48,982 --> 00:00:51,100
 colocamos pasos y los conectamos.
 
 20
-00:00:52,033 --> 00:00:55,151
+00:00:52,034 --> 00:00:55,153
 Uno lee un fichero, otro filtra y otro
 escribe.
 
 21
-00:00:56,072 --> 00:00:59,257
+00:00:56,074 --> 00:00:59,258
 Las conexiones indican hacia dónde pasan los
 datos.
 
 22
-00:01:00,178 --> 00:01:04,112
+00:01:00,179 --> 00:01:04,113
 Parece sencillo, pero cada caja necesita
 reglas concretas: qué
 
 23
-00:01:04,125 --> 00:01:07,309
+00:01:04,126 --> 00:01:07,311
 columna leer, qué tipo tiene y qué condición
 aplicar.
 
 24
-00:01:08,243 --> 00:01:10,757
+00:01:08,245 --> 00:01:10,758
 El motor ejecuta lo que hemos configurado.
 
 25
-00:01:11,678 --> 00:01:13,849
+00:01:11,679 --> 00:01:13,850
 Por eso, antes de arrastrar pasos,
 
 26
-00:01:14,033 --> 00:01:16,717
+00:01:14,034 --> 00:01:16,719
 escribimos la entrada, la regla de negocio,
 
 27
-00:01:16,954 --> 00:01:19,086
+00:01:16,955 --> 00:01:19,087
 la salida y cómo la comprobaremos.
 
 28
-00:01:20,007 --> 00:01:23,257
+00:01:20,008 --> 00:01:23,258
 Estamos procesando una copia de las
 operaciones del hotel;
 
 29
-00:01:23,493 --> 00:01:26,480
+00:01:23,495 --> 00:01:26,482
 no estamos registrando el pago de Ana en
 recepción.
 
 30
-00:01:27,193 --> 00:01:30,522
+00:01:27,194 --> 00:01:30,523
 Para no perdernos después, distingamos tres
 nombres.
 
 31
-00:01:31,469 --> 00:01:33,785
+00:01:31,471 --> 00:01:33,786
 Spoon es donde diseñamos y probamos.
 
 32
-00:01:34,732 --> 00:01:37,811
+00:01:34,734 --> 00:01:37,813
 Una transformación describe cómo se tratan
 las filas
 
 33
-00:01:37,824 --> 00:01:40,706
+00:01:37,826 --> 00:01:40,707
 y se guarda en un archivo con extensión ktr.
 
 34
-00:01:41,653 --> 00:01:44,864
+00:01:41,655 --> 00:01:44,865
 Pan permite ejecutarla sin abrir la ventana
 de diseño.
 
 35
-00:01:45,772 --> 00:01:47,561
+00:01:45,773 --> 00:01:47,563
 Pero nuestra noche de trabajo puede
 
 36
-00:01:47,574 --> 00:01:50,969
+00:01:47,576 --> 00:01:50,971
 requerir más cosas: comprobar un fichero,
 lanzar
 
 37
-00:01:50,982 --> 00:01:53,298
+00:01:50,984 --> 00:01:53,300
 una transformación y detenerse si falla.
 
 38
-00:01:53,826 --> 00:01:56,694
+00:01:53,827 --> 00:01:56,696
 Esa organización se llama job, se guarda con
 
 39
-00:01:56,708 --> 00:01:59,615
+00:01:56,709 --> 00:01:59,617
 extensión kjb y se ejecuta con Kitchen.
 
 40
-00:02:00,523 --> 00:02:03,431
+00:02:00,525 --> 00:02:03,433
 Pensad en dos niveles: dentro de la
 transformación
 
 41
-00:02:03,444 --> 00:02:06,971
+00:02:03,446 --> 00:02:06,972
 preparamos los datos; desde el job
 coordinamos las tareas.
 
 42
-00:02:07,892 --> 00:02:10,102
+00:02:07,893 --> 00:02:10,104
 Así evitamos confundir el recorrido de
 
 43
-00:02:10,115 --> 00:02:12,629
+00:02:10,117 --> 00:02:12,630
 las filas con las condiciones de ejecución.
 
 44
-00:02:13,359 --> 00:02:16,938
+00:02:13,366 --> 00:02:16,945
 Antes de introducir reservas, hagamos una
 prueba pequeña.
 
 45
-00:02:17,859 --> 00:02:20,675
+00:02:17,866 --> 00:02:20,682
 En el taller cero pedimos información del
 sistema
 
 46
-00:02:20,688 --> 00:02:23,017
+00:02:20,695 --> 00:02:23,024
 y la enviamos al registro de ejecución.
 
 47
-00:02:23,528 --> 00:02:25,107
+00:02:23,535 --> 00:02:25,114
 Debe aparecer la versión de
 
 48
-00:02:25,120 --> 00:02:27,001
+00:02:25,127 --> 00:02:27,009
 PDI y terminar sin errores.
 
 49
-00:02:27,936 --> 00:02:30,843
+00:02:27,943 --> 00:02:30,851
 Guardamos y volvemos a abrir la
 transformación.
 
 50
-00:02:31,764 --> 00:02:34,554
+00:02:31,772 --> 00:02:34,561
 Si no funciona, revisamos la instalación y
 la
 
 51
-00:02:34,567 --> 00:02:36,751
+00:02:34,575 --> 00:02:36,759
 versión de Java indicadas por el aula.
 
 52
-00:02:37,672 --> 00:02:40,093
+00:02:37,680 --> 00:02:40,101
 Todavía no hay un CSV ni una regla
 
 53
-00:02:40,107 --> 00:02:42,041
+00:02:40,114 --> 00:02:42,048
 del hotel que pueda causar el fallo.
 
 54
-00:02:42,949 --> 00:02:45,988
+00:02:42,956 --> 00:02:45,996
 Esta separación nos ahorra muchas pruebas a
 ciegas.
 
 55
-00:02:46,909 --> 00:02:49,528
+00:02:46,917 --> 00:02:49,535
 Una vez que el entorno responde, ya podemos
 
 56
-00:02:49,541 --> 00:02:52,462
+00:02:49,548 --> 00:02:52,469
 introducir datos y mirar qué ocurre con las
 filas.
 
 57
-00:02:53,370 --> 00:02:55,857
+00:02:53,377 --> 00:02:55,864
 Nuestra primera petición será más pequeña
 que
 
 58
-00:02:55,870 --> 00:02:58,001
+00:02:55,877 --> 00:02:58,009
 el informe de cobros: un listado de
 
 59
-00:02:58,014 --> 00:03:01,067
+00:02:58,022 --> 00:03:01,075
 alojamientos de Trasmiera ordenado por
 código postal.
 
 60
-00:03:02,001 --> 00:03:05,370
+00:03:02,009 --> 00:03:05,377
 Leemos el CSV y comprobamos nombres y tipos.
 
 61
-00:03:06,264 --> 00:03:09,462
+00:03:06,272 --> 00:03:09,469
 Después aplicamos el filtro, conectando la
 salida
 
 62
-00:03:09,475 --> 00:03:11,804
+00:03:09,482 --> 00:03:11,811
 que cumple la condición con la ordenación.
 
 63
-00:03:12,725 --> 00:03:15,659
+00:03:12,732 --> 00:03:15,667
 Las filas de otras comarcas siguen la otra
 rama.
 
 64
-00:03:16,580 --> 00:03:19,936
+00:03:16,588 --> 00:03:19,943
 Fijaos en los recuentos: filtrar reduce el
 conjunto;
 
 65
-00:03:20,146 --> 00:03:22,804
+00:03:20,153 --> 00:03:22,811
 ordenar no debe quitar ni añadir
 alojamientos.
 
 66
-00:03:23,712 --> 00:03:26,383
+00:03:23,719 --> 00:03:26,390
 Si necesitamos conservar ceros iniciales del
 
 67
-00:03:26,396 --> 00:03:28,857
+00:03:26,403 --> 00:03:28,864
 código postal, lo tratamos como texto.
 
 68
-00:03:29,764 --> 00:03:32,462
+00:03:29,772 --> 00:03:32,469
 Por último escribimos un CSV limpio.
 
 69
-00:03:33,383 --> 00:03:35,291
+00:03:33,390 --> 00:03:35,298
 La opción de anchura mínima evita
 
 70
-00:03:35,304 --> 00:03:37,607
+00:03:35,311 --> 00:03:37,614
 espacios de relleno que no necesitamos.
 
 71
-00:03:38,358 --> 00:03:40,477
+00:03:38,366 --> 00:03:40,484
 ¿Cómo sabemos que el listado está bien?
 
 72
-00:03:41,385 --> 00:03:44,740
+00:03:41,392 --> 00:03:44,747
 Usamos la vista previa después de los
 cambios importantes.
 
 73
-00:03:45,648 --> 00:03:48,332
+00:03:45,655 --> 00:03:48,339
 Si en la ordenación escribimos un nombre de
 campo
 
 74
-00:03:48,345 --> 00:03:51,490
+00:03:48,352 --> 00:03:51,497
 que no existe, el registro nos ayuda a
 localizarlo.
 
 75
-00:03:52,398 --> 00:03:55,082
+00:03:52,405 --> 00:03:55,089
 Corregimos ese paso y volvemos a comprobar.
 
 76
-00:03:55,990 --> 00:03:58,990
+00:03:55,997 --> 00:03:58,997
 Después contrastamos el número de filas
 filtradas con
 
 77
-00:03:59,003 --> 00:04:01,858
+00:03:59,010 --> 00:04:01,866
 el CSV final, sin contar su cabecera.
 
 78
-00:04:02,766 --> 00:04:04,621
+00:04:02,773 --> 00:04:04,629
 También abrimos el fichero fuera de
 
 79
-00:04:04,635 --> 00:04:06,766
+00:04:04,642 --> 00:04:06,773
 Spoon, como lo hará quien lo reciba.
 
 80
-00:04:07,687 --> 00:04:09,674
-Por último lo ejecutamos con Pan
+00:04:07,695 --> 00:04:10,800
+Por último lo ejecutamos con Pan, sin abrir
+Spoon.
 
 81
-00:04:09,687 --> 00:04:11,661
-y verificamos que se genera de nuevo.
+00:04:11,760 --> 00:04:13,866
+Cuando vuelva a generarse el archivo,
 
 82
-00:04:12,569 --> 00:04:15,398
+00:04:14,010 --> 00:04:16,208
+no nos quedamos en comprobar que existe.
+
+83
+00:04:16,734 --> 00:04:19,524
+Lo abrimos y revisamos otra vez que solo
+contiene
+
+84
+00:04:19,537 --> 00:04:22,774
+alojamientos de Trasmiera, que el recuento
+coincide con
+
+85
+00:04:22,787 --> 00:04:25,629
+el filtro y que están ordenados por código
+postal.
+
+86
+00:04:26,537 --> 00:04:29,379
+Así comprobamos que esta forma de ejecutar
+aplica
+
+87
+00:04:29,392 --> 00:04:32,340
+las mismas reglas y produce el resultado
+esperado.
+
+88
+00:04:33,261 --> 00:04:36,090
 Las rutas deben servir en el equipo de
 ejecución.
 
-83
-00:04:16,306 --> 00:04:18,385
+89
+00:04:36,998 --> 00:04:39,076
 Funcionar solo al pulsar un botón en
 
-84
-00:04:18,398 --> 00:04:21,411
+90
+00:04:39,090 --> 00:04:42,103
 nuestro ordenador todavía no completa el
 procedimiento.
 
-85
-00:04:22,306 --> 00:04:24,924
+91
+00:04:42,998 --> 00:04:45,629
 Con ese primer recorrido dominado, volvemos
 
-86
-00:04:24,937 --> 00:04:26,819
+92
+00:04:45,642 --> 00:04:48,082
 a Ana y al informe de dirección.
 
-87
-00:04:27,727 --> 00:04:29,569
+93
+00:04:49,006 --> 00:04:50,848
 Leemos reservas y cobros desde
 
-88
-00:04:29,582 --> 00:04:31,358
+94
+00:04:50,861 --> 00:04:52,637
 los archivos de este apartado.
 
-89
-00:04:31,878 --> 00:04:34,088
+95
+00:04:53,156 --> 00:04:55,366
 Aunque se parecen a los de ingesta, no
 
-90
-00:04:34,101 --> 00:04:38,115
+96
+00:04:55,379 --> 00:04:59,392
 debemos intercambiarlos: tienen columnas y
 objetivos distintos.
 
-91
-00:04:39,022 --> 00:04:41,430
+97
+00:05:00,300 --> 00:05:02,708
 Aquí reservas usa coma como separador;
 
-92
-00:04:41,615 --> 00:04:43,786
+98
+00:05:02,892 --> 00:05:05,064
 cobros y hoteles usan punto y coma.
 
-93
-00:04:44,680 --> 00:04:46,549
+99
+00:05:05,958 --> 00:05:07,840
 Antes de unir, comprobamos que
 
-94
-00:04:46,562 --> 00:04:49,338
+100
+00:05:07,853 --> 00:05:10,103
 las claves tengan tipos compatibles.
 
-95
-00:04:50,261 --> 00:04:52,919
+101
+00:05:11,024 --> 00:05:13,682
 La regla de negocio pide únicamente reservas
 
-96
-00:04:52,932 --> 00:04:55,051
+102
+00:05:13,695 --> 00:05:15,814
 con cobro, así que usaremos una
 
-97
-00:04:55,064 --> 00:04:57,682
+103
+00:05:15,827 --> 00:05:18,445
 unión interna por el identificador de
 reserva.
 
-98
-00:04:58,630 --> 00:05:00,511
+104
+00:05:19,392 --> 00:05:21,274
 Si una reserva todavía no tiene
 
-99
-00:05:00,524 --> 00:05:02,327
+105
+00:05:21,287 --> 00:05:23,090
 pago, queda fuera del informe.
 
-100
-00:05:03,261 --> 00:05:05,274
+106
+00:05:24,024 --> 00:05:26,037
 Eso es aplicar la petición, no
 
-101
-00:05:05,288 --> 00:05:07,051
+107
+00:05:26,050 --> 00:05:27,814
 perder una fila por accidente.
 
-102
-00:05:07,972 --> 00:05:10,551
+108
+00:05:28,735 --> 00:05:31,314
 Para hacer ese cruce utilizamos Merge join.
 
-103
-00:05:11,472 --> 00:05:13,709
+109
+00:05:32,235 --> 00:05:34,471
 Este paso necesita que ambas entradas
 
-104
-00:05:13,722 --> 00:05:15,867
+110
+00:05:34,485 --> 00:05:36,629
 estén ordenadas por la clave de unión.
 
-105
-00:05:16,801 --> 00:05:19,761
+111
+00:05:37,564 --> 00:05:40,524
 Por eso colocamos una ordenación por
 identificador de
 
-106
-00:05:19,774 --> 00:05:22,064
+112
+00:05:40,537 --> 00:05:42,827
 reserva en cada rama antes del cruce.
 
-107
-00:05:22,985 --> 00:05:25,380
+113
+00:05:43,748 --> 00:05:46,142
 También comprobamos qué entrada figura como
 
-108
-00:05:25,393 --> 00:05:28,314
+114
+00:05:46,156 --> 00:05:49,077
 izquierda y cuál como derecha; dibujar
 primero
 
-109
-00:05:28,327 --> 00:05:30,919
+115
+00:05:49,090 --> 00:05:51,682
 una flecha no sustituye esa configuración.
 
-110
-00:05:31,840 --> 00:05:33,788
+116
+00:05:52,603 --> 00:05:54,550
 Ahora el flujo contiene el cobro,
 
-111
-00:05:33,972 --> 00:05:36,367
+117
+00:05:54,735 --> 00:05:57,129
 pero solo conoce el identificador del hotel.
 
-112
-00:05:37,288 --> 00:05:39,406
+118
+00:05:58,050 --> 00:06:00,169
 Para añadir Laredo o Santander, lo
 
-113
-00:05:39,419 --> 00:05:41,169
+119
+00:06:00,182 --> 00:06:01,932
 unimos con la tabla de hoteles.
 
-114
-00:05:42,103 --> 00:05:44,485
+120
+00:06:02,866 --> 00:06:05,248
 La clave ha cambiado, de modo que volvemos
 
-115
-00:05:44,498 --> 00:05:47,340
+121
+00:06:05,261 --> 00:06:08,103
 a ordenar ambas entradas por identificador
 de hotel.
 
-116
-00:05:48,248 --> 00:05:50,748
+122
+00:06:09,011 --> 00:06:11,511
 Cada unión se prepara para su propia clave.
 
-117
-00:05:51,487 --> 00:05:53,882
+123
+00:06:12,244 --> 00:06:14,639
 Ya tenemos el detalle que necesitábamos.
 
-118
-00:05:54,412 --> 00:05:56,386
+124
+00:06:15,171 --> 00:06:17,144
 Ahora ordenamos por hotel y canal
 
-119
-00:05:56,399 --> 00:05:58,307
+125
+00:06:17,158 --> 00:06:19,065
 y lo entregamos al paso Group by.
 
-120
-00:05:59,241 --> 00:06:02,531
+126
+00:06:20,000 --> 00:06:23,289
 Para cada grupo sumamos cobrado y contamos
 las reservas.
 
-121
-00:06:03,439 --> 00:06:06,333
+127
+00:06:24,197 --> 00:06:27,092
 Los nombres de salida deben explicar el
 resultado,
 
-122
-00:06:06,518 --> 00:06:08,833
+128
+00:06:27,276 --> 00:06:29,592
 como cobrado total y número de reservas.
 
-123
-00:06:09,741 --> 00:06:13,110
+129
+00:06:30,500 --> 00:06:33,868
 Detengámonos en un cambio importante: antes
 cada fila
 
-124
-00:06:13,123 --> 00:06:17,241
+130
+00:06:33,881 --> 00:06:38,000
 representaba una reserva cobrada; después
 representa un grupo.
 
-125
-00:06:18,175 --> 00:06:20,807
+131
+00:06:38,934 --> 00:06:41,565
 El informe ya no conserva todo el detalle.
 
-126
-00:06:21,334 --> 00:06:23,755
+132
+00:06:42,092 --> 00:06:44,513
 En estos ficheros hay como máximo un cobro
 
-127
-00:06:23,768 --> 00:06:26,584
+133
+00:06:44,526 --> 00:06:47,342
 por reserva, así que el recuento es
 adecuado.
 
-128
-00:06:27,492 --> 00:06:30,570
+134
+00:06:48,250 --> 00:06:51,329
 Si Ana pudiera tener varios pagos,
 tendríamos
 
-129
-00:06:30,584 --> 00:06:32,110
+135
+00:06:51,342 --> 00:06:52,868
 que revisar la unión y el modo
 
-130
-00:06:32,123 --> 00:06:34,307
+136
+00:06:52,881 --> 00:06:55,066
 de contar para no duplicar su reserva.
 
-131
-00:06:35,215 --> 00:06:38,518
+137
+00:06:55,974 --> 00:06:59,276
 Antes de entregar, hagamos una comprobación
 concreta.
 
-132
-00:06:39,426 --> 00:06:41,781
+138
+00:07:00,184 --> 00:07:02,539
 Con los archivos suministrados partimos de
 
-133
-00:06:41,794 --> 00:06:43,742
+139
+00:07:02,553 --> 00:07:04,500
 veinte reservas y quince cobros.
 
-134
-00:06:44,636 --> 00:06:47,044
+140
+00:07:05,395 --> 00:07:07,803
 La unión interna produce quince filas
 
-135
-00:06:47,057 --> 00:06:49,084
+141
+00:07:07,816 --> 00:07:09,842
 y la agrupación deja trece grupos.
 
-136
-00:06:50,005 --> 00:06:52,676
+142
+00:07:10,763 --> 00:07:13,434
 El total cobrado debe ser tres mil
 novecientos
 
-137
-00:06:52,689 --> 00:06:55,386
+143
+00:07:13,447 --> 00:07:16,145
 sesenta y cinco euros con cincuenta
 céntimos.
 
-138
-00:06:56,307 --> 00:07:00,847
+144
+00:07:17,066 --> 00:07:21,605
 Si no coincide, revisamos separadores,
 claves, tipos y posibles
 
-139
-00:07:00,860 --> 00:07:04,163
+145
+00:07:21,618 --> 00:07:24,921
 duplicados desde el primer punto donde
 cambie el resultado.
 
-140
-00:07:05,070 --> 00:07:07,386
+146
+00:07:25,829 --> 00:07:28,145
 No basta con una luz verde al terminar.
 
-141
-00:07:08,307 --> 00:07:11,978
+147
+00:07:29,066 --> 00:07:32,737
 Finalmente abrimos el CSV fuera de Spoon:
 dirección
 
-142
-00:07:11,992 --> 00:07:15,399
+148
+00:07:32,750 --> 00:07:36,158
 debe reconocer los hoteles, los canales y
 los importes
 
-143
-00:07:15,413 --> 00:07:18,176
+149
+00:07:36,171 --> 00:07:38,934
 sin tener que descifrar nuestros pasos de
 trabajo.
 
-144
-00:07:19,084 --> 00:07:20,965
+150
+00:07:39,842 --> 00:07:41,724
 El hotel también necesita preparar
 
-145
-00:07:20,978 --> 00:07:23,084
+151
+00:07:41,737 --> 00:07:43,842
 alojamientos para su escaparate web.
 
-146
-00:07:24,005 --> 00:07:26,281
+152
+00:07:44,763 --> 00:07:47,039
 Es otra petición, con otros datos,
 
-147
-00:07:26,478 --> 00:07:28,899
+153
+00:07:47,237 --> 00:07:49,658
 pero podemos reutilizar la manera de pensar.
 
-148
-00:07:29,820 --> 00:07:33,715
+154
+00:07:50,579 --> 00:07:54,474
 Seleccionamos columnas, damos nombres
 comprensibles a las claves
 
-149
-00:07:33,728 --> 00:07:36,886
+155
+00:07:54,487 --> 00:07:57,645
 y aplicamos las condiciones: precio válido
 menor de
 
-150
-00:07:36,899 --> 00:07:40,531
+156
+00:07:57,658 --> 00:08:01,289
 doscientos euros, estancia mínima válida de
 cuatro noches o
 
-151
-00:07:40,544 --> 00:07:43,215
+157
+00:08:01,303 --> 00:08:03,974
 menos y un tipo distinto de habitación
 privada.
 
-152
-00:07:44,136 --> 00:07:45,597
+158
+00:08:04,895 --> 00:08:06,355
 Cuatro noches sí cumple.
 
-153
-00:07:46,518 --> 00:07:49,228
+159
+00:08:07,276 --> 00:08:09,987
 Una puntuación ausente no justifica eliminar
 
-154
-00:07:49,242 --> 00:07:51,255
+160
+00:08:10,000 --> 00:08:12,013
 un alojamiento si cumple el resto.
 
-155
-00:07:52,176 --> 00:07:54,610
+161
+00:08:12,934 --> 00:08:15,368
 Si usamos menos uno para marcar un precio
 
-156
-00:07:54,623 --> 00:07:58,084
+162
+00:08:15,381 --> 00:08:18,842
 o unas noches desconocidas, el filtro debe
 excluirlo.
 
-157
-00:07:59,005 --> 00:08:01,373
+163
+00:08:19,763 --> 00:08:22,131
 Al escribir JSON configuramos los campos
 
-158
-00:08:01,386 --> 00:08:03,465
+164
+00:08:22,145 --> 00:08:24,224
 de salida y comprobamos que aparecen los
 
-159
-00:08:03,478 --> 00:08:06,794
+165
+00:08:24,237 --> 00:08:27,553
 diez alojamientos esperados, no objetos
 vacíos.
 
-160
-00:08:07,715 --> 00:08:11,492
+166
+00:08:28,474 --> 00:08:32,250
 Mientras tanto, dirección plantea una nueva
 pregunta: cuánto
 
-161
-00:08:11,505 --> 00:08:14,294
+167
+00:08:32,263 --> 00:08:35,053
 se cobra por noche en costa, ciudad e
 interior.
 
-162
-00:08:15,215 --> 00:08:17,426
+168
+00:08:35,974 --> 00:08:38,184
 El informe anterior ya perdió campos
 
-163
-00:08:17,439 --> 00:08:20,057
+169
+00:08:38,197 --> 00:08:40,816
 que necesitamos, así que volvemos al detalle
 
-164
-00:08:20,070 --> 00:08:22,636
+170
+00:08:40,829 --> 00:08:43,395
 de reservas cobradas, antes de agrupar.
 
-165
-00:08:23,557 --> 00:08:25,702
+171
+00:08:44,316 --> 00:08:46,460
 Añadimos la tabla de cadenas mediante
 
-166
-00:08:25,715 --> 00:08:28,742
+172
+00:08:46,474 --> 00:08:49,500
 su clave y preparamos la ordenación
 correspondiente.
 
-167
-00:08:29,663 --> 00:08:32,742
+173
+00:08:50,421 --> 00:08:53,500
 Después sumamos noches e importes para cada
 ámbito.
 
-168
-00:08:33,263 --> 00:08:35,895
+174
+00:08:54,022 --> 00:08:56,653
 El precio por noche se obtiene dividiendo
 ambos
 
-169
-00:08:35,908 --> 00:08:39,250
+175
+00:08:56,667 --> 00:09:00,009
 totales, siempre que las noches sean mayores
 que cero.
 
-170
-00:08:40,158 --> 00:08:42,882
+176
+00:09:00,917 --> 00:09:03,640
 No promediamos directamente precios de
 estancias
 
-171
-00:08:42,895 --> 00:08:45,908
+177
+00:09:03,653 --> 00:09:06,666
 con distinta duración: eso daría otro
 resultado.
 
-172
-00:08:46,829 --> 00:08:49,763
+178
+00:09:07,588 --> 00:09:10,522
 En costa, por ejemplo, los datos del taller
 
-173
-00:08:49,777 --> 00:08:52,040
+179
+00:09:10,535 --> 00:09:12,798
 reúnen treinta y cinco noches y dos mil
 
-174
-00:08:52,053 --> 00:08:55,408
+180
+00:09:12,811 --> 00:09:16,167
 trescientos noventa y cuatro euros con
 cincuenta céntimos.
 
-175
-00:08:55,606 --> 00:08:58,816
+181
+00:09:16,364 --> 00:09:19,574
 Ya podemos calcular y revisar el informe por
 ámbitos.
 
-176
-00:08:59,724 --> 00:09:02,395
+182
+00:09:20,482 --> 00:09:23,153
 El siguiente paso es dejarlo donde lo
 necesita
 
-177
-00:09:02,408 --> 00:09:04,382
+183
+00:09:23,167 --> 00:09:25,180
 el centro: una carpeta o, si el
 
-178
-00:09:04,395 --> 00:09:07,724
+184
+00:09:25,193 --> 00:09:28,928
 laboratorio lo permite, un almacenamiento en
 la nube.
 
-179
-00:09:08,645 --> 00:09:11,158
+185
+00:09:29,852 --> 00:09:32,365
 Primero comprobamos el CSV local.
 
-180
-00:09:12,079 --> 00:09:13,987
+186
+00:09:33,286 --> 00:09:35,194
 Cambiar de destino no debe alterar
 
-181
-00:09:14,000 --> 00:09:15,579
+187
+00:09:35,207 --> 00:09:36,786
 los grupos ni los totales.
 
-182
-00:09:16,500 --> 00:09:19,184
+188
+00:09:37,707 --> 00:09:40,391
 Si la subida falla, el proceso debe avisar
 
-183
-00:09:19,198 --> 00:09:21,842
+189
+00:09:40,404 --> 00:09:43,049
 y conservar una salida que permita
 repetirla.
 
-184
-00:09:22,750 --> 00:09:24,855
+190
+00:09:43,957 --> 00:09:46,075
 Las credenciales se configuran por los
 
-185
-00:09:24,869 --> 00:09:27,500
+191
+00:09:46,088 --> 00:09:48,917
 mecanismos del entorno, no dentro del
 archivo
 
-186
-00:09:27,513 --> 00:09:30,439
+192
+00:09:48,931 --> 00:09:51,246
 que entregamos o subimos al repositorio.
 
-187
-00:09:31,350 --> 00:09:34,363
+193
+00:09:51,764 --> 00:09:54,778
 La idea es sencilla: presentar bien
 significa
 
-188
-00:09:34,376 --> 00:09:37,087
+194
+00:09:54,791 --> 00:09:57,501
 entregar datos comprensibles y accesibles en
 el
 
-189
-00:09:37,100 --> 00:09:40,797
+195
+00:09:57,514 --> 00:10:01,212
 destino acordado, no obligatoriamente
 utilizar la nube.
 
-190
-00:09:41,732 --> 00:09:43,600
+196
+00:10:02,146 --> 00:10:04,014
 Tenemos las transformaciones.
 
-191
-00:09:44,508 --> 00:09:46,824
+197
+00:10:04,922 --> 00:10:07,238
 Ahora queremos coordinarlas para que puedan
 
-192
-00:09:46,837 --> 00:09:49,047
+198
+00:10:07,251 --> 00:10:09,462
 trabajar después del cierre de las once.
 
-193
-00:09:49,968 --> 00:09:52,666
+199
+00:10:10,383 --> 00:10:13,080
 Creamos un job y lo ejecutamos con Kitchen.
 
-194
-00:09:53,587 --> 00:09:57,403
+200
+00:10:14,001 --> 00:10:17,817
 Detengámonos en una diferencia: Kitchen
 ejecuta el trabajo,
 
-195
-00:09:57,587 --> 00:09:59,600
+201
+00:10:18,001 --> 00:10:20,014
 pero no programa por sí solo la hora.
 
-196
-00:10:00,521 --> 00:10:03,653
+202
+00:10:20,935 --> 00:10:24,067
 Para lanzarlo de madrugada utilizaríamos el
 programador
 
-197
-00:10:03,666 --> 00:10:06,087
+203
+00:10:24,080 --> 00:10:26,501
 de tareas del sistema u otro planificador.
 
-198
-00:10:06,615 --> 00:10:08,839
+204
+00:10:27,030 --> 00:10:29,253
 En el taller cinco vamos a practicar las
 
-199
-00:10:08,852 --> 00:10:11,970
+205
+00:10:29,266 --> 00:10:32,385
 condiciones del job dentro de una carpeta de
 pruebas.
 
-200
-00:10:12,891 --> 00:10:15,326
+206
+00:10:33,306 --> 00:10:35,740
 Preparad copias de las transformaciones para
 
-201
-00:10:15,339 --> 00:10:17,628
+207
+00:10:35,753 --> 00:10:38,043
 que escriban allí, y guardad aparte
 
-202
-00:10:17,641 --> 00:10:20,444
+208
+00:10:38,056 --> 00:10:40,859
 cualquier informe válido que necesitéis
 conservar.
 
-203
-00:10:21,352 --> 00:10:24,668
+209
+00:10:41,766 --> 00:10:45,082
 Ahora sí podemos experimentar sin confundir
 una salida
 
-204
-00:10:24,681 --> 00:10:27,194
+210
+00:10:45,095 --> 00:10:47,609
 de ensayo con el último informe publicado.
 
-205
-00:10:28,102 --> 00:10:30,207
+211
+00:10:48,516 --> 00:10:50,622
 Dentro de esa carpeta, el job
 
-206
-00:10:30,220 --> 00:10:32,431
+212
+00:10:50,635 --> 00:10:52,845
 comprueba si existe la copia del informe
 
-207
-00:10:32,444 --> 00:10:34,628
+213
+00:10:52,859 --> 00:10:55,043
 anterior y, si existe, la borra.
 
-208
-00:10:35,536 --> 00:10:38,786
+214
+00:10:55,951 --> 00:10:59,201
 Después ejecuta la transformación del
 informe por hotel.
 
-209
-00:10:39,694 --> 00:10:43,141
+215
+00:11:00,109 --> 00:11:03,556
 Solo seguimos si termina correctamente y
 aparece su salida.
 
-210
-00:10:44,076 --> 00:10:46,194
+216
+00:11:04,490 --> 00:11:06,609
 El informe por ámbitos vuelve a leer
 
-211
-00:10:46,207 --> 00:10:49,010
+217
+00:11:06,622 --> 00:11:09,424
 las fuentes; no consume el agregado
 anterior.
 
-212
-00:10:49,918 --> 00:10:52,076
+218
+00:11:10,332 --> 00:11:12,490
 Probad tres situaciones: que no haya
 
-213
-00:10:52,089 --> 00:10:54,141
+219
+00:11:12,503 --> 00:11:14,556
 copia previa, que ya exista y que
 
-214
-00:10:54,155 --> 00:10:56,312
+220
+00:11:14,569 --> 00:11:16,727
 una ruta de entrada sea incorrecta.
 
-215
-00:10:57,234 --> 00:11:00,155
+221
+00:11:17,648 --> 00:11:20,569
 En la tercera, el job debe detenerse con
 error.
 
-216
-00:11:01,062 --> 00:11:03,484
+222
+00:11:21,477 --> 00:11:23,898
 Recordad también que un CSV puede
 
-217
-00:11:03,497 --> 00:11:05,707
+223
+00:11:23,911 --> 00:11:26,122
 existir y contener solo la cabecera.
 
-218
-00:11:06,615 --> 00:11:09,589
+224
+00:11:27,030 --> 00:11:30,003
 Comprobar su presencia es un primer control,
 pero
 
-219
-00:11:09,602 --> 00:11:11,760
+225
+00:11:30,016 --> 00:11:32,174
 no valida sus filas ni sus importes.
 
-220
-00:11:12,668 --> 00:11:14,707
+226
+00:11:33,082 --> 00:11:35,122
 Y quitad los mensajes que esperan una
 
-221
-00:11:14,720 --> 00:11:17,891
+227
+00:11:35,135 --> 00:11:38,306
 respuesta en pantalla cuando ejecutéis sin
 supervisión.
 
-222
-00:11:18,812 --> 00:11:20,878
+228
+00:11:39,227 --> 00:11:41,293
 Esa limitación nos lleva al siguiente
 
-223
-00:11:20,891 --> 00:11:23,773
+229
+00:11:41,306 --> 00:11:44,188
 paso, que aplicaremos en la práctica
 integradora.
 
-224
-00:11:24,681 --> 00:11:27,484
+230
+00:11:45,095 --> 00:11:47,898
 Allí no empezamos borrando el informe
 publicado.
 
-225
-00:11:28,405 --> 00:11:31,865
+231
+00:11:48,819 --> 00:11:52,280
 Generamos los dos resultados en temporal,
 comprobamos su
 
-226
-00:11:31,878 --> 00:11:34,668
+232
+00:11:52,293 --> 00:11:55,082
 contenido y solo después los copiamos a
 salida.
 
-227
-00:11:35,217 --> 00:11:36,901
+233
+00:11:55,625 --> 00:11:57,309
 Si la lectura o la validación
 
-228
-00:11:36,914 --> 00:11:39,875
+234
+00:11:57,322 --> 00:12:00,282
 falla, el resultado anterior sigue
 disponible.
 
-229
-00:11:40,796 --> 00:11:43,190
+235
+00:12:01,204 --> 00:12:03,598
 ¿Veis cómo encajan las dos actividades?
 
-230
-00:11:44,098 --> 00:11:46,993
+236
+00:12:04,506 --> 00:12:07,401
 El taller enseña a configurar condiciones
 con una
 
-231
-00:11:47,006 --> 00:11:49,717
+237
+00:12:07,414 --> 00:12:10,125
 copia que podemos borrar; la práctica añade
 
-232
-00:11:49,730 --> 00:11:53,138
+238
+00:12:10,138 --> 00:12:13,546
 los controles necesarios para publicar con
 más confianza.
 
-233
-00:11:54,046 --> 00:11:56,743
+239
+00:12:14,454 --> 00:12:17,151
 Copiar dos archivos tampoco es una operación
 
-234
-00:11:56,756 --> 00:11:59,375
+240
+00:12:17,164 --> 00:12:19,782
 indivisible: si falla una copia, el
 
-235
-00:11:59,388 --> 00:12:01,638
+241
+00:12:19,796 --> 00:12:22,046
 job debe avisar y no anunciar éxito.
 
-236
-00:12:02,546 --> 00:12:04,414
+242
+00:12:22,954 --> 00:12:24,822
 Lo importante es saber qué versión
 
-237
-00:12:04,427 --> 00:12:06,638
+243
+00:12:24,835 --> 00:12:27,046
 puede utilizar quien recibe el informe.
 
-238
-00:12:07,359 --> 00:12:10,241
+244
+00:12:27,767 --> 00:12:30,649
 Nos queda una situación distinta del mismo
 hotel.
 
-239
-00:12:11,162 --> 00:12:14,188
+245
+00:12:31,570 --> 00:12:34,596
 Las incidencias del mostrador llegan en CSV
 y
 
-240
-00:12:14,202 --> 00:12:17,359
+246
+00:12:34,609 --> 00:12:37,767
 necesitamos consultar o modificar una base
 de datos.
 
-241
-00:12:18,267 --> 00:12:21,070
+247
+00:12:38,675 --> 00:12:41,478
 Un lookup busca información, por ejemplo el
 
-242
-00:12:21,083 --> 00:12:23,741
+248
+00:12:41,491 --> 00:12:44,149
 nombre del huésped, para añadirla al flujo.
 
-243
-00:12:24,649 --> 00:12:26,202
+249
+00:12:45,056 --> 00:12:46,609
 Insert crea una fila y
 
-244
-00:12:26,215 --> 00:12:28,491
+250
+00:12:46,622 --> 00:12:48,899
 Update modifica una fila existente.
 
-245
-00:12:29,022 --> 00:12:30,851
+251
+00:12:49,430 --> 00:12:51,259
 Son operaciones diferentes.
 
-246
-00:12:31,785 --> 00:12:34,509
+252
+00:12:52,193 --> 00:12:54,917
 Primero probamos la conexión y comprobamos
 tipos
 
-247
-00:12:34,522 --> 00:12:38,062
+253
+00:12:54,930 --> 00:12:58,469
 y correspondencias: la fecha del CSV se
 escribe
 
-248
-00:12:38,075 --> 00:12:39,930
+254
+00:12:58,482 --> 00:13:00,338
 como fecha de inicio en la tabla.
 
-249
-00:12:40,851 --> 00:12:42,917
+255
+00:13:01,259 --> 00:13:03,324
 Si el lookup no encuentra al huésped,
 
-250
-00:12:43,088 --> 00:12:45,299
+256
+00:13:03,496 --> 00:13:05,706
 debemos decidir qué hacer con esa fila.
 
-251
-00:12:46,206 --> 00:12:49,141
+257
+00:13:06,614 --> 00:13:09,548
 Trabajamos desde un estado inicial conocido
 para que
 
-252
-00:12:49,154 --> 00:12:51,983
+258
+00:13:09,561 --> 00:13:12,390
 una ejecución anterior no confunda las
 pruebas.
 
-253
-00:12:52,891 --> 00:12:54,746
+259
+00:13:13,298 --> 00:13:15,153
 En este ejemplo, después de la
 
-254
-00:12:54,759 --> 00:12:58,785
+260
+00:13:15,167 --> 00:13:19,193
 inserción inicial, intentamos actualizar
 cuatro identificadores.
 
-255
-00:12:59,706 --> 00:13:02,680
+261
+00:13:20,114 --> 00:13:23,088
 Uno y tres tienen una fase que puede
 actualizarse.
 
-256
-00:13:03,601 --> 00:13:06,759
+262
+00:13:24,009 --> 00:13:27,167
 Cinco corresponde a una huésped existente,
 pero no
 
-257
-00:13:06,772 --> 00:13:10,259
+263
+00:13:27,180 --> 00:13:30,667
 tiene esa fase; noventa y nueve tampoco
 encuentra destino.
 
-258
-00:13:11,180 --> 00:13:13,364
+264
+00:13:31,588 --> 00:13:33,772
 Son dos filas sin correspondencia.
 
-259
-00:13:14,285 --> 00:13:16,812
+265
+00:13:34,693 --> 00:13:37,219
 Ahora bien, no esperéis necesariamente un
 
-260
-00:13:16,825 --> 00:13:19,154
+266
+00:13:37,232 --> 00:13:39,561
 contador de ejecución con dos errores.
 
-261
-00:13:20,075 --> 00:13:22,022
+267
+00:13:40,482 --> 00:13:42,430
 Sin tratamiento, el paso puede
 
-262
-00:13:22,035 --> 00:13:23,996
+268
+00:13:42,443 --> 00:13:44,403
 detenerse al encontrar la primera.
 
-263
-00:13:24,904 --> 00:13:28,075
+269
+00:13:45,311 --> 00:13:48,482
 Para observar ambas, restauramos el estado
 inicial y
 
-264
-00:13:28,088 --> 00:13:31,088
+270
+00:13:48,496 --> 00:13:51,496
 configuramos la salida de errores hacia el
 registro,
 
-265
-00:13:31,364 --> 00:13:34,101
+271
+00:13:51,772 --> 00:13:54,509
 conservando la clave y el motivo del
 rechazo.
 
-266
-00:13:34,604 --> 00:13:37,617
+272
+00:13:55,011 --> 00:13:58,025
 Repetimos sin un umbral que detenga antes la
 prueba.
 
-267
-00:13:38,525 --> 00:13:40,762
+273
+00:13:58,932 --> 00:14:01,169
 Debemos encontrar allí cinco y noventa
 
-268
-00:13:40,775 --> 00:13:42,512
+274
+00:14:01,182 --> 00:14:02,919
 y nueve, y comprobar en la tabla
 
-269
-00:13:42,525 --> 00:13:44,683
+275
+00:14:02,932 --> 00:14:05,090
 las actualizaciones de uno y tres.
 
-270
-00:13:45,604 --> 00:13:47,762
+276
+00:14:06,011 --> 00:14:08,169
 Una cosa son las filas rechazadas;
 
-271
-00:13:47,946 --> 00:13:50,485
+277
+00:14:08,354 --> 00:14:10,893
 otra, los errores que detienen la ejecución.
 
-272
-00:13:51,393 --> 00:13:53,709
+278
+00:14:11,689 --> 00:14:14,005
 Con los rechazos identificados, falta
 
-273
-00:13:53,722 --> 00:13:55,380
+279
+00:14:14,018 --> 00:14:15,676
 decidir qué hacemos con ellos.
 
-274
-00:13:56,288 --> 00:13:58,235
+280
+00:14:16,586 --> 00:14:18,534
 En un proceso real, la regla de
 
-275
-00:13:58,249 --> 00:14:00,788
+281
+00:14:18,547 --> 00:14:21,086
 negocio dirá si apartarlos permite continuar
 
-276
-00:14:00,801 --> 00:14:02,735
+282
+00:14:21,099 --> 00:14:23,034
 o si hay que detener la publicación.
 
-277
-00:14:03,229 --> 00:14:04,965
+283
+00:14:23,527 --> 00:14:25,263
 No basta con esconder el error
 
-278
-00:14:04,979 --> 00:14:07,084
+284
+00:14:25,277 --> 00:14:27,382
 para conseguir una ejecución en verde.
 
-279
-00:14:07,643 --> 00:14:09,498
+285
+00:14:27,939 --> 00:14:29,755
 Y si cambiamos a Insert Update,
 
-280
-00:14:09,590 --> 00:14:12,633
+286
+00:14:29,900 --> 00:14:32,453
 podremos insertar cuando no exista la fila,
 
-281
-00:14:12,777 --> 00:14:15,251
+287
+00:14:32,742 --> 00:14:35,321
 pero seguimos necesitando validar al
 huésped.
 
-282
-00:14:15,747 --> 00:14:19,010
+288
+00:14:35,802 --> 00:14:39,066
 Las claves configuradas en el paso tampoco
 sustituyen
 
-283
-00:14:19,023 --> 00:14:21,129
+289
+00:14:39,079 --> 00:14:41,184
 las restricciones de la base de datos.
 
-284
-00:14:22,050 --> 00:14:24,642
+290
+00:14:42,105 --> 00:14:44,697
 Volvamos al objetivo: queremos saber qué se
 
-285
-00:14:24,655 --> 00:14:27,050
+291
+00:14:44,710 --> 00:14:47,105
 actualizó, qué quedó pendiente y por qué.
 
-286
-00:14:27,608 --> 00:14:31,148
+292
+00:14:47,664 --> 00:14:51,203
 Esa explicación forma parte del resultado
 que entregamos.
 
-287
-00:14:31,919 --> 00:14:33,445
+293
+00:14:51,970 --> 00:14:53,496
 Volvamos a la directora.
 
-288
-00:14:34,353 --> 00:14:36,629
+294
+00:14:54,404 --> 00:14:56,680
 No recibe las cajas y flechas de Spoon:
 
-289
-00:14:36,814 --> 00:14:39,379
+295
+00:14:56,864 --> 00:14:59,430
 recibe un informe que responde a su
 pregunta.
 
-290
-00:14:40,287 --> 00:14:44,235
+296
+00:15:00,338 --> 00:15:04,286
 Detrás quedan las lecturas, los filtros, las
 uniones ordenadas,
 
-291
-00:14:44,393 --> 00:14:47,195
+297
+00:15:04,443 --> 00:15:07,246
 los cálculos y los controles que lo hacen
 fiable.
 
-292
-00:14:47,712 --> 00:14:50,448
+298
+00:15:07,765 --> 00:15:10,502
 Hemos empezado con un listado pequeño y
 terminado
 
-293
-00:14:50,462 --> 00:14:53,277
+299
+00:15:10,515 --> 00:15:13,331
 con una ejecución que sabe continuar o
 detenerse.
 
-294
-00:14:54,212 --> 00:14:56,527
+300
+00:15:14,265 --> 00:15:16,581
 Esa es la conexión entre los talleres.
 
-295
-00:14:57,435 --> 00:15:00,659
+301
+00:15:17,489 --> 00:15:20,712
 Para explicar vuestra solución, contad qué
 entra, qué
 
-296
-00:15:00,672 --> 00:15:03,580
+302
+00:15:20,725 --> 00:15:23,633
 regla aplicáis, qué sale y cómo lo
 comprobáis.
 
-297
-00:15:04,514 --> 00:15:07,751
+303
+00:15:24,568 --> 00:15:27,804
 Después ejecutadla sin depender de la
 ventana de diseño
 
-298
-00:15:07,764 --> 00:15:10,698
+304
+00:15:27,818 --> 00:15:30,752
 y abrid el resultado como lo haría su
 destinatario.
 
-299
-00:15:11,219 --> 00:15:13,929
+305
+00:15:31,272 --> 00:15:33,983
 Así completamos el trabajo: procesar los
 
-300
-00:15:13,942 --> 00:15:16,495
+306
+00:15:33,996 --> 00:15:36,548
 datos y entregar algo útil y comprensible.

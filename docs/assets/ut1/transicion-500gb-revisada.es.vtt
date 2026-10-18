@@ -45,620 +45,632 @@ explicar qué condiciones necesita para funcionar.
 00:00:39.826 --> 00:00:42.905
 Antes de hablar de máquinas, concretemos el encargo.
 
-00:00:43.813 --> 00:00:46.392
-El profesor indicará la operación o permitirá
+00:00:43.813 --> 00:00:46.945
+El profesor asignará la operación: una media, una
 
-00:00:46.405 --> 00:00:48.997
-elegir entre una media, una desviación
+00:00:46.958 --> 00:00:49.839
+desviación típica o la normalización de un campo.
 
-00:00:49.011 --> 00:00:51.247
-típica y la normalización de un campo.
+00:00:50.761 --> 00:00:53.458
+También indicará dónde debe quedar el resultado.
 
-00:00:52.168 --> 00:00:56.129
-Antes de empezar, confirmad cuál corresponde a vuestra propuesta.
+00:00:53.986 --> 00:00:56.591
+Antes de empezar, confirmad ese encargo.
 
-00:00:57.037 --> 00:00:59.747
+00:00:57.499 --> 00:01:01.249
+Lo que vosotros elegiréis y justificaréis será cómo resolverlo.
+
+00:01:02.170 --> 00:01:04.881
 Para seguir una historia común, pensemos en el
 
-00:00:59.761 --> 00:01:02.589
+00:01:04.894 --> 00:01:07.723
 importe medio de las reservas de un periodo definido.
 
-00:01:03.511 --> 00:01:05.432
+00:01:08.644 --> 00:01:10.565
 Acordamos qué registros entran y
 
-00:01:05.445 --> 00:01:07.563
+00:01:10.578 --> 00:01:12.697
 cómo tratamos los valores ausentes.
 
-00:01:08.471 --> 00:01:10.168
+00:01:13.604 --> 00:01:15.302
 Recordad que el importe de una
 
-00:01:10.182 --> 00:01:12.339
+00:01:15.315 --> 00:01:17.473
 reserva no demuestra que esté cobrada.
 
-00:01:13.261 --> 00:01:15.603
+00:01:18.394 --> 00:01:20.736
 Una media devuelve un resumen pequeño.
 
-00:01:16.511 --> 00:01:20.024
+00:01:21.644 --> 00:01:25.157
 En cambio, normalizar cada registro produce un conjunto
 
-00:01:20.037 --> 00:01:22.537
+00:01:25.170 --> 00:01:27.670
 de valores y puede generar una salida grande.
 
-00:01:23.484 --> 00:01:26.063
+00:01:28.618 --> 00:01:31.197
 Explicad desde el principio qué vais a calcular
 
-00:01:26.076 --> 00:01:29.721
+00:01:31.210 --> 00:01:34.854
 y qué entregaréis: esa decisión cambia el trabajo necesario.
 
-00:01:30.629 --> 00:01:32.958
+00:01:35.762 --> 00:01:38.091
 Miremos ahora el equipo del enunciado.
 
-00:01:33.879 --> 00:01:36.168
+00:01:39.012 --> 00:01:41.302
 Tiene un disco de un terabyte, pero está
 
-00:01:36.182 --> 00:01:40.826
+00:01:41.315 --> 00:01:45.960
 ocupado al setenta por ciento: quedan aproximadamente trescientos gigabytes.
 
-00:01:41.734 --> 00:01:43.761
+00:01:46.868 --> 00:01:48.894
 El archivo completo no cabe ahí.
 
-00:01:44.682 --> 00:01:46.366
+00:01:49.815 --> 00:01:51.499
 La memoria RAM es de treinta y
 
-00:01:46.379 --> 00:01:48.839
+00:01:51.512 --> 00:01:53.973
 dos gigabytes, así que tampoco podemos
 
-00:01:48.853 --> 00:01:51.300
+00:01:53.986 --> 00:01:56.433
 cargarlo entero como una tabla de pandas.
 
-00:01:52.221 --> 00:01:55.682
+00:01:57.354 --> 00:02:00.815
 Además, interpretar texto puede necesitar más memoria de
 
-00:01:55.695 --> 00:01:57.708
+00:02:00.828 --> 00:02:02.841
 la que sugiere el tamaño del fichero.
 
-00:01:58.616 --> 00:02:01.576
+00:02:03.749 --> 00:02:06.710
 La CPU dispone de diez núcleos y veinte hilos,
 
-00:02:01.826 --> 00:02:03.971
+00:02:06.960 --> 00:02:09.104
 pero eso no aumenta el disco ni la RAM.
 
-00:02:04.866 --> 00:02:06.589
+00:02:09.999 --> 00:02:11.723
 Son recursos distintos.
 
-00:02:07.497 --> 00:02:10.800
+00:02:12.631 --> 00:02:15.933
 La primera pregunta os pide explicar esos límites junto
 
-00:02:10.813 --> 00:02:12.879
+00:02:15.947 --> 00:02:18.012
 con el coste de leer por red y disco.
 
-00:02:13.774 --> 00:02:15.392
+00:02:18.907 --> 00:02:20.526
 El resultado de nuestra media
 
-00:02:15.405 --> 00:02:17.260
+00:02:20.539 --> 00:02:22.394
 puede ocupar apenas unos bytes.
 
-00:02:18.168 --> 00:02:20.682
+00:02:23.302 --> 00:02:25.815
 Sin embargo, para obtenerlo quizá tengamos
 
-00:02:20.695 --> 00:02:22.761
+00:02:25.828 --> 00:02:27.894
 que recorrer los quinientos gigabytes.
 
-00:02:23.668 --> 00:02:25.813
+00:02:28.802 --> 00:02:30.947
 Hagamos una estimación sencilla.
 
-00:02:26.761 --> 00:02:29.761
+00:02:31.894 --> 00:02:34.894
 Si leemos a cien megabytes por segundo sostenidos,
 
-00:02:29.892 --> 00:02:33.063
+00:02:35.026 --> 00:02:38.197
 con unidades decimales, solo la lectura necesita
 
-00:02:33.076 --> 00:02:36.089
+00:02:38.210 --> 00:02:41.223
 cinco mil segundos: unos ochenta y tres minutos.
 
-00:02:37.024 --> 00:02:39.761
+00:02:42.157 --> 00:02:44.894
 Todavía faltan la interpretación y el cálculo.
 
-00:02:40.682 --> 00:02:42.761
+00:02:45.815 --> 00:02:47.894
 Esa velocidad es un supuesto, no
 
-00:02:42.774 --> 00:02:44.511
+00:02:47.907 --> 00:02:49.644
 una medida de vuestra conexión.
 
-00:02:45.432 --> 00:02:48.287
+00:02:50.565 --> 00:02:53.420
 Debéis indicar qué tasa necesitaríais comprobar.
 
-00:02:49.221 --> 00:02:51.366
+00:02:54.354 --> 00:02:56.499
 Antes de prometer que el informe estará
 
-00:02:51.379 --> 00:02:54.405
+00:02:56.512 --> 00:02:59.539
 a las ocho, necesitamos saber cuándo empieza el
 
-00:02:54.418 --> 00:02:56.958
+00:02:59.552 --> 00:03:02.091
 trabajo y si el tiempo disponible alcanza.
 
-00:02:57.866 --> 00:03:00.234
+00:03:02.999 --> 00:03:05.368
 Que el archivo no quepa entero no significa
 
-00:03:00.247 --> 00:03:03.129
+00:03:05.381 --> 00:03:08.262
 que sea imposible calcular la media en una máquina.
 
-00:03:04.050 --> 00:03:06.221
+00:03:09.183 --> 00:03:11.354
 Podemos leer por bloques, sumar los
 
-00:03:06.234 --> 00:03:08.866
+00:03:11.368 --> 00:03:13.999
 valores válidos y contar cuántos hemos visto.
 
-00:03:09.774 --> 00:03:11.037
+00:03:14.907 --> 00:03:16.170
 Cuando llega el siguiente
 
-00:03:11.050 --> 00:03:13.997
+00:03:16.183 --> 00:03:19.131
 bloque, actualizamos esos dos acumuladores.
 
-00:03:14.905 --> 00:03:16.484
+00:03:20.039 --> 00:03:21.618
 Al final dividimos la suma
 
-00:03:16.497 --> 00:03:18.234
+00:03:21.631 --> 00:03:23.368
 total entre el recuento total.
 
-00:03:19.155 --> 00:03:21.300
+00:03:24.289 --> 00:03:26.433
 Si no hay valores válidos, debemos
 
-00:03:21.313 --> 00:03:23.537
+00:03:26.447 --> 00:03:28.670
 indicar que la media no puede calcularse.
 
-00:03:24.458 --> 00:03:27.247
+00:03:29.591 --> 00:03:32.381
 Dejamos memoria libre para convertir los datos y
 
-00:03:27.261 --> 00:03:29.853
+00:03:32.394 --> 00:03:34.986
 trabajar, sin ocuparla toda con el bloque.
 
-00:03:30.387 --> 00:03:32.716
+00:03:35.525 --> 00:03:37.854
 Como el origen está en red, los bytes
 
-00:03:32.729 --> 00:03:35.742
+00:03:37.868 --> 00:03:40.881
 siguen viajando hasta el lector, aunque no guardemos
 
-00:03:35.755 --> 00:03:38.229
+00:03:40.894 --> 00:03:43.368
 una copia completa en el disco del portátil.
 
-00:03:39.163 --> 00:03:40.887
+00:03:44.302 --> 00:03:46.025
 Si vuestra operación es otra,
 
-00:03:41.045 --> 00:03:42.953
+00:03:46.183 --> 00:03:48.091
 explicad cómo cambia ese plan.
 
-00:03:43.860 --> 00:03:46.097
+00:03:48.999 --> 00:03:51.236
 Para la desviación típica necesitamos un
 
-00:03:46.110 --> 00:03:48.926
+00:03:51.249 --> 00:03:54.065
 algoritmo incremental estable y aclarar si queremos
 
-00:03:48.939 --> 00:03:51.650
+00:03:54.078 --> 00:03:56.789
 la desviación poblacional o la muestral.
 
-00:03:52.571 --> 00:03:53.847
+00:03:57.710 --> 00:03:58.986
 No basta con decir que
 
-00:03:53.860 --> 00:03:55.374
+00:03:58.999 --> 00:04:00.512
 sumaremos como en la media.
 
-00:03:56.295 --> 00:03:58.939
+00:04:01.433 --> 00:04:04.078
 Para normalizar todos los valores entre cero y
 
-00:03:58.953 --> 00:04:02.992
+00:04:04.091 --> 00:04:08.131
 uno, normalmente hacemos una primera pasada para conocer mínimo
 
-00:04:03.005 --> 00:04:05.782
+00:04:08.144 --> 00:04:10.920
 y máximo y otra para transformar cada registro.
 
-00:04:06.689 --> 00:04:09.834
+00:04:11.828 --> 00:04:14.973
 Si ambos coinciden, hay que definir qué resultado dar.
 
-00:04:10.755 --> 00:04:13.282
+00:04:15.894 --> 00:04:18.420
 Aquí también cambia el tamaño de la salida.
 
-00:04:14.216 --> 00:04:16.229
-Trabajad con la operación indicada o
+00:04:19.354 --> 00:04:21.499
+Trabajad con la operación asignada por
 
-00:04:16.242 --> 00:04:17.689
-con la que el profesor os haya
+00:04:21.512 --> 00:04:23.802
+el profesor y explicadla con precisión.
 
-00:04:17.703 --> 00:04:20.742
-permitido elegir, y explicadla con precisión.
+00:04:24.710 --> 00:04:26.710
+Esa será la misma cuando comparéis
 
-00:04:21.650 --> 00:04:23.479
+00:04:26.723 --> 00:04:29.381
+las distintas formas de procesar el histórico.
+
+00:04:30.302 --> 00:04:32.131
 No se os pide entregar código
 
-00:04:23.492 --> 00:04:26.518
+00:04:32.144 --> 00:04:35.170
 ejecutable; sí un procedimiento que tenga sentido.
 
-00:04:27.426 --> 00:04:29.163
+00:04:36.078 --> 00:04:37.789
 Podemos preguntarnos ahora si
 
-00:04:29.176 --> 00:04:31.479
+00:04:37.802 --> 00:04:40.621
 varios núcleos acelerarían el cálculo.
 
-00:04:32.400 --> 00:04:34.979
+00:04:41.545 --> 00:04:44.124
 Con paralelismo local, varios trabajadores
 
-00:04:34.992 --> 00:04:36.439
+00:04:44.137 --> 00:04:45.585
 procesan bloques a la vez.
 
-00:04:37.347 --> 00:04:41.185
+00:04:46.493 --> 00:04:49.677
 Eso puede ayudar cuando hay suficiente trabajo de CPU.
 
-00:04:42.121 --> 00:04:44.398
+00:04:50.611 --> 00:04:52.887
 Pero cada trabajador necesita memoria y
 
-00:04:44.411 --> 00:04:46.529
+00:04:52.900 --> 00:04:55.019
 todos pueden competir por la misma red.
 
-00:04:47.450 --> 00:04:50.779
+00:04:55.940 --> 00:04:59.269
 Diez bloques grandes simultáneos podrían agotar la RAM.
 
-00:04:51.700 --> 00:04:53.963
+00:05:00.190 --> 00:05:02.453
 Por eso limitaríamos los trabajadores y
 
-00:04:53.977 --> 00:04:57.069
+00:05:02.466 --> 00:05:05.558
 compararíamos la velocidad de lectura y procesamiento.
 
-00:04:57.977 --> 00:05:00.648
+00:05:06.466 --> 00:05:09.137
 Podéis citar multiprocessing, Dask o Spark en
 
-00:05:00.661 --> 00:05:03.687
+00:05:09.150 --> 00:05:12.177
 modo local como vías posibles, sin instalarlos.
 
-00:05:04.595 --> 00:05:06.227
+00:05:13.085 --> 00:05:14.716
 Fijaos en lo que no cambia:
 
-00:05:06.411 --> 00:05:08.687
+00:05:14.900 --> 00:05:17.177
 seguimos dentro del mismo portátil y, si
 
-00:05:08.700 --> 00:05:11.227
+00:05:17.190 --> 00:05:19.716
 se apaga, esa ejecución se interrumpe.
 
-00:05:12.135 --> 00:05:14.858
+00:05:20.624 --> 00:05:23.348
 Hagamos una pausa para ordenar el vocabulario.
 
-00:05:15.779 --> 00:05:19.200
+00:05:24.269 --> 00:05:27.690
 Concurrencia significa que varias tareas progresan durante un
 
-00:05:19.213 --> 00:05:22.069
+00:05:27.703 --> 00:05:30.558
 mismo periodo; pueden turnarse en un recurso.
 
-00:05:22.977 --> 00:05:24.648
+00:05:31.466 --> 00:05:33.137
 Paralelismo significa que hay
 
-00:05:24.661 --> 00:05:26.924
+00:05:33.150 --> 00:05:35.414
 trabajo ejecutándose al mismo tiempo.
 
-00:05:27.819 --> 00:05:30.214
+00:05:36.308 --> 00:05:38.703
 Distribución añade otra característica:
 
-00:05:30.424 --> 00:05:32.713
+00:05:38.914 --> 00:05:41.203
 participan varias máquinas conectadas.
 
-00:05:33.621 --> 00:05:35.516
+00:05:42.111 --> 00:05:44.006
 Las ideas pueden combinarse.
 
-00:05:36.437 --> 00:05:39.740
+00:05:44.927 --> 00:05:48.229
 Un clúster puede utilizar paralelismo dentro de cada nodo.
 
-00:05:40.648 --> 00:05:42.845
+00:05:49.137 --> 00:05:51.335
 Y un programa que admite distribución
 
-00:05:42.858 --> 00:05:45.753
+00:05:51.348 --> 00:05:54.243
 puede estar ejecutándose solo en vuestro ordenador.
 
-00:05:46.661 --> 00:05:49.385
+00:05:55.150 --> 00:05:57.874
 Cuando defendáis la propuesta, explicad dónde
 
-00:05:49.398 --> 00:05:51.806
+00:05:57.887 --> 00:06:00.295
 corre cada parte y qué recursos utiliza.
 
-00:05:52.727 --> 00:05:55.832
+00:06:01.216 --> 00:06:04.321
 Eso dice mucho más que nombrar una herramienta conocida.
 
-00:05:56.779 --> 00:05:59.345
+00:06:05.269 --> 00:06:07.835
 Si la lectura, el plazo o la repetición del
 
-00:05:59.358 --> 00:06:04.345
+00:06:07.848 --> 00:06:12.835
 informe justifican otros recursos, podemos plantear una ejecución distribuida.
 
-00:06:05.279 --> 00:06:06.727
+00:06:13.769 --> 00:06:15.216
 La idea es procesar en un
 
-00:06:06.740 --> 00:06:10.082
+00:06:15.229 --> 00:06:18.571
 entorno próximo al almacenamiento del histórico, sin
 
-00:06:10.095 --> 00:06:12.108
+00:06:18.585 --> 00:06:20.598
 hacerlo pasar todo por el portátil.
 
-00:06:13.056 --> 00:06:15.595
+00:06:21.545 --> 00:06:24.085
 Explicad dónde estarán los datos, cómo se
 
-00:06:15.608 --> 00:06:17.885
+00:06:24.098 --> 00:06:26.374
 dividirá el trabajo y quién lo ejecutará.
 
-00:06:18.806 --> 00:06:21.950
+00:06:27.295 --> 00:06:30.440
 Podéis considerar HDFS o almacenamiento de
 
-00:06:21.963 --> 00:06:24.385
+00:06:30.453 --> 00:06:32.874
 objetos, según el sistema disponible.
 
-00:06:25.306 --> 00:06:27.845
+00:06:33.795 --> 00:06:36.335
 No deis por hecho que cualquier archivo y lector
 
-00:06:27.858 --> 00:06:31.911
+00:06:36.348 --> 00:06:40.400
 permiten repartirlo igual: importan el formato y su organización.
 
-00:06:32.819 --> 00:06:35.924
+00:06:41.308 --> 00:06:44.414
 La decisión debe apoyarse en medidas y requisitos.
 
-00:06:36.832 --> 00:06:39.332
+00:06:45.321 --> 00:06:47.821
 Quinientos gigabytes, por sí solos, no
 
-00:06:39.345 --> 00:06:41.700
+00:06:47.835 --> 00:06:50.190
 prueban que un clúster sea imprescindible.
 
-00:06:42.621 --> 00:06:45.003
+00:06:51.111 --> 00:06:53.493
 Supongamos que repartimos nuestra media.
 
-00:06:45.924 --> 00:06:48.635
+00:06:54.414 --> 00:06:57.124
 Cada trabajador devuelve su suma y su recuento,
 
-00:06:48.845 --> 00:06:51.595
+00:06:57.335 --> 00:07:00.085
 y combinamos ambos para calcular la media global.
 
-00:06:52.529 --> 00:06:54.832
+00:07:01.019 --> 00:07:03.321
 No promediamos las medias de los bloques sin
 
-00:06:54.845 --> 00:06:58.187
+00:07:03.335 --> 00:07:06.677
 considerar sus tamaños: un bloque con diez reservas
 
-00:06:58.200 --> 00:07:00.042
+00:07:06.690 --> 00:07:08.532
 no pesa lo mismo que otro con mil.
 
-00:07:00.950 --> 00:07:03.950
+00:07:09.440 --> 00:07:12.440
 Después preguntamos qué ocurre si una tarea falla.
 
-00:07:04.469 --> 00:07:07.338
+00:07:12.959 --> 00:07:15.828
 Necesitamos identificar las partes terminadas y
 
-00:07:07.351 --> 00:07:09.851
+00:07:15.841 --> 00:07:18.341
 evitar contarlas dos veces al repetirlas.
 
-00:07:10.772 --> 00:07:12.574
+00:07:19.262 --> 00:07:21.065
 También hay que proteger el origen y
 
-00:07:12.588 --> 00:07:15.114
+00:07:21.078 --> 00:07:23.604
 estudiar qué sucede si falla el coordinador.
 
-00:07:16.022 --> 00:07:17.982
+00:07:24.512 --> 00:07:26.472
 Tener varias máquinas no basta para
 
-00:07:17.995 --> 00:07:20.166
+00:07:26.486 --> 00:07:28.657
 afirmar que el sistema tolera fallos.
 
-00:07:21.074 --> 00:07:23.522
+00:07:29.565 --> 00:07:32.012
 Debéis explicar qué se recupera y cómo.
 
-00:07:24.430 --> 00:07:27.153
+00:07:32.920 --> 00:07:35.644
 Hay otra alternativa que también debéis valorar.
 
-00:07:28.074 --> 00:07:30.916
+00:07:36.565 --> 00:07:39.407
 Si el histórico se va a consultar muchas veces,
 
-00:07:31.140 --> 00:07:33.995
+00:07:39.630 --> 00:07:42.486
 quizá compense prepararlo en un almacén de informes
 
-00:07:34.009 --> 00:07:37.140
+00:07:42.499 --> 00:07:45.630
 o un lakehouse y obtener la media mediante consultas.
 
-00:07:38.048 --> 00:07:39.351
+00:07:46.538 --> 00:07:47.841
 Si el aula trabaja con
 
-00:07:39.364 --> 00:07:41.785
+00:07:47.854 --> 00:07:50.275
 MongoDB, podéis estudiar su encaje.
 
-00:07:42.693 --> 00:07:44.956
+00:07:51.183 --> 00:07:53.446
 La carga inicial tiene un coste, y el
 
-00:07:44.969 --> 00:07:47.627
+00:07:53.459 --> 00:07:56.117
 modelo debe servir para las preguntas previstas.
 
-00:07:48.548 --> 00:07:50.706
+00:07:57.038 --> 00:07:59.196
 También importan las columnas leídas,
 
-00:07:50.824 --> 00:07:52.956
+00:07:59.315 --> 00:08:01.446
 las particiones y el mantenimiento.
 
-00:07:53.864 --> 00:07:55.824
+00:08:02.354 --> 00:08:04.315
 Guardar un archivo en S3 o en
 
-00:07:55.838 --> 00:07:58.601
+00:08:04.328 --> 00:08:07.091
 Blob no calcula automáticamente el resultado:
 
-00:07:58.877 --> 00:08:00.956
+00:08:07.367 --> 00:08:09.446
 hace falta un motor que lo procese.
 
-00:08:01.877 --> 00:08:03.877
+00:08:10.367 --> 00:08:12.367
 Comparad esta opción con un trabajo
 
-00:08:03.890 --> 00:08:06.509
+00:08:12.380 --> 00:08:14.999
 puntual y explicad cuándo podría compensar.
 
-00:08:07.430 --> 00:08:11.101
+00:08:15.920 --> 00:08:19.591
 Volvamos al portátil, que también tiene una tarjeta gráfica.
 
-00:08:12.009 --> 00:08:14.166
+00:08:20.499 --> 00:08:22.657
 ¿La utilizaríamos para esta media?
 
-00:08:14.685 --> 00:08:16.449
+00:08:23.170 --> 00:08:24.933
 No podemos responder solo por
 
-00:08:16.462 --> 00:08:17.843
+00:08:24.946 --> 00:08:26.328
 su nombre o su memoria.
 
-00:08:18.764 --> 00:08:21.633
+00:08:27.249 --> 00:08:30.117
 Las GPU pueden ayudar en entrenamiento de modelos
 
-00:08:21.646 --> 00:08:26.251
+00:08:30.131 --> 00:08:34.736
 o en ciertos cálculos numéricos intensivos, con herramientas compatibles.
 
-00:08:27.172 --> 00:08:29.291
+00:08:35.657 --> 00:08:37.775
 Pero si aquí pasamos la mayor parte del
 
-00:08:29.304 --> 00:08:31.975
+00:08:37.788 --> 00:08:40.460
 tiempo esperando datos de la red o interpretando el
 
-00:08:31.988 --> 00:08:35.738
+00:08:40.473 --> 00:08:44.223
 archivo, añadir capacidad de cálculo quizá aporte poco.
 
-00:08:36.646 --> 00:08:39.501
+00:08:45.131 --> 00:08:47.986
 También hay costes de transferencia y preparación.
 
-00:08:40.422 --> 00:08:42.251
+00:08:48.907 --> 00:08:50.736
 La pregunta os pide localizar el
 
-00:08:42.264 --> 00:08:44.791
+00:08:50.749 --> 00:08:53.275
 cuello de botella y justificar la respuesta.
 
-00:08:45.699 --> 00:08:47.672
+00:08:54.183 --> 00:08:56.157
 No afirmar que una GPU nunca
 
-00:08:47.685 --> 00:08:50.106
+00:08:56.170 --> 00:08:58.591
 sirve ni que siempre acelera cualquier tarea.
 
-00:08:50.846 --> 00:08:53.188
+00:08:59.323 --> 00:09:01.665
 Ya podéis construir una recomendación.
 
-00:08:54.109 --> 00:08:56.767
+00:09:02.586 --> 00:09:05.244
 Indicad el formato y la ubicación del origen,
 
-00:08:56.952 --> 00:09:00.307
+00:09:05.428 --> 00:09:08.783
 la velocidad de lectura que suponéis, el plazo, la
 
-00:09:00.320 --> 00:09:03.254
+00:09:08.796 --> 00:09:11.731
 frecuencia de ejecución y el tamaño del resultado.
 
-00:09:04.162 --> 00:09:06.425
+00:09:12.639 --> 00:09:14.902
 Incluid la estimación mínima de lectura
 
-00:09:06.438 --> 00:09:08.412
+00:09:14.915 --> 00:09:16.889
 y explicad qué mediciones faltan.
 
-00:09:09.346 --> 00:09:11.912
+00:09:17.823 --> 00:09:20.362
 Una media puntual puede admitir un plan local
 
-00:09:11.925 --> 00:09:15.346
+00:09:20.375 --> 00:09:24.097
 por bloques; un informe diario con un plazo exigente
 
-00:09:15.359 --> 00:09:18.899
+00:09:24.110 --> 00:09:27.650
 puede necesitar otra organización y garantías de recuperación.
 
-00:09:19.412 --> 00:09:23.419
+00:09:28.164 --> 00:09:31.743
 También podéis combinar opciones, por ejemplo explorar una
 
-00:09:23.432 --> 00:09:26.774
+00:09:31.756 --> 00:09:35.098
 muestra localmente y procesar el histórico en otro entorno.
 
-00:09:27.698 --> 00:09:31.211
+00:09:36.019 --> 00:09:39.532
 Justificad dónde conservaréis el original y cómo revisaríais
 
-00:09:31.224 --> 00:09:34.316
+00:09:39.545 --> 00:09:42.637
 la solución si mañana creciera hasta cinco terabytes.
 
-00:09:34.487 --> 00:09:37.540
+00:09:42.809 --> 00:09:45.861
 Para terminar la actividad, responded por escrito o
 
-00:09:37.553 --> 00:09:39.263
+00:09:45.874 --> 00:09:47.585
 en un pad a las siete preguntas.
 
-00:09:40.198 --> 00:09:43.527
+00:09:48.519 --> 00:09:51.848
 Explicad los límites del portátil, el plan secuencial
 
-00:09:43.540 --> 00:09:46.513
+00:09:51.861 --> 00:09:54.835
 por bloques, el paralelo local, el distribuido,
 
-00:09:46.777 --> 00:09:49.211
+00:09:55.098 --> 00:09:57.532
 la alternativa de cargar y consultar, el
 
-00:09:49.224 --> 00:09:51.698
+00:09:57.545 --> 00:10:00.019
 papel de la GPU y vuestra elección final.
 
-00:09:52.606 --> 00:09:54.856
-Usáis la misma operación acordada con
+00:10:00.927 --> 00:10:04.151
+Comparad todas esas posibilidades con la misma operación
 
-00:09:54.869 --> 00:09:57.908
-el profesor para comparar todas esas posibilidades.
+00:10:04.164 --> 00:10:06.664
+y el mismo destino asignados por el profesor.
 
-00:09:58.816 --> 00:10:02.342
-Si os ha permitido elegirla, indicad cuál habéis elegido.
+00:10:07.572 --> 00:10:09.756
+Indicad ambos en vuestra respuesta.
 
-00:10:02.873 --> 00:10:04.900
+00:10:10.664 --> 00:10:12.848
+Así mantenemos el encargo y podemos
+
+00:10:12.861 --> 00:10:15.743
+justificar qué solución técnica lo resuelve mejor.
+
+00:10:16.664 --> 00:10:18.690
 No hace falta código que compile.
 
-00:10:05.821 --> 00:10:09.307
+00:10:19.611 --> 00:10:23.098
 La sesión propone leer el caso, trabajar individualmente
 
-00:10:09.321 --> 00:10:11.873
+00:10:23.111 --> 00:10:25.664
 o por parejas y compartir la recomendación.
 
-00:10:12.781 --> 00:10:14.360
+00:10:26.572 --> 00:10:28.151
 La entrega en Moodle solo se
 
-00:10:14.373 --> 00:10:16.386
+00:10:28.164 --> 00:10:30.177
 realiza si el profesor la indica.
 
-00:10:17.307 --> 00:10:19.557
+00:10:31.098 --> 00:10:33.348
 Lo importante es que podáis defender por
 
-00:10:19.571 --> 00:10:21.992
+00:10:33.361 --> 00:10:35.782
 qué vuestra propuesta puede cumplir el encargo.
 
-00:10:22.900 --> 00:10:25.518
+00:10:36.690 --> 00:10:39.309
 Esta es la conexión con la siguiente unidad.
 
-00:10:26.021 --> 00:10:29.614
+00:10:39.812 --> 00:10:43.404
 Con Pentaho hemos construido y comprobado un recorrido pequeño.
 
-00:10:30.521 --> 00:10:34.416
+00:10:44.312 --> 00:10:48.207
 Ahora hemos aprendido a preguntar qué recursos, almacenamiento
 
-00:10:34.429 --> 00:10:38.219
+00:10:48.220 --> 00:10:52.009
 y mecanismos de recuperación necesitaría cuando cambia la escala.
 
-00:10:39.140 --> 00:10:41.192
+00:10:52.930 --> 00:10:54.983
 En la UT2 estudiaremos sistemas y
 
-00:10:41.206 --> 00:10:44.127
+00:10:54.996 --> 00:10:57.917
 herramientas que permiten abordar esas necesidades.
 
-00:10:45.035 --> 00:10:47.456
+00:10:58.825 --> 00:11:01.246
 Seguimos trabajando para el mismo hotel y el
 
-00:10:47.469 --> 00:10:51.429
+00:11:01.259 --> 00:11:05.220
 objetivo no cambia: obtener información fiable dentro del plazo.
 
-00:10:52.337 --> 00:10:55.245
+00:11:06.128 --> 00:11:09.035
 Cuando aparezca una tecnología nueva, recordad
 
-00:10:55.258 --> 00:10:56.903
+00:11:09.049 --> 00:11:10.693
 las preguntas de esta tarea.
 
-00:10:57.837 --> 00:10:59.324
+00:11:11.628 --> 00:11:13.114
 ¿Dónde están los datos?
 
-00:11:00.258 --> 00:11:01.219
+00:11:14.049 --> 00:11:15.009
 ¿Quién calcula?
 
-00:11:02.127 --> 00:11:03.653
+00:11:15.917 --> 00:11:17.443
 ¿Qué pasa si algo falla?
 
-00:11:04.574 --> 00:11:05.679
+00:11:18.364 --> 00:11:19.470
 ¿Cómo creceremos?
 
-00:11:06.627 --> 00:11:09.521
+00:11:20.417 --> 00:11:23.312
 Esas preguntas dan sentido a lo que viene después.

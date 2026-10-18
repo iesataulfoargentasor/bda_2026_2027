@@ -20,7 +20,7 @@ No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase*
 
 ## Vídeo: del informe del hotel a los 500 GB
 
-Esta guía continúa la historia de la práctica de Pentaho: el histórico crece y debemos comparar cómo procesarlo dentro del plazo. Explica los límites del portátil, la lectura por bloques, el paralelismo local, la distribución y las preguntas que debéis responder para justificar vuestra propuesta. **Duración: 11 minutos y 11 segundos.**
+Esta guía continúa la historia de la práctica de Pentaho: el histórico crece y debemos comparar cómo procesarlo dentro del plazo. Explica los límites del portátil, la lectura por bloques, el paralelismo local, la distribución y las preguntas que debéis responder para justificar vuestra propuesta. **Duración: 11 minutos y 24 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/transicion-500gb-revisada-portada.jpg" aria-label="Transición a la UT2: cómo abordar la tarea de los 500 GB" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/transicion-500gb-revisada.mp4" type="video/mp4">

@@ -10,12 +10,12 @@
   },
   {
     "title": "Primero aclaramos qué resultado nos piden",
-    "label": "El profesor indica la operación o permite elegir entre las propuestas.",
+    "label": "El profesor asigna la operación y el destino del resultado.",
     "active": 0,
     "heading": "Media · desviación típica · normalización",
     "body": "Definid campo, periodo, valores válidos y tamaño de la salida.",
     "takeaway": "Una media es un resumen; normalizar cada fila produce muchos valores.",
-    "narration": "Antes de hablar de máquinas, concretemos el encargo. El profesor indicará la operación o permitirá elegir entre una media, una desviación típica y la normalización de un campo. Antes de empezar, confirmad cuál corresponde a vuestra propuesta. Para seguir una historia común, pensemos en el importe medio de las reservas de un periodo definido. Acordamos qué registros entran y cómo tratamos los valores ausentes. Recordad que el importe de una reserva no demuestra que esté cobrada. Una media devuelve un resumen pequeño. En cambio, normalizar cada registro produce un conjunto de valores y puede generar una salida grande. Explicad desde el principio qué vais a calcular y qué entregaréis: esa decisión cambia el trabajo necesario."
+    "narration": "Antes de hablar de máquinas, concretemos el encargo. El profesor asignará la operación: una media, una desviación típica o la normalización de un campo. También indicará dónde debe quedar el resultado. Antes de empezar, confirmad ese encargo. Lo que vosotros elegiréis y justificaréis será cómo resolverlo. Para seguir una historia común, pensemos en el importe medio de las reservas de un periodo definido. Acordamos qué registros entran y cómo tratamos los valores ausentes. Recordad que el importe de una reserva no demuestra que esté cobrada. Una media devuelve un resumen pequeño. En cambio, normalizar cada registro produce un conjunto de valores y puede generar una salida grande. Explicad desde el principio qué vais a calcular y qué entregaréis: esa decisión cambia el trabajo necesario."
   },
   {
     "title": "El portátil tiene límites diferentes",
@@ -45,13 +45,13 @@
     "narration": "Que el archivo no quepa entero no significa que sea imposible calcular la media en una máquina. Podemos leer por bloques, sumar los valores válidos y contar cuántos hemos visto. Cuando llega el siguiente bloque, actualizamos esos dos acumuladores. Al final dividimos la suma total entre el recuento total. Si no hay valores válidos, debemos indicar que la media no puede calcularse. Dejamos memoria libre para convertir los datos y trabajar, sin ocuparla toda con el bloque. Como el origen está en red, los bytes siguen viajando hasta el lector, aunque no guardemos una copia completa en el disco del portátil."
   },
   {
-    "title": "La operación elegida cambia el recorrido",
+    "title": "La operación asignada cambia el recorrido",
     "label": "No todos los cálculos se resuelven con los mismos acumuladores.",
     "active": 1,
     "heading": "Media: suma y recuento · Normalización: mínimo y máximo",
     "body": "Desviación: algoritmo incremental estable y definición poblacional o muestral.",
     "takeaway": "Si máximo y mínimo coinciden, definid el tratamiento.",
-    "narration": "Si vuestra operación es otra, explicad cómo cambia ese plan. Para la desviación típica necesitamos un algoritmo incremental estable y aclarar si queremos la desviación poblacional o la muestral. No basta con decir que sumaremos como en la media. Para normalizar todos los valores entre cero y uno, normalmente hacemos una primera pasada para conocer mínimo y máximo y otra para transformar cada registro. Si ambos coinciden, hay que definir qué resultado dar. Aquí también cambia el tamaño de la salida. Trabajad con la operación indicada o con la que el profesor os haya permitido elegir, y explicadla con precisión. No se os pide entregar código ejecutable; sí un procedimiento que tenga sentido."
+    "narration": "Si vuestra operación es otra, explicad cómo cambia ese plan. Para la desviación típica necesitamos un algoritmo incremental estable y aclarar si queremos la desviación poblacional o la muestral. No basta con decir que sumaremos como en la media. Para normalizar todos los valores entre cero y uno, normalmente hacemos una primera pasada para conocer mínimo y máximo y otra para transformar cada registro. Si ambos coinciden, hay que definir qué resultado dar. Aquí también cambia el tamaño de la salida. Trabajad con la operación asignada por el profesor y explicadla con precisión. Esa será la misma cuando comparéis las distintas formas de procesar el histórico. No se os pide entregar código ejecutable; sí un procedimiento que tenga sentido."
   },
   {
     "title": "Segunda opción: varios núcleos del mismo portátil",
@@ -123,7 +123,7 @@
     "heading": "Límites · bloques · paralelo · distribuido · consultas · GPU · decisión",
     "body": "Respuesta escrita o en un pad; razonamiento defendible en voz alta.",
     "takeaway": "No hay que descargar 500 GB ni instalar un clúster para esta sesión.",
-    "narration": "Para terminar la actividad, responded por escrito o en un pad a las siete preguntas. Explicad los límites del portátil, el plan secuencial por bloques, el paralelo local, el distribuido, la alternativa de cargar y consultar, el papel de la GPU y vuestra elección final. Usáis la misma operación acordada con el profesor para comparar todas esas posibilidades. Si os ha permitido elegirla, indicad cuál habéis elegido. No hace falta código que compile. La sesión propone leer el caso, trabajar individualmente o por parejas y compartir la recomendación. La entrega en Moodle solo se realiza si el profesor la indica. Lo importante es que podáis defender por qué vuestra propuesta puede cumplir el encargo."
+    "narration": "Para terminar la actividad, responded por escrito o en un pad a las siete preguntas. Explicad los límites del portátil, el plan secuencial por bloques, el paralelo local, el distribuido, la alternativa de cargar y consultar, el papel de la GPU y vuestra elección final. Comparad todas esas posibilidades con la misma operación y el mismo destino asignados por el profesor. Indicad ambos en vuestra respuesta. Así mantenemos el encargo y podemos justificar qué solución técnica lo resuelve mejor. No hace falta código que compile. La sesión propone leer el caso, trabajar individualmente o por parejas y compartir la recomendación. La entrega en Moodle solo se realiza si el profesor la indica. Lo importante es que podáis defender por qué vuestra propuesta puede cumplir el encargo."
   },
   {
     "title": "La UT2 comienza donde esta decisión necesita un sistema",
