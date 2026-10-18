@@ -1998,7 +1998,7 @@
 <p><strong>Práctica guiada evaluable:</strong> el taller medido compara tamaño, tipos, resultados y tiempos en el entorno local; se valora el procedimiento y la interpretación, no conseguir una marca de velocidad. <strong>Ampliación:</strong> HDFS y Delta requieren otro entorno. No sustituye al recorrido común; su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="video-la-reserva-de-ana-cambia-de-formato">Vídeo: la reserva de Ana cambia de formato<a class="headerlink" href="#video-la-reserva-de-ana-cambia-de-formato" title="Permanent link">&para;</a></h2>
-<p>Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. <strong>Duración: 12 minutos y 24 segundos.</strong></p>
+<p>Sigue la reserva de Ana para comprender cómo elegimos la representación de los datos al intercambiarlos, conservarlos, calcular y mantener el histórico. El recorrido distingue Avro, Arrow y Parquet, explica las lecturas por filas y por columnas y muestra cómo comparar formatos sin perder datos. <strong>Duración: 14 minutos y 37 segundos.</strong></p>
 <video controls playsinline preload="metadata" poster="../../assets/ut1/formatos-natural-portada.jpg" aria-label="Formatos de datos: la reserva de Ana cambia de formato" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/formatos-natural.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
@@ -2211,7 +2211,7 @@
 <p><a href="https://avro.apache.org/" rel="noopener" target="_blank">Avro</a> guarda <strong>por filas</strong>, en binario. El esquema (JSON) viaja en la <strong>cabecera</strong>. Quien lee sabe cómo se escribió. Encaja cuando <strong>escribís mucho</strong>, el esquema <strong>cambia</strong> y el destino es un bus (<a href="../ingesta/" rel="noopener" target="_blank">Kafka</a>), no el PMS. Guía: <a href="https://avro.apache.org/docs/1.11.1/getting-started-python/" rel="noopener" target="_blank">Getting started (Python)</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Orden de los talleres</p>
-<p>1–2: Avro con nulos. 3: del <code>df</code> a Avro (opcional). 4–6: Parquet; el 6 filtra <strong>al leer</strong>. DuckDB: preguntar sin tragarse el fichero. Luego el <a href="#taller-medido-lo-que-se-examina" rel="noopener" target="_blank">taller medido</a>.</p>
+<p>1–2: Avro con nulos. 3: del <code>df</code> a Avro; forma parte de la práctica guiada y prepara <code>laredo.avro</code>, necesario para el taller medido. 4–6: Parquet; el 6 filtra <strong>al leer</strong>. DuckDB: preguntar sin tragarse el fichero. Luego el <a href="#taller-medido-lo-que-se-examina" rel="noopener" target="_blank">taller medido</a>.</p>
 </div>
 <p>Tipos simples: <code>null</code>, <code>boolean</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>bytes</code>, <code>string</code>.<br />
 Compuestos: <code>record</code>, <code>enum</code>, <code>array</code>, <code>map</code>, <code>union</code>, <code>fixed</code>.</p>

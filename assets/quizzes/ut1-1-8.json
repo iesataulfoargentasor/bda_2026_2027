@@ -104,7 +104,7 @@
     {
       "topic": "Java Filter y nulos",
       "href": "../pentaho/",
-      "prompt": "Java Filter sobre un campo que puede ser nulo, **sin** If field value is null. ¿Qué pasa?",
+      "prompt": "Queréis usar Java Filter sobre un campo que puede ser nulo. ¿Cómo debe prepararse la condición o su entrada para tratar los nulos correctamente?",
       "code": "",
       "options": [
         "Tratar los nulos en la condición o antes; excluir sentinelas que representen datos inválidos.",

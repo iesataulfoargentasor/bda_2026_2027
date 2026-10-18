@@ -132,7 +132,7 @@
     {
       "topic": "Cola y examen",
       "href": "../ingesta/",
-      "prompt": "El consumidor no puede esperar al lote. La cola aguanta; a veces se frena al productor. ¿Para qué es la cola y qué no es contrapresión?",
+      "prompt": "El consumidor no puede esperar al lote. La cola absorbe temporalmente un pico dentro de su capacidad; a veces se frena al productor. ¿Cómo se distinguen el búfer de la cola y la contrapresión?",
       "code": "",
       "options": [
         "La cola desacopla; retener más mensajes equivale a aplicar contrapresión al productor.",
