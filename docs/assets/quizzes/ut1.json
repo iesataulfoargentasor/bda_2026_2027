@@ -9,10 +9,10 @@
       "prompt": "¿Qué es Big Data?",
       "code": "",
       "options": [
-        "Gestionar información no estructurada, aunque sea pequeña y fácil de procesar.",
+        "Gestionar datos de varias fuentes cuyo tamaño supera el espacio del disco local.",
         "Gestionar datos cuyos requisitos superan la capacidad viable del diseño disponible.",
-        "Gestionar datos mediante varios servidores, aunque una máquina cumpla los requisitos.",
-        "Gestionar cualquier conjunto que supere un terabyte, con independencia del plazo."
+        "Gestionar históricos de gran tamaño mediante herramientas de cálculo distribuido.",
+        "Gestionar datos que cambian de estructura y requieren sustituir tablas por documentos."
       ],
       "answer": 1,
       "explain": "No existe un umbral universal en TB ni un número de hoteles que lo determine. Medimos capacidad, plazo, calidad y coste antes de cambiar la solución."
@@ -23,10 +23,10 @@
       "prompt": "Descriptiva, diagnóstica, predictiva y prescriptiva. ¿Qué pregunta hace cada una, en ese orden?",
       "code": "",
       "options": [
+        "¿Por qué pasó? ¿Qué pasó? ¿Qué conviene hacer? ¿Qué pasará?",
         "¿Qué pasó? ¿Qué pasará? ¿Por qué pasó? ¿Qué conviene hacer?",
-        "¿Qué conviene hacer? ¿Por qué pasó? ¿Qué pasó? ¿Qué pasará?",
         "¿Qué pasó? ¿Por qué pasó? ¿Qué pasará? ¿Qué conviene hacer?",
-        "¿Por qué pasó? ¿Qué pasó? ¿Qué conviene hacer? ¿Qué pasará?"
+        "¿Qué conviene hacer? ¿Por qué pasó? ¿Qué pasó? ¿Qué pasará?"
       ],
       "answer": 2,
       "explain": "Son preguntas orientativas: una predicción expresa incertidumbre y un análisis diagnóstico no demuestra causalidad por sí solo. BI puede apoyar decisiones con información histórica o reciente; Big Data no equivale a predicción."
@@ -37,10 +37,10 @@
       "prompt": "Misma cantidad de bytes: 10 TB históricos que cargáis **una vez** al mes, frente a 10 TB **al día** que hay que integrar ahora. ¿Qué V duele en cada caso?",
       "code": "",
       "options": [
-        "En el primero destaca velocidad; en el segundo, variedad por llegar diariamente.",
-        "En ambos destaca variedad, porque un cambio de frecuencia altera el formato.",
-        "En ambos destaca solo volumen, porque el número inicial de bytes es idéntico.",
-        "En el primero destaca volumen; en el segundo, velocidad y acumulación de volumen."
+        "En el primero destaca velocidad por el plazo mensual; en el segundo, volumen por su tamaño.",
+        "En ambos destaca volumen: comparar los diez terabytes basta para elegir el mismo diseño.",
+        "En ambos destaca velocidad: la diferencia relevante es el tiempo que tarda cada transferencia.",
+        "En el primero destaca volumen; en el segundo, velocidad de llegada y acumulación de volumen."
       ],
       "answer": 3,
       "explain": "Volumen = cantidad de bytes. Velocidad = ritmo de llegada y de reacción. Agrandar el disco no arregla un atasco de ingesta. El fabricante anuncia 1 TB (base 10); el explorador suele mostrar ~931 GB (GiB): cuentan distinto, el disco no está roto."
@@ -51,9 +51,9 @@
       "prompt": "¿Qué distingue a minería de datos, ciencia de datos e inteligencia artificial?",
       "code": "",
       "options": [
-        "Minería predice únicamente; ciencia de datos describe únicamente; IA limpia fuentes.",
-        "Minería consulta SQL; ciencia de datos diseña redes; IA conserva históricos.",
-        "Minería prepara archivos; ciencia de datos almacena tablas; IA representa informes.",
+        "Minería prepara las fuentes; ciencia de datos descubre patrones; IA comunica resultados al negocio.",
+        "Minería descubre patrones; ciencia de datos diseña el almacén; IA interpreta los informes del negocio.",
+        "Minería consulta indicadores; ciencia de datos entrena predicciones; IA se ocupa de formular preguntas.",
         "Minería descubre patrones; ciencia de datos investiga con datos; IA construye sistemas inteligentes."
       ],
       "answer": 3,
@@ -66,9 +66,9 @@
       "code": "",
       "options": [
         "Varios nodos conectados por red que se coordinan para realizar trabajo.",
-        "Varios programas instalados en un servidor que utilizan el mismo disco.",
-        "Varios núcleos de un procesador que comparten memoria en un ordenador.",
-        "Varios ordenadores que almacenan archivos sin comunicación ni coordinación."
+        "Varios núcleos que comparten memoria dentro de un mismo ordenador físico.",
+        "Varios servidores conectados a una red, aunque realicen trabajos sin coordinación.",
+        "Varios procesos que reparten una tarea y comparten el disco de un ordenador."
       ],
       "answer": 0,
       "explain": "Cada nodo tiene su CPU, su disco y su memoria. En Big Data permite crecer **añadiendo máquinas**, no solo agrandando una. Hoy se montan sobre servidores normales más un programa que reparte tareas y datos."
@@ -79,9 +79,9 @@
       "prompt": "Un i7 con varios núcleos, ¿es un clúster?",
       "code": "",
       "options": [
-        "Sí: cada núcleo físico constituye un nodo independiente del clúster.",
-        "No: solo sería clúster si ejecutase Spark en el mismo ordenador.",
-        "Sí: disponer de varios hilos implica disponer de varias máquinas en red.",
+        "Sí: los núcleos se coordinan y por ello se consideran nodos de un clúster local.",
+        "No: faltaría repartir los archivos entre los discos internos del mismo ordenador.",
+        "Sí: los hilos lógicos permiten dividir el trabajo como nodos de una red local.",
         "No: varios núcleos permiten paralelismo local, pero siguen en una máquina."
       ],
       "answer": 3,
@@ -93,13 +93,13 @@
       "prompt": "Un nodo desaparece (luz, disco, red) y el servicio **sigue**. ¿Qué propiedad es?",
       "code": "",
       "options": [
-        "Consistencia fuerte, porque continuar el servicio demuestra datos idénticos.",
-        "Equilibrio de carga, aunque no exista ningún mecanismo de recuperación.",
-        "Escalabilidad horizontal, porque el fallo aumenta los recursos disponibles.",
+        "Escalabilidad: el servicio conserva su capacidad al reducirse los nodos activos.",
+        "Equilibrio de carga: el trabajo queda uniformemente repartido al perder un nodo.",
+        "Durabilidad: los datos confirmados pueden recuperarse después de un fallo.",
         "Alta disponibilidad, apoyada en mecanismos de redundancia y recuperación."
       ],
       "answer": 3,
-      "explain": "Alta disponibilidad busca mantener el servicio mediante detección y recuperación. Escalabilidad es capacidad de crecer; elasticidad es ajustar recursos a la demanda. Son objetivos diferentes."
+      "explain": "Continuar atendiendo el servicio corresponde a disponibilidad. La durabilidad trata de conservar datos confirmados; el equilibrio de carga trata de repartir trabajo; la escalabilidad trata de adaptar capacidad. Una propiedad no demuestra por sí sola las demás."
     },
     {
       "topic": "Horizontal y scale-in",
@@ -107,10 +107,10 @@
       "prompt": "Añadís dos máquinas al clúster. Más adelante apagáis dos porque sobra capacidad. ¿Cómo se llama cada cosa?",
       "code": "",
       "options": [
-        "Añadir es replicación; retirar es particionado; ambos distribuyen datos.",
-        "Añadir es scale-up; retirar es scale-down; ambos modifican el número de nodos.",
-        "Añadir es scale-out; retirar es scale-in; ambos modifican el número de nodos.",
-        "Añadir es scale-out; retirar es scale-up; ambos mantienen el mismo equipo."
+        "Añadir es scale-up; retirar es scale-down: varía el número de nodos que atienden la carga.",
+        "Añadir es scale-out; retirar es scale-down: crecer en nodos y reducir la potencia del clúster.",
+        "Añadir es scale-out; retirar es scale-in: cambia el número de nodos disponibles en el clúster.",
+        "Añadir es scale-up; retirar es scale-in: ampliar la potencia del clúster y reducir sus nodos."
       ],
       "answer": 2,
       "explain": "En la jerga: scale-up = vertical, scale-out = horizontal, scale-in = reducir. En clase: vertical, horizontal, y scale-in para apagar cuando sobra."
@@ -122,9 +122,9 @@
       "code": "",
       "options": [
         "Organiza datos en tablas relacionadas y permite definir reglas de integridad.",
-        "Guarda documentos sin relaciones y elimina la necesidad de definir reglas.",
-        "Organiza archivos por carpetas y garantiza transacciones al usar nombres únicos.",
-        "Conserva únicamente históricos agregados y excluye operaciones de recepción."
+        "Organiza registros en archivos relacionados mediante sus nombres y carpetas.",
+        "Organiza documentos independientes y relaciona sus campos mediante claves JSON.",
+        "Organiza datos en tablas y delega sus reglas de integridad en los informes finales."
       ],
       "answer": 0,
       "explain": "El modelo relacional organiza tablas, claves y restricciones. SQL permite consultarlas. La escala y las garantías dependen del gestor y del diseño; también existen sistemas relacionales distribuidos."
@@ -135,10 +135,10 @@
       "prompt": "“NoSQL”, ¿qué es?",
       "code": "",
       "options": [
-        "Una familia de modelos: documento, clave-valor, columnas anchas y grafo.",
-        "Una alternativa que mejora cualquier consulta por evitar relaciones entre tablas.",
-        "Un modelo único que almacena todos los datos como documentos JSON.",
-        "Un conjunto de bases que carecen de cualquier regla o garantía de integridad."
+        "Una familia de modelos de almacenamiento: documento, clave-valor, columnas anchas y grafo.",
+        "Un modelo documental que agrupa clave-valor y grafos como variantes de JSON.",
+        "Una familia definida por ofrecer consistencia eventual en lugar de transacciones.",
+        "Una familia definida por eliminar esquemas y trasladar las reglas a la aplicación."
       ],
       "answer": 0,
       "explain": "NoSQL agrupa modelos como documentos, clave-valor, wide-column y grafos. Las garantías dependen del gestor y su configuración; algunos ofrecen transacciones ACID. Wide-column y un archivo columnar como Parquet son conceptos diferentes."
@@ -149,10 +149,10 @@
       "prompt": "¿En qué se diferencia un data lake de un warehouse?",
       "code": "",
       "options": [
-        "El lago admite únicamente datos sin estructura; el warehouse únicamente CSV.",
+        "El lago se distingue por almacenar archivos; el warehouse por usar discos locales.",
         "El lago admite originales y preparados; el warehouse organiza datos para análisis.",
-        "El lago garantiza calidad al cargar; el warehouse conserva datos sin validar.",
-        "El lago exige ELT; el warehouse exige ETL y nunca puede transformar internamente."
+        "El lago conserva históricos; el warehouse se dedica a las operaciones de recepción.",
+        "El lago admite ELT; el warehouse recibe tablas que se transforman fuera del almacén."
       ],
       "answer": 1,
       "explain": "No son sinónimos de datos sucios frente a limpios. En ambos hacen falta calidad, catálogo y permisos. Un data mart se orienta a un ámbito y puede tener distintos orígenes."
@@ -163,9 +163,9 @@
       "prompt": "¿Qué es un data mart?",
       "code": "",
       "options": [
-        "Área obligatoria del lago que conserva únicamente los datos sin procesar.",
-        "Tabla operativa que registra todas las transacciones de todos los departamentos.",
-        "Copia de seguridad completa del warehouse destinada a recuperar operaciones.",
+        "Partición física del warehouse creada para repartir sus datos entre los nodos.",
+        "Copia de respaldo del warehouse que utiliza un departamento al recuperar sus datos.",
+        "Área de entrada del lago donde un departamento deposita archivos sin integrar.",
         "Conjunto analítico para un ámbito, alimentado por un warehouse u otras fuentes."
       ],
       "answer": 3,
@@ -177,13 +177,13 @@
       "prompt": "En ACID, ¿qué pide cada letra y qué es la C?",
       "code": "",
       "options": [
-        "Atomicidad, compresión, aislamiento y distribución; D exige varias máquinas.",
-        "Disponibilidad, reglas de integridad, indexación y durabilidad; I significa índices.",
-        "Atomicidad, igualdad inmediata entre réplicas, aislamiento y durabilidad; C es CAP.",
+        "Atomicidad, consistencia entre réplicas, aislamiento y durabilidad; C se refiere a las copias.",
+        "Atomicidad, reglas de integridad, independencia y durabilidad; I evita compartir datos.",
+        "Atomicidad, reglas de integridad, aislamiento y disponibilidad; D describe el acceso.",
         "Atomicidad, reglas de integridad, aislamiento y durabilidad; C se refiere a las reglas."
       ],
       "answer": 3,
-      "explain": "ACID-C se refiere a reglas; CAP-C a consistencia fuerte entre operaciones. El aislamiento tiene niveles: serializable busca el efecto de una ejecución en serie."
+      "explain": "La C de ACID se refiere a respetar las reglas de integridad, no a que todas las réplicas muestren el mismo valor en cada momento. A agrupa cambios, I regula la interacción concurrente y D conserva lo confirmado."
     },
     {
       "topic": "CAP",
@@ -191,10 +191,10 @@
       "prompt": "Se corta la red entre dos nodos de un clúster. Un nodo acaba de escribir un valor. El otro, ¿qué puede hacer según CAP?",
       "code": "",
       "options": [
-        "Elegir una propiedad para siempre, incluso cuando la red funciona normalmente.",
+        "Mantener ambas propiedades con ACID en cada nodo, aun sin comunicación entre ellos.",
         "Rechazar ciertas operaciones para preservar consistencia o atenderlas sin garantizarla.",
-        "Mantener consistencia y disponibilidad usando transacciones en cada nodo aislado.",
-        "Garantizar ambas propiedades durante cualquier corte añadiendo una réplica local."
+        "Conservar ambas propiedades escribiendo en réplicas locales durante el corte de red.",
+        "Priorizar según el número de nodos, sin distinguir lo que exige cada operación."
       ],
       "answer": 1,
       "explain": "No se garantizan simultáneamente consistencia fuerte y disponibilidad para todas las operaciones durante una partición. CA no es una forma de evitar ese compromiso."
@@ -205,10 +205,10 @@
       "prompt": "¿Qué debéis determinar antes de elegir cómo almacenar una operación de cobro?",
       "code": "",
       "options": [
-        "Qué base ofrece más velocidad, posponiendo la integridad hasta el informe diario.",
-        "Qué opción declara BASE, porque sustituye las garantías de una transacción.",
-        "Qué modelo tiene más réplicas, porque eso garantiza por sí solo la atomicidad.",
-        "Qué cambios deben confirmarse juntos y qué garantías necesita la operación."
+        "Qué política de réplicas conserva el cobro, tomándola como garantía de atomicidad.",
+        "Qué modelo permite conciliar al final del día, posponiendo la decisión transaccional.",
+        "Qué formato comprime mejor los cobros, dejando las garantías al proceso de ingesta.",
+        "Qué cambios deben confirmarse juntos y qué garantías de integridad necesita la operación."
       ],
       "answer": 3,
       "explain": "BASE admite convergencia eventual bajo las condiciones del sistema. Las transacciones y la consistencia de las réplicas se analizan por ámbito, no solo por la etiqueta del producto."
@@ -220,9 +220,9 @@
       "code": "",
       "options": [
         "El primero es paralelo local; el segundo es distribuido y puede ser paralelo.",
-        "El primero es concurrente sin paralelismo; el segundo es siempre paralelo.",
-        "Ambos son distribuidos, porque cada núcleo representa una máquina independiente.",
-        "El primero es paralelo; el segundo no puede ser paralelo por utilizar una red."
+        "El primero es concurrente sin paralelismo; el segundo es distribuido y paralelo.",
+        "El primero es distribuido entre núcleos; el segundo es distribuido entre máquinas.",
+        "El primero es paralelo local; el segundo deja de ser paralelo al utilizar la red."
       ],
       "answer": 0,
       "explain": "Concurrencia significa progreso de varias tareas, no necesariamente simultáneo. Paralelismo significa ejecución simultánea y puede existir en una o varias máquinas. Distribuido implica varias máquinas que se comunican."
@@ -233,10 +233,10 @@
       "prompt": "En la implementación actual, unas tareas son independientes y otras esperan el resultado anterior. ¿Qué cabe esperar al añadir núcleos?",
       "code": "",
       "options": [
-        "Ninguna puede acelerarse mientras el programa contenga alguna dependencia.",
-        "Se aceleran todas por igual, aunque cada tarea necesite la salida anterior.",
-        "Solo se aceleran las dependientes, porque comparten resultados intermedios.",
-        "Se benefician las tareas independientes; las dependencias limitan la mejora."
+        "Las tareas dependientes se benefician más, porque cada núcleo ejecuta un paso.",
+        "Se acelera toda la cadena al asignar los pasos dependientes a núcleos distintos.",
+        "La cadena dependiente impide aprovechar núcleos incluso en las tareas independientes.",
+        "Se benefician las tareas independientes; la cadena de dependencias limita la mejora."
       ],
       "answer": 3,
       "explain": "Hay que estudiar el algoritmo y sus dependencias. Añadir recursos no elimina automáticamente la parte secuencial."
@@ -247,13 +247,13 @@
       "prompt": "Un job de madrugada deja un informe para la mañana siguiente. ¿Eso es tiempo real?",
       "code": "",
       "options": [
-        "No: solo sería tiempo real si leyera el mismo fichero usando más núcleos.",
-        "Sí: cualquier proceso automático que termina antes de las ocho es tiempo real.",
-        "No: procesa un conjunto delimitado con un plazo de entrega para la mañana.",
-        "Sí: ejecutarse sin intervención humana convierte un lote en procesamiento continuo."
+        "Sí: cumplir una hora límite convierte el cierre nocturno en un flujo continuo.",
+        "No: el motivo es que el informe usa datos antiguos, no cómo delimita su entrada.",
+        "No: es un lote que trata un conjunto delimitado para entregar el informe de la mañana.",
+        "Sí: la ejecución programada permite clasificarlo como procesamiento de eventos."
       ],
       "answer": 2,
-      "explain": "Batch no significa que el resultado no urja: incumplir las 8:00 puede ser un fallo del servicio. La periodicidad y el plazo forman parte del contrato."
+      "explain": "El cierre trabaja con un conjunto delimitado y tiene una fecha de entrega. Tener un horario programado no lo convierte en streaming. La antigüedad del dato tampoco determina por sí sola el modelo de procesamiento."
     },
     {
       "topic": "OLTP y OLAP",
@@ -262,9 +262,9 @@
       "code": "",
       "options": [
         "OLTP opera y OLAP analiza; se valora separarlos si la carga o requisitos lo justifican.",
-        "OLTP opera y OLAP analiza; utilizar SQL impide separar sus cargas de trabajo.",
-        "OLTP conserva históricos y OLAP confirma reservas; separarlos es siempre obligatorio.",
-        "OLTP y OLAP son formatos de archivo; se eligen según el tamaño del disco."
+        "OLTP opera y OLAP analiza; separarlos elimina la necesidad de integrar las fuentes.",
+        "OLTP opera y OLAP analiza; compartir SQL implica que deben usar la misma base.",
+        "OLTP analiza y OLAP opera; separar las cargas permite proteger la recepción."
       ],
       "answer": 0,
       "explain": "No es imposible compartir un sistema. La decisión depende de la carga. Un cubo OLAP organiza medidas por dimensiones; S3 almacena objetos identificados por clave."
@@ -276,9 +276,9 @@
       "code": "",
       "options": [
         "Como guía para valorar velocidad, precisión y volumen con recursos limitados.",
-        "Como teorema que prohíbe alcanzar las tres propiedades en cualquier problema.",
-        "Como fórmula que permite deducir el número exacto de nodos sin medir cargas.",
-        "Como garantía de precisión si se sacrifica velocidad, sin comprobar los datos."
+        "Como una regla que permite escoger dos propiedades y obliga a perder la tercera.",
+        "Como un método para calcular nodos a partir del volumen sin medir el procesamiento.",
+        "Como una forma de aumentar precisión reduciendo volumen sin revisar el muestreo."
       ],
       "answer": 0,
       "explain": "Se pueden revisar recursos, formato, agregados previos o alcance. Una ventana puede dar resultados exactos para su periodo; SCV no equivale a CAP."
@@ -289,10 +289,10 @@
       "prompt": "¿Qué debemos comparar entre un ciclo del dato y un esquema de arquitectura?",
       "code": "",
       "options": [
-        "El número de flechas: debe coincidir para demostrar que no faltan transformaciones.",
-        "La numeración: una capa cuatro debe equivaler siempre a la cuarta fase del ciclo.",
+        "La numeración de las capas, asignando el mismo número a las fases equivalentes.",
+        "La lista de herramientas, exigiendo un programa diferente por cada fase del ciclo.",
         "Las responsabilidades y el recorrido, aunque los esquemas agrupen fases distintas.",
-        "La cantidad de productos: ambos esquemas deben contener los mismos programas."
+        "La secuencia de fases, tomando el orden de un dibujo como orden de toda ejecución."
       ],
       "answer": 2,
       "explain": "El ciclo describe fases; la arquitectura distribuye responsabilidades. Integración y procesamiento pueden compartir transformaciones."
@@ -303,13 +303,13 @@
       "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
-        "Lambda conserva eventos; Kappa elimina cada evento en cuanto lo procesa una vez.",
-        "Lambda usa sensores y Kappa cobros; se distinguen únicamente por el origen del dato.",
+        "Lambda combina cualquier lote y flujo; Kappa es el flujo que queda al retirar el lote.",
+        "Lambda procesa históricos; Kappa procesa lo reciente sin necesidad de conservar eventos.",
         "Lambda combina vistas histórica y reciente; Kappa permite reconstruir vistas desde eventos.",
-        "Lambda exige dos nubes; Kappa exige una sola máquina para evitar duplicados."
+        "Lambda utiliza dos motores; Kappa utiliza uno, aunque mantenga dos caminos de cálculo."
       ],
       "answer": 2,
-      "explain": "Lambda necesita conciliar los caminos sin duplicar hechos. Kappa requiere retención y reprocesamiento controlado. Dos pipelines independientes no bastan para definir Lambda."
+      "explain": "Lambda combina vistas históricas y recientes de los mismos hechos para responder consultas. No basta tener dos procesos independientes de lote y flujo. Kappa permite reconstruir vistas reproduciendo eventos conservados. El número de motores no distingue ambas arquitecturas."
     },
     {
       "topic": "Capas transversales",
@@ -317,13 +317,13 @@
       "prompt": "En un flujo CSV → filtro → Excel, ¿qué dos responsabilidades transversales hay que contemplar también?",
       "code": "",
       "options": [
-        "Replicación y particionado: son obligatorios incluso en cualquier CSV pequeño.",
-        "Entrenamiento y predicción: todo recorrido necesita un modelo estadístico.",
-        "Compresión y cifrado: sustituyen los controles de permisos y de ejecución.",
+        "Particionado y replicación: repartir datos y mantener copias entre distintos nodos.",
+        "Cifrado y compresión: proteger los archivos y reducir su espacio de almacenamiento.",
+        "Catálogo y formato: documentar los campos y elegir su representación en archivos.",
         "Seguridad y monitorización: controlar acceso y comprobar la ejecución."
       ],
       "answer": 3,
-      "explain": "En un caso real existen aunque sean simples: una carpeta con permisos y un log. Sin monitorización el prototipo **miente** en producción."
+      "explain": "En el mapa de esta unidad, seguridad y monitorización son responsabilidades transversales. Cifrar o catalogar puede ayudar, pero no sustituye controlar permisos y comprobar la ejecución. Particionado y replicación son decisiones de diseño según la necesidad."
     },
     {
       "topic": "Qué es ingerir",
@@ -332,9 +332,9 @@
       "code": "",
       "options": [
         "Incorporar datos existentes a otro sistema para almacenarlos o procesarlos.",
-        "Representar los resultados de una consulta mediante un gráfico de gerencia.",
-        "Crear nuevos hechos de negocio en el informe sin recurrir a las fuentes.",
-        "Agregar exclusivamente datos ya disponibles en el mismo almacén analítico."
+        "Transformar datos ya cargados para ajustar sus campos al indicador solicitado.",
+        "Consultar datos existentes en el destino para preparar un informe de gerencia.",
+        "Registrar una reserva nueva en el sistema operativo que atiende la recepción."
       ],
       "answer": 0,
       "explain": "Si este paso falla, el modelo y el cuadro trabajan sobre arena: la cifra queda bien presentada y es mentira. Flexible y ágil importan más que el logo."
@@ -345,10 +345,10 @@
       "prompt": "Una cola guarda altas, sin cruzar ni cargar un almacén. ¿Es pipeline? ¿Es ETL?",
       "code": "",
       "options": [
-        "Es un pipeline; no todo pipeline realiza una ETL completa.",
-        "Es una ETL completa porque almacenar en una cola incluye transformar.",
-        "Es una ETL pero no un pipeline, porque no produce un informe final.",
-        "No es ninguno: un pipeline exige unir al menos dos fuentes diferentes."
+        "Es un pipeline que transporta datos; no todo pipeline realiza una ETL completa.",
+        "Es ETL completa: almacenar las altas se interpreta como una transformación.",
+        "Es ETL pero no pipeline: se reserva pipeline para procesos con varias fuentes.",
+        "Es pipeline solo si entrega un informe, aunque ya transporte datos entre sistemas."
       ],
       "answer": 0,
       "explain": "Pipeline = fases (recoger, colchón, procesar, dejar algo útil). ETL = extraer, transformar, cargar. Un filtro en una cola ya es tubería."
@@ -359,10 +359,10 @@
       "prompt": "El origen envía cada evento; el destino va a buscar a una hora fija; el destino mira de vez en cuando y, si hay cambio, tira. ¿Quién inicia en cada caso?",
       "code": "",
       "options": [
-        "Push: pide destino; pull: envía origen; polling: el origen envía periódicamente.",
+        "Push: pide destino; pull: envía origen; polling: el destino comprueba cambios.",
         "Push: envía origen; pull: pide destino; polling: el destino consulta periódicamente.",
-        "Push: envía origen; pull: pide destino; polling: entrega espontánea por cada cambio.",
-        "Push: envía origen; pull: lectura local; polling: consulta que se ejecuta una sola vez."
+        "Push: envía origen; pull: pide destino; polling: el origen avisa al detectar cambios.",
+        "Push: envía origen; pull: envía origen a una hora; polling: el destino pregunta."
       ],
       "answer": 1,
       "explain": "Quién inicia y cómo se procesa son dimensiones distintas. Push puede enviar un fichero diario y un consumidor de flujo puede solicitar mensajes mediante pull."
@@ -374,9 +374,9 @@
       "code": "",
       "options": [
         "ETL transforma antes de cargar en el destino; ELT transforma dentro de ese destino.",
-        "ETL corresponde a warehouse; ELT corresponde a lago sin admitir excepciones.",
-        "ETL conserva originales; ELT los elimina después de cualquier transformación.",
-        "ETL exige una base local; ELT exige un servicio alojado en nube pública."
+        "ETL valida antes de cargar; ELT carga sin validar, aunque ambos transformen fuera.",
+        "ETL transforma en una máquina local; ELT transforma en una máquina contratada.",
+        "ETL trabaja con tablas; ELT trabaja con archivos, manteniendo el mismo orden."
       ],
       "answer": 0,
       "explain": "Un warehouse puede utilizar ambos patrones, localmente o en la nube. En ambos casos gerencia debe consultar resultados validados, no cualquier entrada bruta."
@@ -387,13 +387,13 @@
       "prompt": "Un JSON con un array de diez millones de objetos entre [ y ]. ¿Lo reparte bien un clúster?",
       "code": "",
       "options": [
-        "Un array JSON y JSONL se reparten siempre igual con cualquier lector disponible.",
-        "JSONL garantiza reparto paralelo incluso con cualquier compresión no divisible.",
+        "Dividir el array por tamaño produce fragmentos que el lector puede tratar como registros.",
+        "Usar JSONL conserva la división por registros, sin importar la compresión del archivo.",
         "JSONL facilita delimitar registros; la división efectiva depende del lector y compresión.",
-        "Un array grande nunca puede leerse sin cargar el documento completo en memoria."
+        "Repartir el archivo entre lectores evita que cada uno necesite localizar sus registros."
       ],
       "answer": 2,
-      "explain": "El formato influye en la lectura paralela. Algunos lectores procesan JSON de forma incremental; no se puede afirmar que cualquier array deba cargarse entero en un nodo."
+      "explain": "JSONL facilita localizar límites entre registros. Dividir por bytes un array puede cortar un objeto o su estructura. La compresión y el lector condicionan el reparto efectivo, incluso cuando el origen es JSONL."
     },
     {
       "topic": "Arrow y Feather",
@@ -402,9 +402,9 @@
       "code": "",
       "options": [
         "Arrow representa columnas en memoria; Feather persiste tablas mediante Arrow IPC.",
-        "Arrow y Feather son dos nombres de Parquet que solo cambian según el lenguaje.",
-        "Arrow describe filas en disco; Feather convierte cada fila en un documento JSON.",
-        "Arrow es una base transaccional; Feather replica sus tablas entre servidores."
+        "Arrow representa columnas en disco; Feather es su representación descomprimida en RAM.",
+        "Arrow y Feather representan tablas en memoria; Parquet es necesario para persistirlas.",
+        "Arrow describe el esquema de Parquet; Feather añade compresión a esos archivos."
       ],
       "answer": 0,
       "explain": "Las conversiones no siempre evitan copias. En el lago del caso elegimos Parquet por sus lectores y consultas, no porque Feather sea incapaz de conservar archivos."
@@ -415,9 +415,9 @@
       "prompt": "Habéis procesado un informe. ¿Qué le dejáis a quien no abre Spoon?",
       "code": "",
       "options": [
-        "Solo el diseño .ktr, porque el cliente puede deducir el resultado al abrirlo.",
-        "Archivo generado y captura de Spoon, sin necesidad de explicar el significado.",
-        "Todas las filas originales juntas, aunque no respondan a la pregunta planteada.",
+        "El archivo final y una captura del lienzo, dejando que el cliente deduzca su alcance.",
+        "El informe con las cifras correctas, dejando las unidades y límites en el proceso.",
+        "Las tablas de entrada y salida, dejando al cliente reconstruir las reglas del informe.",
         "Salida legible con unidades, alcance y explicación de resultados y límites."
       ],
       "answer": 3,
