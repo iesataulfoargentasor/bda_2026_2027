@@ -11,21 +11,21 @@ tags:
 
 Esta práctica cierra la **UT1**. Vais a preparar una solución para el [grupo hotelero de Cantabria](caso-hotel.md): explicar qué datos necesitáis, procesarlos con Pentaho, comprobar el resultado y entregar un informe que dirección pueda interpretar sin abrir Spoon.
 
-Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis conectar lo aprendido y demostrar que el procedimiento funciona, también cuando se repite o falta una entrada. Cada alumno trabajará en un repositorio de su propia cuenta de GitHub y realizará una defensa individual ante el profesor. Podéis contrastar dudas en clase, pero debéis identificar las ayudas recibidas y comprender todo lo que entregáis. La rúbrica de este apartado suma **10,00 puntos**; Moodle concretará las fechas y recogerá el enlace de entrega.
+Los [talleres de 1.8](pentaho.md) son vuestra referencia técnica. Aquí debéis conectar lo aprendido y demostrar que el procedimiento funciona, también cuando se repite o falta una entrada. Cada alumno trabajará en un repositorio de su propia cuenta de GitHub y realizará una defensa individual ante el profesor. El trabajo se realizará durante las sesiones de aula, con seguimiento del profesor. Podéis contrastar dudas en clase, pero debéis identificar las ayudas recibidas y comprender todo lo que entregáis. Al finalizar cada sesión entregaréis el avance realizado, aunque todavía esté incompleto. La rúbrica de este apartado suma **10,00 puntos**; Moodle concretará las fechas y recogerá el enlace de entrega.
 
 !!! info "Dos actividades con funciones diferentes"
     Esta práctica construye y comprueba una solución con datos pequeños. Después, la [transición a la UT2: 500 GB y un portátil](transicion-ut2.md) plantea qué revisaríamos al aumentar el volumen. No necesitáis Spark, nube ni una base de datos para completar esta práctica.
 
-## Vídeo: qué hacer y qué entregar
+## Vídeo: qué hacer, cómo entregarlo y cómo se evalúa
 
-Antes de empezar, mira esta guía del encargo del hotel: explica los dos resultados que debéis preparar, las validaciones, la ejecución con Kitchen, las pruebas de fallo y el contenido de la entrega. **Duración: 10 minutos y 36 segundos.**
+Antes de empezar, mira esta guía del encargo del hotel: explica los paquetes personales A001–A015, los dos resultados, las validaciones y pruebas, las entregas de avances al finalizar cada sesión, la entrega final en GitHub y la rúbrica sobre **10,00 puntos**, incluidos los **2,00 puntos de la defensa individual**. **Duración: 19 minutos y 55 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/practica-pentaho-portada.jpg" aria-label="Práctica integradora de Pentaho: qué hacer y qué entregar" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/practica-pentaho-portada.jpg" aria-label="Práctica integradora de Pentaho: trabajo, entrega en GitHub, rúbrica y defensa individual" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/practica-pentaho.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las instrucciones detalladas de esta práctica. **La entrega se ha actualizado después de grabarlo:** donde el vídeo habla de carpeta o ZIP, entregad ahora el repositorio personal de GitHub según el apartado 9. La evaluación incluye la defensa individual descrita más abajo.
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Esta versión incorpora los datos personalizados, el trabajo en el aula, los avances por sesión, la entrega en GitHub y la defensa individual. Complementa las instrucciones de los apartados 2, 9 y 10; consultad en Moodle las fechas de entrega.
 
 [Descargar el vídeo](../assets/ut1/practica-pentaho.mp4) · [Leer la transcripción](../assets/ut1/practica-pentaho.txt) · [Descargar los subtítulos](../assets/ut1/practica-pentaho.es.srt)
 
@@ -54,17 +54,27 @@ Comprobad primero que funciona el [taller 0 de Pentaho](pentaho.md#taller-0-que-
 
 | Archivo | Separador | Contenido esperado |
 | --- | --- | --- |
-| [reservas_pdi.csv](../assets/practicas/reservas_pdi.csv) | Coma | 20 reservas; `id_reserva` único |
-| [cobros_pdi.csv](../assets/practicas/cobros_pdi.csv) | Punto y coma | 15 cobros; como máximo uno por reserva |
-| [hoteles_pdi.csv](../assets/practicas/hoteles_pdi.csv) | Punto y coma | 5 hoteles; `id_hotel` único |
+| `reservas_pdi.csv` | Coma | 20 reservas; `id_reserva` único |
+| `cobros_pdi.csv` | Punto y coma | 15 cobros; como máximo uno por reserva |
+| `hoteles_pdi.csv` | Punto y coma | 5 hoteles; `id_hotel` único |
 
 No reutilicéis los CSV de 1.6 o 1.7. Noja representa la ampliación del grupo que aparece en los talleres. Conservad los originales sin modificarlos y utilizad copias para las pruebas de fallo.
 
-### Descarga y comprobación de los datos
+### Recibid vuestro paquete personal
 
-Los tres enlaces anteriores permiten descargar los datos sin iniciar sesión. Si el navegador muestra el contenido, utilizad «Guardar enlace como…» y conservad la extensión `.csv`, no `.html`. Son los **tres únicos archivos de datos necesarios** para esta práctica. No tenéis que inventar ni buscar datos de clientes.
+El profesor asignará a cada uno de los **15 alumnos** un código diferente, de **A001 a A015**, y entregará su ZIP mediante Moodle o en el aula. Utilizad **solo el paquete que os haya asignado**; no descarguéis el de otro compañero ni sustituyáis sus archivos por los comunes del taller 1.8. Si todavía no lo tenéis o no podéis abrirlo, avisad al profesor antes de empezar.
 
-1. Guardad los tres originales en `entrada`, dentro de la copia local de vuestro repositorio.
+Dentro encontraréis `entrada/reservas_pdi.csv`, `entrada/cobros_pdi.csv` y `entrada/hoteles_pdi.csv`, además de `asignacion.json`, que identifica vuestro código y las huellas de los originales. Copiad `entrada` a la raíz del repositorio y conservad allí también `asignacion.json`. Indicad vuestro código en el README. No tenéis que introducir nombres ni otros datos personales en los CSV.
+
+Los paquetes mantienen los mismos campos, separadores y dificultad. Cambian algunos importes individuales de reservas con cobro y el orden de las filas; **se conservan todos los resultados de referencia**, incluido cada grupo del informe y el contenido del listado sin cobro. Por tanto, dos informes finales correctos pueden ser idénticos: eso no demuestra una copia. La elaboración personal se comprueba con los avances observados, las evidencias y la defensa individual. No se pide inventar diagramas distintos para aparentar diferencias.
+
+Los archivos comunes de los talleres siguen disponibles como referencia: [reservas](../assets/practicas/reservas_pdi.csv), [cobros](../assets/practicas/cobros_pdi.csv) y [hoteles](../assets/practicas/hoteles_pdi.csv). **No son las entradas que debéis entregar en esta práctica.**
+
+### Comprobación de los datos recibidos
+
+Los tres CSV de vuestro paquete son los **únicos archivos de datos necesarios**. No tenéis que inventar ni buscar datos de clientes. Descomprimid el ZIP antes de abrir los archivos desde Pentaho.
+
+1. Comprobad que los tres originales están en `entrada`, dentro de la copia local de vuestro repositorio, y que el código de `asignacion.json` coincide con el asignado por el profesor.
 2. Abridlos con un editor de texto antes de importarlos: la primera línea debe ser la cabecera de campos, no código de una página web.
 3. En **CSV file input**, activad la cabecera y seleccionad **UTF-8**. Indicad el separador de cada archivo según la tabla; no uséis la misma configuración para los tres.
 4. Revisad los campos con la siguiente tabla. En los importes, estableced punto como símbolo decimal y dejad vacío el separador de miles. Para esta práctica pequeña podéis desactivar **Lazy conversion** y comprobar la conversión al leer.
@@ -88,6 +98,7 @@ Organizadlo así:
 bda-ut1-pentaho-hotel/
 ├── README.md
 ├── .gitignore
+├── asignacion.json # Código del paquete y huellas de los originales
 ├── entrada/       # Los tres CSV originales
 ├── procesos/      # Cuatro .ktr y un .kjb
 ├── temporal/      # Resultados provisionales; no se suben
@@ -234,17 +245,17 @@ Entregad en Moodle **la URL de vuestro repositorio personal y el identificador d
 
 El repositorio debe contener:
 
-- En `entrada`: los tres CSV originales, sin cambios.
+- En `entrada`: los tres CSV originales de vuestro paquete personal, sin cambios; en la raíz, su `asignacion.json`.
 - En `procesos`: `informe_cobros.ktr`, `reservas_sin_cobro.ktr`, `validar_informe.ktr`, `validar_sin_cobro.ktr` y `cierre_hotel.kjb`.
 - En `salida`: `informe_hotel_canal.csv` y `reservas_sin_cobro.csv`, con los resultados comprobados.
-- En `evidencias`: la tabla de esperado/obtenido/conclusión y las seis pruebas del apartado 8, identificadas y comentadas. Las capturas o extractos de log deben permitir entender qué se ejecutó, qué ocurrió y por qué; no basta una captura sin interpretación.
+- En `evidencias`: los registros de avance de cada sesión y la tabla de esperado/obtenido/conclusión y las seis pruebas del apartado 8, identificadas y comentadas. Las capturas o extractos de log deben permitir entender qué se ejecutó, qué ocurrió y por qué; no basta una captura sin interpretación.
 - Un `README.md` que permita a otra persona preparar y ejecutar el trabajo.
 
 ### Qué debe explicar el README
 
 1. Autor, objetivo del encargo y esquema del recorrido de los datos.
 2. Versión de PDI y Java utilizadas, carpetas necesarias y pasos para ejecutar el job con Kitchen desde una copia recién descargada. Indicad dónde aparecerán los resultados.
-3. Procedencia de los tres CSV, sus separadores y tipos; identificación `cierre_aula_01`, fecha y hora de generación de los resultados, unidades en euros y límites de los datos.
+3. Código personal asignado y procedencia de los tres CSV, sus separadores y tipos; identificación `cierre_aula_01`, fecha y hora de generación de los resultados, unidades en euros y límites de los datos.
 4. Decisiones de diseño: por qué esas uniones, por qué sumar `cobrado`, cómo se detectan reservas sin cobro y por qué se entrega CSV.
 5. Enlaces a las comprobaciones y pruebas de fallo y recuperación; qué ocurre al repetir la ejecución.
 6. Fuentes o ayudas utilizadas y qué habéis adaptado vosotros.
@@ -255,7 +266,7 @@ El repositorio puede ser público o privado. Si es privado, añadid como colabor
 
 | Criterio | Máximo | Qué se comprueba |
 | --- | ---: | --- |
-| Repositorio y reproducción del trabajo | 1,00 | Repositorio personal accesible al profesor, estructura y archivos completos, commit identificado, README suficiente y ejecución desde otra carpeta sin cambiar rutas internas. |
+| Repositorio y reproducción del trabajo | 1,00 | Repositorio personal accesible al profesor, paquete asignado y archivos completos, avances por sesión con sus commits identificados, README suficiente y ejecución desde otra carpeta sin cambiar rutas internas. |
 | Diseño y comprensión del encargo | 1,00 | Recorrido coherente, reglas justificadas, cierre y unidades identificados, elección de CSV y límites de los datos explicados. |
 | Informe de cobros | 2,00 | Lecturas y tipos correctos, uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y correspondencia correcta en cada hotel/canal. |
 | Control de reservas sin cobro | 1,00 | Cinco reservas correctas, sin duplicados; distinción entre ausencia de cobro y cobro cero; columnas y motivo claros. |
@@ -287,7 +298,44 @@ Esta relación ayuda a interpretar las evidencias de la rúbrica anterior. No se
 
 ## 10. Organización de las sesiones y continuación
 
-Como orientación, reservad **tres sesiones de 55–60 minutos**, ajustables al ritmo del aula: diseño e informe principal; listado de control y validación; job, pruebas y preparación de la entrega en GitHub. El profesor organizará aparte los encuentros individuales. Si necesitáis más tiempo para los controles automáticos, completadlos en una sesión adicional antes de dar la práctica por terminada.
+El trabajo se desarrolla **en el aula**. No avancéis ni modifiquéis la práctica fuera de las sesiones acordadas; si necesitáis recuperar una ausencia o resolver una incidencia, el profesor establecerá un momento supervisado. GitHub conserva las versiones, pero no demuestra por sí solo dónde ni cuándo se editaron los archivos. El seguimiento se apoya en lo observado en clase y en las entregas de avance.
+
+### Un avance al finalizar cada sesión
+
+Reservad los **últimos 5–10 minutos** para guardar y entregar el estado real del trabajo. No esperéis a tener una solución perfecta: un avance incompleto o con un error explicado también permite al profesor orientaros.
+
+| Sesión orientativa | Objetivo de trabajo | Qué mostrar y entregar al finalizar |
+| --- | --- | --- |
+| 1. Preparación e informe | Recibir el paquete, crear el repositorio, diseñar el recorrido y empezar el informe de cobros | Código asignado, originales, README inicial, transformación en su estado actual y una comprobación de lectura o unión |
+| 2. Control y validación | Preparar reservas sin cobro y las dos validaciones | Procesos actualizados, resultados disponibles y comparación esperado/obtenido; explicar los errores pendientes |
+| 3. Job y pruebas | Coordinar el procedimiento y probar éxito, repetición, fallo y recuperación | Job, evidencias de las pruebas realizadas y estado de la ejecución desde otra carpeta |
+| Sesiones adicionales, si hacen falta | Completar controles, pruebas o documentación pendientes | Un nuevo avance con los cambios y comprobaciones de esa sesión; no se traslada el trabajo pendiente a casa |
+
+La orientación inicial es de **tres sesiones de 55–60 minutos**, ampliables por el profesor según el ritmo del grupo. Los objetivos no obligan a declarar terminada una parte que aún falla. Los encuentros individuales se organizarán aparte y conservan sus **2,00 puntos**.
+
+En cada cierre de sesión:
+
+1. Guardad en Spoon los procesos y anotad en `evidencias/sesion-01.md`, `sesion-02.md`, etc., qué habéis hecho, qué habéis comprobado, qué falta y qué ayuda habéis recibido.
+2. Mostrad al profesor el avance o la dificultad principal. Conservad una captura o un extracto de log comentado cuando ayude a entenderlo.
+3. Registrad los cambios con un mensaje identificable, por ejemplo `Sesión 1: lectura y primera unión`, y subidlos a GitHub.
+4. Comprobad desde el navegador que aparecen. Entregad en el espacio de Moodle indicado por el profesor el **número de sesión, la URL del repositorio y el identificador completo del commit**. El identificador se entrega después de crear el commit; no hace falta escribirlo dentro del archivo de esa misma versión.
+5. Al inicio de la siguiente sesión, retomad la versión registrada. Explicad al profesor cualquier diferencia respecto a ella antes de continuar. No borréis ni reescribáis el historial de los avances entregados.
+
+Si falla Internet o GitHub, mostrad el estado al profesor antes de salir. Este registrará la incidencia y conservará una copia o acordará cómo subir **ese mismo avance** en la siguiente sesión, sin exigir trabajo fuera del aula. Moodle lo organiza el profesor: estas instrucciones no crean automáticamente tareas ni bloqueos horarios.
+
+### Modelo breve para el registro de sesión
+
+```text
+Sesión y fecha:
+Código del paquete:
+Qué he hecho hoy:
+Qué he ejecutado y qué resultado he obtenido:
+Dónde están las evidencias:
+Qué error o trabajo queda pendiente:
+Qué ayuda he recibido y cómo la he utilizado:
+```
+
+Las entregas de avance forman parte del seguimiento y del criterio de repositorio de la rúbrica; **no añaden puntos ni cambian el total de 10,00**. La entrega final del apartado 9 debe identificar la versión final revisada en el aula. El profesor comprobará el paquete utilizado y podrá elegir preguntas relacionadas con lo observado durante las sesiones.
 
 Al acabar, explicad a otro grupo: ¿por qué hay 13 filas y no 20?, ¿por qué sumamos `cobrado`?, ¿qué demuestra la repetición?, ¿qué fallo impide publicar?, ¿por qué este informe no mide ocupación?
 
