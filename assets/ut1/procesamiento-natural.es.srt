@@ -546,304 +546,352 @@ La directora abre el panel y selecciona
 Laredo.
 
 127
-00:06:17,726 --> 00:06:20,278
+00:06:17,708 --> 00:06:20,261
 Ahora quiere que la consulta responda
 mientras
 
 128
-00:06:20,292 --> 00:06:22,936
+00:06:20,274 --> 00:06:22,919
 lo está mirando: ese uso es interactivo.
 
 129
-00:06:23,844 --> 00:06:26,068
+00:06:23,826 --> 00:06:26,050
 Podemos preparar resúmenes por fecha,
 
 130
-00:06:26,239 --> 00:06:28,081
+00:06:26,221 --> 00:06:28,063
 hotel y canal para facilitarlo.
 
 131
-00:06:29,002 --> 00:06:31,726
+00:06:28,984 --> 00:06:31,708
 Organizar el análisis según esas dimensiones
 
 132
-00:06:31,739 --> 00:06:33,305
+00:06:31,721 --> 00:06:33,287
 es la idea de un cubo OLAP.
 
 133
-00:06:34,213 --> 00:06:36,410
-El nombre puede confundir, pero no es
+00:06:34,195 --> 00:06:36,484
+En nuestro ejemplo hemos preparado algunos
 
 134
-00:06:36,423 --> 00:06:39,134
-el cubo de objetos donde guardábamos
-archivos.
+00:06:36,497 --> 00:06:38,655
+resúmenes para responder más rápido.
 
 135
-00:06:40,055 --> 00:06:42,923
-Y otra distinción importante: hacer clic a
-las
+00:06:39,576 --> 00:06:42,024
+Pero detengámonos un momento: eso no
 
 136
-00:06:42,936 --> 00:06:45,423
-once no actualiza el histórico por sí solo.
+00:06:42,037 --> 00:06:44,063
+significa que un cubo OLAP tenga que
 
 137
-00:06:46,331 --> 00:06:48,331
-Si los datos corresponden al cierre
+00:06:44,076 --> 00:06:46,366
+guardar todas las respuestas de antemano.
 
 138
-00:06:48,344 --> 00:06:51,423
+00:06:47,300 --> 00:06:49,761
+Según el motor, puede calcularlas cuando
+
+139
+00:06:49,774 --> 00:06:52,682
+se consulta o aprovechar agregados ya
+preparados.
+
+140
+00:06:53,590 --> 00:06:55,708
+El nombre también puede confundirnos
+
+141
+00:06:55,721 --> 00:06:57,103
+con el cubo de objetos.
+
+142
+00:06:58,011 --> 00:07:00,892
+Un bucket de S3 cumple otra función: es un
+
+143
+00:07:00,905 --> 00:07:04,458
+contenedor de objetos, cada uno identificado
+por su clave.
+
+144
+00:07:05,379 --> 00:07:07,576
+Uno organiza el análisis; el otro
+
+145
+00:07:07,590 --> 00:07:09,616
+contiene los archivos que guardamos.
+
+146
+00:07:10,537 --> 00:07:12,642
+Y antes de seguir, recordemos otra
+
+147
+00:07:12,655 --> 00:07:14,853
+distinción: hacer clic a las once no
+
+148
+00:07:14,866 --> 00:07:16,905
+actualiza el histórico por sí solo.
+
+149
+00:07:17,813 --> 00:07:19,813
+Si los datos corresponden al cierre
+
+150
+00:07:19,826 --> 00:07:22,905
 anterior, el filtro sigue consultando ese
 cierre.
 
-139
-00:06:52,344 --> 00:06:56,120
+151
+00:07:23,826 --> 00:07:27,603
 Mientras dirección consulta el informe, Ana
 sale a desayunar.
 
-140
-00:06:57,068 --> 00:07:00,344
+152
+00:07:28,550 --> 00:07:31,826
 Un sensor deja de detectar presencia en su
 habitación.
 
-141
-00:07:01,252 --> 00:07:04,199
+153
+00:07:32,734 --> 00:07:35,682
 Esta señal interesa ahora, así que esperar
 al
 
-142
-00:07:04,213 --> 00:07:06,686
+154
+00:07:35,695 --> 00:07:38,168
 cierre de la noche no resolvería la
 necesidad.
 
-143
-00:07:07,594 --> 00:07:09,976
+155
+00:07:39,076 --> 00:07:41,458
 Podemos procesar una secuencia de eventos
 
-144
-00:07:09,989 --> 00:07:12,055
+156
+00:07:41,471 --> 00:07:43,537
 conforme llegan: eso es streaming.
 
-145
-00:07:12,976 --> 00:07:15,963
+157
+00:07:44,458 --> 00:07:47,445
 También podemos reunirlos durante intervalos
 cortos
 
-146
-00:07:15,976 --> 00:07:19,081
+158
+00:07:47,458 --> 00:07:50,563
 y procesar pequeños grupos, llamados
 microlotes.
 
-147
-00:07:20,002 --> 00:07:22,173
+159
+00:07:51,484 --> 00:07:53,655
 Cambia el ritmo respecto al informe.
 
-148
-00:07:23,081 --> 00:07:25,305
+160
+00:07:54,563 --> 00:07:56,787
 Pero no cambia la obligación de interpretar
 
-149
-00:07:25,318 --> 00:07:27,778
+161
+00:07:56,800 --> 00:07:59,261
 bien el dato: no detectar personas no
 
-150
-00:07:27,792 --> 00:07:30,107
+162
+00:07:59,274 --> 00:08:01,590
 significa que la habitación se pueda vender.
 
-151
-00:07:31,028 --> 00:07:33,147
+163
+00:08:02,511 --> 00:08:04,629
 La reserva de Ana sigue vigente.
 
-152
-00:07:34,068 --> 00:07:36,068
+164
+00:08:05,550 --> 00:08:07,550
 Y ahora imaginad que ese sensor
 
-153
-00:07:36,081 --> 00:07:37,739
+165
+00:08:07,563 --> 00:08:09,221
 tiene un problema de conexión.
 
-154
-00:07:38,242 --> 00:07:40,111
+166
+00:08:09,725 --> 00:08:11,593
 Mide a las diez, pero entrega
 
-155
-00:07:40,124 --> 00:07:41,848
+167
+00:08:11,606 --> 00:08:13,330
 el mensaje a las diez y tres.
 
-156
-00:07:42,756 --> 00:07:44,703
+168
+00:08:14,238 --> 00:08:16,185
 ¿A qué momento pertenece la señal?
 
-157
-00:07:45,624 --> 00:07:47,124
+169
+00:08:17,106 --> 00:08:18,606
 Al momento en que ocurrió,
 
-158
-00:07:47,256 --> 00:07:49,466
+170
+00:08:18,738 --> 00:08:20,948
 aunque nosotros la conozcamos después.
 
-159
-00:07:50,374 --> 00:07:52,900
+171
+00:08:21,856 --> 00:08:24,382
 Si estamos calculando un indicador del
 primer
 
-160
-00:07:52,913 --> 00:07:55,505
+172
+00:08:24,396 --> 00:08:26,988
 minuto, debemos decidir cuánto esperar y
 
-161
-00:07:55,519 --> 00:07:58,334
+173
+00:08:27,001 --> 00:08:29,817
 si corregiremos el resultado cuando llegue
 tarde.
 
-162
-00:07:58,879 --> 00:08:00,379
+174
+00:08:30,361 --> 00:08:31,861
 Esa regla forma parte de
 
-163
-00:08:00,392 --> 00:08:01,892
+175
+00:08:31,874 --> 00:08:33,374
 lo que significa la cifra.
 
-164
-00:08:02,800 --> 00:08:05,471
+176
+00:08:34,282 --> 00:08:36,953
 Además, necesitamos recuperar el estado del
 
-165
-00:08:05,484 --> 00:08:07,274
+177
+00:08:36,967 --> 00:08:38,756
 cálculo si falla una máquina.
 
-166
-00:08:08,195 --> 00:08:10,590
+178
+00:08:39,677 --> 00:08:42,072
 Por eso trabajar en flujo exige algo más
 
-167
-00:08:10,603 --> 00:08:13,077
+179
+00:08:42,085 --> 00:08:44,559
 que ejecutar muy deprisa el lote de la
 noche.
 
-168
-00:08:14,037 --> 00:08:16,300
+180
+00:08:45,519 --> 00:08:47,782
 Los dos recorridos, el cierre y los
 
-169
-00:08:16,313 --> 00:08:19,090
+181
+00:08:47,796 --> 00:08:50,572
 sensores, nos devuelven a una pregunta
 común:
 
-170
-00:08:19,313 --> 00:08:22,313
+182
+00:08:50,796 --> 00:08:53,796
 ¿qué resultado necesitamos y cuánto podemos
 esperar?
 
-171
-00:08:23,234 --> 00:08:25,866
+183
+00:08:54,717 --> 00:08:57,348
 En el apartado aparece SCV como guía
 
-172
-00:08:25,879 --> 00:08:28,695
+184
+00:08:57,361 --> 00:09:00,177
 para pensar en velocidad, precisión y
 volumen.
 
-173
-00:08:29,616 --> 00:08:31,011
+185
+00:09:01,098 --> 00:09:02,493
 No es una ley que obligue
 
-174
-00:08:31,024 --> 00:08:33,063
+186
+00:09:02,506 --> 00:09:04,546
 siempre a sacrificar una de las tres.
 
-175
-00:08:33,984 --> 00:08:37,840
+187
+00:09:05,467 --> 00:09:09,322
 Si una consulta tarda demasiado, podemos
 preparar resúmenes,
 
-176
-00:08:37,998 --> 00:08:41,827
+188
+00:09:09,480 --> 00:09:13,309
 mejorar el cálculo, añadir recursos o
 limitar el periodo.
 
-177
-00:08:42,748 --> 00:08:46,577
+189
+00:09:14,230 --> 00:09:18,059
 También podemos aceptar una aproximación,
 explicando su error.
 
-178
-00:08:47,498 --> 00:08:50,248
+190
+00:09:18,980 --> 00:09:21,730
 Por ejemplo, un total diario ya preparado
 puede
 
-179
-00:08:50,261 --> 00:08:53,169
+191
+00:09:21,743 --> 00:09:24,651
 consultarse rápido y ser exacto para ese
 día.
 
-180
-00:08:53,679 --> 00:08:56,639
+192
+00:09:25,159 --> 00:09:28,120
 El trabajo se hizo antes; no ha
 desaparecido.
 
-181
-00:08:57,560 --> 00:08:59,652
+193
+00:09:29,041 --> 00:09:31,133
 Volvamos a recorrer el día de Ana.
 
-182
-00:09:00,560 --> 00:09:02,205
+194
+00:09:32,041 --> 00:09:33,686
 Primero atendimos su pago.
 
-183
-00:09:03,113 --> 00:09:05,468
+195
+00:09:34,593 --> 00:09:36,922
 Después lo incorporamos al cierre, y
 
-184
-00:09:05,481 --> 00:09:07,731
+196
+00:09:36,936 --> 00:09:39,735
 dirección pudo consultar el resultado.
 
-185
-00:09:08,652 --> 00:09:11,297
+197
+00:09:40,658 --> 00:09:43,303
 Al mismo tiempo, los sensores alimentaron
 
-186
-00:09:11,310 --> 00:09:13,508
+198
+00:09:43,316 --> 00:09:45,514
 otro indicador con un ritmo diferente.
 
-187
-00:09:14,416 --> 00:09:16,810
+199
+00:09:46,422 --> 00:09:48,816
 Para describir cada trabajo, haced tres
 
-188
-00:09:16,823 --> 00:09:19,758
+200
+00:09:48,829 --> 00:09:51,764
 preguntas: ¿para qué lo ejecutamos?, ¿cuándo
 debe
 
-189
-00:09:19,771 --> 00:09:22,700
+201
+00:09:51,777 --> 00:09:54,697
 producir un resultado?, ¿dónde lo
 calculamos?
 
-190
-00:09:23,621 --> 00:09:25,897
+202
+00:09:55,618 --> 00:09:57,894
 Así las etiquetas encuentran su sitio
 
-191
-00:09:25,910 --> 00:09:27,989
+203
+00:09:57,908 --> 00:09:59,987
 y pueden combinarse sin confusión.
 
-192
-00:09:28,897 --> 00:09:31,516
+204
+00:10:00,894 --> 00:10:03,513
 Y antes de darlo por terminado, comprobad
 que
 
-193
-00:09:31,529 --> 00:09:34,489
+205
+00:10:03,526 --> 00:10:06,487
 el resultado conserva el significado de los
 datos.
 
-194
-00:09:35,410 --> 00:09:37,397
+206
+00:10:07,408 --> 00:10:09,144
 Procesar es conectar lo que hemos
 
-195
-00:09:37,694 --> 00:09:40,299
+207
+00:10:09,158 --> 00:10:11,723
 guardado con una necesidad concreta del
 hotel.

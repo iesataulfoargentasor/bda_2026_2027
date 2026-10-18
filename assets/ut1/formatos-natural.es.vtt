@@ -90,758 +90,782 @@ Lo esencial es que la reserva
 00:01:25.540 --> 00:01:28.264
 conserve su significado durante ese viaje.
 
-00:01:28.993 --> 00:01:31.414
+00:01:28.992 --> 00:01:31.413
 Empecemos con una situación sencilla.
 
-00:01:32.335 --> 00:01:34.309
+00:01:32.334 --> 00:01:34.308
 Una compañera nos pide un fichero
 
-00:01:34.322 --> 00:01:36.138
+00:01:34.321 --> 00:01:36.137
 para revisar la reserva de Ana.
 
-00:01:37.072 --> 00:01:39.519
+00:01:37.071 --> 00:01:39.519
 CSV puede servir porque es texto
 
-00:01:39.533 --> 00:01:41.217
+00:01:39.532 --> 00:01:41.216
 y muchas herramientas lo abren.
 
-00:01:42.125 --> 00:01:45.348
+00:01:42.124 --> 00:01:45.347
 Eso sí, debemos ponernos de acuerdo: qué separador
 
-00:01:45.362 --> 00:01:48.138
+00:01:45.361 --> 00:01:48.137
 usamos, cómo se representan los caracteres y
 
-00:01:48.151 --> 00:01:49.940
+00:01:48.150 --> 00:01:49.940
 qué tipo tiene cada columna y cómo
 
-00:01:49.954 --> 00:01:52.848
+00:01:49.953 --> 00:01:52.847
 distinguimos un texto vacío de un valor ausente.
 
-00:01:53.046 --> 00:01:56.348
+00:01:53.045 --> 00:01:56.347
 Guardaremos esos acuerdos en un contrato de lectura; el
 
-00:01:56.362 --> 00:01:59.625
+00:01:56.361 --> 00:01:59.624
 CSV no incorpora por sí solo un esquema tipado.
 
-00:02:00.546 --> 00:02:02.427
+00:02:00.545 --> 00:02:02.426
 Pensad en el código cero uno.
 
-00:02:03.348 --> 00:02:05.638
+00:02:03.347 --> 00:02:05.637
 Si quien lo abre lo interpreta como número,
 
-00:02:05.769 --> 00:02:08.230
+00:02:05.769 --> 00:02:08.229
 puede quedarse en uno y perder información.
 
-00:02:09.138 --> 00:02:11.467
+00:02:09.137 --> 00:02:11.466
 También hay que proteger las comas que Ana haya
 
-00:02:11.480 --> 00:02:15.059
+00:02:11.479 --> 00:02:15.058
 escrito dentro de un comentario mediante las comillas adecuadas.
 
-00:02:15.967 --> 00:02:20.072
+00:02:15.966 --> 00:02:20.071
 CSV resulta práctico para este intercambio, pero no tiene
 
-00:02:20.085 --> 00:02:23.559
+00:02:20.084 --> 00:02:23.558
 por defecto un índice para encontrar directamente una reserva.
 
-00:02:24.085 --> 00:02:26.217
+00:02:24.084 --> 00:02:26.216
 A veces habrá que recorrer el archivo.
 
-00:02:27.124 --> 00:02:29.138
+00:02:27.124 --> 00:02:29.137
 Ahora cambiamos de destinatario.
 
-00:02:30.059 --> 00:02:32.124
+00:02:30.058 --> 00:02:32.124
 La reserva llega desde el canal web
 
-00:02:32.138 --> 00:02:34.388
+00:02:32.137 --> 00:02:34.387
 y contiene campos con nombre, quizá
 
-00:02:34.401 --> 00:02:37.203
+00:02:34.400 --> 00:02:37.202
 con una dirección organizada en varios subcampos.
 
-00:02:38.138 --> 00:02:40.809
+00:02:38.137 --> 00:02:40.808
 Aquí JSON permite expresar esa estructura.
 
-00:02:41.717 --> 00:02:45.098
+00:02:41.716 --> 00:02:45.097
 Si tenemos muchas reservas, podemos escribir un objeto
 
-00:02:45.111 --> 00:02:47.638
+00:02:45.110 --> 00:02:47.637
 completo por línea: eso es JSON Lines.
 
-00:02:48.545 --> 00:02:50.927
+00:02:48.545 --> 00:02:50.926
 Así resulta más fácil reconocer dónde
 
-00:02:50.940 --> 00:02:53.124
+00:02:50.939 --> 00:02:53.123
 termina un registro y empieza otro.
 
-00:02:54.032 --> 00:02:55.822
+00:02:54.031 --> 00:02:55.821
 Un gran array JSON puede ser más
 
-00:02:55.835 --> 00:02:58.335
+00:02:55.834 --> 00:02:58.334
 difícil de repartir entre lectores, aunque
 
-00:02:58.348 --> 00:03:00.611
+00:02:58.347 --> 00:03:00.610
 algunos motores lo leen poco a poco.
 
-00:03:01.519 --> 00:03:04.138
+00:03:01.518 --> 00:03:04.137
 La compresión y el lector también influyen.
 
-00:03:05.059 --> 00:03:08.638
+00:03:05.058 --> 00:03:08.637
 Hay además una diferencia pequeña que importa: JSON escribe
 
-00:03:08.651 --> 00:03:11.598
+00:03:08.650 --> 00:03:11.597
 null para un valor nulo; None pertenece a Python.
 
-00:03:12.545 --> 00:03:16.361
+00:03:12.545 --> 00:03:16.360
 Si otra fuente entrega XML, necesitaremos respetar
 
 00:03:16.374 --> 00:03:19.045
 su estructura y utilizar un lector compatible.
 
-00:03:19.760 --> 00:03:22.984
+00:03:19.759 --> 00:03:22.983
 Hasta ahora hemos enviado texto que podemos inspeccionar.
 
-00:03:23.918 --> 00:03:28.010
+00:03:23.917 --> 00:03:28.009
 Pero imaginad que varios programas intercambian reservas continuamente
 
-00:03:28.023 --> 00:03:31.405
+00:03:28.022 --> 00:03:31.404
 y necesitan estar seguros de los tipos que reciben.
 
-00:03:32.313 --> 00:03:34.642
+00:03:32.312 --> 00:03:34.641
 Nos interesa un contrato explícito.
 
-00:03:35.549 --> 00:03:38.536
+00:03:35.549 --> 00:03:38.535
 Avro representa registros en binario y utiliza un
 
-00:03:38.549 --> 00:03:41.589
+00:03:38.549 --> 00:03:41.588
 esquema para indicar sus campos y valores admitidos.
 
-00:03:42.510 --> 00:03:44.536
+00:03:42.509 --> 00:03:44.535
 En el archivo contenedor del taller,
 
-00:03:44.734 --> 00:03:46.589
+00:03:44.733 --> 00:03:46.588
 ese esquema está en la cabecera.
 
-00:03:47.497 --> 00:03:50.457
+00:03:47.496 --> 00:03:50.456
 En mensajería puede viajar una referencia que permite
 
-00:03:50.471 --> 00:03:53.089
+00:03:50.470 --> 00:03:53.088
 buscarlo en un registro externo de esquemas.
 
-00:03:53.997 --> 00:03:55.497
+00:03:53.996 --> 00:03:55.496
 No tenemos que repetir una
 
-00:03:55.510 --> 00:03:57.628
+00:03:55.509 --> 00:03:57.628
 cabecera completa en cada mensaje.
 
-00:03:58.536 --> 00:04:01.010
+00:03:58.535 --> 00:04:01.009
 Así, Avro puede representar una reserva
 
-00:04:01.023 --> 00:04:02.589
+00:04:01.022 --> 00:04:02.588
 enviada a través de Kafka.
 
-00:04:03.497 --> 00:04:06.207
+00:04:03.496 --> 00:04:06.206
 Su función es representar el dato; la base que
 
-00:04:06.221 --> 00:04:10.023
+00:04:06.220 --> 00:04:10.022
 registra el cobro en recepción sigue teniendo otra responsabilidad.
 
-00:04:10.748 --> 00:04:13.656
+00:04:10.747 --> 00:04:13.655
 Veamos cómo comprobamos ese contrato en clase.
 
-00:04:14.590 --> 00:04:17.695
+00:04:14.589 --> 00:04:17.694
 Escribimos dos reservas: una tiene importe y la
 
-00:04:17.708 --> 00:04:19.893
+00:04:17.707 --> 00:04:19.892
 otra no dispone todavía de ese valor.
 
-00:04:20.814 --> 00:04:22.774
+00:04:20.813 --> 00:04:22.773
 El esquema debe admitir el nulo.
 
-00:04:23.682 --> 00:04:25.879
+00:04:23.681 --> 00:04:25.878
 Al leerlas de nuevo, la segunda debe
 
-00:04:25.893 --> 00:04:28.998
+00:04:25.892 --> 00:04:28.997
 seguir sin importe; convertirlo en cero diría algo
 
-00:04:29.011 --> 00:04:32.050
+00:04:29.010 --> 00:04:32.050
 distinto, como si la estancia fuera gratuita.
 
-00:04:32.958 --> 00:04:35.419
+00:04:32.957 --> 00:04:35.418
 Si usamos Avro y fastavro, comparamos
 
-00:04:35.432 --> 00:04:38.340
+00:04:35.431 --> 00:04:38.339
 los registros recuperados, no exigimos que los
 
-00:04:38.353 --> 00:04:40.972
+00:04:38.352 --> 00:04:40.971
 archivos tengan exactamente los mismos bytes.
 
-00:04:41.879 --> 00:04:44.987
+00:04:41.878 --> 00:04:44.986
 Y si mañana añadimos un campo, habrá que
 
-00:04:45.001 --> 00:04:48.540
+00:04:45.000 --> 00:04:48.539
 acordar reglas compatibles para lectores antiguos y nuevos.
 
-00:04:49.451 --> 00:04:52.082
+00:04:49.450 --> 00:04:52.081
 Lo mismo ocurre con el dinero: necesitamos
 
-00:04:52.095 --> 00:04:55.490
+00:04:52.094 --> 00:04:55.489
 decimales exactos o céntimos enteros cuando corresponda.
 
-00:04:56.398 --> 00:04:57.648
+00:04:56.397 --> 00:04:57.647
 Cambiar de formato no
 
-00:04:57.661 --> 00:05:00.411
+00:04:57.660 --> 00:05:00.410
 arregla una representación numérica inadecuada.
 
-00:05:01.345 --> 00:05:03.674
+00:05:01.344 --> 00:05:03.673
 La reserva ya ha llegado a su destino.
 
-00:05:04.185 --> 00:05:05.856
+00:05:04.184 --> 00:05:05.855
 Ahora la directora nos pide un
 
-00:05:05.869 --> 00:05:07.553
+00:05:05.868 --> 00:05:07.552
 resumen de importes por hotel.
 
-00:05:08.461 --> 00:05:10.830
+00:05:08.460 --> 00:05:10.829
 Fijaos en cómo cambia la lectura: ya
 
-00:05:10.843 --> 00:05:12.777
+00:05:10.842 --> 00:05:12.776
 no necesitamos todos los detalles de
 
-00:05:12.790 --> 00:05:15.527
+00:05:12.789 --> 00:05:15.526
 Ana, sino dos campos de muchas reservas.
 
-00:05:16.448 --> 00:05:18.816
+00:05:16.447 --> 00:05:18.816
 Cuando guardamos por filas, los valores
 
-00:05:18.830 --> 00:05:20.935
+00:05:18.829 --> 00:05:20.934
 de cada reserva permanecen juntos.
 
-00:05:21.843 --> 00:05:25.435
+00:05:21.842 --> 00:05:25.434
 Cuando organizamos por columnas, agrupamos los valores de
 
-00:05:25.448 --> 00:05:28.448
+00:05:25.447 --> 00:05:28.447
 un mismo campo y podemos seleccionar los que interesan.
 
-00:05:29.356 --> 00:05:31.777
+00:05:29.355 --> 00:05:31.776
 Para ese resumen, leer los comentarios
 
-00:05:31.790 --> 00:05:34.593
+00:05:31.789 --> 00:05:34.592
 de todos los huéspedes sería trabajo innecesario.
 
-00:05:35.514 --> 00:05:38.632
+00:05:35.513 --> 00:05:38.631
 Aquí aparece la razón para cambiar de representación.
 
-00:05:39.540 --> 00:05:42.724
+00:05:39.539 --> 00:05:42.723
 Y mantenemos una precaución del vídeo anterior: sumar
 
-00:05:42.738 --> 00:05:45.856
+00:05:42.737 --> 00:05:45.855
 importes de reservas no demuestra cuánto se ha cobrado.
 
-00:05:46.764 --> 00:05:50.330
+00:05:46.763 --> 00:05:50.329
 Ese informe necesita los pagos confirmados y sus reglas.
 
-00:05:51.251 --> 00:05:53.566
+00:05:51.250 --> 00:05:53.566
 Con esa necesidad en mente, elegimos
 
-00:05:53.580 --> 00:05:55.698
+00:05:53.579 --> 00:05:55.697
 Parquet para el histórico de este caso.
 
-00:05:56.606 --> 00:05:58.093
+00:05:56.605 --> 00:05:58.092
 Es un formato columnar que
 
-00:05:58.106 --> 00:06:00.356
+00:05:58.105 --> 00:06:00.355
 conserva información sobre el esquema.
 
-00:06:01.264 --> 00:06:05.290
+00:06:01.263 --> 00:06:05.289
 Para imaginar su organización, dividamos las reservas en grupos.
 
-00:06:06.224 --> 00:06:09.106
+00:06:06.223 --> 00:06:09.105
 Dentro de cada grupo, Parquet guarda por separado
 
-00:06:09.119 --> 00:06:13.909
+00:06:09.118 --> 00:06:13.908
 los fragmentos correspondientes a hotel, noches, importe y comentarios.
 
-00:06:14.479 --> 00:06:16.505
+00:06:14.478 --> 00:06:16.504
 Son los llamados grupos de filas.
 
-00:06:17.439 --> 00:06:19.321
+00:06:17.438 --> 00:06:19.320
 De ese modo, un lector puede
 
-00:06:19.334 --> 00:06:21.150
+00:06:19.333 --> 00:06:21.149
 pedir hotel e importe y dejar sin
 
-00:06:21.163 --> 00:06:23.163
+00:06:21.162 --> 00:06:23.162
 leer las columnas que no necesita.
 
-00:06:24.071 --> 00:06:28.071
+00:06:24.070 --> 00:06:28.070
 Ahorramos lecturas y, según el entorno, tiempo y transferencia.
 
-00:06:28.979 --> 00:06:31.624
+00:06:28.978 --> 00:06:31.623
 Pero el lector debe aprovechar esa estructura.
 
-00:06:32.545 --> 00:06:34.887
+00:06:32.544 --> 00:06:34.886
 Renombrar un fichero CSV con la
 
-00:06:34.900 --> 00:06:37.821
+00:06:34.899 --> 00:06:37.820
 extensión Parquet no cambia su contenido: hay
 
-00:06:37.834 --> 00:06:40.229
+00:06:37.833 --> 00:06:40.228
 que escribirlo realmente en ese formato.
 
-00:06:41.137 --> 00:06:43.584
+00:06:41.136 --> 00:06:43.583
 Podemos afinar un poco más esa lectura.
 
-00:06:44.492 --> 00:06:47.413
+00:06:44.491 --> 00:06:47.412
 Primero elegimos las columnas: hotel e importe.
 
-00:06:48.347 --> 00:06:52.650
+00:06:48.346 --> 00:06:52.649
 Después, si solo queremos Laredo, las estadísticas pueden ayudar
 
-00:06:52.663 --> 00:06:55.545
+00:06:52.662 --> 00:06:55.544
 a descartar grupos que seguro no contienen ese hotel.
 
-00:06:56.452 --> 00:06:58.834
+00:06:56.452 --> 00:06:58.833
 Pero si todos los grupos incluyen Laredo,
 
-00:06:58.966 --> 00:07:01.558
+00:06:58.965 --> 00:07:01.557
 el filtro quizá no permita saltarse ninguno.
 
-00:07:02.492 --> 00:07:05.058
+00:07:02.491 --> 00:07:05.057
 Hay una tercera posibilidad: organizar el
 
-00:07:05.071 --> 00:07:07.124
+00:07:05.070 --> 00:07:07.123
 conjunto en particiones por fecha.
 
-00:07:08.031 --> 00:07:10.426
+00:07:08.030 --> 00:07:10.425
 Si el informe necesita ayer, podemos
 
-00:07:10.439 --> 00:07:12.768
+00:07:10.438 --> 00:07:12.767
 evitar abrir los archivos de otros días.
 
-00:07:13.676 --> 00:07:16.597
+00:07:13.675 --> 00:07:16.596
 Son tres ayudas distintas: elegir campos,
 
-00:07:16.729 --> 00:07:18.979
+00:07:16.728 --> 00:07:18.978
 descartar grupos y omitir archivos.
 
-00:07:19.538 --> 00:07:22.222
+00:07:19.537 --> 00:07:22.221
 Por eso indicamos columnas y filtros al leer.
 
-00:07:23.130 --> 00:07:26.393
+00:07:23.129 --> 00:07:26.392
 Si cargamos todo primero y recortamos después, parte
 
-00:07:26.406 --> 00:07:29.091
+00:07:26.406 --> 00:07:29.090
 del trabajo que queríamos evitar ya estará hecho.
 
-00:07:29.999 --> 00:07:32.222
+00:07:29.998 --> 00:07:32.221
 Ya sabemos cómo conservar el histórico
 
-00:07:32.235 --> 00:07:33.854
+00:07:32.235 --> 00:07:33.853
 y pedir solo lo necesario.
 
-00:07:34.775 --> 00:07:36.959
+00:07:34.774 --> 00:07:36.958
 Para calcular, esos valores tienen que
 
-00:07:36.972 --> 00:07:38.906
+00:07:36.971 --> 00:07:38.906
 pasar por la memoria del ordenador.
 
-00:07:39.841 --> 00:07:41.104
+00:07:39.840 --> 00:07:41.103
 Aquí aparece Arrow.
 
-00:07:42.038 --> 00:07:44.354
+00:07:42.037 --> 00:07:44.353
 Su nombre se parece mucho a Avro, así
 
-00:07:44.367 --> 00:07:47.735
+00:07:44.366 --> 00:07:47.734
 que detengámonos un momento: Avro representaba nuestros
 
-00:07:47.749 --> 00:07:51.196
+00:07:47.748 --> 00:07:51.195
 registros de intercambio; Arrow describe una organización
 
-00:07:51.209 --> 00:07:54.104
+00:07:51.208 --> 00:07:54.103
 por columnas en memoria, con tipos y nulos.
 
-00:07:55.025 --> 00:07:57.985
+00:07:55.024 --> 00:07:57.985
 Las herramientas compatibles pueden aprovecharla para
 
-00:07:57.999 --> 00:08:00.591
+00:07:57.998 --> 00:08:00.590
 intercambiar datos evitando algunas copias.
 
-00:08:01.525 --> 00:08:03.301
+00:08:01.524 --> 00:08:03.300
 No es una garantía para cualquier
 
-00:08:03.314 --> 00:08:06.959
+00:08:03.313 --> 00:08:06.958
 conversión: cambiar tipos puede requerir memoria adicional.
 
-00:08:07.473 --> 00:08:09.499
+00:08:07.472 --> 00:08:09.498
 Feather utiliza Arrow para guardar e
 
-00:08:09.512 --> 00:08:12.105
+00:08:09.512 --> 00:08:12.104
 intercambiar tablas entre pasos de trabajo.
 
-00:08:13.012 --> 00:08:15.723
+00:08:13.012 --> 00:08:15.722
 Para nuestro histórico seguimos eligiendo Parquet
 
-00:08:15.736 --> 00:08:18.276
+00:08:15.735 --> 00:08:18.275
 por las consultas y los lectores previstos.
 
-00:08:19.210 --> 00:08:22.263
+00:08:19.209 --> 00:08:22.262
 Cada pieza está atendiendo una necesidad diferente.
 
-00:08:23.197 --> 00:08:26.091
+00:08:23.196 --> 00:08:26.091
 Con las piezas situadas, ya podemos preguntar por
 
-00:08:26.105 --> 00:08:28.539
+00:08:26.104 --> 00:08:28.538
 el importe medio de las reservas de cada hotel.
 
-00:08:29.460 --> 00:08:32.039
+00:08:29.459 --> 00:08:32.038
 DuckDB permite expresar esa consulta en
 
-00:08:32.052 --> 00:08:34.736
+00:08:32.051 --> 00:08:34.735
 SQL directamente sobre el archivo Parquet.
 
-00:08:35.670 --> 00:08:37.973
+00:08:35.669 --> 00:08:37.972
 No necesitamos convertir primero todo el
 
-00:08:37.986 --> 00:08:39.894
+00:08:37.985 --> 00:08:39.893
 conjunto en una tabla de pandas.
 
-00:08:40.815 --> 00:08:43.486
+00:08:40.814 --> 00:08:43.485
 Pensemos en sus papeles: Parquet organiza
 
-00:08:43.499 --> 00:08:45.591
+00:08:43.498 --> 00:08:45.591
 el archivo; DuckDB es el motor que
 
-00:08:45.605 --> 00:08:47.447
+00:08:45.604 --> 00:08:47.446
 lo lee y realiza el cálculo.
 
-00:08:48.355 --> 00:08:51.934
+00:08:48.354 --> 00:08:51.933
 Sigue utilizando memoria y puede necesitar espacio temporal.
 
-00:08:52.868 --> 00:08:56.420
+00:08:52.867 --> 00:08:56.419
 Los talleres preparan este recorrido poco a poco: primero
 
-00:08:56.434 --> 00:08:59.644
+00:08:56.433 --> 00:08:59.643
 comprobamos que una tabla pequeña conserva sus valores al
 
-00:08:59.657 --> 00:09:02.894
+00:08:59.656 --> 00:09:02.893
 guardarla, después convertimos JSON Lines a Parquet y
 
-00:09:02.907 --> 00:09:07.039
+00:09:02.906 --> 00:09:07.038
 finalmente seleccionamos columnas y filtramos Laredo durante la lectura.
 
-00:09:07.210 --> 00:09:09.815
+00:09:07.209 --> 00:09:09.814
 En cada paso comprobamos también los nulos.
 
-00:09:10.736 --> 00:09:13.920
+00:09:10.735 --> 00:09:13.919
 Cuando el histórico crece, aparece otra preocupación:
 
-00:09:14.078 --> 00:09:16.328
+00:09:14.077 --> 00:09:16.327
 cuánto ocupa y cuánto tarda en viajar.
 
-00:09:17.262 --> 00:09:20.697
+00:09:17.262 --> 00:09:20.696
 Aquí recuperamos la compresión que mencionamos al principio.
 
-00:09:21.591 --> 00:09:23.434
+00:09:21.591 --> 00:09:23.433
 Nombres repetidos como Laredo
 
-00:09:23.447 --> 00:09:25.539
+00:09:23.446 --> 00:09:25.538
 pueden representarse con menos bytes.
 
-00:09:26.473 --> 00:09:30.271
+00:09:26.472 --> 00:09:30.270
 Eso ahorra espacio y transferencia, pero la máquina
 
-00:09:30.284 --> 00:09:32.797
+00:09:30.283 --> 00:09:32.796
 tiene que trabajar para comprimir y descomprimir.
 
-00:09:33.747 --> 00:09:36.760
+00:09:33.746 --> 00:09:36.759
 Snappy, gzip o zstd ofrecen distintos
 
-00:09:36.774 --> 00:09:39.458
+00:09:36.773 --> 00:09:39.457
 equilibrios que debemos medir con nuestros datos.
 
-00:09:40.366 --> 00:09:42.287
+00:09:40.365 --> 00:09:42.286
 El archivo más pequeño no siempre
 
-00:09:42.300 --> 00:09:43.681
+00:09:42.299 --> 00:09:43.681
 da la lectura más rápida.
 
-00:09:44.230 --> 00:09:47.335
+00:09:44.225 --> 00:09:47.330
 Tampoco podemos prometer un porcentaje fijo de ahorro.
 
-00:09:48.256 --> 00:09:50.585
+00:09:48.251 --> 00:09:50.580
 Si el equipo utiliza Hive, ORC
 
-00:09:50.598 --> 00:09:53.585
+00:09:50.594 --> 00:09:53.580
 es otra alternativa columnar que conviene considerar.
 
-00:09:54.506 --> 00:09:57.032
+00:09:54.501 --> 00:09:57.028
 Para decidir, miramos qué lectores tenemos
 
-00:09:57.045 --> 00:09:59.927
+00:09:57.041 --> 00:09:59.923
 y qué operaciones realizamos, además del tamaño.
 
-00:10:00.848 --> 00:10:03.901
+00:10:00.844 --> 00:10:03.896
 Hasta aquí hemos guardado y consultado el histórico.
 
-00:10:04.809 --> 00:10:07.190
+00:10:04.804 --> 00:10:07.186
 Pero Ana llama y modifica su reserva.
 
-00:10:08.111 --> 00:10:10.848
+00:10:08.107 --> 00:10:10.844
 Ahora necesitamos incorporar el cambio sin que
 
-00:10:10.861 --> 00:10:13.440
+00:10:10.857 --> 00:10:13.436
 una consulta encuentre una versión a medias.
 
-00:10:14.348 --> 00:10:17.309
+00:10:14.344 --> 00:10:17.304
 Un archivo Parquet describe cómo están escritos sus
 
-00:10:17.322 --> 00:10:19.519
+00:10:17.317 --> 00:10:19.515
 datos; por sí solo no coordina las
 
-00:10:19.532 --> 00:10:22.072
+00:10:19.528 --> 00:10:22.067
 versiones de todos los archivos de una tabla.
 
-00:10:23.006 --> 00:10:25.085
+00:10:23.001 --> 00:10:25.080
 Para esa tarea existen formatos de
 
-00:10:25.098 --> 00:10:27.348
+00:10:25.094 --> 00:10:27.344
 tabla como Delta Lake, Iceberg o Hudi.
 
-00:10:28.295 --> 00:10:30.545
+00:10:28.291 --> 00:10:30.541
 Gestionan archivos y metadatos para que
 
-00:10:30.559 --> 00:10:33.072
+00:10:30.554 --> 00:10:33.067
 los cambios se interpreten de forma coherente.
 
-00:10:34.019 --> 00:10:35.295
+00:10:34.015 --> 00:10:35.291
 Según el sistema y su
 
-00:10:35.309 --> 00:10:38.809
+00:10:35.304 --> 00:10:38.804
 configuración, podremos consultar estados anteriores.
 
-00:10:39.716 --> 00:10:42.769
+00:10:39.712 --> 00:10:42.765
 Eso exige mantenimiento: quitar una fila de la
 
-00:10:42.782 --> 00:10:46.980
+00:10:42.778 --> 00:10:46.975
 versión actual no elimina automáticamente todas sus copias históricas.
 
-00:10:47.914 --> 00:10:50.164
+00:10:47.909 --> 00:10:50.159
 Hay que gestionar también la conservación
 
-00:10:50.177 --> 00:10:51.966
+00:10:50.173 --> 00:10:51.962
 y limpieza de esas versiones.
 
-00:10:52.888 --> 00:10:55.374
+00:10:52.883 --> 00:10:55.370
 Ya tenemos razones para elegir formatos.
 
-00:10:56.282 --> 00:10:58.466
+00:10:56.278 --> 00:10:58.462
 Vamos a comprobarlas con las doscientas
 
-00:10:58.480 --> 00:11:00.453
+00:10:58.475 --> 00:11:00.449
 mil reservas sintéticas del taller.
 
-00:11:01.361 --> 00:11:02.716
+00:11:01.357 --> 00:11:02.712
 Antes de poner en marcha
 
-00:11:02.730 --> 00:11:05.006
+00:11:02.725 --> 00:11:05.001
 el cronómetro, mirad los comentarios.
 
-00:11:05.953 --> 00:11:09.322
+00:11:05.949 --> 00:11:09.317
 El generador produce textos vacíos, pero no nulos.
 
-00:11:10.230 --> 00:11:13.545
+00:11:10.225 --> 00:11:13.541
 Si leemos el CSV con las opciones predeterminadas
 
-00:11:13.559 --> 00:11:17.651
+00:11:13.554 --> 00:11:17.646
 de pandas, esos textos pueden convertirse en valores ausentes.
 
-00:11:18.559 --> 00:11:21.861
+00:11:18.554 --> 00:11:21.857
 También podemos recuperar identificadores de sesenta y cuatro
 
-00:11:21.874 --> 00:11:24.256
+00:11:21.870 --> 00:11:24.251
 bits aunque los generamos con treinta y dos.
 
-00:11:25.177 --> 00:11:27.137
+00:11:25.173 --> 00:11:27.133
 Los números pueden seguir siendo los
 
-00:11:27.151 --> 00:11:29.230
+00:11:27.146 --> 00:11:29.225
 mismos, pero el tipo ha cambiado.
 
-00:11:30.151 --> 00:11:32.138
+00:11:30.146 --> 00:11:32.133
 Por eso el apartado fija los tipos
 
-00:11:32.151 --> 00:11:34.440
+00:11:32.146 --> 00:11:34.436
 mediante el diccionario TIPOS y desactiva
 
-00:11:34.453 --> 00:11:37.940
+00:11:34.449 --> 00:11:37.936
 la interpretación automática de vacíos como nulos.
 
-00:11:38.848 --> 00:11:41.085
+00:11:38.844 --> 00:11:41.080
 Con el generador y la semilla indicados,
 
-00:11:41.282 --> 00:11:44.519
+00:11:41.278 --> 00:11:44.515
 debemos recuperar sesenta y seis mil seiscientos noventa
 
-00:11:44.532 --> 00:11:47.006
+00:11:44.528 --> 00:11:47.001
 y cinco comentarios vacíos y cero nulos.
 
-00:11:47.914 --> 00:11:51.111
+00:11:47.909 --> 00:11:51.107
 Si cambiamos el generador, comprobamos la referencia
 
-00:11:51.124 --> 00:11:53.532
+00:11:51.120 --> 00:11:53.528
 original en lugar de memorizar esa cifra.
 
-00:11:54.440 --> 00:11:56.335
+00:11:54.436 --> 00:11:56.330
 Ahora imaginad que necesitamos
 
-00:11:56.348 --> 00:11:58.690
+00:11:56.344 --> 00:11:58.686
 probar un comentario realmente ausente.
 
-00:11:59.624 --> 00:12:01.980
+00:11:59.620 --> 00:12:01.975
 Lo hacemos sobre una copia de los datos.
 
-00:12:02.901 --> 00:12:04.835
+00:12:02.896 --> 00:12:04.830
 Si escribimos ese nulo igual que
 
-00:12:04.848 --> 00:12:07.914
+00:12:04.844 --> 00:12:07.909
 el texto vacío, después no sabremos distinguirlos.
 
-00:12:08.822 --> 00:12:10.835
+00:12:08.817 --> 00:12:10.830
 El ejemplo del apartado reserva un
 
-00:12:10.848 --> 00:12:13.703
+00:12:10.844 --> 00:12:13.699
 marcador que no aparece como comentario legítimo.
 
-00:12:14.624 --> 00:12:16.940
+00:12:14.620 --> 00:12:16.936
 Al escribir, usamos ese marcador para
 
-00:12:16.953 --> 00:12:19.401
+00:12:16.949 --> 00:12:19.396
 el nulo; al leer, indicamos que solo
 
-00:12:19.414 --> 00:12:22.335
+00:12:19.409 --> 00:12:22.330
 ese marcador significa ausencia en comentarios.
 
-00:12:23.243 --> 00:12:25.730
+00:12:23.238 --> 00:12:25.725
 Los textos vacíos continúan vacíos.
 
-00:12:26.638 --> 00:12:30.164
+00:12:26.633 --> 00:12:30.159
 No basta con desactivar las reglas automáticas: también
 
-00:12:30.177 --> 00:12:33.177
+00:12:30.173 --> 00:12:33.173
 debemos acordar cómo reconocer los nulos reales.
 
-00:12:34.085 --> 00:12:37.006
+00:12:34.080 --> 00:12:37.001
 Después comprobamos dónde están las ausencias y que
 
-00:12:37.019 --> 00:12:39.295
+00:12:37.015 --> 00:12:39.291
 los demás valores y tipos se conservan.
 
-00:12:40.216 --> 00:12:43.361
+00:12:40.212 --> 00:12:43.357
 Si faltara un identificador, necesitaríamos además
 
-00:12:43.374 --> 00:12:45.282
+00:12:43.370 --> 00:12:45.278
 un tipo entero que admita nulos.
 
-00:12:46.190 --> 00:12:49.124
+00:12:46.186 --> 00:12:49.120
 Así distinguimos una diferencia de interpretación de
 
-00:12:49.138 --> 00:12:51.598
+00:12:49.133 --> 00:12:51.594
 una pérdida real de información, sin
 
-00:12:51.611 --> 00:12:54.638
+00:12:51.607 --> 00:12:54.633
 atribuirla automáticamente al alumno o al formato.
 
-00:12:55.545 --> 00:12:57.927
+00:12:55.541 --> 00:12:57.923
 Con el contrato ya comprobado, podemos
 
-00:12:57.940 --> 00:13:00.493
+00:12:57.936 --> 00:13:00.488
 hacer una comparación justa entre formatos.
 
-00:13:01.401 --> 00:13:04.611
+00:13:01.396 --> 00:13:04.607
 Antes de cronometrar, verificamos las mismas filas,
 
-00:13:04.730 --> 00:13:06.716
+00:13:04.725 --> 00:13:06.712
 columnas y tipos, además de los
 
-00:13:06.730 --> 00:13:09.032
+00:13:06.725 --> 00:13:09.028
 valores y las posiciones de los nulos.
 
-00:13:09.953 --> 00:13:12.559
+00:13:09.949 --> 00:13:12.554
 No cambiamos tipos ni rellenamos ausencias
 
-00:13:12.572 --> 00:13:14.835
+00:13:12.567 --> 00:13:14.830
 a ciegas para que una comprobación pase.
 
-00:13:15.743 --> 00:13:19.401
+00:13:15.738 --> 00:13:19.396
 Después medimos escritura, lectura y cálculo por separado,
 
-00:13:19.585 --> 00:13:22.361
+00:13:19.580 --> 00:13:22.357
 dejando las comprobaciones fuera de esos tiempos.
 
-00:13:23.309 --> 00:13:25.651
+00:13:23.304 --> 00:13:25.646
 Anotamos también compresión y tamaño.
 
-00:13:26.572 --> 00:13:29.006
+00:13:26.567 --> 00:13:29.001
 Repetimos las medidas, porque la caché
 
-00:13:29.019 --> 00:13:30.966
+00:13:29.015 --> 00:13:30.962
 puede acelerar una segunda lectura.
 
-00:13:31.874 --> 00:13:34.282
+00:13:31.870 --> 00:13:34.278
 Y recordad otra precaución: el Avro del
 
-00:13:34.295 --> 00:13:37.019
+00:13:34.291 --> 00:13:37.015
 taller solo contiene Laredo y cinco columnas.
 
-00:13:37.940 --> 00:13:41.677
-Lo comparamos con CSV y Parquet del mismo subconjunto.
+00:13:37.936 --> 00:13:40.396
+Ese archivo lo preparáis en el taller tres,
 
-00:13:42.611 --> 00:13:44.703
+00:13:40.554 --> 00:13:42.488
+que forma parte de la práctica guiada.
+
+00:13:43.027 --> 00:13:45.896
+Conservadlo al terminar, porque lo necesitaréis
+
+00:13:45.909 --> 00:13:47.659
+después en este taller medido.
+
+00:13:48.580 --> 00:13:51.356
+Así conectamos la preparación con la comparación:
+
+00:13:51.580 --> 00:13:53.922
+tomamos esas mismas filas y columnas y
+
+00:13:53.935 --> 00:13:56.567
+las guardamos también en CSV y Parquet.
+
+00:13:57.475 --> 00:13:59.646
+Entonces sí podemos comparar los tres
+
+00:13:59.659 --> 00:14:01.790
+formatos sobre el mismo subconjunto.
+
+00:14:02.698 --> 00:14:04.790
 Un archivo más pequeño porque perdió
 
-00:13:44.716 --> 00:13:46.559
+00:14:04.804 --> 00:14:06.646
 datos no demuestra una mejora.
 
-00:13:47.480 --> 00:13:50.045
+00:14:07.567 --> 00:14:10.852
 Volvamos por última vez a la reserva de Ana.
 
-00:13:50.953 --> 00:13:54.493
+00:14:11.776 --> 00:14:15.315
 Para revisarla o enviarla podemos utilizar texto; para
 
-00:13:54.506 --> 00:13:57.848
+00:14:15.328 --> 00:14:18.670
 intercambiar registros con un esquema explícito, Avro.
 
-00:13:58.756 --> 00:14:01.901
+00:14:19.578 --> 00:14:22.723
 Cuando el objetivo es consultar pocas columnas de muchas
 
-00:14:01.914 --> 00:14:06.019
+00:14:22.736 --> 00:14:26.842
 reservas, el histórico Parquet resulta adecuado para este caso.
 
-00:14:06.927 --> 00:14:09.993
+00:14:27.750 --> 00:14:30.763
 Arrow organiza valores en memoria mientras trabajan las
 
-00:14:10.006 --> 00:14:13.541
+00:14:30.776 --> 00:14:34.013
 herramientas, y DuckDB puede realizar la consulta.
 
-00:14:14.451 --> 00:14:17.228
+00:14:34.921 --> 00:14:37.697
 Si necesitamos gestionar cambios del conjunto,
 
-00:14:17.478 --> 00:14:20.188
+00:14:37.947 --> 00:14:40.657
 añadimos una solución de tabla con versiones.
 
-00:14:21.096 --> 00:14:23.044
+00:14:41.565 --> 00:14:43.513
 No hace falta utilizarlo todo.
 
-00:14:23.951 --> 00:14:26.991
+00:14:44.421 --> 00:14:47.460
 Antes de elegir, preguntamos quién leerá los datos,
 
-00:14:27.109 --> 00:14:29.412
+00:14:47.578 --> 00:14:49.881
 qué necesita y qué cambios habrá después.
 
-00:14:30.320 --> 00:14:33.004
+00:14:50.789 --> 00:14:53.473
 La buena decisión conserva el significado de la
 
-00:14:33.017 --> 00:14:36.201
+00:14:53.486 --> 00:14:56.671
 reserva y facilita el siguiente paso de su recorrido.
