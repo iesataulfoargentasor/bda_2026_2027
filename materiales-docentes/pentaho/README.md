@@ -2,6 +2,10 @@
 
 `paquetes-pentaho.zip` contiene A001.zip a A015.zip, un control de huellas SHA-256 y unas instrucciones. No incluye nombres de alumnos ni soluciones de las transformaciones. Esta carpeta está fuera de `docs`: MkDocs no la incorpora a la web. Si se sube al repositorio público, será accesible desde GitHub; no es un almacén privado.
 
+## Guía paso a paso para organizar el aula
+
+Consulta la [guía de reparto y configuración de Moodle](guia-moodle.md): asignación de A001 a A015, entrega individual de los ZIP, tareas de avance por sesión, entrega final, textos para copiar y rúbrica con defensa individual.
+
 ## Antes de la primera sesión
 
 1. Descomprimir el paquete docente y asignar un código distinto a cada alumno.
