@@ -210,7 +210,7 @@ Para ver cómo avisa Spoon: escribid `CP` en vez de `codigo_postal`. Preview: ic
 
 **Output → Text file output.** Conectad desde el *Sort*. Primera ejecución: a menudo **rellena con espacios** (anchura fija). Pestaña *Fields* → **Minimal width**. Segunda ejecución: `Mirador Laredo;Trasmiera;39770` sin cola de blancos.
 
-Habéis **procesado** (menos filas, ordenadas) y **presentado** (CSV que se abre en Excel).
+Para demostrar el **procesamiento**, comprobad que solo quedan los alojamientos de Trasmiera, que el recuento coincide con el filtro y que están ordenados por código postal. Para **presentar** el resultado, añadid al CSV una explicación de qué contiene, sus campos y su alcance; que se abra en Excel no demuestra por sí solo que el destinatario lo entienda.
 
 ### Pan (sin Spoon)
 
@@ -220,7 +220,7 @@ Guardad `taller1_trasmiera.ktr`. Borrad el CSV de salida. En la carpeta de PDI:
 pan.bat /file="C:\ruta\taller1_trasmiera.ktr"
 ```
 
-En Linux/macOS: `pan.sh /file=...`. El log debe terminar en *Finished* y el fichero debe **reaparecer**. Eso es el procedimiento de madrugada.
+En Linux/macOS: `pan.sh /file=...`. Revisad que el registro indique una ejecución sin errores y que el fichero vuelva a generarse. Después abridlo y repetid las comprobaciones de filtro, recuento y orden: su existencia por sí sola no demuestra que las reglas se hayan aplicado correctamente. Así ejecutáis el procedimiento sin Spoon; para lanzarlo de madrugada necesitaríais además un programador de tareas.
 
 Parámetros útiles (también en Kitchen): `/level:Basic` (o `Error`, `Debug`, `Rowlevel`…) y `/param:"nombre=valor"` si el flujo espera variables.
 
@@ -369,7 +369,7 @@ Añadís [cadenas_pdi.csv](../assets/practicas/cadenas_pdi.csv){target="_blank" 
 4. *Sort* por `id_cadena`, `cadena` → **Group by:** `id_cadena`, `cadena`. En *Name* del agregado: `SUM(noches)` → **`noches_total`**, `SUM(cobrado)` → **`importe_total`**.
 5. **Transform → Calculator.** Operación *A/B* (o la equivalente en vuestra versión): `importe_total / noches_total` → `precio_medio_noche`. Recorred el desplegable: hay texto, fechas y números; no memoricéis la lista.
 
-Si el aula **no** tiene cubo, *Text file output* a `informe_cadenas.csv` en la carpeta de trabajo y listo: el oficio de d) y e) ya está.
+Si el aula **no** tiene cubo, utilizad *Text file output* para guardar `informe_cadenas.csv` en la carpeta de trabajo. El destino local permite trabajar los mismos criterios: para d), ejecutad las reglas y contrastad grupos, recuentos e importes con lo esperado; para e), explicad el alcance, las unidades y el significado del informe.
 
 ### Destino S3 (si el aula usa AWS)
 
@@ -381,7 +381,7 @@ Antes de publicar, contrastad el resultado del taller 4 con esta tabla. Las medi
 | Costa | 35 | 2394.50 | 68.41 |
 | Interior | 9 | 611.00 | 67.89 |
 
-El primer cubo se crea en el [taller de AWS Academy](aws-academy-s3.md){target="_blank" rel="noopener"} (consola, **privado**, sin claves). Este paso de Spoon es **después**, y solo si el profesor lo abre: en Learner Lab a menudo **no** podéis crear un usuario IAM. Si no hay claves, *Text file output* a carpeta y el oficio de d) y e) ya está.
+El primer cubo se crea en el [taller de AWS Academy](aws-academy-s3.md){target="_blank" rel="noopener"} (consola, **privado**, sin claves). Este paso de Spoon es **después**, y solo si el profesor lo abre: en Learner Lab a menudo **no** podéis crear un usuario IAM. Si no hay claves, utilizad *Text file output* a carpeta, verificad el contenido y acompañadlo de la explicación para gerencia. Cambiar de destino no sustituye las comprobaciones de d) ni la interpretación exigida en e).
 
 1. *Bucket* del **centro** o el vuestro del lab (el nombre lo da el profesor; no copiéis el de otro ciclo).
 2. Credenciales por **variables de entorno** (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, y si aplica `AWS_SESSION_TOKEN`) o el perfil `~/.aws/credentials`.
@@ -525,7 +525,7 @@ Si en vez de fallar queréis **insertar** lo que no exista: **Insert / Update** 
 - Hop **desde el Merge hacia el origen**: el dato no entra. El hop sale del *Sort* y entra en el Merge.
 - Java Filter + nulos sin *If field value is null*.
 - JSON output sin *Get fields*.
-- Cumplir d) (el fichero se genera) y olvidar e) (nadie entiende las claves).
+- Dar por cumplido d) porque se genera un fichero, sin comprobar las reglas y sus resultados; u olvidar e), dejando claves y cifras sin una explicación comprensible.
 - Rutas absolutas de vuestra cuenta de casa.
 - Seguir el PDF con `listings.csv` de Madrid o un `sports` de RDS.
 

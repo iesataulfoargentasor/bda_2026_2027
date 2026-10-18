@@ -317,7 +317,7 @@ Son programas (muchos con pantalla) para diseñar el flujo sin escribirlo todo a
 | Herramienta | Qué es, en una frase | En esta aula |
 | --- | --- | --- |
 | **[Pentaho Data Integration (PDI)](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform.html){target="_blank" rel="noopener"}** | Suite de ETL visual. **Spoon** edita; **Pan** y **Kitchen** ejecutan. Código: [GitHub](https://github.com/pentaho/pentaho-kettle){target="_blank" rel="noopener"}. | La practicáis en [1.8](pentaho.md){target="_blank" rel="noopener"} |
-| **[Talend Open Studio](https://www.talend.com/){target="_blank" rel="noopener"}** | Otra ETL visual | La oiréis; no la montamos |
+| **[Talend Open Studio](https://www.qlik.com/us/products/talend-open-studio){target="_blank" rel="noopener"}** | Referencia histórica de ETL visual | Retirado el **31 de enero de 2024**; Qlik y Talend ya no lo alojan ni actualizan. No se instala en esta unidad. |
 | Otras de catálogo | Informatica, ODI, MuleSoft… | Nombre; no las instaláis |
 
 Las empresas no eligen “solo Pentaho” o “solo Python”. Mezclan:

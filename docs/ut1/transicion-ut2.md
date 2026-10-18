@@ -33,13 +33,13 @@ El vídeo incluye subtítulos visibles y narración con voz sintética en españ
 
 ## El caso: 500 GB y un portátil
 
-Sois técnicos de la cadena. Debéis procesar un histórico de **500 GB** (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. Elegid la operación indicada por el profesor: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.
+Sois técnicos de la cadena. Debéis procesar un histórico de **500 GB** (CSV, JSON o logs de reservas y cobros) de Santander, Laredo, Comillas y Potes. El profesor indicará la operación que debéis analizar: una media produce un resumen pequeño; normalizar un campo a escala 0–1 produce un conjunto de datos transformado que puede seguir siendo grande. El informe de las 8 utilizará el resultado del cierre acordado. No se modifica el PMS.
 
 El fichero está en la **red de la empresa** (una URL interna o una carpeta compartida), no en vuestro disco.
 
-**Operación** (elegid **una**): media, desviación típica, o *normalizar* un campo (dejarlo en una escala comparable, p. ej. 0–1).
+**Operación** (el profesor asigna **una** para comparar las propuestas con el mismo encargo): media, desviación típica, o *normalizar* un campo (dejarlo en una escala comparable, p. ej. 0–1).
 
-**Destino del resultado** (elegid **uno**, el que diga el profesor): cubo **S3**, **Azure** (Blob / Data Lake) o **carpeta del aula**. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa **casi nada**; no lo confundáis con mover los 500 GB.
+**Destino del resultado** (el profesor indica **uno**): cubo **S3**, **Azure** (Blob / Data Lake) o **carpeta del aula**. Si ya usáis MongoDB Atlas, vale. El resultado de una media ocupa **casi nada**; no lo confundáis con mover los 500 GB.
 
 **Vuestra única máquina (el portátil):**
 
@@ -134,7 +134,7 @@ Describid, a alto nivel, un plan en Python:
 
 - Lectura **línea a línea** o por **bloques** (*chunks*: trozos que caben en RAM).
 - Cálculo **incremental** (una pasada: vais actualizando suma y recuento; la media es `suma/n` al final).
-- Escribís la estadística resumida o el conjunto normalizado, según la operación elegida. Estimad también el tamaño de esa salida.
+- Escribís la estadística resumida o el conjunto normalizado, según la operación asignada. Estimad también el tamaño de esa salida.
 
 Relacionadlo con **secuencial**: un solo proceso que lee y actualiza contadores.
 
