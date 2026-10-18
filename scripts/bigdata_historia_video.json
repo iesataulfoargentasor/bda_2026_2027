@@ -80,6 +80,16 @@
     "kind": "normal"
   },
   {
+    "title": "¿No cabe en memoria? Primero comprobamos el límite",
+    "label": "Memoria, espacio de almacenamiento y plazo son límites distintos.",
+    "active": 2,
+    "kind": "normal",
+    "heading": "Leer por bloques → medir el tiempo → comparar alternativas",
+    "body": "Según la operación, una máquina puede usar el disco sin cargar todo en RAM.",
+    "takeaway": "No caber en memoria no obliga a distribuir.",
+    "narration": "Antes de seguir, imaginad que el histórico de reservas ya no cabe entero en la memoria del ordenador. ¿Necesitamos inmediatamente varias máquinas? No necesariamente. Según el cálculo, podemos leer una parte, trabajar con ella y continuar con la siguiente, utilizando el disco para los resultados intermedios. Por ejemplo, podemos acumular los cobros por hotel sin tener todas las filas abiertas a la vez. Eso resuelve algunos límites de memoria, pero no garantiza terminar a tiempo. Por eso medimos también el espacio disponible y la duración. Después comparamos optimizar el proceso, ampliar recursos o repartir tareas entre máquinas. La elección depende de esas medidas y del coste, no solo del tamaño del archivo."
+  },
+  {
     "title": "Velocidad: llegar rápido y responder a tiempo",
     "label": "La tasa de entrada y la latencia son medidas diferentes.",
     "active": 2,

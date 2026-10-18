@@ -45,7 +45,7 @@ base.render=render
 def smooth_audio(events):
  # Recortar únicamente el centro silencioso; conservar intacta la velocidad de la voz.
  base.run(['-i','narracion.mp3','-ac','1','-ar','24000','-c:a','pcm_s16le','original.wav'])
- r=subprocess.run([base.FF,'-i',str(B/'original.wav'),'-af','silencedetect=noise=-40dB:d=0.32','-f','null','-'],capture_output=True,text=True)
+ r=subprocess.run([base.FF,'-i',str(B/'original.wav'),'-af','silencedetect=noise=-40dB:d=1.15','-f','null','-'],capture_output=True,text=True)
  spans=[];start=None
  for line in r.stderr.splitlines():
   a=re.search(r'silence_start: ([\d.]+)',line);b=re.search(r'silence_end: ([\d.]+)',line)
@@ -60,8 +60,8 @@ def smooth_audio(events):
  for a,b in spans:
   previous=[e for e in events if e['offset']/1e7<(a+b)/2]
   word=previous[-1]['text'] if previous else ''
-  keep=.62 if any(a-.15<=t<=b+.15 for t in scene_starts) else (.44 if word.endswith(('.', '?', '!')) else .12)
-  if b>=dur-.03:keep=.35
+  keep=.95 if any(a-.15<=t<=b+.15 for t in scene_starts) else (.75 if word.endswith(('.', '?', '!')) else .40)
+  if b>=dur-.03:keep=.65
   if b-a>keep:cuts.append((round((a+keep/2)*sr)/sr,round((b-keep/2)*sr)/sr))
  parts=[];cursor=0;samples=array.array('h',raw)
  for a,b in cuts:

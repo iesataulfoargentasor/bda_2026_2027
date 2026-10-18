@@ -170,6 +170,15 @@
     "kind": "normal"
   },
   {
+    "title": "El motor elegido no decide cuántas máquinas usamos",
+    "label": "Volvamos al cálculo que prepara el cierre del hotel.",
+    "active": 2,
+    "heading": "PySpark: Spark desde Python, en local o entre máquinas",
+    "body": "Varios hilos en una máquina permiten paralelismo local. Distribuir utiliza varias máquinas.",
+    "takeaway": "Comprobamos la configuración y dónde se ejecutan las tareas.",
+    "narration": "Antes de cerrar el recorrido, pensemos en el motor que prepara los cobros. Si elegimos PySpark, estaremos utilizando Spark desde Python. Pero eso no significa que necesitemos varias máquinas. Podemos ejecutarlo en el ordenador del aula, con un hilo de trabajo o con varios. En este último caso hay paralelismo local: varias tareas pueden avanzar en la misma máquina. Otra posibilidad es repartir las tareas entre trabajadores de distintas máquinas. Para distinguir ambos casos, miramos la configuración y dónde se está ejecutando realmente el cálculo. Así, el mismo objetivo, preparar el cierre de Ana y los demás huéspedes, admite distintas formas de ejecución. Elegimos la que cumpla el plazo y las garantías con un coste razonable."
+  },
+  {
     "title": "Cerramos el recorrido con controles, no con una luz verde",
     "label": "Las herramientas se eligen por la función que deben cumplir.",
     "active": -1,
