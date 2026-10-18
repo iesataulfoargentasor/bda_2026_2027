@@ -2528,8 +2528,32 @@
 <ul>
 <li>Analítica: está pensada para leer mucho y agregar (sumar por hotel), no para que recepción pique una reserva.</li>
 <li>Embebida: no instaláis un servidor. Es una librería (<code>pip install duckdb</code>). Corre <strong>dentro</strong> de Python, en vuestro proceso.</li>
-<li>Habla <strong>SQL</strong> directo sobre ficheros locales (CSV, Parquet, JSON) <strong>sin</strong> cargarlos antes en PostgreSQL. Por dentro es <strong>columnar</strong>: guarda por columnas, así que “importe por hotel” no tiene que leer las doce columnas.</li>
+<li>Habla <strong>SQL</strong> directo sobre ficheros locales (CSV, Parquet, JSON) <strong>sin</strong> cargarlos antes en PostgreSQL.</li>
+<li>Su motor procesa datos en bloques de valores y su almacenamiento propio es <strong>columnar</strong>. Eso no cambia la organización física de los archivos externos que consulta: un CSV sigue siendo texto organizado en registros, aunque lo leamos con DuckDB.</li>
 </ul>
+<p>Para calcular el <strong>importe por hotel</strong>, distinguimos dos situaciones:</p>
+<table>
+<thead>
+<tr>
+<th>Archivo consultado</th>
+<th>Qué puede ahorrar el motor</th>
+<th>Qué implica leer ese formato</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CSV</strong></td>
+<td>Puede evitar convertir o materializar campos que la consulta no necesita; es decir, no tiene que construir todos sus valores para trabajar con ellos</td>
+<td>Debe recorrer el texto y reconocer la estructura de los registros, incluidos separadores y comillas. Seleccionar dos columnas no permite saltarse físicamente las demás como en Parquet</td>
+</tr>
+<tr>
+<td><strong>Parquet</strong></td>
+<td>Puede leer las columnas necesarias para la consulta y omitir los bloques de otras columnas</td>
+<td>La organización columnar y los metadatos permiten localizar esos bloques; los filtros también pueden evitar leer grupos de filas cuando sus estadísticas permiten descartarlos</td>
+</tr>
+</tbody>
+</table>
+<p>Por tanto, <strong>usar un motor columnar no convierte un CSV en un archivo columnar</strong>. La reducción de trabajo dentro del motor y la reducción de bytes leídos del archivo son cosas distintas. Esta diferencia es la que aplicamos en <a href="../formatos/">Formatos de datos</a> y su cuestionario. Véase también la <a href="https://duckdb.org/docs/stable/data/parquet/overview">documentación de DuckDB sobre lectura de Parquet</a>.</p>
 <p>Para ETL, eso significa: extraes (lees el CSV como tabla), transformas (un <code>SELECT</code> con <code>JOIN</code> y <code>WHERE</code>) y cargas (<code>COPY</code> a otro fichero).</p>
 <p>Instalación: <code>pip install duckdb</code> (guía: <a href="https://duckdb.org/docs/installation/" rel="noopener" target="_blank">duckdb.org/docs/installation</a>).</p>
 <p>Mismas tres letras que pandas, idioma SQL:</p>
