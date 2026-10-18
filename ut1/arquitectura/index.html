@@ -2111,11 +2111,11 @@
 <p>Seguridad y monitorización. Un flujo “CSV → filtro → Excel” también necesita controles. Las otras seis capas, si el caso es real, también existen aunque sean simples (una carpeta con permisos y un log de Pentaho).</p>
 </div>
 <h2 id="que-tiene-que-cumplir-el-edificio">Qué tiene que cumplir el edificio<a class="headerlink" href="#que-tiene-que-cumplir-el-edificio" title="Permanent link">&para;</a></h2>
-<p>Las capas de arriba son el <strong>edificio</strong>. Una arquitectura Big Data, además, tiene que <strong>aguantar</strong> volumen y velocidad.</p>
+<p>Las capas de arriba son el <strong>edificio</strong>. La arquitectura debe cumplir los requisitos medidos de capacidad, plazo, coste y recuperación ante fallos. La distribución del almacenamiento y del cálculo son decisiones que se justifican por separado: esta tabla no exige que todos los proyectos repartan ambos entre varias máquinas.</p>
 <table>
 <thead>
 <tr>
-<th>Exigencia</th>
+<th>Aspecto que debemos justificar</th>
 <th>En castellano</th>
 <th>En el hotel</th>
 </tr>
@@ -2127,24 +2127,24 @@
 <td>Abrís Noja y el panel de las 8 sigue saliendo</td>
 </tr>
 <tr>
-<td><strong>Aguanta fallos</strong></td>
-<td>Un nodo muerto no tumba el <strong>histórico</strong></td>
-<td>Se funde un disco en Potes; el <strong>panel</strong> sigue (<a href="../clusters/" rel="noopener" target="_blank">1.2</a>). El cobro en recepción es el PMS, no el clúster</td>
+<td><strong>Recuperación y continuidad</strong></td>
+<td>Definimos qué fallos debemos soportar, qué datos podemos perder y cuánto tiempo puede durar la recuperación</td>
+<td>Ante un disco averiado, las copias y la restauración protegen el histórico; mantener el panel disponible durante el fallo exige mecanismos adicionales (<a href="../clusters/" rel="noopener" target="_blank">1.2</a>)</td>
 </tr>
 <tr>
-<td><strong>Dato repartido</strong></td>
-<td>Repartir datos exige revisar también coordinadores, red y orígenes únicos: distribuir no elimina automáticamente todos los puntos únicos de fallo</td>
-<td>No un USB con “el histórico”</td>
+<td><strong>Distribución del almacenamiento, si procede</strong></td>
+<td>Valoramos repartir datos cuando lo justifiquen capacidad, acceso o disponibilidad; revisamos también coordinadores, red y orígenes únicos</td>
+<td>El histórico necesita capacidad y protección adecuadas. Repartirlo no sustituye las copias de seguridad ni obliga a distribuir cada cálculo</td>
 </tr>
 <tr>
-<td><strong>Proceso repartido</strong></td>
-<td>El cálculo también se parte</td>
-<td>El job de ocupación no corre en un portátil</td>
+<td><strong>Distribución del cálculo, si procede</strong></td>
+<td>Comparamos ejecución local, optimización, más recursos y reparto entre máquinas; elegimos según medidas</td>
+<td>El job de ocupación puede ejecutarse en una máquina si cumple plazo, coste y garantías. Usar Spark o PySpark no implica que se ejecute en varias</td>
 </tr>
 <tr>
-<td><strong>Dato cerca del cálculo</strong></td>
-<td>Menos red, menos espera</td>
-<td>Hadoop clásico; en nube a veces se <strong>separa</strong> (<a href="../clusters/" rel="noopener" target="_blank">1.2</a>, <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>)</td>
+<td><strong>Ubicación del dato y del cálculo</strong></td>
+<td>Valoramos el tráfico de red y el coste frente a la flexibilidad de separar almacenamiento y proceso</td>
+<td>Hadoop clásico aprovecha la proximidad; en otros diseños se separan los recursos y se mide si la red permite cumplir el plazo (<a href="../clusters/" rel="noopener" target="_blank">1.2</a>, <a href="../almacenamiento/" rel="noopener" target="_blank">1.3</a>)</td>
 </tr>
 </tbody>
 </table>
