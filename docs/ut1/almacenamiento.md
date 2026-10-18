@@ -113,7 +113,7 @@ La elección depende de las consultas, las relaciones y las garantías necesaria
 
 ## Data warehouse (almacén de informes)
 
-Un warehouse integra datos de varios orígenes con definiciones comunes. Si un hotel llama “ingreso” al precio reservado y otro al pago recibido, sumar ambas columnas produciría un informe incoherente. Antes de cargar el almacén se acuerda qué significa cada indicador y con qué detalle se conserva.
+Un warehouse integra datos de varios orígenes con definiciones comunes. Si un hotel llama “ingreso” al precio reservado y otro al pago recibido, sumar ambas columnas produciría un informe incoherente. Antes de publicar un informe se acuerda qué significa cada indicador y con qué detalle se conserva. Las entradas pueden cargarse primero en una zona de preparación, donde todavía no constituyen un resultado validado.
 
 Ese nivel de detalle se denomina **granularidad** o **grano**. Una fila puede representar un cobro individual o el total de un hotel en un día. El detalle permite nuevas preguntas; el resumen acelera consultas conocidas, pero pierde información. Por ejemplo, con un total diario no podemos reconstruir los pagos individuales.
 
@@ -121,19 +121,21 @@ En un modelo dimensional, los **hechos** contienen medidas —importe, noches—
 
 Es un sitio **central**, pensado para **informes y decisiones** (inteligencia de negocio, *BI*), con **histórico**. Los datos **no se pican** ahí: **se copian** desde el PMS, la pasarela y, si hace falta, el lago. En nuestro caso se actualiza con cada cierre; otros almacenes reciben cargas frecuentes o continuas. No es el sitio donde recepción cobra.
 
-Las columnas se deciden **antes** de guardar: si mañana el canal añade un campo, hay que **cambiar el modelo**. A cambio, gerencia encuentra tablas limpias (ocupación, importe, hotel), listas para el panel de las **8**.
+Para las **tablas publicadas del cierre** definimos campos, tipos y reglas que gerencia pueda interpretar. Esto no obliga a que todo lo cargado en un warehouse tenga ya la estructura del informe. Algunos motores admiten datos semiestructurados: por ejemplo, [Snowflake permite almacenar JSON mediante el tipo `VARIANT`](https://docs.snowflake.com/en/user-guide/semistructured-intro). Si el canal incorpora un campo, puede ser posible conservarlo sin añadir inmediatamente una columna al informe. Para utilizarlo en un indicador habrá que revisar su significado, las transformaciones y, cuando corresponda, el modelo analítico.
 
-En la nube oiréis [Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"} o BigQuery: es **este** oficio (informes), no el lago.
+En nuestro caso, gerencia consulta a las **8** las tablas del cierre ya comprobadas. Las tablas de preparación tienen otra función y otros permisos. Como veremos en [Ingesta](ingesta.md#elt), tanto ETL como ELT pueden producir ese resultado validado.
 
-## Data mart (un recorte, no otro lago)
+En la nube oiréis [Snowflake](https://www.snowflake.com/){target="_blank" rel="noopener"} o BigQuery como plataformas utilizadas para este trabajo analítico. Sus capacidades pueden combinar datos propios y externos; el nombre del producto no sustituye la explicación de cómo organizamos y validamos los datos.
 
-Un mart organiza datos para un ámbito concreto, como finanzas o marketing. Puede materializarse en tablas propias o en vistas sobre el almacén común. Su utilidad es reducir la complejidad para el usuario y proporcionar definiciones apropiadas a su trabajo.
+## Data mart (información para un ámbito concreto) { #data-mart-un-recorte-no-otro-lago }
+
+Un mart organiza datos para un ámbito concreto, como finanzas o marketing. Puede alimentarse de un warehouse, directamente de otras fuentes o de una combinación de ambos. Puede materializarse en tablas propias o en vistas sobre datos preparados. Su utilidad es reducir la complejidad para el usuario y proporcionar definiciones apropiadas a su trabajo.
 
 La independencia de un mart no lo convierte automáticamente en incorrecto: el riesgo aparece cuando sus reglas, periodos o fuentes difieren sin documentarse. Si dos informes muestran importes distintos, primero comprobamos si ambos incluyen impuestos, devoluciones y la misma fecha de cierre.
 
-El almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Un **data mart** es el **mismo oficio** (tablas limpias, pregunta ya conocida, se copia, no se pica), pero **más estrecho**: un departamento o un hotel.
+En nuestro diseño, el almacén de la cadena sirve a **toda** gerencia: ocupación e importe de Santander, Laredo, Comillas y Potes. Cada **data mart** ofrece la información analítica que necesita un departamento o un hotel. Lo que lo caracteriza es ese ámbito de uso, no que deba proceder de un único almacén.
 
-No es el PMS. No es el [lago](#data-lake){target="_blank" rel="noopener"}. En este caso es un recorte del warehouse que alguien ya puede abrir a las **8** sin tragarse el modelo entero ni ver columnas que no le tocan (el NIF no va al mart de marketing).
+En este caso elegimos marts dependientes del warehouse: cada equipo puede consultar a las **8** su parte del cierre sin recorrer el modelo entero ni acceder a columnas que no necesita, como el NIF en marketing. El mart responde a una necesidad analítica; no sustituye al PMS que registra las operaciones.
 
 ```mermaid
 flowchart TD
@@ -161,7 +163,7 @@ Tres maneras de alimentarlo (el nombre es de libro; el criterio es de diseño):
 | Tipo | De dónde sale | En el hotel |
 | --- | --- | --- |
 | **Dependiente** | Del warehouse de la cadena | El panel de Laredo lee **los mismos** cobros que gerencia a las 8 |
-| **Independiente** | ETL propio, sin pasar por el almacén del grupo | Comillas monta un Excel “porque mañana abre otro”. Los importes **no cuadran** con el cierre |
+| **Independiente** | Se alimenta de otras fuentes sin pasar por el warehouse del grupo | Comillas prepara un conjunto analítico desde sus fuentes; debe documentar las reglas y conciliar los cobros con el cierre común |
 | **Híbrido** | Del warehouse **y** de un fichero extra | Campañas de la OTA + ocupación ya curada |
 
 Un mart dependiente facilita compartir definiciones. Si se elige uno independiente, hay que documentar y conciliar sus reglas para evitar indicadores contradictorios.
@@ -176,17 +178,19 @@ El **data lake** (lago de datos) puede conservar originales y zonas de datos pre
 
 Esa colección que tiene sentido tratar junta (reservas de agosto, lecturas de Potes) es un **dataset**: es *qué* vais a procesar, no *en qué motor* está.
 
-El “cómo se interpreta” se aplica **al leer**, no al guardar. El riesgo clásico es el ***data swamp*** (ciénaga): un lago sin catálogo, sin dueño y sin calidad. Entonces “tenemos un lake” significa “tenemos un disco sucio”.
+En la zona de originales podemos conservar el dato tal como llegó y aplicar un esquema al leerlo: decidir qué campos extraer y cómo interpretar sus tipos. Eso no impide comprobar la entrada antes de guardarla. En las zonas preparadas, en cambio, podemos definir y validar el esquema al escribir las tablas. **Un mismo lago puede combinar ambas formas de trabajo.**
+
+El riesgo clásico es el ***data swamp*** (ciénaga): un lago sin catálogo, sin dueño y sin calidad. Conservar originales no elimina la necesidad de documentarlos, controlar el acceso y comprobar qué se ha recibido.
 
 | | Data warehouse | Data lake |
 | --- | --- | --- |
 | Oficio | Consulta analítica con definiciones comunes | Conservar originales y conjuntos preparados para distintos usos |
-| Dato | Integrado y modelado para el análisis | Zonas de originales, datos validados y resultados |
-| Esquema | Definido para las tablas analíticas | Puede aplicarse al leer el original y fijarse en tablas preparadas |
-| Quién lo usa | Gerencia, informes | Ingeniería y ciencia de datos |
-| Pregunta | Ya la conocéis (ocupación / importe) | Puede aparecer después |
+| Dato | Tablas analíticas y zonas de preparación; puede admitir datos semiestructurados según el motor | Zonas de originales, datos validados y resultados |
+| Esquema | Definido para las tablas del informe; la representación de las entradas depende del motor y del diseño | Puede aplicarse al leer el original y fijarse en tablas preparadas |
+| Usuarios habituales | Gerencia, analistas e ingeniería, según la zona y los permisos | Ingeniería, ciencia de datos y consumidores de resultados preparados, según los permisos |
+| Preguntas | Consultas acordadas y nuevas consultas sobre los datos disponibles | Preguntas previstas y nuevas exploraciones sobre los datos conservados |
 
-En la práctica el grupo suele tener **los dos**: el lago para el bruto y el warehouse para lo que gerencia ve a las 8. En este diseño, el *data mart* es un **recorte** de ese warehouse, no un tercer sitio para el JSON. No elegís uno “para siempre”: elegís **para cada pregunta**.
+En el diseño del hotel utilizamos **los dos**: el lago conserva originales y puede alojar conjuntos preparados; el warehouse organiza las tablas del cierre que gerencia consulta a las 8. Los marts elegidos comparten las definiciones de ese warehouse. No todos los proyectos necesitan esta combinación: justificad qué información se conserva, dónde se prepara y qué consulta cada destinatario. Un lago no obliga a pasar después por un warehouse, ni un warehouse necesita recibir sus datos desde un lago.
 
 ## Acceso al almacenamiento y arquitectura lakehouse { #como-se-guarda-bloque-objeto-lakehouse }
 
@@ -303,9 +307,9 @@ Recorred las preguntas **en este orden**, con el hotel:
 
 1. ¿Hay cambios que deban confirmarse conjuntamente? → exigid transacciones y garantías adecuadas. En este caso las proporciona el PMS relacional.
 2. ¿La carga incumple capacidad o plazo? → medid el cuello de botella y comparad optimizar consultas, mejorar una máquina, separar análisis y operación o distribuir. Ni cuatro hoteles obligan a usar un clúster, ni un clúster obliga a usar NoSQL.
-3. ¿La pregunta ya está clara y se repetirá cada mañana a las 8 (ocupación e importe)? → **warehouse**.
-4. ¿Solo un departamento o un hotel necesita ese recorte (marketing, Laredo) y no toda gerencia? → **data mart**, alimentado del warehouse. No montéis un segundo almacén a escondidas.
-5. ¿Aún no sabéis qué preguntaréis o el bruto es de muchos tipos? → **lake**, y luego curáis hacia el warehouse.
+3. ¿Necesitáis consultas analíticas con definiciones comunes, como el cierre de cada mañana? → valorad un **warehouse**. Es la opción elegida para el informe del hotel; repetir una consulta no obliga por sí solo a utilizarlo.
+4. ¿Un departamento o un hotel necesita un conjunto analítico propio? → valorad un **data mart**. En nuestro caso lo alimentamos del warehouse para compartir definiciones; también puede recibir otras fuentes si documentamos y conciliamos sus reglas.
+5. ¿Necesitáis conservar originales de distintos tipos y preparar conjuntos para varios usos? → valorad un **lake**, con catálogo, controles y retención. Los resultados pueden consultarse con motores compatibles sobre el lago o alimentar otros almacenes, según el diseño.
 6. ¿Necesitáis gestionar tablas y versiones sobre archivos del lago? → valorad un **lakehouse**. Un warehouse también permite actualizar o borrar: esa necesidad aislada no decide la arquitectura. Una eliminación lógica no borra automáticamente históricos y copias; hay que definir su conservación y limpieza.
 
 En [1.4](procesamiento.md){target="_blank" rel="noopener"} veréis otro par de siglas (OLTP y OLAP): no son otro tipo de base, son **dos trabajos distintos** (operar en recepción frente a informar a gerencia).
@@ -318,12 +322,12 @@ No puntúa en Moodle. Una línea de por qué.
 
 1. El PMS debe confirmar conjuntamente dos cambios locales relacionados con una fianza. ¿Qué garantía necesita y por qué una copia en el lago no la sustituye?
 2. El canal web deja un JSON de reserva con extras distintos en cada fila. ¿Dónde conservaríais el original y dónde prepararíais los campos del informe? Justificad la elección: un JSON también puede transformarse y cargarse en un warehouse.
-3. Gerencia quiere ocupación e importe **a las 8**, siempre las mismas columnas. ¿Warehouse o lago?
-4. Marketing quiere campañas **sin** NIF, y finanzas no tiene que ver ese recorte. ¿Lago, warehouse entero o data mart?
+3. En nuestro diseño, gerencia consulta el cierre desde un warehouse. ¿Qué aporta esa organización? ¿Podría recibir un informe equivalente desde tablas preparadas de un lago con un motor de consulta? Indicad qué definiciones y controles deben mantenerse.
+4. Marketing necesita un conjunto analítico de campañas **sin** NIF. ¿Por qué encaja un data mart? Proponed cómo alimentarlo desde el warehouse y cómo hacerlo desde otras fuentes, manteniendo reglas y permisos adecuados.
 5. Se corta la red Santander–Potes. Potes **niega** el saldo antes que enseñar el de hace dos minutos. ¿CP o AP?
 
 !!! tip "Comprobación"
-    ACID para los cambios locales / lago para conservar originales y una tabla preparada para el informe; otras soluciones justificadas son válidas / warehouse para el informe repetido / mart para el departamento / CP ante la partición descrita.
+    (1) ACID para los cambios locales. (2) Podemos conservar originales en el lago y preparar una tabla para el informe; otras soluciones justificadas son válidas. (3) El warehouse facilita consultas con definiciones comunes; un lago con tablas preparadas y un motor adecuado también puede entregar el informe si mantiene reglas, validación, permisos y plazo. (4) El mart organiza el ámbito de marketing: puede depender del warehouse o integrar otras fuentes con definiciones conciliadas. (5) CP ante la partición descrita.
 
 ## Autoevaluación del 1.3
 

@@ -244,7 +244,9 @@ No todos los datos se parecen a una hoja de cálculo. En el mismo hotel conviven
 | **Semiestructurado** | Hay marcas o claves; el esquema puede variar | Un registro trae un campo que otro no tiene | JSON del canal web, logs |
 | **No estructurado** | No hay columnas fijas de entrada | No lo filtras como una tabla | Foto del DNI, PDF de incidencia, vídeo del hall |
 
-Un **data warehouse** (almacén de informes) espera dato ya en tablas: decidís las columnas **antes** de guardar. Un **data lake** (lago) acepta el dato “como llega” y decide cómo interpretarlo **al leer**. Un **data mart** es un **recorte** de ese almacén (finanzas, marketing, solo Laredo), no otro lago. El detalle está en [1.3](almacenamiento.md){target="_blank" rel="noopener"}.
+Estas diferencias de representación influyen en cómo organizamos el almacenamiento, pero no obligan a elegir un único tipo de almacén. Un **data warehouse** reúne datos para consultas analíticas con definiciones comunes: puede tener tablas de preparación y, según el motor, admitir datos semiestructurados como JSON. Un **data lake** puede conservar originales y también tablas preparadas; al leer los originales aplicamos una interpretación, mientras que las tablas preparadas pueden tener un esquema definido y comprobado al escribirlas. Un **data mart** organiza información para un ámbito concreto, como finanzas o marketing, y puede alimentarse de un warehouse, de otras fuentes o de ambos.
+
+En el ejemplo del hotel conservamos originales en el lago, preparamos las tablas del cierre en el warehouse y ofrecemos a cada departamento un mart con las definiciones comunes. Es una decisión de este diseño, no un recorrido obligatorio para todos los proyectos. El detalle está en [1.3](almacenamiento.md){target="_blank" rel="noopener"}.
 
 La variedad es la V que más sorprende al que solo ha visto SQL: el problema no es solo “que quepa”, es que **no todo es tabla**.
 
