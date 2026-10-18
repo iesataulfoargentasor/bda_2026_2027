@@ -1,0 +1,137 @@
+[
+  {
+    "title": "El informe funciona. Ahora crece el histórico",
+    "label": "Del trabajo con Pentaho a las decisiones de la UT2.",
+    "active": 0,
+    "heading": "La misma cadena de hoteles, una nueva escala",
+    "body": "El histórico ocupa 500 GB y está en la red de la empresa.",
+    "takeaway": "La actividad pide una propuesta razonada, no descargar el archivo.",
+    "narration": "Imaginad que habéis terminado la práctica de Pentaho. El informe del hotel sale bien, lo habéis comprobado y sabéis qué hacer cuando falta una entrada. Un tiempo después, la directora os plantea otra petición: quiere una estadística del histórico, que ahora ocupa quinientos gigabytes. Los datos están en la red de la empresa y vosotros tenéis un portátil. ¿Podemos resolverlo con lo que ya sabemos? Esta actividad empieza ahí. No vais a descargar ese archivo ni a montar un clúster hoy. Vais a proponer una solución y explicar qué condiciones necesita para funcionar."
+  },
+  {
+    "title": "Primero aclaramos qué resultado nos piden",
+    "label": "Elegid una operación y concretad los datos que utiliza.",
+    "active": 0,
+    "heading": "Media · desviación típica · normalización",
+    "body": "Definid campo, periodo, valores válidos y tamaño de la salida.",
+    "takeaway": "Una media es un resumen; normalizar cada fila produce muchos valores.",
+    "narration": "Antes de hablar de máquinas, concretemos el encargo. Podéis elegir una media, una desviación típica o la normalización de un campo. Para seguir una historia común, pensemos en el importe medio de las reservas de un periodo definido. Acordamos qué registros entran y cómo tratamos los valores ausentes. Recordad que el importe de una reserva no demuestra que esté cobrada. Una media devuelve un resumen pequeño. En cambio, normalizar cada registro produce un conjunto de valores y puede generar una salida grande. Explicad desde el principio qué vais a calcular y qué entregaréis: esa decisión cambia el trabajo necesario."
+  },
+  {
+    "title": "El portátil tiene límites diferentes",
+    "label": "No confundamos espacio para guardar con memoria para calcular.",
+    "active": 0,
+    "heading": "300 GB libres de disco · 32 GB de RAM",
+    "body": "CPU: 10 núcleos y 20 hilos. La GPU tiene su propia memoria.",
+    "takeaway": "El archivo completo no cabe en el disco libre ni en la RAM.",
+    "narration": "Miremos ahora el equipo del enunciado. Tiene un disco de un terabyte, pero está ocupado al setenta por ciento: quedan aproximadamente trescientos gigabytes. El archivo completo no cabe ahí. La memoria RAM es de treinta y dos gigabytes, así que tampoco podemos cargarlo entero como una tabla de pandas. Además, interpretar texto puede necesitar más memoria de la que sugiere el tamaño del fichero. La CPU dispone de diez núcleos y veinte hilos, pero eso no aumenta el disco ni la RAM. Son recursos distintos. La primera pregunta os pide explicar esos límites junto con el coste de leer por red y disco."
+  },
+  {
+    "title": "Aunque el resultado sea pequeño, hay que leer los datos",
+    "label": "El tiempo de entrada limita lo que podemos prometer.",
+    "active": 0,
+    "heading": "500 GB ÷ 100 MB/s = 5.000 s ≈ 83 min",
+    "body": "Ejemplo con unidades decimales y velocidad sostenida.",
+    "takeaway": "Es una estimación mínima de lectura, no la duración total.",
+    "narration": "El resultado de nuestra media puede ocupar apenas unos bytes. Sin embargo, para obtenerlo quizá tengamos que recorrer los quinientos gigabytes. Hagamos una estimación sencilla. Si leemos a cien megabytes por segundo sostenidos, con unidades decimales, solo la lectura necesita cinco mil segundos: unos ochenta y tres minutos. Todavía faltan la interpretación y el cálculo. Esa velocidad es un supuesto, no una medida de vuestra conexión. Debéis indicar qué tasa necesitaríais comprobar. Antes de prometer que el informe estará a las ocho, necesitamos saber cuándo empieza el trabajo y si el tiempo disponible alcanza."
+  },
+  {
+    "title": "Primera opción: leer una parte cada vez",
+    "label": "Un proceso puede calcular sin guardar todo el archivo.",
+    "active": 1,
+    "heading": "Bloque → sumar y contar → siguiente bloque",
+    "body": "Al terminar: suma de valores válidos dividida por su recuento.",
+    "takeaway": "Leer por bloques reduce memoria, pero no elimina el tráfico de red.",
+    "narration": "Que el archivo no quepa entero no significa que sea imposible calcular la media en una máquina. Podemos leer por bloques, sumar los valores válidos y contar cuántos hemos visto. Cuando llega el siguiente bloque, actualizamos esos dos acumuladores. Al final dividimos la suma total entre el recuento total. Si no hay valores válidos, debemos indicar que la media no puede calcularse. Dejamos memoria libre para convertir los datos y trabajar, sin ocuparla toda con el bloque. Como el origen está en red, los bytes siguen viajando hasta el lector, aunque no guardemos una copia completa en el disco del portátil."
+  },
+  {
+    "title": "La operación elegida cambia el recorrido",
+    "label": "No todos los cálculos se resuelven con los mismos acumuladores.",
+    "active": 1,
+    "heading": "Media: suma y recuento · Normalización: mínimo y máximo",
+    "body": "Desviación: algoritmo incremental estable y definición poblacional o muestral.",
+    "takeaway": "Si máximo y mínimo coinciden, definid el tratamiento.",
+    "narration": "Si habéis elegido otra operación, explicad cómo cambia ese plan. Para la desviación típica necesitamos un algoritmo incremental estable y aclarar si queremos la desviación poblacional o la muestral. No basta con decir que sumaremos como en la media. Para normalizar todos los valores entre cero y uno, normalmente hacemos una primera pasada para conocer mínimo y máximo y otra para transformar cada registro. Si ambos coinciden, hay que definir qué resultado dar. Aquí también cambia el tamaño de la salida. Elegid una operación, pero explicadla con precisión. No se os pide entregar código ejecutable; sí un procedimiento que tenga sentido."
+  },
+  {
+    "title": "Segunda opción: varios núcleos del mismo portátil",
+    "label": "Paralelo local sigue siendo una sola máquina.",
+    "active": 1,
+    "heading": "Varios bloques a la vez, con memoria limitada",
+    "body": "Más trabajadores pueden competir por la misma conexión.",
+    "takeaway": "Spark en modo local no convierte el portátil en un clúster.",
+    "narration": "Podemos preguntarnos ahora si varios núcleos acelerarían el cálculo. Con paralelismo local, varios trabajadores procesan bloques a la vez. Eso puede ayudar cuando hay suficiente trabajo de CPU. Pero cada trabajador necesita memoria y todos pueden competir por la misma red. Diez bloques grandes simultáneos podrían agotar la RAM. Por eso limitaríamos los trabajadores y compararíamos la velocidad de lectura y procesamiento. Podéis citar multiprocessing, Dask o Spark en modo local como vías posibles, sin instalarlos. Fijaos en lo que no cambia: seguimos dentro del mismo portátil y, si se apaga, esa ejecución se interrumpe."
+  },
+  {
+    "title": "Concurrencia, paralelismo y distribución",
+    "label": "Las palabras describen aspectos distintos de la ejecución.",
+    "active": 1,
+    "heading": "Alternar tareas · ejecutar a la vez · repartir entre máquinas",
+    "body": "Un sistema distribuido también puede usar varios núcleos en cada nodo.",
+    "takeaway": "El nombre de una herramienta no demuestra cómo se ha ejecutado.",
+    "narration": "Hagamos una pausa para ordenar el vocabulario. Concurrencia significa que varias tareas progresan durante un mismo periodo; pueden turnarse en un recurso. Paralelismo significa que hay trabajo ejecutándose al mismo tiempo. Distribución añade otra característica: participan varias máquinas conectadas. Las ideas pueden combinarse. Un clúster puede utilizar paralelismo dentro de cada nodo. Y un programa que admite distribución puede estar ejecutándose solo en vuestro ordenador. Cuando defendáis la propuesta, explicad dónde corre cada parte y qué recursos utiliza. Eso dice mucho más que nombrar una herramienta conocida."
+  },
+  {
+    "title": "Tercera opción: acercar el cálculo al histórico",
+    "label": "Distribuir exige decidir almacenamiento y ejecución.",
+    "active": 1,
+    "heading": "Datos accesibles → tareas por partición → resultado combinado",
+    "body": "Considerad HDFS, almacenamiento de objetos o el entorno del aula.",
+    "takeaway": "500 GB no obligan por sí solos a utilizar un clúster.",
+    "narration": "Si la lectura, el plazo o la repetición del informe justifican otros recursos, podemos plantear una ejecución distribuida. La idea es procesar en un entorno próximo al almacenamiento del histórico, sin hacerlo pasar todo por el portátil. Explicad dónde estarán los datos, cómo se dividirá el trabajo y quién lo ejecutará. Podéis considerar HDFS o almacenamiento de objetos, según el sistema disponible. No deis por hecho que cualquier archivo y lector permiten repartirlo igual: importan el formato y su organización. La decisión debe apoyarse en medidas y requisitos. Quinientos gigabytes, por sí solos, no prueban que un clúster sea imprescindible."
+  },
+  {
+    "title": "Repartir también obliga a combinar y recuperar",
+    "label": "La media global necesita sumas y recuentos.",
+    "active": 2,
+    "heading": "Cada trabajador devuelve suma y número de valores válidos",
+    "body": "Reintentar una partición no debe contarla dos veces.",
+    "takeaway": "Varios nodos no garantizan por sí solos tolerancia a fallos.",
+    "narration": "Supongamos que repartimos nuestra media. Cada trabajador devuelve su suma y su recuento, y combinamos ambos para calcular la media global. No promediamos las medias de los bloques sin considerar sus tamaños: un bloque con diez reservas no pesa lo mismo que otro con mil. Después preguntamos qué ocurre si una tarea falla. Necesitamos identificar las partes terminadas y evitar contarlas dos veces al repetirlas. También hay que proteger el origen y estudiar qué sucede si falla el coordinador. Tener varias máquinas no basta para afirmar que el sistema tolera fallos. Debéis explicar qué se recupera y cómo."
+  },
+  {
+    "title": "Otra posibilidad: cargar una vez y consultar",
+    "label": "El uso repetido puede cambiar la decisión.",
+    "active": 2,
+    "heading": "Almacén de informes o lakehouse → consultas posteriores",
+    "body": "Considerad modelo, carga inicial, formato, coste y mantenimiento.",
+    "takeaway": "El servicio de almacenamiento no calcula por sí solo la media.",
+    "narration": "Hay otra alternativa que también debéis valorar. Si el histórico se va a consultar muchas veces, quizá compense prepararlo en un almacén de informes o un lakehouse y obtener la media mediante consultas. Si el aula trabaja con MongoDB, podéis estudiar su encaje. La carga inicial tiene un coste, y el modelo debe servir para las preguntas previstas. También importan las columnas leídas, las particiones y el mantenimiento. Guardar un archivo en S3 o en Blob no calcula automáticamente el resultado: hace falta un motor que lo procese. Comparad esta opción con un trabajo puntual y explicad cuándo podría compensar."
+  },
+  {
+    "title": "¿La GPU resuelve el problema?",
+    "label": "Buscad primero qué recurso está limitando el trabajo.",
+    "active": 2,
+    "heading": "Si esperamos a la red, más cálculo no acelera la llegada",
+    "body": "Una GPU puede ayudar en cargas numéricas adecuadas y con software compatible.",
+    "takeaway": "No deduzcáis rendimiento solo por las especificaciones del equipo.",
+    "narration": "Volvamos al portátil, que también tiene una tarjeta gráfica. ¿La utilizaríamos para esta media? No podemos responder solo por su nombre o su memoria. Las GPU pueden ayudar en entrenamiento de modelos o en ciertos cálculos numéricos intensivos, con herramientas compatibles. Pero si aquí pasamos la mayor parte del tiempo esperando datos de la red o interpretando el archivo, añadir capacidad de cálculo quizá aporte poco. También hay costes de transferencia y preparación. La pregunta os pide localizar el cuello de botella y justificar la respuesta. No afirmar que una GPU nunca sirve ni que siempre acelera cualquier tarea."
+  },
+  {
+    "title": "Ahora recomendad una solución a dirección",
+    "label": "La elección debe apoyarse en supuestos que puedan comprobarse.",
+    "active": 3,
+    "heading": "Formato · ubicación · velocidad · plazo · frecuencia · salida",
+    "body": "Comparad las alternativas y explicad qué medir para decidir.",
+    "takeaway": "Una consulta puntual y un informe diario pueden necesitar planes distintos.",
+    "narration": "Ya podéis construir una recomendación. Indicad el formato y la ubicación del origen, la velocidad de lectura que suponéis, el plazo, la frecuencia de ejecución y el tamaño del resultado. Incluid la estimación mínima de lectura y explicad qué mediciones faltan. Una media puntual puede admitir un plan local por bloques; un informe diario con un plazo exigente puede necesitar otra organización y garantías de recuperación. También podéis combinar opciones, por ejemplo explorar una muestra localmente y procesar el histórico en otro entorno. Justificad dónde conservaréis el original y cómo revisaríais la solución si mañana creciera hasta cinco terabytes."
+  },
+  {
+    "title": "Qué tenéis que preparar para la puesta en común",
+    "label": "Responded las siete preguntas del enunciado.",
+    "active": 3,
+    "heading": "Límites · bloques · paralelo · distribuido · consultas · GPU · decisión",
+    "body": "Respuesta escrita o en un pad; razonamiento defendible en voz alta.",
+    "takeaway": "No hay que descargar 500 GB ni instalar un clúster para esta sesión.",
+    "narration": "Para terminar la actividad, responded por escrito o en un pad a las siete preguntas. Explicad los límites del portátil, el plan secuencial por bloques, el paralelo local, el distribuido, la alternativa de cargar y consultar, el papel de la GPU y vuestra elección final. Elegís una operación, pero comparáis todas esas posibilidades. No hace falta código que compile. La sesión propone leer el caso, trabajar individualmente o por parejas y compartir la recomendación. La entrega en Moodle solo se realiza si el profesor la indica. Lo importante es que podáis defender por qué vuestra propuesta puede cumplir el encargo."
+  },
+  {
+    "title": "La UT2 comienza donde esta decisión necesita un sistema",
+    "label": "Seguimos trabajando para el mismo hotel.",
+    "active": 3,
+    "heading": "Dónde guardar · quién calcula · cómo recuperarse · cómo crecer",
+    "body": "El resultado sigue teniendo que ser correcto, comprensible y estar a tiempo.",
+    "takeaway": "Primero la necesidad y las medidas; después la tecnología.",
+    "narration": "Esta es la conexión con la siguiente unidad. Con Pentaho hemos construido y comprobado un recorrido pequeño. Ahora hemos aprendido a preguntar qué recursos, almacenamiento y mecanismos de recuperación necesitaría cuando cambia la escala. En la UT2 estudiaremos sistemas y herramientas que permiten abordar esas necesidades. Seguimos trabajando para el mismo hotel y el objetivo no cambia: obtener información fiable dentro del plazo. Cuando aparezca una tecnología nueva, recordad las preguntas de esta tarea. ¿Dónde están los datos? ¿Quién calcula? ¿Qué pasa si algo falla? ¿Cómo creceremos? Esas preguntas dan sentido a lo que viene después."
+  }
+]

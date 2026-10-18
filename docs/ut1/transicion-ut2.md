@@ -18,6 +18,19 @@ No se entrega en Moodle salvo que el profesor lo indique. Se trabaja **en clase*
 !!! info "Cómo se lee esta página"
     Primero el **caso** (500 GB del [grupo hotelero](caso-hotel.md){target="_blank" rel="noopener"}, un portátil). Luego un **repaso** de concurrente / paralelo / distribuido (ya lo visteis en el 1.4). Después **siete preguntas**. El número tiene que servir para el **panel de las 8** (cierre de **ayer**).
 
+## Vídeo: del informe del hotel a los 500 GB
+
+Esta guía continúa la historia de la práctica de Pentaho: el histórico crece y debemos comparar cómo procesarlo dentro del plazo. Explica los límites del portátil, la lectura por bloques, el paralelismo local, la distribución y las preguntas que debéis responder para justificar vuestra propuesta. **Duración: 10 minutos y 55 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut1/transicion-500gb-portada.jpg" aria-label="Transición a la UT2: cómo abordar la tarea de los 500 GB" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/transicion-500gb.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa el enunciado: la actividad pide una propuesta razonada, sin descargar 500 GB ni instalar un clúster.
+
+[Descargar el vídeo](../assets/ut1/transicion-500gb.mp4) · [Leer la transcripción](../assets/ut1/transicion-500gb.txt) · [Descargar los subtítulos](../assets/ut1/transicion-500gb.es.srt)
+
 ## El caso: 500 GB y un portátil
 
 Sois técnicos de la cadena. Os piden **un número** sobre un fichero de **500 GB** (CSV, JSON o log del histórico: reservas, cobros o ambos) de Santander, Laredo, Comillas y Potes. Ese número (importe medio, noches medias, o un campo puesto en escala 0–1) tiene que poder usarse en el **panel de las 8**. **No** picáis en el [PMS](caso-hotel.md){target="_blank" rel="noopener"}. **No** copiáis los 500 GB al informe.
