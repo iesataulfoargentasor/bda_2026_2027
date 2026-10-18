@@ -159,15 +159,15 @@ Hay que observar tanto la ejecución como los datos. Un proceso puede terminar c
 
 ## Qué tiene que cumplir el edificio
 
-Las capas de arriba son el **edificio**. Una arquitectura Big Data, además, tiene que **aguantar** volumen y velocidad.
+Las capas de arriba son el **edificio**. La arquitectura debe cumplir los requisitos medidos de capacidad, plazo, coste y recuperación ante fallos. La distribución del almacenamiento y del cálculo son decisiones que se justifican por separado: esta tabla no exige que todos los proyectos repartan ambos entre varias máquinas.
 
-| Exigencia | En castellano | En el hotel |
+| Aspecto que debemos justificar | En castellano | En el hotel |
 | --- | --- | --- |
 | **Escala** | Aumentáis capacidad dentro de los límites del diseño y comprobáis la mejora | Abrís Noja y el panel de las 8 sigue saliendo |
-| **Aguanta fallos** | Un nodo muerto no tumba el **histórico** | Se funde un disco en Potes; el **panel** sigue ([1.2](clusters.md){target="_blank" rel="noopener"}). El cobro en recepción es el PMS, no el clúster |
-| **Dato repartido** | Repartir datos exige revisar también coordinadores, red y orígenes únicos: distribuir no elimina automáticamente todos los puntos únicos de fallo | No un USB con “el histórico” |
-| **Proceso repartido** | El cálculo también se parte | El job de ocupación no corre en un portátil |
-| **Dato cerca del cálculo** | Menos red, menos espera | Hadoop clásico; en nube a veces se **separa** ([1.2](clusters.md){target="_blank" rel="noopener"}, [1.3](almacenamiento.md){target="_blank" rel="noopener"}) |
+| **Recuperación y continuidad** | Definimos qué fallos debemos soportar, qué datos podemos perder y cuánto tiempo puede durar la recuperación | Ante un disco averiado, las copias y la restauración protegen el histórico; mantener el panel disponible durante el fallo exige mecanismos adicionales ([1.2](clusters.md){target="_blank" rel="noopener"}) |
+| **Distribución del almacenamiento, si procede** | Valoramos repartir datos cuando lo justifiquen capacidad, acceso o disponibilidad; revisamos también coordinadores, red y orígenes únicos | El histórico necesita capacidad y protección adecuadas. Repartirlo no sustituye las copias de seguridad ni obliga a distribuir cada cálculo |
+| **Distribución del cálculo, si procede** | Comparamos ejecución local, optimización, más recursos y reparto entre máquinas; elegimos según medidas | El job de ocupación puede ejecutarse en una máquina si cumple plazo, coste y garantías. Usar Spark o PySpark no implica que se ejecute en varias |
+| **Ubicación del dato y del cálculo** | Valoramos el tráfico de red y el coste frente a la flexibilidad de separar almacenamiento y proceso | Hadoop clásico aprovecha la proximidad; en otros diseños se separan los recursos y se mide si la red permite cumplir el plazo ([1.2](clusters.md){target="_blank" rel="noopener"}, [1.3](almacenamiento.md){target="_blank" rel="noopener"}) |
 
 !!! failure "Sobreingeniería"
     Montar Kafka + Spark + tres nubes “porque es Big Data” cuando el Excel de Comillas cabe en un PC. Primero la pregunta de gerencia; luego el edificio. Los proveedores publican listas (p. ej. *Well-Architected*): la idea es la misma, no hace falta recitar la guía.

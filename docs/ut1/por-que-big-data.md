@@ -206,9 +206,11 @@ En el hotel el volumen sale de reservas, logs de la web, sensores, fotos de habi
 
     `4 × 8×10⁹ × 365 ≈ 12 TB`
 
-    Eso es **un** atributo, sin fotos ni historial. Multiplica por imágenes de habitación o por años de logs y ves por qué “un disco más grande en el mismo PC” deja de ser el plan.
+    Eso es **un** atributo. Añadir imágenes o conservar más años aumenta la capacidad necesaria. La cifra obliga a revisar almacenamiento, tiempos y coste; por sí sola no demuestra que ampliar un equipo sea insuficiente ni que haga falta un clúster.
 
-**Qué implica en el diseño:** si el dato ya no cabe (o no se lee a tiempo) en **una** máquina, hay que **repartir** (clúster, lago, formatos que se puedan trocear). Eso es el criterio **a)** empezando a trabajar.
+**Qué implica en el diseño:** primero distinguimos el límite de memoria, la capacidad de almacenamiento y el tiempo disponible. Que un archivo no quepa entero en RAM no obliga a usar varias máquinas: según la operación, podemos leerlo por bloques y utilizar disco para resultados intermedios. Si falta espacio o el proceso no termina a tiempo, comparamos optimizar consultas y formatos, ampliar recursos, separar almacenamiento y cálculo o distribuir el trabajo. Leer por bloques tampoco garantiza cumplir el plazo: hay que medirlo.
+
+Distribuir puede ser necesario cuando las alternativas en una sola máquina no cumplen los requisitos de forma viable. Un lago organiza datos, pero su nombre no indica cuántas máquinas calculan; un formato divisible facilita repartir tareas, pero también puede procesarse localmente. Justificar la elección con medidas de capacidad, tiempo y coste es el criterio **a)** empezando a trabajar.
 
 ### Velocidad
 
