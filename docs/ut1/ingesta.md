@@ -28,16 +28,16 @@ Si este paso falla, el modelo y el cuadro de mando trabajan sobre arena: la cifr
 
 ## Vídeo: el viaje de la reserva y el cobro de Ana
 
-Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de distintos sistemas, los relacionamos y publicamos un resultado fiable. El recorrido explica las cargas incrementales, cómo evitar duplicados, las diferencias entre ETL y ELT y el papel de las colas en la entrada de eventos. **Duración: 7 minutos y 15 segundos.**
+Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de distintos sistemas, los relacionamos y publicamos un resultado fiable. El recorrido explica las cargas incrementales, cómo evitar duplicados, las diferencias entre ETL y ELT y el papel de las colas en la entrada de eventos. **Duración: 12 minutos y 32 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/ingesta-historia-corregido-portada.jpg" aria-label="Ingesta: el viaje de la reserva y el cobro de Ana" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/ingesta-historia-corregido.mp4" type="video/mp4">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/ingesta-natural-portada.jpg" aria-label="Ingesta: el viaje de la reserva y el cobro de Ana" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/ingesta-natural.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
 El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
 
-[Descargar el vídeo](../assets/ut1/ingesta-historia-corregido.mp4) · [Leer la transcripción](../assets/ut1/ingesta-historia-corregido.txt) · [Descargar los subtítulos](../assets/ut1/ingesta-historia-corregido.es.srt)
+[Descargar el vídeo](../assets/ut1/ingesta-natural.mp4) · [Leer la transcripción](../assets/ut1/ingesta-natural.txt) · [Descargar los subtítulos](../assets/ut1/ingesta-natural.es.srt)
 
 ## Introducción
 
