@@ -12,18 +12,18 @@ Este es el **hilo de las dos unidades**: una cadena pequeña, **inventada**, con
 
 Si entráis directo a [ingesta](ingesta.md){target="_blank" rel="noopener"} o a la [UT2](../ut2/index.md){target="_blank" rel="noopener"}, empezad por esta página.
 
-## El caso en menos de dos minutos
+## Vídeo: el caso hotelero y el recorrido de la UT1
 
-Antes de entrar en los detalles, mira este vídeo: conocerás qué necesita saber la directora de los hoteles y cómo vais a ayudarla a reunir la información. **Duración: 1 minuto y 51 segundos.**
+Empieza por este vídeo para conocer el problema del hotel, seguir la reserva de Ana y comprender vuestro papel en la preparación de información fiable. Distingue el cierre de ayer de las señales recientes de los sensores y presenta cómo se conectan los ocho apartados de la UT1. **Duración: 6 minutos y 57 segundos.**
 
-<video controls playsinline preload="metadata" poster="../../assets/ut1/caso-hotel-resumen-portada.jpg" aria-label="Resumen del caso hotelero de Cantabria" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/caso-hotel-resumen-voz-fluida.mp4" type="video/mp4">
+<video controls playsinline preload="metadata" poster="../../assets/ut1/caso-hotel-natural-portada.jpg" aria-label="El caso hotelero de Cantabria y el recorrido de la UT1" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/caso-hotel-natural.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
 El vídeo incluye subtítulos visibles y narración con voz sintética en español.
 
-[Descargar el vídeo](../assets/ut1/caso-hotel-resumen-voz-fluida.mp4) · [Leer la transcripción](../assets/ut1/caso-hotel-resumen-voz-fluida.txt) · [Descargar los subtítulos](../assets/ut1/caso-hotel-resumen-voz-fluida.es.srt)
+[Descargar el vídeo](../assets/ut1/caso-hotel-natural.mp4) · [Leer la transcripción](../assets/ut1/caso-hotel-natural.txt) · [Descargar los subtítulos](../assets/ut1/caso-hotel-natural.es.srt)
 
 ## Quiénes son
 

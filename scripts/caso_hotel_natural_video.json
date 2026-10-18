@@ -1,0 +1,112 @@
+[
+  {
+    "title": "Una mañana en los hoteles de Cantabria",
+    "label": "La historia que conecta lo que aprenderemos en la UT1.",
+    "heading": "Cuatro hoteles, una pregunta compartida",
+    "body": "Santander · Laredo · Comillas · Potes",
+    "takeaway": "Nuestro caso es una empresa inventada para aprender.",
+    "narration": "Imaginad que hoy empezáis a trabajar con un pequeño grupo de hoteles de Cantabria. Es una empresa inventada, pero el problema que vamos a resolver es muy reconocible. Tiene hoteles en Santander, Laredo, Comillas y Potes. En recepción empieza otra mañana de llegadas, llamadas y reservas. Mientras tanto, la directora abre su ordenador y pregunta: ¿cómo nos fue ayer? Esa pregunta será el hilo de esta unidad. Vamos a conocer la historia antes de aprender las herramientas que nos ayudarán a responderla.",
+    "kind": "hotels",
+    "active": 0
+  },
+  {
+    "title": "¿Qué necesita saber la directora?",
+    "label": "Un resumen claro para poder tomar decisiones.",
+    "heading": "Ocupación e importe cobrado por hotel",
+    "body": "Con una fecha definida y datos que se puedan comprobar.",
+    "takeaway": "Los hoteles comparten dueño, pero tienen ritmos distintos.",
+    "narration": "La directora quiere saber qué ocupación tuvo cada hotel y cuánto dinero se cobró. Con esa información puede organizar mejor el trabajo y detectar algo que necesita revisar. Pero hay que interpretar las cifras con contexto. Un hotel de costa en agosto y uno de interior en noviembre pueden tener ritmos muy diferentes. Que compartan dueño y programa de reservas no hace que se comporten igual. Nuestra primera tarea será entender qué pregunta queremos responder y qué datos hacen falta, antes de elegir un programa o empezar a sumar.",
+    "kind": "normal",
+    "active": 0
+  },
+  {
+    "title": "Sigamos una reserva: Ana viaja a Laredo",
+    "label": "Una estancia deja información en varios lugares.",
+    "heading": "Reserva de Ana + confirmación de su pago",
+    "body": "El programa del hotel registra la estancia; el sistema de pagos confirma el cobro.",
+    "takeaway": "Reservar una habitación no demuestra que se haya pagado.",
+    "narration": "Pongámosle una cara a los datos. Ana reserva tres noches en Laredo. El programa del hotel guarda su reserva y, cuando paga, el sistema de pagos confirma el cobro. Son piezas relacionadas, pero distintas. Para reunirlas necesitamos reconocer a qué reserva corresponde cada pago. Si solo miramos el precio de la estancia, podríamos contar como cobrado un dinero que todavía no ha llegado. Por eso acompañaremos a Ana durante los siguientes vídeos: su reserva nos permitirá entender para qué sirve cada paso del recorrido.",
+    "kind": "normal",
+    "active": 0
+  },
+  {
+    "title": "Recepción sigue atendiendo; nosotros preparamos la información",
+    "label": "El programa del hotel también se llama PMS.",
+    "heading": "Operar en recepción → trabajar sobre una copia → informar",
+    "body": "El PMS es el programa; el servidor es el ordenador que puede alojarlo.",
+    "takeaway": "Los datos ya existen: nuestro trabajo es reunirlos y comprobarlos.",
+    "narration": "Mientras preparamos el informe, recepción tiene que seguir atendiendo. Utiliza un programa de gestión del hotel que también llamaremos PMS. Es el programa, no el nombre de un servidor. No vamos a sustituirlo ni a introducir otra vez las reservas. Recogemos una copia de la información para trabajar sin interrumpir las operaciones del mostrador. Esa separación es importante: atender a Ana y analizar muchas reservas son trabajos diferentes. Nosotros conectaremos los datos que ya existen con el lugar donde la directora podrá consultarlos.",
+    "kind": "normal",
+    "active": 0
+  },
+  {
+    "title": "Antes de sumar, entendemos qué estamos contando",
+    "label": "Una cifra puede parecer correcta y responder a otra pregunta.",
+    "heading": "Una reserva · uno o varios pagos · habitaciones ocupadas",
+    "body": "Cada indicador necesita sus datos y sus reglas.",
+    "takeaway": "Contar reservas cobradas no equivale a calcular ocupación.",
+    "narration": "Ahora imaginad que Ana paga una parte al reservar y el resto al llegar. Tenemos una reserva y dos pagos. Podemos sumar ambos importes, pero no contar dos estancias por ese motivo. También debemos distinguir los cobros de la ocupación. Para calcular un porcentaje de ocupación necesitamos saber cuántas habitaciones estaban disponibles y cuántas estuvieron ocupadas durante el periodo. Contar reservas cobradas no basta. No tenéis que dominar aún los cálculos. Quedaos con la idea: antes de producir una cifra, necesitamos saber qué representa y cómo comprobaremos que es correcta.",
+    "kind": "normal",
+    "active": 1
+  },
+  {
+    "title": "El informe de las ocho cuenta el cierre de ayer",
+    "label": "En el caso fijamos el cierre de negocio a las 23:00.",
+    "heading": "23:00: cierre → madrugada: preparación → 8:00: consulta",
+    "body": "El informe debe indicar a qué cierre corresponde.",
+    "takeaway": "Una hora de publicación no convierte el informe en tiempo real.",
+    "narration": "Ya sabemos qué queremos calcular. Falta acordar para cuándo. En nuestro caso, finanzas fija el cierre del día a las once de la noche. De madrugada recogemos y preparamos la información, y a las ocho de la mañana la directora consulta ese cierre. Está viendo cómo terminó el día anterior, no todo lo que sucede en ese instante. Si llega un dato tarde, necesitamos una regla para incorporarlo o corregir el resultado. Por eso el informe debe indicar su fecha de cierre y cuándo se actualizó.",
+    "kind": "clocks",
+    "active": 1
+  },
+  {
+    "title": "Los sensores responden a otra necesidad",
+    "label": "La presencia en una habitación cambia durante el día.",
+    "heading": "Sensor → indicador operativo de recepción",
+    "body": "Otro ritmo de actualización, distinto del cierre de cobros.",
+    "takeaway": "Sin personas dentro no significa disponible para vender.",
+    "narration": "Mientras la directora mira el informe, Ana sale a desayunar. El sensor puede dejar de detectar presencia en su habitación y enviar una señal al poco tiempo. ¿Significa que podemos vender esa habitación a otra persona? No: Ana sigue alojada. El dato del sensor necesita contexto. Estos avisos sirven para un indicador operativo que se actualiza con poco retraso. Es otro recorrido, con otro plazo. Así tendremos dos necesidades bien diferenciadas: preparar el cierre para dirección y atender señales recientes para recepción. A lo largo del tema aprenderemos a organizar cada una.",
+    "kind": "normal",
+    "active": 1
+  },
+  {
+    "title": "¿Por qué hablaremos de Big Data, máquinas y almacenamiento?",
+    "label": "Las primeras decisiones parten de las necesidades del hotel.",
+    "heading": "1.1: el problema · 1.2: las máquinas · 1.3: dónde guardar",
+    "body": "Tamaño, ritmo, variedad y fiabilidad orientan las decisiones.",
+    "takeaway": "No necesitamos repartir el trabajo solo por tener cuatro hoteles.",
+    "narration": "Con la historia situada, el recorrido de la unidad empieza a tener sentido. Primero veremos por qué importan el tamaño de los datos, la rapidez con que llegan, su variedad, su fiabilidad y la utilidad del resultado. Después preguntaremos si una máquina basta o si conviene repartir el trabajo entre varias. Tener cuatro hoteles no obliga por sí solo a usar un clúster: habrá que medir la necesidad. A continuación decidiremos dónde guardar cada cosa, distinguiendo las operaciones de recepción del histórico que utilizaremos para analizar.",
+    "kind": "normal",
+    "active": 2
+  },
+  {
+    "title": "Las siguientes piezas explican cómo hacer el recorrido",
+    "label": "Del cálculo a la organización y la entrada de datos.",
+    "heading": "1.4: procesar · 1.5: organizar · 1.6: recoger",
+    "body": "Cada pieza tiene una responsabilidad y debe colaborar con las demás.",
+    "takeaway": "Seguimos el mismo dato, desde su origen hasta el resultado.",
+    "narration": "Una vez elegidos los recursos y el almacenamiento, veremos cómo procesar los datos: qué puede esperar al trabajo nocturno y qué necesita una respuesta más rápida. El apartado de arquitectura nos ayudará a organizar las responsabilidades para que todo encaje, también cuando algo falle. Después entraremos en la ingesta, es decir, cómo incorporamos los datos desde sus fuentes. En lugar de memorizar tres temas aislados, pensad en tres preguntas sobre el mismo viaje: cómo calculamos, cómo coordinamos las piezas y cómo llega hasta ellas la información.",
+    "kind": "normal",
+    "active": 2
+  },
+  {
+    "title": "Terminaremos preparando una entrega que otra persona entienda",
+    "label": "Formatos y Pentaho convierten las decisiones en trabajo práctico.",
+    "heading": "1.7: cómo representar · 1.8: construir y entregar",
+    "body": "Leer, filtrar, unir, resumir y comprobar los resultados.",
+    "takeaway": "Los talleres practican partes del caso; no todo el panel de una vez.",
+    "narration": "Nos faltarán dos decisiones muy prácticas. En formatos veremos cómo escribir los datos para que el siguiente programa pueda leerlos de forma adecuada. Y con Pentaho construiremos recorridos que leen, filtran, unen y resumen información, hasta entregar un fichero o una tabla comprensible. Las prácticas avanzan poco a poco. Algunas seleccionan reservas y otras calculan importes por hotel y canal; no todas construyen el panel completo ni calculan ocupación. Lo importante será entender qué parte estamos resolviendo y comprobarla. Así llegaremos a la siguiente unidad con una historia conocida sobre la que seguir trabajando.",
+    "kind": "normal",
+    "active": 2
+  },
+  {
+    "title": "Vuestra misión: información clara, fiable y a tiempo",
+    "label": "La pregunta de la directora da sentido a todo el recorrido.",
+    "heading": "Qué necesita → de dónde sale → cómo lo preparo → cómo lo compruebo",
+    "body": "Recepción atiende; dirección decide; vosotros conectáis la información.",
+    "takeaway": "Aprenderemos las herramientas al necesitarlas.",
+    "narration": "Volvamos a aquella primera mañana. La directora pregunta cómo fue ayer y ahora sabemos que responder exige algo más que poner números en una pantalla. Hay que reunir las piezas, entender su significado, respetar los plazos y comprobar el resultado. Esa será vuestra misión en la unidad. Cuando aparezca una herramienta nueva, preguntaos qué problema del hotel ayuda a resolver. No hace falta conocer todos los nombres desde el principio. Iremos aprendiendo lo necesario mientras acompañamos la reserva de Ana hasta una información clara, fiable y disponible a tiempo.",
+    "kind": "normal",
+    "active": 3
+  }
+]
