@@ -17,7 +17,7 @@ tags:
 
 ## Vídeo: del cobro de Ana a las cinco Vs
 
-Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo necesitamos Big Data y cómo las cinco Vs ayudan a diagnosticar las dificultades del recorrido. La explicación desarrolla cada V con ejemplos y cálculos sencillos, y conecta el valor de los datos con las analíticas y los roles del equipo. **Duración: 8 minutos y 36 segundos.**
+Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo necesitamos Big Data y cómo las cinco Vs ayudan a diagnosticar las dificultades del recorrido. La explicación desarrolla cada V con ejemplos y cálculos sencillos, y conecta el valor de los datos con las analíticas y los roles del equipo. **Duración: 10 minutos y 30 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/bigdata-historia-portada.jpg" aria-label="Por qué Big Data: del cobro de Ana a las cinco Vs" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/bigdata-historia.mp4" type="video/mp4">

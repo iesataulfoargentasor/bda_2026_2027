@@ -17,7 +17,7 @@ tags:
 
 ## Vídeo: el recorrido de la reserva de Ana
 
-Sigue una reserva desde recepción hasta los informes de dirección. Esta explicación conecta las transacciones y sus garantías con la conservación de originales, el lago de datos, el almacén de informes y los datos que necesita cada departamento. La narración enlaza cada decisión con el caso de Ana y deja pausas para asimilar los conceptos. **Duración: 11 minutos y 51 segundos.**
+Sigue una reserva desde recepción hasta los informes de dirección. Esta explicación conecta las transacciones y sus garantías con la conservación de originales, el lago de datos, el almacén de informes y los datos que necesita cada departamento. La narración enlaza cada decisión con el caso de Ana y deja pausas para asimilar los conceptos. **Duración: 13 minutos y 48 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/almacenamiento-revisado-portada.jpg" aria-label="Almacenamiento: el recorrido de la reserva de Ana, explicación paso a paso" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/almacenamiento-revisado.mp4" type="video/mp4">

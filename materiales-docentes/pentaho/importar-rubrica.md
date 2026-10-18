@@ -39,6 +39,8 @@ Referencias del desarrollador: [bloque de importación](https://github.com/ingri
 | Defensa individual: responder y comprobar | 0,00 | 0,50 | 1,00 |
 | **Máximo** | | | **10,00** |
 
+En «Job y validaciones automáticas», comprobad también la descripción del nivel completo: los fallos de preparación o validación impiden iniciar la publicación; si falla una copia, el job termina con error y advierte del posible estado parcial de las salidas. No se exige publicación atómica. Esta precisión no cambia las puntuaciones.
+
 La calificación máxima de la tarea debe ser **10**, no 100. Este importador compara la suma de máximos del CSV con el máximo de la tarea. No duplicar las puntuaciones del archivo: se han conservado directamente los valores de la rúbrica del enunciado.
 
 En una tarea de prueba y con una entrega de prueba, comprobar:

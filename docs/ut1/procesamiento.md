@@ -188,7 +188,7 @@ Porcentajes ficticios para ilustrar el análisis. Los CSV de cruce no permiten c
 
 Un **cubo OLAP** organiza medidas (por ejemplo, importe cobrado) por dimensiones (tiempo, hotel, canal). Permite filtrar y agregar por esos ejes. Puede precalcular agregados o resolver consultas al solicitarlas, según el motor; no implica necesariamente que todos los cruces estén hechos ni que todo resida en RAM.
 
-**No es el cubo de objetos** de [1.3](almacenamiento.md){target="_blank" rel="noopener"} (S3, un fichero entero con una clave). Mismo mote, dos sitios distintos: uno es **disco en red**; el otro es un **resumen ya cortado** para el informe.
+**No es el cubo de objetos** de [1.3](almacenamiento.md){target="_blank" rel="noopener"}: en S3, un *bucket* es un **contenedor de objetos**, cada uno identificado por una clave; no es un único fichero ni equivale a un disco en red. El **cubo OLAP**, en cambio, organiza medidas y dimensiones para el análisis. Puede calcular los resúmenes al consultar o tener algunos precalculados, según el motor. La palabra «cubo» se usa aquí para dos conceptos distintos.
 
 En [1.3](almacenamiento.md){target="_blank" rel="noopener"} el **warehouse** es el sitio típico del oficio 2; el PMS relacional es el sitio típico del oficio 1.
 

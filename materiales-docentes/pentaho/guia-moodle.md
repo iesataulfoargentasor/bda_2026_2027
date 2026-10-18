@@ -188,7 +188,7 @@ Usar el separador decimal que acepte el formulario. Si una instalación exige pu
 | Diseño | Recorrido y reglas justificados, elección de CSV y explicación para gerencia del cierre, unidades, resultados y límites de los datos |
 | Informe de cobros | Lecturas y tipos correctos; uniones y agrupación justificadas; 13 grupos, 15 reservas, 3965.50 euros y asignación correcta a cada hotel/canal |
 | Reservas sin cobro | Cinco reservas correctas y sin duplicados; diferencia entre ausencia de cobro y cero; columnas y motivo claros |
-| Job y validaciones | Orden y ramas correctos; validación de ambos CSV; rechazo de salida vacía o incorrecta; publicación tras validar y aviso de fallo |
+| Job y validaciones | Orden y ramas correctos; validación de ambos CSV; rechazo de salida vacía o incorrecta; publicación solo tras validar; los fallos de preparación o validación impiden iniciar las copias; un fallo durante las copias termina con error y advierte del posible estado parcial. No se exige publicación atómica |
 | Pruebas | Seis pruebas documentadas; esperado/obtenido; explicación de repetición, fallos y recuperación |
 | Explicación individual | Recorrido en Spoon que relaciona entradas, pasos y salidas, con decisiones explicadas con palabras propias |
 | Preguntas y comprobación | Respuestas razonadas y realización o interpretación de una pequeña prueba solicitada por el profesor |

@@ -13,7 +13,7 @@ Control de reservas sin cobro,2,Parcial. Prepara parte del control pero presenta
 Control de reservas sin cobro,3,Completo. Obtiene las reservas 4 / 9 / 11 / 15 / 18 sin duplicados. Distingue ausencia de cobro y cobro cero. Conserva las columnas y el motivo solicitados.,1
 Job y validaciones automáticas,1,No demostrado. No aporta un procedimiento coordinado evaluable ni evidencia suficiente de sus controles.,0
 Job y validaciones automáticas,2,Parcial. El job y los controles funcionan parcialmente pero hay errores u omisiones relevantes en el orden o en las validaciones o en las ramas de fallo y publicación.,1
-Job y validaciones automáticas,3,Completo. Coordina las tareas en el orden correcto. Valida ambos CSV. Rechaza salidas vacías o incorrectas. Publica solo tras validar y avisa ante los fallos.,2
+Job y validaciones automáticas,3,Completo. Coordina las tareas en el orden correcto. Valida ambos CSV. Rechaza salidas vacías o incorrectas. Inicia la publicación solo tras validar. Los fallos de preparación o validación impiden iniciar las copias. Si falla una copia termina con error y advierte del posible estado parcial de las salidas. No se exige publicación atómica.,2
 Pruebas y evidencias,1,No demostrado. No aporta pruebas interpretadas ni evidencias suficientes.,0
 Pruebas y evidencias,2,Parcial. Aporta parte de las pruebas pero faltan comprobaciones o explicaciones relevantes. Las evidencias no permiten verificar todo lo solicitado.,0.5
 Pruebas y evidencias,3,Completo. Documenta las seis pruebas. Compara resultados esperados y obtenidos. Interpreta la repetición y los fallos y la recuperación con evidencias claras.,1

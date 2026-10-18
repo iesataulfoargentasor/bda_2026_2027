@@ -17,7 +17,7 @@ tags:
 
 ## Vídeo: del cobro de Ana al panel
 
-Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectura, qué controles necesita el recorrido y cómo se recupera ante fallos. La explicación de Lambda y Kappa utiliza el mismo ejemplo numérico y esquemas comparativos para distinguir ambas opciones. **Duración: 13 minutos y 17 segundos.** La comparación de Lambda y Kappa comienza aproximadamente en el **minuto 6:40**.
+Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectura, qué controles necesita el recorrido y cómo se recupera ante fallos. La explicación de Lambda y Kappa utiliza el mismo ejemplo numérico y esquemas comparativos para distinguir ambas opciones. **Duración: 14 minutos y 8 segundos.** La comparación de Lambda y Kappa comienza aproximadamente en el **minuto 6:40**.
 
 <video controls playsinline preload="metadata" poster="../../assets/ut1/arquitectura-revisada-portada.jpg" aria-label="Arquitectura: del cobro de Ana al panel, con explicación de Lambda y Kappa" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
   <source src="../../assets/ut1/arquitectura-revisada.mp4" type="video/mp4">
@@ -89,7 +89,7 @@ No es el mismo reloj.
 | --- | --- | --- |
 | **Analítica de negocio** | ¿Qué pasó / por qué? Decisiones de **días o semanas**. | El panel de las 8 (lote). |
 | **Analítica operacional** | ¿Qué hago **ahora**? | El semáforo de recepción (sensores). |
-| **Analítica embebida** | El dato vive **dentro** de otra app. | “¿Queda doble al mar?” en la web de reservas. |
+| **Analítica embebida** | Un informe o análisis se integra **dentro** de otra aplicación. | Un panel de evolución de reservas y cancelaciones dentro de la aplicación de gestión del hotel. |
 
 A veces se lleva información preparada del entorno analítico a una aplicación operativa: por ejemplo, un segmento de clientes al CRM. Esto se conoce como **reverse ETL**. Una predicción no se convierte por ello en un hecho confirmado: escribir en el PMS exige permisos, validación y reglas del negocio. Aquí basta comprender que puede existir ese retorno controlado.
 
