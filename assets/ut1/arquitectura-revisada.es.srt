@@ -570,7 +570,7 @@ respondan
 a ambos, y probar que funcionan.
 
 131
-00:06:28,321 --> 00:06:31,335
+00:06:28,322 --> 00:06:31,335
 Al recuperar, tampoco podemos duplicar el
 cobro de
 
@@ -606,7 +606,7 @@ cobrado hoy, hasta el momento de la
 consulta.
 
 139
-00:06:51,453 --> 00:06:54,321
+00:06:51,453 --> 00:06:54,322
 Para este nuevo indicador acordamos contar
 desde las
 
@@ -632,7 +632,7 @@ euros.
 A las diez y cinco llega
 
 145
-00:07:07,900 --> 00:07:09,821
+00:07:07,900 --> 00:07:09,822
 el pago de Ana, de cien euros.
 
 146
@@ -666,7 +666,7 @@ recorrido sin cambiar lo que estamos
 calculando.
 
 153
-00:07:30,071 --> 00:07:31,545
+00:07:30,072 --> 00:07:31,545
 Empecemos por Lambda.
 
 154
@@ -797,396 +797,471 @@ No ha llegado dinero nuevo
 ni hemos cambiado de día.
 
 184
-00:08:52,771 --> 00:08:55,468
+00:08:52,771 --> 00:08:55,469
 Solo ha cambiado qué camino aporta ese
 cobro.
 
 185
-00:08:55,987 --> 00:08:58,566
+00:08:55,982 --> 00:08:58,561
 Esto no obliga a borrar el evento original.
 
 186
-00:08:59,487 --> 00:09:02,316
+00:08:59,482 --> 00:09:02,311
 Lambda necesita coordinar la frontera
 temporal,
 
 187
-00:09:02,540 --> 00:09:05,013
+00:09:02,534 --> 00:09:05,008
 mantener las mismas reglas y evitar huecos
 
 188
-00:09:05,026 --> 00:09:07,316
+00:09:05,021 --> 00:09:07,311
 o duplicados al actualizar las vistas.
 
 189
-00:09:08,058 --> 00:09:11,084
+00:09:08,056 --> 00:09:11,082
 Veamos ahora Kappa desde el mismo punto de
 partida.
 
 190
-00:09:11,614 --> 00:09:13,916
+00:09:11,616 --> 00:09:13,918
 Conservamos los eventos de cobro: qué
 
 191
-00:09:13,930 --> 00:09:16,272
+00:09:13,931 --> 00:09:16,273
 ocurrió, cuándo y con qué identificador.
 
 192
-00:09:17,180 --> 00:09:19,101
+00:09:17,181 --> 00:09:19,102
 Una vía principal los procesa y
 
 193
-00:09:19,114 --> 00:09:21,074
+00:09:19,116 --> 00:09:21,076
 mantiene una vista para consultar.
 
 194
-00:09:21,995 --> 00:09:23,916
+00:09:21,997 --> 00:09:23,918
 La vista de hoy, desde las doce de
 
 195
-00:09:23,930 --> 00:09:26,364
+00:09:23,931 --> 00:09:26,366
 la noche hasta las diez, lleva mil euros.
 
 196
-00:09:27,272 --> 00:09:28,745
+00:09:27,274 --> 00:09:28,747
 Al leer el evento de Ana de
 
 197
-00:09:28,758 --> 00:09:30,732
+00:09:28,760 --> 00:09:30,734
 las diez y cinco, incorpora sus
 
 198
-00:09:30,745 --> 00:09:33,064
+00:09:30,747 --> 00:09:33,065
 cien euros y pasa a mil cien.
 
 199
-00:09:33,987 --> 00:09:36,619
+00:09:33,989 --> 00:09:36,621
 Aquí no estamos sumando una cuenta histórica
 por
 
 200
-00:09:36,632 --> 00:09:38,816
+00:09:36,634 --> 00:09:38,818
 lotes y otra reciente como en Lambda.
 
 201
-00:09:39,737 --> 00:09:43,027
+00:09:39,739 --> 00:09:43,029
 Construimos el resultado a partir del flujo
 de eventos.
 
 202
-00:09:43,935 --> 00:09:46,290
+00:09:43,937 --> 00:09:46,292
 Ahora bien, para que este diseño sea
 
 203
-00:09:46,303 --> 00:09:49,290
+00:09:46,305 --> 00:09:49,292
 útil, tenemos que pensar también cómo
 rehacerlo.
 
 204
-00:09:50,211 --> 00:09:52,211
+00:09:50,213 --> 00:09:52,213
 Supongamos que descubrimos un error
 
 205
-00:09:52,224 --> 00:09:53,540
+00:09:52,226 --> 00:09:53,542
 en la regla del cálculo.
 
 206
-00:09:54,448 --> 00:09:57,711
+00:09:54,450 --> 00:09:57,713
 Como guardamos los eventos necesarios,
 podemos volver
 
 207
-00:09:57,724 --> 00:10:00,158
+00:09:57,726 --> 00:10:00,160
 a leerlos y construir una vista corregida.
 
 208
-00:10:01,066 --> 00:10:02,579
+00:10:01,068 --> 00:10:02,581
 Eso es hacer un replay.
 
 209
-00:10:03,500 --> 00:10:05,329
+00:10:03,502 --> 00:10:05,331
 Pensad en releer los apuntes de
 
 210
-00:10:05,343 --> 00:10:07,303
+00:10:05,344 --> 00:10:07,305
 un cuaderno para rehacer una suma.
 
 211
-00:10:08,224 --> 00:10:10,422
+00:10:08,226 --> 00:10:10,423
 La nueva cuenta no se añade encima de la
 
 212
-00:10:10,435 --> 00:10:13,764
+00:10:10,437 --> 00:10:13,765
 antigua: se valida y se sustituye de forma
 controlada.
 
 213
-00:10:14,685 --> 00:10:17,961
+00:10:14,687 --> 00:10:17,963
 Para hacerlo necesitamos retención
 suficiente, reglas
 
 214
-00:10:17,974 --> 00:10:20,014
+00:10:17,976 --> 00:10:20,015
 conocidas y control de duplicados.
 
 215
-00:10:20,921 --> 00:10:23,237
+00:10:20,923 --> 00:10:23,239
 Y conviene separar dos cosas: volver
 
 216
-00:10:23,250 --> 00:10:24,895
+00:10:23,252 --> 00:10:24,897
 a procesar el evento de Ana no
 
 217
-00:10:24,908 --> 00:10:27,277
+00:10:24,910 --> 00:10:27,279
 significa volver a cobrarle la tarjeta.
 
 218
-00:10:27,783 --> 00:10:30,112
+00:10:27,785 --> 00:10:30,114
 Estamos reconstruyendo información.
 
 219
-00:10:31,020 --> 00:10:33,507
+00:10:31,022 --> 00:10:33,509
 Pongamos ahora los dos esquemas juntos.
 
 220
-00:10:34,415 --> 00:10:36,941
+00:10:34,417 --> 00:10:36,943
 Para el mismo periodo de consulta, Lambda
 
 221
-00:10:36,954 --> 00:10:38,928
+00:10:36,956 --> 00:10:38,930
 mantiene una base por lotes y unas
 
 222
-00:10:38,941 --> 00:10:41,823
+00:10:38,943 --> 00:10:41,825
 novedades posteriores a su corte; la
 consulta
 
 223
-00:10:41,836 --> 00:10:44,020
+00:10:41,838 --> 00:10:44,022
 combina lo que corresponde de cada parte.
 
 224
-00:10:44,968 --> 00:10:47,007
+00:10:44,969 --> 00:10:47,009
 Kappa utiliza una vía principal de
 
 225
-00:10:47,020 --> 00:10:49,981
+00:10:47,022 --> 00:10:49,983
 eventos y, cuando necesita reconstruir una
 vista,
 
 226
-00:10:50,218 --> 00:10:52,797
+00:10:50,219 --> 00:10:52,798
 vuelve a procesar los eventos conservados.
 
 227
-00:10:53,704 --> 00:10:56,810
+00:10:53,706 --> 00:10:56,812
 En Lambda debemos mantener coordinados dos
 caminos.
 
 228
-00:10:57,718 --> 00:10:59,652
+00:10:57,719 --> 00:10:59,654
 En Kappa debemos poder conservar y
 
 229
-00:10:59,665 --> 00:11:02,007
+00:10:59,667 --> 00:11:02,009
 releer lo necesario a un coste viable.
 
 230
-00:11:02,915 --> 00:11:05,007
+00:11:02,917 --> 00:11:05,009
 Una vía principal no significa un
 
 231
-00:11:05,020 --> 00:11:07,112
+00:11:05,022 --> 00:11:07,114
 solo ordenador ni un único informe.
 
 232
-00:11:08,047 --> 00:11:11,152
+00:11:08,048 --> 00:11:11,154
 Puede haber varias máquinas y distintos
 consumidores.
 
 233
-00:11:12,073 --> 00:11:14,349
+00:11:12,075 --> 00:11:14,351
 La diferencia está en cómo organizamos
 
 234
-00:11:14,362 --> 00:11:16,244
+00:11:14,364 --> 00:11:16,246
 el cálculo y su reconstrucción.
 
 235
-00:11:17,152 --> 00:11:19,231
+00:11:17,154 --> 00:11:19,233
 Con esa comparación, volvamos a lo
 
 236
-00:11:19,244 --> 00:11:20,902
+00:11:19,246 --> 00:11:20,904
 que el hotel necesita de verdad.
 
 237
-00:11:21,417 --> 00:11:23,641
+00:11:21,423 --> 00:11:23,647
 Si dirección solo pide el cierre de ayer
 
 238
-00:11:23,654 --> 00:11:26,351
+00:11:23,660 --> 00:11:26,357
 a las ocho, un proceso por lotes puede
 bastar.
 
 239
-00:11:27,259 --> 00:11:29,180
+00:11:27,265 --> 00:11:29,186
 No tenemos que construir Lambda o
 
 240
-00:11:29,193 --> 00:11:31,272
+00:11:29,199 --> 00:11:31,278
 Kappa por haber aprendido sus nombres.
 
 241
-00:11:32,180 --> 00:11:34,969
+00:11:32,186 --> 00:11:34,976
 Tampoco tener un informe de cobros y un
 indicador
 
 242
-00:11:34,983 --> 00:11:38,022
+00:11:34,989 --> 00:11:38,028
 de sensores convierte el sistema en Lambda:
 son
 
 243
-00:11:38,035 --> 00:11:41,127
+00:11:38,042 --> 00:11:41,134
 preguntas distintas, no dos partes de la
 misma cuenta.
 
 244
-00:11:42,035 --> 00:11:45,272
+00:11:42,042 --> 00:11:45,278
 Estudiaremos cada opción cuando responda al
 requisito.
 
 245
-00:11:46,180 --> 00:11:48,377
+00:11:46,186 --> 00:11:48,384
 Lo importante es justificar qué queremos
 
 246
-00:11:48,391 --> 00:11:51,496
+00:11:48,397 --> 00:11:51,502
 consultar y cómo mantendremos fiable ese
 resultado.
 
 247
-00:11:52,417 --> 00:11:56,167
+00:11:52,423 --> 00:11:56,173
 Una vez elegido el recorrido, podemos
 ajustar sus recursos.
 
 248
-00:11:57,075 --> 00:11:58,312
+00:11:57,081 --> 00:11:58,318
 No todos los datos se
 
 249
-00:11:58,325 --> 00:12:00,325
+00:11:58,331 --> 00:12:00,331
 consultan con la misma frecuencia.
 
 250
-00:12:01,246 --> 00:12:04,180
+00:12:01,252 --> 00:12:04,186
 Un indicador utilizado continuamente se
 considera
 
 251
-00:12:04,193 --> 00:12:06,483
+00:12:04,199 --> 00:12:06,489
 caliente; un informe periódico puede
 
 252
-00:12:06,496 --> 00:12:09,969
+00:12:06,502 --> 00:12:09,976
 ser templado; un histórico excepcional,
 frío.
 
 253
-00:12:10,877 --> 00:12:13,877
+00:12:10,884 --> 00:12:13,884
 Esa temperatura habla del acceso, no de la
 calidad.
 
 254
-00:12:14,364 --> 00:12:16,377
+00:12:14,370 --> 00:12:16,383
 Guardar en frío puede costar menos,
 
 255
-00:12:16,535 --> 00:12:18,956
+00:12:16,541 --> 00:12:18,962
 aunque recuperar después tarde o cueste más.
 
 256
-00:12:19,486 --> 00:12:21,829
+00:12:19,493 --> 00:12:21,835
 A continuación elegimos herramientas para
 
 257
-00:12:21,842 --> 00:12:24,710
+00:12:21,848 --> 00:12:24,716
 recoger, transformar, coordinar o presentar.
 
 258
-00:12:25,644 --> 00:12:27,565
+00:12:25,651 --> 00:12:27,572
 En la nube cambia quién opera parte
 
 259
-00:12:27,579 --> 00:12:29,684
+00:12:27,585 --> 00:12:29,690
 de la infraestructura y cómo pagamos,
 
 260
-00:12:29,881 --> 00:12:32,763
+00:12:29,887 --> 00:12:32,769
 pero seguimos teniendo que tomar estas
 decisiones.
 
 261
-00:12:33,684 --> 00:12:36,092
-Ya podemos recorrer el camino completo.
+00:12:33,690 --> 00:12:37,243
+Al ajustar esos recursos conviene separar
+dos decisiones.
 
 262
-00:12:37,000 --> 00:12:39,552
-Recibimos el cobro de Ana, unificamos
+00:12:38,151 --> 00:12:40,072
+Una es dónde guardamos los datos
 
 263
-00:12:39,565 --> 00:12:42,513
+00:12:40,085 --> 00:12:41,966
+y otra dónde hacemos el cálculo.
+
+264
+00:12:42,887 --> 00:12:46,480
+Podemos conservar el histórico en un
+almacenamiento distribuido
+
+265
+00:12:46,493 --> 00:12:49,466
+y preparar un informe concreto desde una
+sola máquina.
+
+266
+00:12:49,651 --> 00:12:52,295
+Por ejemplo, si solo necesitamos los cobros
+
+267
+00:12:52,308 --> 00:12:55,111
+del cierre de ayer, seleccionamos ese
+periodo y
+
+268
+00:12:55,124 --> 00:12:57,861
+comprobamos cuánto tarda en llegar y
+procesarse.
+
+269
+00:12:58,769 --> 00:13:00,624
+Si una máquina cumple, no hace
+
+270
+00:13:00,637 --> 00:13:02,730
+falta repartir ese cálculo por el hecho
+
+271
+00:13:02,743 --> 00:13:05,045
+de que el almacenamiento esté distribuido.
+
+272
+00:13:05,966 --> 00:13:09,006
+Si no cumple, estudiamos optimizar, ampliar
+
+273
+00:13:09,019 --> 00:13:11,506
+recursos o distribuir también el trabajo.
+
+274
+00:13:12,414 --> 00:13:15,058
+Y recordad que un programa capaz de
+distribuir,
+
+275
+00:13:15,190 --> 00:13:17,940
+como Spark, puede ejecutarse en modo local.
+
+276
+00:13:18,848 --> 00:13:21,164
+Lo que importa es el funcionamiento real de
+
+277
+00:13:21,177 --> 00:13:23,769
+nuestro diseño, no el nombre de la
+herramienta.
+
+278
+00:13:24,677 --> 00:13:27,085
+Ya podemos recorrer el camino completo.
+
+279
+00:13:27,993 --> 00:13:30,545
+Recibimos el cobro de Ana, unificamos
+
+280
+00:13:30,558 --> 00:13:33,506
 su significado, lo conservamos y lo
 procesamos.
 
-264
-00:12:43,447 --> 00:12:45,723
+281
+00:13:34,440 --> 00:13:36,716
 Después lo ponemos a disposición de una
 
-265
-00:12:45,736 --> 00:12:48,500
+282
+00:13:36,730 --> 00:13:39,493
 consulta y lo mostramos de forma
 comprensible.
 
-266
-00:12:49,421 --> 00:12:52,947
+283
+00:13:40,414 --> 00:13:43,940
 Seguridad y monitorización acompañan todos
 esos pasos:
 
-267
-00:12:53,236 --> 00:12:56,368
+284
+00:13:44,230 --> 00:13:47,361
 así encajan las ocho responsabilidades del
 apartado.
 
-268
-00:12:57,276 --> 00:13:00,105
+285
+00:13:48,269 --> 00:13:51,098
 Una herramienta puede cubrir varias y una
 solución
 
-269
-00:13:00,118 --> 00:13:02,986
+286
+00:13:51,111 --> 00:13:53,980
 sencilla puede resolverlas sin un gran
 despliegue.
 
-270
-00:13:03,921 --> 00:13:06,960
+287
+00:13:54,914 --> 00:13:57,953
 Diseñar la arquitectura es poder explicar
 cómo llega
 
-271
-00:13:06,973 --> 00:13:09,131
+288
+00:13:57,966 --> 00:14:00,124
 la cifra al panel, cómo sabemos que
 
-272
-00:13:09,144 --> 00:13:11,342
+289
+00:14:00,137 --> 00:14:02,335
 es correcta y qué haremos si algo falla.
 
-273
-00:13:12,263 --> 00:13:14,052
+290
+00:14:03,256 --> 00:14:05,045
 Ese es el mapa que necesitamos
 
-274
-00:13:14,065 --> 00:13:15,802
+291
+00:14:05,058 --> 00:14:06,795
 antes de elegir los programas.
