@@ -10,9 +10,9 @@
       "code": "",
       "options": [
         "Varios nodos conectados por red que se coordinan para realizar trabajo.",
-        "Varios programas instalados en un servidor que utilizan el mismo disco.",
-        "Varios núcleos de un procesador que comparten memoria en un ordenador.",
-        "Varios ordenadores que almacenan archivos sin comunicación ni coordinación."
+        "Varios núcleos que comparten memoria dentro de un mismo ordenador físico.",
+        "Varios servidores conectados a una red, aunque realicen trabajos sin coordinación.",
+        "Varios procesos que reparten una tarea y comparten el disco de un ordenador."
       ],
       "answer": 0,
       "explain": "Cada nodo tiene su CPU, su disco y su memoria. En Big Data permite crecer **añadiendo máquinas**, no solo agrandando una. Hoy se montan sobre servidores normales más un programa que reparte tareas y datos."
@@ -23,9 +23,9 @@
       "prompt": "Un i7 con varios núcleos, ¿es un clúster?",
       "code": "",
       "options": [
-        "Sí: cada núcleo físico constituye un nodo independiente del clúster.",
-        "No: solo sería clúster si ejecutase Spark en el mismo ordenador.",
-        "Sí: disponer de varios hilos implica disponer de varias máquinas en red.",
+        "Sí: los núcleos se coordinan y por ello se consideran nodos de un clúster local.",
+        "No: faltaría repartir los archivos entre los discos internos del mismo ordenador.",
+        "Sí: los hilos lógicos permiten dividir el trabajo como nodos de una red local.",
         "No: varios núcleos permiten paralelismo local, pero siguen en una máquina."
       ],
       "answer": 3,
@@ -37,13 +37,13 @@
       "prompt": "Un nodo desaparece (luz, disco, red) y el servicio **sigue**. ¿Qué propiedad es?",
       "code": "",
       "options": [
-        "Consistencia fuerte, porque continuar el servicio demuestra datos idénticos.",
-        "Equilibrio de carga, aunque no exista ningún mecanismo de recuperación.",
-        "Escalabilidad horizontal, porque el fallo aumenta los recursos disponibles.",
+        "Escalabilidad: el servicio conserva su capacidad al reducirse los nodos activos.",
+        "Equilibrio de carga: el trabajo queda uniformemente repartido al perder un nodo.",
+        "Durabilidad: los datos confirmados pueden recuperarse después de un fallo.",
         "Alta disponibilidad, apoyada en mecanismos de redundancia y recuperación."
       ],
       "answer": 3,
-      "explain": "Alta disponibilidad busca mantener el servicio mediante detección y recuperación. Escalabilidad es capacidad de crecer; elasticidad es ajustar recursos a la demanda. Son objetivos diferentes."
+      "explain": "Continuar atendiendo el servicio corresponde a disponibilidad. La durabilidad trata de conservar datos confirmados; el equilibrio de carga trata de repartir trabajo; la escalabilidad trata de adaptar capacidad. Una propiedad no demuestra por sí sola las demás."
     },
     {
       "topic": "Réplica",
@@ -51,13 +51,13 @@
       "prompt": "¿Qué es una réplica en el clúster?",
       "code": "",
       "options": [
-        "Un archivo histórico desconectado que se conserva como copia de seguridad.",
-        "Una tarea paralela que procesa una parte del fichero sin conservar datos.",
-        "Una partición que contiene exclusivamente datos distintos de los demás nodos.",
-        "Una copia de los mismos datos en otro nodo según la política definida."
+        "Una partición del conjunto, con filas diferentes de las conservadas en otros nodos.",
+        "Una copia histórica desconectada, que se recupera manualmente tras un incidente.",
+        "Una caché del resultado de consultas, que evita repetir cálculos sobre los datos.",
+        "Una copia de los mismos datos en otro nodo, con una política definida de replicación."
       ],
       "answer": 3,
-      "explain": "La réplica puede facilitar recuperación, pero no sustituye detección de fallos, conmutación ni copias de seguridad. Un borrado puede propagarse a todas las réplicas."
+      "explain": "Una réplica conserva los mismos datos según una política de actualización. Una partición guarda una parte diferente del conjunto. Una copia histórica sirve para recuperación y una caché puede guardar resultados: no equivalen a esa réplica."
     },
     {
       "topic": "Alto rendimiento",
@@ -65,10 +65,10 @@
       "prompt": "Pasáis de 1 a 8 nodos. El job tardaba 8 horas. ¿Acaba en 1 hora?",
       "code": "",
       "options": [
-        "Sí: basta con que todos los nodos tengan la misma cantidad de memoria.",
-        "No: distribuir una tarea impide cualquier reducción del tiempo total.",
+        "Sí: el número de nodos permite dividir las ocho horas entre ocho recursos.",
+        "No: debe mantener las ocho horas para que cada nodo procese el histórico.",
         "No necesariamente: influyen dependencias, reparto, red y coordinación.",
-        "Sí: multiplicar nodos divide siempre el tiempo en esa misma proporción."
+        "Sí: copiar el histórico en cada nodo permite reducir ocho veces el tiempo."
       ],
       "answer": 2,
       "explain": "Más nodos no garantizan una aceleración lineal. Medimos el tiempo y localizamos la fase limitante; incluso puede empeorar una carga pequeña."
@@ -79,10 +79,10 @@
       "prompt": "Añadís CPU, RAM o disco **en la misma máquina**. ¿Qué escalado es?",
       "code": "",
       "options": [
-        "Scale-in: aumentar la memoria y el disco sin incorporar otros equipos.",
-        "Replicación: aumentar recursos sin cambiar los datos almacenados.",
-        "Escalado vertical: ampliar recursos dentro de la máquina existente.",
-        "Escalado horizontal: ampliar los componentes de una máquina existente."
+        "Escalado horizontal: aumentar los recursos disponibles para atender la carga.",
+        "Scale-in: concentrar memoria y cálculo en la máquina que ejecuta el servicio.",
+        "Escalado vertical: ampliar CPU, memoria o disco dentro de la máquina existente.",
+        "Consolidación: añadir capacidad al equipo equivale a reducir nodos de trabajo."
       ],
       "answer": 2,
       "explain": "El escalado vertical puede ser suficiente si cumple los requisitos. El horizontal añade nodos y requiere una carga que pueda aprovecharlos; ninguno gana por definición."
@@ -93,10 +93,10 @@
       "prompt": "Añadís dos máquinas al clúster. Más adelante apagáis dos porque sobra capacidad. ¿Cómo se llama cada cosa?",
       "code": "",
       "options": [
-        "Añadir es replicación; retirar es particionado; ambos distribuyen datos.",
-        "Añadir es scale-up; retirar es scale-down; ambos modifican el número de nodos.",
-        "Añadir es scale-out; retirar es scale-in; ambos modifican el número de nodos.",
-        "Añadir es scale-out; retirar es scale-up; ambos mantienen el mismo equipo."
+        "Añadir es scale-up; retirar es scale-down: varía el número de nodos que atienden la carga.",
+        "Añadir es scale-out; retirar es scale-down: crecer en nodos y reducir la potencia del clúster.",
+        "Añadir es scale-out; retirar es scale-in: cambia el número de nodos disponibles en el clúster.",
+        "Añadir es scale-up; retirar es scale-in: ampliar la potencia del clúster y reducir sus nodos."
       ],
       "answer": 2,
       "explain": "En la jerga: scale-up = vertical, scale-out = horizontal, scale-in = reducir. En clase: vertical, horizontal, y scale-in para apagar cuando sobra."
@@ -107,10 +107,10 @@
       "prompt": "Mandáis todos los jobs al nodo que “siempre ha ido bien”. El resto está de brazos cruzados. ¿Qué falla?",
       "code": "",
       "options": [
-        "Replicación: los nodos deben guardar distintos datos para evitar ese cuello.",
-        "Escalado vertical: añadir memoria a nodos ociosos reparte automáticamente los jobs.",
+        "Particionado: guardar diferentes datos en cada nodo basta para repartir los jobs.",
+        "Replicación: mantener una copia en cada nodo basta para distribuir la ejecución.",
         "Equilibrio de carga: un nodo concentra el trabajo y los demás quedan ociosos.",
-        "Consistencia: todas las consultas deben ejecutarse siempre en el mismo nodo."
+        "Escalado: el cuello requiere añadir nodos antes de cambiar dónde se ejecutan los jobs."
       ],
       "answer": 2,
       "explain": "El algoritmo debe mirar lo grande que es el trabajo y lo ocupado (y potente) que está cada nodo. Un clúster rápido sin réplica es frágil; uno muy replicado pero mal balanceado deja un nodo al 100 %."
@@ -121,9 +121,9 @@
       "prompt": "Cada paso del job depende del resultado del anterior. Añadís nodos. ¿Qué pasa?",
       "code": "",
       "options": [
-        "El tiempo se divide por el número de nodos aunque todas las tareas dependan entre sí.",
-        "Duplicar los archivos permite ejecutar cada paso antes de recibir el resultado anterior.",
-        "La red elimina las dependencias porque cada tarea se ejecuta en una máquina distinta.",
+        "La réplica de entradas permite ejecutar los pasos dependientes en paralelo.",
+        "Repartir los pasos entre nodos convierte la cadena en tareas independientes.",
+        "Los nodos adicionales reducen el tiempo en proporción al número de máquinas.",
         "Las dependencias limitan el paralelismo; hay que revisar cómo se divide el trabajo."
       ],
       "answer": 3,
@@ -135,10 +135,10 @@
       "prompt": "¿Separar almacenamiento y cálculo es una propiedad exclusiva de la nube?",
       "code": "",
       "options": [
-        "No: separarlos garantiza siempre menor latencia que mantenerlos en los mismos nodos.",
-        "Sí: separar cálculo y almacenamiento exige contratar servicios de nube pública.",
+        "Sí: el almacenamiento separado necesita la infraestructura de una nube pública.",
+        "Sí: en instalaciones propias la cercanía del disco exige mantener ambas funciones juntas.",
         "No: ambas disposiciones pueden implantarse en la nube o en instalaciones propias.",
-        "Sí: una instalación propia obliga a guardar cada dato en el nodo que lo procesa."
+        "No: separarlos equivale a replicar los datos en los nodos que realizan el cálculo."
       ],
       "answer": 2,
       "explain": "Separarlos permite ajustar recursos de forma independiente, pero exige planificar acceso por red, rendimiento y recuperación. La ubicación no garantiza réplicas ni bajo coste."

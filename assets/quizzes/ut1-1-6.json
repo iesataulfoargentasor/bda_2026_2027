@@ -10,9 +10,9 @@
       "code": "",
       "options": [
         "Incorporar datos existentes a otro sistema para almacenarlos o procesarlos.",
-        "Representar los resultados de una consulta mediante un gráfico de gerencia.",
-        "Crear nuevos hechos de negocio en el informe sin recurrir a las fuentes.",
-        "Agregar exclusivamente datos ya disponibles en el mismo almacén analítico."
+        "Transformar datos ya cargados para ajustar sus campos al indicador solicitado.",
+        "Consultar datos existentes en el destino para preparar un informe de gerencia.",
+        "Registrar una reserva nueva en el sistema operativo que atiende la recepción."
       ],
       "answer": 0,
       "explain": "Si este paso falla, el modelo y el cuadro trabajan sobre arena: la cifra queda bien presentada y es mentira. Flexible y ágil importan más que el logo."
@@ -23,10 +23,10 @@
       "prompt": "Antes de elegir un programa, ¿en qué orden diseñáis?",
       "code": "",
       "options": [
-        "Herramienta conocida → compra de capacidad → definición final del consumidor.",
-        "Lista completa de fuentes → carga de todas → búsqueda posterior de un objetivo.",
+        "Fuentes disponibles → carga de sus campos → definición posterior del resultado.",
+        "Herramienta disponible → formatos admitidos → selección de la pregunta de negocio.",
         "Necesidad del consumidor → resultado y transformaciones → fuentes necesarias.",
-        "Formato de archivo → herramienta disponible → pregunta que permita responder."
+        "Capacidad contratada → selección de fuentes → ajuste del resultado a esa capacidad."
       ],
       "answer": 2,
       "explain": "Sin la pregunta de negocio, unificar veinte fuentes es un proyecto que no sabéis cuándo termina."
@@ -37,10 +37,10 @@
       "prompt": "Una cola guarda altas, sin cruzar ni cargar un almacén. ¿Es pipeline? ¿Es ETL?",
       "code": "",
       "options": [
-        "Es un pipeline; no todo pipeline realiza una ETL completa.",
-        "Es una ETL completa porque almacenar en una cola incluye transformar.",
-        "Es una ETL pero no un pipeline, porque no produce un informe final.",
-        "No es ninguno: un pipeline exige unir al menos dos fuentes diferentes."
+        "Es un pipeline que transporta datos; no todo pipeline realiza una ETL completa.",
+        "Es ETL completa: almacenar las altas se interpreta como una transformación.",
+        "Es ETL pero no pipeline: se reserva pipeline para procesos con varias fuentes.",
+        "Es pipeline solo si entrega un informe, aunque ya transporte datos entre sistemas."
       ],
       "answer": 0,
       "explain": "Pipeline = fases (recoger, colchón, procesar, dejar algo útil). ETL = extraer, transformar, cargar. Un filtro en una cola ya es tubería."
@@ -51,10 +51,10 @@
       "prompt": "¿Qué conecta la ingesta con la consulta del informe del hotel?",
       "code": "",
       "options": [
-        "Agregar las fuentes primero y descartar después cualquier comprobación de origen.",
-        "Incorporar, conservar, integrar, procesar, validar y presentar un resultado.",
-        "Copiar las fuentes y presentar directamente todo lo recibido sin validación.",
-        "Publicar un informe y decidir después qué fuentes justifican sus resultados."
+        "Incorporar, agregar, publicar y comprobar la calidad después de que se use el informe.",
+        "Incorporar, conservar, integrar y procesar datos; validar y presentar un resultado.",
+        "Copiar, conservar y publicar las entradas, dejando su integración al consumidor.",
+        "Consultar las fuentes, publicar resultados y conservar solo el agregado del informe."
       ],
       "answer": 1,
       "explain": "Son responsabilidades del recorrido, no una numeración que deba memorizarse. La seguridad y la monitorización afectan a todas ellas."
@@ -65,10 +65,10 @@
       "prompt": "¿Cuándo conviene separar las consultas analíticas del sistema de recepción?",
       "code": "",
       "options": [
-        "Siempre que se utilice SQL, aunque la carga analítica sea insignificante.",
-        "Cuando la carga o los requisitos lo justifican, contrastándolo con medidas.",
-        "Solo cuando no quede espacio en disco, aunque recepción ya esté bloqueada.",
-        "Nunca si ambas aplicaciones pertenecen al mismo grupo hotelero."
+        "Cuando se empieza a usar SQL para informes, aunque la carga operativa sea pequeña.",
+        "Cuando la carga o los requisitos lo justifican, midiendo la interferencia con recepción.",
+        "Cuando los datos ocupan varios discos, tomando el espacio como única medida.",
+        "Cuando el informe usa datos de ayer, tomando su antigüedad como criterio de separación."
       ],
       "answer": 1,
       "explain": "Sumar mil filas no es necesariamente costoso. Importan volumen, índices, concurrencia, recursos y plazo del servicio."
@@ -79,10 +79,10 @@
       "prompt": "El origen envía cada evento; el destino va a buscar a una hora fija; el destino mira de vez en cuando y, si hay cambio, tira. ¿Quién inicia en cada caso?",
       "code": "",
       "options": [
-        "Push: pide destino; pull: envía origen; polling: el origen envía periódicamente.",
+        "Push: pide destino; pull: envía origen; polling: el destino comprueba cambios.",
         "Push: envía origen; pull: pide destino; polling: el destino consulta periódicamente.",
-        "Push: envía origen; pull: pide destino; polling: entrega espontánea por cada cambio.",
-        "Push: envía origen; pull: lectura local; polling: consulta que se ejecuta una sola vez."
+        "Push: envía origen; pull: pide destino; polling: el origen avisa al detectar cambios.",
+        "Push: envía origen; pull: envía origen a una hora; polling: el destino pregunta."
       ],
       "answer": 1,
       "explain": "Quién inicia y cómo se procesa son dimensiones distintas. Push puede enviar un fichero diario y un consumidor de flujo puede solicitar mensajes mediante pull."
@@ -93,10 +93,10 @@
       "prompt": "En la E, ¿qué dos reglas hay? En la T, ¿qué no es transformar?",
       "code": "",
       "options": [
-        "Extraer corrigiendo el PMS; transformar sustituyendo ausencias por hechos inventados.",
-        "Extraer solo agregados; transformar descartando siempre el original para ahorrar espacio.",
+        "Extraer corrigiendo la fuente; transformar aplicando reglas a los hechos extraídos.",
+        "Extraer sin alterar la operación; transformar rellenando ausencias como hechos observados.",
         "Extraer sin alterar la operación; transformar aplicando reglas a hechos existentes.",
-        "Extraer bloqueando recepción; transformar eliminando columnas sin consultar el encargo."
+        "Extraer los agregados finales; transformar descartando originales antes de validarlos."
       ],
       "answer": 2,
       "explain": "Si colapsa el programa operativo, la empresa pierde dinero operando. Un job en verde con filas cojas envenena el informe: se **aparta**. Una T pesada no va en el mismo milisegundo que el evento."
@@ -107,13 +107,13 @@
       "prompt": "Después de una primera carga completa, ¿es obligatorio usar siempre carga incremental?",
       "code": "",
       "options": [
-        "Sí: una carga completa posterior a la primera es siempre un error técnico.",
-        "No: depende del volumen, coste y posibilidad de identificar cambios.",
-        "Sí: la incremental detecta automáticamente borrados sin apoyo del origen.",
-        "No: la carga completa siempre cuesta menos aunque el histórico siga creciendo."
+        "Sí: repetir una carga completa duplica datos incluso si se sustituye el destino.",
+        "No: depende del volumen, el coste de la recarga y cómo se identifican los cambios.",
+        "No: basta con elegir según el tamaño final, sin considerar cómo se detectan cambios.",
+        "Sí: filtrar por fecha de creación permite recuperar también cambios y borrados."
       ],
       "answer": 1,
-      "explain": "Una incremental debe contemplar altas, modificaciones y, cuando proceda, borrados. El punto de avance se confirma después de una carga correcta."
+      "explain": "La elección considera coste, volumen y captura de cambios. Sustituir correctamente un destino permite repetir una carga completa sin duplicarlo. Una fecha de creación no detecta por sí sola actualizaciones ni borrados."
     },
     {
       "topic": "ETL y ELT",
@@ -122,9 +122,9 @@
       "code": "",
       "options": [
         "ETL transforma antes de cargar en el destino; ELT transforma dentro de ese destino.",
-        "ETL corresponde a warehouse; ELT corresponde a lago sin admitir excepciones.",
-        "ETL conserva originales; ELT los elimina después de cualquier transformación.",
-        "ETL exige una base local; ELT exige un servicio alojado en nube pública."
+        "ETL valida antes de cargar; ELT carga sin validar, aunque ambos transformen fuera.",
+        "ETL transforma en una máquina local; ELT transforma en una máquina contratada.",
+        "ETL trabaja con tablas; ELT trabaja con archivos, manteniendo el mismo orden."
       ],
       "answer": 0,
       "explain": "Un warehouse puede utilizar ambos patrones, localmente o en la nube. En ambos casos gerencia debe consultar resultados validados, no cualquier entrada bruta."
@@ -135,10 +135,10 @@
       "prompt": "El consumidor no puede esperar al lote. La cola aguanta; a veces se frena al productor. ¿Para qué es la cola y qué no es contrapresión?",
       "code": "",
       "options": [
-        "La cola publica; el búfer detiene al consumidor y la contrapresión acelera al productor.",
+        "La cola desacopla; retener más mensajes equivale a aplicar contrapresión al productor.",
         "La cola desacopla; el búfer absorbe temporalmente y la contrapresión reduce el ritmo.",
-        "La cola desacopla; el búfer es ilimitado y la contrapresión añade espacio automáticamente.",
-        "La cola transforma; el búfer elimina duplicados y la contrapresión valida los importes."
+        "La cola desacopla; la contrapresión elimina eventos antiguos para reducir la espera.",
+        "La cola desacopla; el búfer conserva ritmo indefinidamente y sustituye la contrapresión."
       ],
       "answer": 1,
       "explain": "El búfer es limitado y no resuelve una sobrecarga permanente. Hay que definir confirmaciones, reintentos, retención y recuperación. En el hotel separamos dos recorridos por sus objetivos y plazos."

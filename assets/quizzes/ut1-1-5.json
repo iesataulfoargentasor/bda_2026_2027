@@ -9,10 +9,10 @@
       "prompt": "¿Por qué separar responsabilidades de ingesta, procesamiento y presentación, aunque el prototipo use un único script?",
       "code": "",
       "options": [
-        "Cualquier script que incluya varias fases pierde automáticamente integridad.",
-        "Cada responsabilidad exige siempre un producto distinto y una máquina dedicada.",
-        "Separar responsabilidades facilita probar y mantener, aunque el prototipo sea un script.",
-        "Usar un único lenguaje impide combinar ingesta, transformación y almacenamiento."
+        "Separar responsabilidades permite validar cada componente sin comprobar después sus conexiones.",
+        "Separar responsabilidades requiere desplegar cada fase en un servicio con su propia máquina.",
+        "Separar responsabilidades facilita probar, mantener y sustituir componentes, incluso dentro de un script.",
+        "Separar responsabilidades permite intercambiar herramientas sin revisar los contratos de datos."
       ],
       "answer": 2,
       "explain": "Cada capa tiene **una** responsabilidad. Este apartado es el mapa para que el informe **pueda** hacerse, no el gráfico en sí."
@@ -23,10 +23,10 @@
       "prompt": "¿Qué debemos comparar entre un ciclo del dato y un esquema de arquitectura?",
       "code": "",
       "options": [
-        "El número de flechas: debe coincidir para demostrar que no faltan transformaciones.",
-        "La numeración: una capa cuatro debe equivaler siempre a la cuarta fase del ciclo.",
+        "La numeración de las capas, asignando el mismo número a las fases equivalentes.",
+        "La lista de herramientas, exigiendo un programa diferente por cada fase del ciclo.",
         "Las responsabilidades y el recorrido, aunque los esquemas agrupen fases distintas.",
-        "La cantidad de productos: ambos esquemas deben contener los mismos programas."
+        "La secuencia de fases, tomando el orden de un dibujo como orden de toda ejecución."
       ],
       "answer": 2,
       "explain": "El ciclo describe fases; la arquitectura distribuye responsabilidades. Integración y procesamiento pueden compartir transformaciones."
@@ -37,13 +37,13 @@
       "prompt": "Tras transformar, ¿qué suele pasar con el resultado en el lago? Si hay que retirar un identificador personal, ¿editáis el fichero a mano?",
       "code": "",
       "options": [
-        "Se añade una versión y con ello queda garantizada la eliminación de las anteriores.",
-        "Se pueden añadir resultados; retirar un dato exige un procedimiento controlado.",
-        "Se añaden resultados y la retirada se resuelve editando cualquier archivo a mano.",
-        "Se sobrescribe siempre el original y así desaparecen todas las copias anteriores."
+        "Se añaden resultados; retirar el identificador de la vista actual resuelve su eliminación.",
+        "Se pueden añadir resultados; retirar un dato exige controlar originales, versiones y derivados.",
+        "Se sobrescribe el original; retirar el identificador allí elimina sus versiones derivadas.",
+        "Se añaden resultados; filtrar el identificador en las consultas sustituye su retirada."
       ],
       "answer": 1,
-      "explain": "Un lago puede tener originales y tablas preparadas. Añadir, sustituir o actualizar requiere una política; borrar una versión actual no elimina automáticamente sus copias históricas."
+      "explain": "Escribir resultados nuevos no elimina los anteriores. Retirar un identificador requiere revisar originales, versiones y derivados afectados. Ocultarlo en una consulta no demuestra que haya desaparecido de los datos conservados."
     },
     {
       "topic": "Capa 2 frente a capa 4",
@@ -52,9 +52,9 @@
       "code": "",
       "options": [
         "Integrar puede incluir transformar nombres y unir fuentes; no son operaciones excluyentes.",
-        "Integrar y transformar son dos nombres para exactamente la misma responsabilidad.",
-        "Integrar solo transporta archivos y nunca puede modificar nombres de columnas.",
-        "Transformar solo agrega números y no puede combinar datos de varias fuentes."
+        "Integrar mueve los archivos al mismo lugar; las uniones corresponden a otra función.",
+        "Integrar modifica nombres; transformar une fuentes, manteniendo ambas funciones separadas.",
+        "Integrar y transformar se distinguen por ejecutarse antes o después del almacenamiento."
       ],
       "answer": 0,
       "explain": "El esquema destaca la armonización en integración y el cálculo en procesamiento, aunque una herramienta o transformación puede cubrir ambas responsabilidades."
@@ -65,10 +65,10 @@
       "prompt": "Un flujo de ETL y un Parquet crudo, ¿son la capa 6 (visualización)?",
       "code": "",
       "options": [
-        "Sí: cualquier archivo generado es una visualización aunque nadie lo entienda.",
-        "No: visualizar implica una salida que el consumidor pueda interpretar.",
-        "Sí: observar el lienzo de ETL equivale a presentar resultados a gerencia.",
-        "No: solo puede ser visualización un panel alojado en un servidor de informes."
+        "Sí: generar un archivo derivado se considera equivalente a presentar información.",
+        "No: visualizar requiere una salida cuyo significado pueda interpretar el consumidor.",
+        "No: hace falta convertir el archivo en un gráfico, aunque su tabla sea interpretable.",
+        "Sí: el lienzo de ETL explica el recorrido y por ello constituye el informe final."
       ],
       "answer": 1,
       "explain": "En este módulo el ETL visual deja el dato listo. El criterio e) es un fichero o un panel interpretable, no abrir el motor."
@@ -79,13 +79,13 @@
       "prompt": "En un flujo CSV → filtro → Excel, ¿qué dos responsabilidades transversales hay que contemplar también?",
       "code": "",
       "options": [
-        "Replicación y particionado: son obligatorios incluso en cualquier CSV pequeño.",
-        "Entrenamiento y predicción: todo recorrido necesita un modelo estadístico.",
-        "Compresión y cifrado: sustituyen los controles de permisos y de ejecución.",
+        "Particionado y replicación: repartir datos y mantener copias entre distintos nodos.",
+        "Cifrado y compresión: proteger los archivos y reducir su espacio de almacenamiento.",
+        "Catálogo y formato: documentar los campos y elegir su representación en archivos.",
         "Seguridad y monitorización: controlar acceso y comprobar la ejecución."
       ],
       "answer": 3,
-      "explain": "En un caso real existen aunque sean simples: una carpeta con permisos y un log. Sin monitorización el prototipo **miente** en producción."
+      "explain": "En el mapa de esta unidad, seguridad y monitorización son responsabilidades transversales. Cifrar o catalogar puede ayudar, pero no sustituye controlar permisos y comprobar la ejecución. Particionado y replicación son decisiones de diseño según la necesidad."
     },
     {
       "topic": "Sobreingeniería",
@@ -94,9 +94,9 @@
       "code": "",
       "options": [
         "No sin justificarlo: se comparan requisitos, capacidad, plazo y coste.",
-        "Sí: una cola elimina por sí sola todos los problemas de calidad del fichero.",
-        "Sí: trabajar con Big Data exige esas herramientas aunque el equipo sea suficiente.",
-        "No: un fichero que hoy cabe nunca puede requerir otro diseño en el futuro."
+        "Sí: disponer de recursos distribuidos justifica usarlos para este fichero.",
+        "No: comprobar que cabe en disco basta para decidir sin medir el plazo.",
+        "Sí: separar componentes implica que cada uno debe desplegarse en otra nube."
       ],
       "answer": 0,
       "explain": "Escala, aguantar fallos y dato repartido importan cuando el volumen duele. Un único USB con “el histórico” es un SPOF. **RTO** = cuánto tardáis en recuperar el servicio. **RPO** = hasta qué punto de los datos aceptáis **perder**."
@@ -107,9 +107,9 @@
       "prompt": "Un cierre diario preciso frente a eventos que no acaban. ¿Qué camino es cada uno, y “tiempo real” significa instantáneo?",
       "code": "",
       "options": [
-        "Lote para datos históricos; flujo para cualquier consulta SQL ejecutada durante el día.",
-        "Lote para una máquina; flujo para varias, con independencia de cómo llegan los datos.",
-        "Lote para resultados aproximados; flujo para resultados siempre exactos e instantáneos.",
+        "Lote para resultados exactos; flujo para estimaciones que se corrigen al cerrar el día.",
+        "Lote para cargas completas; flujo para cualquier consulta que se ejecute entre cargas.",
+        "Lote para ejecución secuencial; flujo para ejecución paralela, con un plazo útil en ambos.",
         "Lote para conjuntos delimitados; flujo para eventos continuos, ambos con plazo útil."
       ],
       "answer": 3,
@@ -121,13 +121,13 @@
       "prompt": "¿Qué distingue Lambda y Kappa en el tratamiento de los eventos?",
       "code": "",
       "options": [
-        "Lambda conserva eventos; Kappa elimina cada evento en cuanto lo procesa una vez.",
-        "Lambda usa sensores y Kappa cobros; se distinguen únicamente por el origen del dato.",
+        "Lambda combina cualquier lote y flujo; Kappa es el flujo que queda al retirar el lote.",
+        "Lambda procesa históricos; Kappa procesa lo reciente sin necesidad de conservar eventos.",
         "Lambda combina vistas histórica y reciente; Kappa permite reconstruir vistas desde eventos.",
-        "Lambda exige dos nubes; Kappa exige una sola máquina para evitar duplicados."
+        "Lambda utiliza dos motores; Kappa utiliza uno, aunque mantenga dos caminos de cálculo."
       ],
       "answer": 2,
-      "explain": "Lambda necesita conciliar los caminos sin duplicar hechos. Kappa requiere retención y reprocesamiento controlado. Dos pipelines independientes no bastan para definir Lambda."
+      "explain": "Lambda combina vistas históricas y recientes de los mismos hechos para responder consultas. No basta tener dos procesos independientes de lote y flujo. Kappa permite reconstruir vistas reproduciendo eventos conservados. El número de motores no distingue ambas arquitecturas."
     },
     {
       "topic": "Temperatura y paisaje",
@@ -135,10 +135,10 @@
       "prompt": "¿Qué relación hay entre temperatura del dato y catálogos de herramientas?",
       "code": "",
       "options": [
-        "Temperatura depende del formato; un catálogo permite elegir sin medir necesidades.",
-        "Temperatura depende de la calidad; un catálogo sustituye el diseño del recorrido.",
+        "Temperatura depende de la antigüedad; el catálogo indica qué nivel corresponde a cada producto.",
+        "Temperatura depende de la latencia de ingesta; el catálogo ordena productos por esa latencia.",
         "Temperatura depende del acceso; un catálogo ayuda a situar responsabilidades.",
-        "Temperatura depende solo de la edad; un catálogo fija una arquitectura obligatoria."
+        "Temperatura depende del tamaño; el catálogo indica qué producto usar para cada volumen."
       ],
       "answer": 2,
       "explain": "La temperatura expresa frecuencia de acceso y plazo de recuperación. El catálogo ayuda a reconocer responsabilidades; no sustituye requisitos ni medidas. Orquestar coordina tareas, mientras transformar modifica los datos."

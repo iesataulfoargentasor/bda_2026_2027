@@ -9,10 +9,10 @@
       "prompt": "¿Qué es Big Data?",
       "code": "",
       "options": [
-        "Gestionar información no estructurada, aunque sea pequeña y fácil de procesar.",
+        "Gestionar datos de varias fuentes cuyo tamaño supera el espacio del disco local.",
         "Gestionar datos cuyos requisitos superan la capacidad viable del diseño disponible.",
-        "Gestionar datos mediante varios servidores, aunque una máquina cumpla los requisitos.",
-        "Gestionar cualquier conjunto que supere un terabyte, con independencia del plazo."
+        "Gestionar históricos de gran tamaño mediante herramientas de cálculo distribuido.",
+        "Gestionar datos que cambian de estructura y requieren sustituir tablas por documentos."
       ],
       "answer": 1,
       "explain": "No existe un umbral universal en TB ni un número de hoteles que lo determine. Medimos capacidad, plazo, calidad y coste antes de cambiar la solución."
@@ -23,10 +23,10 @@
       "prompt": "“¿Esto es un problema de Big Data?” ¿Cómo se responde?",
       "code": "",
       "options": [
-        "Midiendo capacidad, plazos, calidad y coste frente a los requisitos del caso.",
-        "Comprobando si la organización ya dispone de un clúster de procesamiento.",
-        "Identificando las cinco V y exigiendo que todas tengan valores extremos.",
-        "Contando filas y comparándolas con un límite fijo válido para cualquier equipo."
+        "Midiendo capacidad, plazos, calidad y coste frente a lo que exige la solución del caso.",
+        "Estimando el tamaño de los archivos y comparándolo con la memoria RAM instalada.",
+        "Comparando el número de fuentes y formatos con los de un proyecto convencional.",
+        "Comprobando si las cargas previstas pueden repartirse entre varios nodos de cálculo."
       ],
       "answer": 0,
       "explain": "Una sola V puede imponer un cambio importante; contar cuántas V aparecen no es una prueba. Distribuir es una alternativa que también tiene costes."
@@ -37,9 +37,9 @@
       "prompt": "¿Cuál es el orden del viaje del dato?",
       "code": "",
       "options": [
-        "Evento → dato → conocimiento → valor → información → sabiduría.",
-        "Dato → evento → conocimiento → información → valor → sabiduría.",
         "Evento → información → dato → sabiduría → conocimiento → valor.",
+        "Dato → evento → conocimiento → información → valor → sabiduría.",
+        "Evento → dato → conocimiento → valor → información → sabiduría.",
         "Evento → dato → información → conocimiento → sabiduría → valor."
       ],
       "answer": 3,
@@ -51,10 +51,10 @@
       "prompt": "«La IA contiene a la ciencia de datos, que contiene a la minería.» ¿Qué hay que responder?",
       "code": "",
       "options": [
-        "Es falso: la ciencia de datos y la inteligencia artificial no comparten métodos.",
-        "Es correcto: cualquier análisis de datos constituye inteligencia artificial.",
+        "La relación se invierte: la minería contiene a la ciencia de datos y esta a la IA.",
+        "La IA y la minería se solapan; la ciencia de datos se limita a preparar sus entradas.",
         "Se solapan: ninguna de esas tres áreas contiene necesariamente a las otras dos.",
-        "Es correcto: toda minería exige previamente entrenar un modelo de IA."
+        "La ciencia de datos contiene a las otras dos, porque ambas trabajan con datos."
       ],
       "answer": 2,
       "explain": "Tampoco es «ciencia de datos = minería + Hadoop». El clúster ayuda cuando las V duelen; **no** bautiza el oficio. IA no es solo el chatbot."
@@ -65,9 +65,9 @@
       "prompt": "¿Qué distingue a minería de datos, ciencia de datos e inteligencia artificial?",
       "code": "",
       "options": [
-        "Minería predice únicamente; ciencia de datos describe únicamente; IA limpia fuentes.",
-        "Minería consulta SQL; ciencia de datos diseña redes; IA conserva históricos.",
-        "Minería prepara archivos; ciencia de datos almacena tablas; IA representa informes.",
+        "Minería prepara las fuentes; ciencia de datos descubre patrones; IA comunica resultados al negocio.",
+        "Minería descubre patrones; ciencia de datos diseña el almacén; IA interpreta los informes del negocio.",
+        "Minería consulta indicadores; ciencia de datos entrena predicciones; IA se ocupa de formular preguntas.",
         "Minería descubre patrones; ciencia de datos investiga con datos; IA construye sistemas inteligentes."
       ],
       "answer": 3,
@@ -79,10 +79,10 @@
       "prompt": "Misma cantidad de bytes: 10 TB históricos que cargáis **una vez** al mes, frente a 10 TB **al día** que hay que integrar ahora. ¿Qué V duele en cada caso?",
       "code": "",
       "options": [
-        "En el primero destaca velocidad; en el segundo, variedad por llegar diariamente.",
-        "En ambos destaca variedad, porque un cambio de frecuencia altera el formato.",
-        "En ambos destaca solo volumen, porque el número inicial de bytes es idéntico.",
-        "En el primero destaca volumen; en el segundo, velocidad y acumulación de volumen."
+        "En el primero destaca velocidad por el plazo mensual; en el segundo, volumen por su tamaño.",
+        "En ambos destaca volumen: comparar los diez terabytes basta para elegir el mismo diseño.",
+        "En ambos destaca velocidad: la diferencia relevante es el tiempo que tarda cada transferencia.",
+        "En el primero destaca volumen; en el segundo, velocidad de llegada y acumulación de volumen."
       ],
       "answer": 3,
       "explain": "Volumen = cantidad de bytes. Velocidad = ritmo de llegada y de reacción. Agrandar el disco no arregla un atasco de ingesta. El fabricante anuncia 1 TB (base 10); el explorador suele mostrar ~931 GB (GiB): cuentan distinto, el disco no está roto."
@@ -93,10 +93,10 @@
       "prompt": "Una tabla SQL con las mismas columnas en todas las filas, un JSON cuyas claves pueden variar, y una foto o un PDF. ¿Qué tipos son, en ese orden?",
       "code": "",
       "options": [
-        "Estructurado, no estructurado y semiestructurado, respectivamente.",
+        "Semiestructurado, estructurado y no estructurado, respectivamente.",
         "Estructurado, semiestructurado y no estructurado, respectivamente.",
-        "Estructurado, estructurado y semiestructurado, respectivamente.",
-        "Semiestructurado, estructurado y no estructurado, respectivamente."
+        "Estructurado, no estructurado y semiestructurado, respectivamente.",
+        "Estructurado, estructurado y semiestructurado, respectivamente."
       ],
       "answer": 1,
       "explain": "La clasificación describe la representación del ejemplo. Un lago puede contener originales y tablas preparadas; un warehouse puede admitir campos semiestructurados según el motor."
@@ -107,10 +107,10 @@
       "prompt": "«Como hay muchos datos, el error se compensa» y «guardamos todo por si acaso, sin saber qué decisión mejorar». ¿Qué falla?",
       "code": "",
       "options": [
-        "Valor por el sesgo y volumen por no identificar una decisión útil.",
-        "Veracidad por el sesgo y valor por no identificar una decisión útil.",
         "Volumen por el sesgo y velocidad por no identificar una decisión útil.",
-        "Variedad por el sesgo y veracidad por no identificar una decisión útil."
+        "Veracidad por el sesgo y valor por no identificar una decisión útil.",
+        "Variedad por el sesgo y veracidad por no identificar una decisión útil.",
+        "Valor por el sesgo y volumen por no identificar una decisión útil."
       ],
       "answer": 1,
       "explain": "Más basura, más rápido, no es “más Big Data”. Valor es la V que justifica el gasto. Viabilidad y visualización (cuando se habla de 7) preguntan si la empresa puede **usar** y **ver** el número."
@@ -121,10 +121,10 @@
       "prompt": "Descriptiva, diagnóstica, predictiva y prescriptiva. ¿Qué pregunta hace cada una, en ese orden?",
       "code": "",
       "options": [
+        "¿Por qué pasó? ¿Qué pasó? ¿Qué conviene hacer? ¿Qué pasará?",
         "¿Qué pasó? ¿Qué pasará? ¿Por qué pasó? ¿Qué conviene hacer?",
-        "¿Qué conviene hacer? ¿Por qué pasó? ¿Qué pasó? ¿Qué pasará?",
         "¿Qué pasó? ¿Por qué pasó? ¿Qué pasará? ¿Qué conviene hacer?",
-        "¿Por qué pasó? ¿Qué pasó? ¿Qué conviene hacer? ¿Qué pasará?"
+        "¿Qué conviene hacer? ¿Por qué pasó? ¿Qué pasó? ¿Qué pasará?"
       ],
       "answer": 2,
       "explain": "Son preguntas orientativas: una predicción expresa incertidumbre y un análisis diagnóstico no demuestra causalidad por sí solo. BI puede apoyar decisiones con información histórica o reciente; Big Data no equivale a predicción."
@@ -135,10 +135,10 @@
       "prompt": "En este módulo, ¿quién deja el dato usable (extraer, transformar, cargar y guardar)?",
       "code": "",
       "options": [
-        "Arquitecto de datos: ejecuta personalmente todas las transformaciones diarias.",
-        "Analista de datos: asume por definición toda extracción y operación de las fuentes.",
+        "Analista de datos: su responsabilidad principal es operar las cargas entre los sistemas.",
+        "Científico de datos: su función principal es mantener el almacenamiento y las cargas.",
         "Ingeniero de datos: construye y mantiene el recorrido que deja los datos utilizables.",
-        "Científico de datos: administra por definición las cargas de todos los sistemas."
+        "Arquitecto de datos: su función principal es ejecutar y supervisar las cargas diarias."
       ],
       "answer": 2,
       "explain": "Minería e IA **beben** de lo que el ingeniero deja listo; no son otros nombres del ingeniero. «Tenemos Big Data porque usamos Hadoop» es un error: la herramienta no define el problema."
