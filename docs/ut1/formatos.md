@@ -103,14 +103,17 @@ Además suele pedirse:
 | Autónomo | El fichero lleva cómo interpretarlo (el esquema) |
 | Comprimible | Snappy, gzip, zstd… a cambio de CPU |
 
-Dos familias, no dos religiones:
+Distinguimos representaciones de texto y binarias, sin asignarlas a destinos exclusivos:
 
-| | Lo abre el Bloc de notas | Lo come el lago |
+| | Formatos de texto | Formatos binarios |
 | --- | --- | --- |
 | Ejemplos | CSV, JSON, XML | Avro, Parquet, ORC |
-| Tamaño | Grande | Menor |
-| Esquema | A medias o en la cabeza | Suele ir **dentro** del fichero |
-| Uso | API, entrega a un compañero | Analítica a escala |
+| Inspección | Se pueden inspeccionar con un editor de texto | Requieren un lector compatible |
+| Tamaño | Depende del contenido y de la compresión | La codificación puede reducirlo; hay que medirlo |
+| Esquema | Requieren acuerdos de tipos y estructura; pueden acompañarse de un esquema externo | Los archivos contenedores de estos ejemplos incluyen información de esquema |
+| Usos habituales | Intercambio, API o conservación de originales | Intercambio de registros o consultas analíticas, según el formato |
+
+Un lago puede conservar tanto CSV, JSON y XML como Avro, Parquet y ORC. Elegimos según el contrato de datos, el lector y el trabajo que necesitamos realizar; ser texto o binario no determina el destino.
 
 **CSV.** Universal. `01` ¿texto o número? Una coma dentro de un campo requiere entrecomillado y escape correctos. Para sumar *importe* soléis arrastrar *canal* y *comentarios*.
 
@@ -473,7 +476,9 @@ Eso permite viajar en el tiempo, un [ACID](almacenamiento.md){target="_blank" re
 
 Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC son formatos de archivo; Arrow describe una representación en memoria; DuckDB es un motor; Delta, Iceberg y Hudi gestionan tablas sobre archivos. No son alternativas intercambiables: un motor puede consultar una tabla cuyos datos están en Parquet.
 
-| Situación | Formato | Por qué |
+La tabla propone opciones habituales, no correspondencias obligatorias. Comprobad que los lectores previstos admiten el formato, que el esquema conserva los datos y que la elección responde al uso.
+
+| Situación | Opción que valorar | Por qué |
 | --- | --- | --- |
 | Lo tiene que leer un humano o una API | CSV / JSON | Se depura |
 | Kafka, campos nuevos el mes que viene | **Avro** | Fila + esquema que evoluciona |
@@ -484,10 +489,10 @@ Distinguid el nivel de cada elección: CSV, JSON, Avro, Feather, Parquet y ORC s
 | Picar la reserva en recepción | Ni Parquet ni ORC como almacén | Una fila se actualiza caro |
 | Borrar/versionar en el lago | Delta / Iceberg / Hudi | Diario encima |
 
-- Muchas **escrituras** de registros completos → filas (Avro).
-- **Lecturas** de tres campos de un millón → columnas.
-- Esquema inquieto → Avro. Anidado y subcampos → Parquet.
-- Hive → ORC. Spark → Parquet. Cola → Avro.
+- Para intercambiar o escribir registros completos, valorad formatos por filas como Avro.
+- Para **leer** pocos campos de muchas filas, valorad formatos columnares como Parquet u ORC.
+- Si cambia el esquema, Avro ofrece mecanismos de evolución cuya compatibilidad hay que comprobar. Si consultáis subcampos de datos anidados, valorad Parquet y las capacidades del lector.
+- ORC con Hive, Parquet con Spark y Avro en una cola son combinaciones habituales, no requisitos. Estas herramientas pueden trabajar con otros formatos; comprobad compatibilidad, consultas, evolución del esquema y rendimiento antes de elegir.
 
 | | Escribir | Leer | Ocupa |
 | --- | --- | --- | --- |

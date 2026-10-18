@@ -113,7 +113,7 @@
         "Escalado: el cuello requiere añadir nodos antes de cambiar dónde se ejecutan los jobs."
       ],
       "answer": 2,
-      "explain": "El algoritmo debe mirar lo grande que es el trabajo y lo ocupado (y potente) que está cada nodo. Un clúster rápido sin réplica es frágil; uno muy replicado pero mal balanceado deja un nodo al 100 %."
+      "explain": "El algoritmo debe mirar lo grande que es el trabajo y lo ocupado (y potente) que está cada nodo. Un clúster rápido sin mecanismos adecuados de recuperación es frágil. En nuestro ejemplo utilizamos réplicas, detección de fallos y recuperación; también puede reconstruirse el dato desde un origen conservado. Esto no sustituye al equilibrio de carga: uno muy replicado pero mal balanceado deja un nodo al 100 %."
     },
     {
       "topic": "Cuando el clúster no hace magia",

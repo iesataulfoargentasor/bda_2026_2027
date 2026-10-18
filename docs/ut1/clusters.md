@@ -78,7 +78,7 @@ Los nombres de nodo son **cómputo del histórico**, no la recepción de cada ho
 | **Equilibrio de carga** | No mandáis todo al mismo nodo | Laredo en agosto no se come el 100 % y Potes vacío |
 | **Escalabilidad** | Añadís nodos cuando crece el dato | Abrís otro hotel sin reescribir el PMS |
 
-Estas cuatro se apoyan entre sí. Un clúster “rápido” pero sin réplica es frágil. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.
+Estas cuatro se apoyan entre sí. Un clúster rápido sin mecanismos adecuados de recuperación es frágil. En nuestro ejemplo utilizamos réplicas, detección de fallos y recuperación; otros diseños pueden reconstruir los datos desde un origen conservado. Uno muy replicado pero mal balanceado deja un nodo al 100 % y el resto de brazos cruzados.
 
 ### Alto rendimiento
 
