@@ -595,10 +595,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#video-resumen-las-ideas-esenciales" class="md-nav__link">
+  <a href="#video-el-informe-del-hotel-entre-varias-maquinas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vídeo resumen: las ideas esenciales
+        Vídeo: el informe del hotel entre varias máquinas
       
     </span>
   </a>
@@ -1433,10 +1433,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#video-resumen-las-ideas-esenciales" class="md-nav__link">
+  <a href="#video-el-informe-del-hotel-entre-varias-maquinas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vídeo resumen: las ideas esenciales
+        Vídeo: el informe del hotel entre varias máquinas
       
     </span>
   </a>
@@ -1675,15 +1675,15 @@
 
 
 <h1 id="12-clusteres-de-computadoras">1.2. Clústeres de computadoras<a class="headerlink" href="#12-clusteres-de-computadoras" title="Permanent link">&para;</a></h1>
-<h2 id="video-resumen-las-ideas-esenciales">Vídeo resumen: las ideas esenciales<a class="headerlink" href="#video-resumen-las-ideas-esenciales" title="Permanent link">&para;</a></h2>
-<p>Empieza con este resumen para entender qué es un clúster, cómo reparte el trabajo y qué necesita para recuperarse de un fallo. El ejemplo del grupo hotelero ayuda a distinguir particiones y réplicas, crecimiento vertical y horizontal, y las ventajas y límites de añadir máquinas. <strong>Duración: 3 minutos y 1 segundo.</strong></p>
-<video controls playsinline preload="metadata" poster="../../assets/ut1/clusters-resumen-portada.jpg" aria-label="Resumen de Clústeres de computadoras" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut1/clusters-resumen.mp4" type="video/mp4">
+<h2 id="video-el-informe-del-hotel-entre-varias-maquinas">Vídeo: el informe del hotel entre varias máquinas<a class="headerlink" href="#video-el-informe-del-hotel-entre-varias-maquinas" title="Permanent link">&para;</a></h2>
+<p>Sigue el cobro de Ana hasta el informe de las ocho para entender cómo colaboran los nodos de un clúster. La explicación recorre el reparto de tareas, las diferencias entre particiones y réplicas, la recuperación de fallos y los límites de añadir máquinas, con ejemplos paso a paso y pausas para asimilar las ideas. <strong>Duración: 9 minutos y 55 segundos.</strong></p>
+<video controls playsinline preload="metadata" poster="../../assets/ut1/clusters-natural-portada.jpg" aria-label="Clústeres: el informe del hotel entre varias máquinas" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut1/clusters-natural.mp4" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-<p>El vídeo incluye subtítulos visibles y narración con voz sintética en español.</p>
-<p><a href="../../assets/ut1/clusters-resumen.mp4">Descargar el vídeo</a> · <a href="../../assets/ut1/clusters-resumen.txt">Leer la transcripción</a> · <a href="../../assets/ut1/clusters-resumen.es.srt">Descargar los subtítulos</a></p>
+<p>El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las actividades del apartado.</p>
+<p><a href="../../assets/ut1/clusters-natural.mp4">Descargar el vídeo</a> · <a href="../../assets/ut1/clusters-natural.txt">Leer la transcripción</a> · <a href="../../assets/ut1/clusters-natural.es.srt">Descargar los subtítulos</a></p>
 <h2 id="del-problema-al-reparto-del-trabajo">Del problema al reparto del trabajo<a class="headerlink" href="#del-problema-al-reparto-del-trabajo" title="Permanent link">&para;</a></h2>
 <p>En 1.1 hemos identificado situaciones en las que el sistema disponible puede resultar insuficiente. En este apartado estudiamos cómo colaborarían varias máquinas. La decisión depende de una medida concreta: cuánto tarda el trabajo, cuánta memoria necesita o qué interrupción del servicio se puede aceptar. Tener cuatro hoteles, por sí solo, no demuestra que haga falta un clúster.</p>
 <p>Supongamos que queremos sumar los cobros de un año. Podemos dividir los registros en cuatro conjuntos, calcular una suma parcial en cada nodo y sumar después los cuatro resultados. Para que funcione, cada registro debe entrar en un conjunto y las sumas deben usar las mismas reglas. Un programa coordinador asigna las tareas y comprueba su finalización. Si una tarea falla, debe poder repetirse sin contar dos veces sus resultados.</p>
