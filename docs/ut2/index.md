@@ -8,13 +8,17 @@ tags:
 
 # U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
 
-El título sigue el **[RA2](ra2.md)**: *gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos, facilitando el procesamiento de grandes cantidades de datos, sin fallos y de forma rápida*.
+El hotel ya dispone de un procedimiento para preparar y comprobar sus informes. Ahora queremos estudiar qué sucede cuando aumenta el histórico, coinciden varios trabajos o un componente deja de funcionar. En esta unidad aprenderemos a gestionar los sistemas que almacenan y procesan esos datos, comprobando qué pueden hacer y bajo qué condiciones.
+
+Este trabajo desarrolla el **[RA2](ra2.md)**: *gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos, facilitando el procesamiento de grandes cantidades de datos, sin fallos y de forma rápida*.
 
 En esta unidad, «sin fallos» significa estudiar y probar la respuesta del sistema ante **determinados fallos**, con sus condiciones y límites. La rapidez también se comprueba: depende de los datos, los recursos y el trabajo que se realiza.
 
 ## De dónde venimos y qué cambia
 
-En la [UT1](../ut1/index.md) diseñasteis una solución, elegisteis almacenamiento y formatos, integrasteis datos y construisteis un informe comprobado con [Pentaho](../ut1/tarea-clase.md). Seguimos con el mismo **[grupo hotelero de Cantabria](../ut1/caso-hotel.md)**: recepción registra operaciones, finanzas cierra a las **23:00** y gerencia necesita el informe del cierre de ayer a las **8:00**.
+En la [UT1](../ut1/index.md) diseñasteis una solución, elegisteis almacenamiento y formatos, integrasteis datos y construisteis un informe comprobado con [Pentaho](../ut1/tarea-clase.md). Seguimos con el mismo **[grupo hotelero de Cantabria](../ut1/caso-hotel.md)**: recepción registra operaciones, finanzas cierra a las **23:00** y gerencia necesita el informe de ese cierre a las **8:00 del día siguiente**.
+
+En la práctica integradora aprendisteis a relacionar reservas y cobros, validar el resultado y controlar la publicación. Esas comprobaciones siguen siendo necesarias. Ahora ampliamos la pregunta: además de obtener un resultado correcto, ¿qué recursos y mecanismos necesita el sistema para seguir prestando el servicio cuando cambian las condiciones?
 
 La [transición desde la UT1: 500 GB y un portátil](../ut1/transicion-ut2.md) plantea el crecimiento del histórico. La UT2 amplía ese escenario: ¿qué cambia si seguimos acumulando reservas, cobros, registros de sensores y fotos hasta alcanzar varios terabytes? Debemos comprobar si podemos conservarlos, procesarlos dentro del plazo y recuperar el servicio ante un fallo.
 
@@ -32,12 +36,32 @@ Al terminar la unidad, debéis poder explicar y apoyar con evidencias:
 
 ## Cómo se relacionan los apartados
 
-El recorrido tiene **dos bloques de trabajo con prácticas relacionadas**:
+El hotel necesita tanto revisar su histórico como consultar y actualizar información concreta. Por ejemplo, dirección puede pedir un resumen de muchas reservas, mientras recepción necesita recuperar una reserva y modificar sus datos. Estas necesidades nos permiten organizar **dos bloques de trabajo relacionados**:
+
+| Necesidad que utilizamos como ejemplo | Bloque de la unidad |
+| --- | --- |
+| Conservar archivos históricos y recorrer muchas reservas para obtener un resumen | **2.1–2.4:** almacenamiento de ficheros y procesamiento con Hadoop. |
+| Organizar reservas y opiniones, consultarlas y modificar información concreta | **2.5–2.9:** bases de datos documentales, gestión y acceso desde Python. |
+
+Son ejemplos para aprender las funciones de cada sistema, no usos exclusivos de esas tecnologías. Antes de recorrer los apartados, situad cuatro nombres:
+
+- **HDFS** es el sistema de ficheros de Hadoop: almacena archivos divididos en bloques que pueden repartirse entre nodos.
+- **MapReduce** organiza un cálculo en tareas y reúne sus resultados parciales.
+- **YARN** administra los recursos disponibles para ejecutar los trabajos.
+- **MongoDB** almacena y permite consultar y modificar documentos: registros con campos que también pueden contener listas y estructuras anidadas.
+
+Con esas funciones situadas, el recorrido será el siguiente:
 
 - **2.1–2.4: almacenar ficheros y repartir el cálculo.** Primero identificamos las necesidades del hotel (2.1) y conocemos el ecosistema Hadoop y su entorno de prácticas (2.2). Después estudiamos HDFS, el sistema que guarda los ficheros en bloques (2.3), y profundizamos en cómo MapReduce divide y reúne el cálculo, con recursos gestionados por YARN (2.4). El ejemplo común calcula noches reservadas por hotel.
-- **2.5–2.9: organizar, consultar y gestionar documentos.** Comparamos las familias NoSQL (2.5), practicamos consultas y cambios en MongoDB (2.6) y diseñamos documentos según las operaciones que necesita el hotel (2.7). Después distinguimos replicación —conservar copias— y particionado —repartir datos— (2.8), y accedemos al sistema desde Python (2.9).
+- **2.5–2.9: organizar, consultar y gestionar documentos.** Comparamos las familias NoSQL (2.5), practicamos consultas y cambios en MongoDB (2.6) y diseñamos documentos según las operaciones que necesita el hotel (2.7). Después estudiamos cómo mantener copias de los datos y cómo repartirlos en partes (2.8), y accedemos al sistema desde Python (2.9).
 
-Ambos bloques responden a necesidades del mismo caso hotelero y utilizan entornos independientes. Hive y Spark aparecen como herramientas del ecosistema; la replicación y el particionado son mecanismos que estudiamos en los sistemas. Cada elemento debe relacionarse con la función que aporta.
+Seguimos con el mismo hotel, pero **no reconstruimos directamente el informe de cobros de Pentaho**. En Hadoop empezamos con una pregunta más sencilla: cuántas noches reservadas aparecen por hotel. Así podemos concentrarnos en cómo se divide y reúne el trabajo y comprobar los resultados. En MongoDB utilizaremos reservas y opiniones para aprender a consultar, actualizar y organizar documentos. Cada práctica indicará sus datos y el significado del resultado.
+
+La pregunta común a ambos bloques es: **¿qué cambia cuando crecen los datos, aumenta el trabajo o falla un componente?** Compararemos la organización, los recursos y los mecanismos de cada sistema. Los laboratorios utilizan entornos independientes; completar el primer bloque no exige trasladar automáticamente sus salidas al segundo.
+
+La **replicación** mantiene copias de los datos en varios miembros del sistema, y el **particionado** reparte los datos en partes. Pueden combinarse: cada parte puede tener sus propias réplicas. Replicar tampoco sustituye a una copia de seguridad, porque puede propagar borrados o cambios incorrectos.
+
+Hive y Spark aparecen como herramientas del ecosistema. A medida que avancéis, relacionad cada nombre con la función que aporta: guardar, ejecutar, gestionar recursos, consultar o facilitar la recuperación.
 
 ## Cómo trabajar la unidad
 
@@ -47,9 +71,11 @@ El recorrido común reúne los conceptos y las prácticas guiadas de los apartad
 
 Necesitáis los fundamentos de la UT1, manejo básico de terminal y Python: variables, bucles, funciones y lectura de archivos. Utilizad los materiales y el entorno del módulo; los requisitos de instalación se detallan en [2.2](ecosistema.md) y [2.6](mongodb.md). Antes de ejecutar un comando, identificad si corresponde al equipo anfitrión, al contenedor, a la consola de MongoDB o a Python. Seguid las indicaciones de arranque y parada al cambiar de práctica, especialmente en [2.8](replicas-shards.md).
 
-## Qué vais a trabajar
+<span id="que-vais-a-trabajar"></span>
 
-La tabla recoge las relaciones principales con los criterios del [RA2](ra2.md). Estudiar un concepto y demostrarlo en el laboratorio requieren evidencias diferentes.
+## Mapa de apartados y criterios de evaluación
+
+Utilizad esta tabla para localizar dónde se trabaja cada criterio del [RA2](ra2.md) y qué aprendizaje aporta cada apartado. Estudiar un concepto y demostrarlo en el laboratorio requieren evidencias diferentes.
 
 | Apartado | Criterio | Qué os lleváis |
 | --- | --- | --- |
@@ -86,6 +112,8 @@ Los CSV y JSONL son **conjuntos diferentes**: no tienen por qué producir los mi
 
 !!! info "Qué permite demostrar el entorno de aula"
     El entorno básico de Hadoop utiliza un único nodo de datos y un único nodo de ejecución en un ordenador. Permite observar sus funciones y las tareas, pero probar la tolerancia por réplica requiere más nodos de datos y copias efectivas. Varios contenedores en un ordenador tampoco demuestran resistencia ante la pérdida de ese ordenador ni aceleración entre máquinas físicas. En cada prueba, distinguid lo observado de lo esperado por diseño.
+
+Para observar el crecimiento del sistema, relacionad cada recurso añadido con lo que aporta: por ejemplo, capacidad de almacenamiento al incorporar un DataNode o capacidad de ejecución al añadir un trabajador. El laboratorio opcional de particionado ofrece otra forma de estudiarlo. El profesor concretará la práctica o demostración con la que se recogerá la evidencia del criterio **e)**; explicar una ampliación prevista no equivale a haberla observado.
 
 En cada práctica conservad **entrada, configuración, operación, resultado y explicación**. Una captura sin interpretación no permite saber si el resultado es correcto. Contrastad recuentos, totales y reglas de negocio; al probar un fallo, registrad el estado inicial, la interrupción y la recuperación. Si el entorno no permite demostrar una propiedad, explicad la limitación y qué prueba adicional necesitaríais.
 
