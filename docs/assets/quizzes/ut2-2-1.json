@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.1",
+  "title": "Autoevaluación del 2.1",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Diagnosticar la necesidad",
+      "href": "../por-que-almacenamiento/#tres-necesidades-que-debemos-medir",
+      "prompt": "El informe termina tarde, aunque queda espacio en disco. ¿Qué paso permite justificar una mejora?",
+      "code": "",
+      "options": [
+        "Ampliar el disco según el crecimiento anual y repetir el cierre con más espacio disponible.",
+        "Medir tiempos por fase y uso de recursos para localizar qué limita el trabajo.",
+        "Repartir las reservas por hotel y estimar el tiempo dividiendo entre los nodos previstos.",
+        "Añadir réplicas del histórico y estimar la mejora según el número de copias accesibles."
+      ],
+      "answer": 1,
+      "explain": "El retraso exige diagnosticar el rendimiento. Más espacio o más réplicas no identifican el cuello de botella. Repartir puede ayudar, pero su mejora debe medirse: los tiempos no se dividen proporcionalmente al número de nodos."
+    },
+    {
+      "topic": "Capacidad y crecimiento",
+      "href": "../por-que-almacenamiento/#tres-necesidades-que-debemos-medir",
+      "prompt": "Se conservan 20 GB nuevos diarios durante 365 días. Antes de compresión y copias, ¿qué representan los 7,3 TB calculados?",
+      "code": "",
+      "options": [
+        "El espacio físico total, incluidos los índices y los temporales del proceso.",
+        "El espacio adicional que hay que comprar, descontado el disco disponible.",
+        "El volumen que debe recorrer cada cierre, aunque consulte un solo día.",
+        "El espacio de los datos nuevos, sin incluir histórico previo ni espacio auxiliar."
+      ],
+      "answer": 3,
+      "explain": "20 × 365 = 7.300 GB = 7,3 TB decimales. Falta considerar histórico previo, índices, temporales y protección. Para decidir cuánto añadir también hay que conocer el espacio libre. Conservar un volumen no obliga a leerlo entero en cada trabajo."
+    },
+    {
+      "topic": "Plazo del informe",
+      "href": "../por-que-almacenamiento/#el-hotel-necesita-seguir-cumpliendo-el-plazo",
+      "prompt": "El proceso completo empieza a las 23:00 y tarda once horas, sin cambio de hora. Gerencia lo necesita a las 8:00. ¿Qué conclusión es correcta?",
+      "code": "",
+      "options": [
+        "Termina a las 10:00 y supera en dos horas el plazo previsto.",
+        "Termina a las 8:00 si el corte de negocio coincide con el arranque.",
+        "Termina a las 9:00 y supera en una hora el plazo previsto.",
+        "Termina a las 10:00 y dispone de dos horas para validar la salida."
+      ],
+      "answer": 0,
+      "explain": "Entre las 23:00 y las 8:00 hay nueve horas. Once horas sitúan el final a las 10:00. El supuesto incluye el proceso completo; no se puede excluir la validación para considerar cumplido el plazo."
+    },
+    {
+      "topic": "Almacenamiento y procesamiento",
+      "href": "../por-que-almacenamiento/#datos-diferentes-usos-diferentes",
+      "prompt": "Un CSV de reservas se ha guardado correctamente en HDFS. ¿Qué falta para obtener las noches reservadas por hotel?",
+      "code": "",
+      "options": [
+        "Replicar sus bloques para que cada copia represente el total de un hotel.",
+        "Partir el archivo por tamaño para obtener un subtotal en cada bloque.",
+        "Ejecutar un programa que interprete los registros, agrupe y compruebe las sumas.",
+        "Registrar el nombre del archivo y sus metadatos para consultar los totales."
+      ],
+      "answer": 2,
+      "explain": "HDFS conserva los bytes. El cálculo requiere interpretar los campos, agrupar por hotel, sumar noches y comprobar el resultado. Dividir o replicar bloques no realiza esas operaciones; los metadatos del archivo tampoco contienen necesariamente los totales."
+    },
+    {
+      "topic": "Elegir según el uso",
+      "href": "../por-que-almacenamiento/#datos-diferentes-usos-diferentes",
+      "prompt": "Llegan reservas en JSON y se necesitan consultas por varios campos. ¿Cómo justificaríais la organización?",
+      "code": "",
+      "options": [
+        "Conservar los originales y valorar una base documental según consultas y garantías.",
+        "Elegir una base documental porque el formato JSON determina el modelo de almacenamiento.",
+        "Convertir a CSV para que los campos puedan filtrarse antes de cargar la información.",
+        "Guardar en HDFS para que el sistema interprete los campos y resuelva las consultas."
+      ],
+      "answer": 0,
+      "explain": "JSON no obliga a utilizar MongoDB. Deben valorarse las consultas y garantías necesarias. CSV no es un requisito para filtrar y HDFS necesita herramientas de procesamiento para interpretar el contenido."
+    },
+    {
+      "topic": "Transferencias y cálculo",
+      "href": "../por-que-almacenamiento/#procesar-cerca-de-los-datos-puede-reducir-transferencias",
+      "prompt": "El histórico de 500 GB ya está repartido. ¿Por qué puede ayudar ejecutar tareas cerca de sus bloques?",
+      "code": "",
+      "options": [
+        "Evita transferir resultados parciales porque cada bloque contiene el total final.",
+        "Permite medir la mejora contando nodos sin repetir el mismo cálculo local.",
+        "Puede reducir transferencias de entrada, aunque las tareas siguen comunicándose.",
+        "Reduce el espacio de los originales al sustituir cada bloque por su subtotal."
+      ],
+      "answer": 2,
+      "explain": "La localidad puede reducir el movimiento de los datos de entrada. Sigue habiendo coordinación y transferencias, por ejemplo para reunir parciales. El cálculo no sustituye por sí solo los originales y la mejora se verifica con tiempos y resultados comparables."
+    },
+    {
+      "topic": "Lectura por bloques",
+      "href": "../por-que-almacenamiento/#procesar-cerca-de-los-datos-puede-reducir-transferencias",
+      "prompt": "Un programa lee el histórico remoto por bloques y descarta cada bloque tras procesarlo. ¿Qué cambia respecto a descargarlo completo?",
+      "code": "",
+      "options": [
+        "Añade tolerancia a fallos porque cada bloque leído equivale a una réplica.",
+        "Reduce los bytes de entrada por la red en proporción al tamaño de cada bloque.",
+        "Traslada el cálculo al servidor remoto porque los archivos permanecen allí.",
+        "Reduce el espacio local necesario, pero transfiere por la red los datos que lee."
+      ],
+      "answer": 3,
+      "explain": "Leer por bloques evita necesitar una copia local completa; no evita transferir los datos leídos. El programa puede seguir calculando en el portátil. Los bloques de lectura no son por ello réplicas ni una garantía de recuperación."
+    },
+    {
+      "topic": "Réplicas y recuperación",
+      "href": "../por-que-almacenamiento/#que-debe-ocurrir-cuando-falla-un-componente",
+      "prompt": "Un borrado equivocado se ha propagado a todas las réplicas. ¿Qué permitiría recuperar los registros anteriores?",
+      "code": "",
+      "options": [
+        "Repartir las réplicas actuales entre más nodos para reconstruir los registros borrados.",
+        "Restaurar una versión anterior conservada y comprobar los registros recuperados.",
+        "Elegir otra réplica actual como principal para recuperar el contenido anterior.",
+        "Repetir la consulta sobre todas las réplicas actuales y combinar sus resultados."
+      ],
+      "answer": 1,
+      "explain": "Si el borrado ya se propagó, consultar o reorganizar esas réplicas no recupera el estado anterior. Hace falta una versión recuperable, como una copia de seguridad adecuada, y comprobar la restauración."
+    },
+    {
+      "topic": "Alcance de una prueba",
+      "href": "../por-que-almacenamiento/#que-debe-ocurrir-cuando-falla-un-componente",
+      "prompt": "Se detiene un contenedor y las consultas continúan en otros dos del mismo portátil. ¿Qué demuestra la prueba?",
+      "code": "",
+      "options": [
+        "Que los datos podrían restaurarse a un estado anterior a un borrado propagado.",
+        "Que las consultas continuarían si se apagara el ordenador que aloja las copias.",
+        "Que la configuración mantiene esas consultas ante la parada de ese proceso.",
+        "Que repartir las consultas entre tres contenedores reduce el tiempo del cierre."
+      ],
+      "answer": 2,
+      "explain": "Se ha probado un fallo de proceso y la continuidad de unas consultas concretas. No se ha probado pérdida del ordenador, recuperación histórica ni mejora de rendimiento. Las conclusiones deben corresponder a la evidencia recogida."
+    },
+    {
+      "topic": "Reutilización y significado",
+      "href": "../por-que-almacenamiento/#conservar-hoy-para-responder-nuevas-preguntas",
+      "prompt": "Dos fuentes tienen un campo llamado importe. Antes de sumarlo para un nuevo informe, ¿qué debe comprobarse?",
+      "code": "",
+      "options": [
+        "Que los campos representan conceptos compatibles, con unidades y periodos definidos.",
+        "Que ambos campos son numéricos y el programa termina sin errores de lectura.",
+        "Que ambos archivos tienen las mismas columnas y un número parecido de filas.",
+        "Que ambos archivos ocupan tamaños similares y se guardan en la misma carpeta."
+      ],
+      "answer": 0,
+      "explain": "Un precio previsto y un cobro confirmado pueden ser numéricos y llamarse importe, pero representan hechos distintos. Los metadatos deben aclarar significado, unidades y periodo. Una suma ejecutada sin errores no garantiza una interpretación correcta."
+    }
+  ]
+}
