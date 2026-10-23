@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.4",
+  "title": "Autoevaluación del 2.4",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Map y significado",
+      "href": "../computacion-distribuida/#map-transformar-cada-registro",
+      "prompt": "Para sumar noches reservadas por hotel, ¿qué par debe emitir el mapper por reserva?",
+      "code": "",
+      "options": [
+        "La clave hotel y el importe, para agregar el precio de cada estancia.",
+        "La clave canal y las noches, para agrupar las reservas por procedencia.",
+        "La clave hotel y las noches, para reunir las estancias del mismo hotel.",
+        "La clave id_reserva y las noches, para separar cada reserva en la salida."
+      ],
+      "answer": 2,
+      "explain": "El indicador exige agrupar por hotel y sumar noches. Usar importe calcularía otra magnitud; agrupar por canal o identificador respondería preguntas distintas. Que el job termine no valida esa elección."
+    },
+    {
+      "topic": "Tareas y máquinas",
+      "href": "../computacion-distribuida/#map-transformar-cada-registro",
+      "prompt": "Una entrada genera seis splits y un único NodeManager ejecuta dos maps a la vez. ¿Qué se observa?",
+      "code": "",
+      "options": [
+        "Seis tareas map que pueden ejecutarse por turnos en el mismo nodo.",
+        "Seis máquinas físicas coordinadas para completar las tareas disponibles.",
+        "Seis tareas simultáneas porque cada split reserva sus propios recursos.",
+        "Dos tareas map que reúnen los seis splits antes de empezar el cálculo."
+      ],
+      "answer": 0,
+      "explain": "Cada split da lugar a una tarea map, pero la concurrencia depende de los recursos. Seis tareas no implican seis máquinas; un NodeManager puede ejecutarlas por turnos. No se deduce una aceleración sin medir."
+    },
+    {
+      "topic": "Shuffle y desequilibrio",
+      "href": "../computacion-distribuida/#shuffle-y-sort-reunir-la-misma-clave",
+      "prompt": "El 95 % de las reservas es de Laredo. Con particionado por hotel, ¿por qué añadir reducers puede ayudar poco?",
+      "code": "",
+      "options": [
+        "Porque Hadoop reparte las reservas de Laredo entre todos los reducers disponibles.",
+        "Porque el NameNode debe sumar las noches antes de poder asignar los reducers.",
+        "Porque cada bloque HDFS obliga a utilizar exactamente un reducer diferente.",
+        "Porque la clave Laredo sigue reuniéndose en un reducer que concentra la carga."
+      ],
+      "answer": 3,
+      "explain": "Con la clave hotel, todas las emisiones de Laredo se reúnen en el mismo reducer. El desequilibrio puede dominar el tiempo. Cambiar ese reparto requeriría rediseñar la agregación, no solo aumentar el número de reducers."
+    },
+    {
+      "topic": "Combinar medias",
+      "href": "../computacion-distribuida/#reduce-agregar-y-escribir",
+      "prompt": "Un grupo contiene [2, 4] noches y otro [10]. ¿Cómo se calcula la media conjunta?",
+      "code": "",
+      "options": [
+        "Promediando 3 y 10 para que cada grupo contribuya por igual al resultado.",
+        "Sumando 6 y 10 y dividiendo entre los tres registros de ambos grupos.",
+        "Sumando 3 y 10 y dividiendo entre los tres registros de ambos grupos.",
+        "Sumando 6 y 10 y dividiendo entre los dos grupos que se han procesado."
+      ],
+      "answer": 1,
+      "explain": "La media se obtiene con suma total y recuento total: 16/3. La media de medias da 6,5 y pondera igual grupos de tamaños distintos. El combiner puede transportar sumas y recuentos; la división se hace al final."
+    },
+    {
+      "topic": "Comprobar resultados",
+      "href": "../computacion-distribuida/#verificar-primero-en-local",
+      "prompt": "Una salida suma 62 noches, pero resta una a Laredo y añade una a Potes. ¿Debe aceptarse?",
+      "code": "",
+      "options": [
+        "No: hay que contrastar cada hotel, aunque el total global coincida.",
+        "Sí: la suma conserva las noches y las diferencias se compensan.",
+        "Sí: las diferencias reflejan el orden de llegada de las claves al reducer.",
+        "No: habría que ordenar por noches para recuperar el reparto original."
+      ],
+      "answer": 0,
+      "explain": "El agregado responde por hotel. Dos errores pueden compensarse y conservar el total global. Ordenar las líneas no corrige los valores; comprobar_noches.py compara las claves y sus totales independientemente del orden."
+    },
+    {
+      "topic": "Validación de ejecución",
+      "href": "../computacion-distribuida/#ejecutar-el-mismo-calculo-en-hadoop",
+      "prompt": "El job termina con _SUCCESS y produce varios part-*. ¿Qué paso completa la comprobación del agregado?",
+      "code": "",
+      "options": [
+        "Comparar el número de archivos de salida con el número de hoteles de entrada.",
+        "Tomar el primer archivo, porque contiene la combinación de las demás partes.",
+        "Comparar el tiempo del job con la ejecución anterior que usó el mismo programa.",
+        "Leer todas las partes y contrastar los totales por hotel con la misma entrada."
+      ],
+      "answer": 3,
+      "explain": "_SUCCESS indica finalización técnica. Los resultados pueden estar repartidos entre archivos y un archivo puede contener varios hoteles. Debemos reunir todas las partes y verificar el cálculo; un tiempo parecido no lo valida."
+    },
+    {
+      "topic": "Mediciones comparables",
+      "href": "../computacion-distribuida/#medir-sin-cambiar-dos-variables-a-la-vez",
+      "prompt": "Para estudiar el efecto de ampliar recursos de ejecución, ¿qué comparación es adecuada?",
+      "code": "",
+      "options": [
+        "Cambiar recursos y formato de entrada y atribuir al primero toda la diferencia.",
+        "Mantener datos y código, cambiar el recurso definido y validar cada resultado.",
+        "Usar más registros en la configuración nueva para compensar la mayor capacidad.",
+        "Medir el mejor tiempo de cada configuración y excluir la espera del segundo."
+      ],
+      "answer": 1,
+      "explain": "Hay que definir una variable, mantener trabajo e intervalo comparables y conservar las mediciones. Cambiar formato o volumen introduce otras causas. El protocolo usa tres tiempos y su mediana después del calentamiento."
+    },
+    {
+      "topic": "Aceleración",
+      "href": "../computacion-distribuida/#medir-sin-cambiar-dos-variables-a-la-vez",
+      "prompt": "Las medianas de dos configuraciones comparables son 120 y 80 segundos. ¿Cómo se interpreta el cambio?",
+      "code": "",
+      "options": [
+        "Aceleración 0,67 y reducción del tiempo aproximada del 33,3 %.",
+        "Aceleración 1,5 y reducción del tiempo aproximada del 50 %.",
+        "Aceleración 1,5 y reducción del tiempo aproximada del 33,3 %.",
+        "Aceleración 0,67 y reducción del tiempo aproximada del 50 %."
+      ],
+      "answer": 2,
+      "explain": "La aceleración es 120/80 = 1,5. La reducción del tiempo es (120-80)/120, aproximadamente 33,3 %. Son medidas distintas y solo tienen sentido con trabajo equivalente y resultados correctos."
+    },
+    {
+      "topic": "Reintentos",
+      "href": "../computacion-distribuida/#yarn-quien-presta-la-cpu",
+      "prompt": "Un mapper registra un cobro externo y falla antes de terminar. ¿Qué riesgo introduce el reintento?",
+      "code": "",
+      "options": [
+        "Que HDFS convierta el cobro externo en otra réplica del archivo de entrada.",
+        "Que YARN deshaga el primer cobro antes de reservar recursos para el reintento.",
+        "Que el reducer cambie el hotel asociado al cobro para evitar repetir la clave.",
+        "Que se repita el efecto externo, porque la tarea puede ejecutarse otra vez."
+      ],
+      "answer": 3,
+      "explain": "El framework puede volver a ejecutar tareas. Esto no deshace ni deduplica automáticamente un cobro en otro sistema. El mapper analítico de la práctica debe limitarse a producir datos, sin efectos de negocio externos."
+    },
+    {
+      "topic": "Límites de la evidencia",
+      "href": "../computacion-distribuida/#que-habeis-demostrado-y-como-continua-la-unidad",
+      "prompt": "El agregado es correcto y se observan varias tareas en el Compose de un portátil. ¿Qué conclusión está respaldada?",
+      "code": "",
+      "options": [
+        "El cálculo funciona en esa configuración; falta demostrar reparto entre máquinas físicas.",
+        "La aceleración aumenta con el número de tareas aunque no se hayan registrado tiempos.",
+        "El reparto entre contenedores prueba continuidad si se pierde el ordenador completo.",
+        "La corrección del resultado acredita más rendimiento que la ejecución local equivalente."
+      ],
+      "answer": 0,
+      "explain": "El resultado y las tareas observadas son evidencias válidas, pero no acreditan por sí solos distribución entre ordenadores, tolerancia al fallo del portátil ni aceleración. Cada conclusión necesita su propia prueba."
+    }
+  ]
+}
