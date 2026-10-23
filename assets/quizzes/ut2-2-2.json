@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.2",
+  "title": "Autoevaluación del 2.2",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Funciones del núcleo",
+      "href": "../ecosistema/#el-nucleo-cuatro-piezas",
+      "prompt": "El hotel calcula noches por hotel con Hadoop. ¿Qué reparto de funciones es correcto?",
+      "code": "",
+      "options": [
+        "HDFS suma los registros, YARN valida los totales y MapReduce conserva los bloques.",
+        "HDFS conserva bloques, YARN administra recursos y MapReduce organiza el cálculo.",
+        "HDFS asigna memoria, YARN conserva archivos y MapReduce registra sus ubicaciones.",
+        "HDFS conserva bloques, YARN calcula los totales y MapReduce administra las réplicas."
+      ],
+      "answer": 1,
+      "explain": "HDFS almacena los archivos. YARN administra recursos. MapReduce organiza las tareas del cálculo definido por el programa. La validación de los totales requiere comprobar la salida; no la realiza automáticamente el gestor de recursos."
+    },
+    {
+      "topic": "Roles de los servicios",
+      "href": "../ecosistema/#procesamiento-en-el-mismo-cluster-que-el-dato",
+      "prompt": "DataNode y NodeManager están instalados en una misma máquina. ¿Qué hace cada uno?",
+      "code": "",
+      "options": [
+        "DataNode coordina aplicaciones y NodeManager mantiene el mapa de bloques.",
+        "DataNode asigna memoria a las tareas y NodeManager conserva las réplicas.",
+        "DataNode ejecuta los maps y NodeManager agrupa los resultados por hotel.",
+        "DataNode sirve bloques y NodeManager lanza y supervisa procesos de ejecución."
+      ],
+      "answer": 3,
+      "explain": "Compartir máquina no convierte ambos servicios en uno. DataNode pertenece al almacenamiento HDFS y NodeManager a la ejecución YARN. El NameNode mantiene los metadatos; el ApplicationMaster coordina la aplicación."
+    },
+    {
+      "topic": "Split y bloque",
+      "href": "../ecosistema/#ejemplo-de-aula-noches-por-hotel",
+      "prompt": "Una entrada genera ocho splits. ¿Qué podemos afirmar antes de ejecutar el job?",
+      "code": "",
+      "options": [
+        "Habrá ocho tareas map; pueden ejecutarse simultáneamente o por turnos.",
+        "Habrá ocho máquinas ejecutoras; cada una recibirá un fragmento completo.",
+        "Habrá ocho tareas concurrentes; cada split reserva su CPU al enviarse.",
+        "Habrá ocho bloques HDFS; la división lógica reproduce la física del archivo."
+      ],
+      "answer": 0,
+      "explain": "El split es una división lógica de entrada y genera una tarea map. Formato y compresión pueden modificar su relación con los bloques. La concurrencia depende de los recursos disponibles; una máquina puede ejecutar varias tareas."
+    },
+    {
+      "topic": "Significado del resultado",
+      "href": "../ecosistema/#noches-por-hotel-el-job-que-si-entiende-gerencia",
+      "prompt": "El CSV de la práctica produce 62 al sumar noches. ¿Qué representa ese resultado?",
+      "code": "",
+      "options": [
+        "Las noches pagadas, porque cada fila incluye un importe numérico.",
+        "Las habitaciones disponibles, porque se ha agrupado por hotel.",
+        "Las noches reservadas que aparecen en el fichero utilizado.",
+        "El porcentaje de ocupación calculado sobre los cinco hoteles."
+      ],
+      "answer": 2,
+      "explain": "El contrato del fichero permite sumar noches reservadas. La columna importe no confirma pagos, y no tenemos inventario de habitaciones ni calendario para calcular disponibilidad u ocupación. El resultado debe interpretarse según los campos disponibles."
+    },
+    {
+      "topic": "Revisión de resultados",
+      "href": "../ecosistema/#que-hay-en-hdfs-al-acabar",
+      "prompt": "Aparece _SUCCESS en la salida. ¿Qué comprobación falta para aceptar el agregado?",
+      "code": "",
+      "options": [
+        "Ver que el NameNode utiliza más memoria después de incorporar la salida.",
+        "Contar los archivos part y compararlos con el número de hoteles del CSV.",
+        "Comprobar que el identificador de aplicación coincide con el nombre de salida.",
+        "Leer todas las partes y contrastar los totales sobre la misma entrada."
+      ],
+      "answer": 3,
+      "explain": "_SUCCESS informa de la finalización técnica del job con el mecanismo utilizado. No acredita la fórmula ni los datos elegidos. Un reducer puede producir resultados de varios hoteles; contar archivos no valida el agregado."
+    },
+    {
+      "topic": "Ampliar capacidad",
+      "href": "../ecosistema/#que-promete-y-por-que-importa-al-ra2",
+      "prompt": "Se incorpora un DataNode, pero ningún NodeManager adicional. ¿Qué aportación debe comprobarse?",
+      "code": "",
+      "options": [
+        "Más almacenamiento HDFS, sin deducir que haya más recursos de ejecución YARN.",
+        "Más ejecución YARN, porque cada bloque nuevo incorpora una tarea disponible.",
+        "Más velocidad de cálculo, proporcional a los discos añadidos al almacenamiento.",
+        "Más capacidad SQL, porque el nuevo nodo convierte los archivos en tablas."
+      ],
+      "answer": 0,
+      "explain": "DataNode aporta almacenamiento. Hace falta configuración y comprobar capacidad, reparto y copias. Añadir ejecución exige recursos gestionados por NodeManagers; instalar un servicio no garantiza velocidad proporcional ni consulta SQL."
+    },
+    {
+      "topic": "Contenedor YARN",
+      "href": "../ecosistema/#contenedor",
+      "prompt": "¿Cómo se relacionan Docker y los contenedores YARN en el laboratorio?",
+      "code": "",
+      "options": [
+        "Cada tarea map necesita crear un nuevo servicio en el archivo compose.yaml.",
+        "Cada DataNode equivale a un contenedor YARN dedicado a almacenar réplicas.",
+        "Docker aloja servicios; YARN asigna recursos para procesos de las aplicaciones.",
+        "El contenedor YARN sustituye a Docker cuando comienza a ejecutar el primer job."
+      ],
+      "answer": 2,
+      "explain": "Son conceptos distintos. Compose organiza los servicios del laboratorio. El NodeManager funciona dentro de ese entorno y permite ejecutar procesos con asignaciones YARN. No se añade un servicio Docker al Compose por cada tarea."
+    },
+    {
+      "topic": "Alcance del laboratorio",
+      "href": "../ecosistema/#mini-cluster-docker-de-este-modulo",
+      "prompt": "El Compose tiene un DataNode, un NodeManager y réplica 1. ¿Qué permite concluir una ejecución correcta?",
+      "code": "",
+      "options": [
+        "El proceso podría continuar en otra máquina si se apagara el portátil.",
+        "El trabajo funciona en esa configuración, con su resultado comprobado.",
+        "El fallo del DataNode se resolvería leyendo otra copia de sus bloques.",
+        "Los cuatro servicios aportan cuatro máquinas físicas al cálculo distribuido."
+      ],
+      "answer": 1,
+      "explain": "El laboratorio permite observar servicios y tareas, y validar resultados. No tiene redundancia de DataNodes ni otro ordenador que mantenga el servicio. Varios contenedores comparten la misma máquina y no demuestran aceleración entre máquinas físicas."
+    },
+    {
+      "topic": "Comparar mediciones",
+      "href": "../ecosistema/#el-estimador-de-paralelismo-visible",
+      "prompt": "Para comparar pi 8 25000 con pi 4 50000, ¿qué observación es necesaria?",
+      "code": "",
+      "options": [
+        "Que la primera ejecución tarde la mitad por disponer del doble de tareas map.",
+        "Que se reparta el archivo de entrada en tantos bloques como tareas solicitadas.",
+        "Que se duplique el total de muestras al pasar de cuatro a ocho tareas map.",
+        "Que se mantengan 200.000 muestras y se registren recursos, concurrencia y tiempo."
+      ],
+      "answer": 3,
+      "explain": "Ambas variantes mantienen el total de muestras, pero cambia el reparto. El arranque y la concurrencia efectiva influyen en el tiempo. Observar más tareas no acredita aceleración. Este ejemplo genera muestras; no divide el CSV de reservas."
+    },
+    {
+      "topic": "Localidad y transferencias",
+      "href": "../ecosistema/#procesamiento-en-el-mismo-cluster-que-el-dato",
+      "prompt": "¿Qué significa intentar ejecutar un map cerca de los datos?",
+      "code": "",
+      "options": [
+        "Reducir transferencias de entrada, manteniendo comunicaciones y posibles lecturas remotas.",
+        "Evitar el shuffle porque las claves de cada hotel ya están reunidas en su bloque.",
+        "Enviar la salida al portátil para liberar antes el almacenamiento del DataNode.",
+        "Garantizar que cada tarea se ejecuta en el mismo nodo que contiene su entrada."
+      ],
+      "answer": 0,
+      "explain": "La localidad es una preferencia condicionada por planificación y recursos. Puede reducir transferencias de entrada, pero no elimina el shuffle ni garantiza que cada map tenga lectura local. La corrección no debe depender de esa ubicación."
+    }
+  ]
+}
