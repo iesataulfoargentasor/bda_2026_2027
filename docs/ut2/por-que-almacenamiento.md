@@ -8,67 +8,112 @@ tags:
 
 # 2.1. Por qué un almacén masivo
 
-El criterio **a)** pide esto: entender **por qué** hace falta un sistema pensado para **depositar** y **procesar** grandes cantidades de **cualquier tipo** de dato, **rápido**. No es “comprar un disco más gordo”.
+!!! info "Ruta de estudio"
+    **Esencial:** relacionar capacidad, rendimiento y continuidad con las necesidades del hotel; distinguir guardar datos, interpretarlos y procesarlos.
 
-## El hotel el martes por la mañana
+    **Práctica guiada:** justificar una mejora a partir del crecimiento del histórico y del tiempo disponible para el informe. En este apartado trabajamos con supuestos y cálculos sencillos; la instalación comienza en 2.2.
 
-En el [grupo hotelero de Cantabria](../ut1/caso-hotel.md), recepción genera reservas, mantenimiento recibe medidas de sensores y finanzas registra cobros. El cierre empieza a las **23:00** y gerencia necesita el informe antes de las **8:00**: tenemos una ventana de nueve horas.
+    **Ampliación:** comparar qué cambia al conservar varias copias del histórico. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
-Al principio podemos guardar y procesar los ficheros en una máquina. El problema aparece cuando crecen los datos o coinciden varias tareas: mientras se carga el día, alguien consulta el histórico y otro proceso prepara un resumen. Que un fichero no abra en Excel indica un límite de esa herramienta; por sí solo **no demuestra** que necesitemos un clúster.
+## El hotel necesita seguir cumpliendo el plazo
 
-Para decidir, medimos tres necesidades:
+En la [UT1](../ut1/index.md) construisteis un informe con datos integrados y comprobados. La [transición de los 500 GB](../ut1/transicion-ut2.md) plantea qué ocurre cuando crece el histórico. Ahora necesitamos justificar cómo conservar esos datos y utilizarlos sin que el crecimiento impida cumplir los requisitos del [grupo hotelero de Cantabria](../ut1/caso-hotel.md).
 
-1. **Capacidad:** bytes nuevos al día, histórico que conservamos, índices, copias y espacio de trabajo. Si llegan 20 GB diarios, 365 días suman unos 7,3 TB antes de réplicas y compresión.
-2. **Rendimiento:** cuánto tarda el cierre y cuántos datos lee por segundo. Si el proceso tarda once horas, incumple la ventana aunque el disco todavía tenga espacio.
-3. **Continuidad:** qué sucede si falla un disco durante el cierre y cuánto tiempo podemos esperar para recuperar el servicio.
+Recepción registra reservas, mantenimiento recibe medidas de sensores y finanzas registra cobros. Las **23:00 marcan el corte de negocio**; gerencia necesita el informe de ese cierre a las **8:00 del día siguiente**. En una noche sin cambio de hora hay nueve horas entre ambos momentos, pero dentro de ese margen deben caber la preparación, el procesamiento, la validación y la publicación del resultado. Si los datos llegan tarde o el trabajo empieza después, queda menos tiempo.
 
-Un almacén masivo organiza los datos para afrontar esas necesidades. Puede repartirlos entre servidores, acercarles el procesamiento y mantener copias. La elección se justifica por las mediciones y el tipo de acceso, no por alcanzar una cifra mágica de gigabytes.
+Una máquina puede ser suficiente mientras cumpla los requisitos. El problema aparece si el histórico ya no cabe, las consultas compiten con las cargas o una avería impide entregar el informe. Que un fichero no abra en Excel solo demuestra un límite de esa herramienta: para decidir si necesitamos más recursos hay que estudiar el proceso completo.
 
-## Cualquier tipo (variedad)
+En este apartado, **sistema de almacenamiento masivo** designa una solución para conservar y dar acceso a grandes volúmenes de datos, con mecanismos de organización, protección y crecimiento. Trabaja con herramientas de procesamiento; guardar los datos y calcular sobre ellos son funciones distintas. La expresión no identifica un producto concreto ni un volumen mínimo universal.
 
-En la [UT1](../ut1/por-que-big-data.md) las 5 V ya decían que el dato no es solo la fila SQL. Aquí lo **guardas de verdad**:
+## Tres necesidades que debemos medir
 
-| Qué llega | Dónde encaja de primeras |
-| --- | --- |
-| CSV / Parquet de reservas | [HDFS](hdfs.md) (lago de ficheros) |
-| JSON de sensores, anidado | HDFS (bruto) o [MongoDB](mongodb.md) (consultas) |
-| Foto de la habitación | HDFS (objeto grande); metadatos en Mongo |
-| Grafo “quién recomendó a quién” | Familia [NoSQL de grafos](nosql.md) |
-| Caché de sesión del motor de reservas | Clave-valor (Redis o similar) |
+| Necesidad | Qué debemos averiguar | Ejemplo del hotel |
+| --- | --- | --- |
+| **Capacidad** | Cuánto ocupan los datos, cuánto crecen y qué espacio adicional necesitamos. | Histórico, índices, copias y archivos temporales deben caber durante el procesamiento. |
+| **Rendimiento** | Cuánto tarda cada fase y qué recurso limita el trabajo. | El disco tiene espacio, pero el informe termina después de las 8:00. |
+| **Continuidad** | Qué ocurre ante un fallo, cuánto tarda la recuperación y qué datos podrían perderse. | Una avería durante la madrugada obliga a recuperar datos o repetir parte del trabajo. |
 
-En nuestro diseño, el relacional conserva las operaciones de cobro y el lago reúne históricos para análisis. Es una decisión de arquitectura: existen sistemas documentales con transacciones y sistemas SQL distribuidos. Elegimos cada uno por las consultas, las garantías y el coste de administrarlo.
+**Ejemplo de capacidad.** Supongamos, solo para el ejercicio, que se conservan **20 GB nuevos al día durante 365 días**. Son `20 × 365 = 7.300 GB`, es decir, **7,3 TB decimales** de datos nuevos antes de compresión o copias. A esa cifra se añade el histórico previo y el espacio auxiliar. Es una estimación didáctica, no una medición real del hotel ni una obligación de leer todo el histórico cada noche.
 
-Guardar un formato no significa entenderlo automáticamente. HDFS conserva los bytes de una foto, pero reconocer una habitación requiere otro programa. MongoDB permite consultar campos de documentos; los ficheros binarios grandes suelen quedar en un almacén de objetos o de ficheros, con su referencia en el documento.
+**Ejemplo de rendimiento.** Si preparar, procesar y publicar un cierre requiere once horas desde las 23:00, el resultado llegaría a las 10:00 en una noche sin cambio de hora. Más espacio libre no resuelve por sí solo ese retraso: primero debemos localizar la fase que consume el tiempo.
 
-## Rápido = cálculo junto al dato
+El criterio **a)** del [RA2](ra2.md) se trabaja justificando estas necesidades y su relación con los datos y las operaciones. La elección de tecnología viene después del diagnóstico.
 
-**La cercanía reduce transferencias; no garantiza rapidez por sí sola.** El tiempo final depende también del disco, la red, los índices y de si el trabajo se puede dividir. El título resume una estrategia de Hadoop, no una igualdad matemática.
+## Datos diferentes, usos diferentes
 
-Si copias 500 GB al portátil para contar noches por hotel, el cuello es el **USB o la red**, no la CPU. El modelo de Hadoop (y de muchas NoSQL) es:
+La variedad estudiada en la UT1 sigue presente. **El formato y la consulta se consideran juntos:** guardar una foto, localizar una reserva y recorrer un año de cobros exigen accesos distintos.
 
-- el fichero **ya está partido** en trozos en varias máquinas;
-- cada máquina **cuenta su trozo**;
-- al final **juntas** los parciales.
+| Datos y necesidad | Posible organización | Qué debe aportar el procesamiento |
+| --- | --- | --- |
+| Ficheros CSV o Parquet de reservas para un resumen histórico. | Un almacén de ficheros; en la UT2 practicaremos con [HDFS](hdfs.md), el sistema de ficheros distribuido de Hadoop. | Leer los campos necesarios, aplicar filtros y obtener totales correctos. |
+| Documentos JSON de sensores o reservas para consultar campos concretos. | Conservar el original en ficheros y, si las consultas lo justifican, utilizar una base documental como [MongoDB](mongodb.md). | Interpretar los campos, validar sus tipos y ejecutar las consultas. |
+| Fotos de habitaciones que deben conservarse y localizarse. | Un almacén de objetos o de ficheros, con referencias y metadatos en una base de datos. | Buscar por hotel, habitación o fecha; analizar la imagen requiere otro programa. |
 
-Eso es el criterio **b)** visto desde la puerta: el almacén no es un armario muerto; **está pensado para que el procesamiento se siente encima**. El detalle está en [2.4](computacion-distribuida.md).
+HDFS conserva los bytes de un fichero, pero no reconoce por sí mismo qué muestra una fotografía. MongoDB permite consultar campos de documentos, pero recibir JSON no obliga a elegir esa base. En [2.5](nosql.md) compararemos también modelos para relaciones entre datos y para accesos por clave, como una caché de sesión.
 
-## Sin un solo punto que lo tumbe todo
+En el diseño del caso, el programa de reservas y la base relacional siguen atendiendo las operaciones del hotel; las copias para análisis alimentan el histórico. Se mantiene así la separación de la [UT1 entre operar e informar](../ut1/almacenamiento.md). Esta elección depende de consultas y garantías, no de que un modelo sea siempre superior a otro.
 
-Un disco puede fallar tanto en un portátil como en un servidor. La **replicación** guarda el mismo contenido en distintos nodos para poder leer otra copia. Pero duplicar datos en tres contenedores del mismo ordenador no protege frente al fallo de ese ordenador.
+## Procesar cerca de los datos puede reducir transferencias
 
-También hay que proteger los procesos que coordinan el sistema. Un HDFS con varios DataNodes y un solo NameNode tiene réplicas de datos, pero necesita una configuración de alta disponibilidad para tolerar la caída de ese NameNode. En MongoDB, un conjunto de réplicas necesita suficientes miembros comunicados para elegir primario.
+Volvamos al histórico de **500 GB**. Descargarlo completo al portátil añade una transferencia y necesita espacio local. Leerlo por bloques desde la red evita guardar una copia completa, pero sigue transfiriendo los datos que se leen. El límite puede estar en la red, el disco, la interpretación del formato o el cálculo: hay que medirlo.
 
-Un NAS puede incorporar redundancia; no es necesariamente un único disco. En cualquier tecnología distinguimos **réplica** (seguir trabajando ante ciertos fallos) y **copia de seguridad** (recuperar una versión anterior). Un borrado equivocado puede propagarse a todas las réplicas.
+Si los datos ya están repartidos en un clúster, una estrategia es ejecutar tareas cerca de los bloques que necesitan y combinar después sus resultados. Por ejemplo, para sumar noches reservadas por hotel:
 
-## Guardar ahora, decidir el uso después
+1. Cada tarea lee una parte de las reservas y obtiene sumas parciales por hotel.
+2. El sistema reúne los parciales correspondientes al mismo hotel.
+3. Se calcula y comprueba el total final.
 
-El criterio **d)** es el lago: escribes el JSON de 2024 **sin** haber inventado el informe de 2026. Mañana Hive o Spark leen solo `hotel` e `importe`. Eso se llama a menudo **esquema al leer** (*schema-on-read*): no tiras el bruto porque hoy no sepas la pregunta.
+Este es un anticipo de [MapReduce en 2.4](computacion-distribuida.md). **HDFS almacena los bloques; el motor de procesamiento realiza el cálculo.** La [arquitectura de HDFS](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html) facilita acercar las aplicaciones a sus datos, pero todavía hay transferencias para distribuir datos, comunicar tareas o reunir resultados.
 
-Conservar datos en bruto permite formular nuevas preguntas, pero necesitamos registrar origen, fecha, formato y significado de los campos. Sin esos metadatos, dentro de dos años no sabremos si `importe` incluía impuestos o si `fecha` era la entrada o la creación de la reserva.
+La mejora depende del trabajo y de los recursos. Con pocos datos, la coordinación puede costar más tiempo que el cálculo local. Tampoco todas las bases NoSQL ejecutan sus consultas de esta manera. Para demostrar una mejora compararemos el mismo trabajo y verificaremos tanto su tiempo como su resultado.
 
-La capacidad tampoco es infinita: se amplía con presupuesto, espacio y administración. Por eso definimos periodos de conservación y verificamos permisos y calidad. **Esquema al leer** significa aplicar una interpretación al consultar; no significa guardar sin organización.
+## Qué debe ocurrir cuando falla un componente
 
-**Comprueba que lo entiendes:** si el informe tarda once horas, ¿añadir otro disco lo solucionaría? Solo si el cuello de botella era capacidad o rendimiento de almacenamiento. Si el programa usa una única CPU y no se paraleliza, antes hay que revisar el procesamiento. Esa conexión conduce al [ecosistema Hadoop](ecosistema.md).
+Imaginad que un disco falla durante el cálculo nocturno. Si la única copia estaba allí, habrá que recuperarla de otra fuente. La **replicación** mantiene copias de los datos en distintos nodos para poder acceder a otra copia ante ciertos fallos. Su utilidad depende de dónde estén esas copias y de que los servicios necesarios sigan disponibles.
 
-!!! success "Lo que tienes que poder decir"
-    “El almacén debe admitir nuestros formatos, procesarlos dentro del plazo y tolerar los fallos previstos. Crece añadiendo recursos, pero hay que medir sus límites y configurar sus garantías.”
+Replicar y repartir tienen finalidades distintas: **replicar conserva copias; particionar distribuye partes del conjunto**. Pueden combinarse. Repartir datos sin copias no basta para protegerlos de la pérdida de un nodo.
+
+También deben protegerse los componentes que coordinan el sistema. En [2.3](hdfs.md) veremos que tener varios nodos con datos no elimina por sí solo el posible fallo del coordinador. En [2.8](replicas-shards.md) probaremos cómo MongoDB elige un nuevo servidor encargado de aceptar escrituras cuando la configuración y los miembros disponibles lo permiten.
+
+Una **copia de seguridad** permite recuperar datos de un estado anterior; hay que comprobar que se puede restaurar. Una réplica puede propagar un borrado equivocado, por lo que no sustituye a esa protección. Un NAS —almacenamiento accesible por red— también puede incorporar redundancia: su respuesta ante fallos depende de la configuración.
+
+En el aula, varios contenedores en un mismo ordenador permiten estudiar fallos de procesos, pero no protegen frente a perder ese ordenador. Las conclusiones deben indicar siempre **qué fallo se ha probado y qué configuración lo ha soportado**.
+
+## Conservar hoy para responder nuevas preguntas
+
+Podemos conservar registros de reservas antes de conocer todos los informes que necesitaremos. Más adelante, otro programa puede interpretarlos para una consulta nueva. Aplicar una estructura al consultar se conoce como **esquema al leer**. Es una forma de trabajar los usos posteriores de los datos del criterio **d)**, no una obligación de guardar todo sin reglas.
+
+Para reutilizar el histórico necesitamos metadatos: origen, fecha de extracción, formato, versión y significado de los campos. Un campo `importe` puede representar el precio previsto o el cobro confirmado; un campo `fecha` puede referirse a la reserva, a la estancia o al pago. Una suma técnicamente correcta puede producir un informe equivocado si confundimos esos significados.
+
+La conservación requiere capacidad, permisos, calidad y plazos definidos. Crecer puede implicar ampliar una máquina o añadir nodos, pero debemos comprobar qué mejora aporta cada recurso y cuánto cuesta administrarlo. Añadir almacenamiento no garantiza acelerar un cálculo; añadir copias consume espacio y no equivale a repartir la carga de escritura. Estas decisiones se desarrollan en 2.2–2.4 y 2.8.
+
+## Práctica guiada: justificar el siguiente paso
+
+Trabajad con estos **supuestos del ejercicio**, sin instalar herramientas: llegan 20 GB nuevos al día, se conservan durante un año y el proceso nocturno completo tarda once horas desde las 23:00, en una noche sin cambio de hora. Solo sabemos que dispone de espacio para los datos actuales; todavía no conocemos su cuello de botella.
+
+1. Calculad cuánto almacenamiento adicional requieren los datos nuevos, antes de copias y compresión. Indicad qué espacio queda fuera de esa cifra.
+2. Determinad a qué hora terminaría el proceso y si cumple el plazo de las 8:00.
+3. Anotad qué medir antes de decidir entre optimizar el procedimiento, ampliar la máquina o repartir el trabajo.
+4. Explicad qué necesitaríais para continuar ante la pérdida de un disco y qué protección permitiría recuperar un borrado equivocado.
+5. Elegid un dato del hotel y proponed una consulta futura. Identificad los metadatos que necesitaríais para interpretarlo correctamente.
+
+Recoged la respuesta en vuestra hoja de decisiones: **problema → evidencia disponible → información que falta → propuesta condicionada → comprobación**. Las condiciones de entrega se concretan en Moodle.
+
+??? success "Orientación para comprobar la respuesta"
+    El crecimiento es de **7,3 TB decimales**, sin contar histórico previo, índices, copias ni espacio de trabajo. Once horas desde las 23:00 sitúan el final a las **10:00**, dos horas después del plazo en el supuesto indicado.
+
+    Antes de elegir recursos, medid tiempos por fase, bytes realmente leídos, uso de CPU y memoria, tasas de disco y red y tareas concurrentes. Una propuesta válida explica qué observación justificaría el cambio y cómo se comprobaría el resultado.
+
+    Para la pérdida de un disco, la continuidad depende de copias accesibles y servicios capaces de utilizarlas; deben probarse la interrupción y la recuperación. Para un borrado propagado, hace falta una versión recuperable anterior. Los metadatos de la consulta deben aclarar el significado de campos, unidades y periodo.
+
+??? info "Ampliación: el coste de mantener copias"
+    Si esos 7,3 TB se almacenaran con **tres copias completas en total**, ocuparían aproximadamente **21,9 TB** antes de compresión, metadatos y espacio auxiliar. La capacidad física dedicada a esas copias no representa 21,9 TB de datos distintos. Las copias de seguridad deben planificarse aparte.
+
+## Qué debéis poder explicar antes de pasar al 2.2
+
+La conclusión debe relacionar **datos, operaciones, plazo y respuesta ante fallos**. No basta con afirmar que el hotel tiene muchos datos o nombrar una herramienta. En este apartado justificamos el sistema; las pruebas de distribución, tolerancia y crecimiento llegarán en los laboratorios posteriores.
+
+!!! success "Idea clave"
+    Un sistema de almacenamiento debe conservar y facilitar el acceso a los datos que necesitamos, con capacidad y protección suficientes. Las herramientas de procesamiento deben obtener resultados correctos dentro del plazo. Elegimos y ampliamos ambos a partir de medidas.
+
+En [2.2 Ecosistema Hadoop](ecosistema.md) separaremos las piezas que almacenan los ficheros, gestionan los recursos y ejecutan el trabajo. Esa separación permite comprender qué componente responde a cada necesidad del hotel.
