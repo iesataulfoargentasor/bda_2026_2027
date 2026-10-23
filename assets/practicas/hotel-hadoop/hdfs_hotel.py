@@ -28,4 +28,6 @@ df = pd.DataFrame(
     }
 )
 df.to_parquet("/user/bda/noches_resumen.parquet", filesystem=hdfs, index=False)
-print("Parquet escrito en HDFS")
+recuperado = pd.read_parquet("/user/bda/noches_resumen.parquet", filesystem=hdfs)
+pd.testing.assert_frame_equal(df, recuperado)
+print("Parquet releído: filas, columnas, tipos y valores verificados")
