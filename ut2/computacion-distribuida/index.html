@@ -1234,6 +1234,50 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#que-habeis-demostrado-y-como-continua-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué habéis demostrado y cómo continúa la unidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autoevaluacion-del-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autoevaluación del 2.4
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1577,6 +1621,50 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#que-habeis-demostrado-y-como-continua-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué habéis demostrado y cómo continúa la unidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autoevaluacion-del-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autoevaluación del 2.4
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1671,8 +1759,47 @@
 
 
 <h1 id="24-computacion-distribuida">2.4. Computación distribuida<a class="headerlink" href="#24-computacion-distribuida" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> seguir el cálculo map → shuffle/sort → reduce; distinguir tareas, simultaneidad y máquinas; comprobar resultados antes de comparar tiempos.</p>
+<p><strong>Práctica guiada:</strong> ejecutar el agregado de noches con el CSV pequeño, contrastarlo por hotel y observar su ejecución en el entorno de 2.2.</p>
+<p><strong>Ampliación:</strong> generar más datos y comparar configuraciones preparadas por el profesor. No se presupone que el portátil permita demostrar aceleración entre máquinas físicas.</p>
+</div>
 <p>En los apartados anteriores hemos separado almacenamiento y ejecución. Ahora comprobaremos <strong>cómo se divide un cálculo, cómo se reúnen sus resultados y cuándo compensa hacerlo</strong>. El criterio <strong>b)</strong> exige observar el procesamiento distribuido y medirlo; no basta con afirmar que añadir máquinas siempre acelera un programa.</p>
 <p>La pregunta de gerencia será: <strong>¿cuántas noches reservadas aparecen en el fichero para cada hotel?</strong> No son necesariamente noches cobradas ni habitaciones ocupadas en una fecha: el CSV no contiene estado del pago ni calendario de ocupación.</p>
+<p>En 2.2 conocimos las piezas y en 2.3 seguimos el archivo dentro de HDFS. Ahora preguntamos: <strong>si repartimos la lectura, cómo obtenemos el mismo resultado y cómo sabemos si compensa</strong>. La validación de la UT1 sigue vigente: ni una salida generada ni un tiempo menor bastan si cambia el significado del informe.</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué describe</th>
+<th>Qué debemos observar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>División en tareas</strong></td>
+<td>El cálculo se descompone en partes.</td>
+<td>Splits, tareas map y tareas reduce.</td>
+</tr>
+<tr>
+<td><strong>Paralelismo</strong></td>
+<td>Hay tareas ejecutándose al mismo tiempo.</td>
+<td>Intervalos de ejecución y recursos disponibles.</td>
+</tr>
+<tr>
+<td><strong>Distribución</strong></td>
+<td>Intervienen varios nodos coordinados.</td>
+<td>Dónde se ejecutan los procesos y qué comunicación realizan.</td>
+</tr>
+<tr>
+<td><strong>Aceleración</strong></td>
+<td>El mismo trabajo correcto termina en menos tiempo.</td>
+<td>Medidas comparables, no solo número de tareas.</td>
+</tr>
+</tbody>
+</table>
+<p>Puede haber paralelismo en una sola máquina. También puede haber fases de espera en un sistema distribuido. Los contenedores del portátil permiten estudiar servicios separados, pero comparten el hardware.</p>
 <h2 id="mapreduce-con-reservas-no-con-el-quijote">MapReduce, con reservas (no con el Quijote)<a class="headerlink" href="#mapreduce-con-reservas-no-con-el-quijote" title="Permanent link">&para;</a></h2>
 <p>Una suma por hotel puede dividirse porque la suma de enteros es asociativa: sumar primero cada grupo y después sus resultados produce el mismo total. MapReduce organiza ese trabajo en tres fases.</p>
 <h3 id="map-transformar-cada-registro">Map: transformar cada registro<a class="headerlink" href="#map-transformar-cada-registro" title="Permanent link">&para;</a></h3>
@@ -1684,13 +1811,24 @@
 </span></code></pre></div>
 <p>El mapper selecciona <code>hotel</code> como clave y <code>noches</code> como valor. Emite <code>Laredo → 3</code>, <code>Laredo → 2</code> y <code>Potes → 5</code>, utilizando un tabulador entre clave y valor.</p>
 <p>Cada tarea map procesa un <strong>input split</strong>, una división lógica de la entrada. Con texto divisible, los splits suelen guardar relación con los bloques HDFS, pero <strong>bloque y split no son sinónimos</strong>. El formato y la compresión pueden cambiar el reparto. Tampoco hay un mapper por máquina: una máquina puede ejecutar varias tareas, simultáneamente o por turnos.</p>
+<p>El siguiente esquema utiliza solo las tres filas anteriores, repartidas en dos splits ilustrativos. No representa los veinte registros completos ni obliga a usar dos máquinas.</p>
+<pre class="mermaid"><code>flowchart LR
+  A["Split A: Laredo 3; Potes 5"] --&gt; MA["Map: emite hotel y noches"]
+  B["Split B: Laredo 2"] --&gt; MB["Map: emite hotel y noches"]
+  MA --&gt; S["Shuffle/sort: reúne por hotel"]
+  MB --&gt; S
+  S --&gt; R["Reduce: suma por clave"]
+  R --&gt; O["Laredo 5; Potes 5"]</code></pre>
 <h3 id="shuffle-y-sort-reunir-la-misma-clave">Shuffle y sort: reunir la misma clave<a class="headerlink" href="#shuffle-y-sort-reunir-la-misma-clave" title="Permanent link">&para;</a></h3>
 <p>Dos mappers pueden emitir <code>Laredo</code>. Hadoop envía todos los pares de esa clave al mismo reducer y los ordena por clave. Esta fase consume red, memoria y, a menudo, disco.</p>
 <p>El <strong>particionador</strong> determina qué reducer recibe cada clave. Aunque configuremos diez reducers, todos los valores de Laredo siguen llegando al mismo. Si casi todos los registros pertenecen a ese hotel, aparece un desequilibrio de carga o <em>skew</em>: un reducer concentra casi todo el trabajo.</p>
+<p>En esta suma no importa el orden de las reservas dentro de cada hotel. Sí importa que la misma clave llegue al mismo reducer. El shuffle ordena <strong>por clave</strong>, no por importe o número de noches, y el conjunto de archivos de salida no constituye necesariamente una ordenación global.</p>
 <h3 id="reduce-agregar-y-escribir">Reduce: agregar y escribir<a class="headerlink" href="#reduce-agregar-y-escribir" title="Permanent link">&para;</a></h3>
 <p>El reducer recibe claves consecutivas y acumula sus valores. Cuando cambia de hotel, escribe el total anterior y reinicia el acumulador. Para las tres líneas anteriores obtendría <code>Laredo → 5</code> y <code>Potes → 5</code>.</p>
 <p>La salida se escribe en HDFS. Puede haber varios ficheros <code>part-*</code>: debemos leerlos todos. <code>_SUCCESS</code> indica finalización correcta, pero <strong>no demuestra que nuestra fórmula sea correcta</strong>. Eso se comprueba con un cálculo independiente.</p>
 <p>Un <strong>combiner</strong> puede sumar parciales antes del shuffle y reducir tráfico. Es válido para esta suma, pero no para calcular una media como «media de las medias»: grupos de distinto tamaño pesarían igual. Para una media se transportan <strong>suma y número de valores</strong> y se divide al final.</p>
+<p>El combiner es una optimización opcional: puede no ejecutarse o hacerlo varias veces. El cálculo debe seguir siendo correcto. No está configurado en el comando básico de esta práctica.</p>
+<p>Por ejemplo, un grupo con noches <code>[2, 4]</code> tiene media 3 y otro con <code>[10]</code> tiene media 10. Promediar 3 y 10 da 6,5; la media de las tres reservas es <code>(2 + 4 + 10) / 3 = 5,33…</code>. Para combinar correctamente conservamos sumas y recuentos: <code>(6 + 10) / (2 + 1)</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Cuándo elegir otro modelo</p>
 <p>MapReduce encaja en recorridos por lotes y agregaciones. Los algoritmos iterativos pueden pagar repetidamente el coste de materializar resultados. Spark permite reutilizar datos en memoria cuando hay capacidad, aunque también puede escribir a disco. Elegimos según el algoritmo y los recursos.</p>
@@ -1728,7 +1866,7 @@
 </tr>
 </tbody>
 </table>
-<p>Un contenedor YARN <strong>no es necesariamente un contenedor Docker</strong>. Docker aloja los servicios del laboratorio; dentro, YARN administra las asignaciones de las tareas.</p>
+<p>Un contenedor YARN y un contenedor Docker son conceptos distintos. Docker aloja los servicios del laboratorio; dentro, YARN administra las asignaciones de las tareas.</p>
 <ol>
 <li>El cliente envía el trabajo y sus ficheros auxiliares.</li>
 <li>YARN reserva recursos para el ApplicationMaster.</li>
@@ -1757,13 +1895,13 @@
 </tr>
 <tr>
 <td>hotel</td>
-<td>Texto no vacío</td>
-<td>Clave de agrupación</td>
+<td>Texto no vacío y sin tabuladores</td>
+<td>Clave de agrupación; mantenemos los nombres exactos del fichero</td>
 </tr>
 <tr>
 <td>canal</td>
-<td>Texto</td>
-<td>No interviene en la suma</td>
+<td>Texto no vacío</td>
+<td>Se valida, aunque no interviene en la suma</td>
 </tr>
 <tr>
 <td>noches</td>
@@ -1772,21 +1910,34 @@
 </tr>
 <tr>
 <td>importe</td>
-<td>Número decimal</td>
-<td>No interviene en la suma</td>
+<td>Decimal finito y no negativo</td>
+<td>Se valida, aunque no interviene en la suma</td>
 </tr>
 </tbody>
 </table>
 <p>Hay una reserva por línea física y una cabecera. El procesamiento por líneas de Streaming no admite sin adaptación campos CSV con saltos de línea internos.</p>
 <h3 id="verificar-primero-en-local">Verificar primero en local<a class="headerlink" href="#verificar-primero-en-local" title="Permanent link">&para;</a></h3>
 <p>Los scripts enlazados contienen el código completo. El mapper usa <code>csv.reader</code>, omite la cabecera y rechaza registros incompatibles en vez de descartarlos silenciosamente. El reducer conserva solo la clave actual y su suma.</p>
-<p>En <strong>PowerShell</strong>, desde la carpeta de prácticas:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Content</span> <span class="n">reservas</span><span class="p">.</span><span class="n">csv</span> <span class="p">|</span> <span class="n">python</span> <span class="n">mapper_noches</span><span class="p">.</span><span class="n">py</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="p">|</span> <span class="n">python</span> <span class="n">reducer_noches</span><span class="p">.</span><span class="n">py</span>
+<p>En <strong>PowerShell</strong>, desde la carpeta de prácticas, ejecutad las fases separadas. Así se detecta un error del mapper antes de continuar con un resultado parcial. Estos comandos guardan las filas en memoria y se reservan para el CSV pequeño:</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">$pares</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Encoding</span> <span class="n">utf8</span> <span class="n">reservas</span><span class="p">.</span><span class="n">csv</span> <span class="p">|</span> <span class="n">python</span> <span class="n">mapper_noches</span><span class="p">.</span><span class="n">py</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-ne</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="s2">"El mapper ha fallado; no se acepta la salida."</span> <span class="p">}</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$resultado</span> <span class="p">=</span> <span class="nv">$pares</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="p">|</span> <span class="n">python</span> <span class="n">reducer_noches</span><span class="p">.</span><span class="n">py</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-ne</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="s2">"El reducer ha fallado; no se acepta la salida."</span> <span class="p">}</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$resultado</span> <span class="p">|</span> <span class="nb">Set-Content</span> <span class="n">-Encoding</span> <span class="n">utf8</span> <span class="n">noches_local</span><span class="p">.</span><span class="n">tsv</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Get-Content</span> <span class="n">noches_local</span><span class="p">.</span><span class="n">tsv</span>
 </span></code></pre></div>
 <p>En <strong>Bash</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python3<span class="w"> </span>mapper_noches.py<span class="w"> </span>&lt;<span class="w"> </span>reservas.csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>reducer_noches.py
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python3<span class="w"> </span>mapper_noches.py<span class="w"> </span>&lt;<span class="w"> </span>reservas.csv<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">LC_ALL</span><span class="o">=</span>C<span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>reducer_noches.py<span class="w"> </span>&gt;<span class="w"> </span>noches_local.tsv
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">estado</span><span class="o">=</span><span class="nv">$?</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$estado</span><span class="s2">"</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"El proceso ha fallado; no se acepta noches_local.tsv."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">else</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>cat<span class="w"> </span>noches_local.tsv
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">fi</span>
 </span></code></pre></div>
-<p><code>sort</code> representa la agrupación que hará Hadoop. Estas tuberías sirven para el fichero pequeño; la ordenación local de un fichero grande también consume recursos.</p>
+<p>La ordenación local agrupa las claves que recibirá el reducer, pero <strong>no reproduce toda la distribución ni la comunicación del shuffle</strong>. En Bash, <code>pipefail</code> permite detectar que una etapa anterior ha fallado. Una salida parcial puede existir aun con error: no se acepta ni se mide como ejecución correcta.</p>
+<p>Usad nombres nuevos al repetir si queréis conservar resultados. Las claves del fichero son los cinco nombres conocidos; si se añaden otros textos, revisad también la ordenación y codificación. Ordenar ficheros grandes consume memoria, disco y tiempo.</p>
 <p>Con las 20 reservas originales, debes obtener:</p>
 <table>
 <thead>
@@ -1831,58 +1982,100 @@
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">fichero</span><span class="p">):</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">totales</span><span class="p">[</span><span class="n">fila</span><span class="p">[</span><span class="s2">"hotel"</span><span class="p">]]</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="s2">"noches"</span><span class="p">])</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">print</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">totales</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">totales</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="mi">62</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">esperados</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Comillas"</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">"Laredo"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">"Noja"</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">"Potes"</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">"Santander"</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">assert</span> <span class="nb">dict</span><span class="p">(</span><span class="n">totales</span><span class="p">)</span> <span class="o">==</span> <span class="n">esperados</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">totales</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="mi">62</span>
 </span></code></pre></div>
-<p>También puedes usar pandas o un <code>GROUP BY hotel</code> en DuckDB sobre <strong>el mismo fichero</strong>. Las 62 noches corresponden exclusivamente al CSV pequeño sin modificar.</p>
+<p>El ejemplo anterior confirma la referencia del CSV original, pero todavía hay que contrastarla con la salida real. Descargad <a href="../../assets/practicas/hotel-hadoop/comprobar_noches.py">comprobar_noches.py</a> en la misma carpeta y ejecutad:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python comprobar_noches.py reservas.csv noches_local.tsv
+</span></code></pre></div>
+<p>El comprobador obtiene los totales de la entrada de manera independiente y compara <strong>cada hotel</strong>, detectando claves ausentes, adicionales, repetidas o con un total incorrecto. No importa el orden de las líneas. Devuelve código 1 si encuentra un error.</p>
+<p>También podéis usar pandas o DuckDB sobre <strong>el mismo fichero</strong>, comprobando el mapa completo hotel → noches. Las 62 noches corresponden exclusivamente al CSV pequeño original: con datos generados se recalcula la referencia, no se conserva ese número como objetivo.</p>
 <h3 id="ejecutar-el-mismo-calculo-en-hadoop">Ejecutar el mismo cálculo en Hadoop<a class="headerlink" href="#ejecutar-el-mismo-calculo-en-hadoop" title="Permanent link">&para;</a></h3>
-<p>Arranca el laboratorio del <a href="../ecosistema/">2.2</a>. La carpeta de prácticas está montada en <code>/practicas</code>. Entra con <code>docker compose exec namenode bash</code>. Ejecuta allí:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>/practicas
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>-p<span class="w"> </span>/user/bda
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>-f<span class="w"> </span>reservas.csv<span class="w"> </span>/user/bda/reservas.csv
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>mapred<span class="w"> </span>streaming<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-files<span class="w"> </span>mapper_noches.py,reducer_noches.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-mapper<span class="w"> </span><span class="s2">"python3 mapper_noches.py"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-reducer<span class="w"> </span><span class="s2">"python3 reducer_noches.py"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-input<span class="w"> </span>/user/bda/reservas.csv<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-output<span class="w"> </span>/user/bda/salida_noches_01
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span><span class="s1">'/user/bda/salida_noches_01/part-*'</span>
+<p>Primero, desde el anfitrión y en la carpeta del Compose, comprobad que los servicios del <a href="../ecosistema/">2.2</a> están disponibles y que el ejecutor tiene Python:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker compose ps
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>docker compose exec nodemanager python3 --version
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>docker compose exec namenode bash
 </span></code></pre></div>
-<p>Antes, comprueba desde el host <code>docker compose exec nodemanager python3 --version</code>: Python debe estar instalado donde se ejecutan las tareas. Si falta, utiliza la imagen preparada por el docente con Python 3. <code>-files</code> distribuye los scripts, <strong>no instala dependencias</strong>.</p>
-<p>La salida debe ser una carpeta nueva. Usa <code>salida_noches_02</code> al repetir para conservar la comparación. Comprueba el estado final en YARN, los contadores y los cinco totales.</p>
+<p>Si falta Python, utilizad la imagen preparada por el profesor. <code>-files</code> distribuye los scripts, <strong>no instala dependencias</strong>. Copiad también comprobar_noches.py en la carpeta local montada como /practicas.</p>
+<p>Ya en el Bash del NameNode, utilizad rutas propias de 2.4 para no sobrescribir las salidas de 2.2:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>/practicas
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-mkdir<span class="w"> </span>-p<span class="w"> </span>/user/bda/ut24
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>reservas.csv<span class="w"> </span>/user/bda/ut24/reservas_01.csv
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>mapred<span class="w"> </span>streaming<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-D<span class="w"> </span>mapreduce.job.reduces<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-files<span class="w"> </span>mapper_noches.py,reducer_noches.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-mapper<span class="w"> </span><span class="s2">"python3 mapper_noches.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-reducer<span class="w"> </span><span class="s2">"python3 reducer_noches.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-input<span class="w"> </span>/user/bda/ut24/reservas_01.csv<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>-output<span class="w"> </span>/user/bda/ut24/salida_noches_01
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nv">estado</span><span class="o">=</span><span class="nv">$?</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$estado</span><span class="s2">"</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Job fallido: revisad los logs antes de aceptar resultados."</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">else</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>hdfs<span class="w"> </span>dfs<span class="w"> </span>-cat<span class="w"> </span><span class="s1">'/user/bda/ut24/salida_noches_01/part-*'</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="k">fi</span>
+</span></code></pre></div>
+<p>Comprobad el éxito de cada paso antes de continuar. Si la entrada ya existe, verificad que corresponde al mismo CSV y reutilizadla; no la sustituyáis a ciegas. Si la salida existe, elegid salida_noches_02. El parámetro reduce=1 hace explícita la configuración inicial: no implica que el cálculo requiera un reducer por hotel.</p>
+<p><strong>Solo tras un job correcto</strong>, descargad todas las partes de texto a una ruta escribible del contenedor y verificadlas:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-getmerge<span class="w"> </span><span class="s1">'/user/bda/ut24/salida_noches_01/part-*'</span><span class="w"> </span>/tmp/noches_hadoop_01.tsv
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python3<span class="w"> </span>/practicas/comprobar_noches.py<span class="w"> </span>/practicas/reservas.csv<span class="w"> </span>/tmp/noches_hadoop_01.tsv
+</span></code></pre></div>
+<p>Cada registro de la salida de estos scripts termina en salto de línea. Concatenar sus partes TSV sirve para comprobarlas; no es una operación válida para fusionar Parquet. /practicas es de solo lectura, por eso la descarga se hace en /tmp.</p>
+<p>Registrad en YARN el identificador de aplicación, estado, tareas e intentos, además de los cinco totales. <strong>Intentos no equivale a tareas lógicas:</strong> los reintentos pueden elevar ciertos contadores. Los tiempos de las tareas y sus nodos permiten observar dónde y cuándo se ejecutaron.</p>
 <h3 id="medir-sin-cambiar-dos-variables-a-la-vez">Medir sin cambiar dos variables a la vez<a class="headerlink" href="#medir-sin-cambiar-dos-variables-a-la-vez" title="Permanent link">&para;</a></h3>
-<p>El fichero pequeño verifica el algoritmo. Para estudiar paralelismo, usa <a href="../../assets/practicas/hotel-hadoop/generar_reservas_grandes.py">generar_reservas_grandes.py</a>. Consulta el tamaño real y <code>hdfs fsck</code>: no deduzcas los bloques solo del número de filas.</p>
-<p>Mantén entrada, código y opciones salvo el recurso que estudias. Haz una ejecución de calentamiento y tres mediciones por configuración.</p>
+<p>El fichero pequeño sirve para verificar el algoritmo. No es una prueba convincente de rendimiento: iniciar servicios y tareas puede costar más que sumar sus veinte filas.</p>
+<p>Para generar una entrada mayor, descargad <a href="../../assets/practicas/hotel-hadoop/generar_reservas_grandes.py">generar_reservas_grandes.py</a> y ejecutad desde el anfitrión, en la carpeta de prácticas:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python generar_reservas_grandes.py --lineas 4500000 --salida reservas_grandes.csv
+</span></code></pre></div>
+<p>El tamaño depende del contenido generado; anotad los bytes que imprime y el número de registros solicitado. No subáis el archivo grande al repositorio. Cargadlo en una ruta HDFS propia, ejecutad el mismo agregado con salida nueva y pasad <strong>esa entrada y esa salida</strong> a comprobar_noches.py. Esta referencia se calcula fuera del intervalo que medimos del job.</p>
+<p>Para inspeccionar bloques y copias, desde el Bash del NameNode:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>/practicas/reservas_grandes.csv<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>hdfs<span class="w"> </span>fsck<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv<span class="w"> </span>-files<span class="w"> </span>-blocks<span class="w"> </span>-locations
+</span></code></pre></div>
+<p>No deduzcáis número de tareas, simultaneidad o máquinas a partir del tamaño del archivo. Revisad splits y ejecución real.</p>
+<p><strong>Protocolo de comparación:</strong></p>
+<ol>
+<li>Identificad la entrada con tamaño, registros y, cuando sea posible, una huella SHA-256. Usad los mismos bytes y programas en ambas configuraciones.</li>
+<li>Definid <strong>una variable</strong>: por ejemplo, recursos de ejecución disponibles en un entorno preparado por el profesor. Anotad valores inicial y nuevo. Cambiar reducers es otro experimento; no prueba añadir máquinas.</li>
+<li>Definid el intervalo: aquí medimos desde el envío de mapred streaming hasta su finalización. No incluimos generación, carga previa ni comprobación posterior. Si medís el proceso completo, declaradlo y mantenedlo en ambas pruebas.</li>
+<li>Realizad un calentamiento y tres ejecuciones medidas por configuración, con salidas distintas. Registrad también esperas, otras cargas, cachés y cambios del entorno; evitad atribuir su efecto al recurso estudiado.</li>
+<li>Comprobad cada resultado. Una ejecución fallida o con resultado diferente se registra como tal; no se usa como evidencia de aceleración.</li>
+<li>Conservad los tres tiempos y comparad sus medianas. Si varían mucho, investigad la causa antes de concluir.</li>
+</ol>
 <table>
 <thead>
 <tr>
 <th>Configuración</th>
-<th>Bytes / registros</th>
-<th>Maps y reduces</th>
-<th>Concurrencia observada</th>
-<th>Tiempo total</th>
-<th>Resultado correcto</th>
+<th>Entrada y recursos</th>
+<th>Maps / reduces e intentos</th>
+<th>Concurrencia y nodos</th>
+<th>Tres tiempos y mediana</th>
+<th>Resultado comprobado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Recursos iniciales</td>
+<td>A: situación inicial</td>
+<td>Bytes, registros, recursos</td>
+<td>Observación</td>
+<td>Evidencias de ejecución</td>
 <td>Medición</td>
-<td>Contadores</td>
-<td>UI YARN</td>
-<td>Mediana de 3 pruebas</td>
-<td>Sí / no</td>
+<td>Comparación por hotel</td>
 </tr>
 <tr>
-<td>Más recursos</td>
-<td>Los mismos</td>
-<td>Contadores</td>
-<td>UI YARN</td>
-<td>Mediana de 3 pruebas</td>
-<td>Sí / no</td>
+<td>B: una variable modificada</td>
+<td>Mismos datos; cambio indicado</td>
+<td>Observación</td>
+<td>Evidencias de ejecución</td>
+<td>Medición</td>
+<td>Comparación por hotel</td>
 </tr>
 </tbody>
 </table>
-<p>La <strong>aceleración</strong> es <code>tiempo inicial / tiempo nuevo</code>: pasar de 120 a 80 segundos da 1,5. El arranque, el shuffle, el disco y las partes secuenciales limitan la ganancia.</p>
+<p>La <strong>aceleración</strong> se calcula como <code>tiempo inicial / tiempo nuevo</code>. En un ejemplo hipotético, A tarda 118, 120 y 123 segundos; B, 79, 80 y 84. Las medianas son 120 y 80, por lo que la aceleración es <strong>1,5</strong> y el tiempo se reduce aproximadamente un <strong>33,3 %</strong>. No es una medición del laboratorio.</p>
+<p>Una razón menor que 1 indica que la nueva configuración tarda más. El arranque, la lectura, el shuffle, las partes secuenciales y el desequilibrio de claves pueden limitar la ganancia.</p>
+<p><strong>Comparación local frente a Hadoop.</strong> Puede ser útil, pero cambia más que el número de máquinas: intervienen otro motor, almacenamiento y costes de inicio. Explicad el alcance; no la presentéis como un experimento que aísla una única causa.</p>
 <div class="admonition warning">
 <p class="admonition-title">Qué demuestra el mini-clúster</p>
 <p>El Compose básico tiene un DataNode y un NodeManager en un ordenador. Permite observar roles y tareas, pero no demuestra reparto entre máquinas físicas ni aceleración al añadir servidores. Con pocos datos puede tardar más que el cálculo local. Registra y explica ese resultado: es una conclusión válida.</p>
@@ -1890,6 +2083,66 @@
 <h3 id="entrega-y-comprobaciones">Entrega y comprobaciones<a class="headerlink" href="#entrega-y-comprobaciones" title="Permanent link">&para;</a></h3>
 <p>Entrega la identificación y tamaño de la entrada, comandos, contadores, resultados comparados y una interpretación de los tiempos. Sin más workers, documenta lo observado y qué experimento adicional necesitarías. No presentes «varios maps» como prueba de que había varias máquinas.</p>
 <p>Para cerrar: ¿qué cambia si todas las reservas son de Laredo?, ¿por qué no sumamos medias sin sus tamaños?, ¿por qué <code>_SUCCESS</code> no valida la fórmula? Las respuestas conectan el algoritmo con el comportamiento del sistema.</p>
+<h2 id="que-habeis-demostrado-y-como-continua-la-unidad">Qué habéis demostrado y cómo continúa la unidad<a class="headerlink" href="#que-habeis-demostrado-y-como-continua-la-unidad" title="Permanent link">&para;</a></h2>
+<p>Este apartado se centra en el <strong>criterio b) del RA2</strong>. La evidencia reúne cálculo correcto, tareas observadas y mediciones interpretadas según el entorno. Ejecutar varios maps en un NodeManager no prueba un reparto entre ordenadores físicos. El profesor concretará el entorno o demostración adicional necesario para observar ese reparto.</p>
+<table>
+<thead>
+<tr>
+<th>Evidencia</th>
+<th>Qué permite afirmar</th>
+<th>Qué no permite afirmar por sí sola</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Totales por hotel contrastados</td>
+<td>El agregado coincide con la referencia de esa entrada.</td>
+<td>Que hubo ejecución distribuida o mejora de tiempo.</td>
+</tr>
+<tr>
+<td>Tareas y nodos registrados</td>
+<td>Dónde y cuándo se ejecutó el trabajo observado.</td>
+<td>Que más tareas hicieron el proceso más rápido.</td>
+</tr>
+<tr>
+<td>Tiempos comparables y resultados iguales</td>
+<td>Cómo cambió el rendimiento bajo esas condiciones.</td>
+<td>Que la mejora se repetirá para cualquier volumen o consulta.</td>
+</tr>
+</tbody>
+</table>
+<p>Cerramos el primer bloque: sabemos conservar archivos, ejecutar un agregado y comprobarlo. En <a href="../nosql/">2.5 Familias NoSQL</a> cambia la necesidad: además de recorrer un histórico, queremos localizar y actualizar información concreta. Compararemos modelos según esas operaciones; no porque el volumen obligue a abandonar las bases relacionales. Los datos y el laboratorio de MongoDB serán independientes.</p>
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://hadoop.apache.org/docs/r3.4.2/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html">Tutorial oficial de MapReduce</a>.</li>
+<li><a href="https://hadoop.apache.org/docs/r3.4.2/hadoop-streaming/HadoopStreaming.html">Hadoop Streaming</a>.</li>
+<li><a href="https://hadoop.apache.org/docs/r3.4.2/hadoop-yarn/hadoop-yarn-site/YARN.html">Arquitectura YARN</a>.</li>
+<li><a href="../ecosistema/">2.2 Ecosistema Hadoop</a> y <a href="../hdfs/">2.3 HDFS</a>.</li>
+</ul>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Justificad las respuestas con el caso hotelero. Conservad entrada, configuración, operaciones, resultados y explicación. Las condiciones de entrega se concretan en Moodle.</p>
+<ol>
+<li><strong>Seguir tres reservas.</strong> Con las tres filas del comienzo, escribid las emisiones map, agrupad por clave y calculad la salida reduce. Explicad por qué usar importe en lugar de noches daría otro indicador aunque el job terminara correctamente.</li>
+<li><strong>Tareas, simultaneidad y máquinas.</strong> Una ejecución tiene seis tareas map, un único NodeManager y como máximo dos maps activos a la vez. Explicad qué reparto se observa y qué no se ha demostrado. No deduzcáis un tiempo exacto sin medir.</li>
+<li><strong>Validar por hotel.</strong> Ejecutad el cálculo local y comprobar_noches.py. En una copia de la salida, restad una noche a Laredo y sumad una a Potes. El total sigue siendo 62: comprobad que el verificador lo rechaza y explicad por qué.</li>
+<li><strong>Contrastar Hadoop.</strong> Ejecutad el mismo agregado en el entorno de aula, descargad todos los part-* y verificadlos. Identificad rutas locales y HDFS y conservad el identificador de aplicación. Si el entorno no funciona, documentad el error; no presentéis la salida local como ejecución Hadoop.</li>
+<li><strong>Entender el desequilibrio.</strong> Imaginad que el 95 % de los registros corresponde a Laredo. ¿Por qué añadir reducers puede ayudar poco? Explicad qué concentra la carga y qué evidencias buscaríais.</li>
+<li><strong>Combinar correctamente.</strong> Calculad la media de los grupos [2, 4] y [10] mediante suma y recuento. Comparadla con la media de sus medias. Explicad por qué la corrección no debe depender de que se ejecute el combiner.</li>
+<li><strong>Interpretar medidas.</strong> Calculad medianas, aceleración y reducción de tiempo del ejemplo 118/120/123 frente a 79/80/84. Indicad qué condiciones deben cumplirse para aceptar la comparación y qué revisar si la configuración nueva tarda más.</li>
+<li><strong>Medir — ampliación.</strong> Con la entrada mayor y las configuraciones preparadas por el profesor, aplicad el protocolo. Si solo disponéis del Compose básico, presentad sus observaciones y diseñad el experimento adicional necesario para probar otras máquinas.</li>
+<li><strong>Reintentos.</strong> Un mapper registra un cobro en un servicio externo y después falla. ¿Qué puede ocurrir al repetirlo? Explicad por qué separaríamos ese efecto del agregado analítico.</li>
+</ol>
+<details class="success">
+<summary>Orientaciones para revisar las respuestas</summary>
+<p><strong>1–2.</strong> Las emisiones son Laredo→3, Laredo→2 y Potes→5; los totales, Laredo 5 y Potes 5. Seis tareas con dos activas requieren turnos; no demuestran seis máquinas ni una aceleración determinada.</p>
+<p><strong>3–4.</strong> Igual total global no implica igual reparto por hotel. El verificador debe rechazar los cambios compensados. La salida de Hadoop se contrasta sobre la misma entrada y leyendo todas las partes; el orden de los hoteles puede cambiar.</p>
+<p><strong>5–6.</strong> Con el particionado por hotel, todas las emisiones de Laredo llegan al mismo reducer. La media correcta es 16/3, aproximadamente 5,33; promediar 3 y 10 da 6,5 y pondera mal los grupos.</p>
+<p><strong>7–8.</strong> Las medianas son 120 y 80 segundos; aceleración 1,5 y reducción aproximada del 33,3 %. Requiere trabajo equivalente, resultados correctos y condiciones documentadas. Una medida más lenta también es información útil.</p>
+<p><strong>9.</strong> El cobro podría repetirse. El agregado de la práctica no debe producir efectos externos; los reintentos del framework no convierten una operación de negocio en exactamente una ejecución.</p>
+</details>
+<h2 id="autoevaluacion-del-24">Autoevaluación del 2.4<a class="headerlink" href="#autoevaluacion-del-24" title="Permanent link">&para;</a></h2>
+<p>Diez preguntas (A–D, <strong>una</strong> correcta). No puntúan en Moodle. <strong>Comprobar respuesta</strong> muestra el resultado y explica el motivo. Revisad el apartado enlazado antes de repetir.</p>
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2-2-4.json"></div>
 
 
 
