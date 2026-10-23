@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.3",
+  "title": "Autoevaluación del 2.3",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Bloques y copias",
+      "href": "../hdfs/#bloques",
+      "prompt": "Un fichero de 600 MiB usa bloques de 128 MiB y tiene tres copias efectivas de cada bloque. ¿Cómo se organiza?",
+      "code": "",
+      "options": [
+        "Cinco bloques lógicos y quince copias de bloque; 1.800 MiB de contenido físico.",
+        "Cinco bloques lógicos y cinco copias de bloque; 600 MiB de contenido físico.",
+        "Quince bloques lógicos y tres copias de archivo; 5.400 MiB de contenido físico.",
+        "Cinco bloques lógicos y quince copias de bloque; 1.920 MiB de contenido físico."
+      ],
+      "answer": 0,
+      "explain": "Hay cuatro bloques de 128 MiB y uno de 88 MiB. Tres copias de cada uno suman 1.800 MiB de contenido, antes de checksums y otros costes. El último bloque no consume 128 MiB completos por copia."
+    },
+    {
+      "topic": "Lectura de archivos",
+      "href": "../hdfs/#proceso-de-lectura",
+      "prompt": "¿Por dónde viajan los bytes cuando un cliente lee normalmente un archivo HDFS?",
+      "code": "",
+      "options": [
+        "Del DataNode al NameNode, que reúne todos los bloques y envía el archivo al cliente.",
+        "Del Secondary al cliente, después de comprobar la imagen de metadatos más reciente.",
+        "De los DataNodes al cliente, que obtiene las ubicaciones mediante el NameNode.",
+        "Del ResourceManager al cliente, utilizando los bloques asignados a sus tareas."
+      ],
+      "answer": 2,
+      "explain": "El NameNode informa del espacio de nombres y las ubicaciones. Los DataNodes sirven el contenido. Secondary consolida metadatos y YARN gestiona ejecución; no son intermediarios del contenido de una lectura."
+    },
+    {
+      "topic": "Copias solicitadas y efectivas",
+      "href": "../hdfs/#bloques",
+      "prompt": "Se solicita réplica 3, pero solo existe un DataNode. ¿Qué debe comprobarse?",
+      "code": "",
+      "options": [
+        "Que tres carpetas del DataNode contienen copias independientes para soportar su caída.",
+        "Que el NameNode ha conservado las otras dos copias junto a sus metadatos.",
+        "Que se han creado tres splits para distribuir cada bloque entre las tareas map.",
+        "Que el factor solicitado puede superar las copias disponibles; hay que inspeccionarlas."
+      ],
+      "answer": 3,
+      "explain": "Un único DataNode no satisface tres copias independientes del mismo bloque. El factor solicitado no prueba su cumplimiento. NameNode no guarda las otras copias y los splits de cálculo no equivalen a réplicas."
+    },
+    {
+      "topic": "Secondary NameNode",
+      "href": "../hdfs/#secondary-namenode",
+      "prompt": "¿Qué función realiza el Secondary NameNode en una configuración que lo utiliza?",
+      "code": "",
+      "options": [
+        "Asume el servicio de lectura de bloques cuando deja de responder el NameNode activo.",
+        "Consolida imagen y diario de metadatos mediante checkpoints periódicos.",
+        "Guarda una copia de cada bloque para reconstruir archivos borrados por el usuario.",
+        "Asigna recursos de ejecución a los procesos que necesitan reconstruir el histórico."
+      ],
+      "answer": 1,
+      "explain": "Secondary realiza checkpoints; no es un NameNode standby con conmutación automática. Proteger metadatos, mantener bloques replicados y guardar versiones anteriores son funciones distintas."
+    },
+    {
+      "topic": "Rutas de la práctica",
+      "href": "../hdfs/#trabajando-con-hdfs-hdfs-dfs",
+      "prompt": "Desde el Bash del NameNode ejecutas hdfs dfs -get /user/bda/datos/reservas.csv ./reservas_local.csv. ¿Dónde queda la descarga?",
+      "code": "",
+      "options": [
+        "En Windows, junto al compose.yaml que inició los servicios del laboratorio.",
+        "En el directorio de bloques del DataNode que conservaba la primera copia.",
+        "En el directorio local actual del contenedor desde el que ejecutaste el comando.",
+        "En HDFS, dentro del directorio de trabajo correspondiente al usuario del cliente."
+      ],
+      "answer": 2,
+      "explain": "-get copia desde HDFS al entorno local del proceso cliente. Aquí es el contenedor. Para conservar el archivo en el anfitrión hay que copiarlo fuera, por ejemplo con docker compose cp. /practicas es de solo lectura en este montaje."
+    },
+    {
+      "topic": "Checksums y calidad",
+      "href": "../hdfs/#crc-detectar-corrupcion-durante-la-lectura",
+      "prompt": "Una lectura supera las comprobaciones de checksum. ¿Qué conclusión está justificada?",
+      "code": "",
+      "options": [
+        "Los campos de las reservas cumplen las reglas de negocio del informe solicitado.",
+        "Existe otra copia sana disponible si desaparece el DataNode que atendió la lectura.",
+        "El archivo puede recuperarse al estado anterior a un borrado propagado.",
+        "No se han detectado discrepancias respecto a los checksums durante esa lectura."
+      ],
+      "answer": 3,
+      "explain": "Los checksums permiten detectar corrupción de bytes; no validan importes, fechas ni reglas de negocio. Tampoco acreditan copias adicionales o versiones anteriores, ni reconstruyen por sí solos contenido perdido."
+    },
+    {
+      "topic": "Snapshots",
+      "href": "../hdfs/#snapshots-foto-del-lago",
+      "prompt": "Una snapshot permite recuperar un CSV borrado. ¿Qué límite debemos explicar?",
+      "code": "",
+      "options": [
+        "Conserva la vista anterior en el mismo almacenamiento; no es una copia externa.",
+        "Crea otra réplica física por bloque y aumenta el factor solicitado del archivo.",
+        "Conserva la vista anterior aunque se pierdan los discos que contienen sus bloques.",
+        "Guarda el CSV completo dentro del fsimage del NameNode para reconstruirlo."
+      ],
+      "answer": 0,
+      "explain": "La snapshot conserva una vista de solo lectura y referencias a bloques. Puede ayudar ante un borrado, pero depende del mismo almacenamiento. No crea automáticamente una copia externa ni incrementa por sí sola la replicación."
+    },
+    {
+      "topic": "Diagnóstico de réplicas",
+      "href": "../hdfs/#bloques-en-disco-fsck-y-el-blk_",
+      "prompt": "fsck indica réplica insuficiente, pero cada bloque tiene una copia sana y accesible. ¿Qué implica?",
+      "code": "",
+      "options": [
+        "Que el archivo está incompleto porque faltan los registros de las otras copias.",
+        "Que el contenido es válido porque la copia existente supera la política de réplica.",
+        "Que la lectura puede ser posible, aunque no se cumple el nivel de réplica solicitado.",
+        "Que las copias faltantes se reconstruyen desde el checksum de la copia restante."
+      ],
+      "answer": 2,
+      "explain": "Menos copias que las solicitadas no equivale a un bloque sin copias. El fichero puede leerse si hay una copia accesible de cada bloque y los servicios funcionan. Recuperar la redundancia exige fuentes sanas, destinos y espacio."
+    },
+    {
+      "topic": "Crecer sin confundir funciones",
+      "href": "../hdfs/#crecer-criterio-e-y-decidir-despues-d",
+      "prompt": "Se añade un DataNode y se comprueba que aumenta la capacidad HDFS. ¿Qué falta para afirmar que el cierre termina antes?",
+      "code": "",
+      "options": [
+        "Contar los nuevos bloques, porque cada uno equivale a otra tarea simultánea.",
+        "Medir el mismo trabajo con resultados contrastados y recursos de ejecución conocidos.",
+        "Contar las réplicas, porque cada copia reduce proporcionalmente el tiempo de cálculo.",
+        "Comprobar la capacidad libre, porque ese incremento determina el tiempo del cierre."
+      ],
+      "answer": 1,
+      "explain": "Más almacenamiento no equivale a más CPU gestionada por YARN ni a una aceleración fija. Hay que medir el trabajo comparable, comprobar sus resultados y considerar el cuello de botella y los recursos de ejecución."
+    },
+    {
+      "topic": "Acceso desde Python",
+      "href": "../hdfs/#hdfs-y-python",
+      "prompt": "El navegador abre localhost:9870 desde Windows. ¿Basta para que un programa WebHDFS lea archivos en este Compose?",
+      "code": "",
+      "options": [
+        "Sí, porque el NameNode sirve los bloques por el mismo puerto que su interfaz web.",
+        "Sí, si el programa cambia el usuario HTTP por el nombre de la carpeta de datos.",
+        "No, porque WebHDFS exige utilizar las bibliotecas nativas libhdfs del cliente RPC.",
+        "No, también debe alcanzar los DataNodes a los que se redirigen las lecturas."
+      ],
+      "answer": 3,
+      "explain": "Ver la UI solo demuestra acceso a ese servicio. WebHDFS necesita resolver y alcanzar las redirecciones a DataNodes y tener permisos. libhdfs corresponde a otra vía de acceso, como la utilizada por PyArrow, no al cliente HTTP HdfsCLI."
+    }
+  ]
+}
