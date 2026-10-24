@@ -17,6 +17,7 @@ services:
       - "127.0.0.1:27117:27017"
     volumes:
       - ./anadir-shards.js:/scripts/anadir-shards.js:ro
+      - ./comprobar-particiones.js:/scripts/comprobar-particiones.js:ro
     depends_on:
       - cfg-santander
       - trasmiera-a
