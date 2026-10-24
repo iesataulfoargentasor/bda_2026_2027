@@ -1736,10 +1736,11 @@
 <p>Volvamos al histórico de <strong>500 GB</strong>. Descargarlo completo al portátil añade una transferencia y necesita espacio local. Leerlo por bloques desde la red evita guardar una copia completa, pero sigue transfiriendo los datos que se leen. El límite puede estar en la red, el disco, la interpretación del formato o el cálculo: hay que medirlo.</p>
 <p>Si los datos ya están repartidos en un clúster, una estrategia es ejecutar tareas cerca de los bloques que necesitan y combinar después sus resultados. Para aprender cómo se divide y reúne un cálculo, utilizaremos una operación más sencilla que el informe de cobros de Pentaho: sumar noches reservadas por hotel. Este resultado no representa un importe cobrado ni un porcentaje de ocupación. El recorrido sería:</p>
 <ol>
-<li>Cada tarea lee una parte de las reservas y obtiene sumas parciales por hotel.</li>
-<li>El sistema reúne los parciales correspondientes al mismo hotel.</li>
-<li>Se calcula y comprueba el total final.</li>
+<li>Cada tarea <strong>map</strong> lee una parte de las reservas y emite un par <code>(hotel, noches)</code> por reserva. Por ejemplo, dos reservas de Laredo con 3 y 2 noches producen <code>(Laredo, 3)</code> y <code>(Laredo, 2)</code>; el mapper todavía no las suma.</li>
+<li>El sistema agrupa los pares por hotel durante el <strong>shuffle</strong>, de modo que los valores de una misma clave lleguen al mismo reducer.</li>
+<li>El <strong>reducer</strong> suma las noches de cada hotel: en el ejemplo, Laredo obtiene 5. Después comprobamos los totales con un cálculo independiente sobre el mismo CSV.</li>
 </ol>
+<p>Como optimización, algunos trabajos pueden sumar valores parciales antes de enviarlos por la red mediante un <strong>combiner</strong>, si la operación lo permite. Es opcional y no lo configuramos en esta práctica: el recorrido básico es emitir pares, agruparlos y sumar sus valores.</p>
 <p>Este es un anticipo de <a href="../computacion-distribuida/">MapReduce en 2.4</a>. <strong>HDFS almacena los bloques; el motor de procesamiento realiza el cálculo.</strong> La <a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">arquitectura de HDFS</a> facilita acercar las aplicaciones a sus datos, pero todavía hay transferencias para distribuir datos, comunicar tareas o reunir resultados.</p>
 <p>La mejora depende del trabajo y de los recursos. Con pocos datos, la coordinación puede costar más tiempo que el cálculo local. Tampoco todas las bases NoSQL ejecutan sus consultas de esta manera. Para demostrar una mejora compararemos el mismo trabajo y verificaremos tanto su tiempo como su resultado.</p>
 <h2 id="que-debe-ocurrir-cuando-falla-un-componente">Qué debe ocurrir cuando falla un componente<a class="headerlink" href="#que-debe-ocurrir-cuando-falla-un-componente" title="Permanent link">&para;</a></h2>
