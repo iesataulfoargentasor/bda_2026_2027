@@ -110,7 +110,7 @@
         "Guardar cada camino posible como documento para evitar definir las relaciones.",
         "Representar entidades y relaciones y expresar recorridos con filtros y límites.",
         "Distribuir cada arista en un servidor distinto para acortar cualquier recorrido.",
-        "Sustituir identificadores por posiciones físicas para prescindir de índices."
+        "Resolver los saltos con un índice de identificadores, sin recorrer las relaciones."
       ],
       "answer": 1,
       "explain": "El grafo facilita recorridos de relaciones. Hay que diseñar propiedades, índices y límites; visitar muchos vecinos puede seguir siendo costoso."
@@ -136,7 +136,7 @@
       "code": "",
       "options": [
         "Demuestra el diseño previsto; falta observar una ampliación para afirmar que se probó.",
-        "Demuestra el crecimiento real; solo falta medir cuánto tardó en realizar el dibujo.",
+        "Demuestra el crecimiento real; falta medir su rendimiento con una carga representativa.",
         "Demuestra tolerancia a fallos; las tres particiones funcionan como copias del conjunto.",
         "Demuestra procesamiento distribuido; cada partición implica una tarea en ejecución."
       ],
