@@ -29,6 +29,14 @@ Destaca porque:
 
 Analogía: base ≈ esquema SQL, colección ≈ tabla, documento ≈ fila… **pero** el esquema puede ser flexible o incorporar validadores explícitos. El criterio **a)** aquí: organizáis y consultáis documentos anidados, comprobando tipos, significado y validación; poder cargar un JSON no garantiza que sus datos sean correctos.
 
+### Recorrido mínimo de la sesión
+
+1. Comprobad servidor, versión y base; elegid una sola vía de importación.
+2. Cargad en colecciones vacías y verificad 15 reservas, 6 opiniones y tipos de fecha.
+3. Consultad los originales de `hotel` y contrastad la tabla de referencia y el comprobador.
+4. Practicad inserciones y cambios únicamente en las bases de ejercicios indicadas.
+5. Guardad filtro, resultado e interpretación, conservando `hotel` para 2.9. Atlas, restauración e índices avanzados siguen siendo ampliaciones.
+
 ## Conceptos
 
 | Pieza | Oficio | Analogía SQL (con trampa) |
@@ -149,6 +157,25 @@ Comprobad el mensaje final de cada importación: deben haberse importado **15** 
 Si no habéis descargado el repositorio completo, descargad [reservas_mongo.jsonl](../assets/practicas/reservas_mongo.jsonl) y [opiniones.jsonl](../assets/practicas/hotel-mongo/opiniones.jsonl) en una carpeta. Abrid allí la terminal y sustituid las rutas de `--file` por los nombres de los archivos. Son JSONL: un documento por línea, por eso no añadimos `--jsonArray`.
 
 No usamos el *sample dataset* de Atlas (`sample_mflix`, `sample_training`). El caso es el **grupo hotelero**.
+
+### Alternativa: importar con las herramientas del contenedor
+
+Elegid esta vía **en lugar de** la importación desde el PC, no después. Requiere que `docker exec hotel-mongo mongoimport --version` funcione. Desde la raíz del repositorio, en la terminal del PC, comprobad primero que ambas colecciones están vacías:
+
+```text
+docker exec hotel-mongo mongosh hotel --quiet --eval "print(db.reservas.countDocuments({})); print(db.opiniones.countDocuments({}))"
+```
+
+Si alguno de los recuentos no es cero, revisad las cargas previas y no importéis otra vez. Con ambos a cero:
+
+```text
+docker cp docs/assets/practicas/reservas_mongo.jsonl hotel-mongo:/tmp/reservas_mongo.jsonl
+docker cp docs/assets/practicas/hotel-mongo/opiniones.jsonl hotel-mongo:/tmp/opiniones.jsonl
+docker exec hotel-mongo mongoimport --db hotel --collection reservas --file /tmp/reservas_mongo.jsonl
+docker exec hotel-mongo mongoimport --db hotel --collection opiniones --file /tmp/opiniones.jsonl
+```
+
+Comprobad el éxito de cada comando antes de continuar y después seguid las verificaciones siguientes: 15 reservas, 6 opiniones y fechas BSON. Una carga parcial debe investigarse antes de repetirla. Si la imagen no incluye Database Tools, utilizad la instalación en el PC explicada arriba. Descargar archivos sueltos solo cambia las rutas de origen de `docker cp`.
 
 ### Comprobar la carga antes de practicar
 

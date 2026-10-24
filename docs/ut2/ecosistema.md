@@ -23,6 +23,14 @@ Calcularemos **noches reservadas por hotel**, una pregunta más sencilla que el 
 
 Las prácticas utilizan Hadoop **3.x**. Anotad la versión efectiva con `hadoop version` y la imagen indicada por el profesor: la etiqueta `apache/hadoop:3` puede cambiar. Las referencias a Hadoop 1 permiten interpretar materiales antiguos.
 
+### Recorrido mínimo de la sesión
+
+1. Preparad los archivos juntos y verificad servicios, versiones y Python antes de Streaming.
+2. Comprobad un DataNode y un NodeManager registrados; identificad qué hace cada servicio.
+3. Ejecutad wordcount en una salida nueva y leed sus partes.
+4. Calculad noches por hotel y contrastad las 62 noches y los cinco subtotales con 2.4.
+5. Guardad comandos, configuración y resultados; continuad con la comparación común de 2.4. Las instalaciones tradicionales y los extras no se ejecutan como pasos adicionales del Compose.
+
 ## Qué promete (y por qué importa al RA2)
 
 Separad tres preguntas: **dónde conservar el histórico**, **quién asigna recursos** y **cómo organizar el cálculo**. HDFS responde a la primera, YARN a la segunda y MapReduce a la tercera.
@@ -201,7 +209,7 @@ Pasos reales:
 2. Cada línea va a un *mapper*. Hay una tarea map por split; formato y compresión influyen en el reparto. Una tarea puede tener varios intentos si hay reintentos.
 3. El *mapper* parsea el hotel (clave) y las noches (valor) y emite `(hotel, noches)`.
 4. Para facilitar la agregación, se **ordenan y barajan** los datos por clave. Aquí viajan por la red: puede ser costoso incluso si la entrada del mapper era local, porque las claves se reúnen entre tareas.
-5. El *reducer* suma las ocurrencias de cada hotel y genera un fichero por **partición** de salida.
+5. El *reducer* suma los valores de noches asociados a cada hotel y genera un fichero por **partición** de salida.
 6. Las partes se ven como `part-r-00000` (el nombre depende de la API y configuración) más un `_SUCCESS` si el job acabó bien.
 
 El resultado debe ser correcto aunque el combiner no se ejecute. Para medias se combinan sumas y recuentos, no medias de grupos de distinto tamaño.
@@ -322,7 +330,7 @@ name: hotel-hadoop
 
 services:
   namenode:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: namenode
     command: ["hdfs", "namenode"]
     ports:
@@ -337,7 +345,7 @@ services:
       - hdfs_name:/tmp/hadoop-root/dfs/name
 
   datanode:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: datanode
     command: ["hdfs", "datanode"]
     volumes:
@@ -346,7 +354,7 @@ services:
       - ./config.env
 
   resourcemanager:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: resourcemanager
     command: ["yarn", "resourcemanager"]
     ports:
@@ -355,7 +363,7 @@ services:
       - ./config.env
 
   nodemanager:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: nodemanager
     command: ["yarn", "nodemanager"]
     env_file:
@@ -431,6 +439,19 @@ ls /practicas
 ```
 
 Debe aparecer un DataNode vivo y un NodeManager registrado. Si no aparecen, revisad desde el anfitrión `docker compose logs datanode nodemanager`. Salid del Bash con `exit` antes de ejecutar comandos Docker. Para terminar la sesión: `docker compose down`, sin `-v` si queréis conservar HDFS.
+
+### Preparación docente antes de la sesión
+
+Descargad juntos los archivos de `hotel-hadoop`. Para la comparación de 2.4, añadid también [compose.dos-workers.yaml](../assets/practicas/hotel-hadoop/compose.dos-workers.yaml). Antes de dar el entorno al grupo, comprobad:
+
+1. Docker con contenedores Linux, puertos disponibles y memoria/CPU suficientes para los servicios y las tareas YARN. Registrad los límites de Docker y los recursos anunciados por cada NodeManager; más contenedores no crean más hardware.
+2. Misma imagen Hadoop en todos los servicios. Anotad su identificador o digest, `hadoop version`, versión de Java y `python3 --version` en NameNode y NodeManagers. El NameNode también necesita Python para la comprobación de salida.
+3. Un wordcount correcto y el agregado de 20 reservas validado con `comprobar_noches.py`: cinco hoteles y 62 noches. Esta prueba confirma también que el ejecutor dispone de Python y que recibe los scripts.
+4. La comparación A/B de 2.4 ensayada antes de clase, con tareas realmente ejecutadas en ambos trabajadores en B. Si faltan intérprete o recursos, corregid el entorno antes de asignarlo.
+
+El Compose permite seleccionar una imagen de aula compatible mediante `HOTEL_HADOOP_IMAGE`; si no se define, utiliza `apache/hadoop:3`. Para fijar la imagen disponible, el docente establece en PowerShell `$env:HOTEL_HADOOP_IMAGE = "nombre-o-digest-validado"`, sustituyendo el texto por la referencia real, antes de arrancar. La imagen debe mantener el arranque y la traducción de `config.env` del laboratorio e incluir Python 3 en los servicios indicados. No utilicéis una imagen distinta solo por tener Hadoop en su nombre. Conservad la referencia elegida en la ficha de entorno y usadla durante toda la comparación.
+
+Una comprobación de configuración no sustituye estas ejecuciones. Si el equipo de un alumno no puede sostener el entorno, el docente realizará la demostración común de 2.4 y 2.8; cada alumno entregará sus observaciones e interpretación.
 
 ### Ficheros XML (`$HADOOP_HOME/etc/hadoop`)
 

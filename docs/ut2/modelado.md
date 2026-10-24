@@ -153,7 +153,7 @@ Un hotel, decenas de miles de reservas. El `_id` del hotel vive **en el lado de 
 
 **Precio acordado:** conserva las condiciones de esa reserva aunque cambie el catálogo. Un cambio de tarifa no reescribe automáticamente el histórico. Esto no equivale a afirmar que ese importe se haya cobrado; pagos, devoluciones y rectificaciones requieren sus propios datos y reglas.
 
-**Nombre del hotel en la ficha:** si recepción lo pide **siempre**, copiad `nombre` + `comarca` en la reserva (*referencia extendida*). El teléfono que **sí** cambia se queda en `hoteles`.
+**Nombre del hotel en la ficha:** si recepción lo consulta con frecuencia, valorad copiar `nombre` + `comarca` en la reserva (*referencia extendida*), comparando el coste de consulta y de mantener esa copia. Definid si conserva el dato histórico o el actual. En este ejemplo, el teléfono actual se consulta en `hoteles`.
 
 ### Uno a tropecientos (habitación → logs de puerta)
 
@@ -231,7 +231,7 @@ Visitas a la web del hotel: el cliente **acumula** 100 clics y escribe **una** v
 
 La **referencia extendida** conserva el identificador del hotel y unos pocos atributos copiados. Definid si esos atributos son históricos o deben actualizarse. Una caché o una proyección pueden ser alternativas: no hace falta duplicar toda la entidad para ahorrar una consulta.
 
-Duplicad en la reserva lo que **siempre** pintáis (nombre del hotel). Dejad fuera lo que **cambia** (teléfono). Redundancia **consciente**.
+Consultar frecuentemente el nombre del hotel puede justificar estudiar una copia, pero no obliga a duplicarlo. Comparad la referencia con una copia histórica o una copia actualizada, indicando cómo se mantiene. En este ejemplo dejamos el teléfono actual en el hotel y conservamos en la reserva el nombre histórico acordado.
 
 ### El informe es siempre la misma suma
 
@@ -352,7 +352,7 @@ Compass permite explorar el esquema inferido de una muestra; las opciones de dia
 
 ## Cómo se cierra el apartado
 
-Da igual la carga y los patrones: el modelo **sigue a las historias de usuario**. Si no podéis decir “recepción abre *esto* y por eso el cobro va *aquí*”, el dibujo es decoración.
+El modelo **parte de las historias de usuario** y se ajusta a la carga, los patrones de acceso, el crecimiento y las garantías necesarias. Si no podéis decir “recepción abre *esto* y por eso el cobro va *aquí*”, el dibujo es decoración.
 
 !!! success "d) en voz alta"
     “Conservo los datos y su significado. Agrupo lo que conviene leer y cambiar junto, referencio lo compartido y limito el crecimiento. Si el esquema cambia, adapto lectores y validación. Compruebo que el rediseño no pierde información.”

@@ -107,9 +107,9 @@
       "prompt": "¿Qué debe ocurrir al dividir un rango por Potes y mover una de sus partes?",
       "code": "",
       "options": [
-        "SplitAt debe duplicar los documentos y moveChunk debe eliminar las copias sobrantes.",
-        "SplitAt debe modificar la comarca para que el nombre del shard coincida con el hotel.",
-        "MoveChunk debe aumentar las noches porque el destino añade capacidad al agregado.",
+        "SplitAt crea dos copias completas; moveChunk conserva una copia lógica adicional en el destino.",
+        "SplitAt desplaza el rango al otro shard; moveChunk ajusta después su límite de partición.",
+        "MoveChunk cambia el destino de nuevas altas; los documentos existentes permanecen en el origen.",
         "Cambiarán límites y ubicación; documentos, identificadores y resultados se conservarán."
       ],
       "answer": 3,

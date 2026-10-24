@@ -13,7 +13,7 @@ tags:
 
     **Práctica guiada:** ejecutar el agregado de noches con el CSV pequeño, contrastarlo por hotel y observar su ejecución en el entorno de 2.2.
 
-    **Ampliación:** generar más datos y comparar configuraciones preparadas por el profesor. No se presupone que el portátil permita demostrar aceleración entre máquinas físicas.
+    **Evidencia común de b):** comparar dos configuraciones de ejecución, en el equipo del alumno o mediante demostración docente, con resultados y tiempos contrastados. Ampliar a otras cargas o máquinas físicas es profundización; no se exige obtener aceleración.
 
 En los apartados anteriores hemos separado almacenamiento y ejecución. Ahora comprobaremos **cómo se divide un cálculo, cómo se reúnen sus resultados y cuándo compensa hacerlo**. El criterio **b)** exige observar el procesamiento distribuido y medirlo; no basta con afirmar que añadir máquinas siempre acelera un programa.
 
@@ -238,6 +238,50 @@ Cada registro de la salida de estos scripts termina en salto de línea. Concaten
 
 Registrad en YARN el identificador de aplicación, estado, tareas e intentos, además de los cinco totales. **Intentos no equivale a tareas lógicas:** los reintentos pueden elevar ciertos contadores. Los tiempos de las tareas y sus nodos permiten observar dónde y cuándo se ejecutaron.
 
+### Nombres de hotel: conservar o normalizar explícitamente
+
+El mapper, el reducer y el comprobador conservan el nombre del hotel, incluidos sus espacios iniciales o finales. `" Laredo"` y `"Laredo"` son claves distintas en este contrato. El reducer retira únicamente el salto de línea; no limpia la clave al agregar. Si el negocio considera equivalentes ambos nombres, hay que acordar y aplicar esa normalización antes del cálculo y usar la misma regla en la referencia. En una copia del CSV podéis introducir ambas variantes y comprobar que permanecen separadas; no cambiéis los originales del aula.
+
+### Evidencia común del criterio b): comparar uno y dos trabajadores
+
+Todo el alumnado debe observar e interpretar esta comparación. Puede ejecutarse individualmente o como demostración docente con registros compartidos y una explicación individual. No basta con diseñar una prueba que no se ha realizado. El profesor prepara antes el entorno siguiendo 2.2; si no funciona, registra la incidencia y reprograma la observación.
+
+Utilizaremos el mismo agregado y una entrada que produzca al menos dos splits. Primero se comprueba el CSV pequeño; después se prepara la entrada mayor del bloque siguiente. La configuración A tiene un NodeManager; B incorpora `nodemanager2` mediante el complemento descargable. Se mantienen imagen, HDFS, entrada, scripts y número de reducers. Cambia el número de ejecutores y su capacidad YARN anunciada; ambos siguen compartiendo el ordenador y sus límites físicos.
+
+Desde el host, en `docs/assets/practicas/hotel-hadoop`, comprobad la configuración combinada:
+
+```text
+docker compose -f compose.yaml -f compose.dos-workers.yaml config
+```
+
+Para **A**, si el segundo trabajador estaba arrancado, detenedlo sin borrar datos; después arrancad los cuatro servicios básicos:
+
+```text
+docker compose -f compose.yaml -f compose.dos-workers.yaml stop nodemanager2
+docker compose up -d
+```
+
+Si aún no se creó `nodemanager2`, no hay ningún segundo servicio que detener. Desde el Bash del NameNode, registrad `yarn node -list`: antes de medir debe aparecer un único trabajador en estado RUNNING. Aplicad el protocolo de calentamiento y tres ejecuciones de más abajo, siempre con salidas nuevas.
+
+Para **B**, desde el host:
+
+```text
+docker compose -f compose.yaml -f compose.dos-workers.yaml up -d nodemanager2
+docker compose -f compose.yaml -f compose.dos-workers.yaml exec nodemanager2 python3 --version
+```
+
+Esperad a que `yarn node -list` muestre dos trabajadores RUNNING. Repetid el mismo protocolo y anotad los hosts donde se ejecutan las tareas. Dos trabajadores registrados no prueban que ambos hayan calculado: si el planificador solo utiliza uno, investigad los splits, la capacidad asignada y las esperas. Esa ejecución se conserva como diagnóstico, pero falta completar la observación del reparto entre trabajadores.
+
+**Entrega mínima individual:** entrada identificada; imagen y recursos A/B; aplicación y tareas por trabajador; los tres tiempos y mediana de cada configuración; verificación de todos los subtotales; conclusión sobre corrección, reparto, tiempo y límites. Una configuración B más lenta también es un resultado válido. Las capturas o logs de la demostración pueden ser comunes; las conclusiones deben ser propias.
+
+Al terminar, detened todos los servicios con la configuración combinada:
+
+```text
+docker compose -f compose.yaml -f compose.dos-workers.yaml stop
+```
+
+La incorporación del segundo trabajador también permite observar una ampliación de recursos, pero no sustituye la evidencia común de almacenamiento y reparto del criterio e) que se concreta en 2.8.
+
 ### Medir sin cambiar dos variables a la vez
 
 El fichero pequeño sirve para verificar el algoritmo. No es una prueba convincente de rendimiento: iniciar servicios y tareas puede costar más que sumar sus veinte filas.
@@ -284,13 +328,13 @@ Una razón menor que 1 indica que la nueva configuración tarda más. El arranqu
 
 ### Entrega y comprobaciones
 
-Entrega la identificación y tamaño de la entrada, comandos, contadores, resultados comparados y una interpretación de los tiempos. Sin más workers, documenta lo observado y qué experimento adicional necesitarías. No presentes «varios maps» como prueba de que había varias máquinas.
+Entrega las evidencias A/B indicadas en «Evidencia común del criterio b)». Si tu equipo solo permite un trabajador, adjunta sus observaciones y completa la comparación a partir de la demostración docente. Una incidencia pendiente no equivale a una comparación realizada. No presentes «varios maps» como prueba de varias máquinas físicas.
 
 Para cerrar: ¿qué cambia si todas las reservas son de Laredo?, ¿por qué no sumamos medias sin sus tamaños?, ¿por qué `_SUCCESS` no valida la fórmula? Las respuestas conectan el algoritmo con el comportamiento del sistema.
 
 ## Qué habéis demostrado y cómo continúa la unidad
 
-Este apartado se centra en el **criterio b) del RA2**. La evidencia reúne cálculo correcto, tareas observadas y mediciones interpretadas según el entorno. Ejecutar varios maps en un NodeManager no prueba un reparto entre ordenadores físicos. El profesor concretará el entorno o demostración adicional necesario para observar ese reparto.
+Este apartado se centra en el **criterio b) del RA2**. La evidencia reúne cálculo correcto, tareas observadas y mediciones interpretadas según el entorno. Ejecutar varios maps en un NodeManager no prueba un reparto entre ordenadores físicos. La comparación común usa uno y dos trabajadores, con ejecución o demostración observada. Si comparten ordenador, la conclusión se limita a procesos coordinados sobre ese hardware; observar máquinas físicas distintas requiere otro despliegue.
 
 | Evidencia | Qué permite afirmar | Qué no permite afirmar por sí sola |
 | --- | --- | --- |
@@ -318,7 +362,7 @@ Justificad las respuestas con el caso hotelero. Conservad entrada, configuració
 5. **Entender el desequilibrio.** Imaginad que el 95 % de los registros corresponde a Laredo. ¿Por qué añadir reducers puede ayudar poco? Explicad qué concentra la carga y qué evidencias buscaríais.
 6. **Combinar correctamente.** Calculad la media de los grupos [2, 4] y [10] mediante suma y recuento. Comparadla con la media de sus medias. Explicad por qué la corrección no debe depender de que se ejecute el combiner.
 7. **Interpretar medidas.** Calculad medianas, aceleración y reducción de tiempo del ejemplo 118/120/123 frente a 79/80/84. Indicad qué condiciones deben cumplirse para aceptar la comparación y qué revisar si la configuración nueva tarda más.
-8. **Medir — ampliación.** Con la entrada mayor y las configuraciones preparadas por el profesor, aplicad el protocolo. Si solo disponéis del Compose básico, presentad sus observaciones y diseñad el experimento adicional necesario para probar otras máquinas.
+8. **Medir — evidencia común de b).** Aplicad el protocolo A/B con uno y dos trabajadores o analizad la demostración docente. Entregad individualmente las evidencias mínimas, incluyendo dónde se ejecutaron las tareas y qué límites impone compartir ordenador. Probar otros volúmenes o máquinas físicas es ampliación.
 9. **Reintentos.** Un mapper registra un cobro en un servicio externo y después falla. ¿Qué puede ocurrir al repetirlo? Explicad por qué separaríamos ese efecto del agregado analítico.
 
 ??? success "Orientaciones para revisar las respuestas"

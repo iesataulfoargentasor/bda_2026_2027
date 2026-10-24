@@ -69,6 +69,8 @@ Leed los apartados **en orden**, empezando por el caso hotelero y la transición
 
 El recorrido común reúne los conceptos y las prácticas guiadas de los apartados. Las actividades señaladas como **opcionales, extras o ampliaciones** permiten profundizar; su ejecución o detalle adicional solo se exige si el profesor lo anuncia antes. Las entregas evaluables y sus condiciones se concretan en Moodle. Las preguntas de autoevaluación sirven para repasar y no fijan por sí solas el contenido de una prueba calificada.
 
+**Son comunes también las observaciones de los criterios b) y e)**: comparación de uno y dos trabajadores en [2.4](computacion-distribuida.md#evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores) e incorporación de shards en [2.8](replicas-shards.md#evidencia-comun-del-criterio-e-observar-la-ampliacion). Pueden hacerse mediante demostración docente cuando el equipo del alumno no permita ejecutarlas. Cada alumno entrega su interpretación y las evidencias indicadas en el [RA2](ra2.md#evidencias-minimas-comunes-de-b-y-e); la instalación individual del laboratorio opcional no es obligatoria.
+
 Necesitáis los fundamentos de la UT1, manejo básico de terminal y Python: variables, bucles, funciones y lectura de archivos. Utilizad los materiales y el entorno del módulo; los requisitos de instalación se detallan en [2.2](ecosistema.md) y [2.6](mongodb.md). Antes de ejecutar un comando, identificad si corresponde al equipo anfitrión, al contenedor, a la consola de MongoDB o a Python. Seguid las indicaciones de arranque y parada al cambiar de práctica, especialmente en [2.8](replicas-shards.md).
 
 <span id="que-vais-a-trabajar"></span>
@@ -104,7 +106,7 @@ Trabajamos con conjuntos pequeños para poder revisar los resultados. El volumen
 | Escrituras en MongoDB (2.6 y 2.9) | Copia de las colecciones de consulta | Altas, cambios y borrados, conservando los datos originales para las consultas. |
 | Modelado documental (2.7) | Necesidades y documentos de ejemplo del hotel | Organización de los datos, evolución del esquema y reglas de validación. |
 | Conjunto de réplicas (2.8) | Documento de prueba identificado | Elección de un nuevo primario, lectura de otras copias y recuperación. |
-| Particionado, laboratorio opcional (2.8) | 15 reservas importadas en ese entorno | Reparto y movimiento de datos sin alterar los resultados de las consultas. |
+| Particionado: observación común; instalación individual opcional (2.8) | 15 reservas importadas en ese entorno | Reparto y movimiento de datos sin alterar los resultados de las consultas. |
 | Transacciones, práctica opcional (2.9) | Reserva y una plaza de parking, sobre un conjunto de réplicas | Confirmación conjunta de los cambios o rechazo sin cambios parciales. |
 | Aplicación web, extra opcional (2.9) | Datos originales de consulta | Coincidencia entre los resultados del programa y los mostrados en la web. |
 
@@ -113,7 +115,7 @@ Los CSV y JSONL son **conjuntos diferentes**: no tienen por qué producir los mi
 !!! info "Qué permite demostrar el entorno de aula"
     El entorno básico de Hadoop utiliza un único nodo de datos y un único nodo de ejecución en un ordenador. Permite observar sus funciones y las tareas, pero probar la tolerancia por réplica requiere más nodos de datos y copias efectivas. Varios contenedores en un ordenador tampoco demuestran resistencia ante la pérdida de ese ordenador ni aceleración entre máquinas físicas. En cada prueba, distinguid lo observado de lo esperado por diseño.
 
-Para observar el crecimiento del sistema, relacionad cada recurso añadido con lo que aporta: por ejemplo, capacidad de almacenamiento al incorporar un DataNode o capacidad de ejecución al añadir un trabajador. El laboratorio opcional de particionado ofrece otra forma de estudiarlo. El profesor concretará la práctica o demostración con la que se recogerá la evidencia del criterio **e)**; explicar una ampliación prevista no equivale a haberla observado.
+Para observar el crecimiento del sistema, relacionad cada recurso añadido con lo que aporta: por ejemplo, capacidad de almacenamiento al incorporar un DataNode o capacidad de ejecución al añadir un trabajador. El laboratorio opcional de particionado ofrece otra forma de estudiarlo. La evidencia común del criterio **e)** se recoge mediante la secuencia de incorporación y reparto de 2.8, ejecutada por el alumno o demostrada por el profesor; explicar una ampliación prevista no equivale a haberla observado.
 
 En cada práctica conservad **entrada, configuración, operación, resultado y explicación**. Una captura sin interpretación no permite saber si el resultado es correcto. Contrastad recuentos, totales y reglas de negocio; al probar un fallo, registrad el estado inicial, la interrupción y la recuperación. Si el entorno no permite demostrar una propiedad, explicad la limitación y qué prueba adicional necesitaríais.
 

@@ -7,7 +7,7 @@ tags:
 
 # Resultado de aprendizaje 2 (RA2)
 
-Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **5075**), según el Real Decreto 279/2021.
+Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **5075**), según el Real Decreto 279/2021 y el currículo de Cantabria establecido por la [Orden EDU/48/2024, anexo VI, página 148](https://boc.cantabria.es/boces/verAnuncioAction.do?idAnuBlob=410716#page=148).
 
 ## Enunciado
 
@@ -30,7 +30,7 @@ En la [UT1](../ut1/ra1.md) **diseñabas** la solución (dónde guardar, cómo in
 La [tarea de los 500 GB](../ut1/transicion-ut2.md) sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.
 
 !!! note "Cómo se evalúa"
-    Debes poder **decir** por qué HDFS o Mongo, **mostrar** (en el lab) que un nodo caído no pierde el dato, **lanzar** un job que parte el trabajo y **justificar** que mañana se añade un disco o un *shard* sin rediseñar el hotel. Las entregas siguen en Moodle.
+    Debes poder **justificar** la elección del sistema, **comprobar** el cálculo y su reparto, **probar** la recuperación ante un fallo definido y **observar** qué aporta una ampliación. Cada conclusión indicará configuración, datos y límites; no se promete conservar cualquier dato ante cualquier caída. Las entregas siguen en Moodle.
 
     Para practicar: [autoevaluación de la UT2](autoevaluacion.md).
 
@@ -44,6 +44,15 @@ La [tarea de los 500 GB](../ut1/transicion-ut2.md) sirve de puente: hay que medi
 | d) | Reutilizar datos conservados con metadatos y lectores compatibles | Capacidad literalmente infinita o ausencia de reglas |
 | e) | Mostrar el recurso añadido y qué capacidad o función aporta | Añadir cualquier nodo duplica siempre el rendimiento |
 
+### Evidencias mínimas comunes de b) y e)
+
+| Criterio | Experiencia común | Entrega individual |
+| --- | --- | --- |
+| **b)** | Comparación A/B de 2.4: mismo agregado y entrada, uno y dos trabajadores; tareas observadas, calentamiento y tres ejecuciones medidas por configuración. | Identificación de datos, versiones y recursos; tareas y nodos; tiempos y medianas; totales contrastados; explicación de la mejora o ausencia de ella y límites físicos. |
+| **e)** | Demostración o ejecución de 2.8: registro del primer y segundo shard, ubicación de datos y movimiento de un rango con conservación comprobada. | Shards registrados antes y después; recurso incorporado; ubicaciones; comprobación de documentos, tipos y noches; distinción entre capacidad, reparto y rendimiento. |
+
+Estas observaciones forman parte del recorrido común. La instalación individual del laboratorio de particionado sigue siendo opcional; si no se realiza, el docente lo demuestra y facilita los registros para que cada alumno los interprete. Lo mismo se aplica a b) cuando el equipo no admite dos trabajadores. El profesor concreta en Moodle sesión, formato y entrega; no sustituye una prueba por cifras inventadas. Si una incidencia impide observarla, se reprograma y se identifica como pendiente.
+
 El enunciado oficial se conserva arriba. Su aplicación práctica exige concretar recursos, fallos y límites: «sin fallos» no significa que el hardware nunca falle, sino diseñar y probar la respuesta del sistema a los fallos previstos.
 
-La evaluación reúne explicación y observación. Si una ampliación no puede ejecutarse en el entorno disponible, documenta esa limitación y el experimento necesario; no presentes una predicción como un resultado medido.
+La evaluación reúne explicación y observación. Si una ampliación adicional no puede ejecutarse, documenta esa limitación y el experimento necesario. Para las evidencias comunes de b) y e), completa la observación en la demostración docente; no presentes una predicción como un resultado medido.

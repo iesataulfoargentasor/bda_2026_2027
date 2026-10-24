@@ -25,6 +25,14 @@ En este apartado estudiamos **archivos replicados**. El tamaño predeterminado h
 
 HDFS favorece **escribir y leer muchas veces**. Permite añadir al final mediante operaciones compatibles y eliminar archivos; no ofrece una modificación arbitraria de una fila en medio del fichero. La expresión WORM es una simplificación del patrón de uso, no una prohibición absoluta de añadir datos. Para cargar archivos podemos utilizar `hdfs dfs -put` o una herramienta compatible; Sqoop, citado en materiales antiguos, es una referencia histórica.
 
+### Recorrido mínimo de la sesión
+
+1. Reutilizad el entorno de 2.2 y confirmad qué comandos van en el host y cuáles en el contenedor.
+2. Preparad una carpeta HDFS propia y `/tmp/practica-hdfs`, escribible, para las descargas locales.
+3. Subid, listad, copiad y recuperad el fichero de prueba; comparad su contenido.
+4. Inspeccionad bloques, ubicaciones y copias efectivas con `fsck` y `dfsadmin -report`.
+5. Entregad el recorrido de lectura/escritura y los límites observados. Snapshots, Python y Hue son ampliaciones; la prueba común de fallo está en 2.8.
+
 ## Qué no hace bien (y qué sí)
 
 Relacionad el acceso con la herramienta. El informe nocturno recorre muchos registros secuencialmente: encaja en HDFS. Recepción busca y modifica una reserva concreta en milisegundos: necesita un motor de base de datos. HDFS conserva los ficheros sobre los que ese motor o un procesamiento analítico puede trabajar; no ofrece por sí solo consultas por `id_reserva`.
@@ -85,9 +93,11 @@ Los permisos de lectura y escritura siguen la filosofía **POSIX** (usuario, gru
 | **DataNode** | Almacena y sirve bloques a los clientes |
 | **Secondary NameNode** | Puntos de control de los metadatos (`fsimage` + `edits`). **No** es un NameNode de reserva |
 
+El recuadro «Servicios de metadatos» agrupa responsabilidades, no una única máquina física. NameNode y Secondary pueden ejecutarse en servidores distintos; Secondary realiza checkpoints y no es un NameNode en espera.
+
 ```mermaid
 flowchart TB
-  subgraph maestro["Maestro"]
+  subgraph maestro["Servicios de metadatos"]
     NN[NameNode]
     SNN[Secondary NameNode]
   end
