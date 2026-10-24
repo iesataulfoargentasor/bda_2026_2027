@@ -1074,6 +1074,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#recorrido-minimo-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido mínimo de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-no-hace-bien-y-que-si" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1678,6 +1689,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#recorrido-minimo-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido mínimo de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-no-hace-bien-y-que-si" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2148,6 +2170,14 @@
 <p>Su tolerancia a fallos depende de copias sanas, servicios disponibles y configuración. Añadir nodos puede ampliar capacidad, pero no garantiza acelerar un cálculo ni conservar datos ante cualquier avería. Son las condiciones que aprendimos a comprobar en la UT1 y en 2.1.</p>
 <p>En este apartado estudiamos <strong>archivos replicados</strong>. El tamaño predeterminado habitual es <strong>128 MiB por bloque</strong> y el factor de réplica de fábrica es <strong>3</strong>; ambos son configurables. Nuestro laboratorio solicita <strong>una copia</strong>, porque tiene un único DataNode. Hadoop también admite otras políticas, como codificación de borrado, que quedan fuera de esta práctica.</p>
 <p>HDFS favorece <strong>escribir y leer muchas veces</strong>. Permite añadir al final mediante operaciones compatibles y eliminar archivos; no ofrece una modificación arbitraria de una fila en medio del fichero. La expresión WORM es una simplificación del patrón de uso, no una prohibición absoluta de añadir datos. Para cargar archivos podemos utilizar <code>hdfs dfs -put</code> o una herramienta compatible; Sqoop, citado en materiales antiguos, es una referencia histórica.</p>
+<h3 id="recorrido-minimo-de-la-sesion">Recorrido mínimo de la sesión<a class="headerlink" href="#recorrido-minimo-de-la-sesion" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Reutilizad el entorno de 2.2 y confirmad qué comandos van en el host y cuáles en el contenedor.</li>
+<li>Preparad una carpeta HDFS propia y <code>/tmp/practica-hdfs</code>, escribible, para las descargas locales.</li>
+<li>Subid, listad, copiad y recuperad el fichero de prueba; comparad su contenido.</li>
+<li>Inspeccionad bloques, ubicaciones y copias efectivas con <code>fsck</code> y <code>dfsadmin -report</code>.</li>
+<li>Entregad el recorrido de lectura/escritura y los límites observados. Snapshots, Python y Hue son ampliaciones; la prueba común de fallo está en 2.8.</li>
+</ol>
 <h2 id="que-no-hace-bien-y-que-si">Qué no hace bien (y qué sí)<a class="headerlink" href="#que-no-hace-bien-y-que-si" title="Permanent link">&para;</a></h2>
 <p>Relacionad el acceso con la herramienta. El informe nocturno recorre muchos registros secuencialmente: encaja en HDFS. Recepción busca y modifica una reserva concreta en milisegundos: necesita un motor de base de datos. HDFS conserva los ficheros sobre los que ese motor o un procesamiento analítico puede trabajar; no ofrece por sí solo consultas por <code>id_reserva</code>.</p>
 <p>No ofrece buen rendimiento para:</p>
@@ -2207,8 +2237,9 @@
 </tr>
 </tbody>
 </table>
+<p>El recuadro «Servicios de metadatos» agrupa responsabilidades, no una única máquina física. NameNode y Secondary pueden ejecutarse en servidores distintos; Secondary realiza checkpoints y no es un NameNode en espera.</p>
 <pre class="mermaid"><code>flowchart TB
-  subgraph maestro["Maestro"]
+  subgraph maestro["Servicios de metadatos"]
     NN[NameNode]
     SNN[Secondary NameNode]
   end

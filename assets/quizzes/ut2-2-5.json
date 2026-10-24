@@ -122,7 +122,7 @@
       "code": "",
       "options": [
         "Ambos grupos confirman localmente y la convergencia posterior evita la venta doble.",
-        "Las réplicas suman su capacidad para crear una plaza temporal mientras dura el corte.",
+        "Ambos grupos confirman desde su copia y resuelven después qué reserva conserva la plaza.",
         "Alguna operación espera o se rechaza, perdiendo disponibilidad en el sentido de CAP.",
         "Las lecturas del primario permiten confirmar en ambos grupos sin coordinar escrituras."
       ],

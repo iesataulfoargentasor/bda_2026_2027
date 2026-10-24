@@ -1593,6 +1593,7 @@
 <h2 id="como-trabajar-la-unidad">Cómo trabajar la unidad<a class="headerlink" href="#como-trabajar-la-unidad" title="Permanent link">&para;</a></h2>
 <p>Leed los apartados <strong>en orden</strong>, empezando por el caso hotelero y la transición de los 500 GB. Identificad primero el problema, explicad los conceptos con vuestras palabras y aplicadlos en la práctica. Mantened una hoja de decisiones: <strong>problema, entrada, resultado esperado, recursos y comprobación</strong>.</p>
 <p>El recorrido común reúne los conceptos y las prácticas guiadas de los apartados. Las actividades señaladas como <strong>opcionales, extras o ampliaciones</strong> permiten profundizar; su ejecución o detalle adicional solo se exige si el profesor lo anuncia antes. Las entregas evaluables y sus condiciones se concretan en Moodle. Las preguntas de autoevaluación sirven para repasar y no fijan por sí solas el contenido de una prueba calificada.</p>
+<p><strong>Son comunes también las observaciones de los criterios b) y e)</strong>: comparación de uno y dos trabajadores en <a href="computacion-distribuida/#evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores">2.4</a> e incorporación de shards en <a href="replicas-shards/#evidencia-comun-del-criterio-e-observar-la-ampliacion">2.8</a>. Pueden hacerse mediante demostración docente cuando el equipo del alumno no permita ejecutarlas. Cada alumno entrega su interpretación y las evidencias indicadas en el <a href="ra2/#evidencias-minimas-comunes-de-b-y-e">RA2</a>; la instalación individual del laboratorio opcional no es obligatoria.</p>
 <p>Necesitáis los fundamentos de la UT1, manejo básico de terminal y Python: variables, bucles, funciones y lectura de archivos. Utilizad los materiales y el entorno del módulo; los requisitos de instalación se detallan en <a href="ecosistema/">2.2</a> y <a href="mongodb/">2.6</a>. Antes de ejecutar un comando, identificad si corresponde al equipo anfitrión, al contenedor, a la consola de MongoDB o a Python. Seguid las indicaciones de arranque y parada al cambiar de práctica, especialmente en <a href="replicas-shards/">2.8</a>.</p>
 <p><span id="que-vais-a-trabajar"></span></p>
 <h2 id="mapa-de-apartados-y-criterios-de-evaluacion">Mapa de apartados y criterios de evaluación<a class="headerlink" href="#mapa-de-apartados-y-criterios-de-evaluacion" title="Permanent link">&para;</a></h2>
@@ -1701,7 +1702,7 @@
 <td>Elección de un nuevo primario, lectura de otras copias y recuperación.</td>
 </tr>
 <tr>
-<td>Particionado, laboratorio opcional (2.8)</td>
+<td>Particionado: observación común; instalación individual opcional (2.8)</td>
 <td>15 reservas importadas en ese entorno</td>
 <td>Reparto y movimiento de datos sin alterar los resultados de las consultas.</td>
 </tr>
@@ -1722,7 +1723,7 @@
 <p class="admonition-title">Qué permite demostrar el entorno de aula</p>
 <p>El entorno básico de Hadoop utiliza un único nodo de datos y un único nodo de ejecución en un ordenador. Permite observar sus funciones y las tareas, pero probar la tolerancia por réplica requiere más nodos de datos y copias efectivas. Varios contenedores en un ordenador tampoco demuestran resistencia ante la pérdida de ese ordenador ni aceleración entre máquinas físicas. En cada prueba, distinguid lo observado de lo esperado por diseño.</p>
 </div>
-<p>Para observar el crecimiento del sistema, relacionad cada recurso añadido con lo que aporta: por ejemplo, capacidad de almacenamiento al incorporar un DataNode o capacidad de ejecución al añadir un trabajador. El laboratorio opcional de particionado ofrece otra forma de estudiarlo. El profesor concretará la práctica o demostración con la que se recogerá la evidencia del criterio <strong>e)</strong>; explicar una ampliación prevista no equivale a haberla observado.</p>
+<p>Para observar el crecimiento del sistema, relacionad cada recurso añadido con lo que aporta: por ejemplo, capacidad de almacenamiento al incorporar un DataNode o capacidad de ejecución al añadir un trabajador. El laboratorio opcional de particionado ofrece otra forma de estudiarlo. La evidencia común del criterio <strong>e)</strong> se recoge mediante la secuencia de incorporación y reparto de 2.8, ejecutada por el alumno o demostrada por el profesor; explicar una ampliación prevista no equivale a haberla observado.</p>
 <p>En cada práctica conservad <strong>entrada, configuración, operación, resultado y explicación</strong>. Una captura sin interpretación no permite saber si el resultado es correcto. Contrastad recuentos, totales y reglas de negocio; al probar un fallo, registrad el estado inicial, la interrupción y la recuperación. Si el entorno no permite demostrar una propiedad, explicad la limitación y qué prueba adicional necesitaríais.</p>
 <p>Terminad con la <a href="autoevaluacion/">autoevaluación</a> y revisad los criterios del <a href="ra2/">RA2</a>. Debéis poder explicar a un compañero qué necesidad resuelve cada sistema, qué habéis comprobado y bajo qué condiciones se mantiene el resultado.</p>
 

@@ -1031,6 +1031,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Evidencias que conectan teoría y práctica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidencias-minimas-comunes-de-b-y-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias mínimas comunes de b) y e)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1397,6 +1414,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Evidencias que conectan teoría y práctica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidencias-minimas-comunes-de-b-y-e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencias mínimas comunes de b) y e)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1486,7 +1520,7 @@
 
 
 <h1 id="resultado-de-aprendizaje-2-ra2">Resultado de aprendizaje 2 (RA2)<a class="headerlink" href="#resultado-de-aprendizaje-2-ra2" title="Permanent link">&para;</a></h1>
-<p>Esta unidad desarrolla el <strong>RA2</strong> del módulo <em>Big Data aplicado</em> (código <strong>5075</strong>), según el Real Decreto 279/2021.</p>
+<p>Esta unidad desarrolla el <strong>RA2</strong> del módulo <em>Big Data aplicado</em> (código <strong>5075</strong>), según el Real Decreto 279/2021 y el currículo de Cantabria establecido por la <a href="https://boc.cantabria.es/boces/verAnuncioAction.do?idAnuBlob=410716#page=148">Orden EDU/48/2024, anexo VI, página 148</a>.</p>
 <h2 id="enunciado">Enunciado<a class="headerlink" href="#enunciado" title="Permanent link">&para;</a></h2>
 <p><strong>RA 2:</strong> Gestiona sistemas de almacenamiento y el amplio ecosistema alrededor de ellos, facilitando el procesamiento de grandes cantidades de datos, sin fallos y de forma rápida.</p>
 <h2 id="criterios-de-evaluacion">Criterios de evaluación<a class="headerlink" href="#criterios-de-evaluacion" title="Permanent link">&para;</a></h2>
@@ -1531,7 +1565,7 @@
 <p>La <a href="../../ut1/transicion-ut2/">tarea de los 500 GB</a> sirve de puente: hay que medir si el equipo y el procedimiento cumplen el plazo, y justificar cuándo conviene ampliar o distribuir recursos.</p>
 <div class="admonition note">
 <p class="admonition-title">Cómo se evalúa</p>
-<p>Debes poder <strong>decir</strong> por qué HDFS o Mongo, <strong>mostrar</strong> (en el lab) que un nodo caído no pierde el dato, <strong>lanzar</strong> un job que parte el trabajo y <strong>justificar</strong> que mañana se añade un disco o un <em>shard</em> sin rediseñar el hotel. Las entregas siguen en Moodle.</p>
+<p>Debes poder <strong>justificar</strong> la elección del sistema, <strong>comprobar</strong> el cálculo y su reparto, <strong>probar</strong> la recuperación ante un fallo definido y <strong>observar</strong> qué aporta una ampliación. Cada conclusión indicará configuración, datos y límites; no se promete conservar cualquier dato ante cualquier caída. Las entregas siguen en Moodle.</p>
 <p>Para practicar: <a href="../autoevaluacion/">autoevaluación de la UT2</a>.</p>
 </div>
 <h2 id="evidencias-que-conectan-teoria-y-practica">Evidencias que conectan teoría y práctica<a class="headerlink" href="#evidencias-que-conectan-teoria-y-practica" title="Permanent link">&para;</a></h2>
@@ -1571,8 +1605,31 @@
 </tr>
 </tbody>
 </table>
+<h3 id="evidencias-minimas-comunes-de-b-y-e">Evidencias mínimas comunes de b) y e)<a class="headerlink" href="#evidencias-minimas-comunes-de-b-y-e" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Experiencia común</th>
+<th>Entrega individual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>b)</strong></td>
+<td>Comparación A/B de 2.4: mismo agregado y entrada, uno y dos trabajadores; tareas observadas, calentamiento y tres ejecuciones medidas por configuración.</td>
+<td>Identificación de datos, versiones y recursos; tareas y nodos; tiempos y medianas; totales contrastados; explicación de la mejora o ausencia de ella y límites físicos.</td>
+</tr>
+<tr>
+<td><strong>e)</strong></td>
+<td>Demostración o ejecución de 2.8: registro del primer y segundo shard, ubicación de datos y movimiento de un rango con conservación comprobada.</td>
+<td>Shards registrados antes y después; recurso incorporado; ubicaciones; comprobación de documentos, tipos y noches; distinción entre capacidad, reparto y rendimiento.</td>
+</tr>
+</tbody>
+</table>
+<p>Estas observaciones forman parte del recorrido común. La instalación individual del laboratorio de particionado sigue siendo opcional; si no se realiza, el docente lo demuestra y facilita los registros para que cada alumno los interprete. Lo mismo se aplica a b) cuando el equipo no admite dos trabajadores. El profesor concreta en Moodle sesión, formato y entrega; no sustituye una prueba por cifras inventadas. Si una incidencia impide observarla, se reprograma y se identifica como pendiente.</p>
 <p>El enunciado oficial se conserva arriba. Su aplicación práctica exige concretar recursos, fallos y límites: «sin fallos» no significa que el hardware nunca falle, sino diseñar y probar la respuesta del sistema a los fallos previstos.</p>
-<p>La evaluación reúne explicación y observación. Si una ampliación no puede ejecutarse en el entorno disponible, documenta esa limitación y el experimento necesario; no presentes una predicción como un resultado medido.</p>
+<p>La evaluación reúne explicación y observación. Si una ampliación adicional no puede ejecutarse, documenta esa limitación y el experimento necesario. Para las evidencias comunes de b) y e), completa la observación en la demostración docente; no presentes una predicción como un resultado medido.</p>
 
 
 

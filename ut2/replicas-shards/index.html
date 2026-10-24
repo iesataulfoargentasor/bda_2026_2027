@@ -1392,6 +1392,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#evidencia-comun-del-criterio-e-observar-la-ampliacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencia común del criterio e): observar la ampliación
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1757,6 +1768,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#evidencia-comun-del-criterio-e-observar-la-ampliacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencia común del criterio e): observar la ampliación
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1943,7 +1965,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> distinguir copias y particiones, calcular mayorías y separar preferencias de lectura, confirmaciones y visibilidad.</p>
 <p><strong>Práctica común:</strong> conjunto de tres miembros; comprobar una escritura, una lectura de secundario, un relevo y la recuperación tras detener un proceso.</p>
-<p><strong>Ampliación:</strong> laboratorio de particionado, registro de shards y movimiento de un rango. Sus conjuntos reducidos no ofrecen alta disponibilidad completa. Las entregas se concretan en Moodle.</p>
+<p><strong>Evidencia común de e):</strong> observar registro de shards y movimiento de un rango, ejecutándolo o siguiendo una demostración docente. La instalación individual del laboratorio de particionado es opcional; sus conjuntos reducidos no ofrecen alta disponibilidad completa. Las entregas se concretan en Moodle.</p>
 </div>
 <p>En <a href="../mongodb/">2.6</a> consultamos y modificamos documentos; en <a href="../modelado/">2.7</a> comprobamos que un rediseño conserva su significado. Ahora preguntamos <strong>dónde viven los datos y qué sucede cuando falla un componente o añadimos recursos</strong>.</p>
 <p>Si deja de responder el primario, otro miembro puede asumir su función cuando hay mayoría, un candidato elegible y los datos necesarios. Puede haber una pausa. El objetivo del criterio <strong>c)</strong> es provocar un fallo concreto y comprobar la recuperación; no afirmar que un cobro externo se completa por disponer de réplicas.</p>
@@ -2318,6 +2340,16 @@
 </span></code></pre></div>
 <p>Tercer argumento histórico: <code>unique</code> (el índice de la clave es único). En el hotel, <code>_id</code> hashed <strong>no</strong> se declara único a la ligera: un índice hashed no puede declararse único; la unicidad debe diseñarse de acuerdo con las reglas de índices de colecciones particionadas.</p>
 <p>El pequeño conjunto sirve para aprender los mecanismos; no justifica desplegar sharding en producción por su volumen. Observad metadatos, ubicación y conservación de resultados. Para afirmar una mejora de capacidad o rendimiento, identificad el recurso añadido y medid bajo condiciones comparables.</p>
+<h3 id="evidencia-comun-del-criterio-e-observar-la-ampliacion">Evidencia común del criterio e): observar la ampliación<a class="headerlink" href="#evidencia-comun-del-criterio-e-observar-la-ampliacion" title="Permanent link">&para;</a></h3>
+<p>La secuencia del laboratorio siguiente se ejecuta individualmente o la demuestra el profesor. Todos entregáis un análisis propio de lo observado; únicamente la instalación individual es opcional. Para la demostración inicial, el docente utiliza un entorno nuevo y aislado, sin sustituir los volúmenes de trabajos anteriores.</p>
+<ol>
+<li>Registrad la lista inicial de shards y los recursos previstos. El script <code>anadir-shards.js</code> muestra la lista antes y después de cada incorporación: conservad especialmente el paso de <strong>un shard registrado a dos</strong>. Que los procesos estuvieran arrancados no significa que ya formasen parte del clúster.</li>
+<li>Identificad el recurso incorporado: el segundo shard aporta otro grupo de almacenamiento y ejecución. Sus dos miembros replican su parte; no equivalen a dos partes lógicas nuevas. Al compartir ordenador no se añade otro disco físico ni se demuestra más rendimiento.</li>
+<li>Seguid la importación y la preparación de las dos colecciones de comparación del laboratorio. Registrad su distribución y ejecutad el comprobador antes de mover datos.</li>
+<li>Dividid y moved un rango según las instrucciones. Registrad origen y destino y repetid la comprobación: deben conservarse los 15 documentos, sus tipos e identificadores y las 46 noches, con los mismos subtotales por hotel.</li>
+<li>Entregad las listas antes/después, ubicaciones, comprobaciones y una explicación de qué creció y qué no se ha medido. Añadir un shard y mover un rango son operaciones distintas; no calculéis una aceleración sin medir tiempos comparables.</li>
+</ol>
+<p>Si el conjunto ya estaba registrado, su lista actual no muestra la incorporación inicial: utilizad los registros de la demostración o preparad con el docente otra sesión aislada. No eliminéis shards ni volúmenes para recrear una captura. Si el laboratorio no funciona, la evidencia queda pendiente de una nueva demostración, no se sustituye por un dibujo.</p>
 <h2 id="laboratorio-opcional-trasmiera-y-liebana">Laboratorio opcional: Trasmiera y Liébana<a class="headerlink" href="#laboratorio-opcional-trasmiera-y-liebana" title="Permanent link">&para;</a></h2>
 <p>Utilizad la carpeta completa <code>docs/assets/practicas/hotel-shards</code>, con sus scripts junto al archivo Compose. Descargar solo el YAML no proporciona los archivos que monta.</p>
 <p>El <a href="../../assets/practicas/hotel-shards/compose.yaml">Compose de sharding</a> incluye un <code>mongos</code> en el puerto 27117, un miembro de configuración y dos shards de dos miembros cada uno. Todos los procesos <code>mongod</code> usan explícitamente 27017 dentro de la red. <strong>Es un laboratorio de reparto, no de alta disponibilidad completa</strong>: un conjunto de dos votantes necesita ambos, y el único config server es un punto de fallo.</p>
@@ -2439,7 +2471,7 @@
 </tbody>
 </table>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>Guardad comandos, conexión utilizada, configuración, resultados y explicación. Las entregas evaluables se concretan en Moodle. El laboratorio de particionado es ampliación; si no se ejecuta, documentad el diseño sin presentarlo como una prueba realizada.</p>
+<p>Guardad comandos, conexión utilizada, configuración, resultados y explicación. Las entregas evaluables se concretan en Moodle. La instalación individual del laboratorio de particionado es opcional; su observación y análisis del criterio e) son comunes, mediante ejecución o demostración docente.</p>
 <ol>
 <li><strong>Tres miembros y mayoría.</strong> Dibujad el conjunto <code>hotelrs</code>, señalad quién almacena datos y quién vota. Calculad la mayoría con tres y con cuatro votantes. Explicad por qué agregar un cuarto votante no permite perder dos. Como ampliación, diseñad la incorporación de <code>rs-santona</code> antes de modificar el entorno.</li>
 <li><strong>Lectura y escritura.</strong> Ejecutad la prueba identificada. Mostrad la confirmación mayoritaria y la lectura en un secundario con preferencia explícita. Probad el rechazo de escritura directa en el secundario. Explicad por qué esa preferencia no cambia su cargo.</li>
@@ -2448,7 +2480,7 @@
 <li><strong>Resultado incierto.</strong> Una escritura devuelve un error de espera de confirmación. ¿Puede haberse aplicado? Diseñad una comprobación por identificador y un reintento que no duplique la operación. Distinguid «no confirmado» de «deshecho».</li>
 <li><strong>Tres decisiones.</strong> Para un informe que admite retraso, proponed preferencia de lectura, read concern y write concern del proceso que genera los datos. Explicad qué aporta cada uno y por qué <code>majority</code> no equivale a «última versión».</li>
 <li><strong>Clave y consultas.</strong> El 90 % de las altas pertenece a Laredo. Comparad <code>hotel</code>, una fecha creciente y <code>_id</code> hashed. Justificad reparto y coste de una consulta solo por hotel; el hash de <code>hotel</code> no elimina la concentración en ese mismo valor.</li>
-<li><strong>Particionar — ampliación.</strong> Registrad los shards y preparad las colecciones de comparación. Mostrad ubicación antes y después de dividir y mover un rango. Contrastad los documentos originales, sus identificadores y noches por hotel. Si el rango ya estaba en el destino, elegid el otro shard y anotadlo.</li>
+<li><strong>Particionar — evidencia común de e).</strong> Ejecutad la secuencia o seguid la demostración docente. Registrad los shards antes y después de incorporarlos y preparad las colecciones de comparación. Mostrad ubicación antes y después de dividir y mover un rango. Contrastad los documentos originales, sus identificadores y noches por hotel. Si el rango ya estaba en el destino, elegid el otro shard y anotadlo.</li>
 <li><strong>Dominios de fallo.</strong> Explicad qué sucede si cae un proceso del replica set, un miembro de un shard de dos votantes, el único config server o el ordenador. Indicad qué mejora requeriría cada caso y qué no habéis probado.</li>
 <li><strong>Oplog y backup.</strong> Un secundario tarda en volver y su historial pendiente ya no está en el oplog. Explicad cómo puede recuperarse y por qué ni la réplica ni ampliar el oplog sustituyen una copia de seguridad ante un borrado erróneo.</li>
 </ol>

@@ -737,7 +737,7 @@
       "code": "",
       "options": [
         "Insertar la reserva y dejar que commit compruebe si quedaba alguna plaza.",
-        "Returnar del callback sin excepción para que with_transaction cancele lo anterior.",
+        "Retornar del callback sin excepción para que with_transaction cancele lo anterior.",
         "Lanzar una excepción antes de insertar la reserva y abortar la transacción.",
         "Repetir el descuento sin la condición de cupo para completar ambas escrituras."
       ],

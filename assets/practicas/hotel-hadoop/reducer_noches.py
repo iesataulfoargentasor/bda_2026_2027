@@ -4,7 +4,8 @@ import sys
 
 actual, total = None, 0
 for linea in sys.stdin:
-    linea = linea.strip()
+    # Conservamos la clave tal como la emitió el mapper.
+    linea = linea.rstrip("\r\n")
     if not linea:
         continue
     try:

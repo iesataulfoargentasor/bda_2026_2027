@@ -62,7 +62,7 @@
     {
       "topic": "Rutas de la práctica",
       "href": "../hdfs/#trabajando-con-hdfs-hdfs-dfs",
-      "prompt": "Desde el Bash del NameNode ejecutas hdfs dfs -get /user/bda/datos/reservas.csv ./reservas_local.csv. ¿Dónde queda la descarga?",
+      "prompt": "Desde el Bash del NameNode, situado en /tmp/practica-hdfs con permiso de escritura, ejecutas hdfs dfs -get /user/bda/datos/reservas.csv ./reservas_local.csv. El origen existe y el destino es nuevo. ¿Dónde queda la descarga si termina correctamente?",
       "code": "",
       "options": [
         "En Windows, junto al compose.yaml que inició los servicios del laboratorio.",
@@ -71,7 +71,7 @@
         "En HDFS, dentro del directorio de trabajo correspondiente al usuario del cliente."
       ],
       "answer": 2,
-      "explain": "-get copia desde HDFS al entorno local del proceso cliente. Aquí es el contenedor. Para conservar el archivo en el anfitrión hay que copiarlo fuera, por ejemplo con docker compose cp. /practicas es de solo lectura en este montaje."
+      "explain": "-get copia desde HDFS al entorno local del proceso cliente: aquí, /tmp/practica-hdfs del contenedor. Para conservar el archivo en el anfitrión hay que copiarlo fuera, por ejemplo con docker compose cp. Se ha elegido una carpeta escribible porque /practicas es de solo lectura."
     },
     {
       "topic": "Checksums y calidad",

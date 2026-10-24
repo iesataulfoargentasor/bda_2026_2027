@@ -1046,6 +1046,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#recorrido-minimo-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido mínimo de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-promete-y-por-que-importa-al-ra2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1256,6 +1267,17 @@
     <span class="md-ellipsis">
       
         Mini-clúster Docker de este módulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparacion-docente-antes-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación docente antes de la sesión
       
     </span>
   </a>
@@ -1711,6 +1733,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#recorrido-minimo-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido mínimo de la sesión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#que-promete-y-por-que-importa-al-ra2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1921,6 +1954,17 @@
     <span class="md-ellipsis">
       
         Mini-clúster Docker de este módulo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparacion-docente-antes-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparación docente antes de la sesión
       
     </span>
   </a>
@@ -2213,6 +2257,14 @@
 <p>Hadoop reúne herramientas de almacenamiento y procesamiento. Puede utilizarse en grandes clústeres o en un entorno pequeño para aprender. <strong>No es un requisito de cualquier problema Big Data:</strong> su elección depende de los datos, las operaciones y los recursos.</p>
 <p>Calcularemos <strong>noches reservadas por hotel</strong>, una pregunta más sencilla que el informe de cobros de Pentaho. Así podemos concentrarnos en guardar la entrada, asignar recursos y reunir el cálculo. Como en la UT1, comprobaremos el resultado: terminar sin errores no basta.</p>
 <p>Las prácticas utilizan Hadoop <strong>3.x</strong>. Anotad la versión efectiva con <code>hadoop version</code> y la imagen indicada por el profesor: la etiqueta <code>apache/hadoop:3</code> puede cambiar. Las referencias a Hadoop 1 permiten interpretar materiales antiguos.</p>
+<h3 id="recorrido-minimo-de-la-sesion">Recorrido mínimo de la sesión<a class="headerlink" href="#recorrido-minimo-de-la-sesion" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Preparad los archivos juntos y verificad servicios, versiones y Python antes de Streaming.</li>
+<li>Comprobad un DataNode y un NodeManager registrados; identificad qué hace cada servicio.</li>
+<li>Ejecutad wordcount en una salida nueva y leed sus partes.</li>
+<li>Calculad noches por hotel y contrastad las 62 noches y los cinco subtotales con 2.4.</li>
+<li>Guardad comandos, configuración y resultados; continuad con la comparación común de 2.4. Las instalaciones tradicionales y los extras no se ejecutan como pasos adicionales del Compose.</li>
+</ol>
 <h2 id="que-promete-y-por-que-importa-al-ra2">Qué promete (y por qué importa al RA2)<a class="headerlink" href="#que-promete-y-por-que-importa-al-ra2" title="Permanent link">&para;</a></h2>
 <p>Separad tres preguntas: <strong>dónde conservar el histórico</strong>, <strong>quién asigna recursos</strong> y <strong>cómo organizar el cálculo</strong>. HDFS responde a la primera, YARN a la segunda y MapReduce a la tercera.</p>
 <table>
@@ -2469,7 +2521,7 @@
 <li>Cada línea va a un <em>mapper</em>. Hay una tarea map por split; formato y compresión influyen en el reparto. Una tarea puede tener varios intentos si hay reintentos.</li>
 <li>El <em>mapper</em> parsea el hotel (clave) y las noches (valor) y emite <code>(hotel, noches)</code>.</li>
 <li>Para facilitar la agregación, se <strong>ordenan y barajan</strong> los datos por clave. Aquí viajan por la red: puede ser costoso incluso si la entrada del mapper era local, porque las claves se reúnen entre tareas.</li>
-<li>El <em>reducer</em> suma las ocurrencias de cada hotel y genera un fichero por <strong>partición</strong> de salida.</li>
+<li>El <em>reducer</em> suma los valores de noches asociados a cada hotel y genera un fichero por <strong>partición</strong> de salida.</li>
 <li>Las partes se ven como <code>part-r-00000</code> (el nombre depende de la API y configuración) más un <code>_SUCCESS</code> si el job acabó bien.</li>
 </ol>
 <p>El resultado debe ser correcto aunque el combiner no se ejecute. Para medias se combinan sumas y recuentos, no medias de grupos de distinto tamaño.</p>
@@ -2575,7 +2627,7 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">services</span><span class="p">:</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">namenode</span><span class="p">:</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">namenode</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"namenode"</span><span class="p p-Indicator">]</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
@@ -2590,7 +2642,7 @@
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hdfs_name:/tmp/hadoop-root/dfs/name</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="nt">datanode</span><span class="p">:</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"</span>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datanode</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hdfs"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"datanode"</span><span class="p p-Indicator">]</span>
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
@@ -2599,7 +2651,7 @@
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span><span class="nt">resourcemanager</span><span class="p">:</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resourcemanager</span>
 </span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"resourcemanager"</span><span class="p p-Indicator">]</span>
 </span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
@@ -2608,7 +2660,7 @@
 </span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config.env</span>
 </span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span><span class="nt">nodemanager</span><span class="p">:</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/hadoop:3</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">"${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"</span>
 </span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nodemanager</span>
 </span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"yarn"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"nodemanager"</span><span class="p p-Indicator">]</span>
 </span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
@@ -2670,6 +2722,16 @@
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ls<span class="w"> </span>/practicas
 </span></code></pre></div>
 <p>Debe aparecer un DataNode vivo y un NodeManager registrado. Si no aparecen, revisad desde el anfitrión <code>docker compose logs datanode nodemanager</code>. Salid del Bash con <code>exit</code> antes de ejecutar comandos Docker. Para terminar la sesión: <code>docker compose down</code>, sin <code>-v</code> si queréis conservar HDFS.</p>
+<h3 id="preparacion-docente-antes-de-la-sesion">Preparación docente antes de la sesión<a class="headerlink" href="#preparacion-docente-antes-de-la-sesion" title="Permanent link">&para;</a></h3>
+<p>Descargad juntos los archivos de <code>hotel-hadoop</code>. Para la comparación de 2.4, añadid también <a href="../../assets/practicas/hotel-hadoop/compose.dos-workers.yaml">compose.dos-workers.yaml</a>. Antes de dar el entorno al grupo, comprobad:</p>
+<ol>
+<li>Docker con contenedores Linux, puertos disponibles y memoria/CPU suficientes para los servicios y las tareas YARN. Registrad los límites de Docker y los recursos anunciados por cada NodeManager; más contenedores no crean más hardware.</li>
+<li>Misma imagen Hadoop en todos los servicios. Anotad su identificador o digest, <code>hadoop version</code>, versión de Java y <code>python3 --version</code> en NameNode y NodeManagers. El NameNode también necesita Python para la comprobación de salida.</li>
+<li>Un wordcount correcto y el agregado de 20 reservas validado con <code>comprobar_noches.py</code>: cinco hoteles y 62 noches. Esta prueba confirma también que el ejecutor dispone de Python y que recibe los scripts.</li>
+<li>La comparación A/B de 2.4 ensayada antes de clase, con tareas realmente ejecutadas en ambos trabajadores en B. Si faltan intérprete o recursos, corregid el entorno antes de asignarlo.</li>
+</ol>
+<p>El Compose permite seleccionar una imagen de aula compatible mediante <code>HOTEL_HADOOP_IMAGE</code>; si no se define, utiliza <code>apache/hadoop:3</code>. Para fijar la imagen disponible, el docente establece en PowerShell <code>$env:HOTEL_HADOOP_IMAGE = "nombre-o-digest-validado"</code>, sustituyendo el texto por la referencia real, antes de arrancar. La imagen debe mantener el arranque y la traducción de <code>config.env</code> del laboratorio e incluir Python 3 en los servicios indicados. No utilicéis una imagen distinta solo por tener Hadoop en su nombre. Conservad la referencia elegida en la ficha de entorno y usadla durante toda la comparación.</p>
+<p>Una comprobación de configuración no sustituye estas ejecuciones. Si el equipo de un alumno no puede sostener el entorno, el docente realizará la demostración común de 2.4 y 2.8; cada alumno entregará sus observaciones e interpretación.</p>
 <h3 id="ficheros-xml-hadoop_homeetchadoop">Ficheros XML (<code>$HADOOP_HOME/etc/hadoop</code>)<a class="headerlink" href="#ficheros-xml-hadoop_homeetchadoop" title="Permanent link">&para;</a></h3>
 <p>Cada propiedad configura una responsabilidad. <code>fs.defaultFS</code> indica a los clientes el sistema de ficheros por defecto; <code>dfs.replication</code> solicita copias por bloque; <code>mapreduce.framework.name</code> selecciona YARN; la dirección del ResourceManager permite localizar al coordinador de recursos. Cambiar una propiedad en un contenedor no actualiza mágicamente todos los demás: la configuración debe ser coherente entre servicios.</p>
 <p>Tanto en la VM como en Docker el raíz suele ser <code>/opt/hadoop</code>. En <em>pseudo-distribuido</em> veréis <code>localhost</code> o el hostname de <strong>esa</strong> máquina. No copies el hostname de otro instituto.</p>

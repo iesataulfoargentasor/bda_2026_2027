@@ -1,0 +1,10 @@
+# Complemento de compose.yaml para la comparación común del criterio b).
+# Mantiene HDFS y añade un segundo ejecutor YARN, sin crear otra copia de datos.
+# Ambos ejecutores comparten el hardware del anfitrión: comprobar sus recursos.
+services:
+  nodemanager2:
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
+    hostname: nodemanager2
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config.env

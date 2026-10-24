@@ -1208,6 +1208,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nombres-de-hotel-conservar-o-normalizar-explicitamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nombres de hotel: conservar o normalizar explícitamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencia común del criterio b): comparar uno y dos trabajadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#medir-sin-cambiar-dos-variables-a-la-vez" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1595,6 +1617,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nombres-de-hotel-conservar-o-normalizar-explicitamente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nombres de hotel: conservar o normalizar explícitamente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidencia común del criterio b): comparar uno y dos trabajadores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#medir-sin-cambiar-dos-variables-a-la-vez" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1763,7 +1807,7 @@
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> seguir el cálculo map → shuffle/sort → reduce; distinguir tareas, simultaneidad y máquinas; comprobar resultados antes de comparar tiempos.</p>
 <p><strong>Práctica guiada:</strong> ejecutar el agregado de noches con el CSV pequeño, contrastarlo por hotel y observar su ejecución en el entorno de 2.2.</p>
-<p><strong>Ampliación:</strong> generar más datos y comparar configuraciones preparadas por el profesor. No se presupone que el portátil permita demostrar aceleración entre máquinas físicas.</p>
+<p><strong>Evidencia común de b):</strong> comparar dos configuraciones de ejecución, en el equipo del alumno o mediante demostración docente, con resultados y tiempos contrastados. Ampliar a otras cargas o máquinas físicas es profundización; no se exige obtener aceleración.</p>
 </div>
 <p>En los apartados anteriores hemos separado almacenamiento y ejecución. Ahora comprobaremos <strong>cómo se divide un cálculo, cómo se reúnen sus resultados y cuándo compensa hacerlo</strong>. El criterio <strong>b)</strong> exige observar el procesamiento distribuido y medirlo; no basta con afirmar que añadir máquinas siempre acelera un programa.</p>
 <p>La pregunta de gerencia será: <strong>¿cuántas noches reservadas aparecen en el fichero para cada hotel?</strong> No son necesariamente noches cobradas ni habitaciones ocupadas en una fecha: el CSV no contiene estado del pago ni calendario de ocupación.</p>
@@ -2023,15 +2067,38 @@
 </span></code></pre></div>
 <p>Cada registro de la salida de estos scripts termina en salto de línea. Concatenar sus partes TSV sirve para comprobarlas; no es una operación válida para fusionar Parquet. /practicas es de solo lectura, por eso la descarga se hace en /tmp.</p>
 <p>Registrad en YARN el identificador de aplicación, estado, tareas e intentos, además de los cinco totales. <strong>Intentos no equivale a tareas lógicas:</strong> los reintentos pueden elevar ciertos contadores. Los tiempos de las tareas y sus nodos permiten observar dónde y cuándo se ejecutaron.</p>
+<h3 id="nombres-de-hotel-conservar-o-normalizar-explicitamente">Nombres de hotel: conservar o normalizar explícitamente<a class="headerlink" href="#nombres-de-hotel-conservar-o-normalizar-explicitamente" title="Permanent link">&para;</a></h3>
+<p>El mapper, el reducer y el comprobador conservan el nombre del hotel, incluidos sus espacios iniciales o finales. <code>" Laredo"</code> y <code>"Laredo"</code> son claves distintas en este contrato. El reducer retira únicamente el salto de línea; no limpia la clave al agregar. Si el negocio considera equivalentes ambos nombres, hay que acordar y aplicar esa normalización antes del cálculo y usar la misma regla en la referencia. En una copia del CSV podéis introducir ambas variantes y comprobar que permanecen separadas; no cambiéis los originales del aula.</p>
+<h3 id="evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores">Evidencia común del criterio b): comparar uno y dos trabajadores<a class="headerlink" href="#evidencia-comun-del-criterio-b-comparar-uno-y-dos-trabajadores" title="Permanent link">&para;</a></h3>
+<p>Todo el alumnado debe observar e interpretar esta comparación. Puede ejecutarse individualmente o como demostración docente con registros compartidos y una explicación individual. No basta con diseñar una prueba que no se ha realizado. El profesor prepara antes el entorno siguiendo 2.2; si no funciona, registra la incidencia y reprograma la observación.</p>
+<p>Utilizaremos el mismo agregado y una entrada que produzca al menos dos splits. Primero se comprueba el CSV pequeño; después se prepara la entrada mayor del bloque siguiente. La configuración A tiene un NodeManager; B incorpora <code>nodemanager2</code> mediante el complemento descargable. Se mantienen imagen, HDFS, entrada, scripts y número de reducers. Cambia el número de ejecutores y su capacidad YARN anunciada; ambos siguen compartiendo el ordenador y sus límites físicos.</p>
+<p>Desde el host, en <code>docs/assets/practicas/hotel-hadoop</code>, comprobad la configuración combinada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker compose -f compose.yaml -f compose.dos-workers.yaml config
+</span></code></pre></div>
+<p>Para <strong>A</strong>, si el segundo trabajador estaba arrancado, detenedlo sin borrar datos; después arrancad los cuatro servicios básicos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker compose -f compose.yaml -f compose.dos-workers.yaml stop nodemanager2
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>docker compose up -d
+</span></code></pre></div>
+<p>Si aún no se creó <code>nodemanager2</code>, no hay ningún segundo servicio que detener. Desde el Bash del NameNode, registrad <code>yarn node -list</code>: antes de medir debe aparecer un único trabajador en estado RUNNING. Aplicad el protocolo de calentamiento y tres ejecuciones de más abajo, siempre con salidas nuevas.</p>
+<p>Para <strong>B</strong>, desde el host:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker compose -f compose.yaml -f compose.dos-workers.yaml up -d nodemanager2
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>docker compose -f compose.yaml -f compose.dos-workers.yaml exec nodemanager2 python3 --version
+</span></code></pre></div>
+<p>Esperad a que <code>yarn node -list</code> muestre dos trabajadores RUNNING. Repetid el mismo protocolo y anotad los hosts donde se ejecutan las tareas. Dos trabajadores registrados no prueban que ambos hayan calculado: si el planificador solo utiliza uno, investigad los splits, la capacidad asignada y las esperas. Esa ejecución se conserva como diagnóstico, pero falta completar la observación del reparto entre trabajadores.</p>
+<p><strong>Entrega mínima individual:</strong> entrada identificada; imagen y recursos A/B; aplicación y tareas por trabajador; los tres tiempos y mediana de cada configuración; verificación de todos los subtotales; conclusión sobre corrección, reparto, tiempo y límites. Una configuración B más lenta también es un resultado válido. Las capturas o logs de la demostración pueden ser comunes; las conclusiones deben ser propias.</p>
+<p>Al terminar, detened todos los servicios con la configuración combinada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker compose -f compose.yaml -f compose.dos-workers.yaml stop
+</span></code></pre></div>
+<p>La incorporación del segundo trabajador también permite observar una ampliación de recursos, pero no sustituye la evidencia común de almacenamiento y reparto del criterio e) que se concreta en 2.8.</p>
 <h3 id="medir-sin-cambiar-dos-variables-a-la-vez">Medir sin cambiar dos variables a la vez<a class="headerlink" href="#medir-sin-cambiar-dos-variables-a-la-vez" title="Permanent link">&para;</a></h3>
 <p>El fichero pequeño sirve para verificar el algoritmo. No es una prueba convincente de rendimiento: iniciar servicios y tareas puede costar más que sumar sus veinte filas.</p>
 <p>Para generar una entrada mayor, descargad <a href="../../assets/practicas/hotel-hadoop/generar_reservas_grandes.py">generar_reservas_grandes.py</a> y ejecutad desde el anfitrión, en la carpeta de prácticas:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python generar_reservas_grandes.py --lineas 4500000 --salida reservas_grandes.csv
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python generar_reservas_grandes.py --lineas 4500000 --salida reservas_grandes.csv
 </span></code></pre></div>
 <p>El tamaño depende del contenido generado; anotad los bytes que imprime y el número de registros solicitado. No subáis el archivo grande al repositorio. Cargadlo en una ruta HDFS propia, ejecutad el mismo agregado con salida nueva y pasad <strong>esa entrada y esa salida</strong> a comprobar_noches.py. Esta referencia se calcula fuera del intervalo que medimos del job.</p>
 <p>Para inspeccionar bloques y copias, desde el Bash del NameNode:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>/practicas/reservas_grandes.csv<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>hdfs<span class="w"> </span>fsck<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv<span class="w"> </span>-files<span class="w"> </span>-blocks<span class="w"> </span>-locations
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hdfs<span class="w"> </span>dfs<span class="w"> </span>-put<span class="w"> </span>/practicas/reservas_grandes.csv<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>hdfs<span class="w"> </span>fsck<span class="w"> </span>/user/bda/ut24/reservas_grandes.csv<span class="w"> </span>-files<span class="w"> </span>-blocks<span class="w"> </span>-locations
 </span></code></pre></div>
 <p>No deduzcáis número de tareas, simultaneidad o máquinas a partir del tamaño del archivo. Revisad splits y ejecución real.</p>
 <p><strong>Protocolo de comparación:</strong></p>
@@ -2081,10 +2148,10 @@
 <p>El Compose básico tiene un DataNode y un NodeManager en un ordenador. Permite observar roles y tareas, pero no demuestra reparto entre máquinas físicas ni aceleración al añadir servidores. Con pocos datos puede tardar más que el cálculo local. Registra y explica ese resultado: es una conclusión válida.</p>
 </div>
 <h3 id="entrega-y-comprobaciones">Entrega y comprobaciones<a class="headerlink" href="#entrega-y-comprobaciones" title="Permanent link">&para;</a></h3>
-<p>Entrega la identificación y tamaño de la entrada, comandos, contadores, resultados comparados y una interpretación de los tiempos. Sin más workers, documenta lo observado y qué experimento adicional necesitarías. No presentes «varios maps» como prueba de que había varias máquinas.</p>
+<p>Entrega las evidencias A/B indicadas en «Evidencia común del criterio b)». Si tu equipo solo permite un trabajador, adjunta sus observaciones y completa la comparación a partir de la demostración docente. Una incidencia pendiente no equivale a una comparación realizada. No presentes «varios maps» como prueba de varias máquinas físicas.</p>
 <p>Para cerrar: ¿qué cambia si todas las reservas son de Laredo?, ¿por qué no sumamos medias sin sus tamaños?, ¿por qué <code>_SUCCESS</code> no valida la fórmula? Las respuestas conectan el algoritmo con el comportamiento del sistema.</p>
 <h2 id="que-habeis-demostrado-y-como-continua-la-unidad">Qué habéis demostrado y cómo continúa la unidad<a class="headerlink" href="#que-habeis-demostrado-y-como-continua-la-unidad" title="Permanent link">&para;</a></h2>
-<p>Este apartado se centra en el <strong>criterio b) del RA2</strong>. La evidencia reúne cálculo correcto, tareas observadas y mediciones interpretadas según el entorno. Ejecutar varios maps en un NodeManager no prueba un reparto entre ordenadores físicos. El profesor concretará el entorno o demostración adicional necesario para observar ese reparto.</p>
+<p>Este apartado se centra en el <strong>criterio b) del RA2</strong>. La evidencia reúne cálculo correcto, tareas observadas y mediciones interpretadas según el entorno. Ejecutar varios maps en un NodeManager no prueba un reparto entre ordenadores físicos. La comparación común usa uno y dos trabajadores, con ejecución o demostración observada. Si comparten ordenador, la conclusión se limita a procesos coordinados sobre ese hardware; observar máquinas físicas distintas requiere otro despliegue.</p>
 <table>
 <thead>
 <tr>
@@ -2129,7 +2196,7 @@
 <li><strong>Entender el desequilibrio.</strong> Imaginad que el 95 % de los registros corresponde a Laredo. ¿Por qué añadir reducers puede ayudar poco? Explicad qué concentra la carga y qué evidencias buscaríais.</li>
 <li><strong>Combinar correctamente.</strong> Calculad la media de los grupos [2, 4] y [10] mediante suma y recuento. Comparadla con la media de sus medias. Explicad por qué la corrección no debe depender de que se ejecute el combiner.</li>
 <li><strong>Interpretar medidas.</strong> Calculad medianas, aceleración y reducción de tiempo del ejemplo 118/120/123 frente a 79/80/84. Indicad qué condiciones deben cumplirse para aceptar la comparación y qué revisar si la configuración nueva tarda más.</li>
-<li><strong>Medir — ampliación.</strong> Con la entrada mayor y las configuraciones preparadas por el profesor, aplicad el protocolo. Si solo disponéis del Compose básico, presentad sus observaciones y diseñad el experimento adicional necesario para probar otras máquinas.</li>
+<li><strong>Medir — evidencia común de b).</strong> Aplicad el protocolo A/B con uno y dos trabajadores o analizad la demostración docente. Entregad individualmente las evidencias mínimas, incluyendo dónde se ejecutaron las tareas y qué límites impone compartir ordenador. Probar otros volúmenes o máquinas físicas es ampliación.</li>
 <li><strong>Reintentos.</strong> Un mapper registra un cobro en un servicio externo y después falla. ¿Qué puede ocurrir al repetirlo? Explicad por qué separaríamos ese efecto del agregado analítico.</li>
 </ol>
 <details class="success">

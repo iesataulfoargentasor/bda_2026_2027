@@ -5,7 +5,7 @@ name: hotel-hadoop
 
 services:
   namenode:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: namenode
     command: ["hdfs", "namenode"]
     ports:
@@ -20,7 +20,7 @@ services:
       - hdfs_name:/tmp/hadoop-root/dfs/name
 
   datanode:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: datanode
     command: ["hdfs", "datanode"]
     volumes:
@@ -29,7 +29,7 @@ services:
       - ./config.env
 
   resourcemanager:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: resourcemanager
     command: ["yarn", "resourcemanager"]
     ports:
@@ -38,7 +38,7 @@ services:
       - ./config.env
 
   nodemanager:
-    image: apache/hadoop:3
+    image: "${HOTEL_HADOOP_IMAGE:-apache/hadoop:3}"
     hostname: nodemanager
     command: ["yarn", "nodemanager"]
     env_file:
