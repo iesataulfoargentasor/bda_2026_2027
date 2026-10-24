@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.5",
+  "title": "Autoevaluación del 2.5",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Elegir modelo",
+      "href": "../nosql/#no-solo-sql",
+      "prompt": "Recepción quiere consultar una reserva y sus extras. ¿Qué justificación permite valorar un modelo documental?",
+      "code": "",
+      "options": [
+        "Agrupa datos que se consultan juntos, valorando cambios, tamaño y restricciones.",
+        "Reparte cada documento entre nodos, evitando planificar su crecimiento y acceso.",
+        "Sustituye las restricciones por campos opcionales, reduciendo las comprobaciones.",
+        "Convierte el JSON en un índice, acelerando las búsquedas por cualquier campo."
+      ],
+      "answer": 0,
+      "explain": "El patrón de acceso puede justificar agrupar información. Ni JSON crea índices automáticamente ni el modelo garantiza distribución o elimina restricciones."
+    },
+    {
+      "topic": "Esquema flexible",
+      "href": "../nosql/#esquema-dinamico-criterio-d",
+      "prompt": "Una reserva no incluye mascota y otra contiene mascota: false. ¿Cómo interpretaríamos esa diferencia?",
+      "code": "",
+      "options": [
+        "Contaríamos ambas como negativas para mantener una comparación entre versiones.",
+        "Descartaríamos la antigua porque la colección necesita las mismas claves en cada fila.",
+        "Definiríamos el significado de ausencia antes de agruparlas en una consulta.",
+        "Añadiríamos false a la antigua porque un campo ausente equivale a un booleano."
+      ],
+      "answer": 2,
+      "explain": "La ausencia puede significar que no se preguntó. La flexibilidad requiere un contrato; permite combinar campos opcionales con validación al escribir."
+    },
+    {
+      "topic": "Particiones y copias",
+      "href": "../nosql/#replicacion-criterio-c",
+      "prompt": "Hay 90 GB lógicos, tres shards iguales y dos copias completas por shard. Sin sobrecostes, ¿qué distribución tenemos?",
+      "code": "",
+      "options": [
+        "60 GB lógicos por shard y 180 GB físicos entre los seis miembros.",
+        "30 GB lógicos por shard y 180 GB físicos entre los seis miembros.",
+        "30 GB lógicos por shard y 90 GB físicos entre los seis miembros.",
+        "15 GB lógicos por shard y 90 GB físicos entre los seis miembros."
+      ],
+      "answer": 1,
+      "explain": "Particionar divide los 90 GB en tres partes de 30 GB. Replicar cada parte dos veces duplica el contenido físico a 180 GB; no duplica los datos lógicos."
+    },
+    {
+      "topic": "Clave de partición",
+      "href": "../nosql/#auto-sharding",
+      "prompt": "El 90 % de las reservas tiene hotel=Laredo. ¿Qué sucede si particionamos aplicando hash solo a hotel?",
+      "code": "",
+      "options": [
+        "Cada reserva obtiene un hash distinto porque se calcula al escribir el documento.",
+        "La carga se iguala cuando añadimos tantos shards como reservas tiene ese hotel.",
+        "La función convierte las consultas por hotel en consultas por rangos de fechas.",
+        "Las reservas de Laredo comparten hash y pueden seguir concentrando la carga."
+      ],
+      "answer": 3,
+      "explain": "Un mismo valor produce el mismo hash. Debemos valorar cardinalidad, frecuencia y consultas; añadir nodos o aplicar hash no elimina una clave muy frecuente."
+    },
+    {
+      "topic": "Fallos y mayoría",
+      "href": "../nosql/#replicacion-criterio-c",
+      "prompt": "Un conjunto usa dos miembros votantes y exige mayoría para elegir primario. Se pierde uno. ¿Qué concluimos?",
+      "code": "",
+      "options": [
+        "La copia restante puede conservar datos, pero falta mayoría para elegir primario.",
+        "La copia restante representa la mayoría al quedar como único miembro accesible.",
+        "El miembro restante deja de almacenar datos hasta que termina la nueva elección.",
+        "La copia de seguridad puede aportar el voto pendiente sin pertenecer al conjunto."
+      ],
+      "answer": 0,
+      "explain": "La mayoría de dos votantes configurados es dos. Tener datos accesibles y poder elegir primario son propiedades distintas; un backup no participa automáticamente en elecciones."
+    },
+    {
+      "topic": "Columnas",
+      "href": "../nosql/#dos-modelos-que-comparten-la-palabra-columna",
+      "prompt": "¿Cómo distinguimos Parquet de Cassandra en el ejemplo de sensores?",
+      "code": "",
+      "options": [
+        "Parquet es un motor de consultas y Cassandra determina el formato de cada fichero.",
+        "Parquet reparte columnas entre nodos y Cassandra mantiene una copia por campo.",
+        "Parquet es un formato columnar y Cassandra organiza tablas según claves y consultas.",
+        "Parquet exige datos sin cambios y Cassandra reserva sus tablas para análisis globales."
+      ],
+      "answer": 2,
+      "explain": "Parquet describe archivos; Cassandra es un motor de la familia wide-column. Su clave de partición y consultas no equivalen a la disposición columnar de un archivo."
+    },
+    {
+      "topic": "Caché y confirmación",
+      "href": "../nosql/#modelo-clave-valor",
+      "prompt": "La caché indica que queda una plaza de parking. ¿Cómo debería tratarlo la aplicación al confirmar?",
+      "code": "",
+      "options": [
+        "Confirmar desde la caché y restar la plaza en la fuente en el siguiente refresco.",
+        "Confirmar después de ampliar el TTL para conservar el dato durante la operación.",
+        "Confirmar si dos lecturas consecutivas de la caché muestran la misma cantidad.",
+        "Comprobar y descontar la plaza en el sistema que protege la disponibilidad."
+      ],
+      "answer": 3,
+      "explain": "La caché puede estar atrasada. La comprobación y el descuento deben proteger conjuntamente la regla de no vender más plazas; dos lecturas iguales no reservan nada."
+    },
+    {
+      "topic": "Grafo",
+      "href": "../nosql/#modelo-de-grafos",
+      "prompt": "Queremos seguir quién recomendó un hotel a quién durante varios saltos. ¿Qué aporta un modelo de grafos?",
+      "code": "",
+      "options": [
+        "Guardar cada camino posible como documento para evitar definir las relaciones.",
+        "Representar entidades y relaciones y expresar recorridos con filtros y límites.",
+        "Distribuir cada arista en un servidor distinto para acortar cualquier recorrido.",
+        "Sustituir identificadores por posiciones físicas para prescindir de índices."
+      ],
+      "answer": 1,
+      "explain": "El grafo facilita recorridos de relaciones. Hay que diseñar propiedades, índices y límites; visitar muchos vecinos puede seguir siendo costoso."
+    },
+    {
+      "topic": "CAP",
+      "href": "../nosql/#teorema-cap",
+      "prompt": "Dos grupos de nodos no pueden comunicarse. Queremos preservar una visión linealizable al confirmar la última plaza. ¿Qué consecuencia puede aparecer?",
+      "code": "",
+      "options": [
+        "Ambos grupos confirman localmente y la convergencia posterior evita la venta doble.",
+        "Las réplicas suman su capacidad para crear una plaza temporal mientras dura el corte.",
+        "Alguna operación espera o se rechaza, perdiendo disponibilidad en el sentido de CAP.",
+        "Las lecturas del primario permiten confirmar en ambos grupos sin coordinar escrituras."
+      ],
+      "answer": 2,
+      "explain": "Bajo partición no se garantizan a la vez linealizabilidad y disponibilidad de todas las operaciones. Además, el procedimiento debe proteger comprobación y descuento: CAP no diseña esa transacción."
+    },
+    {
+      "topic": "Evidencias del RA2",
+      "href": "../nosql/#relacion-con-el-ra2",
+      "prompt": "Una alumna dibuja tres shards y explica su crecimiento. ¿Qué evidencia aporta y qué falta?",
+      "code": "",
+      "options": [
+        "Demuestra el diseño previsto; falta observar una ampliación para afirmar que se probó.",
+        "Demuestra el crecimiento real; solo falta medir cuánto tardó en realizar el dibujo.",
+        "Demuestra tolerancia a fallos; las tres particiones funcionan como copias del conjunto.",
+        "Demuestra procesamiento distribuido; cada partición implica una tarea en ejecución."
+      ],
+      "answer": 0,
+      "explain": "Una explicación justifica el diseño, pero no sustituye a observar recursos añadidos, fallos o ejecución. Las pruebas se documentan en los laboratorios con sus límites."
+    }
+  ]
+}

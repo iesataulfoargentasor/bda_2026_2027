@@ -1142,10 +1142,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#acid-el-liston-del-relacional" class="md-nav__link">
+  <a href="#acid-garantias-de-las-transacciones" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ACID (el listón del relacional)
+        ACID: garantías de las transacciones
       
     </span>
   </a>
@@ -1169,10 +1169,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#siete-caracteristicas-frente-al-relacional" class="md-nav__link">
+  <a href="#siete-caracteristicas-que-debemos-comprobar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Siete características (frente al relacional)
+        Siete características que debemos comprobar
       
     </span>
   </a>
@@ -1270,10 +1270,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#limitaciones-las-honestas" class="md-nav__link">
+  <a href="#limitaciones-que-debemos-evaluar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Limitaciones (las honestas)
+        Limitaciones que debemos evaluar
       
     </span>
   </a>
@@ -1392,10 +1392,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#base-el-otro-extremo-de-acid" class="md-nav__link">
+  <a href="#base-convergencia-y-estado-observado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BASE (el otro extremo de ACID)
+        BASE: convergencia y estado observado
       
     </span>
   </a>
@@ -1441,10 +1441,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#para-practicar-moodle-manda-la-nota" class="md-nav__link">
+  <a href="#actividades" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Para practicar (Moodle manda la nota)
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autoevaluacion-del-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autoevaluación del 2.5
       
     </span>
   </a>
@@ -1657,10 +1668,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#acid-el-liston-del-relacional" class="md-nav__link">
+  <a href="#acid-garantias-de-las-transacciones" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ACID (el listón del relacional)
+        ACID: garantías de las transacciones
       
     </span>
   </a>
@@ -1684,10 +1695,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#siete-caracteristicas-frente-al-relacional" class="md-nav__link">
+  <a href="#siete-caracteristicas-que-debemos-comprobar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Siete características (frente al relacional)
+        Siete características que debemos comprobar
       
     </span>
   </a>
@@ -1785,10 +1796,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#limitaciones-las-honestas" class="md-nav__link">
+  <a href="#limitaciones-que-debemos-evaluar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Limitaciones (las honestas)
+        Limitaciones que debemos evaluar
       
     </span>
   </a>
@@ -1907,10 +1918,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#base-el-otro-extremo-de-acid" class="md-nav__link">
+  <a href="#base-convergencia-y-estado-observado" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BASE (el otro extremo de ACID)
+        BASE: convergencia y estado observado
       
     </span>
   </a>
@@ -1956,10 +1967,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#para-practicar-moodle-manda-la-nota" class="md-nav__link">
+  <a href="#actividades" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Para practicar (Moodle manda la nota)
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autoevaluacion-del-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autoevaluación del 2.5
       
     </span>
   </a>
@@ -2071,22 +2093,29 @@
 
 
 <h1 id="25-familias-nosql">2.5. Familias NoSQL<a class="headerlink" href="#25-familias-nosql" title="Permanent link">&para;</a></h1>
-<p>Se puede decir que el almacenamiento de datos va por la <strong>tercera plataforma</strong>.</p>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> elegir entre clave-valor, documento, familias de columnas y grafo según las consultas; distinguir modelo, esquema, particionado y replicación.</p>
+<p><strong>Aplicación al hotel:</strong> justificar qué guardar, cómo consultarlo y qué debe ocurrir ante un fallo. No se necesita instalar cuatro motores para realizar las actividades.</p>
+<p><strong>Ampliación:</strong> contrastar productos con su documentación y estudiar SQL distribuido. Las condiciones de entrega se concretan en Moodle.</p>
+</div>
+<p>En <a href="../computacion-distribuida/">2.4</a> recorrimos un fichero de reservas para sumar noches por hotel. Ahora recepción necesita <strong>recuperar una reserva concreta, actualizar sus extras o consultar las recomendaciones de un huésped</strong>. Son preguntas diferentes: el modelo que organiza los datos debe facilitar las operaciones previstas.</p>
+<p>Seguimos con el grupo hotelero de la UT1. No cambiamos de tecnología porque los datos hayan alcanzado un tamaño mágico: primero describimos la consulta, el volumen, la frecuencia de cambios y las garantías. Un sistema relacional puede seguir siendo una buena elección, incluso con datos semiestructurados o despliegues distribuidos.</p>
+<p>Como contexto histórico, se suele hablar de tres etapas que <strong>coexisten</strong>, no de sustituciones completas:</p>
 <ol>
-<li><strong>Primera:</strong> los primeros computadores. Bases <strong>jerárquicas</strong> y en <strong>red</strong>, ficheros <strong>ISAM</strong>.</li>
-<li><strong>Segunda:</strong> Internet y el cliente-servidor. Ahí se imponen las bases <strong>relacionales</strong>.</li>
-<li><strong>Tercera:</strong> Big Data, móviles, <em>cloud</em>, IoT y redes sociales. El volumen obliga a paradigmas nuevos: <strong>NoSQL</strong>, <strong>NewSQL</strong> y las plataformas de lago (Hadoop, almacenes en la nube).</li>
+<li>Primeros sistemas: bases jerárquicas, en red y ficheros con acceso indexado, como ISAM.</li>
+<li>Expansión del modelo relacional y de las aplicaciones cliente-servidor.</li>
+<li>Crecimiento de servicios web, móviles, nube e IoT: se amplía la oferta con NoSQL, SQL distribuido y plataformas analíticas.</li>
 </ol>
-<p>Esta página se centra en <strong>NoSQL</strong>. El relacional no desaparece: la caja del hotel sigue cobrando en PostgreSQL. Lo que aparece es <strong>otra familia</strong> cuando el volumen, la variedad o la escala horizontal dejan corto al SQL.</p>
-<p>Los SGBD relacionales <strong>no se diseñaron</strong> para crecer añadiendo máquinas ni para que el esquema cambie cada <em>sprint</em>. Tampoco aprovechan que el disco <strong>hoy es barato</strong> ni que un clúster de <em>commodity</em> suma más CPU que un único <em>mainframe</em>. La respuesta de la industria: <strong>desplegar la aplicación y el dato en un clúster</strong>, repartiendo el trabajo entre servidores.</p>
-<p>El criterio <strong>a)</strong> del RA2 aquí: estas bases <strong>depositan</strong> formas raras (JSON, grafos, series) y <strong>responden rápido</strong> a <em>su</em> tipo de pregunta. El <strong>d)</strong>: muchas permiten <strong>guardar sin esquema rígido</strong> y validar <strong>al leer</strong>. El <strong>e)</strong> y el <strong>c)</strong> se ven en el <em>auto-sharding</em> y en la réplica (el detalle de Mongo está en el <a href="../replicas-shards/">2.8</a>).</p>
+<p>El volumen y la variedad impulsaron esas soluciones, pero <strong>SQL es un lenguaje, relacional es un modelo y distribuido es una forma de desplegar y ejecutar</strong>. No son opciones mutuamente excluyentes.</p>
+<p>Aquí preparamos las decisiones de los criterios <strong>a), c), d) y e) del RA2</strong>. Las consultas documentales se practicarán en 2.6, el diseño en 2.7 y las pruebas de réplicas y particiones en 2.8. Los JSON de MongoDB son un conjunto diferente del CSV de Hadoop; no se presupone una migración entre laboratorios.</p>
 <h2 id="no-solo-sql">No solo SQL<a class="headerlink" href="#no-solo-sql" title="Permanent link">&para;</a></h2>
-<p>Si lo definimos en serio: NoSQL es un conjunto de tecnologías para procesar conjuntos grandes de datos dando <strong>prioridad al rendimiento, la fiabilidad y la agilidad</strong>.</p>
+<p>NoSQL agrupa sistemas con modelos como documentos, clave-valor, familias de columnas y grafos. El término no garantiza un tamaño mínimo, una velocidad superior ni una configuración distribuida. Algunos productos combinan varios modelos.</p>
 <p>El acrónimo suena a “cualquier cosa que no sea relacional y no hable SQL”. En la práctica el <em>No</em> es <strong>not only</strong>: sistemas <strong>complementarios</strong> al SGBD relacional. Sus garantías varían: algunas priorizan disponibilidad, otras ofrecen lecturas fuertes y transacciones. <strong>NoSQL describe una familia de modelos, no una renuncia universal a ACID</strong>.</p>
 <p>Hay <strong>más de una manera</strong> de resolver el problema. A veces la mejor herramienta es PostgreSQL (cobrar, stock de minibar). A veces es Mongo (reserva con extras que cambian). A veces Redis (sesión). NoSQL no <strong>sustituye</strong> la caja: <strong>amplía</strong> el ecosistema. Eso se llama a menudo <strong>persistencia políglota</strong>: cada pregunta, su almacén.</p>
-<h3 id="acid-el-liston-del-relacional">ACID (el listón del relacional)<a class="headerlink" href="#acid-el-liston-del-relacional" title="Permanent link">&para;</a></h3>
+<h3 id="acid-garantias-de-las-transacciones">ACID: garantías de las transacciones<a class="headerlink" href="#acid-garantias-de-las-transacciones" title="Permanent link">&para;</a></h3>
 <p>ACID describe propiedades de una <strong>transacción</strong>, también disponible en ciertos motores NoSQL. La consistencia de ACID significa respetar invariantes, como que una cantidad no sea negativa. La C de CAP, que veremos después, se refiere a la visión de las operaciones entre nodos; son conceptos distintos.</p>
-<p>Las relacionales ofrecen <strong>transaccionalidad</strong> con <a href="../../ut1/almacenamiento/">ACID</a>. En el hotel: transferir un depósito de la fianza a la cuenta de Laredo son <strong>dos</strong> cambios. O salen los dos o no sale ninguno.</p>
+<p>Los SGBD relacionales suelen ofrecer <strong>transaccionalidad</strong> con <a href="../../ut1/almacenamiento/">ACID</a>. En el hotel: transferir un depósito de la fianza a la cuenta de Laredo son <strong>dos</strong> cambios. O salen los dos o no sale ninguno.</p>
 <table>
 <thead>
 <tr>
@@ -2109,16 +2138,16 @@
 <tr>
 <td><strong>I</strong></td>
 <td>Aislamiento</td>
-<td>Nadie ve el cobro a medias</td>
+<td>Controla cómo interfieren transacciones concurrentes; depende del nivel elegido</td>
 </tr>
 <tr>
 <td><strong>D</strong></td>
 <td>Durabilidad</td>
-<td>Lo confirmado <strong>no se pierde</strong> si se va la luz</td>
+<td>Lo confirmado se conserva ante los fallos cubiertos por la configuración</td>
 </tr>
 </tbody>
 </table>
-<p>Un <em>like</em> en la web del hotel puede retrasarse un segundo. Un cobro, no.</p>
+<p>Un contador de visitas puede admitir un retraso visible. Para confirmar la última plaza de parking, en cambio, necesitamos comprobar y descontar la disponibilidad de forma atómica. Leer un valor reciente y actualizarlo después sin proteger la operación puede permitir dos ventas. ACID no sustituye a definir bien esa regla de negocio.</p>
 <h3 id="cuatro-familias-elige-el-problema">Cuatro familias (elige el problema)<a class="headerlink" href="#cuatro-familias-elige-el-problema" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2143,8 +2172,8 @@
 <td>MongoDB, CouchDB</td>
 </tr>
 <tr>
-<td><strong>Columnas</strong></td>
-<td>Familia de columnas, filas enormes</td>
+<td><strong>Familias de columnas</strong></td>
+<td>Filas y claves de partición según el motor</td>
 <td>Series de sensores, logs</td>
 <td>Cassandra, HBase, Bigtable</td>
 </tr>
@@ -2157,7 +2186,7 @@
 </tbody>
 </table>
 <p>Más abajo cada modelo se desarrolla. Elegir “NoSQL” sin decir <strong>cuál</strong> es como decir “voy en vehículo” sin decir si es bici o camión.</p>
-<h2 id="siete-caracteristicas-frente-al-relacional">Siete características (frente al relacional)<a class="headerlink" href="#siete-caracteristicas-frente-al-relacional" title="Permanent link">&para;</a></h2>
+<h2 id="siete-caracteristicas-que-debemos-comprobar">Siete características que debemos comprobar<a class="headerlink" href="#siete-caracteristicas-que-debemos-comprobar" title="Permanent link">&para;</a></h2>
 <p>Estas características son tendencias. Antes de elegir un producto hay que comprobar cuáles ofrece y con qué configuración.</p>
 <ol>
 <li><strong>Flexibilidad del esquema.</strong> Un documento puede incluir <code>mascota</code> y otro no. La aplicación debe definir qué significa la ausencia y validar los datos imprescindibles. Una base de grafos o de familias de columnas tiene sus propias reglas; no todas aceptan cualquier estructura.</li>
@@ -2176,7 +2205,7 @@
 <p>Desnormalizar consiste en guardar juntos datos que se leen juntos. Ahorra consultas, pero obliga a decidir cómo mantener las copias coherentes. El <a href="../modelado/">modelado documental</a> desarrolla este intercambio entre facilidad de lectura, tamaño y coste de actualización.</p>
 <h2 id="fragmentacion-particionado-criterio-e">Fragmentación / particionado (criterio e)<a class="headerlink" href="#fragmentacion-particionado-criterio-e" title="Permanent link">&para;</a></h2>
 <p><strong>Escalar en vertical</strong> es ampliar RAM, CPU o discos de una máquina. Es una opción tanto para SQL como para NoSQL; tiene límites de hardware y no aporta por sí sola alta disponibilidad.</p>
-<p>La salida es escalar <strong>en horizontal</strong>: añadir servidores en vez de hinchar uno. Un clúster traga más dato del que cabe en <strong>cualquier</strong> máquina sola. A ese corte se le llama <strong><em>sharding</em></strong> o <strong>particionado</strong>.</p>
+<p>Otra opción es escalar <strong>en horizontal</strong>, añadiendo servidores. Para repartir los datos usamos particionado; cuando las partes se distribuyen entre nodos se habla habitualmente de <em>sharding</em>. Puede ampliar la capacidad útil, pero exige distribuir también la carga de forma adecuada. No todo el conjunto debe caber en RAM: índices, cachés y lectura desde disco forman parte del diseño.</p>
 <p>El particionado <strong>no es exclusivo</strong> de NoSQL. En SQL también existe:</p>
 <table>
 <thead>
@@ -2229,50 +2258,46 @@
 </tr>
 <tr>
 <td><strong>Por hash</strong></td>
-<td>Una función decide el <em>shard</em> a partir de la clave</td>
-<td>Reparte más <strong>uniforme</strong>; las consultas por rango de <code>_id</code> se <strong>complican</strong></td>
+<td>Una función transforma la clave para distribuir sus valores</td>
+<td>Puede equilibrar claves distintas; las consultas por rangos originales pueden visitar varios shards</td>
 </tr>
 </tbody>
 </table>
+<p>Los métodos son generales; no todos los productos ofrecen los tres. Si usamos solo <code>hotel</code> y casi todo corresponde a Laredo, aplicar un hash no divide las reservas que tienen ese mismo valor. Igual que en el shuffle de 2.4, la elección de la clave puede concentrar el trabajo. Debemos estudiar cardinalidad, frecuencia y consultas, además del número de servidores.</p>
 <h3 id="cuando-particionar">Cuándo particionar<a class="headerlink" href="#cuando-particionar" title="Permanent link">&para;</a></h3>
-<p>Sí, cuando:</p>
-<ul>
-<li><strong>no cabe</strong> (disco o RAM de un solo servidor);</li>
-<li>las <strong>escrituras</strong> saturan un nodo y queréis <strong>repartir</strong> la carga;</li>
-<li>la carga puede dividirse de forma útil entre particiones. La disponibilidad requiere además réplicas y un protocolo de recuperación.</li>
-</ul>
-<p>No, cuando el volumen es <strong>pequeño</strong>: repartir <strong>cuesta</strong> (red, <em>routers</em>, rebalanceos). Tampoco esperéis a tener <strong>demasiado</strong>: partir un lago ya enorme <strong>satura</strong> el sistema. El <a href="../replicas-shards/">2.8</a> lo enseña en Mongo.</p>
-<p>La nube (AWS, Azure) vende capacidad <strong>bajo demanda</strong> y os quita parte de la administración. Una granja de <em>commodity</em> puede igualar a un servidor carísimo <strong>por menos dinero</strong>. El criterio <strong>e)</strong> en una frase: <em>añades un nodo, no reescribes la recepción</em>.</p>
+<p>Conviene estudiarlo cuando la capacidad o el caudal de un nodo no cumplen la necesidad, después de revisar consultas, índices, conservación de datos y recursos. Añadir RAM puede ayudar a una carga concreta; superar la RAM no obliga por sí solo a particionar.</p>
+<p>El reparto tiene costes: red, enrutamiento, movimiento de datos y consultas que reúnen resultados. Con pocos datos puede no compensar, pero el tamaño tampoco es el único motivo: importan la carga y otros requisitos del servicio. Planificamos y probamos la ampliación antes de saturar el sistema.</p>
+<p>La nube permite contratar recursos y delegar parte de la administración, pero no elimina el coste ni asegura que más nodos mejoren el rendimiento. El criterio <strong>e)</strong> se demuestra observando qué recurso se añade y qué aporta, no solo nombrando el auto-sharding. El <a href="../replicas-shards/">2.8</a> desarrolla el caso de MongoDB.</p>
 <h2 id="replicacion-criterio-c">Replicación (criterio c)<a class="headerlink" href="#replicacion-criterio-c" title="Permanent link">&para;</a></h2>
-<p>La <strong>réplica</strong> mantiene <strong>copias</strong> del mismo dato en varios servidores. La <em>app</em> sigue aunque una máquina muera. La mayoría de NoSQL lo hacen <strong>solas</strong>, sin un producto de terceros. Para el desarrollador el almacén es un <em>servicio</em>; no abre sockets a <code>mongo-2</code>.</p>
+<p>La <strong>replicación</strong> mantiene copias del mismo conjunto de datos. Si falla un miembro, otro puede prestar servicio <strong>según el protocolo, las copias disponibles y las garantías exigidas</strong>. Puede haber una interrupción durante la detección y elección de un nuevo primario. El cliente debe estar configurado para conectarse al conjunto y gestionar esa transición.</p>
 <p>Sirve para:</p>
 <ul>
-<li><strong>Escala:</strong> las lecturas se <strong>reparten</strong>; cada nodo tiene (casi) los mismos bytes.</li>
-<li><strong>Disponibilidad:</strong> fallo de hardware o corrupción. Una copia puede <strong>tomar el relevo</strong>. Informes y <em>backups</em> en secundarios para no tumbar el primario.</li>
-<li><strong>Separación de cargas:</strong> determinadas lecturas analíticas pueden dirigirse a secundarios. Esto reduce trabajo en el primario, pero <strong>no es el aislamiento transaccional de ACID</strong>. Una réplica operativa tampoco es un entorno de pruebas independiente: los cambios del primario llegan a ella.</li>
+<li><strong>Disponibilidad:</strong> conservar otras copias ante determinados fallos. No protege frente a todo: un borrado erróneo también puede replicarse, por lo que necesitamos copias de seguridad y recuperación probada.</li>
+<li><strong>Lecturas:</strong> algunos sistemas permiten repartirlas entre réplicas, aceptando las condiciones de visibilidad correspondientes. No aumenta automáticamente la capacidad útil ni el caudal de escritura.</li>
+<li><strong>Separación de cargas:</strong> ciertas consultas pueden dirigirse a secundarios. Esto no equivale al aislamiento transaccional de ACID ni convierte una réplica en un entorno de pruebas independiente.</li>
 </ul>
-<p>Antes de elegir arquitectura, decidid el <strong>oficio</strong> de la copia: ¿solo <strong>lectura</strong> (informes) o también <strong>escritura</strong>?</p>
 <table>
 <thead>
 <tr>
 <th>Arquitectura</th>
-<th>Quién escribe</th>
-<th>Precio</th>
+<th>Quién recibe escrituras</th>
+<th>Qué debemos comprobar</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Primario–secundario</strong> (<em>master–slave</em>)</td>
-<td>Solo el primario; los demás siguen</td>
-<td>El primario es <strong>SPOF</strong> si no hay elección automática</td>
+<td><strong>Primario–secundario</strong></td>
+<td>El primario coordina las escrituras y los secundarios replican</td>
+<td>Elección, mayoría necesaria, confirmación y retraso de las copias</td>
 </tr>
 <tr>
-<td><strong>Varios primarios / entre pares</strong></td>
-<td>Casi todos aceptan escritura</td>
-<td>Escrituras simultáneas → <strong>discrepancias</strong> un rato</td>
+<td><strong>Varios primarios o entre pares</strong></td>
+<td>Varios nodos pueden recibir escrituras según el protocolo</td>
+<td>Coordinación, conflictos y garantías de cada operación</td>
 </tr>
 </tbody>
 </table>
+<p>No todas las topologías con varios nodos escritores funcionan igual. Una escritura puede requerir comunicación con otros miembros antes de confirmarse.</p>
 <h3 id="consistencia">Consistencia<a class="headerlink" href="#consistencia" title="Permanent link">&para;</a></h3>
 <p>La consistencia describe qué versiones pueden observar los clientes. <strong>Leer tus propias escrituras</strong> es una garantía concreta; la consistencia linealizable exige además que las operaciones de todos los clientes se comporten como si actuaran sobre una única copia, respetando el orden temporal.</p>
 <table>
@@ -2285,19 +2310,19 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Fuerte</strong></td>
-<td>Tras confirmar, <strong>toda</strong> lectura ve el valor</td>
-<td>Banca, caja, fianza</td>
+<td><strong>Linealizable</strong></td>
+<td>Las operaciones se comportan como sobre una copia única y respetan el orden temporal</td>
+<td>Lecturas y escrituras que necesitan esa garantía, con las opciones adecuadas</td>
 </tr>
 <tr>
 <td><strong>Eventual</strong></td>
-<td>Las copias se igualan <em>al rato</em>; puedes leer <strong>atrasado</strong></td>
-<td><em>Likes</em>, comentarios, a veces stock no crítico</td>
+<td>Sin nuevos cambios y con comunicación recuperada, las réplicas convergen según el protocolo</td>
+<td>Contadores o contenidos donde el negocio acepta desfases y sus consecuencias</td>
 </tr>
 </tbody>
 </table>
-<p>Stock del minibar: si es <strong>fuerte</strong>, cada consulta es el inventario real. Si es <strong>eventual</strong>, puede mentir un instante y <strong>arreglarse</strong>. Décadas de SQL os hacen ver la consistencia fuerte como “lo natural”. A veces el desfase es un <strong>precio aceptable</strong> a cambio de que la web <strong>no se caiga</strong>.</p>
-<p>La consistencia eventual encaja en <em>apps</em> de <strong>solo lectura</strong>, históricos que casi no cambian, o <strong>mucha escritura y poca lectura</strong> (un log).</p>
+<p>«Consistencia fuerte» puede usarse con distintos alcances; aquí concretamos la linealizabilidad. No significa que un inventario refleje físicamente un consumo que nadie ha registrado. Tampoco evita por sí sola una venta doble si la comprobación y el descuento son dos operaciones sin protección conjunta.</p>
+<p>La consistencia eventual no se elige solo por tener muchas escrituras o pocas lecturas. Preguntamos qué daño causaría una versión anterior y cómo resolveríamos los conflictos. Un comentario puede mostrarse después; una plaza confirmada necesita un procedimiento que preserve su disponibilidad.</p>
 <div class="admonition warning">
 <p class="admonition-title">Réplica no es shard</p>
 <p><strong>Replicar</strong> = el <strong>mismo</strong> dato en varias máquinas. <strong>Particionar</strong> = cada máquina un <strong>trozo</strong>. Se pueden combinar: cada shard mantiene réplicas. La seguridad y el rendimiento dependen de cuántas, cómo votan y dónde se alojan; dos votantes no toleran perder uno y seguir eligiendo primario. El <a href="../replicas-shards/">2.8</a> lo monta.</p>
@@ -2332,11 +2357,11 @@
 </tr>
 <tr>
 <td><strong>Consistencia</strong></td>
-<td>Fuerte o eventual (varias copias)</td>
+<td>¿Qué versión puede leerse y qué cambios deben confirmarse juntos?</td>
 </tr>
 <tr>
 <td><strong>API</strong></td>
-<td><strong>No hay estándar.</strong> Cada producto es un idioma. Un API inmaduro cuesta <strong>años</strong></td>
+<td>¿Qué consultas y operaciones ofrece? ¿Qué trabajo exige cambiar de producto?</td>
 </tr>
 <tr>
 <td><strong>Comunidad y soporte</strong></td>
@@ -2349,18 +2374,19 @@
 <li>Web con campos <strong>a medida</strong> → documental.</li>
 <li>Capa de <strong>caché</strong> → clave-valor.</li>
 <li>Binarios + metadatos consultables (fotos de habitación) → documento o clave-valor; los bytes gordos a menudo en <a href="../hdfs/">HDFS</a> / objeto, el JSON en Mongo.</li>
-<li>Volumen enorme, consistencia <strong>no</strong> crítica, sí disponibilidad y distribución → documento o columnas.</li>
+<li>Muchas medidas por sensor y periodo → estudiar familias de columnas, un motor de series temporales u otras opciones según consulta, conservación y garantías; medir antes de decidir.</li>
 </ul>
-<h3 id="limitaciones-las-honestas">Limitaciones (las honestas)<a class="headerlink" href="#limitaciones-las-honestas" title="Permanent link">&para;</a></h3>
+<h3 id="limitaciones-que-debemos-evaluar">Limitaciones que debemos evaluar<a class="headerlink" href="#limitaciones-que-debemos-evaluar" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Poco estándar.</strong> Cada NoSQL nació de un caso distinto. No hay un SQL único.</li>
-<li><strong>Riesgo <em>open source</em>.</strong> Algunas no se mantienen. Mirad comunidad y si existe versión de pago.</li>
-<li><strong>GUI desigual.</strong> Pocas tienen un Compass cómodo.</li>
-<li><strong>Perfiles escasos</strong> (y caros) frente a SQL.</li>
+<li><strong>Portabilidad:</strong> APIs y modelos diferentes pueden exigir adaptar consultas y datos.</li>
+<li><strong>Operación:</strong> copias, índices, actualizaciones, seguridad y monitorización siguen siendo necesarios.</li>
+<li><strong>Mantenimiento y soporte:</strong> comprobar versiones mantenidas, licencias y documentación, tanto en software abierto como comercial.</li>
+<li><strong>Equipo y herramientas:</strong> valorar conocimientos, conectores y herramientas de administración disponibles; no deducir su calidad solo de la familia.</li>
 </ul>
+<p>La persistencia políglota añade integración y mantenimiento. Si un único motor cumple los requisitos, introducir cuatro puede complicar el trabajo sin aportar una mejora demostrada.</p>
 <h2 id="modelo-documental">Modelo documental<a class="headerlink" href="#modelo-documental" title="Permanent link">&para;</a></h2>
 <p>La unidad de lectura es una ficha con campos relacionados. En el hotel, reserva, huéspedes y extras pueden viajar juntos. Antes de embeber, estimad tamaño y crecimiento y decidid qué cambios deben ser atómicos. El documento no elimina las relaciones: permite representarlas dentro de la ficha o mediante referencias.</p>
-<p>El relacional guarda filas y columnas. El documental guarda <strong>documentos</strong> (casi siempre <strong>JSON</strong>): un objeto, como en programación. Los documentos se agrupan en <strong>colecciones</strong> (o “bases”, según el producto).</p>
+<p>El relacional guarda filas y columnas. El documental guarda <strong>documentos</strong> (casi siempre <strong>JSON</strong>): un objeto, como en programación. En MongoDB, los documentos se agrupan en <strong>colecciones</strong>, dentro de una base de datos; otros productos utilizan sus propios contenedores.</p>
 <p>Un campo tiene tipo: cadena, entero, fecha, binario, <em>array</em> u <strong>otro documento</strong>. En vez de <strong>esparcir</strong> la reserva en cinco tablas, <strong>hotel, huéspedes y extras viven juntos</strong>. El acceso se simplifica: menos <em>joins</em>, menos transacciones largas.</p>
 <p><em>Lo que se usa junto, se guarda junto.</em> El <a href="../mongodb/">2.6</a> y el <a href="../modelado/">2.7</a> lo practican.</p>
 <p>El esquema es <strong>dinámico</strong>: dos documentos de <code>reservas</code> <strong>no</strong> tienen por qué traer las mismas claves.</p>
@@ -2383,28 +2409,30 @@
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">"extras"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"parking"</span><span class="p">,</span><span class="w"> </span><span class="s2">"cuna"</span><span class="p">]</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>El objeto <code>cobro</code> agrupa lo que en SQL sería una relación <strong>1:1</strong> (tabla <code>Cobro</code>). El <em>array</em> <code>extras</code> agrupa un <strong>1:N</strong> (tabla <code>Extra</code>). No hace falta <em>join</em> para pintar la reserva.</p>
-<p>Suele haber una <strong>clave</strong> (<code>_id</code>) que identifica el documento. Además, consultas por <strong>cualquier</strong> campo. Índices: compuestos, dispersos, <strong>TTL</strong> (la sesión caduca sola), únicos, texto, geo (hoteles cerca de una playa). Agregación y, en algunos productos, MapReduce.</p>
+<p>En este ejemplo decidimos guardar un único resumen <code>cobro</code> y una lista de extras dentro de la reserva. En un diseño relacional podrían representarse con columnas o tablas relacionadas. No significa que una reserva solo pueda tener un cobro: si hay pagos parciales o devoluciones, habrá que modelarlos. Estos JSON son ejemplos de estructura, no los archivos de importación de 2.6.</p>
+<p>En MongoDB, <code>_id</code> identifica el documento dentro de su colección. Podemos filtrar por otros campos, pero sin un índice adecuado puede ser necesario recorrer muchos documentos. Los índices disponibles dependen del producto: compuestos, únicos, de texto, geoespaciales o TTL, entre otros. Un índice TTL permite eliminar datos caducados mediante un proceso de fondo; no promete borrarlos en el instante exacto de caducidad. Para resumir documentos utilizaremos agregaciones en los siguientes apartados.</p>
 <p>Actualizar <strong>un</strong> documento suele ser <strong>una</strong> sentencia: no recorréis tres tablas.</p>
 <p><strong>Sirve para:</strong> flujos de eventos entre <em>apps</em>, CMS / blog (comentarios, usuarios), analítica web (un campo nuevo cuando aparece una métrica), <em>e-commerce</em> que <strong>crece</strong> de esquema.</p>
 <p><strong>Hay que evaluarlo con cuidado</strong> cuando abundan relaciones cruzadas, restricciones entre documentos o transacciones largas. MongoDB admite transacciones, pero su coste y el modelo deben compararse con una solución relacional. No basta con que la información pueda escribirse como JSON.</p>
 <p>Productos: <strong>MongoDB</strong> (el de esta UT), <strong>CouchDB</strong>.</p>
 <h2 id="modelo-clave-valor">Modelo clave-valor<a class="headerlink" href="#modelo-clave-valor" title="Permanent link">&para;</a></h2>
 <p>La pregunta típica es «dame el valor de esta clave», por ejemplo <code>sesion:991</code>. Si necesitamos buscar por el contenido de todos los valores, quizá hagan falta estructuras auxiliares o un motor con índices. Una sesión puede caducar; una reserva confirmada requiere una política de conservación diferente. Los ejemplos de Redis presuponen un servidor Redis y su cliente, independientes del laboratorio MongoDB.</p>
-<p>Es una <strong>tabla hash</strong>: casi todo el acceso va por la <strong>clave primaria</strong>. Desde el modelo de datos, es el más <strong>simple</strong>.</p>
+<p>El modelo básico es una asociación <strong>clave → valor</strong>. Puede imaginarse como un diccionario, sin presuponer que su implementación física sea una tabla hash. Su acceso característico recupera el valor mediante una clave conocida.</p>
 <p>Imaginad una tabla SQL de dos columnas (<code>id</code>, <code>nombre</code>). En clave-valor el “nombre” puede ser un entero, un JSON o un <strong>BLOB</strong>. Si la clave existe, el <code>SET</code> <strong>pisa</strong> el valor.</p>
-<p>El cliente: obtener, asignar, borrar. El valor es <strong>opaco</strong> para el motor: <strong>no</strong> sabe qué hay dentro. No podéis pedir “todas las de Trasmiera” si Trasmiera está <strong>dentro</strong> del <em>blob</em>. La <em>app</em> es responsable de recordar el contrato.</p>
-<p>Algunos productos agrupan claves en <strong><em>buckets</em></strong> (como una tabla). Riak, por ejemplo, habla HTTP:</p>
+<p>En el modelo básico, el cliente obtiene, asigna o borra por clave y el valor se trata como opaco. Buscar «todas las reservas de Trasmiera» dentro de esos valores exige otros mecanismos. Algunos productos ofrecen tipos estructurados e índices adicionales: debemos distinguir la idea básica de las capacidades del motor.</p>
+<p>Algunos productos agrupan claves en <em>buckets</em>. Este ejemplo de la API HTTP de Riak es ilustrativo, no un comando para el laboratorio MongoDB; exige una instancia compatible:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl -X PUT http://localhost:8098/riak/sesiones/S-991 \
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  -H "Content-Type: application/json" \
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  -d "{\"hotel\":\"Laredo\",\"canal\":\"web\"}"
 </span></code></pre></div>
 <p><strong>Redis</strong> tipa el valor: cadenas, <em>hashes</em>, conjuntos, listas. Entonces sí hay intersección, unión, rangos. Ya no es “solo un <em>blob</em>”: se usa como caché, cola y contador.</p>
+<p>Los siguientes comandos corresponden a <code>redis-cli</code>, con un servidor Redis disponible. No se ejecutan en <code>mongosh</code>:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SET sesion:991 "huésped-Laredo"
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>HSET reserva:18442 hotel "Laredo"
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>HSET reserva:18442 canal "web"
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>SADD hotel:Laredo:extras parking cuna
 </span></code></pre></div>
+<p>El ejemplo Python necesita el paquete <code>redis</code> y un servidor local en el puerto 6379. Sus etiquetas son datos ficticios de caché; no confirman disponibilidad comercial:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">redis</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"localhost"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">)</span>
@@ -2413,8 +2441,8 @@
 </span></code></pre></div>
 <p>El acceso directo por clave puede ser eficiente. Guardar en RAM y persistir mediante snapshots o registro de operaciones afecta a rendimiento y recuperación ante fallos. <strong>No determina por sí solo la consistencia entre réplicas</strong>: esa propiedad depende del protocolo y de las opciones de lectura y escritura.</p>
 <p><strong>Sirve para:</strong> <code>sessionid</code> del motor de reservas, preferencias, carrito <strong>antes</strong> de cobrar, <strong>caché</strong> de disponibilidad.</p>
-<p><strong>No encaja:</strong> relaciones entre datos, transacciones de <strong>varios</strong> pasos, consultas <strong>por dentro</strong> del valor, operaciones sobre <strong>conjuntos de claves</strong> (“todas las que empiezan por <code>Laredo:</code>” si el producto no lo ayuda).</p>
-<p>Productos: <strong>Redis</strong>, <strong>DynamoDB</strong>, Voldemort (clon abierto de Dynamo).</p>
+<p><strong>Requiere evaluación adicional:</strong> relaciones, búsquedas por contenido y operaciones sobre varias claves. Algunos motores incorporan transacciones, scripts o índices, con límites propios. No se puede deducir su ausencia de la etiqueta clave-valor. Una caché de disponibilidad debe contrastarse con el sistema que confirma la reserva.</p>
+<p>Productos de referencia: <strong>Redis</strong> y <strong>DynamoDB</strong>; este último ofrece modelos clave-valor y documental. Riak y Voldemort son referencias históricas del ecosistema Dynamo, no instalaciones exigidas en esta unidad.</p>
 <h2 id="dos-modelos-que-comparten-la-palabra-columna">Dos modelos que comparten la palabra «columna»<a class="headerlink" href="#dos-modelos-que-comparten-la-palabra-columna" title="Permanent link">&para;</a></h2>
 <p>En el <a href="../../ut1/almacenamiento/">1.3</a> ya quedó la frontera. Aquí se usan los dos, y no son el mismo oficio.</p>
 <h3 id="fichero-o-almacen-columnar">Fichero o almacén columnar<a class="headerlink" href="#fichero-o-almacen-columnar" title="Permanent link">&para;</a></h3>
@@ -2423,45 +2451,49 @@
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Por columnas:  [Laredo,Potes,Noja] [web,ota,web] [3,2,4] [186,90,210]
 </span></code></pre></div>
 <div class="admonition question">
-<p class="admonition-title">Autoevaluación de pizarra</p>
-<p>¿Añadir <strong>un</strong> registro (una reserva nueva) es más barato en filas o en un fichero columnar? En <strong>filas</strong>: un sitio, un append. En Parquet tocáis <strong>varias</strong> estructuras. Por eso el columnar brilla en el <strong>panel</strong> (OLAP), no en el clic de recepción (OLTP).</p>
+<p class="admonition-title">Para distinguir formato y motor</p>
+<p>¿Modificar una reserva dentro de un Parquet equivale a actualizar una fila en una base operativa? No. Parquet organiza archivos para lecturas analíticas; una actualización suele requerir reescribir datos o apoyarse en una capa de tablas que gestione los cambios. El coste depende del sistema y de cómo agrupe las operaciones, no solo de decir «filas» o «columnas».</p>
 </div>
-<p>Con Spark en memoria, la ventaja relativa <em>a veces</em> se estrecha. El oficio sigue: <strong>scan</strong> de una métrica en millones de filas.</p>
-<p><strong>Sirve para:</strong> BI, <em>warehouse</em> columnar, cubos OLAP, el panel de las 8.</p>
-<p><strong>No encaja:</strong> actualizar la celda del sensor de la 214, ni picar el cobro.</p>
-<p><strong>Productos de este oficio:</strong> Parquet, ORC, Amazon Redshift.</p>
+<p><strong>Encaje habitual:</strong> leer pocas columnas de muchas filas para BI o el panel de las 8. Un almacén columnar puede ofrecer actualizaciones y transacciones; no debemos atribuirle las limitaciones de un archivo aislado.</p>
+<p><strong>Niveles distintos:</strong> Parquet y ORC son formatos de archivo; Amazon Redshift es un sistema de almacén analítico. Spark es un motor que puede consultar formatos diferentes. Ninguno de esos nombres convierte el archivo en una base de familias de columnas.</p>
 <h3 id="wide-column-familias-de-columnas">Wide-column (familias de columnas)<a class="headerlink" href="#wide-column-familias-de-columnas" title="Permanent link">&para;</a></h3>
 <p>HBase y Cassandra comparten la familia general, pero no una API ni un esquema idénticos. HBase admite calificadores de columna dinámicos por familia; las tablas CQL de Cassandra declaran columnas y claves. En Cassandra se diseña la clave de partición según la consulta, por ejemplo hotel, habitación y día para leer medidas de un periodo acotado.</p>
-<p>Otra familia, la de <a href="https://research.google.com/archive/bigtable.html">Bigtable</a>: mapa <strong>ordenado</strong>, <strong>multidimensional</strong> y <strong>repartido</strong>. Cada fila puede tener <strong>muchísimas</strong> columnas (a menudo dispersas) y hay <strong>miles de millones</strong> de filas, con <strong>versiones</strong>. No es un Parquet: guardáis <strong>filas</strong> bajo una clave, y cada fila trae las columnas que tenga.</p>
-<p>Dos niveles: la clave de fila → un mapa de <strong>familias de columnas</strong> → columnas.</p>
-<p>Una <strong>columna</strong> es <code>nombre</code> + <code>valor</code> + <strong><code>timestamp</code></strong> (caducidad y “quién gana” si hay dos escrituras):</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"temp_c"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21.4"</span><span class="p">,</span><span class="w"> </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1710000000</span><span class="w"> </span><span class="p">}</span>
+<p>El modelo de Bigtable y HBase organiza filas por clave y columnas dentro de familias. Es distinto de un archivo Parquet: no describe simplemente colocar juntos todos los importes para un análisis.</p>
+<p>Ejemplo conceptual de HBase, con una familia <code>medidas</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>clave de fila              familia:calificador     valor
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Laredo:214:2026-04-01:0800   medidas:temp_c          21.4
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Laredo:214:2026-04-01:0800   medidas:humedad         55
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Potes:108:2026-04-01:0800    medidas:temp_c          19.8
 </span></code></pre></div>
-<p>Una <strong>fila</strong> es un conjunto de columnas bajo una clave (<code>hab:214:2026-04-01</code>). Una <strong>familia</strong> agrupa columnas de un mismo asunto, <strong>sin</strong> exigir las mismas columnas en cada fila:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sensores
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  hab:214 : { temp_c, humedad, ultima_lectura }
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  hab:108 : { temp_c, puerta }          ← no tiene humedad
+<p>Las familias se declaran; los calificadores pueden variar por fila. Las celdas pueden conservar versiones identificadas por una marca temporal. <strong>La marca temporal no es el TTL</strong>: la caducidad se configura mediante políticas de conservación. El ejemplo no es una sentencia que debáis ejecutar.</p>
+<p>En Cassandra, CQL declara tablas y claves. Para una consulta «medidas de una habitación en un día», un diseño ilustrativo sería:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sensores</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="n">hotel</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="n">hab_id</span><span class="w"> </span><span class="nb">text</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="n">dia</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="n">instante</span><span class="w"> </span><span class="k">timestamp</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="n">temp_c</span><span class="w"> </span><span class="n">double</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">((</span><span class="n">hotel</span><span class="p">,</span><span class="w"> </span><span class="n">hab_id</span><span class="p">,</span><span class="w"> </span><span class="n">dia</span><span class="p">),</span><span class="w"> </span><span class="n">instante</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">);</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">instante</span><span class="p">,</span><span class="w"> </span><span class="n">temp_c</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sensores</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">hotel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Laredo'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">hab_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'214'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">dia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'2026-04-01'</span><span class="p">;</span>
 </span></code></pre></div>
-<p>Se accede por <strong>clave de fila</strong> (toda la familia o una columna), no barriendo «la columna importe de todo el lago» como hace Parquet. Cassandra ofrece <strong>CQL</strong>, parecido a SQL <strong>sin</strong> <em>joins</em> ni subconsultas; el <code>WHERE</code> es limitado:</p>
-<div class="language-sql highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">temp_c</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sensores</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">hab_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'214'</span><span class="p">;</span>
-</span></code></pre></div>
-<p>En Cassandra antiguo existían las <strong>supercolumnas</strong> (un mapa anidado dentro de otra columna). CQL ya no las usa: hoy anidáis con un mapa o con otra tabla.</p>
-<p>Actualizar una celda es <strong>encontrar la fila</strong> y reescribir esa columna. A veces se reescribe más de la cuenta.</p>
-<p><strong>Sirve para:</strong> series que <strong>cambian</strong> (el sensor de la 214), filas muy anchas y dispersas, metadatos cuyas columnas aparecen y desaparecen.</p>
-<p><strong>Conviene evaluar otras opciones</strong> para agregaciones globales sobre muchas columnas o transacciones con relaciones complejas. Estos motores también pueden recorrer datos, pero un formato columnar y un motor analítico pueden ser más adecuados para el informe.</p>
-<p><strong>Productos:</strong> <strong>HBase</strong> (encima de <a href="../hdfs/">HDFS</a>), <strong>Cassandra</strong>. Redshift queda en el apartado anterior.</p>
+<p>Las tres primeras columnas de la clave forman la <strong>clave de partición</strong>; <code>instante</code> ordena las filas dentro de ella. Acotar por día ayuda a limitar su crecimiento, pero hay que estimar cuántas medidas llegan. Este ejemplo requeriría Cassandra y un <em>keyspace</em> seleccionado: aquí se estudia el diseño, no se instala ese laboratorio.</p>
+<p>CQL se parece a SQL, pero sus consultas se diseñan alrededor de las claves y no ofrece los joins relacionales habituales. Las antiguas supercolumnas de Cassandra son contexto histórico, no el modelo CQL que usamos como referencia.</p>
+<p><strong>Encaje posible:</strong> medidas y eventos consultados por entidad y periodo, con volumen y patrones de acceso conocidos. No hace falta que los datos sean sensores para usar el modelo, ni que toda serie temporal se guarde en él.</p>
+<p><strong>Precaución:</strong> una consulta global o una relación nueva puede exigir otra tabla, índices o procesamiento adicional. HBase se apoya habitualmente en HDFS; Cassandra utiliza su propio almacenamiento distribuido. Un archivo Parquet puede ser adecuado para analizar exportaciones de cualquiera de ellos.</p>
 <h2 id="modelo-de-grafos">Modelo de grafos<a class="headerlink" href="#modelo-de-grafos" title="Permanent link">&para;</a></h2>
 <p>Partimos de una pregunta de recorrido: «¿qué hoteles recomiendan las personas relacionadas con este huésped?». Los nodos representan entidades y las aristas relaciones con significado. El coste depende de cuántos vecinos se visitan, de los filtros y de los índices; tener un grafo no hace barata cualquier consulta global.</p>
 <p>Guarda <strong>entidades</strong> y <strong>relaciones</strong>. Las entidades son <strong>nodos</strong> (con propiedades). Las relaciones son <strong>aristas</strong> (también con propiedades y <strong>sentido</strong>). Un nodo ≈ una instancia. La dirección tiene significado, aunque una consulta puede recorrer una relación en ambos sentidos. Solo añadimos otra arista si representa otra relación del dominio.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>(Huésped:Ana) -[:RECOMENDO {año:2025}]-&gt; (Hotel:Potes)
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>(Huésped:Luis) -[:AMIGO]-&gt; (Huésped:Ana)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(Huésped:Ana) -[:RECOMENDO {año:2025}]-&gt; (Hotel:Potes)
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>(Huésped:Luis) -[:AMIGO]-&gt; (Huésped:Ana)
 </span></code></pre></div>
-<p>Los nodos se organizan por relaciones: el <strong>mismo</strong> dato se interpreta distinto según el camino (<em>quién recomendó</em>, <em>quién es VIP</em>, <em>quién está a dos saltos</em>). No hay techo práctico de tipos de arista en el mismo grafo.</p>
+<p>Los nodos se organizan por relaciones: el <strong>mismo</strong> dato se interpreta distinto según el camino (<em>quién recomendó</em>, <em>quién es VIP</em>, <em>quién está a dos saltos</em>). Los tipos de relación y sus propiedades forman parte del diseño y están sujetos a los límites del producto.</p>
 <p><strong>Recorrer</strong> (<em>traverse</em>) es la consulta: “huéspedes del club de senderismo <strong>y</strong> con más de dos estancias en Liébana”. En Neo4j las relaciones <strong>ya están persistidas</strong>: no se calculan al vuelo como un <code>JOIN</code> de ocho tablas.</p>
 <p>En SQL podemos representar relaciones mediante claves y tablas de asociaciones, incluso de forma genérica. Un motor de grafos facilita expresar y ejecutar recorridos de relaciones. Ambos modelos requieren diseñar identificadores, propiedades e índices según las preguntas; ninguno elimina el modelado.</p>
 <p><strong>Sirve para:</strong> redes (quién conoce a quién), rutas y distancias (hoteles cercanos, camino más corto), <strong>recomendaciones</strong> (“quien reservó Potes también reservó Fuente Dé”).</p>
-<p><strong>No encaja:</strong> cambiar <strong>una</strong> propiedad en <strong>todos</strong> los nodos (operación cara).</p>
-<p>Productos: <strong>Neo4j</strong>, ArangoDB, OrientDB, TinkerPop, Amazon Neptune.</p>
+<p><strong>Conviene comparar alternativas:</strong> las actualizaciones globales o agregados que recorren gran parte del grafo pueden ser costosos, como los recorridos amplios en otros modelos. El encaje debe comprobarse con las consultas previstas.</p>
+<p>Productos: <strong>Neo4j</strong>, ArangoDB, OrientDB y Amazon Neptune. <strong>Apache TinkerPop</strong> es un framework de computación sobre grafos, no una base de datos equivalente a esos productos.</p>
 <h2 id="consistencia-segun-la-familia">Consistencia según la familia<a class="headerlink" href="#consistencia-segun-la-familia" title="Permanent link">&para;</a></h2>
 <p>No se deduce la consistencia únicamente del modelo. Un documento, una clave o un nodo de grafo pueden almacenarse con garantías distintas según el producto y el despliegue.</p>
 <p>En MongoDB distinguimos <strong>dónde leer</strong> (<code>readPreference</code>), <strong>qué confirmación exigir al escribir</strong> (<code>writeConcern</code>) y <strong>qué visibilidad exigir al leer</strong> (<code>readConcern</code>). Leer del primario no convierte automáticamente toda operación en linealizable. El <a href="../replicas-shards/">2.8</a> combina estas opciones.</p>
@@ -2525,7 +2557,7 @@
 </tbody>
 </table>
 <p>Para clasificar MongoDB, HBase, DynamoDB, Redis o PostgreSQL hay que indicar versión, topología y operación. Una lectura local y una escritura con mayoría pueden tener condiciones distintas incluso en el mismo sistema.</p>
-<h3 id="base-el-otro-extremo-de-acid">BASE (el otro extremo de ACID)<a class="headerlink" href="#base-el-otro-extremo-de-acid" title="Permanent link">&para;</a></h3>
+<h3 id="base-convergencia-y-estado-observado">BASE: convergencia y estado observado<a class="headerlink" href="#base-convergencia-y-estado-observado" title="Permanent link">&para;</a></h3>
 <p>El nombre reúne tres ideas frecuentes en diseños que aceptan convergencia posterior:</p>
 <ul>
 <li><strong>Basically Available:</strong> el servicio intenta seguir ofreciendo operaciones durante fallos parciales, con las limitaciones definidas por el diseño.</li>
@@ -2539,7 +2571,7 @@
 <p>NewSQL (CockroachDB, etc.) intenta <strong>SQL + escala horizontal + ACID</strong>. No es el núcleo de esta página; si Moodle lo pide, es una presentación de 5–6 diapositivas: qué problema cierra respecto a NoSQL y respecto a un PostgreSQL de un solo nodo.</p>
 <div class="admonition success">
 <p class="admonition-title">En voz alta</p>
-<p>“NoSQL es <em>not only</em>. Elegís la familia por la pregunta. Partís cuando no cabe; replicáis para no morir. CAP os obliga a elegir. La caja sigue en ACID.”</p>
+<p>“Elegimos el modelo por las consultas y las garantías. Particionar reparte datos; replicar mantiene copias. Ambos necesitan diseño y comprobación. Durante una partición de red no podemos garantizar a la vez linealizabilidad y disponibilidad de todas las operaciones. El modelo no determina por sí solo las transacciones.”</p>
 </div>
 <h2 id="relacion-con-el-ra2">Relación con el RA2<a class="headerlink" href="#relacion-con-el-ra2" title="Permanent link">&para;</a></h2>
 <table>
@@ -2552,7 +2584,7 @@
 <tbody>
 <tr>
 <td><strong>a)</strong></td>
-<td>Depositar <strong>cualquier</strong> forma (JSON, grafo, serie) y responder <strong>a su</strong> pregunta, rápido</td>
+<td>Justificar el modelo según los datos, consultas y rendimiento necesario; cada motor tiene tipos y límites</td>
 </tr>
 <tr>
 <td><strong>c)</strong></td>
@@ -2560,38 +2592,61 @@
 </tr>
 <tr>
 <td><strong>d)</strong></td>
-<td>Esquema al guardar <strong>flojo</strong>, esquema al leer; documentos que <strong>crecen</strong></td>
+<td>Conservar datos y metadatos para reutilizarlos; distinguir esquema flexible de ausencia de validación</td>
 </tr>
 <tr>
 <td><strong>e)</strong></td>
-<td><em>Auto-sharding</em>, más nodos, cloud</td>
+<td>Explicar qué aporta particionar o añadir recursos y qué debe observarse al ampliar</td>
 </tr>
 </tbody>
 </table>
+<p>Este apartado prepara el razonamiento. Explicar una réplica no demuestra haber probado tolerancia a fallos, ni dibujar shards prueba una ampliación. Las observaciones se recogen en los laboratorios correspondientes. La capacidad tampoco es ilimitada: depende de recursos, costes y políticas de conservación.</p>
 <h2 id="como-justificar-una-eleccion">Cómo justificar una elección<a class="headerlink" href="#como-justificar-una-eleccion" title="Permanent link">&para;</a></h2>
 <p>Utiliza una ficha con <strong>dato → consulta → garantía → modelo → coste</strong>. Por ejemplo: «sesión de usuario → recuperar por identificador → puede caducar → clave-valor → definir expiración y reconstrucción». Para la última plaza de parking, la garantía cambia: hace falta comprobar y descontar de forma atómica. Una respuesta que solo diga «MongoDB porque admite JSON» está incompleta.</p>
 <p>En las prácticas se espera una decisión razonada, no una única combinación de productos. Comprueba que no presentas réplica como aumento de capacidad útil ni una caché como única fuente de reservas confirmadas.</p>
-<h2 id="para-practicar-moodle-manda-la-nota">Para practicar (Moodle manda la nota)<a class="headerlink" href="#para-practicar-moodle-manda-la-nota" title="Permanent link">&para;</a></h2>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Estas actividades pueden resolverse con los ejemplos de la página, sin instalar Redis, Cassandra ni un motor de grafos. Justificad <strong>dato → consulta → garantía → modelo → coste</strong>. Las entregas evaluables se concretan en Moodle.</p>
 <ol>
-<li>¿Qué significa el <em>No</em> de NoSQL? Relación con el relacional (complemento, no sustituto).</li>
-<li>¿Un sistema puede <strong>replicar y particionar</strong> a la vez? Dibujad el hotel: tres <em>shards</em> (comarcas) × dos copias.</li>
-<li>Elegid <strong>familia y por qué</strong>:<ul>
-<li>wiki de fichas de habitación (texto, fotos, campos que aparecen);</li>
-<li>expediente académico de un país (centros, alumnos, notas, muchas relaciones fijas);</li>
-<li>caché de “¿queda habitación doble en Laredo esta noche?”;</li>
-<li>“quién recomendó Potes a quién” para una campaña.</li>
-</ul>
-</li>
-<li>Investigad <strong>persistencia políglota</strong> y aplicadla al grupo hotelero (caja + Mongo + Redis + HDFS).</li>
-<li>Elegid tres productos entre Bigtable, Cassandra, DynamoDB, HBase, MongoDB, Redis, Neo4j, PostgreSQL e InfluxDB. Indicad modelo, versión, topología y una operación concreta. Con documentación oficial, explicad qué ocurre si se parte la red y justificad si la operación prioriza C o A. Si consultáis <a href="https://db-engines.com/en/ranking">DB-Engines</a>, anotad fecha: popularidad no equivale a rendimiento ni a garantía de consistencia.</li>
-<li>(Opcional) 5–6 diapositivas: movimiento <strong>NewSQL</strong> y qué ofrece CockroachDB frente a un relacional clásico.</li>
+<li><strong>Del histórico a recepción.</strong> Comparad sumar noches de todo un CSV con recuperar y modificar una reserva. Explicad por qué MongoDB puede ser una opción para la segunda necesidad y por qué el tamaño no descarta una base relacional.</li>
+<li><strong>Elegir por la pregunta.</strong> Proponed modelo para una wiki de habitaciones, un expediente académico con relaciones y restricciones, una sesión recuperada por identificador y una cadena de recomendaciones. Añadid una alternativa y qué dato os haría cambiar de decisión.</li>
+<li><strong>Ausencia de un campo.</strong> Una reserva antigua no contiene <code>mascota</code>; otra contiene <code>mascota: false</code>. ¿Podemos contarlas como equivalentes? Definid una regla y explicad cómo validaríais <code>noches</code> sin impedir nuevos campos opcionales.</li>
+<li><strong>Replicar y particionar.</strong> Dibujad tres shards con dos copias de datos cada uno. Con 90 GB lógicos repartidos por igual, calculad datos por shard y contenido físico total, sin índices ni sobrecostes. Si cada shard usa exactamente dos miembros votantes y necesita mayoría para elegir primario, ¿puede perder uno y elegirlo? Separad copias de datos y votos.</li>
+<li><strong>La clave concentra la carga.</strong> El 90 % de las reservas pertenece a Laredo. ¿Aplicar hash solo a <code>hotel</code> resuelve el desequilibrio? Comparad con una clave de mayor cardinalidad e indicad qué consultas podrían necesitar reunir resultados.</li>
+<li><strong>Dos significados de columna.</strong> Comparad un Parquet de reservas con la tabla <code>sensores</code> del ejemplo CQL. Identificad formato, motor, clave de partición y consulta prevista. Explicad por qué no se asigna una máquina a cada columna.</li>
+<li><strong>La última plaza.</strong> Dos recepciones pierden comunicación y quieren confirmar la misma plaza. Explicad qué operación debe protegerse y qué implica esperar o rechazar en un lado. Comparad con registrar comentarios para sincronizarlos después. No basta con etiquetar un producto como CP o AP.</li>
+<li><strong>Persistencia políglota.</strong> Proponed cómo combinar caja, documentos, caché e histórico. Indicad qué sistema confirma la reserva, qué copia puede estar atrasada y cómo recuperaríais una caché vacía. Explicad también cuándo simplificaríais a menos sistemas.</li>
+<li><strong>Contrastar documentación — ampliación.</strong> Elegid tres productos entre Bigtable, Cassandra, DynamoDB, HBase, MongoDB, Redis, Neo4j, PostgreSQL e InfluxDB. Indicad versión, topología y operación. Buscad evidencia oficial sobre qué sucede al perder comunicación; si falta información, señaladla sin deducir la garantía del modelo. Un ranking de popularidad no demuestra rendimiento.</li>
+<li><strong>SQL distribuido — ampliación.</strong> Preparad 5–6 diapositivas sobre NewSQL y CockroachDB: qué problema aborda, qué conserva del modelo relacional y qué costes de coordinación introduce frente a una instancia única.</li>
 </ol>
+<details class="success">
+<summary>Orientaciones para revisar las respuestas</summary>
+<p><strong>1–2.</strong> Recorrer un histórico y acceder a una reserva son patrones distintos. Documento, relacional, clave-valor y grafo son candidatos para los cuatro casos, respectivamente; no son respuestas exclusivas. La justificación debe mencionar consultas, restricciones y coste.</p>
+<p><strong>3.</strong> Ausencia puede significar desconocido, no «no». Debe documentarse antes de consultar. Un validador puede exigir un entero positivo en <code>noches</code> y admitir campos opcionales.</p>
+<p><strong>4.</strong> Cada shard contiene 30 GB lógicos; dos copias por shard suman 180 GB físicos de contenido. Con dos votantes, la mayoría es dos: perder uno impide elegir un primario. La mera existencia de una copia no garantiza escrituras disponibles.</p>
+<p><strong>5–6.</strong> El mismo hotel produce el mismo hash; no se divide por ello su carga. Más valores distintos pueden ayudar, con costes de consulta. Parquet es un formato; Cassandra es un motor y la clave ilustrativa combina hotel, habitación y día. Las columnas no equivalen a servidores.</p>
+<p><strong>7–8.</strong> Confirmar una plaza exige proteger comprobación y descuento; una lectura reciente aislada no basta. Mantener una visión única puede dejar operaciones sin disponibilidad durante la partición. Una caché puede reconstruirse desde la fuente definida, pero no debe confirmar una reserva solo porque conserva un dato antiguo.</p>
+<p><strong>9–10.</strong> Las conclusiones deben acompañarse de fuente y condiciones. Las garantías de una operación o configuración no se generalizan a toda una familia.</p>
+</details>
+<h2 id="autoevaluacion-del-25">Autoevaluación del 2.5<a class="headerlink" href="#autoevaluacion-del-25" title="Permanent link">&para;</a></h2>
+<p>Diez preguntas (A–D, <strong>una</strong> correcta). No puntúan en Moodle. <strong>Comprobar respuesta</strong> muestra el resultado y explica el motivo. Revisad el apartado enlazado antes de repetir.</p>
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2-2-5.json"></div>
+
+<p>Antes de pasar a <a href="../mongodb/">2.6 MongoDB</a>, debéis poder explicar por qué elegimos documentos para las consultas de aula y qué no garantiza esa elección. Allí utilizaremos sus propios archivos de reservas y opiniones; más adelante añadiremos modelado, réplicas y acceso desde Python.</p>
 <h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Guy Harrison, <em>Next Generation Databases</em></li>
 <li>Sadalage y Fowler, <em>NoSQL Distilled</em> (<em>polyglot persistence</em>)</li>
 <li><a href="../../ut1/almacenamiento/">1.3 Almacenamiento</a> (ACID, CAP, BASE con la transferencia)</li>
-<li><a href="../mongodb/">2.6 MongoDB</a>, <a href="../modelado/">2.7 Modelado</a>, <a href="../replicas-shards/">2.8 Réplicas y shards</a></li>
+<li>
+<p><a href="../mongodb/">2.6 MongoDB</a>, <a href="../modelado/">2.7 Modelado</a>, <a href="../replicas-shards/">2.8 Réplicas y shards</a></p>
+</li>
+<li>
+<p><a href="https://www.mongodb.com/docs/manual/core/schema-validation/">MongoDB: validación del esquema</a>.</p>
+</li>
+<li><a href="https://www.mongodb.com/docs/manual/core/replica-set-elections/">MongoDB: elección de primario</a> y <a href="https://www.mongodb.com/docs/manual/core/sharding-choose-a-shard-key/">elección de clave de particionado</a>.</li>
+<li><a href="https://redis.io/docs/latest/develop/data-types/">Redis: tipos de datos</a>.</li>
+<li><a href="https://cassandra.apache.org/doc/latest/cassandra/developing/data-modeling/intro.html">Cassandra: modelado orientado a consultas</a>.</li>
+<li><a href="https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/">Neo4j: conceptos del modelo de grafos</a>.</li>
 </ul>
 
 
