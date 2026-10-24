@@ -2908,7 +2908,7 @@
 <tbody>
 <tr>
 <td><code>Launched map tasks</code></td>
-<td>¿Cuántos <em>mappers</em>? ¿Coincide con los <em>splits</em>?</td>
+<td>¿Cuántos <strong>intentos de ejecución</strong> de tareas Map se han lanzado? Comparadlos con las tareas lógicas y los <em>splits</em>: los reintentos o la ejecución especulativa pueden elevar este contador</td>
 </tr>
 <tr>
 <td><code>Data-local map tasks</code></td>
@@ -2932,6 +2932,7 @@
 </tr>
 </tbody>
 </table>
+<p>Una <strong>tarea Map lógica</strong> procesa un <em>split</em>. Un <strong>intento</strong> es una ejecución de esa tarea: si falla, puede lanzarse otro; con ejecución especulativa, también puede lanzarse un intento adicional para una tarea lenta. Por ejemplo, dos <em>splits</em> dan lugar a dos tareas Map; si una necesita un segundo intento, <code>Launched map tasks</code> puede mostrar <strong>3</strong>, aunque sigan siendo <strong>2</strong> tareas lógicas. El contador tampoco indica cuántas se ejecutaron a la vez ni cuántas máquinas participaron.</p>
 <p>Como <strong>ampliación</strong>, en una instalación con History Server configurado, puede iniciarse así. No es un paso del Compose básico:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>mapred --daemon start historyserver
 </span></code></pre></div>
