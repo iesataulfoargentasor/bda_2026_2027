@@ -5,13 +5,13 @@
     {
       "topic": "2.1 Almacén masivo",
       "href": "../por-que-almacenamiento/",
-      "prompt": "El grupo hotelero junta JSON de reservas, fotos y logs de sensores. ¿Qué justifica un almacén masivo (criterio a)?",
+      "prompt": "El histórico crece y el cierre llega tarde. ¿Qué permite justificar una mejora del almacenamiento y del procesamiento?",
       "code": "",
       "options": [
-        "Solo sirve si todos los datos caben en una tabla SQL de 20 columnas.",
-        "Sustituye siempre a la caja (OLTP) para cobrar.",
-        "Necesitamos capacidad, formatos adecuados y procesamiento dentro del plazo, con las garantías de fallo previstas.",
-        "Obliga a decidir el informe de 2027 antes de guardar 2024."
+        "Dimensionar el disco con el tamaño del histórico y deducir de ahí el tiempo del cierre.",
+        "Elegir un clúster por el número de archivos y mantener sin cambios el proceso actual.",
+        "Medir capacidad, tiempos por fase y recuperación ante fallos, usando la carga del hotel.",
+        "Aumentar el número de réplicas para repartir entre ellas todo el cálculo nocturno."
       ],
       "answer": 2,
       "explain": "La elección se justifica midiendo volumen, tiempo y continuidad. Tener terabytes o no poder abrir un CSV en Excel no demuestra por sí solo que sea necesario un clúster."
@@ -19,13 +19,13 @@
     {
       "topic": "2.1 Cálculo al dato",
       "href": "../por-que-almacenamiento/",
-      "prompt": "¿Por qué Hadoop insiste en procesar en el mismo clúster donde está el fichero?",
+      "prompt": "El histórico ya está repartido en HDFS. ¿Qué ventaja puede aportar ejecutar un map cerca de su bloque?",
       "code": "",
       "options": [
-        "Porque el NameNode debe copiar todos los bytes.",
-        "Porque MapReduce no puede leer HDFS.",
-        "Mover petabytes por la red suele ser más caro que enviar el cálculo al nodo que ya tiene el bloque.",
-        "Para obligar a usar RAID en cada worker."
+        "Evitar el shuffle, porque cada nodo ya dispone de todas las claves del cálculo.",
+        "Mantener la recuperación del bloque sin guardar copias en otros DataNodes.",
+        "Reducir la transferencia de entrada, aunque otras fases intercambien datos.",
+        "Reducir el número de registros que exige procesar la consulta del usuario."
       ],
       "answer": 2,
       "explain": "Acercar las tareas a los bloques puede reducir transferencia. No elimina la red del shuffle ni garantiza que cualquier trabajo sea más rápido."
@@ -33,27 +33,27 @@
     {
       "topic": "2.2 Ecosistema",
       "href": "../ecosistema/",
-      "prompt": "Añadís Hive al clúster que ya tiene HDFS y YARN. ¿Qué criterio ilustra sobre todo?",
+      "prompt": "Se incorpora Hive a un entorno Hadoop compatible y se comprueba su funcionamiento. ¿Qué evidencia aporta principalmente?",
       "code": "",
       "options": [
-        "Solo el criterio b: Hive es MapReduce.",
-        "Hive sustituye a HDFS.",
-        "Ya no hace falta tolerancia a fallos.",
-        "El sistema crece añadiendo módulos (e) sin reescribir el núcleo."
+        "Una ampliación de la capacidad física HDFS equivalente a incorporar nuevos DataNodes.",
+        "Una prueba de recuperación del almacenamiento ante la caída del NameNode activo.",
+        "Una medida de aceleración del mismo cálculo al duplicar los recursos de ejecución.",
+        "Una ampliación de funciones de consulta del ecosistema, relacionada con el criterio e)."
       ],
       "answer": 3,
-      "explain": "Hive añade una forma de consultar y organizar el acceso al dato. HDFS continúa almacenando y el motor de ejecución realiza el cálculo: ampliar funciones no exige sustituir todas las piezas."
+      "explain": "Hive incorpora funciones de consulta y metadatos. Integrarlo y comprobarlo es una evidencia de ampliación funcional, distinta de añadir discos, probar una caída o medir rendimiento. Requiere compatibilidad y configuración."
     },
     {
       "topic": "2.2 Núcleo Hadoop",
       "href": "../ecosistema/",
-      "prompt": "¿Qué pieza reparte CPU y RAM entre jobs?",
+      "prompt": "¿Qué componente de Hadoop administra los recursos de ejecución solicitados por las aplicaciones?",
       "code": "",
       "options": [
-        "HDFS.",
-        "YARN.",
-        "ZooKeeper solo.",
-        "Sqoop."
+        "HDFS, mediante sus servicios de bloques y metadatos.",
+        "YARN, mediante sus servicios de gestión y ejecución.",
+        "Hive, mediante sus tablas y su catálogo de consultas.",
+        "ZooKeeper, mediante la coordinación de sus clientes."
       ],
       "answer": 1,
       "explain": "YARN administra recursos mediante ResourceManager, NodeManagers y ApplicationMasters. HDFS almacena bloques; MapReduce define el cálculo."
@@ -61,27 +61,27 @@
     {
       "topic": "2.2 ApplicationMaster",
       "href": "../ecosistema/",
-      "prompt": "¿Qué es cierto del ApplicationMaster?",
+      "prompt": "En YARN, ¿qué responsabilidad corresponde al ApplicationMaster?",
       "code": "",
       "options": [
-        "Hay uno por aplicación, corre en un worker y muere cuando acaba el job.",
-        "Hay uno por clúster y vive siempre, como el ResourceManager.",
-        "Guarda los bloques de HDFS.",
-        "Sustituye al NameNode si este cae."
+        "Coordinar una aplicación, solicitar recursos y seguir el estado de sus tareas.",
+        "Aplicar la política global de recursos para las aplicaciones de todas las colas.",
+        "Supervisar en cada nodo los contenedores de las distintas aplicaciones admitidas.",
+        "Mantener el historial consultable de los trabajos MapReduce que ya han terminado."
       ],
       "answer": 0,
-      "explain": "Cada aplicación tiene su ApplicationMaster, que coordina sus tareas. El ResourceManager administra recursos del conjunto y no termina cuando acaba un único job."
+      "explain": "El ApplicationMaster coordina una aplicación y solicita recursos. La política global corresponde al ResourceManager; el NodeManager supervisa ejecución en su nodo. Un AM no equivale al servicio de historial de trabajos terminados."
     },
     {
       "topic": "2.2 Carpeta de salida",
       "href": "../ecosistema/",
-      "prompt": "Lanzas un wordcount y la carpeta /user/bda/salida_wc ya existe. ¿Qué ocurre?",
+      "prompt": "El wordcount de la práctica usa FileOutputFormat y su ruta de salida ya existe. ¿Qué comportamiento se espera?",
       "code": "",
       "options": [
-        "Hadoop pisa el resultado anterior sin avisar.",
-        "El job rechaza una salida existente: usa una ruta nueva o elimina solo la salida que hayas decidido descartar.",
-        "Se crea salida_wc_2 automáticamente.",
-        "Solo falla si falta el _SUCCESS."
+        "Añade sus partes al directorio, manteniendo los resultados anteriores.",
+        "Rechaza esa ruta; se puede repetir el trabajo en un directorio nuevo.",
+        "Reemplaza los archivos de la salida cuando el nuevo trabajo termina.",
+        "Retoma el trabajo desde los archivos part-* que encuentra en la salida."
       ],
       "answer": 1,
       "explain": "Conservar las salidas con nombres distintos permite comparar ejecuciones. No es obligatorio borrar el resultado anterior para volver a ejecutar el cálculo."
@@ -89,13 +89,13 @@
     {
       "topic": "2.2 Hadoop Streaming",
       "href": "../ecosistema/",
-      "prompt": "¿Qué exige Hadoop Streaming de un mapper en Python?",
+      "prompt": "¿Cómo intercambia registros un mapper Python de Hadoop Streaming con el framework?",
       "code": "",
       "options": [
-        "Que implemente la clase Java Mapper.",
-        "Que abra un socket al NameNode.",
-        "Que lea stdin y escriba stdout (tubería Unix); Hadoop reparte el crudo y el shuffle.",
-        "Que cargue todo el lago en un dict antes de emitir."
+        "Lee stdin y mezcla en stdout los pares con las trazas de cada registro.",
+        "Recibe en stdin los totales por clave ya reunidos por todos los reducers.",
+        "Leer registros de stdin, emitir pares clave-valor por stdout y enviar las trazas a stderr.",
+        "Escribe los pares en archivos locales para que el NameNode los agrupe."
       ],
       "answer": 2,
       "explain": "El mapper lee stdin y emite pares por stdout; los diagnósticos van a stderr. Hadoop realiza shuffle y ordenación. Streaming aquí es una interfaz de un trabajo por lotes, no un flujo continuo de eventos."
@@ -103,13 +103,13 @@
     {
       "topic": "2.3 Bloques HDFS",
       "href": "../hdfs/",
-      "prompt": "Un fichero de 600 MiB en HDFS con bloques de 128 MiB y replicación 3, con suficientes DataNodes. ¿Qué es correcto?",
+      "prompt": "Un archivo de 600 MiB usa bloques de 128 MiB y tiene tres copias efectivas de cada bloque. Sin sobrecostes, ¿qué representa?",
       "code": "",
       "options": [
-        "Ocupa un solo bloque de 600 MiB en un disco.",
-        "El NameNode guarda los 600 MiB.",
-        "Se divide en cinco bloques lógicos y se solicitan tres copias de cada bloque.",
-        "Un fichero de 1 MB obliga a reservar 128 MiB reales en disco."
+        "Cinco bloques lógicos y 1.920 MiB, al reservar completo el último bloque.",
+        "Quince bloques lógicos y 600 MiB físicos, al repartir el archivo entre copias.",
+        "Cinco bloques lógicos, quince copias de bloque y 1.800 MiB de contenido entre las copias.",
+        "Cuatro bloques lógicos y 1.800 MiB, al incluir los 88 MiB finales en el cuarto."
       ],
       "answer": 2,
       "explain": "600 MiB = 4 × 128 MiB + 88 MiB. Con tres réplicas hay 15 copias de bloque y unos 1800 MiB de contenido físico; el último bloque no necesita llenarse hasta 128 MiB."
@@ -117,13 +117,13 @@
     {
       "topic": "2.3 NameNode",
       "href": "../hdfs/",
-      "prompt": "En una lectura, los bytes del Parquet de reservas…",
+      "prompt": "Durante una lectura normal de HDFS, ¿qué recorrido sigue el contenido del archivo?",
       "code": "",
       "options": [
-        "Pasan siempre por el NameNode.",
-        "Solo los sirve el Secondary NameNode.",
-        "Los lee el cliente desde los DataNodes que el NameNode indicó.",
-        "No se pueden replicar."
+        "Los DataNodes lo envían al NameNode, que lo reúne y lo devuelve al cliente.",
+        "El cliente lo obtiene del NameNode, que conserva una copia del contenido.",
+        "Los DataNodes lo sirven al cliente, que obtuvo las ubicaciones del NameNode.",
+        "El cliente lo obtiene del Secondary, que mantiene la última imagen del archivo."
       ],
       "answer": 2,
       "explain": "El NameNode proporciona ubicaciones y metadatos. El cliente obtiene los bytes directamente de DataNodes y puede recurrir a otra copia sana si falla una lectura."
@@ -131,27 +131,27 @@
     {
       "topic": "2.3 Tolerancia HDFS",
       "href": "../hdfs/",
-      "prompt": "Falla un DataNode, pero quedan réplicas sanas del bloque en otros nodos. ¿Qué se espera de HDFS?",
+      "prompt": "Falla un DataNode. Hay copias sanas accesibles de todos los bloques y funcionan los servicios necesarios. ¿Qué se espera?",
       "code": "",
       "options": [
-        "Lee las réplicas sanas y trata de restablecer el número de copias cuando dispone de destinos y espacio.",
-        "Se pierde el fichero entero.",
-        "Hay que restaurar desde cinta siempre.",
-        "El Secondary NameNode entrega los bytes."
+        "Leer las copias sanas y recuperar el factor de réplica cuando haya destinos con espacio.",
+        "Esperar al DataNode original, porque sus bloques conservan la prioridad de lectura.",
+        "Reconstruir los bytes desde los checksums, sin utilizar las copias de otros nodos.",
+        "Consultar la imagen de metadatos para recuperar desde ella el contenido perdido."
       ],
       "answer": 0,
-      "explain": "La recuperación requiere copias accesibles. Con un único DataNode y factor 1 no existe otra réplica de la que leer; detenerlo deja los datos inaccesibles."
+      "explain": "Las copias accesibles permiten continuar la lectura; restablecer la redundancia requiere fuentes sanas, destinos y espacio. Los checksums detectan corrupción, pero no contienen el archivo. Con un único DataNode no existe otra copia disponible."
     },
     {
       "topic": "2.3 Esquema al leer",
       "href": "../hdfs/",
-      "prompt": "Dejáis JSON bruto de 2024 en HDFS y en 2026 Spark lee solo hotel e importe. ¿Qué criterio?",
+      "prompt": "Se conservó JSON original con metadatos y después se reutiliza para un informe nuevo. ¿Qué aspecto del RA2 ilustra?",
       "code": "",
       "options": [
-        "d): almacenar ahora y decidir el uso después (esquema al leer).",
-        "Obliga a migrar el JSON el día 1.",
-        "Prohibido: HDFS solo admite tablas SQL.",
-        "Solo el criterio b."
+        "El uso posterior de datos conservados con metadatos, relacionado con el criterio d).",
+        "La continuidad de las consultas ante una caída, relacionada con el criterio c).",
+        "La ampliación física de recursos del sistema, relacionada con el criterio e).",
+        "La aceleración medida de un cálculo repartido, relacionada con el criterio b)."
       ],
       "answer": 0,
       "explain": "Se conserva el dato original y se aplica una interpretación posterior. Para reutilizarlo hacen falta metadatos y capacidad: el criterio no significa almacenamiento infinito ni ausencia de organización."
@@ -159,13 +159,13 @@
     {
       "topic": "2.3 Secondary NameNode",
       "href": "../hdfs/",
-      "prompt": "¿Qué oficio tiene el Secondary NameNode?",
+      "prompt": "¿Qué tarea realiza el Secondary NameNode en una configuración que lo utiliza?",
       "code": "",
       "options": [
-        "Es el NameNode de reserva: si el maestro cae, toma el relevo solo.",
-        "Guarda los bloques de 128 MiB.",
-        "Sustituye a YARN cuando no hay ResourceManager.",
-        "Compacta fsimage y edits (checkpoints). No es el standby de HA."
+        "Asumir el cargo de NameNode activo cuando deja de recibir sus comunicaciones.",
+        "Conservar copias adicionales del contenido de los bloques que sirven los DataNodes.",
+        "Repartir los bloques existentes entre discos para equilibrar el espacio utilizado.",
+        "Consolidar la imagen y el diario de metadatos mediante checkpoints periódicos."
       ],
       "answer": 3,
       "explain": "El Secondary NameNode realiza checkpoints de metadatos. No asume automáticamente el papel del NameNode activo; la alta disponibilidad necesita una configuración diferente."
@@ -173,13 +173,13 @@
     {
       "topic": "2.3 Escritura HDFS",
       "href": "../hdfs/",
-      "prompt": "Al escribir con réplica 3, los bytes…",
+      "prompt": "En una escritura HDFS con tres réplicas, ¿cómo se transmite normalmente el contenido?",
       "code": "",
       "options": [
-        "Pasan tres veces por el NameNode.",
-        "Van en tubería: el cliente al primer DataNode y ese reenvía al segundo y al tercero.",
-        "Solo se guardan en el Secondary.",
-        "Obligan a RAID-5 en cada worker."
+        "El cliente envía al NameNode y este distribuye el contenido entre los tres nodos.",
+        "El cliente envía paquetes al primer DataNode, que los reenvía por la cadena de réplicas.",
+        "El cliente escribe tres archivos distintos y el NameNode los fusiona al finalizar.",
+        "El cliente espera al checkpoint para que los otros nodos reciban la nueva imagen."
       ],
       "answer": 1,
       "explain": "El cliente envía paquetes al primer DataNode y se encadenan las réplicas y sus confirmaciones. El NameNode decide destinos y mantiene metadatos; no transporta el contenido completo."
@@ -187,13 +187,13 @@
     {
       "topic": "2.3 Localidad",
       "href": "../hdfs/",
-      "prompt": "YARN coloca un map en el mismo nodo que el bloque. ¿Qué nivel de localidad es?",
+      "prompt": "Un map lee su bloque de entrada en la misma máquina donde se ejecuta. ¿Qué describe NODE_LOCAL?",
       "code": "",
       "options": [
-        "NODE_LOCAL (óptimo: no cruza la red del rack).",
-        "OFF_SWITCH.",
-        "Solo existe RACK_LOCAL.",
-        "El NameNode mueve el bloque al portátil."
+        "Entrada local, con posible tráfico de red en el shuffle del mismo trabajo.",
+        "Entrada desde otro nodo del rack, con transferencia local entre sus discos.",
+        "Entrada local, con las claves de todos los nodos ya reunidas para el reducer.",
+        "Entrada desde una réplica remota, elegida por tener una cola de tareas menor."
       ],
       "answer": 0,
       "explain": "NODE_LOCAL evita transferir la entrada desde otra máquina. No significa que el job no use red: el shuffle puede seguir intercambiando datos entre nodos."
@@ -201,27 +201,27 @@
     {
       "topic": "2.4 MapReduce",
       "href": "../computacion-distribuida/",
-      "prompt": "Contar noches por hotel sobre ficheros en HDFS. ¿Qué hace el Map?",
+      "prompt": "Para sumar noches reservadas por hotel, ¿qué par debe emitir el mapper por cada reserva?",
       "code": "",
       "options": [
-        "En cada trozo emite pares hotel → noches; luego el Reduce agrega por hotel.",
-        "Suma ya el total global en el NameNode.",
-        "Borra los bloques para ahorrar disco.",
-        "Solo funciona con el Quijote."
+        "Hotel como clave y noches como valor, para sumar por hotel en Reduce.",
+        "Hotel como clave y uno como valor, para sumar por hotel en Reduce.",
+        "Canal como clave y noches como valor, para sumar por canal en Reduce.",
+        "Hotel como clave e importe como valor, para sumar por hotel en Reduce."
       ],
       "answer": 0,
-      "explain": "Map transforma registros en pares hotel/noches. Shuffle reúne las mismas claves; Reduce suma. La división inicial corresponde al formato de entrada y sus splits, no a la función map por sí sola."
+      "explain": "Hotel/noches responde a la pregunta. Hotel/1 contaría reservas; canal/noches cambiaría el grupo e importe mediría otra magnitud. Shuffle reúne claves y Reduce suma; el formato de entrada determina los splits."
     },
     {
       "topic": "2.4 YARN",
       "href": "../computacion-distribuida/",
-      "prompt": "¿Qué es un contenedor YARN?",
+      "prompt": "¿Qué representa un contenedor YARN para una aplicación?",
       "code": "",
       "options": [
-        "Un trozo de CPU y RAM donde corre una tarea; al terminar se libera.",
-        "Un DataNode entero.",
-        "El NameNode.",
-        "Un fichero de 128 MiB."
+        "Una asignación de recursos en un nodo para ejecutar un proceso de la aplicación.",
+        "Una imagen Docker nueva que Compose crea para cada tarea del cálculo solicitado.",
+        "Un bloque HDFS que reserva espacio en disco para los datos de la tarea asignada.",
+        "Una máquina dedicada que reúne los recursos de todos los workers disponibles."
       ],
       "answer": 0,
       "explain": "Es una asignación de recursos administrada por YARN, distinta de un contenedor Docker. Más recursos solo ayudan si hay tareas paralelizables y no domina otro cuello de botella."
@@ -229,13 +229,13 @@
     {
       "topic": "2.5 NoSQL",
       "href": "../nosql/",
-      "prompt": "¿Qué significa NoSQL en la unidad?",
+      "prompt": "¿Cómo se interpreta NoSQL en esta unidad?",
       "code": "",
       "options": [
-        "Prohibido usar SQL nunca.",
-        "Solo grafos.",
-        "Lo mismo que HDFS.",
-        "Not only SQL: familias que complementan al relacional (escala, variedad)."
+        "Un conjunto de motores cuya elección asegura reparto entre varias máquinas.",
+        "Una capa que transforma archivos HDFS en consultas sin diseñar su organización.",
+        "Un modelo documental común que cambia de nombre según el producto utilizado.",
+        "Un conjunto de modelos no relacionales que se valoran según acceso y garantías."
       ],
       "answer": 3,
       "explain": "NoSQL agrupa modelos no relacionales. No implica ausencia de transacciones ni de validación, y SQL también puede distribuirse. Elegimos según acceso y garantías."
@@ -243,27 +243,27 @@
     {
       "topic": "2.5 Familias",
       "href": "../nosql/",
-      "prompt": "Caché de disponibilidad por id de habitación. ¿Familia más natural?",
+      "prompt": "Una caché recupera una ficha completa mediante un identificador conocido, sin recorrer relaciones. ¿Qué modelo describe ese acceso?",
       "code": "",
       "options": [
-        "Clave-valor.",
-        "Grafo.",
-        "Solo HDFS sin índice.",
-        "Documento con 16 MiB de fotos embebidas."
+        "Clave-valor: usar el identificador para recuperar el valor asociado.",
+        "Grafo: usar el identificador para recorrer conexiones entre entidades.",
+        "Documental: recuperar la ficha buscando combinaciones de sus atributos.",
+        "Wide-column: recuperar series mediante una clave y rangos ordenados."
       ],
       "answer": 0,
-      "explain": "Una clave conocida permite recuperar directamente el valor de la caché. Hay que definir caducidad y qué hacer si falta: la caché no confirma por sí sola una reserva de la última habitación."
+      "explain": "El acceso descrito es clave→valor. Otros motores pueden implementarlo, pero aquí identificamos el patrón, no una herramienta obligatoria. Hay que definir caducidad y qué hacer si la caché falta o está atrasada; consultarla no confirma una reserva."
     },
     {
       "topic": "2.5 Réplica vs shard",
       "href": "../nosql/",
-      "prompt": "¿Qué distingue replicar de particionar?",
+      "prompt": "¿Qué diferencia describe replicación y particionado?",
       "code": "",
       "options": [
-        "Son sinónimos.",
-        "Particionar solo existe en SQL.",
-        "Replicar copia el mismo dato; particionar parte el conjunto entre nodos.",
-        "Replicar impide la tolerancia a fallos."
+        "Replicar reparte partes diferentes; particionar mantiene una copia completa por nodo.",
+        "Replicar divide las escrituras por clave; particionar guarda versiones históricas.",
+        "Replicar mantiene copias del mismo contenido; particionar reparte partes distintas.",
+        "Replicar añade capacidad lógica útil; particionar añade confirmaciones de escritura."
       ],
       "answer": 2,
       "explain": "Las réplicas repiten contenido para tolerar ciertos fallos; las particiones distribuyen contenido diferente para ampliar capacidad y carga. Pueden combinarse replicando cada shard."
@@ -271,55 +271,55 @@
     {
       "topic": "2.5 Auto-sharding",
       "href": "../nosql/",
-      "prompt": "¿Qué implica el auto-sharding en NoSQL?",
+      "prompt": "En un motor con sharding configurado, ¿qué automatiza la gestión de las particiones?",
       "code": "",
       "options": [
-        "La aplicación reparte a mano cada INSERT entre servidores.",
-        "El motor gestiona distribución y enrutamiento una vez configurada una clave adecuada.",
-        "Solo existe en PostgreSQL de un solo servidor.",
-        "Prohibido usar hash: solo se parte por rango."
+        "La elección de una clave óptima a partir de las primeras consultas recibidas.",
+        "La distribución y el enrutamiento según la clave y las reglas configuradas.",
+        "La división de una misma clave dominante entre nodos al aumentar su carga.",
+        "La incorporación de servidores físicos cuando los actuales agotan su disco."
       ],
       "answer": 1,
-      "explain": "La automatización no elimina el diseño de la clave ni la supervisión del balanceo. Una clave poco diversa puede concentrar la carga aunque haya muchos servidores."
+      "explain": "El motor puede gestionar reparto, balanceo y enrutamiento dentro de la configuración. No compra recursos ni garantiza una clave adecuada. Deben supervisarse distribución, capacidad y carga; las prestaciones dependen del sistema concreto."
     },
     {
       "topic": "2.5 CAP",
       "href": "../nosql/",
-      "prompt": "Se corta la red entre Laredo y Potes. Un sistema AP…",
+      "prompt": "Durante una partición de red, un diseño AP mantiene la disponibilidad de las operaciones previstas. ¿Qué garantía no puede asegurar a la vez?",
       "code": "",
       "options": [
-        "Prefiere no responder a enseñar un dato atrasado.",
-        "Garantiza las tres letras de CAP a la vez.",
-        "Deja de ser NoSQL.",
-        "Mantiene disponibles las operaciones previstas, aunque puede devolver versiones divergentes entre ambos lados."
+        "La validez de los tipos exigidos por cada nodo para aceptar una escritura.",
+        "La persistencia local que proporcione el almacenamiento de cada miembro.",
+        "La posibilidad de intercambiar cambios cuando la comunicación se recupere.",
+        "La linealizabilidad de las operaciones afectadas en ambos lados de la partición de red."
       ],
       "answer": 3,
-      "explain": "Durante una partición no puede garantizar a la vez disponibilidad CAP y una visión linealizable. La convergencia eventual requiere además reglas de resolución y que puedan propagarse los cambios; AP por sí solo no especifica ese mecanismo."
+      "explain": "CAP contrapone disponibilidad y linealizabilidad durante una partición. No es una oposición entre disponibilidad y validación o persistencia. AP no define por sí solo cómo se resuelven conflictos ni garantiza convergencia sin un mecanismo adicional."
     },
     {
       "topic": "2.5 Columnas",
       "href": "../nosql/",
-      "prompt": "Lecturas de temperatura por habitación (clave hab:214; la 108 no trae humedad). ¿Qué familia encaja, y qué no es?",
+      "prompt": "¿Qué diferencia hay entre un motor wide-column como Cassandra y Parquet?",
       "code": "",
       "options": [
-        "Grafo (Neo4j) para cada medida.",
-        "Wide-column (HBase/Cassandra): fila con familias de columnas. No es un fichero Parquet.",
-        "Clave-valor opaco sin poder pedir temp_c.",
-        "Solo ACID en una tabla de 8 columnas fijas."
+        "Cassandra define archivos columnares; Parquet coordina consultas y particiones entre nodos.",
+        "Cassandra organiza tablas y accesos por claves; Parquet define un formato de archivo.",
+        "Ambos describen el mismo formato, con nombres distintos para escritura y lectura.",
+        "Ambos proporcionan un motor de consultas, pero Parquet mantiene un catálogo local."
       ],
       "answer": 1,
-      "explain": "Wide-column organiza accesos mediante claves de fila o partición y columnas. Parquet es un formato columnar orientado a lectura analítica. Compartir la palabra «columna» no implica el mismo modelo físico ni las mismas consultas."
+      "explain": "Cassandra es un motor con claves de partición, esquema y consultas propias. Parquet es un formato columnar, no un servidor. No debe deducirse que HBase y Cassandra tienen exactamente las mismas reglas de columnas o esquema."
     },
     {
       "topic": "2.6 MongoDB",
       "href": "../mongodb/",
-      "prompt": "Dos documentos de la colección reservas no tienen las mismas claves. ¿Es válido?",
+      "prompt": "Dos documentos de reservas tienen campos opcionales diferentes. ¿Qué permite decidir si son válidos para la aplicación?",
       "code": "",
       "options": [
-        "No: Mongo exige el mismo esquema que SQL.",
-        "Solo si usas HBase.",
-        "Solo en el NameNode.",
-        "Sí, siempre que respeten las reglas del validador y el contrato de la aplicación."
+        "Comprobar que tienen el mismo número de campos, aunque sus tipos difieran.",
+        "Comprobar que se insertaron en la misma colección y recibieron un identificador.",
+        "Comprobar que ambos se pueden convertir a JSON, sin examinar su significado.",
+        "Comprobar que cumplen el validador configurado y el contrato de los lectores."
       ],
       "answer": 3,
       "explain": "Flexibilidad no significa ausencia de reglas. Un campo nuevo puede ser opcional; cambiar el tipo de hotel de cadena a objeto sí exige adaptar los lectores."
@@ -327,13 +327,13 @@
     {
       "topic": "2.6 Consultas",
       "href": "../mongodb/",
-      "prompt": "¿Qué hace find() de entrada?",
+      "prompt": "En mongosh, ¿qué devuelve find() frente a findOne()?",
       "code": "",
       "options": [
-        "Carga toda la colección en RAM.",
-        "Ejecuta MapReduce en YARN.",
-        "Borra la colección.",
-        "Devuelve un cursor (vas pidiendo documentos)."
+        "find devuelve una lista completa; findOne devuelve un cursor limitado.",
+        "find devuelve el recuento de coincidencias; findOne devuelve la primera.",
+        "find devuelve documentos y modifica su proyección en la colección.",
+        "find devuelve un cursor de documentos; findOne devuelve un documento coincidente o null."
       ],
       "answer": 3,
       "explain": "El cursor obtiene resultados por lotes. Convertirlo entero a una lista o JSON puede cargarlo todo en memoria. findOne devuelve un documento o null, no un cursor."
@@ -341,41 +341,41 @@
     {
       "topic": "2.6 ObjectId",
       "href": "../mongodb/",
-      "prompt": "Al insertar desde mongosh o un driver habitual sin especificar _id, ¿qué ocurre?",
+      "prompt": "Se inserta una reserva con mongosh o PyMongo sin aportar _id. ¿Qué ocurre habitualmente?",
       "code": "",
       "options": [
-        "El NameNode de HDFS.",
-        "Compass obligatorio.",
-        "Normalmente el driver o el shell; ObjectId ocupa 12 bytes e incluye tiempo, un valor aleatorio y un contador.",
-        "Siempre es un entero autoincremental de SQL."
+        "El servidor asigna el siguiente entero de una secuencia de la colección.",
+        "El cliente calcula el identificador a partir del contenido para deduplicarlo.",
+        "El shell o driver genera un ObjectId y lo incorpora como _id del documento que se inserta.",
+        "El servidor toma la fecha de la reserva como identificador único de negocio."
       ],
       "answer": 2,
-      "explain": "El identificador es generado habitualmente en el cliente. Incluye 4 bytes temporales, 5 aleatorios y 3 de contador. No es un número de reserva ni garantiza orden cronológico exacto entre clientes."
+      "explain": "El shell o driver suele generar un ObjectId de 12 bytes: tiempo, valor aleatorio y contador. No deduplica por contenido ni sustituye un identificador de negocio. Otros tipos de _id son posibles; el orden de ObjectId no garantiza cronología exacta entre clientes."
     },
     {
       "topic": "2.6 Upsert",
       "href": "../mongodb/",
-      "prompt": "updateOne con filtro que no encuentra nada y { upsert: true }…",
-      "code": "",
+      "prompt": "No existe _id=\"prueba-01\". Sin conflictos de validación, ¿qué hace la actualización mostrada?",
+      "code": "db.reservas.updateOne(\n  {_id: \"prueba-01\"},\n  {$set: {hotel: \"Laredo\", noches: 2}},\n  {upsert: true}\n)",
       "options": [
-        "No hace nada nunca.",
-        "Inserta un documento nuevo con los $set (update + insert).",
-        "Borra la colección.",
-        "Sustituye siempre a replaceOne."
+        "Devuelve cero coincidencias y deja la colección sin ningún cambio.",
+        "Inserta con ese _id un documento nuevo con los campos hotel y noches.",
+        "Espera a que otra operación cree ese identificador para aplicar $set.",
+        "Actualiza otra reserva de Laredo aunque no tenga el _id del filtro."
       ],
       "answer": 1,
-      "explain": "Con upsert se inserta si no hay coincidencia, a partir del filtro compatible y de la actualización. Sin upsert, encontrar cero documentos no inserta nada ni provoca necesariamente una excepción."
+      "explain": "upsert permite insertar cuando no hay coincidencia. En este ejemplo se combinan la igualdad del filtro y los campos de $set. Sin upsert, cero coincidencias no inserta. El resultado sigue sujeto a validación e índices únicos."
     },
     {
       "topic": "2.6 Arrays",
       "href": "../mongodb/",
-      "prompt": "Queréis un comentario que sea a la vez de Luis y de un email concreto. ¿Operador?",
+      "prompt": "Una opinión contiene varios comentarios. ¿Qué filtro exige autor Luis y su correo concreto en el mismo comentario?",
       "code": "",
       "options": [
-        "Dos veces comentarios.autor en el mismo objeto basta siempre.",
-        "$elemMatch: las dos condiciones en el MISMO elemento del array.",
-        "$text obligatorio.",
-        "Solo $size."
+        "Dos condiciones independientes sobre comentarios.autor y comentarios.email.",
+        "Un $elemMatch sobre comentarios, con autor y correo juntos dentro de esa condición.",
+        "Un $or que combine autor Luis con el correo indicado en el enunciado.",
+        "$elemMatch para autor Luis y otra condición independiente para el correo."
       ],
       "answer": 1,
       "explain": "En el filtro, $elemMatch exige que el mismo elemento cumpla ambas condiciones. En una proyección tiene otra función: devuelve solo el primer elemento coincidente."
@@ -383,13 +383,13 @@
     {
       "topic": "2.7 Modelado",
       "href": "../modelado/",
-      "prompt": "Un hotel cambia el teléfono y hay 40 000 reservas. ¿Qué modelado evita el desastre?",
+      "prompt": "Debe mostrarse el teléfono actual de un hotel desde 40.000 reservas. ¿Qué diseño evita actualizar una copia en cada reserva?",
       "code": "",
       "options": [
-        "Embeber el teléfono completo en cada reserva.",
-        "Un grafo obligatorio.",
-        "Referenciar id_hotel y guardar el teléfono en la colección hoteles.",
-        "Prohibir el cambio."
+        "Copiar el teléfono actual dentro de cada reserva y actualizarlo al leerla.",
+        "Guardar una copia del teléfono por año y seleccionar la del año de la reserva.",
+        "Referenciar el hotel y mantener su teléfono actual en la colección hoteles.",
+        "Usar el teléfono como referencia del hotel y cambiarla en las reservas afectadas."
       ],
       "answer": 2,
       "explain": "El teléfono actual es compartido y cambia: mantenerlo en hoteles evita sincronizar miles de copias. Un precio histórico, en cambio, puede necesitar conservarse en la reserva."
@@ -397,27 +397,27 @@
     {
       "topic": "2.7 Embeber",
       "href": "../modelado/",
-      "prompt": "Huéspedes (1–4) de una reserva. Suele convenir…",
+      "prompt": "Los 1–4 huéspedes de una reserva se leen juntos, no son perfiles compartidos y su crecimiento está acotado. ¿Qué favorece ese acceso?",
       "code": "",
       "options": [
-        "Un shard por huésped.",
-        "Un array embebido: se leen siempre juntos.",
-        "HDFS bloques de 128 MiB por huésped.",
-        "Un JobTracker."
+        "Una colección por huésped, localizada mediante el nombre de su colección.",
+        "Un array embebido dentro de la reserva, que se consulta junto con su información.",
+        "Un array de huéspedes en el hotel que reúna las estancias de todo el histórico.",
+        "Una referencia por huésped cuyo contenido se reconstruya en cada consulta."
       ],
       "answer": 1,
-      "explain": "El número acotado y la lectura conjunta favorecen embeber. No basta con ver 1:N: un historial sin límite de eventos debería separarse o agruparse en buckets acotados."
+      "explain": "El crecimiento acotado y la lectura conjunta favorecen embeber aquí. Referenciar puede ser válido con otras necesidades, por ejemplo un perfil compartido. Ni una relación 1:N ni ser un documento impone un modelo en todos los casos."
     },
     {
       "topic": "2.7 Cubo",
       "href": "../modelado/",
-      "prompt": "Un sensor de habitación envía temperatura cada minuto. ¿Qué modelado evita un documento por cada minuto?",
+      "prompt": "Queremos agrupar temperaturas por sensor y hora, conservando el histórico sin crear un documento ilimitado. ¿Qué diseño encaja?",
       "code": "",
       "options": [
-        "Un cubo: un documento por hora con medidas[] y un resumen (suma/media).",
-        "Un array infinito en el documento del hotel.",
-        "Obligar 3FN y un join por medida.",
-        "Guardar cada medida en HDFS NameNode."
+        "Buckets acotados por sensor y hora, con medidas, su suma y el número de lecturas.",
+        "Un bucket por sensor que añada las lecturas mientras el dispositivo siga activo.",
+        "Un bucket por hora que conserve la suma y divida por 60 aunque falten lecturas.",
+        "Un bucket por sensor que sustituya la hora anterior sin conservar sus medidas."
       ],
       "answer": 0,
       "explain": "El bucket agrupa un intervalo acotado. Para la media guardamos suma y número real de medidas; si faltan lecturas, dividir siempre por 60 sería incorrecto. Debe contemplar datos tardíos."
@@ -425,13 +425,13 @@
     {
       "topic": "2.7 Versión de esquema",
       "href": "../modelado/",
-      "prompt": "En 2024 el teléfono iba plano; en 2026 va dentro de hotel:{}. ¿Qué patrón permite leer ambos?",
+      "prompt": "Coexisten reservas antiguas con teléfono plano y nuevas con teléfono anidado. ¿Qué permite leer ambas estructuras?",
       "code": "",
       "options": [
-        "Borrar las reservas de 2024.",
-        "DBRef obligatorio.",
-        "Un shard por año sin más.",
-        "Un campo v (o esquema) y la app interpreta según la versión."
+        "Un cambio de v en todos los documentos sin transformar el contenido guardado.",
+        "Un índice sobre v para que MongoDB traduzca los campos durante la consulta.",
+        "Una colección por año que permita usar el mismo acceso a campos en todas.",
+        "Una versión definida y lectores que interpreten la estructura de esa versión."
       ],
       "answer": 3,
       "explain": "El campo de versión solo ayuda si la aplicación sabe interpretar cada estructura. Primero se despliegan lectores compatibles y después las nuevas escrituras; cambiar v sin cambiar el contenido no es una migración."
@@ -439,27 +439,27 @@
     {
       "topic": "2.7 Logs",
       "href": "../modelado/",
-      "prompt": "Millones de aperturas de puerta por habitación. ¿Dónde va el array?",
+      "prompt": "Se conservan millones de aperturas de puerta por habitación y se consultan por fecha. ¿Qué evita el crecimiento ilimitado del documento habitación?",
       "code": "",
       "options": [
-        "Dentro de habitaciones: un array de millones de eventos.",
-        "Solo en el Secondary NameNode.",
-        "Un documento de 16 MiB por evento.",
-        "Cada evento referencia a la habitación (muchos→uno); la habitación no guarda el histórico."
+        "Un array de eventos en la habitación con un índice sobre la fecha de cada entrada.",
+        "Un array de eventos por hotel que reúna las aperturas de todas sus habitaciones.",
+        "Un array dentro de la habitación que se ordene y compacte después de cada alta.",
+        "Eventos separados con referencia inequívoca a hotel y habitación, e instante de apertura."
       ],
       "answer": 3,
-      "explain": "El histórico ilimitado no debe hacer crecer indefinidamente el documento habitación. Cada evento necesita una referencia inequívoca, por ejemplo hotel y habitación, además de la fecha."
+      "explain": "Separar eventos evita que el documento habitación crezca sin límite. La referencia debe identificar hotel y habitación, además de la fecha. Buckets acotados también pueden servir; un índice u ordenar un array no limita por sí solo su crecimiento."
     },
     {
       "topic": "2.8 Réplicas",
       "href": "../replicas-shards/",
-      "prompt": "Cae el primario de un replica set de tres nodos. ¿Qué se espera?",
+      "prompt": "Cae el primario de un set de tres votantes con datos. Los otros dos se comunican y hay un candidato elegible y actualizado. ¿Qué se espera?",
       "code": "",
       "options": [
-        "Se pierde la base.",
-        "Solo el árbitro guarda los documentos.",
-        "HDFS toma el relevo automático.",
-        "Los restantes eligen un primario nuevo si hay mayoría (tolerancia a fallos)."
+        "Que ambos secundarios acepten escrituras independientes hasta que vuelva el anterior.",
+        "Que se necesite el voto del miembro caído para confirmar cualquier nuevo primario.",
+        "Que uno empiece a escribir por prioridad sin coordinar la elección con el otro.",
+        "Una elección de primario, con una posible pausa mientras se completa el relevo."
       ],
       "answer": 3,
       "explain": "Con tres votantes, dos comunicados pueden mantener mayoría si hay candidato elegible. Durante la elección puede haber una pausa. Tres contenedores en el mismo PC no protegen contra la caída del PC."
@@ -467,13 +467,13 @@
     {
       "topic": "2.8 Shards",
       "href": "../replicas-shards/",
-      "prompt": "Añadís un shard y el equilibrador mueve chunks. ¿Qué criterio se ve?",
+      "prompt": "Se añade un shard y se verifica que recibe rangos conservando los documentos. ¿Qué conclusión está respaldada?",
       "code": "",
       "options": [
-        "Solo el criterio a de la UT1.",
-        "Prohibido: Mongo no escala en horizontal.",
-        "Hay que reescribir todos los _id.",
-        "El sistema crece añadiendo módulos/nodos (e) sin cambiar la app que habla con mongos."
+        "Se ha duplicado la capacidad lógica útil, con independencia del tamaño de los nodos.",
+        "Se ha probado que cualquier consulta por hotel visita ahora un único shard.",
+        "Se ha eliminado la necesidad de réplicas al existir dos destinos para los rangos.",
+        "Se ha observado ampliación y reparto; el efecto en rendimiento requiere medirse."
       ],
       "answer": 3,
       "explain": "Añadir un shard amplía recursos de almacenamiento y ejecución. El balanceo tarda y debe comprobarse; no demuestra por sí solo que una consulta concreta haya acelerado."
@@ -481,55 +481,55 @@
     {
       "topic": "2.8 Oplog",
       "href": "../replicas-shards/",
-      "prompt": "¿Qué es el oplog de un replica set?",
+      "prompt": "¿Qué función cumple local.oplog.rs en un replica set?",
       "code": "",
       "options": [
-        "El diario capped (local.oplog.rs) que los secundarios copian en asíncrono.",
-        "Un dump nocturno que hace el NameNode.",
-        "La shard key hasheada.",
-        "El único sitio donde escribe el árbitro."
+        "Registrar cambios que los miembros aplican para mantener sus copias de los datos.",
+        "Conservar versiones externas para recuperar cualquier borrado propagado.",
+        "Almacenar los documentos definitivos en lugar de las colecciones de la base.",
+        "Repartir las claves de los documentos para decidir en qué shard se guardan."
       ],
       "answer": 0,
-      "explain": "El oplog conserva un historial limitado que los secundarios aplican. Si un secundario pierde la ventana necesaria, puede requerir sincronización inicial. No es una copia de seguridad independiente."
+      "explain": "El oplog mantiene un historial limitado de cambios para replicación. Su ventana depende de la carga; un secundario que perdió operaciones necesarias puede requerir sincronización inicial. Es una colección capped especial que puede superar el tamaño configurado para proteger el punto de confirmación mayoritario, no un backup independiente."
     },
     {
       "topic": "2.8 Write concern",
       "href": "../replicas-shards/",
-      "prompt": "En el replica set de tres miembros con datos, ¿qué confirmación elegimos para proteger una escritura frente al fallo de un miembro?",
+      "prompt": "En el laboratorio de tres votantes con datos y configuración de durabilidad por defecto, ¿qué opción exige confirmación mayoritaria de una escritura?",
       "code": "",
       "options": [
-        "w: 0 (fire-and-forget).",
-        "Solo j: false sin w.",
-        "w: \"majority\", para exigir la confirmación mayoritaria configurada.",
-        "Leer siempre del Secondary NameNode."
+        "readPreference con secondary en el manejador de lectura.",
+        "readConcern con majority en la consulta posterior al cambio.",
+        "writeConcern con w:\"majority\" en la operación de escritura.",
+        "writeConcern con w:1 para confirmar la aplicación en el primario."
       ],
       "answer": 2,
-      "explain": "En el conjunto de tres votantes con datos, la mayoría permite conservar escrituras confirmadas ante el fallo de un miembro. No exige todas las copias. Un wtimeout no revierte automáticamente una operación ya aplicada."
+      "explain": "Write concern regula la confirmación de escritura. En esta topología, majority protege frente al rollback habitual de elección tras perder un miembro; no exige aplicación en todos los secundarios ni protege frente a perder el conjunto. Read concern y read preference cumplen funciones distintas."
     },
     {
       "topic": "2.8 Shard key",
       "href": "../replicas-shards/",
-      "prompt": "Partís reservas por { hotel: 1 }. En agosto casi todo es Laredo. ¿Qué ocurre?",
+      "prompt": "Particionamos por hotel y el 90 % de las reservas pertenece a Laredo. ¿Qué cambio podría repartir esas altas, con un coste que debe evaluarse?",
       "code": "",
       "options": [
-        "Las escrituras se reparten solos por hash.",
-        "El árbitro equilibra los chunks.",
-        "mongos guarda la mitad de los documentos.",
-        "Un valor dominante concentra carga; conviene evaluar otra clave, por ejemplo un hash de _id, y su efecto en las consultas."
+        "Aplicar hash solo a hotel para que las reservas de Laredo produzcan valores diferentes.",
+        "Añadir shards sin cambiar la clave para dividir el mismo valor entre todos los nodos.",
+        "Aumentar réplicas por shard para repartir las altas de Laredo entre varios primarios.",
+        "Probar hash de _id diverso, considerando consultas por hotel que visiten varios shards."
       ],
       "answer": 3,
-      "explain": "El hash de un identificador diverso puede repartir altas, pero consultar solo por hotel puede requerir visitar todos los shards. El JSONL de aula no incluye id_reserva: utilizamos el _id generado al importar."
+      "explain": "Un hash de identificadores diversos puede repartir altas. El hash del mismo valor hotel sigue siendo igual y no resuelve esa concentración. Con _id hashed, consultar solo por hotel puede requerir varios shards; deben medirse reparto y consultas."
     },
     {
       "topic": "2.9 PyMongo",
       "href": "../pymongo/",
-      "prompt": "Un pipeline $match → $group por hotel → $sum de noches. ¿Qué oficio es?",
+      "prompt": "Python envía a MongoDB un pipeline que filtra reservas y agrupa noches por hotel. ¿Dónde se realiza esa agregación?",
       "code": "",
       "options": [
-        "Solo sirve para Flask.",
-        "Un NameNode.",
-        "Prohibido si el documento no tiene esquema SQL.",
-        "Una agregación (el mismo gesto que un Reduce, dentro de Mongo)."
+        "En Python; el driver descarga las reservas antes de agrupar.",
+        "En el pool; cada conexión calcula un subtotal de los datos.",
+        "En YARN; el driver traduce el pipeline a tareas MapReduce.",
+        "En MongoDB; Python recibe el resultado mediante el driver."
       ],
       "answer": 3,
       "explain": "El servidor filtra y agrega, evitando transferir todas las reservas a Python. Ejecutar aggregate en un standalone no demuestra procesamiento distribuido; el experimento de 2.4 aporta esa evidencia."
@@ -537,27 +537,27 @@
     {
       "topic": "2.9 MongoClient",
       "href": "../pymongo/",
-      "prompt": "¿Qué es un MongoClient en PyMongo?",
+      "prompt": "¿Qué uso de MongoClient permite aprovechar sus pools en una aplicación Flask sencilla?",
       "code": "",
       "options": [
-        "Un socket que se abre y cierra en cada find.",
-        "Un pool de conexiones (se reutilizan); no se crea uno por petición de Flask.",
-        "El NameNode de HDFS.",
-        "Un mongos que guarda documentos."
+        "Crear un cliente por petición y guardarlo en flask.g hasta enviar la respuesta.",
+        "Reutilizar un cliente por proceso, compartido por las rutas de la aplicación.",
+        "Crear un cliente por documento del cursor para repartir las conexiones disponibles.",
+        "Compartir las conexiones de un cliente creado antes de arrancar todos los procesos."
       ],
       "answer": 1,
-      "explain": "MongoClient administra topología y pools por servidor, que crecen según demanda. Se reutiliza por proceso; crear uno nuevo en flask.g en cada petición impide esa reutilización entre peticiones."
+      "explain": "MongoClient administra topología y pools por servidor. En esta aplicación se reutiliza un cliente por proceso; flask.g dura una petición. No se comparten conexiones de un cliente previo mediante fork: cada proceso debe crear su propio cliente."
     },
     {
       "topic": "2.9 Errores",
       "href": "../pymongo/",
-      "prompt": "insert_one con un _id que ya existe. ¿Qué capturáis?",
+      "prompt": "Una escritura insert_one alcanza MongoDB, pero su _id ya existe. ¿Qué excepción específica debe capturarse?",
       "code": "",
       "options": [
-        "DuplicateKeyError.",
-        "ServerSelectionTimeoutError.",
-        "Un fallo del Secondary NameNode.",
-        "Nada: Mongo pisa el documento."
+        "DuplicateKeyError, por la colisión en el índice único.",
+        "ServerSelectionTimeoutError, por no encontrar un servidor apropiado.",
+        "WriteConcernError, por no alcanzar la confirmación solicitada.",
+        "ExecutionTimeout, por superar el tiempo permitido para ejecutar."
       ],
       "answer": 0,
       "explain": "DuplicateKeyError indica una colisión en un índice único. ServerSelectionTimeoutError indica que no se encontró un servidor adecuado a tiempo: puede ser por red, topología o preferencia, no solo porque no exista el servidor."
@@ -565,13 +565,13 @@
     {
       "topic": "2.9 Transacciones",
       "href": "../pymongo/",
-      "prompt": "Reservas y plazas de parking en dos colecciones, atómicas. ¿Qué hace falta?",
+      "prompt": "Descontar parking e insertar una reserva en otra colección deben confirmarse juntos. ¿Qué procedimiento corresponde?",
       "code": "",
       "options": [
-        "Una transacción explícita en un replica set o clúster particionado compatible, con session en cada operación.",
-        "Solo insert_many sin sesión.",
-        "Un árbitro que haga de join.",
-        "Prohibido: Mongo nunca es atómico entre documentos."
+        "Una transacción en un despliegue compatible, pasando la sesión a cada operación.",
+        "Dos escrituras majority seguidas, comprobando cada resultado antes de la siguiente.",
+        "Una sesión compartida por ambas escrituras, sin iniciar una transacción explícita.",
+        "Un lote ordenado de escrituras, deteniendo las restantes ante el primer error."
       ],
       "answer": 0,
       "explain": "Una sesión sola no basta. El callback debe comprobar modified_count y abortar si no hay plaza. Los standalone no admiten transacciones multidocumento, y with_transaction puede reejecutar el callback."
@@ -579,13 +579,13 @@
     {
       "topic": "2.3 Snapshots",
       "href": "../hdfs/",
-      "prompt": "Una snapshot HDFS permite recuperar un CSV borrado. ¿Sustituye una copia independiente?",
+      "prompt": "Una snapshot HDFS permite recuperar un CSV borrado. ¿Por qué no equivale a una copia de seguridad independiente?",
       "code": "",
       "options": [
-        "Sí, porque duplica todos los bloques en otro centro.",
-        "No: conserva referencias dentro del mismo almacenamiento y puede perderse con él.",
-        "Sí, aunque desaparezcan todos los DataNodes.",
-        "Solo si se llama backup."
+        "Copia los bloques a un volumen reservado, independiente de los discos del clúster.",
+        "Mantiene la vista anterior en el almacenamiento del que dependen los datos.",
+        "Duplica el contenido en el Secondary, que lo sirve si se pierden los DataNodes.",
+        "Copia los bloques a los discos del cliente que solicitó crear la snapshot."
       ],
       "answer": 1,
       "explain": "La snapshot protege versiones frente a cambios dentro del sistema. La pérdida del almacenamiento compartido puede afectar tanto a los datos actuales como a sus snapshots."
@@ -593,13 +593,13 @@
     {
       "topic": "2.3 WebHDFS",
       "href": "../hdfs/",
-      "prompt": "Desde Windows puedes abrir 9870, pero no resolver el hostname del DataNode. ¿Basta para leer ficheros por WebHDFS?",
+      "prompt": "Windows abre la UI de 9870, pero no alcanza el hostname del DataNode indicado por WebHDFS. ¿Qué falta para leer por esa vía?",
       "code": "",
       "options": [
-        "Sí: todos los bytes pasan por el NameNode.",
-        "No: la lectura puede redirigir al DataNode y el cliente debe alcanzarlo.",
-        "Sí: la UI descarga automáticamente todos los bloques.",
-        "Solo hay que cambiar el nombre del fichero."
+        "Abrir otra conexión a 9870 para que el NameNode entregue el contenido del archivo.",
+        "Resolver y alcanzar el DataNode de la redirección, además de tener permisos.",
+        "Convertir el archivo a CSV para que la UI pueda servirlo sin acceder al DataNode.",
+        "Aumentar el factor de réplica para que la URL redirigida se traduzca a localhost."
       ],
       "answer": 1,
       "explain": "El acceso a metadatos y el acceso al contenido siguen caminos distintos. Publicar el puerto del NameNode no publica automáticamente todos los destinos de datos."
@@ -607,13 +607,13 @@
     {
       "topic": "2.4 Medición",
       "href": "../computacion-distribuida/",
-      "prompt": "El CSV pequeño tarda más en Hadoop que con Python local. ¿Qué conclusión está justificada?",
+      "prompt": "El agregado pequeño es correcto, pero tarda más con Hadoop que con Python local. ¿Qué interpretación está justificada?",
       "code": "",
       "options": [
-        "La sobrecarga puede dominar; hay que medir una carga adecuada y observar los recursos.",
-        "MapReduce es incorrecto.",
-        "Se demuestra que nunca sirve distribuir.",
-        "Hay que cambiar el resultado para que coincida con la teoría."
+        "La coordinación puede dominar el tiempo; conviene medir cargas y recursos comparables.",
+        "La partición de entrada es incorrecta, porque un cálculo distribuido debe terminar antes.",
+        "El resultado demuestra que ampliar recursos perjudicará también las cargas más grandes.",
+        "El tiempo permite deducir que los DataNodes han duplicado las filas durante el cálculo."
       ],
       "answer": 0,
       "explain": "El arranque y la coordinación tienen un coste. La práctica debe conservar el resultado correcto y explicar el tiempo observado, sin inventar aceleración."
@@ -621,13 +621,13 @@
     {
       "topic": "2.4 Contrato de datos",
       "href": "../computacion-distribuida/",
-      "prompt": "Sustituyes el CSV de UT2 por otro que tiene entrada en la segunda columna. ¿Qué debes hacer?",
+      "prompt": "Un nuevo CSV sitúa entrada donde el mapper de la práctica esperaba hotel. ¿Qué debe hacerse antes de aceptar sus resultados?",
       "code": "",
       "options": [
-        "Revisar el contrato y adaptar el mapper antes de ejecutarlo.",
-        "Nada: la segunda columna siempre es hotel.",
-        "Cambiar solo el nombre de salida.",
-        "Eliminar la cabecera y confiar en la posición."
+        "Revisar el contrato, adaptar la lectura y contrastar las agrupaciones obtenidas.",
+        "Conservar las posiciones y comprobar el total global de noches al terminar.",
+        "Quitar la cabecera para que Hadoop identifique el hotel a partir de cada valor.",
+        "Cambiar el separador de la salida para que el reducer reagrupe por el nombre correcto."
       ],
       "answer": 0,
       "explain": "La posición de hotel y noches depende del formato. Un programa que acaba sin error puede agrupar por un campo equivocado; validar entrada y contrastar totales detecta el problema."
@@ -635,13 +635,13 @@
     {
       "topic": "2.5 Persistencia y consistencia",
       "href": "../nosql/",
-      "prompt": "Redis mantiene datos en RAM y usa persistencia. ¿Eso prueba consistencia eventual?",
+      "prompt": "Redis mantiene datos en RAM y tiene persistencia configurada. ¿Qué se puede concluir sobre su consistencia entre clientes?",
       "code": "",
       "options": [
-        "No: la persistencia ante reinicios y la visibilidad entre clientes son propiedades diferentes.",
-        "Sí: RAM y consistencia eventual son sinónimos.",
-        "Sí: guardar en disco elimina todas las réplicas.",
-        "No puede guardar en disco."
+        "La persistencia no basta para deducir qué versiones observarán las lecturas.",
+        "Las lecturas son eventualmente consistentes porque el dato principal está en RAM.",
+        "Las lecturas son linealizables porque cada escritura puede recuperarse desde disco.",
+        "Las réplicas están al día cuando termina la escritura del registro de persistencia."
       ],
       "answer": 0,
       "explain": "La persistencia determina recuperación tras fallos; la consistencia determina qué versiones observan operaciones y clientes. Deben estudiarse por separado."
@@ -649,13 +649,13 @@
     {
       "topic": "2.6 Proyección de arrays",
       "href": "../mongodb/",
-      "prompt": "Una proyección usa $elemMatch y coinciden tres comentarios. ¿Cuántos elementos devuelve ese array proyectado?",
+      "prompt": "Una proyección con $elemMatch se aplica a un array de cinco comentarios, de los que tres cumplen la condición. ¿Qué devuelve en ese campo?",
       "code": "",
       "options": [
-        "Siempre los tres.",
-        "Ninguno.",
-        "Todos los comentarios, coincidan o no.",
-        "Solo el primer elemento coincidente."
+        "Tres elementos: todos los que coinciden con la condición de proyección.",
+        "Cinco elementos: el filtro selecciona el documento y conserva el array completo.",
+        "Tres documentos: cada coincidencia se convierte en una fila independiente.",
+        "Un elemento: el primero que coincide con la condición de proyección."
       ],
       "answer": 3,
       "explain": "El $elemMatch de proyección selecciona el primer elemento que satisface el criterio. Para conservar todos los coincidentes puede utilizarse $filter en agregación."
@@ -663,13 +663,13 @@
     {
       "topic": "2.6 Repetir importaciones",
       "href": "../mongodb/",
-      "prompt": "Importas dos veces las 15 reservas JSONL sin _id en una colección inicialmente vacía, sin índices únicos adicionales. ¿Qué esperas?",
+      "prompt": "Se completan dos importaciones normales de las 15 reservas JSONL sin _id, en una colección vacía y sin otros índices únicos. ¿Qué se espera?",
       "code": "",
       "options": [
-        "15 documentos: mongoimport detecta que el contenido se repite.",
-        "Cero: el JSONL no es válido.",
-        "30 documentos con identificadores generados distintos.",
-        "Un error de id repetido en todas las filas."
+        "15 documentos, porque la segunda carga actualiza los que tienen el mismo hotel.",
+        "15 documentos, porque el identificador se calcula a partir del contenido del JSON.",
+        "30 documentos, porque las dos cargas generan identificadores diferentes.",
+        "Un rechazo en la segunda carga, porque se repiten los mismos valores de los campos."
       ],
       "answer": 2,
       "explain": "La importación no deduplica por contenido. Hay que controlar la carga inicial o definir una estrategia de identificación e importación idempotente."
@@ -677,13 +677,13 @@
     {
       "topic": "2.7 Validación",
       "href": "../modelado/",
-      "prompt": "Añades un validador a una colección con datos antiguos. ¿Qué ocurre con esos documentos?",
+      "prompt": "Se añade un validador a una colección que contiene documentos antiguos. ¿Qué debemos comprobar?",
       "code": "",
       "options": [
-        "Se convierten todos al nuevo tipo automáticamente.",
-        "Se borran siempre los que no cumplen.",
-        "No se reparan automáticamente: hay que inspeccionarlos y planificar su adaptación.",
-        "El validador solo cambia los colores en Compass."
+        "Si los tipos antiguos se han convertido según las nuevas reglas del validador.",
+        "Si los documentos inválidos se han trasladado a una colección de cuarentena.",
+        "Si los datos previos cumplen el contrato; añadir la regla no los transforma.",
+        "Si el recuento se ha reducido tras eliminarse los documentos que incumplen."
       ],
       "answer": 2,
       "explain": "La validación controla escrituras según su nivel y acción. No es un programa de migración ni demuestra que todos los documentos existentes ya cumplan el contrato."
@@ -691,13 +691,13 @@
     {
       "topic": "2.8 Mayoría",
       "href": "../replicas-shards/",
-      "prompt": "Añades un cuarto votante a un set de tres. ¿Cuántos votos hacen falta ahora para la mayoría?",
+      "prompt": "Un replica set pasa de tres a cuatro miembros votantes configurados. ¿Cuántos votos requiere ahora la mayoría?",
       "code": "",
       "options": [
-        "Dos, porque antes bastaban.",
-        "Tres.",
-        "Cuatro siempre.",
-        "Solo los que respondan en ese instante."
+        "Dos votos, porque basta con alcanzar la mitad de los cuatro configurados.",
+        "Tres votos, porque se necesita más de la mitad de los cuatro configurados.",
+        "Cuatro votos, porque añadir un miembro exige que todos aprueben la elección.",
+        "Uno o dos votos, según cuántos de los cuatro respondan durante la elección."
       ],
       "answer": 1,
       "explain": "La mayoría es más de la mitad de los votantes configurados: cuatro requieren tres. La pérdida tolerable de votantes sigue siendo uno, suponiendo candidatos elegibles."
@@ -705,13 +705,13 @@
     {
       "topic": "2.8 Timeout de escritura",
       "href": "../replicas-shards/",
-      "prompt": "Una escritura aplicada en el primario devuelve un error de wtimeout. ¿Qué puedes afirmar?",
+      "prompt": "Una escritura ya aplicada en el primario devuelve un error de wtimeout. ¿Qué significa ese resultado?",
       "code": "",
       "options": [
-        "Se ha deshecho en todos los nodos.",
-        "Seguro que nunca existió.",
-        "No se obtuvo a tiempo la confirmación solicitada; hay que comprobar el estado antes de repetir.",
-        "Todos los secundarios la han aplicado."
+        "El cambio se elimina del primario al cumplirse el tiempo máximo de confirmación.",
+        "El cambio se conserva como borrador y se aplicará cuando el cliente vuelva a intentarlo.",
+        "La confirmación solicitada no llegó a tiempo; el cambio no se revierte por ese error.",
+        "El cambio está confirmado en todos los miembros, pero se perdió la respuesta al cliente."
       ],
       "answer": 2,
       "explain": "El timeout de write concern limita la espera de confirmación. No revierte cambios ya realizados; repetir sin comprobar puede duplicar un efecto de negocio."
@@ -719,13 +719,13 @@
     {
       "topic": "2.8 Relevo y caída",
       "href": "../replicas-shards/",
-      "prompt": "Ejecutas rs.stepDown() correctamente. ¿Has apagado el contenedor?",
+      "prompt": "Se ejecuta rs.stepDown(60) correctamente sobre el primario. ¿Qué cambio provoca?",
       "code": "",
       "options": [
-        "Sí, hay que recrear el volumen.",
-        "No: el miembro renuncia al cargo, pero el proceso continúa.",
-        "Sí, se borró el oplog.",
-        "Sí, se perdió la base."
+        "El proceso se detiene y necesita arrancarse antes de participar en otra elección.",
+        "El miembro cede temporalmente el cargo y su proceso continúa funcionando.",
+        "El miembro abandona la configuración y debe añadirse de nuevo al replica set.",
+        "El miembro conserva el cargo y retrasa sesenta segundos la réplica a secundarios."
       ],
       "answer": 1,
       "explain": "El relevo controlado y la caída del proceso son experimentos distintos. Para detener un servicio se utiliza el comando del host; no hay que reiniciar un proceso que solo dejó de ser primario."
@@ -733,27 +733,27 @@
     {
       "topic": "2.9 Regla de parking",
       "href": "../pymongo/",
-      "prompt": "Dentro de una transacción, el descuento de plaza devuelve modified_count = 0. ¿Qué debe hacer el callback?",
+      "prompt": "El callback de parking filtra por id y libres>=1 y descuenta uno. Obtiene modified_count=0. ¿Qué debe hacer para no confirmar una reserva sin cupo?",
       "code": "",
       "options": [
-        "Insertar la reserva: la transacción inventará una plaza.",
-        "Ignorar el resultado porque no hubo error técnico.",
-        "Abortar con una excepción y no confirmar la reserva.",
-        "Cambiar libres a -1."
+        "Insertar la reserva y dejar que commit compruebe si quedaba alguna plaza.",
+        "Returnar del callback sin excepción para que with_transaction cancele lo anterior.",
+        "Lanzar una excepción antes de insertar la reserva y abortar la transacción.",
+        "Repetir el descuento sin la condición de cupo para completar ambas escrituras."
       ],
       "answer": 2,
-      "explain": "Cero coincidencias es una respuesta válida del motor. La aplicación debe convertir la falta de plazas en rechazo de la operación para mantener el invariante de negocio."
+      "explain": "El callback debe comprobar la modificación y rechazar la operación si no se descontó una plaza. Cero coincidencias no produce por sí solo un error técnico; retornar normalmente puede confirmar la transacción. Debe investigarse también si falta el documento de parking, sin interpretar todo cero como plaza vendida."
     },
     {
       "topic": "2.9 Lookup y recuentos",
       "href": "../pymongo/",
-      "prompt": "Tres reservas de Laredo reciben cada una sus dos opiniones mediante $lookup por hotel. ¿Cuántas opiniones distintas demuestra esto?",
+      "prompt": "Tres reservas de Laredo reciben cada una las mismas dos opiniones del hotel mediante $lookup. ¿Cuántas opiniones distintas intervienen?",
       "code": "",
       "options": [
-        "Seis.",
-        "Dos: el mismo conjunto de opiniones se repite en cada reserva.",
-        "Tres.",
-        "Nueve."
+        "Seis opiniones distintas, al sumar las dos que aparecen en cada reserva.",
+        "Dos opiniones distintas, asociadas de nuevo a cada una de las tres reservas.",
+        "Tres opiniones distintas, al conservar una por cada documento de reserva.",
+        "Una opinión distinta, al agrupar todas las valoraciones por el nombre del hotel."
       ],
       "answer": 1,
       "explain": "La unión conserva una fila por reserva. Sumar el tamaño de los arrays cuenta asociaciones repetidas, no opiniones distintas. Hay que definir la unidad que se desea contar."
