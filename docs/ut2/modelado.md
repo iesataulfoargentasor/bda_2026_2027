@@ -8,11 +8,20 @@ tags:
 
 # 2.7. Modelado documental
 
-Tanto en SQL como en MongoDB empezamos por los datos, las operaciones y las reglas de negocio. En un modelo documental tiene especial importancia **qué información se lee y actualiza junta**. El criterio **d)** del RA2 no es “tirar JSON al cubo”. Es: **guardáis lo que hay hoy** y **dejáis hueco** para el campo de abril, sin tumbar el hotel una noche y sin reescribir 40 000 reservas.
+!!! info "Ruta de estudio"
+    **Esencial:** decidir qué embeber y qué referenciar, limitar el crecimiento y definir reglas de validación y evolución del esquema.
 
-Un documento es el sitio donde vive **lo que se lee junto**. Una escritura sobre un documento es atómica. Si una operación modifica reserva y cobro en dos documentos, un único `update` no los convierte en una unidad atómica: necesitáis una transacción explícita en el servidor, iniciada desde una sesión del cliente. El atajo mental “3FN + `$lookup` en cada pantalla” suele ser señal de que seguís modelando como PostgreSQL.
+    **Práctica guiada:** usar `hotel_modelado` para comprobar referencias, atributos, versiones, agrupación de medidas y un validador. No se modifican los originales de 2.6 y 2.9.
 
-El código se lee mejor —y el `find` corre antes— cuando aceptáis **cierta redundancia**. Duplicar el nombre del hotel en la reserva no es suciedad: es **no hacer un join** cada vez que recepción abre la ficha.
+    **Ampliación:** diseñar el caso completo, probar datos tardíos y estudiar otros patrones. Las condiciones de entrega se concretan en Moodle.
+
+En [2.6](mongodb.md) aprendimos a consultar y cambiar documentos. Ahora decidimos **cómo organizarlos para las operaciones del hotel**. Una reserva puede guardar huéspedes dentro, referenciar el hotel y conservar una copia del nombre o precio acordado. Cada decisión tiene consecuencias cuando leemos, actualizamos o conservamos el histórico.
+
+Tanto en SQL como en MongoDB partimos de datos, consultas y reglas de negocio. Una escritura en un documento es atómica; modificar varios documentos como una unidad requiere una transacción explícita en una topología compatible. El servidor independiente de 2.6 permite esta práctica, pero no transacciones multidocumento.
+
+El criterio **d)** del RA2 implica conservar información que pueda utilizarse después. Eso requiere metadatos, lectores y reglas de evolución; un esquema flexible no garantiza cambios sin migración ni interrupción. La capacidad disponible también tiene límites.
+
+Embeber y duplicar algunos atributos puede evitar lecturas adicionales, pero no garantiza una consulta más rápida. Referenciar y usar `$lookup` también son decisiones válidas. **Medimos el tamaño, la frecuencia de acceso y el coste de mantener la coherencia**, en lugar de trasladar o rechazar automáticamente un modelo relacional.
 
 ## Empieza por las preguntas, no por las entidades
 
@@ -21,7 +30,7 @@ Antes de Compass, escribid **qué hace** cada rol. Tres ejemplos del grupo:
 | Quién | Qué abre | Qué necesita ver *ya* |
 | --- | --- | --- |
 | Recepción | Ficha de una reserva | Hotel, noches, huéspedes, cobro |
-| Gerencia | Ocupación de Laredo | Conteos, no el DNI de cada huésped |
+| Gerencia | Resumen de reservas de Laredo | Noches e importes de reservas; la ocupación real exige además fechas, habitaciones y disponibilidad |
 | Mantenimiento | Incidencias de la 214 | Historial largo (años), no la ficha de reserva |
 
 Luego medid, aunque sea a groso modo:
@@ -29,9 +38,9 @@ Luego medid, aunque sea a groso modo:
 - ¿Más **lecturas** o más **escrituras**?
 - ¿Cuántas veces por minuto? ¿Qué latencia aguanta el mostrador?
 - ¿Qué campos entran en el filtro (`hotel`, `checkin`, `comarca`)?
-- ¿Hay algo que **cambia** (teléfono del hotel) y algo que **debe quedar congelado** (precio ya cobrado)?
+- ¿Hay algo que **cambia** (teléfono del hotel) y algo que **debe quedar congelado** (precio acordado de la reserva)?
 
-Un equipo pequeño, una sola *app* y siempre las mismas consultas: **simple**. Embebéd lo que quepa. Un equipo grande, muchas *apps* y picos de escritura: mirad **tamaño**, **ops/s** y **qué operación no puede fallar**. Optimizar código es más barato que destensar un esquema ya enrevesado: **empezad simple**.
+Empezad con el diseño más sencillo que cumpla las operaciones y garantías. Que un documento quepa hoy no basta: estimad cuánto crecerá, quién lo actualizará y qué información se necesita junta. Una proyección o un índice pueden resolver un problema sin duplicar datos ni introducir otra colección.
 
 ### Carga de aula: no es el sensor de un MOOC
 
@@ -39,11 +48,11 @@ Imaginad 12 hoteles, 800 habitaciones y un sensor de puerta/temperatura por habi
 
 | Actor | Gestos | Ritmo (orden) | Lectura o escritura | Nota de modelado |
 | --- | --- | --- | --- | --- |
-| Sensor 214 | `hab`, `ts`, `temp_c`, `puerta` | ~800/min en el grupo | Escritura | Un documento **por minuto** hincha índices; un **cubo por hora** agrupa |
-| Reloj de gerencia | Agregar la hora | 1/hora | Escritura | Valor **ya sumado** (patrón calculado) |
+| Sensores del grupo | Hotel, habitación, sensor, instante y medida | 800/min si llegan todas las medidas | Escritura | Comparar documentos individuales, buckets acotados o una colección de series temporales |
+| Proceso de gerencia | Leer medidas y actualizar el resumen | 1 ejecución/hora | Lectura y escritura | Conservar suma, recuento y periodo del resumen |
 | Analista | Tendencia de un mes | Pocas, *scan* | Lectura | Puede ir a un secundario ([2.8](replicas-shards.md)) |
 
-Conclusión distinta a “un JSON por clic”: **agrupáis escrituras** y **precalculáis** lo que gerencia pide siempre. El detalle de *buckets* está más abajo.
+Con esas hipótesis llegan **48 000 medidas por hora** al grupo y **60 por hora y sensor**. El número permite estimar crecimiento, pero no obliga a agrupar manualmente. Compararemos alternativas. La práctica utiliza solo un sensor, durante dos horas, para comprobar exactamente qué se conserva. Un evento de puerta no demuestra disponibilidad comercial de una habitación.
 
 ## Solo hay dos gestos: meter dentro o señalar fuera
 
@@ -51,50 +60,44 @@ Decidid con cuatro preguntas: ¿se lee junto?, ¿cambia junto?, ¿crece de forma
 
 Duplicar un nombre puede representar una **instantánea histórica** o una copia del nombre actual. En el primer caso no debemos actualizarlo si cambia el hotel; en el segundo necesitamos una estrategia para mantenerlo sincronizado. La duplicación solo está bien definida cuando explicitamos esa diferencia.
 
-**Meter dentro (embeber):** el cobro viaja *con* la reserva. Un `find`, un `update`. Atómico. Tope: **16 MiB** por documento. `bsonSize` en el *shell* os dice cuánto ocupa el que tenéis abierto:
+**Meter dentro (embeber):** una ficha pequeña de llegada puede viajar con la reserva. Su actualización conjunta cabe en una operación atómica de un documento. Si hablamos de cobros, primero debemos modelar pagos parciales y devoluciones, no asumir que existe uno solo.
+
+El límite de un documento BSON es **16 MiB**. Con los datos preparados en la práctica guiada, esta agregación mide el documento de ejemplo:
 
 ```javascript
-bsonSize(db.reservas.findOne({ hotel: "Laredo" }))
-```
-
-Fotos de habitación: la ruta o un `id` de objeto; los bytes gordos a **GridFS** o a [HDFS](hdfs.md), no al BSON.
-
-**Señalar fuera (referencia):** `id_hotel` en la reserva. Segunda lectura o `$lookup`. Bien cuando el hotel **cambia** el teléfono y no queréis tocar 40 000 copias.
-
-Referencia **a mano** (lo habitual):
-
-```javascript
-const idLaredo = ObjectId()
-db.hoteles.insertOne({
-  _id: idLaredo,
-  nombre: "Laredo",
-  telefono: "942 60 00 00",
-  comarca: "Trasmiera",
-})
-db.reservas.insertOne({
-  hotel_id: idLaredo,
-  canal: "web",
-  noches: 3,
-  importe: 186.5,
-})
-```
-
-```javascript
-db.reservas.aggregate([
-  {
-    $lookup: {
-      from: "hoteles",
-      localField: "hotel_id",
-      foreignField: "_id",
-      as: "hotel",
-    },
-  },
+db.reservas_referencias.aggregate([
+  {$match: {_id: "R27-1"}},
+  {$project: {bytes: {$bsonSize: "$$ROOT"}}}
 ])
 ```
 
-`$lookup` lo usaréis en agregaciones ([2.9](pymongo.md)). Si **cada** pantalla lo necesita, el modelo pide **duplicar un trozo** (nombre + comarca), no un join eterno.
+El resultado es el tamaño BSON, no el espacio total con índices y réplicas ni una predicción de rendimiento. Estimad también el crecimiento futuro.
 
-En textos viejos salen **DBRef** (`$ref`, `$id`, `$db`). Mongo **desaconseja** usarlas. Quedaos con el `_id` y el nombre de colección en la *app*.
+Para archivos grandes, estudiad almacenamiento de objetos, GridFS o un sistema de ficheros como HDFS según el uso. La ficha puede conservar identificador, ubicación y metadatos. GridFS divide archivos en fragmentos; no elimina los límites ni hace atómica toda modificación de un archivo.
+
+**Señalar fuera (referencia):** `id_hotel` en la reserva. Segunda lectura o `$lookup`. Bien cuando el hotel **cambia** el teléfono y no queréis tocar 40 000 copias.
+
+La **referencia manual** guarda el identificador con el mismo tipo que el documento referenciado. El preparador de la práctica crea un hotel con `_id` ObjectId y una reserva `R27-1` con `hotel_id` apuntando a él. No ejecutéis una segunda inserción de esos ejemplos.
+
+En `hotel_modelado`:
+
+```javascript
+db.reservas_referencias.aggregate([
+  {$match: {_id: "R27-1"}},
+  {$lookup: {
+    from: "hoteles",
+    localField: "hotel_id",
+    foreignField: "_id",
+    as: "hotel_actual"
+  }}
+])
+```
+
+`hotel_actual` es un **array** con las coincidencias; en este caso debe contener un hotel. Si no hay referencia válida, puede quedar vacío. MongoDB no crea una clave foránea ni borra referencias automáticamente. Una cadena con los caracteres de un ObjectId no es ese ObjectId.
+
+Si la pantalla necesita el nombre histórico, podemos conservarlo en la reserva; si necesita el teléfono actual, consultamos `hoteles`. Un `$lookup` frecuente no demuestra por sí solo un mal diseño: comparad consulta, índices, duplicación y coste de actualización.
+
+En documentación antigua aparecen **DBRef** (`$ref`, `$id`, `$db`). Para esta práctica bastan referencias manuales; resolver y mantener las relaciones sigue siendo responsabilidad del diseño.
 
 ## Cardinalidad: el hotel en cuatro tamaños
 
@@ -104,7 +107,7 @@ No memoricéis “1:N = array”. Preguntad **cuántos** y **si se leen siempre 
 
 La cardinalidad 1:1 no obliga a embeber. Si los datos de llegada son pequeños y aparecen en la ficha de reserva, resulta cómodo. Si un documento médico u otra información con acceso separado tuviera un ciclo de vida distinto, la referencia podría ser más adecuada. El criterio es la operación, no solo el dibujo de la relación.
 
-La reserva y el *check-in* breve (matrícula del coche, hora de llegada) se leen **siempre** a la vez → **dentro**.
+En nuestro ejemplo, recepción suele abrir la reserva junto con los datos breves de llegada; por eso proponemos embeberlos.
 
 ```json
 {
@@ -114,7 +117,7 @@ La reserva y el *check-in* breve (matrícula del coche, hora de llegada) se leen
 }
 ```
 
-Separadlos si: uno se consulta **casi nunca**, uno es **enorme**, o uno se **reescribe** diez veces más que el otro. Si tenéis que cambiar **los dos a la vez**, volved a embeber: si no, pagáis transacción.
+Separarlos puede convenir si tienen permisos, tamaño o ciclos de actualización diferentes. Si deben cambiar juntos, comparad embeber con una transacción multidocumento: la atomicidad necesaria es un criterio más, no una orden de embeber cualquier contenido.
 
 ### Uno a pocos (huéspedes)
 
@@ -148,7 +151,7 @@ Un hotel, decenas de miles de reservas. El `_id` del hotel vive **en el lado de 
 { "hotel_id": "...", "canal": "web", "noches": 3, "importe": 186.5 }
 ```
 
-**Precio ya cobrado:** ese número se **congela** en la reserva. Si mañana Laredo pone la doble a 200 €, el cobro de abril **no** se mueve. Es el mismo gesto que embeber el precio en un pedido: el catálogo cambia; el ticket, no.
+**Precio acordado:** conserva las condiciones de esa reserva aunque cambie el catálogo. Un cambio de tarifa no reescribe automáticamente el histórico. Esto no equivale a afirmar que ese importe se haya cobrado; pagos, devoluciones y rectificaciones requieren sus propios datos y reglas.
 
 **Nombre del hotel en la ficha:** si recepción lo pide **siempre**, copiad `nombre` + `comarca` en la reserva (*referencia extendida*). El teléfono que **sí** cambia se queda en `hoteles`.
 
@@ -158,21 +161,26 @@ Cada evento debe identificar inequívocamente habitación **y hotel**: la habita
 
 Millones de líneas. La habitación **no** guarda el array. Cada evento apunta a la habitación (muchos → uno). Invertís la flecha para no reventar el BSON.
 
-```json
-{ "hab": "214", "ts": "2026-04-12T22:03:00Z", "evento": "apertura" }
+Ejemplo en `mongosh` (la fecha se guarda como BSON Date):
+
+```javascript
+({hotel: "Laredo", hab: "214", sensor: "puerta-01",
+  ts: ISODate("2026-04-12T22:03:00Z"), evento: "apertura"})
 ```
+
+La práctica siguiente mide temperatura; no confunde ese dato con un evento de puerta.
 
 ### Varios a varios (habitaciones ↔ servicios)
 
 Una colección de asociaciones es válida también en MongoDB. Resulta útil cuando la relación tiene atributos propios, como vigencia, precio contratado o disponibilidad. No implica necesariamente tres viajes a la base: una agregación puede reunir resultados. Comparad frecuencia de lectura y coste de mantener referencias duplicadas antes de elegir.
 
-Spa, parking, cuna: una habitación tiene pocos servicios; un servicio (parking) toca muchas habitaciones. Tres caminos, **ninguno** es “la tabla puente de SQL” como primera opción:
+Spa, parking y cuna pueden relacionarse con muchas habitaciones. Hay varias opciones:
 
-1. Colección puente `hab_id` + `servicio_id`: tres lecturas. Solo si el puente **tiene vida propia** (fecha, precio extra).
-2. Array de ids **en un lado** (el *pequeño*). Suele bastar. Array **en los dos** (*two-way*): coherencia a mano, fácil de romper.
-3. Embeber el servicio entero en la habitación: solo si el servicio **casi no cambia** y N es **chico**. Si el spa cambia de horario, no queréis 800 copias.
+1. **Colección de asociaciones** con habitación y servicio, especialmente si la relación tiene vigencia, precio o atributos propios. Una consulta o agregación puede reunir lo necesario.
+2. **Array de identificadores en un lado**, si su crecimiento está acotado. Mantenerlo en ambos lados exige coordinar las dos representaciones.
+3. **Contenido embebido**, si los atributos son pequeños y poco cambiantes o representan una instantánea histórica.
 
-Regla de pulgar: si un lado es 3 y el otro 500 000, el 3 **cabe dentro** del 500 000. Si ambos son 3 y 5, podéis **cruzar** arrays de ids.
+Contar elementos ayuda, pero no decide por sí solo: tres objetos muy grandes pueden pesar más que muchos identificadores. La actualización del horario de un spa no debería requerir corregir copias sin una política definida.
 
 !!! warning "Arrays que no paran de crecer"
     No hay un umbral universal de elementos. Importan el tamaño, el crecimiento, la frecuencia de actualización y qué parte se lee. Si el array crece sin límite, separadlo o divididlo en grupos acotados antes de acercaros al máximo del documento.
@@ -191,7 +199,7 @@ Mongo University parte los patrones en representación / acceso / agrupación. A
 
 Este es el **patrón de atributos**. Por ejemplo, `tarifas: [{canal: "web", precio: 90, moneda: "EUR"}]`. Para exigir canal web y precio menor que 100 en la misma tarifa, usad `$elemMatch`. Un índice sobre los campos del array puede ayudar, pero aumenta el coste de escritura.
 
-En vez de una columna por país, un **array de objetos** (`sitio`, `importe`, `moneda`). Añadir Andorra es **otro elemento**, no otra clave. Se indexa y se ordena mejor.
+En vez de una columna por país, un **array de objetos** (`sitio`, `importe`, `moneda`). Añadir Andorra es **otro elemento**, no otra clave. Puede facilitar índices y consultas comunes, pero hay que comprobar el plan y el coste de actualizar arrays.
 
 En el hotel: tarifas por **canal** (`web`, `ota`, `recepcion`), no `tarifa_web`, `tarifa_ota`.
 
@@ -199,13 +207,13 @@ En el hotel: tarifas por **canal** (`web`, `ota`, `recepcion`), no `tarifa_web`,
 
 El **versionado de esquema** exige lectores compatibles: si `v` falta, tratadlo como la versión antigua definida por el equipo. Primero desplegad un lector que entienda ambas versiones, después empezad a escribir la nueva y, si procede, migrad por lotes. Cambiar solo la etiqueta `v` sin transformar el contenido no es una migración correcta.
 
-Campo `v: 2` (o `esquema`). Los documentos viejos siguen; la *app* sabe cómo leer. Evitáis la parada de “migrar toda la colección a las 03:00”. Eso **es** el criterio **d)**.
+Un campo `v` identifica el contrato. Los documentos antiguos pueden permanecer mientras los lectores los entiendan. Esto permite planificar una transición gradual, pero no garantiza por sí solo cero interrupciones: consultas, índices, validadores y programas deben ser compatibles. La práctica distingue **clasificar versiones** de **transformar su contenido**.
 
 ### El mismo tipo de cosa, con rarezas
 
 El **patrón polimórfico** conserva campos comunes y un discriminador de tipo. Por ejemplo, una reserva OTA añade localizador del proveedor; una de recepción añade puesto. La validación puede aplicar reglas diferentes según el tipo. Si las operaciones y el ciclo de vida son totalmente distintos, revisad si conviene separar colecciones.
 
-`tipo: "web" | "ota"` y un subdocumento `detalle` distinto. **Una** colección `reservas`, no tres. Consultas unificadas.
+Si comparten consultas y ciclo de vida, una colección `reservas` con un discriminador y un `detalle` variable permite consultas comunes. Si esas condiciones no se cumplen, separar colecciones puede estar justificado.
 
 ### La ficha pesa y la lista no
 
@@ -241,9 +249,9 @@ Un documento **por hora** (o por día) con `medidas: [ … ]` y `suma` / `n`. Me
 
 El **patrón atípico** conserva el camino habitual sencillo y mueve el exceso a otra colección. La reserva debe indicar que existe continuación y cómo recuperarla. Comprobad tanto una reserva normal como una excepcional: optimizar el caso frecuente no permite perder extras del caso poco frecuente.
 
-El 99 % de reservas tiene ≤ 6 extras. Una agencia deja 200. No hinchéis el 99 %: flag `rara: true` y el resto en `reservas_extras`. La *app* hace el segundo `find` **solo** en ese caso.
+El 99 % de reservas tiene ≤ 6 extras. Una agencia deja 200. Podemos guardar hasta **6** extras en la reserva y el resto en `reservas_extras`, enlazados por el identificador de reserva. El indicador `rara` avisa de la continuación. Es un límite didáctico, no una restricción de MongoDB; una reserva excepcional con 200 extras conservaría 6 dentro y 194 fuera.
 
-Otros nombres que veréis: **árbol** (ancestros), **preasignación** (estructura vacía de antemano; hoy Mongo gestiona mejor la RAM, menos urgente).
+Otros nombres que veréis: **árbol** (ancestros) y **preasignación** (reservar una estructura de antemano). Su utilidad depende de la carga y del motor; no se aplican solo por aparecer en un catálogo de patrones.
 
 ### Lo que no queréis hacer
 
@@ -252,27 +260,30 @@ Evaluad los patrones con la consulta que intentan mejorar. Cread unos datos pequ
 | Mal hábito | Qué duele | Salida |
 | --- | --- | --- |
 | Array sin techo | Lecturas lentas, 16 MiB | Otra colección o páginas |
-| Documento-baúl | Traéis 200 KB para pintar 3 campos | Colección flaca / subconjunto |
-| Cien colecciones vacías | Catálogo sucio | Menos colecciones, `tipo` |
-| Índice que nadie usa | Escrituras lentas | Revisar y **tirar** |
-| Partir lo que se abre junto | `$lookup` en cada clic | Embeber |
+| Documento grande para una lista pequeña | Transferencia o conjunto de trabajo excesivo | Proyección primero; estudiar subconjunto si sigue siendo necesario |
+| Colecciones sin una razón de acceso o gestión | Mantenimiento innecesario | Revisar el propósito y los límites de cada colección |
+| Índice sin uso demostrado | Coste de escritura y almacenamiento | Revisar uso y restricciones antes de retirarlo |
+| Lecturas adicionales costosas | Latencia o trabajo repetido | Comparar índices, referencias, caché o datos embebidos |
 | Sin versión de esquema | Migraciones a ciegas | Campo `v` |
 
 ## Un validador no es un `CREATE TABLE`
 
-El esquema **sigue siendo dinámico**. El validador pone **barandillas**: que `noches` sea entero ≥ 1, que exista `hotel`. Si prohibís **cualquier** campo nuevo, chocáis con **d)**.
+El validador expresa un contrato: campos obligatorios, tipos y límites. Un esquema abierto facilita nuevos campos; un esquema cerrado también puede ser apropiado si se evoluciona de forma controlada. **El criterio d) no obliga a aceptar campos desconocidos ni datos inválidos**. Lo importante es conservar información utilizable y planificar sus cambios.
 
-Al crear:
+Al crear una colección nueva en `hotel_modelado`, este contrato exige hotel, noches e importe. `canal` es opcional, pero si aparece debe ser uno de los valores indicados. Las noches entre 1 y 60 son una **regla del ejercicio**, no un límite universal del alojamiento. Los campos adicionales se permiten en este ejemplo:
+
 
 ```javascript
 db.createCollection("reservas_validacion", {
+  validationLevel: "strict",
+  validationAction: "error",
   validator: {
     $jsonSchema: {
       bsonType: "object",
       title: "Reserva del grupo",
       required: ["hotel", "noches", "importe"],
       properties: {
-        hotel: { bsonType: "string" },
+        hotel: { bsonType: "string", minLength: 1 },
         canal: {
           enum: ["web", "ota", "recepcion"],
           description: "origen de la reserva",
@@ -285,7 +296,7 @@ db.createCollection("reservas_validacion", {
             bsonType: "object",
             required: ["nombre"],
             properties: {
-              nombre: { bsonType: "string" },
+              nombre: { bsonType: "string", minLength: 1 },
               tipo: { bsonType: "string" },
             },
           },
@@ -300,7 +311,7 @@ Podéis **combinar** `$jsonSchema` con `$expr` (p. ej. `importe` ≥ un mínimo 
 
 `validationLevel` y `validationAction` deciden qué pasa con documentos **viejos** y si el fallo **rechaza** o solo **avisa**. En Compass: pestaña *Validation*.
 
-Colección **ya** existente:
+Colección **ya existente**: este comando ajusta el nivel y la acción del validador existente; **no crea uno ni cambia sus reglas**. Para sustituir el contrato se debe proporcionar también `validator`:
 
 ```javascript
 db.runCommand({
@@ -310,7 +321,7 @@ db.runCommand({
 })
 ```
 
-En Atlas el usuario de prácticas a veces **no** puede `collMod` (hace falta rol de admin).
+`collMod` requiere el privilegio correspondiente sobre la base. Un usuario de prácticas puede no tenerlo: solicitad al profesor un entorno con los permisos necesarios; no necesita por definición ser administrador de todo el servidor.
 
 Ver el validador:
 
@@ -333,7 +344,7 @@ db.reservas_validacion.insertOne({hotel: "Laredo", noches: "dos", importe: 124})
 db.reservas_validacion.insertOne({hotel: "Potes", noches: Int32(1), importe: 90, mascota: true})
 ```
 
-`strict` aplica la validación a inserciones y actualizaciones; `error` rechaza operaciones inválidas. Cambiar las reglas no repara automáticamente los documentos anteriores. Para migrar una colección existente, inspeccionad los datos, preparad lectores compatibles y comprobad qué escrituras aceptará el nuevo validador.
+`strict` comprueba las inserciones y las actualizaciones sujetas a validación; `error` rechaza las que no cumplen. `moderate` permite actualizar documentos preexistentes que ya eran inválidos sin exigirles el contrato, por lo que no equivale a una limpieza. `warn` permite la escritura y registra el incumplimiento. Cambiar las reglas no recorre, repara ni elimina automáticamente los documentos anteriores. Para migrar una colección existente, inspeccionad los datos, preparad lectores compatibles y comprobad qué escrituras aceptará el nuevo validador.
 
 ## Compass como pizarra (no como examen)
 
@@ -344,30 +355,219 @@ Compass permite explorar el esquema inferido de una muestra; las opciones de dia
 Da igual la carga y los patrones: el modelo **sigue a las historias de usuario**. Si no podéis decir “recepción abre *esto* y por eso el cobro va *aquí*”, el dibujo es decoración.
 
 !!! success "d) en voz alta"
-    “Guardo la reserva de 2024. En 2026 añado `mascota` solo a las nuevas. El teléfono del hotel no está copiado 40 000 veces. El precio cobrado sí está congelado dentro. El sensor de la 214 va por horas, no un JSON por minuto.”
+    “Conservo los datos y su significado. Agrupo lo que conviene leer y cambiar junto, referencio lo compartido y limito el crecimiento. Si el esquema cambia, adapto lectores y validación. Compruebo que el rediseño no pierde información.”
 
 ## Relación con el RA2
 
 | Criterio | Aquí |
 | --- | --- |
-| **d)** | Esquema que **crece**; `v`; validador que no ahoga |
-| **a)** | Un `find` que responde a la ficha **sin** ocho tablas |
-| **e)** | Cubos y colecciones nuevas cuando el array **ya no cabe** |
+| **d)** | Conservar y reutilizar información mediante contratos, versiones y lectores compatibles |
+| **a)** | Justificar la organización según consultas, datos y costes; contrastar los resultados |
+| Conexión con **e)** | Preparar un modelo que pueda crecer; añadir una colección o un bucket no demuestra añadir recursos al sistema |
 
-## Para practicar (Moodle manda)
+## Práctica guiada: comprobar el rediseño
 
-1. **De un ER de hotel a documentos.** Entidades típicas: hotel, habitación, reserva, huésped, cobro, servicio (spa/parking), incidencia. La *app* muestra (a) ficha de reserva, (b) ficha de hotel con teléfono, (c) listado de incidencias de una habitación. Entregad: un JSON de ejemplo **por** colección, `insertOne`/`insertMany`, por qué embebeis o referenciáis (explicaciones fuera del JSON, que no admite comentarios), validador de `reservas` y de `hoteles`. Si Compass lo pide el profesor: captura o `.mdm`.
-2. **Tarifas.** Partís de `tarifa_web`, `tarifa_ota`, `tarifa_recepcion`. Pasadlo a array de `{ canal, precio, moneda }`. Un `update` que añada `agencias`.
-3. **Versión de esquema.** Las reservas viejas tienen `telefono_hotel` plano. Las nuevas, `hotel: { id, nombre }`. Campo `v`. Un `updateMany` que marque las viejas con `v: 1` y las que ya tengan objeto con `v: 2`.
-4. **Cubo.** Medidas de temperatura de la 214 (un JSON por minuto, 2 horas). Rediseñad **un documento por hora** con `medidas` y `temp_media`. Explicad qué patrón es y qué ganáis al purgar.
-5. **Atípico.** El 99 % tiene ≤ 5 extras. Diseñad `rara` + colección auxiliar. No hace falta implementar la *app*.
-6. (Opcional) Tres patrones que **ya** usáis en `reservas` + `opiniones` del [2.6](mongodb.md) (array de huéspedes, comentarios, etiquetas). Nombradlos con vuestras palabras.
+### Preparar un entorno independiente
+
+Utilizad el servidor de MongoDB 7 del [2.6](mongodb.md). Este apartado usa **otra base, `hotel_modelado`**: no importéis ni modifiquéis `hotel.reservas` o `hotel.opiniones`. Los ejemplos de JSON anteriores ilustran decisiones; el conjunto ejecutable se prepara con el archivo siguiente.
+
+Descargad [preparar_modelado.js](../assets/practicas/hotel-modelado/preparar_modelado.js). Desde la raíz del repositorio, en la **terminal del PC**:
+
+```text
+docker cp docs/assets/practicas/hotel-modelado/preparar_modelado.js hotel-mongo:/tmp/preparar_modelado.js
+docker exec hotel-mongo mongosh hotel_modelado --quiet --file /tmp/preparar_modelado.js
+docker exec -it hotel-mongo mongosh hotel_modelado
+```
+
+Con `mongosh` instalado en el PC, la alternativa es:
+
+```text
+mongosh "mongodb://127.0.0.1:27017/hotel_modelado" --quiet --file docs/assets/practicas/hotel-modelado/preparar_modelado.js
+mongosh "mongodb://127.0.0.1:27017/hotel_modelado"
+```
+
+Si descargáis el archivo suelto, ajustad su ruta. Para un servidor compartido, el docente debe asignar un entorno aislado; el preparador exige expresamente `hotel_modelado` y no debe lanzarse en la base común del grupo. Atlas requiere además los permisos y la conexión correspondientes.
+
+El preparador comprueba primero que sus cinco colecciones no existan. **No las sobrescribe**: repetirlo termina con un aviso. Si la carga se interrumpe, revisad qué quedó antes de reintentar. Guardad el trabajo previo antes de preparar una nueva ejecución; no borréis otras bases para repetir esta práctica.
+
+| Colección | Contenido inicial |
+| --- | --- |
+| `hoteles` | Un hotel Laredo con ObjectId conocido |
+| `reservas_referencias` | Una reserva que referencia ese hotel y conserva su nombre histórico |
+| `tarifas` | Tres tarifas planas: web 90, OTA 110 y recepción 100, en EUR |
+| `reservas_versionadas` | Dos reservas: hotel en cadena con teléfono plano, y hotel como objeto |
+| `medidas` | 120 medidas del sensor `temp-01`, habitación 214 de Laredo, en dos horas UTC |
+
+En `mongosh`, confirmad `db.getName()` y los recuentos. Los siguientes comandos pertenecen a **esa consola**, no a PowerShell.
+
+### 1. Referenciar sin perder el significado
+
+Ejecutad el `$lookup` de «Meter dentro o señalar fuera». Para `R27-1` debe devolver un único elemento en `hotel_actual`, con nombre Laredo y teléfono `942 60 00 00`. El campo `hotel_nombre_historico` conserva el nombre acordado en la ficha; la referencia permite obtener los datos actuales.
+
+Medid su tamaño con `$bsonSize` y explicad por qué ni el tamaño ni la existencia de una referencia prueban que la consulta será rápida con cualquier volumen. Comprobad también que `hotel_id` y `_id` son ambos ObjectId.
+
+### 2. Convertir tarifas en atributos
+
+Primero consultad `T27-1` y anotad sus tres importes. Después, **una sola vez**, transformad el contenido usando una actualización con pipeline:
+
+```javascript
+db.tarifas.updateOne(
+  {_id: "T27-1", tarifa_web: {$exists: true}},
+  [
+    {$set: {tarifas: [
+      {canal: "web", precio: "$tarifa_web", moneda: "$moneda"},
+      {canal: "ota", precio: "$tarifa_ota", moneda: "$moneda"},
+      {canal: "recepcion", precio: "$tarifa_recepcion", moneda: "$moneda"}
+    ]}},
+    {$unset: ["tarifa_web", "tarifa_ota", "tarifa_recepcion", "moneda"]}
+  ]
+)
+db.tarifas.updateOne(
+  {_id: "T27-1", "tarifas.canal": {$ne: "agencias"}},
+  {$push: {tarifas: {canal: "agencias", precio: 95, moneda: "EUR"}}}
+)
+db.tarifas.find({
+  tarifas: {$elemMatch: {canal: "web", precio: {$lt: 100}, moneda: "EUR"}}
+})
+```
+
+Debéis conservar 90, 110 y 100 y añadir agencias a 95. El filtro de la primera actualización evita reconstruir el array desde campos ya eliminados al repetirla. El segundo evita añadir otra tarifa de agencias en esta secuencia de aula; no sustituye a diseñar restricciones y concurrencia en una aplicación.
+
+### 3. Etiquetar versiones y después migrar
+
+Los dos documentos contienen información equivalente organizada de manera distinta. Empezamos **clasificando** su estructura conocida:
+
+```javascript
+db.reservas_versionadas.updateMany(
+  {hotel: {$type: "string"}, telefono_hotel: {$type: "string"}, v: {$exists: false}},
+  {$set: {v: Int32(1)}}
+)
+db.reservas_versionadas.updateMany(
+  {hotel: {$type: "object"}, "hotel.id": {$type: "objectId"}, v: {$exists: false}},
+  {$set: {v: Int32(2)}}
+)
+db.reservas_versionadas.find({
+  $or: [{hotel: "Laredo"}, {"hotel.nombre": "Laredo"}]
+})
+```
+
+La consulta compatible devuelve **dos reservas**. Etiquetar no ha trasladado ni eliminado campos. Una estructura inesperada no debería recibir una versión sin inspección.
+
+Ahora migramos la reserva antigua, conservando nombre, teléfono, noches e importe:
+
+```javascript
+db.reservas_versionadas.updateOne(
+  {_id: "V27-1", v: Int32(1)},
+  [
+    {$set: {
+      hotel: {
+        id: ObjectId("000000000000000000000027"),
+        nombre: "$hotel",
+        telefono: "$telefono_hotel"
+      },
+      v: Int32(2)
+    }},
+    {$unset: "telefono_hotel"}
+  ]
+)
+db.reservas_versionadas.find({"hotel.nombre": "Laredo", v: 2})
+```
+
+Deben seguir existiendo dos reservas, ahora en versión 2. El teléfono de este ejercicio es una **instantánea del documento**, no una promesa de sincronización con el hotel actual. El identificador se conoce porque el conjunto solo contiene Laredo; en una migración real habría que resolver cada referencia y tratar las que no se encuentran.
+
+### 4. Agrupar 120 medidas sin perderlas
+
+El preparador genera medidas del **12 de abril de 2026**, desde las 08:00 hasta las 09:59 UTC, una por minuto. Las inserta en orden inverso para que el cálculo no dependa del orden de llegada. Cada medida tiene un `_id` estable.
+
+| Hora UTC | Medidas | Suma de temperaturas | Media |
+| --- | --- | --- | --- |
+| 08:00–09:00 | 60 | 1470 | 24,5 °C |
+| 09:00–10:00 | 60 | 1590 | 26,5 °C |
+
+Agrupad por hotel, habitación, sensor e inicio de hora:
+
+```javascript
+db.medidas.aggregate([
+  {$sort: {ts: 1, _id: 1}},
+  {$group: {
+    _id: {
+      hotel: "$hotel", hab: "$hab", sensor: "$sensor",
+      hora: {$dateTrunc: {date: "$ts", unit: "hour", timezone: "UTC"}}
+    },
+    medidas: {$push: {id: "$_id", ts: "$ts", temp_c: "$temp_c"}},
+    suma: {$sum: "$temp_c"},
+    n: {$sum: 1}
+  }},
+  {$set: {temp_media: {$divide: ["$suma", "$n"]}}},
+  {$out: "medidas_hora"}
+])
+db.medidas_hora.find().sort({"_id.hora": 1})
+```
+
+`$out` crea o **reemplaza solo `medidas_hora`** en la base actual. Las medidas originales se conservan. Reejecutar este cálculo sobre las mismas 120 medidas reconstruye dos buckets; no añade otros dos. En producción, coordinar lectores y actualizaciones del resumen requiere un procedimiento adicional.
+
+La suma 1470 no es una temperatura ambiental; es un acumulador para calcular la media de lecturas igualmente espaciadas. Comprobad **los 120 identificadores**, no solo los recuentos y las medias: una repetición y una omisión podrían compensarse. Si faltan medidas se divide por las recibidas, sin afirmar que representan todos los minutos; si se necesita una media temporal con intervalos irregulares, habrá que definir ponderaciones.
+
+Para comprobar la conservación podéis usar [comprobar_buckets.js](../assets/practicas/hotel-modelado/comprobar_buckets.js), de **solo lectura**. Revisa cada identificador, instante y temperatura, además de sumas y medias. Se utiliza con los 120 datos originales, antes de las ampliaciones:
+
+```text
+docker cp docs/assets/practicas/hotel-modelado/comprobar_buckets.js hotel-mongo:/tmp/comprobar_buckets.js
+docker exec hotel-mongo mongosh hotel_modelado --quiet --file /tmp/comprobar_buckets.js
+```
+
+Con `mongosh` en el PC:
+
+```text
+mongosh "mongodb://127.0.0.1:27017/hotel_modelado" --quiet --file docs/assets/practicas/hotel-modelado/comprobar_buckets.js
+```
+
+Ante un error, revisad la entrada, la clave de agrupación y el cálculo. No ajustéis las sumas esperadas para ocultar la pérdida de una medida. El comprobador está pensado para el conjunto pequeño de aula; no es una prueba de rendimiento.
+
+### 5. Crear y probar el validador
+
+En `hotel_modelado`, ejecutad el bloque de creación de `reservas_validacion` de este apartado. Si ya existe, no repitáis la creación como si modificara sus reglas: inspeccionadla y utilizad `collMod` con un contrato explícito si procede.
+
+Probad **uno a uno** los tres `insertOne` del apartado «Probar el contrato». El segundo debe fallar; continuad con el tercero después de interpretar el error. Si los guardáis en un script sin capturar la excepción, el error interrumpe su ejecución y no se inserta el tercero.
+
+Tras ejecutar una vez los casos válidos debe haber **dos documentos**. Añadid pruebas rechazadas por `noches: Int32(0)`, `importe: -1` y un huésped sin `nombre`; ninguna debe aumentar el recuento. No uséis la existencia de una colección como evidencia de que el contrato funciona: mostrad las operaciones aceptadas y rechazadas.
+
+## Actividades
+
+Entregad las decisiones con ejemplos y resultados, no solo el dibujo. Las actividades 1–6 consolidan el recorrido; las restantes permiten profundizar.
+
+1. **Del ER a los documentos.** Diseñad hotel, habitación, reserva, huésped, cobro, servicio e incidencia para tres consultas: ficha de reserva, teléfono actual del hotel e incidencias de una habitación. Indicad qué embebéis, qué referenciáis, crecimiento esperado y una consulta por colección. Separad precio acordado de pagos efectuados. Un JSON por colección, sin comentarios dentro, basta para representar el diseño; explicaciones aparte.
+2. **Referencias e historia.** Sobre una copia de los ejemplos, cambiad nombre y teléfono del hotel. Comprobad qué cambia en el `$lookup` y qué conserva la reserva. Sustituid temporalmente la referencia por una cadena del mismo aspecto y explicad el resultado vacío. No confundáis ese error de tipo con ausencia de datos en el hotel.
+3. **Tarifas.** Realizad el rediseño guiado, comprobad las cuatro tarifas y explicad `$elemMatch`. Preparad un contraejemplo con web a 110 y OTA a 90: dos rutas independientes podrían seleccionar la ficha aunque web no cueste menos de 100. Proponed cómo evitar dos tarifas del mismo canal en una aplicación.
+4. **Versionado.** Guardad evidencia de la reserva antigua, del etiquetado y de la migración. Deben conservarse 2 reservas, sus noches (2 y 3), importes (124 y 186,5) y teléfonos. Explicad qué lectores e índices revisaríais antes de cambiar la escritura de producción.
+5. **Buckets.** Ejecutad la agrupación y contrastad horas, identificadores, sumas y medias con el origen. Repetid el cálculo para demostrar que no duplica buckets. Explicad qué ocurre si se divide por 60 cuando solo se recibieron 59 lecturas.
+6. **Contrato.** Mostrad los casos válidos e inválidos de `reservas_validacion`. Diseñad además un validador para `hoteles` que requiera nombre y un teléfono de tipo cadena. Justificad si admite campos adicionales. Si decidís cerrarlo, incluid `_id` entre los campos permitidos y planificad cómo evolucionarlo.
+7. **Datos tardíos — ampliación.** Trabajad sobre una copia de `medidas` y una salida distinta. Añadid una medida nueva a las 09:30:30 UTC con 30 °C e identificador propio. Deben resultar 61 medidas, suma 1620 y media `1620/61` para esa hora. Reintentad la inserción con el mismo `_id`: el rechazo de duplicado evita añadirla otra vez, pero la aplicación debe decidir cómo tratar ese reintento. Conservad el conjunto original de 120 para las comprobaciones comunes.
+8. **Caso atípico.** Diseñad una reserva normal y otra con 200 extras: límite didáctico de 6 dentro y 194 fuera. Indicad la referencia de continuación y cómo recuperar todos sin duplicarlos. Explicad qué pasa si falla una de las dos escrituras.
+9. **Subconjunto y proyección.** Comparad una proyección de hotel con una colección de resúmenes. Explicad qué información se duplica, cuándo se actualiza y cómo se reconstruye. No deduzcáis que menos campos devueltos significa menos documentos examinados.
+10. **Revisión del modelo de 2.6.** Identificad tres decisiones ya presentes en reservas y opiniones (huéspedes, comentarios, etiquetas, datos opcionales). Explicad qué se mantiene y qué revisaríais al crecer. No hay obligación de aplicar todos los patrones.
+
+??? success "Orientaciones para revisar las respuestas"
+    **1–2.** No hay un único diseño. Debe responder a las consultas y mantener reglas de negocio. Una copia histórica puede permanecer aunque cambie el hotel actual; una referencia necesita igual valor y tipo. No hay integridad referencial automática.
+
+    **3–4.** Las tarifas finales son 90, 110, 100 y 95. Etiquetar la estructura no migra sus campos. El resultado final conserva dos reservas y el teléfono, con `v: 2`; la consulta compatible permite leer ambas durante la transición.
+
+    **5–7.** Los dos buckets conservan 120 medidas y 120 identificadores distintos. Sus sumas son 1470 y 1590 y sus medias 24,5 y 26,5. Con el dato tardío, solo la segunda hora pasa a 61 y `1620/61`. El contrato debe rechazar las entradas inválidas; permitir nuevos campos es una decisión del ejemplo, no una obligación del RA2.
+
+    **8–10.** El caso excepcional requiere leer y mantener su continuación. Una colección de resúmenes añade obligaciones de actualización; una proyección no duplica contenido almacenado. Las decisiones se justifican por operaciones, crecimiento y garantías, no por el nombre del patrón.
 
 ### Criterios para revisar la entrega
 
-Cada colección debe incluir un ejemplo válido, una consulta que justifique su existencia y una explicación del crecimiento esperado. Para referencias, comprobad tipos e identificadores; para duplicaciones, explicad cómo se mantienen o por qué son históricas; para validadores, adjuntad un caso aceptado y otro rechazado.
+Cada colección debe tener un ejemplo válido, una consulta y una explicación del crecimiento esperado. Para las referencias, contrastad tipos e identificadores; para las copias, documentad si son actuales o históricas; para los validadores, adjuntad pruebas aceptadas y rechazadas. Conservad el estado anterior y posterior a cada transformación.
 
-Los ejercicios que cambian `hotel` de cadena a objeto se realizan en una colección **independiente**, por ejemplo `reservas_versionadas`. No modifiquéis la colección usada por el 2.6 y el 2.9: sus consultas presuponen `hotel` como cadena. En los buckets, usad 120 medidas conocidas y verificad que las dos horas conservan las 120, incluidas las que lleguen fuera de orden.
+La práctica se realiza en `hotel_modelado`. No se exige modificar los datos usados por 2.6 o 2.9. Los contadores y resultados de este apartado corresponden a sus propios ejemplos. Dibujar buckets o crear colecciones no demuestra capacidad adicional de un clúster; las pruebas de distribución y tolerancia se estudian en sus apartados específicos.
+
+## Autoevaluación del 2.7
+
+Diez preguntas (A–D, **una** correcta). No puntúan en Moodle. **Comprobar respuesta** muestra el resultado y explica el motivo. Revisad el apartado enlazado antes de repetir.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2-2-7.json"></div>
+
+En [2.8](replicas-shards.md) estudiaremos dónde viven las copias y las particiones y cómo responden ante fallos. El diseño documental sigue siendo necesario: repartir un modelo no corrige referencias incorrectas, arrays sin límite ni resúmenes incoherentes.
 
 ## Referencias
 
@@ -375,3 +575,7 @@ Los ejercicios que cambian `hotel` de cadena a objeto se realizan en una colecci
 - “6 Rules of Thumb for MongoDB Schema Design” (blog de Mongo)
 - [Schema validation](https://www.mongodb.com/docs/manual/core/schema-validation/)
 - [2.6 MongoDB](mongodb.md) (oficios del *shell*) · [2.8](replicas-shards.md) (dónde viven las copias) · [2.9](pymongo.md) (`$lookup` en Python)
+
+- [Modelado de datos](https://www.mongodb.com/docs/manual/data-modeling/).
+- [Versionado del esquema](https://www.mongodb.com/docs/manual/data-modeling/design-patterns/data-versioning/schema-versioning/).
+- [Tamaño BSON en agregación](https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/).

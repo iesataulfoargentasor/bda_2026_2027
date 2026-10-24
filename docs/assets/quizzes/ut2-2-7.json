@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.7",
+  "title": "Autoevaluación del 2.7",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Embeber o referenciar",
+      "href": "../modelado/#solo-hay-dos-gestos-meter-dentro-o-senalar-fuera",
+      "prompt": "Una ficha contiene cuatro huéspedes, se lee junta y su crecimiento está acotado. ¿Qué justifica embeberlos?",
+      "code": "",
+      "options": [
+        "La colección de reservas deja de necesitar índices al contener huéspedes dentro.",
+        "Los huéspedes adquieren una identidad compartida entre todas las reservas del hotel.",
+        "La lectura conjunta y una actualización atómica del documento encajan con ese acceso.",
+        "El documento conserva el mismo tamaño aunque se añadan campos a cada huésped."
+      ],
+      "answer": 2,
+      "explain": "Embeber puede facilitar lectura y cambios conjuntos con crecimiento limitado. No elimina índices, límites ni la necesidad de identificar un perfil compartido si existe."
+    },
+    {
+      "topic": "Datos históricos",
+      "href": "../modelado/#solo-hay-dos-gestos-meter-dentro-o-senalar-fuera",
+      "prompt": "La reserva guarda hotel_nombre_historico y referencia al hotel. Cambia el nombre actual. ¿Qué comportamiento es coherente?",
+      "code": "",
+      "options": [
+        "Conservar el nombre histórico y consultar por referencia el dato actual cuando se necesite.",
+        "Reescribir el nombre histórico al leer para que desaparezca la diferencia entre ambas fichas.",
+        "Eliminar la referencia porque tener dos nombres indica que se ha duplicado el identificador.",
+        "Cambiar el precio acordado junto con el nombre para que la reserva coincida con el catálogo."
+      ],
+      "answer": 0,
+      "explain": "La copia histórica representa el estado acordado; no es una réplica del atributo actual. Si se requiere una copia actualizada, hay que definir otra política."
+    },
+    {
+      "topic": "Referencias",
+      "href": "../modelado/#1-referenciar-sin-perder-el-significado",
+      "prompt": "hotel_id contiene una cadena con los caracteres del ObjectId del hotel y el lookup devuelve un array vacío. ¿Qué revisaríamos?",
+      "code": "",
+      "options": [
+        "El orden de creación de las colecciones, porque lookup solo consulta colecciones anteriores.",
+        "El tipo de hotel_id y del identificador del hotel, además de comprobar el valor referenciado.",
+        "El nombre del array de salida, porque debe coincidir con la colección que contiene el hotel.",
+        "El tamaño de la reserva, porque un documento pequeño no puede utilizar una referencia."
+      ],
+      "answer": 1,
+      "explain": "Valor y tipo deben coincidir. Una cadena no es un ObjectId y la referencia no crea integridad referencial automática. El resultado vacío debe investigarse."
+    },
+    {
+      "topic": "Versionado",
+      "href": "../modelado/#3-etiquetar-versiones-y-despues-migrar",
+      "prompt": "Asignamos v:2 a una reserva que conserva hotel como cadena y telefono_hotel plano. ¿Hemos realizado la migración propuesta?",
+      "code": "",
+      "options": [
+        "Sí, porque MongoDB transforma los campos cuando cambia el número de versión.",
+        "Sí, porque un lector de versión 2 convierte automáticamente todas las cadenas en objetos.",
+        "No, porque una versión de esquema solo puede almacenarse en una colección separada.",
+        "No, porque etiquetar no transforma el contenido ni garantiza que cumpla el contrato nuevo."
+      ],
+      "answer": 3,
+      "explain": "La etiqueta debe describir la estructura. Migrar requiere transformar y comprobar los datos; también deben adaptarse lectores, índices y validación."
+    },
+    {
+      "topic": "Atributos",
+      "href": "../modelado/#2-convertir-tarifas-en-atributos",
+      "prompt": "Hay una tarifa web a 110 EUR y otra OTA a 90 EUR. Queremos web por menos de 100 EUR. ¿Qué evita mezclar ambas?",
+      "code": "",
+      "options": [
+        "Exigir canal web y precio menor que 100 dentro del mismo $elemMatch.",
+        "Usar dos rutas independientes porque ambas apuntan al array de tarifas.",
+        "Ordenar el array por precio antes de filtrar por el canal en otra condición.",
+        "Exigir un array de dos tarifas para garantizar que sus propiedades se emparejan."
+      ],
+      "answer": 0,
+      "explain": "Las rutas independientes pueden satisfacerse con elementos distintos. $elemMatch exige que la misma tarifa cumpla canal, precio y, si se incluye, moneda."
+    },
+    {
+      "topic": "Media del bucket",
+      "href": "../modelado/#4-agrupar-120-medidas-sin-perderlas",
+      "prompt": "Una hora conserva 59 temperaturas cuya suma es 1475. ¿Cómo se expresa la media de las medidas recibidas?",
+      "code": "",
+      "options": [
+        "1475/60, para mantener una referencia fija aunque falte una lectura del sensor.",
+        "1475/59, indicando que faltan lecturas y sin afirmar cobertura completa de la hora.",
+        "1475/58, descontando el intervalo que falta además de la medida no recibida.",
+        "1475, porque agrupar las medidas convierte su suma en la temperatura de la hora."
+      ],
+      "answer": 1,
+      "explain": "La media aritmética usa el número de lecturas conservadas. No demuestra cobertura temporal completa; para intervalos irregulares puede requerirse otra ponderación."
+    },
+    {
+      "topic": "Conservación",
+      "href": "../modelado/#4-agrupar-120-medidas-sin-perderlas",
+      "prompt": "Los buckets suman 120 entradas y sus medias coinciden. ¿Qué comprobación adicional detecta una omisión compensada?",
+      "code": "",
+      "options": [
+        "Comparar solo el tamaño BSON de los buckets con el del conjunto de entrada.",
+        "Contar los buckets y verificar que sus nombres de campo sean idénticos.",
+        "Contrastar identificadores, instantes y valores de cada medida con el origen.",
+        "Repetir el cálculo de las medias desde los propios buckets sin consultar el origen."
+      ],
+      "answer": 2,
+      "explain": "Una duplicación y una omisión pueden conservar cantidad y sumas. La comparación por identificador y contenido detecta pérdidas, repeticiones y asignaciones incorrectas."
+    },
+    {
+      "topic": "Validador",
+      "href": "../modelado/#un-validador-no-es-un-create-table",
+      "prompt": "El validador exige noches entero positivo y permite campos adicionales. ¿Qué significa para el RA2?",
+      "code": "",
+      "options": [
+        "Que deben retirarse los límites numéricos para poder reutilizar los documentos después.",
+        "Que un campo nuevo se acepta aunque cambie el tipo obligatorio de noches a texto.",
+        "Que el servidor deduce cómo consultar cualquier campo nuevo sin adaptar la aplicación.",
+        "Que es un contrato abierto; uno cerrado también puede servir con evolución controlada."
+      ],
+      "answer": 3,
+      "explain": "El criterio no obliga a aceptar datos sin reglas. Permitir o prohibir campos adicionales es una decisión; ambos contratos requieren lectores compatibles y una evolución planificada."
+    },
+    {
+      "topic": "Caso atípico",
+      "href": "../modelado/#uno-de-cada-mil-se-sale-atipico",
+      "prompt": "La regla didáctica deja seis extras dentro y el resto fuera. Una reserva tiene 200. ¿Qué necesita el diseño?",
+      "code": "",
+      "options": [
+        "Un indicador que permita descartar los extras externos al abrir la ficha habitual.",
+        "Seis extras internos, 194 enlazados fuera y una lectura que recupere el conjunto completo.",
+        "Doscientos extras dentro y otra copia de esos mismos doscientos en la colección auxiliar.",
+        "Una colección auxiliar sin referencia, porque el orden de inserción identifica la reserva."
+      ],
+      "answer": 1,
+      "explain": "El patrón preserva toda la información y define cómo obtener la continuación. También requiere gestionar coherencia y posibles fallos de escrituras en varios documentos."
+    },
+    {
+      "topic": "Crecimiento y evidencias",
+      "href": "../modelado/#relacion-con-el-ra2",
+      "prompt": "Una alumna convierte medidas en buckets y crea una colección nueva. ¿Qué puede afirmar con esa evidencia?",
+      "code": "",
+      "options": [
+        "Que el clúster dispone de más capacidad porque cada colección usa un servidor adicional.",
+        "Que se ha probado tolerancia a fallos porque quedan documentos en dos colecciones.",
+        "Que ha demostrado un rediseño; añadir recursos al sistema requiere otra observación.",
+        "Que el procesamiento se ha distribuido porque group ejecuta una tarea por cada hora."
+      ],
+      "answer": 2,
+      "explain": "Crear colecciones o agrupar datos cambia la organización lógica. No prueba nuevos nodos, distribución física ni tolerancia a fallos; esas evidencias se obtienen en los laboratorios correspondientes."
+    }
+  ]
+}
