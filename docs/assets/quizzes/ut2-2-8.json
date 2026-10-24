@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.8",
+  "title": "Autoevaluación del 2.8",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Copias y partes",
+      "href": "../replicas-shards/#cuando-copiar-ya-no-basta-partir",
+      "prompt": "Tres miembros mantienen cada uno 100 GB del mismo conjunto. ¿Cuántos datos lógicos representan, sin índices ni registros?",
+      "code": "",
+      "options": [
+        "100 GB lógicos con tres copias; la réplica no triplica la capacidad útil.",
+        "300 GB lógicos porque cada servidor aporta un disco de 100 GB al conjunto.",
+        "200 GB lógicos porque se descuenta el disco del primario al calcular las copias.",
+        "100 GB lógicos repartidos en tres fragmentos que solo se reúnen durante la lectura."
+      ],
+      "answer": 0,
+      "explain": "Cada miembro conserva el mismo conjunto. Sharding reparte partes diferentes; replicar aumenta copias y coste físico, no la cantidad lógica almacenada."
+    },
+    {
+      "topic": "Mayorías",
+      "href": "../replicas-shards/#eleccion-mayoria-de-los-que-estan-configurados",
+      "prompt": "Se amplía un conjunto de tres a cuatro miembros votantes. ¿Cómo cambia la mayoría necesaria?",
+      "code": "",
+      "options": [
+        "Pasa de dos a dos, porque decide la mitad de los miembros que responden.",
+        "Pasa de dos a tres, por lo que perder dos impide formar la mayoría.",
+        "Pasa de tres a cuatro, porque toda elección requiere el voto de cada miembro.",
+        "Pasa de dos a uno, porque la prioridad del antiguo primario sustituye los votos."
+      ],
+      "answer": 1,
+      "explain": "Se necesita más de la mitad de los votantes configurados: dos de tres y tres de cuatro. Deben existir además un candidato elegible y datos suficientes."
+    },
+    {
+      "topic": "Secundarios",
+      "href": "../replicas-shards/#escribir-en-laredo-leer-en-potes",
+      "prompt": "Una conexión directa a un secundario usa setReadPref(\"secondary\"). ¿Qué permite ese cambio?",
+      "code": "",
+      "options": [
+        "Que el secundario confirme escrituras locales y las envíe después al primario.",
+        "Que la lectura espere a que todos los miembros tengan la misma versión.",
+        "Que el cliente elija ese proceso como primario mientras dure su sesión.",
+        "Que el cliente solicite lecturas al secundario, sin habilitar escrituras allí."
+      ],
+      "answer": 3,
+      "explain": "La preferencia de lectura no altera el cargo del servidor ni la confirmación de escrituras. Un secundario puede estar atrasado y debe rechazar la escritura directa."
+    },
+    {
+      "topic": "Relevo y parada",
+      "href": "../replicas-shards/#prueba-del-c-apagar-el-primario",
+      "prompt": "¿Qué diferencia hay entre rs.stepDown(60) y detener el proceso del primario?",
+      "code": "",
+      "options": [
+        "StepDown elimina el miembro de la configuración; detenerlo mantiene su voto activo.",
+        "StepDown borra su oplog; detenerlo conserva el diario para una elección posterior.",
+        "StepDown cede temporalmente el cargo; detener el proceso exige arrancarlo de nuevo.",
+        "StepDown configura un shard nuevo; detenerlo cambia el conjunto al modo independiente."
+      ],
+      "answer": 2,
+      "explain": "StepDown mantiene el proceso en ejecución. Detenerlo provoca una caída del proceso y requiere recuperarlo. Ambos experimentos deben observarse por separado."
+    },
+    {
+      "topic": "Confirmación incierta",
+      "href": "../replicas-shards/#preocupacion-de-escritura",
+      "prompt": "Una escritura devuelve un error por wtimeout. ¿Qué debe hacer la aplicación antes de repetir un cobro?",
+      "code": "",
+      "options": [
+        "Dar por aplicado el rollback y repetir con un identificador nuevo para no colisionar.",
+        "Consultar su identificador y resolver la incertidumbre, pues el cambio puede haberse aplicado.",
+        "Leer en cualquier secundario y deducir del primer resultado vacío que el cobro no existe.",
+        "Cambiar a w:0 para que el servidor complete la escritura que quedó pendiente en el cliente."
+      ],
+      "answer": 1,
+      "explain": "El timeout limita la espera, no revierte lo aplicado. Una lectura atrasada puede no resolver el resultado; se necesita un procedimiento de comprobación y reintento que evite duplicados."
+    },
+    {
+      "topic": "Visibilidad",
+      "href": "../replicas-shards/#preocupacion-de-lectura",
+      "prompt": "¿Qué implica una lectura con readConcern majority?",
+      "code": "",
+      "options": [
+        "Observa datos confirmados mayoritariamente, pero no promete la versión más reciente.",
+        "Consulta todos los secundarios y construye una respuesta con el valor más repetido.",
+        "Selecciona el nodo de menor latencia y espera a que se convierta en el primario.",
+        "Confirma la transacción externa del cliente antes de devolver cualquier documento."
+      ],
+      "answer": 0,
+      "explain": "Read concern regula visibilidad. No elige el nodo ni garantiza frescura máxima. Leer las propias escrituras y otras dependencias puede requerir sesiones y opciones adicionales."
+    },
+    {
+      "topic": "Clave de partición",
+      "href": "../replicas-shards/#la-clave-hotel-os-junta-el-atasco",
+      "prompt": "El 90 % de las reservas tiene hotel=Laredo. ¿Qué sucede al aplicar hash solo a hotel?",
+      "code": "",
+      "options": [
+        "Cada reserva obtiene un hash distinto porque MongoDB incluye su _id automáticamente.",
+        "Las consultas por fecha quedan dirigidas a un shard al conservarse el orden del hotel.",
+        "Las reservas con ese mismo valor pueden seguir concentrándose en una parte.",
+        "La réplica divide cada documento de Laredo entre los miembros del mismo conjunto."
+      ],
+      "answer": 2,
+      "explain": "El hash de un mismo valor es el mismo. Hay que estudiar cardinalidad, frecuencia y consultas; no basta con cambiar el método de particionado."
+    },
+    {
+      "topic": "Dividir y mover",
+      "href": "../replicas-shards/#chunks-que-no-se-mueven-solos-aun",
+      "prompt": "¿Qué debe ocurrir al dividir un rango por Potes y mover una de sus partes?",
+      "code": "",
+      "options": [
+        "SplitAt debe duplicar los documentos y moveChunk debe eliminar las copias sobrantes.",
+        "SplitAt debe modificar la comarca para que el nombre del shard coincida con el hotel.",
+        "MoveChunk debe aumentar las noches porque el destino añade capacidad al agregado.",
+        "Cambiarán límites y ubicación; documentos, identificadores y resultados se conservarán."
+      ],
+      "answer": 3,
+      "explain": "Dividir establece un límite y mover cambia la ubicación. Las operaciones no deben alterar los datos lógicos. Se compara contenido completo, tipos y totales."
+    },
+    {
+      "topic": "Límites del laboratorio",
+      "href": "../replicas-shards/#laboratorio-opcional-trasmiera-y-liebana",
+      "prompt": "El laboratorio tiene dos votantes por shard y un config server. ¿Qué limitación debemos reconocer?",
+      "code": "",
+      "options": [
+        "Cada shard necesita ambos votantes; el config server único es otro punto de fallo.",
+        "Cada shard tolera perder uno porque el router aporta el voto que falta al conjunto.",
+        "El config server guarda una copia completa y puede sustituir a cualquier shard caído.",
+        "Los dos shards replican todo el conjunto entre sí y compensan la pérdida de un miembro."
+      ],
+      "answer": 0,
+      "explain": "Cada replica set tiene su propia mayoría. El router no vota en ella y los config servers mantienen metadatos. El laboratorio está pensado para observar reparto, no alta disponibilidad completa."
+    },
+    {
+      "topic": "Oplog y recuperación",
+      "href": "../replicas-shards/#el-diario-antes-que-los-votos",
+      "prompt": "Un secundario vuelve cuando las operaciones que necesita ya no están en el oplog. ¿Qué conclusión es correcta?",
+      "code": "",
+      "options": [
+        "La réplica conserva esas operaciones en todas las copias de seguridad automáticamente.",
+        "El secundario debe convertirse en primario para reconstruir su diario con las lecturas.",
+        "Puede necesitar sincronización inicial; el oplog no sustituye una copia de seguridad.",
+        "El primario debe borrar sus documentos recientes para igualar el estado del secundario."
+      ],
+      "answer": 2,
+      "explain": "La ventana del oplog es limitada y depende de la carga. Una sincronización inicial puede reconstruir la copia; los backups cubren necesidades distintas, como recuperar borrados erróneos."
+    }
+  ]
+}
