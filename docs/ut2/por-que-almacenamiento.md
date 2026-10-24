@@ -63,9 +63,11 @@ Volvamos al histórico de **500 GB**. Descargarlo completo al portátil añade u
 
 Si los datos ya están repartidos en un clúster, una estrategia es ejecutar tareas cerca de los bloques que necesitan y combinar después sus resultados. Para aprender cómo se divide y reúne un cálculo, utilizaremos una operación más sencilla que el informe de cobros de Pentaho: sumar noches reservadas por hotel. Este resultado no representa un importe cobrado ni un porcentaje de ocupación. El recorrido sería:
 
-1. Cada tarea lee una parte de las reservas y obtiene sumas parciales por hotel.
-2. El sistema reúne los parciales correspondientes al mismo hotel.
-3. Se calcula y comprueba el total final.
+1. Cada tarea **map** lee una parte de las reservas y emite un par `(hotel, noches)` por reserva. Por ejemplo, dos reservas de Laredo con 3 y 2 noches producen `(Laredo, 3)` y `(Laredo, 2)`; el mapper todavía no las suma.
+2. El sistema agrupa los pares por hotel durante el **shuffle**, de modo que los valores de una misma clave lleguen al mismo reducer.
+3. El **reducer** suma las noches de cada hotel: en el ejemplo, Laredo obtiene 5. Después comprobamos los totales con un cálculo independiente sobre el mismo CSV.
+
+Como optimización, algunos trabajos pueden sumar valores parciales antes de enviarlos por la red mediante un **combiner**, si la operación lo permite. Es opcional y no lo configuramos en esta práctica: el recorrido básico es emitir pares, agruparlos y sumar sus valores.
 
 Este es un anticipo de [MapReduce en 2.4](computacion-distribuida.md). **HDFS almacena los bloques; el motor de procesamiento realiza el cálculo.** La [arquitectura de HDFS](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html) facilita acercar las aplicaciones a sus datos, pero todavía hay transferencias para distribuir datos, comunicar tareas o reunir resultados.
 

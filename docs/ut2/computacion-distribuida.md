@@ -130,9 +130,10 @@ Los scripts enlazados contienen el código completo. El mapper usa `csv.reader`,
 En **PowerShell**, desde la carpeta de prácticas, ejecutad las fases separadas. Así se detecta un error del mapper antes de continuar con un resultado parcial. Estos comandos guardan las filas en memoria y se reservan para el CSV pequeño:
 
 ```powershell
-$pares = Get-Content -Encoding utf8 reservas.csv | python mapper_noches.py
+[string[]]$pares = @(Get-Content -Encoding utf8 reservas.csv | python mapper_noches.py)
 if ($LASTEXITCODE -ne 0) { throw "El mapper ha fallado; no se acepta la salida." }
-$resultado = $pares | Sort-Object | python reducer_noches.py
+[Array]::Sort($pares, [StringComparer]::Ordinal)
+$resultado = $pares | python reducer_noches.py
 if ($LASTEXITCODE -ne 0) { throw "El reducer ha fallado; no se acepta la salida." }
 $resultado | Set-Content -Encoding utf8 noches_local.tsv
 Get-Content noches_local.tsv
@@ -150,6 +151,8 @@ else
   cat noches_local.tsv
 fi
 ```
+
+En PowerShell usamos una comparación **ordinal**, que distingue mayúsculas y minúsculas y mantiene juntas las filas de cada clave exacta. Por ejemplo, `Laredo` y `laredo` son dos claves diferentes según nuestro contrato: no las unificamos al ordenar. `Sort-Object` sin configurar no distingue esas mayúsculas y puede intercalar sus filas, lo que haría que el reducer calculase varios subtotales para un mismo hotel. Si quisiéramos unificar los nombres, habría que definir y aplicar una regla de normalización antes de agrupar.
 
 La ordenación local agrupa las claves que recibirá el reducer, pero **no reproduce toda la distribución ni la comunicación del shuffle**. En Bash, `pipefail` permite detectar que una etapa anterior ha fallado. Una salida parcial puede existir aun con error: no se acepta ni se mide como ejecución correcta.
 

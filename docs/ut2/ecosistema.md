@@ -820,9 +820,20 @@ El *mapper* salta la cabecera (`id_reserva,…`), interpreta las cinco columnas 
 Las tuberías anteriores con `< fichero` son de **Bash**. En PowerShell, para el fichero pequeño, utilizad:
 
 ```powershell
-Get-Content opiniones.txt | python mapper.py | Sort-Object | python reducer.py
-Get-Content reservas.csv | python mapper_noches.py | Sort-Object | python reducer_noches.py
+[string[]]$paresPalabras = @(Get-Content -Encoding utf8 opiniones.txt | python mapper.py)
+if ($LASTEXITCODE -ne 0) { throw "El mapper ha fallado; no se acepta la salida." }
+[Array]::Sort($paresPalabras, [StringComparer]::Ordinal)
+$paresPalabras | python reducer.py
+if ($LASTEXITCODE -ne 0) { throw "El reducer ha fallado; no se acepta la salida." }
+
+[string[]]$paresNoches = @(Get-Content -Encoding utf8 reservas.csv | python mapper_noches.py)
+if ($LASTEXITCODE -ne 0) { throw "El mapper ha fallado; no se acepta la salida." }
+[Array]::Sort($paresNoches, [StringComparer]::Ordinal)
+$paresNoches | python reducer_noches.py
+if ($LASTEXITCODE -ne 0) { throw "El reducer ha fallado; no se acepta la salida." }
 ```
+
+La ordenación **ordinal** compara el texto exacto y deja juntas las filas de cada clave. No usamos `Sort-Object` con sus valores predeterminados, porque no distingue mayúsculas de minúsculas y puede intercalar claves distintas, como `Laredo` y `laredo`. El reducer necesita recibir consecutivamente todos los valores de una misma clave. Esta simulación guarda los pares en memoria; está pensada para los ficheros pequeños del ejemplo, no para el histórico de 500 GB.
 
 Con el CSV de 20 reservas se esperan **Comillas 11, Laredo 12, Noja 15, Potes 14 y Santander 10: 62 noches en total**. Son noches reservadas, no cobradas ni porcentaje de ocupación. La comprobación independiente se desarrolla en [2.4](computacion-distribuida.md). En ambas pruebas debe usarse el CSV de esta carpeta, no uno de UT1 con otras columnas.
 
