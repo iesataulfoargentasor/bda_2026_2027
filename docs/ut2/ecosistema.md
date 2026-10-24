@@ -649,12 +649,14 @@ Map-Reduce Framework
 
 | Contador | Pregunta de aula |
 | --- | --- |
-| `Launched map tasks` | ¿Cuántos *mappers*? ¿Coincide con los *splits*? |
+| `Launched map tasks` | ¿Cuántos **intentos de ejecución** de tareas Map se han lanzado? Comparadlos con las tareas lógicas y los *splits*: los reintentos o la ejecución especulativa pueden elevar este contador |
 | `Data-local map tasks` | ¿El map corrió **en el nodo que tenía el bloque**? Si es 0, revisad topología y planificación; en este laboratorio los servicios viven en contenedores separados y no se garantiza localidad |
 | `Map input records` | Líneas (o registros) que entraron al map |
 | `Combine output records` | Comparad entradas y salidas del combiner y bytes del shuffle; puede ejecutarse varias veces. Menos registros no cuantifica por sí solo el ahorro de red |
 | `Reduce input groups` | Claves distintas que vio el *reducer* (palabras distintas, hoteles distintos) |
 | Bytes HDFS leídos / escritos | Volumen real, no “el CSV pesa X en Windows” |
+
+Una **tarea Map lógica** procesa un *split*. Un **intento** es una ejecución de esa tarea: si falla, puede lanzarse otro; con ejecución especulativa, también puede lanzarse un intento adicional para una tarea lenta. Por ejemplo, dos *splits* dan lugar a dos tareas Map; si una necesita un segundo intento, `Launched map tasks` puede mostrar **3**, aunque sigan siendo **2** tareas lógicas. El contador tampoco indica cuántas se ejecutaron a la vez ni cuántas máquinas participaron.
 
 Como **ampliación**, en una instalación con History Server configurado, puede iniciarse así. No es un paso del Compose básico:
 
