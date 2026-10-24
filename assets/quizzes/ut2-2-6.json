@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.6",
+  "title": "Autoevaluación del 2.6",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Carga inicial",
+      "href": "../mongodb/#comprobar-la-carga-antes-de-practicar",
+      "prompt": "Tras importar dos veces un JSONL sin _id, hay 30 reservas en lugar de 15. ¿Qué explicación es coherente?",
+      "code": "",
+      "options": [
+        "MongoDB ha almacenado dos copias internas y countDocuments cuenta ambas réplicas.",
+        "La segunda carga ha añadido documentos con nuevos identificadores a la colección.",
+        "El cursor ha contado dos veces cada reserva al mostrar los resultados por lotes.",
+        "La importación ha separado cada reserva en un documento de datos y otro de tipos."
+      ],
+      "answer": 1,
+      "explain": "Importar no actualiza por hotel ni deduplica por contenido. Sin identificadores estables, repetir la carga puede añadir otra copia lógica de cada documento. Revisad la base antes de recargar."
+    },
+    {
+      "topic": "Tipos BSON",
+      "href": "../mongodb/#fechas",
+      "prompt": "El filtro de abril con ISODate no encuentra un checkin guardado como texto. ¿Qué revisarías?",
+      "code": "",
+      "options": [
+        "El orden de los campos del documento, porque la fecha debe preceder al hotel.",
+        "El número de resultados del cursor, porque las fechas se filtran después de limit.",
+        "La proyección de checkin, porque ocultarlo impide evaluar su intervalo temporal.",
+        "El tipo almacenado y la importación Extended JSON, además de los límites del periodo."
+      ],
+      "answer": 3,
+      "explain": "Una cadena con aspecto de fecha no es una fecha BSON. Extended JSON permite conservar el tipo. Los límites UTC del ejemplo tampoco equivalen automáticamente a un día civil local."
+    },
+    {
+      "topic": "Filtro y proyección",
+      "href": "../mongodb/#proyeccion",
+      "prompt": "¿Qué hace find({hotel: \"Laredo\"}, {hotel: 1, importe: 1, _id: 0})?",
+      "code": "",
+      "options": [
+        "Selecciona reservas de Laredo y devuelve hotel e importe sin cambiar lo almacenado.",
+        "Selecciona reservas de Laredo y elimina sus otros campos de la colección original.",
+        "Selecciona reservas con importe igual a uno y hotel informado, sin devolver su id.",
+        "Selecciona el primer documento de Laredo y lo reemplaza por los campos indicados."
+      ],
+      "answer": 0,
+      "explain": "El primer argumento selecciona documentos y el segundo controla los campos devueltos. La proyección no es una actualización. Excluir _id se admite junto a una proyección de inclusión."
+    },
+    {
+      "topic": "Arrays",
+      "href": "../mongodb/#arrays",
+      "prompt": "Una opinión tiene a Ana con su correo y a Luis con otro. Queremos autor y correo en el mismo comentario. ¿Qué filtro usaríamos?",
+      "code": "",
+      "options": [
+        "Dos rutas independientes, porque cada condición aplica al comentario seleccionado.",
+        "Un $or entre autor y correo, porque ambas propiedades pertenecen al mismo array.",
+        "Un $elemMatch con autor y correo, para exigir ambas condiciones a un elemento.",
+        "Un $size de dos, porque la presencia de dos comentarios permite emparejar campos."
+      ],
+      "answer": 2,
+      "explain": "Las rutas independientes pueden coincidir con elementos distintos. $elemMatch en el filtro exige un elemento que cumpla todas sus condiciones; en proyección tiene otro propósito."
+    },
+    {
+      "topic": "Nulo y ausente",
+      "href": "../mongodb/#criterios-y-implicita",
+      "prompt": "Hay un documento sin extras, otro con extras:null y otro con extras:[]. ¿Qué encuentra {extras:null}?",
+      "code": "",
+      "options": [
+        "El documento con null y el documento cuyo campo extras está ausente.",
+        "El documento con null y el documento que contiene el array vacío.",
+        "El documento con null, dejando fuera el que no declara ese campo.",
+        "Los tres documentos, al interpretar ausencia, null y array vacío igual."
+      ],
+      "answer": 0,
+      "explain": "La igualdad con null también puede coincidir con ausencia. $exists:false identifica el campo ausente; $size:0 identifica un array vacío."
+    },
+    {
+      "topic": "Cursores y páginas",
+      "href": "../mongodb/#cursores",
+      "prompt": "Hay seis reservas web. Ordenamos por importe descendente y _id ascendente y aplicamos skip(4).limit(4). ¿Qué devuelve?",
+      "code": "",
+      "options": [
+        "Cuatro reservas, porque limit completa la página con documentos de otros canales.",
+        "Dos reservas, correspondientes a las posiciones quinta y sexta del orden aplicado.",
+        "Cuatro reservas, desde la cuarta hasta la séptima porque skip empieza a contar en uno.",
+        "Dos reservas elegidas antes de ordenar, porque sort solo organiza la página final."
+      ],
+      "answer": 1,
+      "explain": "Skip descarta cuatro coincidencias del orden solicitado y limit fija un máximo. Quedan dos. El desempate por _id estabiliza el orden cuando hay importes iguales."
+    },
+    {
+      "topic": "Cambios comprobados",
+      "href": "../mongodb/#insertar-y-modificar",
+      "prompt": "Una actualización devuelve matchedCount:1 y modifiedCount:0. ¿Qué interpretación debemos comprobar?",
+      "code": "",
+      "options": [
+        "Se ha insertado una reserva nueva sin necesidad de modificar la que ya existía.",
+        "Se ha modificado un documento, pero la confirmación aún no cuenta esa escritura.",
+        "Se ha encontrado una reserva y sus campos se han eliminado por la proyección.",
+        "Se ha encontrado una reserva cuyo valor quizá ya era el que intentábamos asignar."
+      ],
+      "answer": 3,
+      "explain": "La coincidencia y la modificación son recuentos distintos. Asignar con $set un valor que ya existe puede no cambiar nada. Revisad el documento y la operación."
+    },
+    {
+      "topic": "Reemplazo",
+      "href": "../mongodb/#replaceone",
+      "prompt": "Una reserva contiene canal, fecha y extras. Ejecutamos replaceOne por _id con un documento que solo incluye canal. ¿Qué ocurre?",
+      "code": "",
+      "options": [
+        "Se conserva la fecha y extras porque replaceOne actualiza únicamente campos presentes.",
+        "Se crea otro documento porque omitir _id en el reemplazo obliga a generar uno nuevo.",
+        "Desaparecen fecha y extras, y se conserva el _id del documento que se reemplaza.",
+        "Se rechaza el cambio porque cada reemplazo debe repetir todos los campos anteriores."
+      ],
+      "answer": 2,
+      "explain": "ReplaceOne sustituye el contenido; los campos omitidos desaparecen. Si se omite _id en el reemplazo, se conserva el existente. Para cambiar una propiedad usamos $set."
+    },
+    {
+      "topic": "Concurrencia",
+      "href": "../mongodb/#concurrencia",
+      "prompt": "Dos recepciones quieren descontar la última plaza de un documento. ¿Qué operación protege la comprobación y el descuento?",
+      "code": "",
+      "options": [
+        "Leer libres en cada cliente y escribir después el valor leído menos uno mediante $set.",
+        "Comprobar el total de documentos y restar una plaza al primero que devuelve el cursor.",
+        "Actualizar ambos documentos de recepción con updateMany sin comprobar el resultado.",
+        "Filtrar por id y libres>=1, aplicar $inc:-1 y verificar si se modificó el documento."
+      ],
+      "answer": 3,
+      "explain": "El filtro y la actualización atómica de un documento impiden descontar cuando ya no hay plaza. Hay que interpretar el resultado. UpdateMany no aporta por sí solo una transacción del conjunto."
+    },
+    {
+      "topic": "Separación de prácticas",
+      "href": "../mongodb/#actividades",
+      "prompt": "Tras añadir Islares, incrementar los importes de Trasmiera y borrar Islares, quedan 15 reservas en hotel_escrituras. ¿Qué significa?",
+      "code": "",
+      "options": [
+        "La copia vuelve al contenido inicial porque coincide el recuento de documentos.",
+        "El borrado revierte también los incrementos anteriores al pertenecer a la misma sesión.",
+        "El recuento coincide, pero cinco reservas conservan el incremento de la actividad.",
+        "La base hotel recibe esos incrementos porque $out mantiene sincronizada la copia."
+      ],
+      "answer": 2,
+      "explain": "Eliminar el documento nuevo no revierte otras escrituras. $out creó una copia, no una réplica sincronizada. Por eso preservamos hotel para las consultas y prácticas posteriores."
+    }
+  ]
+}
