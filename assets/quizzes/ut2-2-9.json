@@ -1,0 +1,147 @@
+{
+  "unit": "el apartado 2.9",
+  "title": "Autoevaluación del 2.9",
+  "mode": "each",
+  "questions": [
+    {
+      "topic": "Conexión",
+      "href": "../pymongo/#el-primer-cable",
+      "prompt": "Se crea MongoClient y se obtiene cliente[\"hotel\"], pero aún no se pide ninguna operación. ¿Qué se ha comprobado?",
+      "code": "",
+      "options": [
+        "Hay objetos de cliente y base; todavía falta comprobar acceso y datos con operaciones.",
+        "La base hotel está disponible; solo falta comprobar los permisos de cada colección.",
+        "El servidor aceptó la conexión; los documentos se descargarán al crear el cursor.",
+        "La base hotel se ha creado vacía; la primera consulta recuperará sus colecciones."
+      ],
+      "answer": 0,
+      "explain": "Obtener referencias no crea la base ni confirma que la operación deseada pueda ejecutarse. ping prueba acceso al servidor; recuentos y consultas comprueban los datos y permisos necesarios."
+    },
+    {
+      "topic": "Cursores",
+      "href": "../pymongo/#preguntar-sin-vaciar-el-bson",
+      "prompt": "Una consulta puede devolver millones de documentos. ¿Qué forma evita cargarlos todos de golpe en la memoria de Python?",
+      "code": "",
+      "options": [
+        "Convertir find en list y procesar esa lista por grupos pequeños de documentos.",
+        "Filtrar y proyectar en MongoDB, y recorrer el cursor procesando sus resultados.",
+        "Exportar primero el cursor completo con dumps y recorrer después el texto JSON.",
+        "Ampliar maxPoolSize para que cada conexión guarde una parte distinta del resultado."
+      ],
+      "answer": 1,
+      "explain": "El cursor permite recibir resultados por lotes. Convertirlo completo en list o serializarlo completo materializa el resultado; un pool no reparte automáticamente su memoria."
+    },
+    {
+      "topic": "Significado del parte",
+      "href": "../pymongo/#el-parte-agregacion-en-el-motor",
+      "prompt": "El pipeline suma noches y calcula $avg de importe por hotel. ¿Qué describe esa media?",
+      "code": "",
+      "options": [
+        "El precio de cada noche, porque las noches y los importes se agrupan por hotel.",
+        "El cobro medio confirmado, porque aggregate procesa los documentos en el servidor.",
+        "El importe medio por reserva incluida en el filtro que se está aplicando.",
+        "El porcentaje de ocupación, porque el grupo reúne las reservas de la misma sede."
+      ],
+      "answer": 2,
+      "explain": "La media tiene como unidades los documentos de reserva incluidos. Precio por noche requiere otra fórmula; ocupación necesita capacidad y calendario, y una reserva no prueba un cobro."
+    },
+    {
+      "topic": "Uniones",
+      "href": "../pymongo/#el-parte-agregacion-en-el-motor",
+      "prompt": "Tres reservas de Laredo reciben mediante $lookup las dos opiniones del hotel. ¿Cómo se interpreta la suma de tamaños de los arrays?",
+      "code": "",
+      "options": [
+        "Son seis opiniones diferentes, ya que cada documento de salida tiene su propio array.",
+        "Son tres opiniones, porque el número de reservas determina el número de valoraciones.",
+        "Son dos reservas con opinión, porque cada comentario identifica una estancia concreta.",
+        "Son seis asociaciones con las mismas dos opiniones, repetidas para cada reserva."
+      ],
+      "answer": 3,
+      "explain": "El cruce usa el nombre del hotel, no el identificador de la reserva. Dos opiniones se asocian con cada una de las tres reservas; no aparecen seis opiniones distintas."
+    },
+    {
+      "topic": "Orden y límite",
+      "href": "../pymongo/#el-cursor-cortar-ordenar-saltar",
+      "prompt": "Se necesitan los dos importes mayores de Potes. ¿Qué secuencia del pipeline expresa esa consulta?",
+      "code": "",
+      "options": [
+        "Filtrar Potes, limitar a dos documentos y ordenar esos dos por importe descendente.",
+        "Filtrar Potes, ordenar por importe descendente y después limitar a dos documentos.",
+        "Ordenar los hoteles por nombre, limitar a dos documentos y después seleccionar Potes.",
+        "Filtrar Potes, agrupar el importe total del hotel y limitar la salida a dos documentos."
+      ],
+      "answer": 1,
+      "explain": "Hay que ordenar el conjunto filtrado antes de limitar. Los datos originales dan 490 y 280. Ante empates se puede añadir un desempate definido, igual en cursor y pipeline."
+    },
+    {
+      "topic": "Escrituras",
+      "href": "../pymongo/#cambios",
+      "prompt": "Un update_one con $set devuelve matched_count=1 y modified_count=0. ¿Qué explicación es compatible con esos valores?",
+      "code": "",
+      "options": [
+        "El documento coincidió con el filtro y ya contenía el valor que se quería asignar.",
+        "El filtro no encontró la reserva y el servidor creó un documento sin modificar campos.",
+        "El documento coincidió, pero esos contadores indican que la escritura sigue pendiente.",
+        "El servidor cambió el documento, pero solo cuenta cambios cuando se usa update_many."
+      ],
+      "answer": 0,
+      "explain": "Encontrar y modificar son cosas distintas. Repetir un $set con el mismo valor puede encontrar una reserva sin cambiarla. Se comprueba el estado, no se interpreta el cero como un fallo automático."
+    },
+    {
+      "topic": "Confirmación",
+      "href": "../pymongo/#las-mismas-promesas-que-el-28",
+      "prompt": "Una escritura majority está confirmada y una lectura en un secundario aún no la devuelve. ¿Qué explicación es válida?",
+      "code": "",
+      "options": [
+        "La preferencia SECONDARY cambia esa escritura a w:1 para permitir la lectura local.",
+        "La confirmación informa de que todos los secundarios han aplicado la misma versión.",
+        "La lectura secundaria revierte la escritura si el documento no está en su copia local.",
+        "La mayoría puede estar confirmada sin que ese secundario haya aplicado aún el cambio."
+      ],
+      "answer": 3,
+      "explain": "Write concern determina confirmación; read preference determina el destino de lectura. Confirmación mayoritaria no significa que cada secundario esté al día."
+    },
+    {
+      "topic": "Transacción",
+      "href": "../pymongo/#dos-papeles-un-si-transacciones",
+      "prompt": "El descuento de parking se ejecuta dentro de la transacción, pero insertar la reserva produce DuplicateKeyError y se aborta. ¿Qué debe comprobarse?",
+      "code": "",
+      "options": [
+        "La plaza sigue descontada y la reserva previa se conserva como prueba del intento.",
+        "La plaza se repone mediante otra actualización antes de consultar las reservas.",
+        "El cupo y la reserva preexistente conservan el estado anterior a la transacción.",
+        "La reserva previa se sustituye y el cupo conserva el descuento del nuevo intento."
+      ],
+      "answer": 2,
+      "explain": "El aborto descarta el descuento realizado en esa transacción y no sustituye la reserva previa. El comprobador provoca el error después del descuento para demostrarlo."
+    },
+    {
+      "topic": "Reintentos",
+      "href": "../pymongo/#dos-papeles-un-si-transacciones",
+      "prompt": "Se quiere enviar un correo de confirmación desde el callback de with_transaction. ¿Qué problema debe contemplarse?",
+      "code": "",
+      "options": [
+        "El callback puede repetirse; el correo es externo a MongoDB y podría enviarse varias veces.",
+        "El correo queda incluido en el commit y solo será visible cuando confirme la mayoría.",
+        "El envío se retrasa hasta cerrar MongoClient porque la sesión comparte el pool de conexiones.",
+        "El correo cambia la preferencia de lectura y obliga a ejecutar el callback en un secundario."
+      ],
+      "answer": 0,
+      "explain": "with_transaction puede repetir el callback ante determinados errores. Los efectos externos no se revierten con MongoDB; requieren un diseño que evite duplicados y gestione su confirmación."
+    },
+    {
+      "topic": "Evidencias",
+      "href": "../pymongo/#relacion-con-el-ra2",
+      "prompt": "Un script obtiene correctamente el parte desde un MongoDB independiente. ¿Qué evidencia aporta por sí solo?",
+      "code": "",
+      "options": [
+        "Que el trabajo se ha repartido entre los núcleos del cliente y los servidores de MongoDB.",
+        "Que el programa envía una agregación al motor y obtiene el resultado que se ha contrastado.",
+        "Que la base puede seguir escribiendo cuando se detiene el servidor que atendió el parte.",
+        "Que añadir un segundo servidor reducirá el tiempo de generación del parte en esta carga."
+      ],
+      "answer": 1,
+      "explain": "El parte demuestra operaciones desde la aplicación y procesamiento en el motor. Distribución, tolerancia a fallos y mejoras de rendimiento requieren sus pruebas específicas."
+    }
+  ]
+}
