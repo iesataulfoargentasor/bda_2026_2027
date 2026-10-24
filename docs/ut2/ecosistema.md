@@ -799,11 +799,20 @@ if actual is not None:
 
 El reducer de palabras mostrado es didáctico y descarta valores no enteros. Los scripts del agregado de noches rechazan registros y pares inválidos con error para evitar perder datos silenciosamente.
 
-Tubería local **completa**. El `sort` imita el shuffle de Hadoop (en el clúster **no** lo ponéis vosotros):
+Tubería local **completa en Bash**. La ordenación agrupa las claves para el reducer; no reproduce toda la comunicación del shuffle de Hadoop. `LC_ALL=C` evita que la ordenación dependa de las reglas lingüísticas del equipo. Elegid un nombre de salida nuevo en cada prueba para conservar los resultados anteriores:
 
-```text
-python mapper.py < opiniones.txt | sort | python reducer.py
+```bash
+set -o pipefail
+python mapper.py < opiniones.txt | LC_ALL=C sort | python reducer.py > palabras_local_01.tsv
+estado=$?
+if [ "$estado" -ne 0 ]; then
+  echo "El proceso ha fallado; no se acepta palabras_local_01.tsv." >&2
+else
+  cat palabras_local_01.tsv
+fi
 ```
+
+Sin `pipefail`, Bash utiliza el estado del último comando: el reducer podría terminar correctamente aunque el mapper hubiera fallado. Con esta opción comprobamos si alguna fase ha comunicado un error. Puede quedar un archivo parcial; no se acepta como resultado válido. Un estado correcto tampoco valida por sí solo el contenido: hay que contrastar los recuentos. En el clúster, Hadoop realiza la ordenación; no añadís este `sort` al comando del job.
 
 Debéis ver `desayuno`, `laredo`, `parking`… con sus cuentas. Si el `sort` falta, el reducer de clave actual **rompe** (ve `laredo`, luego `potes`, luego `laredo` otra vez y emite dos líneas de Laredo).
 
@@ -811,9 +820,18 @@ Debéis ver `desayuno`, `laredo`, `parking`… con sus cuentas. Si el `sort` fal
 
 El recuento de palabras permite probar Streaming. Volvemos al hotel con el agregado:
 
-```text
-python mapper_noches.py < reservas.csv | sort | python reducer_noches.py
+```bash
+set -o pipefail
+python mapper_noches.py < reservas.csv | LC_ALL=C sort | python reducer_noches.py > noches_local_01.tsv
+estado=$?
+if [ "$estado" -ne 0 ]; then
+  echo "El proceso ha fallado; no se acepta noches_local_01.tsv." >&2
+else
+  cat noches_local_01.tsv
+fi
 ```
+
+Si el mapper rechaza una fila después de emitir otras, el archivo puede contener subtotales incompletos. Revisad el error antes de continuar; no uséis esa salida para validar el cálculo ni comparar tiempos. Tras una ejecución sin errores, contrastad todos los totales con el CSV mediante el procedimiento de 2.4, indicando el nombre de salida utilizado aquí.
 
 El *mapper* salta la cabecera (`id_reserva,…`), interpreta las cinco columnas CSV, valida los campos y emite `Laredo\t3`. El *reducer* suma. El [2.4](computacion-distribuida.md) os pide **contrastar** esa salida con un `GROUP BY` en DuckDB o pandas sobre el mismo CSV.
 

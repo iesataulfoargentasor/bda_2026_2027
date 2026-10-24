@@ -582,7 +582,12 @@ Diez preguntas (A–D, **una** correcta). No puntúan en Moodle. **Comprobar res
 
 <div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2-2-9.json"></div>
 
-Al terminar, cerrad los clientes de Python y Flask. Detened el laboratorio Docker que hayáis utilizado con `docker compose stop` desde su carpeta, conservando los volúmenes. No uséis `down -v` para alternar entornos.
+Al terminar, cerrad los clientes de Python y detened Flask. Salid del contenedor cliente con `exit` si lo utilizasteis; al haberse iniciado con `--rm`, se retira al salir, pero eso no detiene los servidores MongoDB. Desde la terminal del PC, elegid la parada que corresponda:
+
+- **Servidor independiente de 2.6 (`hotel-mongo`), utilizado para consultas, parte y Flask:** ejecutad `docker stop hotel-mongo`. Se creó con `docker run`, por lo que no se detiene con Compose.
+- **Conjunto de réplicas de 2.8 (`hotel-rs`):** ejecutad `docker compose stop` desde `docs/assets/practicas/hotel-rs`, donde está su `compose.yaml`.
+
+Ambas paradas conservan los volúmenes y sus datos. No uséis `down -v` para alternar entornos.
 
 ## Referencias
 
