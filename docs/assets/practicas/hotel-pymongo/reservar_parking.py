@@ -14,8 +14,8 @@ from pymongo.read_concern import ReadConcern
 from pymongo.write_concern import WriteConcern
 
 
-def reservar(cliente, identificador):
-    bd = cliente.get_database("hotel_tx")
+def reservar(cliente, identificador, nombre_bd="hotel_tx"):
+    bd = cliente.get_database(nombre_bd)
 
     def operacion(sesion):
         resultado = bd.parking.update_one(
@@ -43,9 +43,12 @@ def main():
     uri = os.environ.get("HOTEL_MONGO_URI")
     if not uri:
         raise SystemExit("Define HOTEL_MONGO_URI con la URI del replica set accesible")
+    confirmada = False
     try:
         with MongoClient(uri, serverSelectionTimeoutMS=5000) as cliente:
-            cliente.admin.command("ping")
+            estado = cliente.admin.command("hello")
+            if not estado.get("setName"):
+                raise ValueError("Esta práctica requiere un replica set; revisa HOTEL_MONGO_URI")
             # Solo inicializa una vez: no repone plazas al repetir el programa.
             parking = cliente.hotel_tx.get_collection(
                 "parking", write_concern=WriteConcern("majority", wtimeout=5000)
@@ -55,12 +58,19 @@ def main():
             )
             # Fuera del callback: el mismo id se conserva durante sus reintentos.
             identificador = ObjectId()
+            print("Identificador de esta ejecución:", identificador)
             reservar(cliente, identificador)
+            confirmada = True
             print("Reserva confirmada:", identificador)
             print("Plazas:", parking.find_one({"_id": "Laredo"}))
     except ValueError as exc:
         raise SystemExit(str(exc)) from None
     except PyMongoError as exc:
+        if confirmada:
+            raise SystemExit(
+                f"Reserva confirmada; no se pudo consultar el estado final ({type(exc).__name__}). "
+                "Comprueba el identificador mostrado antes de repetir la operación."
+            ) from None
         raise SystemExit(
             f"Operación no confirmada ({type(exc).__name__}). "
             "Revisa conectividad, topología y estado antes de reintentar."

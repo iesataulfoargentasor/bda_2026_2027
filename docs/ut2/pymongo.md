@@ -8,19 +8,40 @@ tags:
 
 # 2.9. MongoDB y Python
 
-Gerencia puede obtener el parte de las ocho mediante un **script**, sin escribir consultas manualmente en `mongosh`. [PyMongo](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) es el conector oficial. Aquí comprobáis el criterio **b)** (el procesamiento lo lanza la *app*) y el **d)** (metéis `mascota` en 2027 y los `find` de 2026 **no** se rompen).
+En los apartados anteriores hemos aprendido a consultar MongoDB, modelar documentos y comprobar qué sucede cuando falla un miembro del conjunto. Ahora gerencia necesita repetir el parte sin escribir cada consulta a mano. **PyMongo permite ejecutar esas operaciones desde un programa Python**: el programa prepara la petición y MongoDB la resuelve según su configuración.
 
-El *shell* del [2.6](mongodb.md) enseña el oficio. Python es el mismo gesto con otro teclado: filtro, proyección, cursor, *pipeline*, `WriteConcern`. Las reservas y opiniones son las del hotel, no un catálogo de cine ni el proyecto de otro ciclo.
+Continuamos con las reservas y opiniones del grupo hotelero. Como en la UT1, comprobaremos el resultado: que un programa termine no demuestra que haya leído la base correcta ni aplicado la regla de negocio.
 
-```bash
+!!! info "Ruta de estudio"
+    **Esencial:** preparar la conexión, consultar sin alterar los originales, interpretar el cursor y las agregaciones, y comprobar las escrituras en una base de ejercicios.
+
+    **Práctica guiada:** obtener el parte de gerencia y comparar los resultados con 2.6. Después, trasladar las preferencias y confirmaciones de 2.8 a Python.
+
+    **Ampliación:** transacción de reserva de parking sobre el replica set y una página local con Flask. Se indican por separado sus requisitos. Las entregas evaluables se concretan en Moodle.
+
+[PyMongo](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) es el driver oficial. Usaremos Python 3.12, **PyMongo 4.x** y MongoDB 7, en coherencia con el laboratorio. Desde la raíz del repositorio, cread el entorno de Python; si ya existe, reutilizadlo:
+
+```powershell
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-pip install "pymongo>=4,<5"
+.\.venv\Scripts\Activate.ps1
+python -m pip install "pymongo>=4,<5"
 ```
 
-En el aula usad **PyMongo 4.x** y anotad la versión instalada. La URI típica es `mongodb://localhost:27017`. Atlas trae usuario, `tls` y a menudo `mongodb+srv://`. **No** subáis la URI con contraseña a Moodle en claro.
+En PowerShell, activadlo con `.\.venv\Scripts\Activate.ps1`. Si la política del equipo impide activar, ejecutad `.\.venv\Scripts\python.exe` en lugar de `python`, también para `-m pip`; no hace falta cambiar la política del sistema. Anotad `python --version` y `python -m pip show pymongo`. El paquete `bson` viene incluido en PyMongo: no instaléis otro paquete independiente con ese nombre.
+
+La URI típica es `mongodb://localhost:27017`. Atlas trae usuario, `tls` y a menudo `mongodb+srv://`. **No** subáis la URI con contraseña a Moodle en claro.
 
 ## El primer cable
+
+Primero detened el laboratorio de 2.8 que ocupe el puerto 27017 y arrancad el servidor independiente de [2.6](mongodb.md). **Los volúmenes del servidor independiente y del replica set son diferentes**: cambiar la URI no copia los datos.
+
+| Recorrido | Conexión y base | Qué se conserva |
+| --- | --- | --- |
+| Lecturas y parte | Servidor de 2.6, `hotel` | 15 reservas, 6 opiniones y 46 noches originales |
+| Escrituras | Mismo servidor, `hotel_escrituras` | Copia de ejercicios, modificable |
+| Preferencias y confirmaciones | Replica set de 2.8, `hotel_python_lab` | Documentos identificados de prueba |
+| Transacción — ampliación | Replica set de 2.8, `hotel_tx` | Cupo y reservas propios del experimento |
+| Flask — ampliación | Servidor de 2.6, `hotel` | Lectura de los originales |
 
 Importad una sola vez los JSONL en `hotel`: deben existir **15 reservas y 6 opiniones**. Las consultas de este bloque utilizan esos datos originales. `MongoClient` crea un cliente, el acceso a `cliente["hotel"]` obtiene una referencia a la base y `find_one` envía una consulta. No son tres formas equivalentes de conectar.
 
@@ -37,12 +58,16 @@ reservas = hotel.reservas      # o hotel["reservas"]
 print(reservas.find_one({"hotel": "Laredo"}))
 ```
 
+Hasta el bloque de escrituras, los fragmentos reutilizan `cliente`, `hotel` y `reservas` de esta sesión Python. Cerrad `cliente.close()` al finalizar ese recorrido. No concatenéis todos los fragmentos como si fueran un único programa; los scripts descargables sí son programas completos.
+
 Si no habéis importado aún, desde la **raíz del repo** y con `mongoimport` instalado en el PC (el procedimiento y la comprobación de carga están en el [2.6](mongodb.md)):
 
 ```bash
 mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection reservas --file docs/assets/practicas/reservas_mongo.jsonl
 mongoimport --host 127.0.0.1 --port 27017 --db hotel --collection opiniones --file docs/assets/practicas/hotel-mongo/opiniones.jsonl
 ```
+
+Comprobad los recuentos antes de importar: repetir la carga puede duplicar documentos, porque los archivos no incluyen `_id`. Si no trabajáis con el repositorio completo, descargad [reservas_mongo.jsonl](../assets/practicas/reservas_mongo.jsonl) y [opiniones.jsonl](../assets/practicas/hotel-mongo/opiniones.jsonl) y adaptad solo la ruta de `--file`. El procedimiento alternativo dentro del contenedor está en 2.6.
 
 Hay un script de aula que imprime el parte: [`parte_gerencia.py`](../assets/practicas/hotel-pymongo/parte_gerencia.py). Arrancad un `mongod` (el del [2.6](mongodb.md), no el *replica set* y el suelto a la vez: los dos quieren el **27017**).
 
@@ -51,15 +76,27 @@ $env:HOTEL_MONGO_URI = "mongodb://localhost:27017"
 python docs/assets/practicas/hotel-pymongo/parte_gerencia.py
 ```
 
+El script verifica 15 reservas, 6 opiniones, fechas BSON y 46 noches antes de presentar el parte. Estos controles detectan problemas habituales, pero no certifican por sí solos que todos los campos coincidan con el archivo original. La media impresa es **importe por reserva**, no precio por noche ni cobro realizado.
+
+| Hotel | Noches originales |
+| --- | ---: |
+| Comillas | 4 |
+| Laredo | 11 |
+| Noja | 4 |
+| Potes | 13 |
+| Reinosa | 6 |
+| Santander | 8 |
+| **Total** | **46** |
+
 ## Una llave, no un enchufe por clic
 
 Un cliente gestiona conexiones y descubre la topología. Crear uno por documento desperdicia ese trabajo. `connectTimeoutMS` limita el establecimiento de una conexión; `serverSelectionTimeoutMS` limita cuánto se busca un servidor adecuado. Ninguno equivale a cancelar automáticamente una escritura ya realizada.
 
 Las opciones de reintento no hacen idempotente cualquier código de aplicación. Si el programa no sabe si se confirmó una operación, necesita un identificador de negocio para comprobarla y evitar duplicarla. Los errores mostrados al alumnado no deben imprimir una URI que pudiera contener contraseña.
 
-`MongoClient` **no** es “abro el socket, pregunto, cierro”. Mantiene un ***pool*** que crece según la demanda, con un límite predeterminado de 100 conexiones por servidor; no abre 100 de golpe. Cada `find` toma una y la suelta. Abrir un cliente **dentro** del `for` de un Flask es el error clásico.
+`MongoClient` **no** es “abro el socket, pregunto, cierro”. Mantiene un ***pool*** que crece según la demanda, con un límite predeterminado de 100 conexiones por servidor; no abre 100 de golpe. Las operaciones utilizan el pool; al recorrer un cursor puede haber varias peticiones al servidor, no una conexión nueva por documento. Abrir un cliente **dentro** del `for` de un Flask es el error clásico.
 
-Podéis pasar la URI o trocearla. Opciones que en el hotel importan:
+El siguiente fragmento muestra una configuración alternativa. Si vais a sustituir el cliente anterior, cerradlo con `cliente.close()` y obtened de nuevo los manejadores de base y colección desde el nuevo cliente antes de continuar. No reutilicéis los manejadores vinculados al cliente cerrado:
 
 ```python
 cliente = MongoClient(
@@ -68,32 +105,34 @@ cliente = MongoClient(
     connectTimeoutMS=2000,
     serverSelectionTimeoutMS=4000,
     retryWrites=True,
-    wtimeout=2500,
+    wtimeoutMS=2500,
 )
+hotel = cliente["hotel"]
+reservas = hotel["reservas"]
 ```
 
-`wtimeout` evita que un cobro con `w: "majority"` se quede **colgado** si Potes no contesta ([2.8](replicas-shards.md)). Si no hay servidor, salta `ServerSelectionTimeoutError`: capturadlo; no dejéis un *traceback* crudo en recepción.
+La opción `wtimeoutMS` del cliente (llamada `wtimeout` en `WriteConcern`) limita la espera de confirmación cuando la escritura necesita las confirmaciones indicadas. **No limita toda la operación ni deshace lo ya aplicado**. En un conjunto de tres miembros, la ausencia de uno no impide necesariamente obtener mayoría: importan los miembros disponibles y su estado. El ejemplo anterior no fija `w`; para pedir mayoría de forma explícita se usa `WriteConcern(w="majority", wtimeout=2500)`, como veremos después. Si no hay servidor, salta `ServerSelectionTimeoutError`: capturadlo; no dejéis un *traceback* crudo en recepción.
 
 ```python
 print(cliente.list_database_names())
 print(cliente.address)
 ```
 
-Set `hotelrs` (varios hosts + nombre del conjunto):
+Set `hotelrs` (varios hosts + nombre del conjunto). **Esta URI solo sirve desde un entorno que resuelva y alcance esos nombres Docker**, como el contenedor cliente explicado más abajo; no la ejecutéis directamente en Windows sin adaptar la red:
 
 ```python
 uri = "mongodb://rs-laredo:27017,rs-potes:27017,rs-noja:27017/?replicaSet=hotelrs"
 ```
 
-En Atlas, `mongodb+srv://…` ya lista los miembros. `tls=True` va en la cadena. El *pool* ve los tres *hosts*; no hace falta “elegir el primario a mano”.
+En Atlas, una URI `mongodb+srv://…` permite descubrir servidores mediante DNS y activa TLS por defecto. Usad la URI que proporciona el servicio, con credenciales fuera del código. En un replica set accesible, el driver descubre los miembros y selecciona el primario; `directConnection=true` fija un servidor y no sustituye esa conexión con descubrimiento.
 
-**Pereza:** `cliente.hotel` y `hotel.reservas` **no** crean nada en disco hasta el primer `insert`. Un typo (`cliente.htel`) no falla al instante: puede crear una base equivocada al escribir. Verificad el nombre antes de cargar datos.
+**Referencias:** `cliente.hotel` y `hotel.reservas` no crean por sí solos la base ni la colección. Una escritura o una creación explícita sí puede crearlas. Un typo (`cliente.htel`) no falla al instante: puede crear una base equivocada al escribir. Verificad el nombre antes de cargar datos.
 
 ## Preguntar sin vaciar el BSON
 
 Construid primero el filtro como diccionario de Python. Las claves de operadores son cadenas (`"$gte"`); los booleanos son `True` y `False`, y el valor nulo es `None`. Copiar literalmente `true` del shell JavaScript produce un error en Python.
 
-Una consulta vacía no demuestra fallo de conexión: puede no haber coincidencias. Contrastad `count_documents({})`, base y filtro. Al convertir un cursor completo en JSON o en una lista, cargáis sus resultados en memoria; el ejemplo siguiente limita la salida a diez documentos.
+Una consulta vacía no demuestra fallo de conexión: puede no haber coincidencias. Contrastad `count_documents({})`, base y filtro. Al convertir un cursor completo en JSON o en una lista, cargáis sus resultados en memoria; el ejemplo de exportación limita la salida a diez documentos. La primera consulta usa el pequeño conjunto de aula; con datos grandes conviene filtrar, proyectar y recorrer los resultados sin materializarlos completos.
 
 `find` devuelve un **cursor**, no una lista. `count_documents` cuenta con el mismo filtro.
 
@@ -117,7 +156,7 @@ cursor = reservas.find({"hotel": "Laredo"}).limit(10)
 print(dumps(cursor, indent=2, ensure_ascii=False))
 ```
 
-`ObjectId` y fechas salen con `$oid` / `$date`. `json.dumps` de la biblioteca estándar **rompe** con esos tipos.
+`dumps` produce Extended JSON, con representaciones como `$oid` y `$date`; no convierte el resultado en JSON ordinario independiente de los tipos BSON. `json.dumps` de la biblioteca estándar **rompe** con esos tipos.
 
 ## El parte: agregación en el motor
 
@@ -128,7 +167,7 @@ Seguid la forma de los datos después de cada etapa. `$match` conserva reservas 
 Aquí aprendemos a **dejar el trabajo en Mongo** (`aggregate`) y que Python solo reciba el resultado. Una agregación sobre un servidor independiente no demuestra computación distribuida; esa evidencia se obtiene con el experimento del [2.4](computacion-distribuida.md). Tres fases que gerencia pide cada mañana: filtrar, agrupar, ordenar.
 
 ```python
-from pymongo import DESCENDING
+from pymongo import ASCENDING, DESCENDING
 
 pipeline = [
     {"$match": {"canal": {"$in": ["web", "ota"]}}},
@@ -139,11 +178,13 @@ pipeline = [
             "media": {"$avg": "$importe"},
         }
     },
-    {"$sort": {"noches": DESCENDING}},
+    {"$sort": {"noches": DESCENDING, "_id": ASCENDING}},
 ]
 for fila in reservas.aggregate(pipeline):
     print(fila)
 ```
+
+El parte descargable suma **todos los canales**; este pipeline filtra `web` y `ota`, por lo que no debe exigirse el mismo total. Comparad únicamente consultas con el mismo alcance.
 
 Extras (array) → una fila por valor, luego recuento:
 
@@ -175,7 +216,7 @@ for fila in reservas.aggregate(pipeline):
     print(fila["hotel"], "opiniones:", len(fila["criticas"]))
 ```
 
-Si la opinión apuntara a `_id` de una reserva, el `localField` sería `_id` y el `foreignField` un `ObjectId` guardado. Si **cada** pantalla necesita `$lookup`, el [2.7](modelado.md) os está pidiendo embeber un trozo.
+Si la opinión apuntara a `_id` de una reserva, el `localField` sería `_id` y el `foreignField` un `ObjectId` guardado. Si muchas pantallas necesitan `$lookup`, revisad con [2.7](modelado.md) la frecuencia de lectura, las actualizaciones y el crecimiento del documento. Embeber puede ayudar, pero no es una obligación: una relación compartida o creciente puede justificar referencias.
 
 En el `$lookup` anterior, cada reserva de Laredo recibe las opiniones de ese hotel. Con los datos originales salen **tres reservas**, cada una con **dos opiniones**. Sumar los tamaños de esos arrays daría seis asociaciones, no seis opiniones distintas. Para una fila por hotel, agrupad primero o consultad una colección de hoteles.
 
@@ -185,7 +226,7 @@ En el `$lookup` anterior, cada reserva de Laredo recibe las opiniones de ese hot
 
 Para comparar cursor y pipeline, consumid ambos sobre los mismos datos, con idéntico filtro, proyección y orden. En el fichero original Potes tiene importes 124, 490 y 280: los dos mayores son **490 y 280**. Si hay empates, añadid `_id` como desempate en ambos. La equivalencia no significa que cualquier cadena arbitraria de etapas produzca el mismo resultado.
 
-Lo que en el *pipeline* es `$limit` / `$sort` / `$skip`, en el cursor son métodos **encadenados**. Mismo resultado; elegid uno y no mezcléis sin motivo.
+El cursor permite encadenar `sort`, `skip` y `limit`. Un pipeline puede expresar la misma consulta mediante etapas, pero su orden importa: limitar antes de ordenar no equivale a ordenar todos los resultados y escoger los primeros.
 
 ```python
 from pymongo import ASCENDING, DESCENDING
@@ -210,21 +251,22 @@ pipeline = [
 ]
 ```
 
-Dos criterios (noche y nombre): lista de tuplas.
+Dos criterios (nombre del hotel y después importe): lista de tuplas.
 
 ```python
 reservas.find({}).sort([("hotel", ASCENDING), ("importe", DESCENDING)])
 ```
 
-Paginación de aula: `.sort("checkin", ASCENDING).skip(10).limit(10)`. En colecciones **enormes**, `skip` recorre lo saltado: mejor un rango (`"_id": {"$gt": ultimo}`).
+Paginación de aula: `.sort([("checkin", ASCENDING), ("_id", ASCENDING)]).skip(10).limit(10)`. El desempate permite un orden definido. Con desplazamientos grandes, `skip` puede resultar costoso: estudiad paginación por rango e índices. El rango debe corresponder al orden: `_id > ultimo` sirve para avanzar por `_id`, pero no sustituye sin más a paginar por `checkin`. Si los datos cambian entre peticiones, un orden estable no equivale a una instantánea común.
 
 ## Escribir, borrar, enmendar
 
-Realizad las modificaciones sobre la base `hotel_escrituras`, preparada en el [2.6](mongodb.md). Antes de continuar, reasignad los manejadores:
+Realizad las modificaciones sobre la base `hotel_escrituras`, preparada en el [2.6](mongodb.md). Si aún no la habéis preparado, copiad las dos colecciones con el procedimiento `$out` de el bloque de escrituras de 2.6; hacerlo otra vez reemplaza los ejercicios anteriores. Antes de continuar, reasignad los manejadores y verificad el destino:
 
 ```python
 hotel = cliente["hotel_escrituras"]
 reservas = hotel["reservas"]
+print(reservas.full_name)  # hotel_escrituras.reservas
 ```
 
 Así las altas y cambios no alteran los 15 documentos originales del parte. En las respuestas de escritura distinguimos que el servidor haya confirmado la operación, que haya encontrado un documento y que realmente lo haya cambiado.
@@ -251,7 +293,10 @@ print(alta.acknowledged, alta.inserted_id)
 ```python
 from bson.objectid import ObjectId
 
-id_reserva = reservas.find_one({"hotel": "Laredo"})["_id"]
+reserva = reservas.find_one({"hotel": "Laredo"}, sort=[("_id", 1)])
+if reserva is None:
+    raise ValueError("Falta Laredo: revisa la copia de hotel_escrituras")
+id_reserva = reserva["_id"]
 hotel["opiniones"].insert_one({
     "hotel": "Laredo",
     "reserva_id": id_reserva,  # conserva exactamente su valor y su tipo
@@ -273,7 +318,7 @@ except DuplicateKeyError:
 
 ### Bajas
 
-`delete_one` / `delete_many` → `deleted_count`. Vaciar con `delete_many({})` deja la colección; `reservas.drop()` la **quita** (índices incluidos). En el hotel, `drop` de `reservas` un viernes es noticia.
+`delete_one` / `delete_many` → `deleted_count`. Vaciar con `delete_many({})` deja la colección; `reservas.drop()` la **quita** (índices incluidos). Para practicar, borrad únicamente el documento que acabáis de insertar, usando su `_id`; conservad las operaciones de vaciado como comparación conceptual.
 
 ### Cambios
 
@@ -314,18 +359,28 @@ Lectura: clases de `ReadPreference`. Escritura: `WriteConcern`. Se fijan en el c
 from pymongo import ReadPreference
 from pymongo.write_concern import WriteConcern
 
-cliente = MongoClient(uri, serverSelectionTimeoutMS=5000)  # URI interna del set, definida antes
-print(cliente.read_preference)
-
-informes = cliente.get_database("hotel", read_preference=ReadPreference.SECONDARY)
-mostrador = informes.get_collection("reservas", read_preference=ReadPreference.PRIMARY)
-
-ocupacion = mostrador.with_options(read_preference=ReadPreference.SECONDARY_PREFERRED)
-cobro = mostrador.with_options(write_concern=WriteConcern(w="majority", wtimeout=2500))
-cobro.insert_one({"hotel": "Potes", "canal": "web", "noches": 1, "importe": 95})
+# Ejecutar solo desde la red Docker indicada en el siguiente bloque.
+# Se cierra este cliente al salir del bloque; no reemplaza el cliente de lectura.
+with MongoClient(uri, serverSelectionTimeoutMS=5000) as cliente_rs:
+    cliente_rs.admin.command("ping")
+    bd_lab = cliente_rs.get_database("hotel_python_lab")
+    mostrador = bd_lab.get_collection("reservas", read_preference=ReadPreference.PRIMARY)
+    informes = mostrador.with_options(read_preference=ReadPreference.SECONDARY)
+    escritura = mostrador.with_options(
+        write_concern=WriteConcern(w="majority", wtimeout=2500)
+    )
+    resultado = escritura.update_one(
+        {"_id": "python-confirmacion-01"},
+        {"$set": {"hotel": "Potes", "noches": 1, "importe": 95}},
+        upsert=True,
+    )
+    print("Confirmada:", resultado.acknowledged)
+    print("Lectura secundaria:", informes.find_one({"_id": "python-confirmacion-01"}))
 ```
 
-Valores: `PRIMARY`, `PRIMARY_PREFERRED`, `SECONDARY`, `SECONDARY_PREFERRED`, `NEAREST` (los mismos nombres del [2.8](replicas-shards.md)). El informe de ocupación puede ir a Noja; el cobro, no.
+Repetir esta escritura mantiene el mismo documento de laboratorio. No convierte cualquier proceso de negocio en idempotente. La lectura secundaria puede devolver `None` si el miembro seleccionado todavía no ha aplicado la escritura: **mayoría no significa que todos estén al día**. Contrastad después desde el primario y repetid la lectura para observar la propagación.
+
+Valores: `PRIMARY`, `PRIMARY_PREFERRED`, `SECONDARY`, `SECONDARY_PREFERRED` y `NEAREST`. La preferencia selecciona lecturas; no dirige escrituras al secundario. Un informe que admite retraso puede usar secundarios. Para fijar qué datos son visibles existe además `ReadConcern`, y `WriteConcern` indica cómo se confirma una escritura. Son decisiones distintas, como en [2.8](replicas-shards.md).
 
 ### Ejecutar Python dentro de la red del replica set
 
@@ -338,7 +393,7 @@ docker run --rm -it --network hotel-rs_default -v "${PWD}:/trabajo:ro" -w /traba
 Este contenedor cliente necesita acceso a Internet para instalar PyMongo. En su Bash:
 
 ```bash
-pip install "pymongo>=4,<5"
+python -m pip install "pymongo>=4,<5"
 export HOTEL_MONGO_URI='mongodb://rs-laredo:27017,rs-potes:27017,rs-noja:27017/?replicaSet=hotelrs'
 python docs/assets/practicas/hotel-pymongo/reservar_parking.py
 ```
@@ -347,7 +402,7 @@ La red se llama `hotel-rs_default` con el nombre de proyecto del Compose incluid
 
 ## Dos papeles, un “sí” (transacciones)
 
-Una actualización de un documento es atómica. Si una operación modifica documentos distintos, como el cupo de parking y la reserva, necesitamos una transacción explícita para confirmarlos juntos. **Un servidor standalone no admite transacciones multidocumento**; utilizamos el replica set preparado en el 2.8.
+Una actualización de un documento es atómica. Si la regla exige confirmar juntos cambios en documentos distintos, como descontar el cupo de parking y crear la reserva, utilizamos una transacción explícita. Otras operaciones pueden aceptar pasos independientes; hay que decidir la garantía antes de elegir el mecanismo. **Un servidor standalone no admite transacciones multidocumento**; utilizamos el replica set preparado en el 2.8.
 
 MongoDB ofrece una API explícita de inicio/commit/abort y una API de callback, `with_transaction`. Esta última puede reejecutar el callback o reintentar el commit ante determinados errores. Por tanto, dentro del callback no enviamos correos ni realizamos efectos externos que pudieran duplicarse.
 
@@ -368,7 +423,7 @@ def operacion(sesion):
     )
 ```
 
-`bd` e `identificador` se preparan fuera del callback. El programa lo ejecuta con lectura `snapshot`, escritura `majority` y preferencia `PRIMARY`. Todas las operaciones participantes llevan `session=sesion`.
+`bd` e `identificador` se preparan fuera del callback. El programa lo ejecuta con lectura `snapshot`, escritura `majority` y preferencia `PRIMARY`. Todas las operaciones participantes llevan `session=sesion`. El identificador se muestra antes de intentar la reserva y se conserva durante los reintentos del callback; volver a arrancar el programa genera otro. Ante un resultado incierto, consultad el identificador anterior antes de repetir: no es una solución completa de idempotencia entre ejecuciones.
 
 La comprobación de `modified_count` es esencial: **no encontrar plazas no provoca automáticamente una excepción**. Sin esa comprobación, una transacción podría confirmar una reserva sin haber descontado cupo. Si la inserción falla después del descuento, el aborto también deshace ese descuento.
 
@@ -382,15 +437,29 @@ Prueba en una base `hotel_tx` nueva:
 
 No repongáis una plaza antes de la segunda ejecución: el objetivo es probar el rechazo. Para repetir el experimento desde cero, el docente reinicia solo los datos de `hotel_tx`. Un error de red o de confirmación requiere comprobar el estado antes de reintentar una operación de negocio.
 
+### Comprobar también el aborto
+
+La tercera fila de la tabla necesita una prueba diferente: sin plazas, el callback se detiene antes de insertar. Para provocar un error **después** del descuento sin cambiar `hotel_tx`, descargad también [comprobar_transaccion.py](../assets/practicas/hotel-pymongo/comprobar_transaccion.py) junto a `reservar_parking.py` y ejecutadlo desde la misma conexión al set:
+
+```bash
+python docs/assets/practicas/hotel-pymongo/comprobar_transaccion.py
+```
+
+Crea una base temporal propia con nombre `hotel_tx_prueba_...`, que muestra al iniciar. Comprueba tres casos: reserva correcta, rechazo sin cupo y una inserción con `_id` duplicado después del descuento. En este último debe mantenerse **una plaza y una reserva preexistente**, sin el segundo documento. El comprobador elimina únicamente su base temporal si pasan todas las comprobaciones; si falla, la conserva para investigar. No reinicia el trabajo anterior.
+
+La transacción controla documentos de MongoDB; no confirma un cargo bancario ni envía un correo de forma atómica. Ese tipo de efecto externo requiere un diseño adicional.
+
 !!! note "ODM"
     Un mapeo objeto-documento, como los basados en modelos de validación, puede simplificar una aplicación. En esta unidad usamos PyMongo para ver explícitamente filtros, sesiones y resultados. Un ODM no elimina la necesidad de comprender sus garantías.
 
 ## Extra: una URL para gerencia (Flask)
 
-El RA2 **no** pide un MVC. Si el profesor quiere ver el dato en el navegador, Flask basta. Distinto del “Hola / Adiós / listado de usuarios” de otros apuntes: aquí la ruta útil es la **ocupación**.
+Volved a la conexión del servidor de 2.6 que contiene `hotel` original, deteniendo antes el set si ambos necesitan 27017. En PowerShell: `$env:HOTEL_MONGO_URI = "mongodb://localhost:27017"`. Comprobad de nuevo el parte antes de arrancar Flask. Los ficheros siguientes son una aplicación aparte; no se pegan al final de los ejemplos de transacciones.
+
+El RA2 **no** pide un MVC. Si el profesor quiere ver el dato en el navegador, Flask basta. Distinto del “Hola / Adiós / listado de usuarios” de otros apuntes: aquí la ruta muestra **noches reservadas por hotel**.
 
 ```bash
-pip install pymongo flask
+python -m pip install "pymongo>=4,<5" flask
 ```
 
 ```
@@ -421,7 +490,7 @@ def hotel_db():
 ```python
 # app.py
 from flask import Flask, render_template
-from pymongo import DESCENDING
+from pymongo import ASCENDING, DESCENDING
 import conexion
 
 app = Flask(__name__)
@@ -436,7 +505,7 @@ def ocupacion():
     col = conexion.hotel_db()["reservas"]
     filas = list(col.aggregate([
         {"$group": {"_id": "$hotel", "noches": {"$sum": "$noches"}}},
-        {"$sort": {"noches": DESCENDING}},
+        {"$sort": {"noches": DESCENDING, "_id": ASCENDING}},
     ]))
     return render_template("ocupacion.html", filas=filas)
 ```
@@ -464,38 +533,56 @@ cd mostrador
 flask --app app run --debug
 ```
 
-`http://127.0.0.1:5000/ocupacion`. Jinja: `{{ variable }}` y `{% for %}`. Eso es el *bridge* a una *app*; el oficio de Big Data ya lo hizo `aggregate`.
+`http://127.0.0.1:5000/ocupacion`. Jinja usa `{{ variable }}` para mostrar valores y `{% for %}` para recorrer filas. MongoDB calcula el resumen y Flask lo presenta; esta separación no demuestra por sí sola distribución ni rendimiento con grandes volúmenes.
 
 ## Cómo se cierra el apartado (y la UT2)
 
-Un script que suma noches por hotel practica procesamiento en el servidor; para demostrar el modelo distribuido de **b)** se añade la evidencia del 2.4. Un `insert_one` con `mascota` que no tumba los `find` viejos es **d)**. `WriteConcern` y `ReadPreference` en el cliente son el [2.8](replicas-shards.md) con otro idioma.
+Un script que suma noches practica procesamiento en MongoDB. Para comprobar el modelo distribuido del criterio **b)** se mantiene la evidencia de 2.4. Añadir `mascota` permite ensayar evolución del documento, pero el criterio **d)** también requiere explicar qué datos se conservan, sus límites y cómo se reutilizan.
 
 !!! success "Cerrar la UT2"
-    HDFS **deposita** el lago y **tolera** discos muertos. YARN/MapReduce **demuestran** el cómputo partido. Mongo **guarda** el JSON inquieto. Réplicas y *shards* **prueban** fallos y **muestran** el crecimiento. PyMongo **enciende** eso desde Python. Hive, Spark y el resto son **módulos** que enchufáis después.
+    HDFS permite almacenar bloques y recuperarlos según la configuración; MapReduce y YARN permiten ejecutar y observar tareas distribuidas. MongoDB aporta otro modelo de almacenamiento y consulta. Las réplicas y particiones responden a necesidades diferentes, con recursos y fallos concretos. PyMongo conecta ese sistema con una aplicación que consulta, modifica y comprueba resultados. Ninguna de estas herramientas elimina por sí sola los límites de capacidad ni todos los fallos.
 
 ## Relación con el RA2
 
-| Criterio | Aquí |
+| Criterio | Evidencia y alcance |
 | --- | --- |
-| **b)** | Procesamiento en el motor con `aggregate`; se complementa con la prueba distribuida del 2.4 |
-| **d)** | Campo nuevo en un `insert`; `find` antiguos siguen |
-| **c)** | `ReadPreference` / `WriteConcern` / transacción sobre `hotelrs` |
+| **b)** | Pipeline enviado desde Python y resultado contrastado; se complementa con la prueba distribuida de 2.4, no la sustituye. |
+| **d)** | Conservación de los originales, incorporación controlada de un campo y consultas compatibles. No demuestra capacidad ilimitada ni compatibilidad de cualquier aplicación. |
+| **c)** | Opciones del cliente y resultados de transacciones; la prueba de tolerancia a una caída se documenta en 2.8. Atomicidad y alta disponibilidad son garantías distintas. |
 
-## Para practicar (Moodle manda)
+## Actividades
 
-1. **Parte.** Importad `reservas` y `opiniones`. Ejecutad `parte_gerencia.py` (o el vuestro). Entregad captura de `count_documents`, un `find` de Laredo y el `$group` por hotel.
-2. **Esquema que crece.** Insertad una reserva de 2027 con `mascota: True`. Un `find({"mascota": True})` y otro `find({"hotel": "Laredo"})` que **siga** devolviendo las de 2026. Eso es **d)** en Python.
-3. **Cursor frente a *pipeline*.** La misma pregunta (Potes, orden por importe, dos filas) de las dos formas. Una frase: cuándo usaríais cada una.
-4. **Errores.** Forzad un `DuplicateKeyError` y un `ServerSelectionTimeoutError` (URI falsa). Capturad; no vale el *traceback* suelto.
-5. **Promesas.** Sobre `hotelrs` (si el lab está levantado): un `insert_one` con `WriteConcern(w="majority", wtimeout=2500)` y un `find` con `SECONDARY`. Relacionadlo con el viernes de Laredo del [2.8](replicas-shards.md).
-6. (Opcional) Ruta Flask `/ocupacion` con un cliente compartido por proceso y el *pool*. No hace falta login ni un MVC de otro proyecto.
-7. (Opcional) Transacción `reservas` + `parking` en el *replica set*. Si el `mongod` es suelto, documentad **por qué** falla.
+Conservad **objetivo, URI sin credenciales, base, código, resultado esperado, resultado observado e interpretación**. Las actividades 1–7 forman el recorrido básico; 8–10 requieren las condiciones indicadas. Las entregas evaluables se concretan en Moodle.
 
-### Criterios de comprobación
+1. **Preparar y comprobar.** Registrad versiones, ejecutad `ping` y el parte. Contrastad 15 reservas, 6 opiniones, 46 noches y el reparto por hotel. Explicad por qué una base vacía accesible no equivale a una conexión fallida.
+2. **Traducir una pregunta.** Buscad reservas web de al menos tres noches, mostrando hotel, importe y noches sin `_id`. Comparad el recuento y el cursor con la consulta equivalente de 2.6. Explicad cuándo se ejecuta la consulta y por qué no conviene convertir un resultado enorme en una lista.
+3. **Cursor y pipeline.** Obtened los dos mayores importes de Potes de ambas formas: 490 y 280. Usad el mismo filtro, proyección y orden. Si introducís empates en una copia, aplicad el mismo desempate antes de retirar `_id` de la proyección.
+4. **Agregaciones con sentido.** Contrastad el parte de todos los canales con el pipeline filtrado a web y ota. Después explicad por qué las tres reservas de Laredo con dos opiniones cada una no representan seis opiniones distintas y por qué `$unwind` puede duplicar importes si se suman sin ajustar.
+5. **Esquema y conservación.** En `hotel_escrituras`, insertad la reserva con `mascota=True`, guardad su id y comprobad la consulta antigua de Laredo. Mostrad que `hotel` mantiene sus recuentos. Justificad por qué añadir un campo no prueba que cualquier aplicación sea compatible.
+6. **Escribir y verificar.** Actualizad una reserva identificada con `$set`; repetid el mismo valor y comparad `matched_count` y `modified_count`. Borrad solo el alta de la actividad 5 mediante su id. Mostrad antes y después; no vaciéis la colección.
+7. **Errores comprensibles.** Provocad una clave duplicada en la copia y un fallo de selección con `MongoClient("mongodb://127.0.0.1:1", serverSelectionTimeoutMS=1000)` seguido de `ping`. Capturad `DuplicateKeyError` y `ServerSelectionTimeoutError`, sin credenciales ni traceback. Explicad por qué construir el cliente no basta para observar el segundo error.
+8. **Confirmar y leer — con replica set.** Ejecutad el ejemplo de `hotel_python_lab` desde su red. Diferenciad confirmación mayoritaria y lectura secundaria. Si se observa retraso, registradlo; si no, no afirméis que es imposible. Recuperad la evidencia de caída de 2.8 para distinguir configuración de prueba de tolerancia.
+9. **Parking — ampliación.** Ejecutad dos veces `reservar_parking.py` sobre una base `hotel_tx` inicialmente nueva. Contrastad éxito y rechazo por falta de cupo. Ejecutad el comprobador independiente para demostrar el aborto después del descuento. Indicad qué parte del estado se conserva en cada caso.
+10. **Página de gerencia — ampliación.** Construid Flask, visitad `/` y `/ocupacion` y contrastad los seis hoteles y las 46 noches. Explicad dónde se calcula y dónde se representa. Una página correcta no demuestra rendimiento con millones de documentos.
 
-En las consultas de lectura, contrastad los recuentos iniciales y los importes de Potes indicados arriba. En escrituras, mostrad el antes, el resultado de la operación y el después sobre `hotel_escrituras`. En la transacción, entregad tanto la primera ejecución correcta como el rechazo de la segunda: mostrar solo el camino de éxito deja sin probar la regla de negocio.
+### Orientaciones para comprobar las respuestas
 
-La aplicación Flask es opcional y utiliza `hotel` sin modificar. Probad `/` y `/ocupacion`, y comprobad que los totales coinciden con el script de gerencia. El servidor con `--debug` es para desarrollo local.
+??? note "Revisar después de intentarlo"
+    **1–3.** `ping` comprueba acceso al servidor; los recuentos comprueban el conjunto usado. `find` devuelve un cursor y su recorrido obtiene documentos por lotes. Los dos importes mayores de Potes son 490 y 280; un pipeline debe ordenar antes de limitar.
+
+    **4–5.** El parte completo suma 46 noches; el filtro web y ota deja 30. Las opiniones pertenecen al hotel y se repiten en el resultado de cada reserva. Un nuevo campo puede coexistir con documentos antiguos, pero hay que revisar validadores, lectores y valores ausentes.
+
+    **6–7.** Una coincidencia con cero modificaciones puede significar que el valor ya era el solicitado. Una clave repetida debe rechazarse. Una conexión mal dirigida solo se comprueba al pedir una operación; no imprimáis una URI con contraseña para diagnosticarla.
+
+    **8–10.** Mayoría no significa aplicación en todos los secundarios. Una transacción mantiene unidos el descuento y la inserción, y un fallo debe conservar el estado anterior. Flask presenta noches, no un porcentaje de ocupación. Las pruebas locales no demuestran resistencia a perder el ordenador.
+
+## Autoevaluación del 2.9
+
+Diez preguntas (A–D, **una** correcta). No puntúan en Moodle. **Comprobar respuesta** muestra el resultado y explica el motivo. Revisad el apartado enlazado antes de repetir.
+
+<div class="dwec-quiz" data-dwec-quiz data-src="../../assets/quizzes/ut2-2-9.json"></div>
+
+Al terminar, cerrad los clientes de Python y Flask. Detened el laboratorio Docker que hayáis utilizado con `docker compose stop` desde su carpeta, conservando los volúmenes. No uséis `down -v` para alternar entornos.
 
 ## Referencias
 
