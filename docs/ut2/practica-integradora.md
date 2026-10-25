@@ -47,7 +47,9 @@ Una captura sin la operación y sin la interpretación no acredita el criterio. 
 
 ## Los datos
 
-Los datos son **ficticios**. El profesor publica en Moodle el generador y el fichero `totales_esperados.json`. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.
+Los datos son **ficticios** y son otro conjunto, distinto de los ficheros pequeños de los apartados 2.2 a 2.9. El profesor publica en Moodle el generador y el fichero `totales_esperados.json`. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.
+
+Los cuatro hoteles de este encargo son los del [caso](../ut1/caso-hotel.md): Santander, Laredo, Comillas y Potes. En los talleres, el CSV de Hadoop tiene cinco hoteles y **62 noches**, e incluye **Noja**; alguna consulta de MongoDB menciona también **Reinosa**. Esos totales pertenecen a aquellos ficheros. No los contrastéis con `totales_esperados.json`.
 
 El perfil de aula se queda cerca de **1 GB** en bruto, antes de copias, índices y ficheros temporales:
 
@@ -94,8 +96,8 @@ Las horas son orientativas y suman unas 35. El profesor concreta en Moodle el ca
 | Bloque | Horas | Criterios | Qué queda hecho |
 | --- | --- | --- | --- |
 | 1. Dos almacenes | 6 | **a)**, **d)** | Histórico e información viva separados, con el volumen medido y la primera carga contrastada |
-| 2. Cierre repartido | 8 | **b)** | El mismo agregado en local y en el motor repartido, más un segundo motor o una segunda configuración |
-| 3. Fallo en el histórico | 4 | **c)**, **e)** | Un nodo de ficheros detenido, con el efecto anotado y la recuperación |
+| 2. Cierre repartido | 8 | **b)** | El mismo agregado en local y en el motor repartido, la comparación de uno y dos trabajadores, y la misma pregunta en un segundo motor |
+| 3. Fallo en el histórico | 4 | **c)** | Un nodo de ficheros detenido, con el efecto anotado y la recuperación |
 | 4. Recepción con copias | 8 | **a)**, **c)**, **d)** | Alta o cambio de una reserva, caída de un miembro y lectura posterior |
 | 5. Crecer por módulos | 5 | **e)** | Un módulo añadido y la misma pregunta de negocio repetida |
 | 6. Una pregunta posterior | 4 | **d)**, **c)** | Una consulta nueva sobre el histórico ya guardado, y la diferencia entre réplica y copia de seguridad |
@@ -170,7 +172,7 @@ Cada alumno crea el suyo desde la plantilla [bda-ut2-hotel](https://github.com/i
 
 La dirección debe quedar `github.com/VUESTRO_USUARIO/bda-ut2-hotel`. Puede ser pública o privada. Si es privada, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación.
 
-La plantilla ya trae la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora `datos/bruto/` y `datos/generado/`. Sí se suben `totales_esperados.json`, los scripts, la combinación y las evidencias.
+La plantilla ya trae el archivo para escribir la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. La combinación sale vacía: no viene decidida. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora `datos/bruto/` y `datos/generado/`. Sí se suben `totales_esperados.json`, los scripts, la combinación y las evidencias.
 
 En Moodle entregad la **URL del repositorio** y el **identificador completo del commit** que queréis que se evalúe. Comprobad en el navegador que ese commit está publicado. Un commit solo en el portátil no queda entregado.
 

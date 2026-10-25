@@ -23,6 +23,8 @@ Esta unidad desarrolla el **RA2** del módulo *Big Data aplicado* (código **507
 | **d)** | Se ha determinado que se pueden almacenar tantos datos como se desee y decidir cómo utilizarlos más tarde. | [2.3](hdfs.md) (WORM, esquema al leer), [2.5](nosql.md) (esquema dinámico) y [2.7](modelado.md) |
 | **e)** | Se ha visualizado que el sistema puede crecer fácilmente añadiendo módulos. | [2.2](ecosistema.md) (piezas Hadoop), [2.3](hdfs.md) (más *datanodes*), [2.5](nosql.md) (*auto-sharding*), [2.8](replicas-shards.md) |
 
+La [práctica integradora](practica-integradora.md) vuelve a recorrer los cinco criterios con un conjunto ficticio propio. En Moodle se entregan la URL del repositorio y el commit; el detalle está en ese apartado.
+
 ## Qué cambia respecto a la UT1
 
 En la [UT1](../ut1/ra1.md) **diseñabas** la solución (dónde guardar, cómo ingerir, en qué formato, cómo presentar). Aquí **gestionas el sistema** que aguanta el volumen: el clúster de ficheros, el modelo *map* / *reduce*, las familias NoSQL y cómo se **replican** y **parten**.
