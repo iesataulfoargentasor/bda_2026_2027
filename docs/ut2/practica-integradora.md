@@ -10,12 +10,12 @@ tags:
 
 Esta práctica cierra la **UT2**. Durante unas **35 horas** vais a gestionar el almacenamiento y el procesamiento del [grupo hotelero de Cantabria](../ut1/caso-hotel.md): el histórico que se recorre entero en el cierre y la recepción que sigue cambiando reservas. El encargo desarrolla el **[RA2](ra2.md)** en sus criterios **a)** a **e)**.
 
-Los apartados [2.1](por-que-almacenamiento.md) a [2.9](pymongo.md) siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de **1 GB** y con dos usos distintos del mismo negocio. La entrega formal y sus condiciones se concretan en Moodle. Esta página no sustituye a la [autoevaluación](autoevaluacion.md).
+Los apartados [2.1](por-que-almacenamiento.md) a [2.9](pymongo.md) siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de **1 GB** y con dos usos distintos del mismo negocio. Cada alumno trabaja en un repositorio propio, creado desde la [plantilla](#el-repositorio). En Moodle se entregan la URL y el identificador del commit. Esta página no sustituye a la [autoevaluación](autoevaluacion.md).
 
 !!! info "Ruta de estudio"
     **Esencial:** elegir dos almacenes con funciones distintas, comprobar un cálculo repartido, probar un fallo definido, mantener la recepción ante la caída de un miembro y mostrar qué aporta añadir un módulo.
 
-    **Práctica:** un expediente con predicción, operación, salida e interpretación para cada criterio. Las herramientas de la unidad valen; también una alternativa que documentéis y que permita esas pruebas.
+    **Práctica:** un repositorio propio, con la combinación elegida y un expediente de predicción, operación, salida e interpretación para cada criterio. Las herramientas de la unidad valen; también una alternativa que documentéis y que permita esas pruebas.
 
     **Ampliación:** perfil de 5 a 10 GB, una segunda máquina física u otro motor. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
@@ -162,9 +162,23 @@ Indicad las ayudas recibidas, incluidas las de una herramienta de inteligencia a
 | [2.8](replicas-shards.md) | Caída de un miembro y crecimiento por particiones o nodos |
 | [2.9](pymongo.md) | Acceso desde un programa, si la recepción se hace en Python |
 
+## El repositorio
+
+Cada alumno crea el suyo desde la plantilla [bda-ut2-hotel](https://github.com/iesataulfoargentasor/bda-ut2-hotel){target="_blank" rel="noopener"}. En **Owner** elegid vuestro usuario. El nombre del repositorio es **`bda-ut2-hotel`**. La cuenta `iesataulfoargentasor` publica la plantilla; el trabajo queda en vuestra cuenta.
+
+[Crear vuestra copia de la plantilla](https://github.com/iesataulfoargentasor/bda-ut2-hotel/generate){target="_blank" rel="noopener"}
+
+La dirección debe quedar `github.com/VUESTRO_USUARIO/bda-ut2-hotel`. Puede ser pública o privada. Si es privada, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación.
+
+La plantilla ya trae la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora `datos/bruto/` y `datos/generado/`. Sí se suben `totales_esperados.json`, los scripts, la combinación y las evidencias.
+
+En Moodle entregad la **URL del repositorio** y el **identificador completo del commit** que queréis que se evalúe. Comprobad en el navegador que ese commit está publicado. Un commit solo en el portátil no queda entregado.
+
+Al cerrar cada sesión, copiad `avances/PLANTILLA.md` a `avances/sesion-01.md`, `sesion-02.md`, etc., y registrad el cambio con un mensaje reconocible, por ejemplo `Bloque 1: carga contrastada con los totales esperados`.
+
 ## Actividades
 
-Las seis actividades coinciden con los bloques. Entregad el expediente en el espacio de Moodle. Conservad entradas, configuración y salidas el tiempo que indique el profesor.
+Las seis actividades coinciden con los bloques y con los archivos `evidencias/` de la plantilla. Conservad en local las entradas y las salidas grandes el tiempo que indique el profesor. En el repositorio dejad el extracto que permite contrastar cada resultado.
 
 1. **Separar.** Medid el bruto, asignad cada conjunto a su almacén y cargadlo. Entregad los recuentos frente a `totales_esperados.json` y un párrafo por almacén con la operación que justifica esa elección.
 2. **Cerrar.** Calculad el cierre en local y en el motor repartido. Entregad tareas o etapas, la mediana de tres tiempos y la comparación al añadir capacidad de ejecución. Incluid el segundo motor y la coincidencia de totales.
