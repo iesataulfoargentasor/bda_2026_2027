@@ -1419,6 +1419,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El repositorio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#actividades" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1649,6 +1660,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#el-repositorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El repositorio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#actividades" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1754,11 +1776,11 @@
 
 <h1 id="practica-integradora-de-la-ut2">Práctica Integradora de la UT2<a class="headerlink" href="#practica-integradora-de-la-ut2" title="Permanent link">&para;</a></h1>
 <p>Esta práctica cierra la <strong>UT2</strong>. Durante unas <strong>35 horas</strong> vais a gestionar el almacenamiento y el procesamiento del <a href="../../ut1/caso-hotel/">grupo hotelero de Cantabria</a>: el histórico que se recorre entero en el cierre y la recepción que sigue cambiando reservas. El encargo desarrolla el <strong><a href="../ra2/">RA2</a></strong> en sus criterios <strong>a)</strong> a <strong>e)</strong>.</p>
-<p>Los apartados <a href="../por-que-almacenamiento/">2.1</a> a <a href="../pymongo/">2.9</a> siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de <strong>1 GB</strong> y con dos usos distintos del mismo negocio. La entrega formal y sus condiciones se concretan en Moodle. Esta página no sustituye a la <a href="../autoevaluacion/">autoevaluación</a>.</p>
+<p>Los apartados <a href="../por-que-almacenamiento/">2.1</a> a <a href="../pymongo/">2.9</a> siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de <strong>1 GB</strong> y con dos usos distintos del mismo negocio. Cada alumno trabaja en un repositorio propio, creado desde la <a href="#el-repositorio">plantilla</a>. En Moodle se entregan la URL y el identificador del commit. Esta página no sustituye a la <a href="../autoevaluacion/">autoevaluación</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> elegir dos almacenes con funciones distintas, comprobar un cálculo repartido, probar un fallo definido, mantener la recepción ante la caída de un miembro y mostrar qué aporta añadir un módulo.</p>
-<p><strong>Práctica:</strong> un expediente con predicción, operación, salida e interpretación para cada criterio. Las herramientas de la unidad valen; también una alternativa que documentéis y que permita esas pruebas.</p>
+<p><strong>Práctica:</strong> un repositorio propio, con la combinación elegida y un expediente de predicción, operación, salida e interpretación para cada criterio. Las herramientas de la unidad valen; también una alternativa que documentéis y que permita esas pruebas.</p>
 <p><strong>Ampliación:</strong> perfil de 5 a 10 GB, una segunda máquina física u otro motor. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="el-encargo">El encargo<a class="headerlink" href="#el-encargo" title="Permanent link">&para;</a></h2>
@@ -2009,8 +2031,15 @@
 </tr>
 </tbody>
 </table>
+<h2 id="el-repositorio">El repositorio<a class="headerlink" href="#el-repositorio" title="Permanent link">&para;</a></h2>
+<p>Cada alumno crea el suyo desde la plantilla <a href="https://github.com/iesataulfoargentasor/bda-ut2-hotel" rel="noopener" target="_blank">bda-ut2-hotel</a>. En <strong>Owner</strong> elegid vuestro usuario. El nombre del repositorio es <strong><code>bda-ut2-hotel</code></strong>. La cuenta <code>iesataulfoargentasor</code> publica la plantilla; el trabajo queda en vuestra cuenta.</p>
+<p><a href="https://github.com/iesataulfoargentasor/bda-ut2-hotel/generate" rel="noopener" target="_blank">Crear vuestra copia de la plantilla</a></p>
+<p>La dirección debe quedar <code>github.com/VUESTRO_USUARIO/bda-ut2-hotel</code>. Puede ser pública o privada. Si es privada, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación.</p>
+<p>La plantilla ya trae la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora <code>datos/bruto/</code> y <code>datos/generado/</code>. Sí se suben <code>totales_esperados.json</code>, los scripts, la combinación y las evidencias.</p>
+<p>En Moodle entregad la <strong>URL del repositorio</strong> y el <strong>identificador completo del commit</strong> que queréis que se evalúe. Comprobad en el navegador que ese commit está publicado. Un commit solo en el portátil no queda entregado.</p>
+<p>Al cerrar cada sesión, copiad <code>avances/PLANTILLA.md</code> a <code>avances/sesion-01.md</code>, <code>sesion-02.md</code>, etc., y registrad el cambio con un mensaje reconocible, por ejemplo <code>Bloque 1: carga contrastada con los totales esperados</code>.</p>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
-<p>Las seis actividades coinciden con los bloques. Entregad el expediente en el espacio de Moodle. Conservad entradas, configuración y salidas el tiempo que indique el profesor.</p>
+<p>Las seis actividades coinciden con los bloques y con los archivos <code>evidencias/</code> de la plantilla. Conservad en local las entradas y las salidas grandes el tiempo que indique el profesor. En el repositorio dejad el extracto que permite contrastar cada resultado.</p>
 <ol>
 <li><strong>Separar.</strong> Medid el bruto, asignad cada conjunto a su almacén y cargadlo. Entregad los recuentos frente a <code>totales_esperados.json</code> y un párrafo por almacén con la operación que justifica esa elección.</li>
 <li><strong>Cerrar.</strong> Calculad el cierre en local y en el motor repartido. Entregad tareas o etapas, la mediana de tres tiempos y la comparación al añadir capacidad de ejecución. Incluid el segundo motor y la coincidencia de totales.</li>
