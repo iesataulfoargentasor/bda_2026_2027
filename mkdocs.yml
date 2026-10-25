@@ -117,4 +117,5 @@ nav:
     - 2.7 Modelado documental: ut2/modelado.md
     - 2.8 Réplicas y particiones: ut2/replicas-shards.md
     - 2.9 MongoDB y Python: ut2/pymongo.md
+    - Práctica Integradora de la UT2: ut2/practica-integradora.md
     - Autoevaluación: ut2/autoevaluacion.md

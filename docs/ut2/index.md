@@ -91,6 +91,7 @@ Utilizad esta tabla para localizar dónde se trabaja cada criterio del [RA2](ra2
 | [2.7 Modelado documental](modelado.md) | **d)** | Diseñar documentos y reglas de validación según las operaciones del hotel y la evolución de sus datos. |
 | [2.8 Réplicas y particiones](replicas-shards.md) | **c)** / **e)** | Probar la respuesta ante la caída de un miembro y razonar cómo repartir los datos para crecer. |
 | [2.9 MongoDB y Python](pymongo.md) | **d)** / **c)**; apoyo a **b)** | Consultar, agregar y modificar desde Python; aplicar las opciones de acceso al conjunto de réplicas. |
+| [Práctica Integradora de la UT2](practica-integradora.md) | **a–e** | Reunir el histórico del cierre y la recepción viva, con datos ficticios de cerca de 1 GB y pruebas de los cinco criterios. |
 | [Autoevaluación](autoevaluacion.md) | — | Repasar la unidad y revisar la explicación de los errores. No puntúa en Moodle. |
 
 En **2.9**, ejecutar una agregación en el servidor permite practicar procesamiento, pero **no demuestra por sí solo computación distribuida**. La evidencia del criterio **b)** se trabaja en 2.2 y 2.4, indicando qué distribución permite observar el entorno disponible.
