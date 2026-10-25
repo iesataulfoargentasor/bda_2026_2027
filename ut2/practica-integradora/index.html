@@ -1831,7 +1831,8 @@
 </table>
 <p>Una captura sin la operación y sin la interpretación no acredita el criterio. Si el entorno no permite observar una propiedad, registrad el límite y el experimento que haría falta. No presentéis una predicción como una medida.</p>
 <h2 id="los-datos">Los datos<a class="headerlink" href="#los-datos" title="Permanent link">&para;</a></h2>
-<p>Los datos son <strong>ficticios</strong>. El profesor publica en Moodle el generador y el fichero <code>totales_esperados.json</code>. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.</p>
+<p>Los datos son <strong>ficticios</strong> y son otro conjunto, distinto de los ficheros pequeños de los apartados 2.2 a 2.9. El profesor publica en Moodle el generador y el fichero <code>totales_esperados.json</code>. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.</p>
+<p>Los cuatro hoteles de este encargo son los del <a href="../../ut1/caso-hotel/">caso</a>: Santander, Laredo, Comillas y Potes. En los talleres, el CSV de Hadoop tiene cinco hoteles y <strong>62 noches</strong>, e incluye <strong>Noja</strong>; alguna consulta de MongoDB menciona también <strong>Reinosa</strong>. Esos totales pertenecen a aquellos ficheros. No los contrastéis con <code>totales_esperados.json</code>.</p>
 <p>El perfil de aula se queda cerca de <strong>1 GB</strong> en bruto, antes de copias, índices y ficheros temporales:</p>
 <table>
 <thead>
@@ -1940,12 +1941,12 @@
 <td>2. Cierre repartido</td>
 <td>8</td>
 <td><strong>b)</strong></td>
-<td>El mismo agregado en local y en el motor repartido, más un segundo motor o una segunda configuración</td>
+<td>El mismo agregado en local y en el motor repartido, la comparación de uno y dos trabajadores, y la misma pregunta en un segundo motor</td>
 </tr>
 <tr>
 <td>3. Fallo en el histórico</td>
 <td>4</td>
-<td><strong>c)</strong>, <strong>e)</strong></td>
+<td><strong>c)</strong></td>
 <td>Un nodo de ficheros detenido, con el efecto anotado y la recuperación</td>
 </tr>
 <tr>
@@ -2035,7 +2036,7 @@
 <p>Cada alumno crea el suyo desde la plantilla <a href="https://github.com/iesataulfoargentasor/bda-ut2-hotel" rel="noopener" target="_blank">bda-ut2-hotel</a>. En <strong>Owner</strong> elegid vuestro usuario. El nombre del repositorio es <strong><code>bda-ut2-hotel</code></strong>. La cuenta <code>iesataulfoargentasor</code> publica la plantilla; el trabajo queda en vuestra cuenta.</p>
 <p><a href="https://github.com/iesataulfoargentasor/bda-ut2-hotel/generate" rel="noopener" target="_blank">Crear vuestra copia de la plantilla</a></p>
 <p>La dirección debe quedar <code>github.com/VUESTRO_USUARIO/bda-ut2-hotel</code>. Puede ser pública o privada. Si es privada, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación.</p>
-<p>La plantilla ya trae la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora <code>datos/bruto/</code> y <code>datos/generado/</code>. Sí se suben <code>totales_esperados.json</code>, los scripts, la combinación y las evidencias.</p>
+<p>La plantilla ya trae el archivo para escribir la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. La combinación sale vacía: no viene decidida. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora <code>datos/bruto/</code> y <code>datos/generado/</code>. Sí se suben <code>totales_esperados.json</code>, los scripts, la combinación y las evidencias.</p>
 <p>En Moodle entregad la <strong>URL del repositorio</strong> y el <strong>identificador completo del commit</strong> que queréis que se evalúe. Comprobad en el navegador que ese commit está publicado. Un commit solo en el portátil no queda entregado.</p>
 <p>Al cerrar cada sesión, copiad <code>avances/PLANTILLA.md</code> a <code>avances/sesion-01.md</code>, <code>sesion-02.md</code>, etc., y registrad el cambio con un mensaje reconocible, por ejemplo <code>Bloque 1: carga contrastada con los totales esperados</code>.</p>
 <h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
