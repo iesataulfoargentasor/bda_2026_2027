@@ -8,7 +8,7 @@ tags:
 
 # Práctica Integradora de la UT2
 
-Esta práctica cierra la **UT2**. Durante unas **35 horas** vais a gestionar el almacenamiento y el procesamiento del [grupo hotelero de Cantabria](../ut1/caso-hotel.md): el histórico que se recorre entero en el cierre y la recepción que sigue cambiando reservas. El encargo desarrolla el **[RA2](ra2.md)** en sus criterios **a)** a **e)**.
+Esta práctica cierra la **UT2**. Durante unas **20 horas** vais a gestionar el almacenamiento y el procesamiento del [grupo hotelero de Cantabria](../ut1/caso-hotel.md): el histórico que se recorre entero en el cierre y la recepción que sigue cambiando reservas. El encargo desarrolla el **[RA2](ra2.md)** en sus criterios **a)** a **e)**.
 
 Los apartados [2.1](por-que-almacenamiento.md) a [2.9](pymongo.md) siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de **1 GB** y con dos usos distintos del mismo negocio. Cada alumno trabaja en un repositorio propio, creado desde la [plantilla](#el-repositorio). En Moodle se entregan la URL y el identificador del commit. Esta página no sustituye a la [autoevaluación](autoevaluacion.md).
 
@@ -98,16 +98,16 @@ El laboratorio Hadoop del módulo puede tener un solo DataNode. En ese caso pod�
 
 ## Recorrido
 
-Las horas son orientativas y suman unas 35. El profesor concreta en Moodle el calendario de las sesiones.
+Las horas son orientativas y suman unas 20. El profesor concreta en Moodle el calendario de las sesiones.
 
 | Bloque | Horas | Criterios | Qué queda hecho |
 | --- | --- | --- | --- |
-| 1. Dos almacenes | 6 | **a)**, **d)** | Histórico e información viva separados, con el volumen medido y la primera carga contrastada |
-| 2. Cierre repartido | 8 | **b)** | El mismo agregado en local y en el motor repartido, la comparación de uno y dos trabajadores, y la misma pregunta en un segundo motor |
-| 3. Fallo en el histórico | 4 | **c)** | Un nodo de ficheros detenido, con el efecto anotado y la recuperación |
-| 4. Recepción con copias | 8 | **a)**, **c)**, **d)** | Alta o cambio de una reserva, caída de un miembro y lectura posterior |
-| 5. Crecer por módulos | 5 | **e)** | Un módulo añadido y la misma pregunta de negocio repetida |
-| 6. Una pregunta posterior | 4 | **d)**, **c)** | Una consulta nueva sobre el histórico ya guardado, y la diferencia entre réplica y copia de seguridad |
+| 1. Dos almacenes | 3 | **a)**, **d)** | Histórico e información viva separados, con el volumen medido y la primera carga contrastada |
+| 2. Cierre repartido | 5 | **b)** | El mismo agregado en local y en el motor repartido, la comparación de uno y dos trabajadores, y la misma pregunta en un segundo motor |
+| 3. Fallo en el histórico | 2 | **c)** | Un nodo de ficheros detenido, con el efecto anotado y la recuperación |
+| 4. Recepción con copias | 5 | **a)**, **c)**, **d)** | Alta o cambio de una reserva, caída de un miembro y lectura posterior |
+| 5. Crecer por módulos | 3 | **e)** | Un módulo añadido y la misma pregunta de negocio repetida |
+| 6. Una pregunta posterior | 2 | **d)**, **c)** | Una consulta nueva sobre el histórico ya guardado, y la diferencia entre réplica y copia de seguridad |
 
 ### 1. Dos almacenes
 
