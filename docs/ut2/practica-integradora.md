@@ -47,18 +47,25 @@ Una captura sin la operación y sin la interpretación no acredita el criterio. 
 
 ## Los datos
 
-Los datos son **ficticios** y son otro conjunto, distinto de los ficheros pequeños de los apartados 2.2 a 2.9. El profesor publica en Moodle el generador y el fichero `totales_esperados.json`. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.
+Los datos son **ficticios** y son otro conjunto, distinto de los ficheros pequeños de los apartados 2.2 a 2.9. El generador y el contrato de totales viajan en la plantilla, en `datos/generar_cierre.py` y `datos/totales_esperados.json`. Los mismos archivos están en el sitio: [generar_cierre.py](../assets/practicas/hotel-ut2/generar_cierre.py) y [totales_esperados.json](../assets/practicas/hotel-ut2/totales_esperados.json).
+
+La semilla es **2026** y el perfil por defecto es `aula`. Quien ejecuta el generador sin cambiar argumentos obtiene los mismos totales. El bruto se escribe en `datos/bruto/` y no se sube. No hace falta escribir las filas a mano, ni inventar otro volumen, otra semilla u otros hoteles.
+
+```text
+python datos/generar_cierre.py --salida datos/bruto
+python datos/generar_cierre.py --salida datos/bruto --comprobar datos/totales_esperados.json
+```
 
 Los cuatro hoteles de este encargo son los del [caso](../ut1/caso-hotel.md): Santander, Laredo, Comillas y Potes. En los talleres, el CSV de Hadoop tiene cinco hoteles y **62 noches**, e incluye **Noja**; alguna consulta de MongoDB menciona también **Reinosa**. Esos totales pertenecen a aquellos ficheros. No los contrastéis con `totales_esperados.json`.
 
-El perfil de aula se queda cerca de **1 GB** en bruto, antes de copias, índices y ficheros temporales:
+El perfil de aula ocupa **1 037 243 783 bytes** (1,037 GB) en bruto, antes de copias, índices y ficheros temporales:
 
-| Conjunto | Papel en el encargo | Tamaño orientativo |
+| Conjunto | Papel en el encargo | Filas del perfil aula |
 | --- | --- | --- |
-| Reservas | Histórico que se recorre en el cierre y documento que recepción actualiza | Unos 3 millones de filas |
-| Cobros | Importe asociado a la reserva; se suma el cobrado, no un precio calculado aparte | Unos 3 millones de filas |
-| Opiniones | Texto o valoración que no cabe tratar como una tabla estrecha | Alrededor de 1 millón |
-| Sensores | Lecturas de habitación o de zona; recuento del cierre y, si el diseño lo separa, consulta reciente | Unos 10–15 millones, o un recorte de unos 500 MB si así el bruto sigue cerca de 1 GB |
+| Reservas | Histórico que se recorre en el cierre y documento que recepción actualiza | 3.000.000 |
+| Cobros | Importe cobrado de cada reserva confirmada. No se suma el precio `importe` de la reserva | 2.639.775 |
+| Opiniones | Texto y valoración que no cabe tratar como una tabla estrecha | 1.000.000 |
+| Sensores | Lecturas de zona; el cierre cuenta cuántas hay por hotel | 15.000.000 |
 
 `totales_esperados.json` fija, para esa semilla, las noches y el importe por hotel, las cancelaciones por canal y los recuentos de sensores. Contrastad vuestro cierre con ese fichero antes de interpretar tiempos o fallos. Un resultado distinto obliga a revisar la lectura, el filtro del cierre y la agregación; no se corrige cambiando el esperado.
 
@@ -172,7 +179,7 @@ Cada alumno crea el suyo desde la plantilla [bda-ut2-hotel](https://github.com/i
 
 La dirección debe quedar `github.com/VUESTRO_USUARIO/bda-ut2-hotel`. Puede ser pública o privada. Si es privada, añadid como colaborador al usuario que indique el profesor y comprobad que ha aceptado la invitación antes de la evaluación.
 
-La plantilla ya trae el archivo para escribir la combinación, un archivo de evidencia por bloque y carpetas para scripts, datos y avances. La combinación sale vacía: no viene decidida. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de cerca de 1 GB, se queda en el equipo: la plantilla ignora `datos/bruto/` y `datos/generado/`. Sí se suben `totales_esperados.json`, los scripts, la combinación y las evidencias.
+La plantilla ya trae el archivo para escribir la combinación, un archivo de evidencia por bloque, el generador, `totales_esperados.json` y carpetas para scripts, datos y avances. La combinación sale vacía: no viene decidida. GitHub guarda ese expediente y los programas. No ejecuta el clúster. El bruto, de 1 037 243 783 bytes, se queda en el equipo: la plantilla ignora `datos/bruto/` y `datos/generado/`. Sí se suben `totales_esperados.json`, los scripts, la combinación y las evidencias.
 
 En Moodle entregad la **URL del repositorio** y el **identificador completo del commit** que queréis que se evalúe. Comprobad en el navegador que ese commit está publicado. Un commit solo en el portátil no queda entregado.
 

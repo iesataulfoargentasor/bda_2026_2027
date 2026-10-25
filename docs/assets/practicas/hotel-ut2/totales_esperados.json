@@ -1,0 +1,46 @@
+{
+  "semilla": 2026,
+  "perfil": "aula",
+  "filas": {
+    "reservas": 3000000,
+    "cobros": 2639775,
+    "opiniones": 1000000,
+    "sensores": 15000000
+  },
+  "bytes_bruto": 1037243783,
+  "noches_por_hotel": {
+    "Santander": 4949768,
+    "Laredo": 4961397,
+    "Comillas": 4952778,
+    "Potes": 4940767
+  },
+  "importe_centimos_por_hotel": {
+    "Santander": 43297269581,
+    "Laredo": 43411147163,
+    "Comillas": 43326010585,
+    "Potes": 43237209960
+  },
+  "importe_por_hotel": {
+    "Santander": "432972695.81",
+    "Laredo": "434111471.63",
+    "Comillas": "433260105.85",
+    "Potes": "432372099.60"
+  },
+  "cancelaciones_por_canal": {
+    "web": 120116,
+    "ota": 119729,
+    "recepcion": 120380
+  },
+  "sensores_por_hotel": {
+    "Santander": 3750794,
+    "Laredo": 3749977,
+    "Comillas": 3751857,
+    "Potes": 3747372
+  },
+  "reglas": {
+    "noches_por_hotel": "Suma de noches de las reservas con estado confirmada.",
+    "importe_por_hotel": "Suma de cobrado agrupada por el hotel de la reserva. No se suma la columna importe.",
+    "cancelaciones_por_canal": "Reservas con estado cancelada. No tienen fila en cobros.csv.",
+    "sensores_por_hotel": "Número de filas de sensores.csv por hotel."
+  }
+}
