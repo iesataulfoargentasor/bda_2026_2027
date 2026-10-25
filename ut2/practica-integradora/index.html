@@ -1,0 +1,2116 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Apuntes del módulo BDA (curso de especialización en IA y Big Data) — IES Ataúlfo Argenta">
+      
+      
+      
+        <link rel="canonical" href="https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/practica-integradora/">
+      
+      
+        <link rel="prev" href="../pymongo/">
+      
+      
+        <link rel="next" href="../autoevaluacion/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/branding/logo-ies-ataulfo-argenta.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Práctica Integradora de la UT2 - Big Data Aplicado</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/quiz.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#practica-integradora-de-la-ut2" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Big Data Aplicado" class="md-header__button md-logo" aria-label="Big Data Aplicado" data-md-component="logo">
+      
+  <img src="../../assets/branding/logo-ies-ataulfo-argenta.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Big Data Aplicado
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Práctica Integradora de la UT2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartir" aria-label="Compartir" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/iesataulfoargentasor/bda_2026_2027" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    iesataulfoargentasor/bda_2026_2027
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../ut1/" class="md-tabs__link">
+          
+  
+  
+  U.T. 1. Gestión de soluciones de almacenamiento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Big Data Aplicado" class="md-nav__button md-logo" aria-label="Big Data Aplicado" data-md-component="logo">
+      
+  <img src="../../assets/branding/logo-ies-ataulfo-argenta.png" alt="logo">
+
+    </a>
+    Big Data Aplicado
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/iesataulfoargentasor/bda_2026_2027" title="Ir al repositorio" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    iesataulfoargentasor/bda_2026_2027
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U.T. 1. Gestión de soluciones de almacenamiento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    U.T. 1. Gestión de soluciones de almacenamiento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    La unidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/caso-hotel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    El caso: grupo hotelero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/ra1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RA1 y criterios de evaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/por-que-big-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1 Por qué Big Data y las 5 Vs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/clusters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2 Clústeres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/almacenamiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3 Almacenamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/aws-academy-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taller: AWS Academy y S3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/procesamiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4 Procesamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/arquitectura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.5 Arquitectura y ecosistema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/ingesta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.6 Ingesta de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/formatos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.7 Formatos de datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/pentaho/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.8 Pentaho
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/tarea-clase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica integradora con Pentaho
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/autoevaluacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoevaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    La unidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ut1/transicion-ut2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transición desde la UT1: 500 GB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ra2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RA2 y criterios de evaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../por-que-almacenamiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1 Por qué un almacén masivo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ecosistema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2 Ecosistema Hadoop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hdfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3 HDFS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../computacion-distribuida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.4 Computación distribuida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nosql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.5 Familias NoSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mongodb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.6 MongoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.7 Modelado documental
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../replicas-shards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.8 Réplicas y particiones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pymongo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.9 MongoDB y Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica Integradora de la UT2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica Integradora de la UT2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-encargo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El encargo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-teneis-que-demostrar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué tenéis que demostrar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Los datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnologias-que-podeis-elegir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tecnologías que podéis elegir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recorrido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recorrido">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dos-almacenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dos almacenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cierre-repartido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cierre repartido
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-fallo-en-el-historico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Fallo en el histórico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-recepcion-con-copias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recepción con copias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-crecer-por-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Crecer por módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-una-pregunta-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Una pregunta posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-se-documenta-cada-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se documenta cada prueba
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacion-con-los-apartados-de-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relación con los apartados de la unidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autoevaluacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autoevaluación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-encargo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El encargo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-teneis-que-demostrar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué tenéis que demostrar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Los datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnologias-que-podeis-elegir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tecnologías que podéis elegir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recorrido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recorrido">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dos-almacenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dos almacenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cierre-repartido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cierre repartido
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-fallo-en-el-historico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Fallo en el histórico
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-recepcion-con-copias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recepción con copias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-crecer-por-modulos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Crecer por módulos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-una-pregunta-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Una pregunta posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-se-documenta-cada-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo se documenta cada prueba
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relacion-con-los-apartados-de-la-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relación con los apartados de la unidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actividades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actividades
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegación" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Inicio
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    U.T. 2. Gestión de sistemas de almacenamiento y su ecosistema
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+      
+        <span class="md-tag">BDA</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">Big Data</span>
+      
+    
+      
+      
+      
+      
+        <span class="md-tag">RA2</span>
+      
+    
+  </nav>
+
+
+  
+  
+
+
+<h1 id="practica-integradora-de-la-ut2">Práctica Integradora de la UT2<a class="headerlink" href="#practica-integradora-de-la-ut2" title="Permanent link">&para;</a></h1>
+<p>Esta práctica cierra la <strong>UT2</strong>. Durante unas <strong>35 horas</strong> vais a gestionar el almacenamiento y el procesamiento del <a href="../../ut1/caso-hotel/">grupo hotelero de Cantabria</a>: el histórico que se recorre entero en el cierre y la recepción que sigue cambiando reservas. El encargo desarrolla el <strong><a href="../ra2/">RA2</a></strong> en sus criterios <strong>a)</strong> a <strong>e)</strong>.</p>
+<p>Los apartados <a href="../por-que-almacenamiento/">2.1</a> a <a href="../pymongo/">2.9</a> siguen siendo la referencia técnica y trabajan con ficheros pequeños para poder revisar cada comando. Aquí conectáis esas funciones con un conjunto ficticio de cerca de <strong>1 GB</strong> y con dos usos distintos del mismo negocio. La entrega formal y sus condiciones se concretan en Moodle. Esta página no sustituye a la <a href="../autoevaluacion/">autoevaluación</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Ruta de estudio</p>
+<p><strong>Esencial:</strong> elegir dos almacenes con funciones distintas, comprobar un cálculo repartido, probar un fallo definido, mantener la recepción ante la caída de un miembro y mostrar qué aporta añadir un módulo.</p>
+<p><strong>Práctica:</strong> un expediente con predicción, operación, salida e interpretación para cada criterio. Las herramientas de la unidad valen; también una alternativa que documentéis y que permita esas pruebas.</p>
+<p><strong>Ampliación:</strong> perfil de 5 a 10 GB, una segunda máquina física u otro motor. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
+</div>
+<h2 id="el-encargo">El encargo<a class="headerlink" href="#el-encargo" title="Permanent link">&para;</a></h2>
+<p>Recepción registra operaciones en <strong>Santander</strong>, <strong>Laredo</strong>, <strong>Comillas</strong> y <strong>Potes</strong>. Finanzas cierra a las <strong>23:00</strong>. Gerencia abre el panel a las <strong>8:00</strong> del día siguiente y necesita el cierre ya comprobado. Mientras tanto, recepción tiene que localizar una reserva y modificarla sin esperar a ese panel.</p>
+<blockquote>
+<p>«A las 8:00 necesito noches e importe por hotel, cancelaciones por canal y el recuento de lecturas de sensores del cierre. Esos datos ya no se reescriben: se recorren enteros. A la vez, recepción sigue consultando y cambiando reservas. Si un nodo deja de responder, el servicio que corresponda tiene que seguir o recuperarse de forma explicada, y el sistema tiene que poder crecer añadiendo un módulo.»</p>
+</blockquote>
+<pre class="mermaid"><code>flowchart LR
+  H[Histórico inmutable] --&gt; C[Cierre publicado a las 8:00]
+  R[Recepción en vivo] --&gt; P[Consulta y cambio de una reserva]</code></pre>
+<p>El informe de las 8:00 no es el estado de recepción en ese instante. Conservad en el resultado la fecha de cierre y la hora de generación, como en el <a href="../../ut1/caso-hotel/">caso</a>. Esta práctica no vuelve a construir el flujo de Pentaho de la <a href="../../ut1/tarea-clase/">UT1</a>.</p>
+<h2 id="que-teneis-que-demostrar">Qué tenéis que demostrar<a class="headerlink" href="#que-teneis-que-demostrar" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Qué se pide en este encargo</th>
+<th>Evidencia mínima</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>a)</strong></td>
+<td>Justificar por qué cada dato va a un almacén y cómo se procesa dentro del plazo.</td>
+<td>Volumen medido, operación, plazo de las 8:00 y motivo de la elección.</td>
+</tr>
+<tr>
+<td><strong>b)</strong></td>
+<td>Comprobar un cálculo repartido sobre el histórico del cierre.</td>
+<td>Mismo agregado en local y en el sistema repartido, tareas o etapas observadas y tiempos comparables.</td>
+</tr>
+<tr>
+<td><strong>c)</strong></td>
+<td>Probar la respuesta ante un fallo concreto.</td>
+<td>Estado inicial, interrupción, qué sigue disponible y cómo se recupera.</td>
+</tr>
+<tr>
+<td><strong>d)</strong></td>
+<td>Conservar el histórico y usarlo después para una pregunta que no estaba en el primer informe.</td>
+<td>Datos intactos, metadatos y una consulta nueva con el total contrastado.</td>
+</tr>
+<tr>
+<td><strong>e)</strong></td>
+<td>Mostrar que el sistema crece al añadir un módulo.</td>
+<td>Recurso incorporado, qué capacidad o función aporta y qué queda igual en el resultado.</td>
+</tr>
+</tbody>
+</table>
+<p>Una captura sin la operación y sin la interpretación no acredita el criterio. Si el entorno no permite observar una propiedad, registrad el límite y el experimento que haría falta. No presentéis una predicción como una medida.</p>
+<h2 id="los-datos">Los datos<a class="headerlink" href="#los-datos" title="Permanent link">&para;</a></h2>
+<p>Los datos son <strong>ficticios</strong>. El profesor publica en Moodle el generador y el fichero <code>totales_esperados.json</code>. La semilla va dentro de ese generador: quien lo ejecuta obtiene los mismos totales. Podéis regenerarlos o descargar el archivo comprimido que indique el profesor. No hace falta que el profesor escriba las filas a mano, ni que vosotros inventéis otro volumen, otra semilla u otros hoteles.</p>
+<p>El perfil de aula se queda cerca de <strong>1 GB</strong> en bruto, antes de copias, índices y ficheros temporales:</p>
+<table>
+<thead>
+<tr>
+<th>Conjunto</th>
+<th>Papel en el encargo</th>
+<th>Tamaño orientativo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reservas</td>
+<td>Histórico que se recorre en el cierre y documento que recepción actualiza</td>
+<td>Unos 3 millones de filas</td>
+</tr>
+<tr>
+<td>Cobros</td>
+<td>Importe asociado a la reserva; se suma el cobrado, no un precio calculado aparte</td>
+<td>Unos 3 millones de filas</td>
+</tr>
+<tr>
+<td>Opiniones</td>
+<td>Texto o valoración que no cabe tratar como una tabla estrecha</td>
+<td>Alrededor de 1 millón</td>
+</tr>
+<tr>
+<td>Sensores</td>
+<td>Lecturas de habitación o de zona; recuento del cierre y, si el diseño lo separa, consulta reciente</td>
+<td>Unos 10–15 millones, o un recorte de unos 500 MB si así el bruto sigue cerca de 1 GB</td>
+</tr>
+</tbody>
+</table>
+<p><code>totales_esperados.json</code> fija, para esa semilla, las noches y el importe por hotel, las cancelaciones por canal y los recuentos de sensores. Contrastad vuestro cierre con ese fichero antes de interpretar tiempos o fallos. Un resultado distinto obliga a revisar la lectura, el filtro del cierre y la agregación; no se corrige cambiando el esperado.</p>
+<p>El perfil de <strong>5 a 10 GB</strong> es una ampliación. Usadlo solo si el equipo tiene memoria y disco suficientes y el profesor lo ha anunciado. En un laboratorio de particiones documentales, podéis bajar el tamaño de <em>chunk</em> para ver el reparto sin cargar varios gigabytes en esa base. Anotad el valor usado: el reparto observado depende de esa configuración.</p>
+<p>Dejad sitio para las copias del almacén y para la salida del cálculo. Un bruto de 1 GB no cabe en la planificación como si fuera el único byte que va a ocupar el disco.</p>
+<h2 id="tecnologias-que-podeis-elegir">Tecnologías que podéis elegir<a class="headerlink" href="#tecnologias-que-podeis-elegir" title="Permanent link">&para;</a></h2>
+<p>Podéis usar las herramientas de la unidad o una alternativa que investiguéis. En el expediente tenéis que decir qué función cubre cada pieza. La combinación elegida tiene que permitir <strong>detener un nodo</strong> y <strong>añadir un módulo</strong>. Un único Postgres, o un almacén de objetos con un solo proceso y sin reparto ni copias, no cubre los criterios <strong>c)</strong> y <strong>e)</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Función</th>
+<th>Qué resuelve en el hotel</th>
+<th>Ejemplos válidos si justificáis la elección</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Histórico de ficheros</td>
+<td>Conservar reservas, cobros y sensores para recorrerlos en el cierre</td>
+<td>HDFS, MinIO, S3, Azure Blob, Ceph, ficheros Parquet sobre uno de esos almacenes</td>
+</tr>
+<tr>
+<td>Cierre de las 8:00</td>
+<td>Repartir el cálculo y reunir un total comprobable</td>
+<td>MapReduce y YARN, Spark, Hive, Trino o Presto</td>
+</tr>
+<tr>
+<td>Recepción</td>
+<td>Consultar y modificar una reserva concreta</td>
+<td>MongoDB, Cassandra o Scylla, CouchDB, OpenSearch o Elasticsearch si el acceso encaja con el modelo</td>
+</tr>
+<tr>
+<td>Copia ante un fallo</td>
+<td>Seguir o recuperar el servicio al perder un miembro</td>
+<td>Réplica de bloques en HDFS, <em>replica set</em> de MongoDB, factor de replicación de Cassandra, MinIO distribuido</td>
+</tr>
+<tr>
+<td>Crecimiento</td>
+<td>Añadir capacidad o una función</td>
+<td>DataNode, trabajador de Spark, partición de Cassandra, <em>shard</em> de OpenSearch, nodo de almacenamiento de objetos</td>
+</tr>
+<tr>
+<td>Apoyo</td>
+<td>Acelerar una lectura repetida, sin convertirse en el archivo de negocio</td>
+<td>Redis u otra caché, solo como apoyo</td>
+</tr>
+</tbody>
+</table>
+<p>Flink encaja si las lecturas de sensores forman un camino cercano al tiempo real, separado del lote de las 8:00. No hace falta Kafka, Airflow ni un lago completo para terminar el encargo. Si los usáis, indicad qué criterio cubren y qué parte del expediente seguiría en pie sin ellos.</p>
+<p>Estas tres combinaciones son recorridos coherentes, no una lista cerrada:</p>
+<ol>
+<li><strong>HDFS con MapReduce</strong>, más <strong>MongoDB</strong> en <em>replica set</em> y, para el criterio <strong>e)</strong>, una partición o un nodo añadido.</li>
+<li><strong>MinIO o S3 con Parquet</strong>, consulta con <strong>Hive o Trino</strong> y, si lo justificáis, Spark; la recepción en MongoDB, Cassandra o Scylla.</li>
+<li><strong>Sensores en Cassandra o Scylla</strong> y el cierre de ficheros con Spark o Hive.</li>
+</ol>
+<p>El laboratorio Hadoop del módulo puede tener un solo DataNode. En ese caso podéis aprender los comandos, y tenéis que decir que <strong>no</strong> habéis observado la tolerancia por réplica de bloques. Para el criterio <strong>c)</strong> usad un montaje con copias efectivas o dejad constancia de que la prueba queda pendiente de otro entorno. Varios contenedores en un ordenador tampoco demuestran que el servicio sobreviva a la pérdida de ese ordenador, ni que el trabajo se acelere entre máquinas físicas.</p>
+<h2 id="recorrido">Recorrido<a class="headerlink" href="#recorrido" title="Permanent link">&para;</a></h2>
+<p>Las horas son orientativas y suman unas 35. El profesor concreta en Moodle el calendario de las sesiones.</p>
+<table>
+<thead>
+<tr>
+<th>Bloque</th>
+<th>Horas</th>
+<th>Criterios</th>
+<th>Qué queda hecho</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Dos almacenes</td>
+<td>6</td>
+<td><strong>a)</strong>, <strong>d)</strong></td>
+<td>Histórico e información viva separados, con el volumen medido y la primera carga contrastada</td>
+</tr>
+<tr>
+<td>2. Cierre repartido</td>
+<td>8</td>
+<td><strong>b)</strong></td>
+<td>El mismo agregado en local y en el motor repartido, más un segundo motor o una segunda configuración</td>
+</tr>
+<tr>
+<td>3. Fallo en el histórico</td>
+<td>4</td>
+<td><strong>c)</strong>, <strong>e)</strong></td>
+<td>Un nodo de ficheros detenido, con el efecto anotado y la recuperación</td>
+</tr>
+<tr>
+<td>4. Recepción con copias</td>
+<td>8</td>
+<td><strong>a)</strong>, <strong>c)</strong>, <strong>d)</strong></td>
+<td>Alta o cambio de una reserva, caída de un miembro y lectura posterior</td>
+</tr>
+<tr>
+<td>5. Crecer por módulos</td>
+<td>5</td>
+<td><strong>e)</strong></td>
+<td>Un módulo añadido y la misma pregunta de negocio repetida</td>
+</tr>
+<tr>
+<td>6. Una pregunta posterior</td>
+<td>4</td>
+<td><strong>d)</strong>, <strong>c)</strong></td>
+<td>Una consulta nueva sobre el histórico ya guardado, y la diferencia entre réplica y copia de seguridad</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-dos-almacenes">1. Dos almacenes<a class="headerlink" href="#1-dos-almacenes" title="Permanent link">&para;</a></h3>
+<p>Medid el bruto generado y el espacio que ocupará con las copias previstas. Asignad el histórico de reservas, cobros, opiniones y sensores al almacén que se recorre entero. Asignad la reserva que recepción consulta y modifica al almacén que admite ese acceso. Explicad por qué un único sitio empeoraría el plazo de las 8:00 o la operación de recepción.</p>
+<p>Cargad los datos y contrastad recuentos con <code>totales_esperados.json</code> antes de seguir. Guardar el fichero no demuestra que el motor entienda sus campos: anotad formato, esquema o metadatos y el programa que los lee.</p>
+<h3 id="2-cierre-repartido">2. Cierre repartido<a class="headerlink" href="#2-cierre-repartido" title="Permanent link">&para;</a></h3>
+<p>Calculad noches e importe por hotel, cancelaciones por canal y el recuento de sensores del cierre. Haced primero el mismo agregado con una herramienta local, sobre el mismo corte, y guardad esos totales como referencia. Después ejecutadlo en el motor repartido.</p>
+<p>Registrad tareas o etapas, nodos y tres tiempos por configuración, con una ejecución de calentamiento fuera de la mediana. Comparad una y dos trabajadores, o el equivalente en la tecnología elegida. Si añadir un trabajador no reduce el tiempo, el criterio <strong>b)</strong> sigue cubierto: explicad el coste de arranque o de la mezcla, como en <a href="../computacion-distribuida/">2.4</a>. Un total distinto del esperado anula la comparación de tiempos.</p>
+<p>Repetid una de las preguntas en un segundo motor, aunque sea de forma acotada. El segundo resultado tiene que coincidir con el primero. Así se ve que el criterio depende del cálculo repartido y comprobable, no de un producto concreto.</p>
+<h3 id="3-fallo-en-el-historico">3. Fallo en el histórico<a class="headerlink" href="#3-fallo-en-el-historico" title="Permanent link">&para;</a></h3>
+<p>Elegid un fallo que el diseño declara soportar: un DataNode, un nodo de almacenamiento de objetos o el proceso que guarda una copia del fichero. Anotad el estado antes de detenerlo, detened solo ese miembro y comprobad si el cierre puede leer los datos o qué parte queda interrumpida. Documentad la recuperación y el tiempo empleado.</p>
+<p>Si la prueba solo detiene un contenedor del mismo ordenador, escribid esa limitación junto al resultado. Añadir el nodo de nuevo, cuando el producto lo permita, sirve también para preparar el bloque 5.</p>
+<h3 id="4-recepcion-con-copias">4. Recepción con copias<a class="headerlink" href="#4-recepcion-con-copias" title="Permanent link">&para;</a></h3>
+<p>Modelad la reserva que recepción necesita recuperar y modificar. Una inserción con un campo nuevo, por ejemplo una mascota o una hora de llegada, tiene que convivir con las reservas ya guardadas. Relacionadlo con <a href="../modelado/">2.7</a> y <a href="../pymongo/">2.9</a> si usáis documentos; si elegís otro modelo, explicad la operación equivalente.</p>
+<p>Levantad las copias que hayáis justificado. Detened un miembro que no sea el único dato existente, comprobad qué operación sigue y cuál espera, y volved a leer la reserva modificada. Conservad la preferencia de lectura o de confirmación que use el cliente. Esta prueba acredita el fallo de un miembro de recepción; no sustituye al fallo del histórico del bloque 3 si son sistemas distintos.</p>
+<h3 id="5-crecer-por-modulos">5. Crecer por módulos<a class="headerlink" href="#5-crecer-por-modulos" title="Permanent link">&para;</a></h3>
+<p>Añadid un módulo real del diseño: otro DataNode, otro trabajador, otra partición o <em>shard</em>, u otro nodo del almacén de objetos. Repetid una pregunta de negocio ya contrastada y mostrad que el total no cambia. Explicad qué ha aumentado: espacio, paralelismo, reparto o una función nueva. Un nodo añadido que no acelera el cierre puede ser una evidencia válida de <strong>e)</strong> si medís qué capacidad sí aporta.</p>
+<p>La evidencia común de <a href="../replicas-shards/#evidencia-comun-del-criterio-e-observar-la-ampliacion">2.8</a> sigue disponible cuando el equipo no admite la ampliación. Completadla con la interpretación individual que pide el <a href="../ra2/#evidencias-minimas-comunes-de-b-y-e">RA2</a>. En esta práctica, además, el módulo tiene que pertenecer al diseño que habéis elegido para el hotel.</p>
+<h3 id="6-una-pregunta-posterior">6. Una pregunta posterior<a class="headerlink" href="#6-una-pregunta-posterior" title="Permanent link">&para;</a></h3>
+<p>Con el histórico ya cargado, responded una pregunta que no formaba parte del primer panel. Puede ser el importe cobrado de un canal en un hotel y un mes, o las lecturas de sensores por encima de un umbral en una sede. No reescribáis el histórico para poder contestarla: usad metadatos y un lector compatible. Contrastad el nuevo total con un cálculo independiente sobre el mismo corte.</p>
+<p>En el mismo bloque, provocad o describid con una prueba pequeña la diferencia entre réplica y copia de seguridad. Una réplica puede propagar un borrado o una corrección errónea. La copia de seguridad tiene que permitir volver a una versión anterior. Decid cuál de las dos habéis probado y cuál queda solo diseñada.</p>
+<h2 id="como-se-documenta-cada-prueba">Cómo se documenta cada prueba<a class="headerlink" href="#como-se-documenta-cada-prueba" title="Permanent link">&para;</a></h2>
+<p>Para cada criterio, el expediente contiene cuatro piezas, en este orden:</p>
+<ol>
+<li><strong>Predicción.</strong> Qué esperáis que ocurra, con el total de referencia si la prueba calcula.</li>
+<li><strong>Operación.</strong> Comando, trabajo o fragmento de código, con la versión y el nodo.</li>
+<li><strong>Salida.</strong> El resultado literal, recortado si es largo, suficiente para contrastar el total o el estado.</li>
+<li><strong>Interpretación.</strong> Qué criterio queda acreditado, qué límite tiene la prueba y qué no se puede afirmar.</li>
+</ol>
+<p>Indicad las ayudas recibidas, incluidas las de una herramienta de inteligencia artificial. La valoración recae en la decisión de diseño, en el experimento y en la interpretación. Un <em>mapper</em> o una consulta generados no sustituyen esa explicación: tenéis que poder repetir la comprobación y decir por qué el total coincide o deja de coincidir.</p>
+<div class="admonition warning">
+<p class="admonition-title">Qué permite afirmar el laboratorio</p>
+<p>Contenedores en un solo ordenador muestran funciones, tareas y la parada de un proceso. No demuestran la supervivencia del servicio si se pierde el ordenador entero, ni una aceleración entre máquinas físicas. Escribid junto a cada prueba qué habéis observado y qué corresponde al diseño.</p>
+</div>
+<h2 id="relacion-con-los-apartados-de-la-unidad">Relación con los apartados de la unidad<a class="headerlink" href="#relacion-con-los-apartados-de-la-unidad" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Apartado</th>
+<th>Qué reutilizáis aquí</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ut1/transicion-ut2/">Transición de los 500 GB</a> y <a href="../por-que-almacenamiento/">2.1</a></td>
+<td>Medir volumen, plazo y continuidad antes de elegir herramientas</td>
+</tr>
+<tr>
+<td><a href="../ecosistema/">2.2</a>, <a href="../hdfs/">2.3</a> y <a href="../computacion-distribuida/">2.4</a></td>
+<td>Ficheros, bloques y un cálculo repartido con el total contrastado</td>
+</tr>
+<tr>
+<td><a href="../nosql/">2.5</a>, <a href="../mongodb/">2.6</a> y <a href="../modelado/">2.7</a></td>
+<td>Elegir el modelo de recepción y justificar campos y consultas</td>
+</tr>
+<tr>
+<td><a href="../replicas-shards/">2.8</a></td>
+<td>Caída de un miembro y crecimiento por particiones o nodos</td>
+</tr>
+<tr>
+<td><a href="../pymongo/">2.9</a></td>
+<td>Acceso desde un programa, si la recepción se hace en Python</td>
+</tr>
+</tbody>
+</table>
+<h2 id="actividades">Actividades<a class="headerlink" href="#actividades" title="Permanent link">&para;</a></h2>
+<p>Las seis actividades coinciden con los bloques. Entregad el expediente en el espacio de Moodle. Conservad entradas, configuración y salidas el tiempo que indique el profesor.</p>
+<ol>
+<li><strong>Separar.</strong> Medid el bruto, asignad cada conjunto a su almacén y cargadlo. Entregad los recuentos frente a <code>totales_esperados.json</code> y un párrafo por almacén con la operación que justifica esa elección.</li>
+<li><strong>Cerrar.</strong> Calculad el cierre en local y en el motor repartido. Entregad tareas o etapas, la mediana de tres tiempos y la comparación al añadir capacidad de ejecución. Incluid el segundo motor y la coincidencia de totales.</li>
+<li><strong>Detener un nodo del histórico.</strong> Entregad estado inicial, fallo, efecto sobre la lectura y recuperación. Si la prueba comparte un solo ordenador, escribid qué fallo no queda demostrado.</li>
+<li><strong>Atender recepción.</strong> Entregad el alta o el cambio, la lectura que sigue funcionando y la parada de un miembro de las copias. Mostrad que las reservas anteriores siguen siendo legibles.</li>
+<li><strong>Añadir un módulo.</strong> Entregad el antes y el después del recurso, la pregunta repetida y qué capacidad cambia sin cambiar el total.</li>
+<li><strong>Preguntar después.</strong> Entregad la consulta nueva, su contraste y la distinción, probada o diseñada, entre réplica y copia de seguridad.</li>
+</ol>
+<details class="note">
+<summary>Revisar después de intentarlo</summary>
+<p><strong>1.</strong> El bruto medido y el espacio con copias son cifras distintas. Un fichero colocado en HDFS o en un cubo todavía necesita formato y lector. Recepción y cierre pueden compartir negocio y usar almacenes distintos.</p>
+<p><strong>2.</strong> Los totales del motor repartido coinciden con el cálculo local y con <code>totales_esperados.json</code>. Tres tiempos y una pasada de calentamiento permiten comparar. Una agregación en un solo proceso no acredita <strong>b)</strong> por sí sola.</p>
+<p><strong>3.</strong> El fallo nombra un miembro concreto. La recuperación incluye el tiempo y el estado final de los datos. Detener un contenedor del mismo portátil no acredita la pérdida de ese portátil.</p>
+<p><strong>4.</strong> El campo nuevo no impide leer las reservas ya guardadas. La parada de un miembro deja escrito qué operación continúa. Confirmación y lectura son opciones del cliente; no equivalen a haber probado todos los fallos.</p>
+<p><strong>5.</strong> El recurso añadido se ve en el sistema, no solo en un diagrama. El total de negocio se mantiene. Más capacidad, más reparto y más rendimiento son conclusiones distintas.</p>
+<p><strong>6.</strong> La pregunta nueva usa el histórico ya depositado. Un cálculo independiente contrasta el resultado. La réplica puede copiar también un error; la copia de seguridad conserva una versión anterior.</p>
+</details>
+<p>Al terminar, tenéis que poder explicar a otro grupo dónde queda cada dato, qué total habéis contrastado, qué fallo habéis provocado y qué módulo habéis añadido. Seguid con la <a href="../autoevaluacion/">autoevaluación</a> para repasar los conceptos. El cuestionario no sustituye a este expediente.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      IES Ataúlfo Argenta · BDA · curso 2026/2027
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/iesataulfoargentasor/bda_2026_2027" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/quiz.js"></script>
+      
+    
+  </body>
+</html>

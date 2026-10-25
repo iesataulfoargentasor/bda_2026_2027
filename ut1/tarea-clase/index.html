@@ -1529,6 +1529,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut2/practica-integradora/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica Integradora de la UT2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut2/autoevaluacion/" class="md-nav__link">
         
   
@@ -2203,8 +2231,8 @@
 </ol>
 <p>No borréis el último informe publicado al empezar. Un fallo de preparación o validación debe dejarlo intacto, porque todavía no se ha iniciado la publicación. <strong>Copiar dos archivos no es una publicación atómica del conjunto</strong>: la primera copia puede completarse y fallar la segunda. En ese caso, <code>salida</code> puede contener un archivo nuevo y otro anterior o ausente; el job debe terminar con error y advertir de ese posible estado parcial, sin anunciar éxito. Esta práctica no exige deshacer las copias ni garantizar que ambos archivos se sustituyan a la vez. Como ampliación se puede diseñar una publicación por versiones, con un mecanismo que solo señale la nueva versión cuando esté completa.</p>
 <p>Utilizad <strong>Pan</strong> para probar cada <code>.ktr</code> y <strong>Kitchen</strong> para ejecutar el <code>.kjb</code> sin depender de Spoon. Adaptad las rutas a vuestro entorno:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pan.bat /file="C:/ruta/procesos/informe_cobros.ktr" /level:Basic
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kitchen.bat /file="C:/ruta/procesos/cierre_hotel.kjb" /level:Basic
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pan.bat /file=&quot;C:/ruta/procesos/informe_cobros.ktr&quot; /level:Basic
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kitchen.bat /file=&quot;C:/ruta/procesos/cierre_hotel.kjb&quot; /level:Basic
 </span></code></pre></div>
 <p>En Linux utilizad <code>pan.sh</code> y <code>kitchen.sh</code>. Para la entrega basta ejecutar Kitchen manualmente y explicar que el programador de tareas del sistema lo lanzaría de madrugada. Kitchen no queda programado a una hora por el mero hecho de ejecutar el comando.</p>
 <h2 id="8-probad-exito-repeticion-y-fallo">8. Probad éxito, repetición y fallo<a class="headerlink" href="#8-probad-exito-repeticion-y-fallo" title="Permanent link">&para;</a></h2>

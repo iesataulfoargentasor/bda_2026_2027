@@ -1683,6 +1683,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../ut2/practica-integradora/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica Integradora de la UT2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../ut2/autoevaluacion/" class="md-nav__link">
         
   
@@ -2467,7 +2495,7 @@
 <h2 id="taller-1-filtrar-ordenar-persistir-y-pan">Taller 1 — Filtrar, ordenar, persistir y Pan<a class="headerlink" href="#taller-1-filtrar-ordenar-persistir-y-pan" title="Permanent link">&para;</a></h2>
 <p>El flujo se construye en cuatro etapas: lectura → filtro → ordenación → escritura. La lectura debe conservar todas las filas del origen; el filtro reduce el conjunto a Trasmiera; la ordenación cambia su orden, no su número; la escritura conserva el resultado seleccionado.</p>
 <p>Anotad el recuento después del filtro y comprobad que coincide con las líneas de datos del CSV de salida, sin contar la cabecera. Tratad el código postal como texto si necesitáis conservar ceros iniciales. Tras ejecutar Pan, abrid de nuevo el archivo: el objetivo es demostrar que la transformación funciona sin interacción con Spoon.</p>
-<p>Cliente: <em>“Listado de alojamientos de la comarca <strong>Trasmiera</strong>, ordenados por código postal, en un CSV limpio.”</em></p>
+<p>Cliente: <em>“Listado de alojamientos de la comarca </em><em>Trasmiera</em><em>, ordenados por código postal, en un CSV limpio.”</em></p>
 <p>Fichero: <a href="../../assets/practicas/alojamientos_cp.csv" rel="noopener" target="_blank">alojamientos_cp.csv</a> (<code>hotel</code>, <code>comarca</code>, <code>codigo_postal</code>). Hay más nombres que los cuatro del esqueleto (Noja, Santoña, Isla…): es el “mañana abre otro”.</p>
 <h3 id="leer">Leer<a class="headerlink" href="#leer" title="Permanent link">&para;</a></h3>
 <ol>
@@ -2486,7 +2514,7 @@
 <p>Para demostrar el <strong>procesamiento</strong>, comprobad que solo quedan los alojamientos de Trasmiera, que el recuento coincide con el filtro y que están ordenados por código postal. Para <strong>presentar</strong> el resultado, añadid al CSV una explicación de qué contiene, sus campos y su alcance; que se abra en Excel no demuestra por sí solo que el destinatario lo entienda.</p>
 <h3 id="pan-sin-spoon">Pan (sin Spoon)<a class="headerlink" href="#pan-sin-spoon" title="Permanent link">&para;</a></h3>
 <p>Guardad <code>taller1_trasmiera.ktr</code>. Borrad el CSV de salida. En la carpeta de PDI:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file="C:\ruta\taller1_trasmiera.ktr"
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pan.bat /file=&quot;C:\ruta\taller1_trasmiera.ktr&quot;
 </span></code></pre></div>
 <p>En Linux/macOS: <code>pan.sh /file=...</code>. Revisad que el registro indique una ejecución sin errores y que el fichero vuelva a generarse. Después abridlo y repetid las comprobaciones de filtro, recuento y orden: su existencia por sí sola no demuestra que las reglas se hayan aplicado correctamente. Así ejecutáis el procedimiento sin Spoon; para lanzarlo de madrugada necesitaríais además un programador de tareas.</p>
 <p>Parámetros útiles (también en Kitchen): <code>/level:Basic</code> (o <code>Error</code>, <code>Debug</code>, <code>Rowlevel</code>…) y <code>/param:"nombre=valor"</code> si el flujo espera variables.</p>
@@ -2495,7 +2523,7 @@
 <p>Antes de construir el flujo, identificad su granularidad: en los archivos suministrados hay una fila por reserva y como máximo una fila de cobro por reserva. Por ello, una unión interna devuelve una fila por reserva cobrada. Si un origen real admitiera varios pagos por reserva, habría que revisar esta regla antes de contar reservas.</p>
 <p>El primer join añade el cobro; el segundo incorpora el nombre del hotel. La agrupación cambia la granularidad a <strong>una fila por hotel y canal</strong>. Después de agrupar ya no podemos recuperar el detalle de cada reserva desde ese informe.</p>
 <p>Configurad explícitamente las entradas izquierda y derecha del Merge join y verificad sus claves y tipos. El orden en que dibujáis las conexiones no sustituye esa comprobación. Cada entrada debe estar ordenada por la clave de la unión; la entrada de Group by debe ordenarse por sus campos de agrupación.</p>
-<p>Cliente: <em>“Importe cobrado y número de reservas <strong>por hotel y canal</strong>. Las que aún no tienen cobro no entran.”</em></p>
+<p>Cliente: <em>“Importe cobrado y número de reservas </em><em>por hotel y canal</em><em>. Las que aún no tienen cobro no entran.”</em></p>
 <p>Es la <strong>misma idea</strong> que el <a href="../ingesta/#hola-etl" rel="noopener" target="_blank">Hola ETL</a> (reservas ⋈ cobros, solo cobradas). <strong>No</strong> reutilicéis aquellos CSV: aquí el hotel va por <code>id_hotel</code>, el cobro va con <strong>punto y coma</strong>, y gerencia quiere un <strong>agregado</strong>, no el JSON de una fila.</p>
 <pre class="mermaid"><code>flowchart TD
  R[Reservas CSV] --&gt; SR[Sort: id_reserva]
@@ -2646,7 +2674,7 @@
 <p>Aquí se combinan selección de columnas, tratamiento de ausencias y reglas de filtrado. Aplicad las condiciones de forma explícita: precio válido y menor de 200, estancia mínima válida y no superior a cuatro noches, y tipo diferente de habitación privada.</p>
 <p>La puntuación no forma parte del filtro solicitado. Por tanto, una puntuación nula no justifica eliminar un alojamiento que cumple las demás condiciones. Los valores <code>-1</code> que se utilizan como marcador deben excluirse de las comparaciones de precio o noches; no representan un precio negativo real.</p>
 <p><strong>Comprobación con el archivo suministrado:</strong> deben quedar los identificadores 101, 104, 106, 107, 108, 110, 113, 116, 118 y 119. Son diez alojamientos. El 110 comprueba el límite de cuatro noches; el 117 comprueba el rechazo del precio inválido. Abrid el JSON y verificad estos identificadores y los nombres de las claves.</p>
-<p>Cliente: <em>“Alojamientos para un <strong>escaparate web</strong> (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”</em></p>
+<p>Cliente: <em>“Alojamientos para un </em><em>escaparate web</em><em> (no es el PMS ni el panel de las 8): no habitación privada, precio real menor de 200 €, estancia mínima de 4 noches o menos. En JSON, claves en castellano.”</em></p>
 <p>Fichero: <a href="../../assets/practicas/alojamientos_opiniones.csv" rel="noopener" target="_blank">alojamientos_opiniones.csv</a>. Hay <strong>nulos</strong> a propósito (<code>puntuacion</code>, <code>estancia_min</code>) y un precio <code>-1</code>.</p>
 <h3 id="leer-y-elegir-columnas">Leer y elegir columnas<a class="headerlink" href="#leer-y-elegir-columnas" title="Permanent link">&para;</a></h3>
 <p><strong>CSV file input</strong>, separador <code>,</code>. <em>Get fields</em>: <code>precio</code> y <code>puntuacion</code> como <strong>Number</strong>; <code>id</code>, <code>dormitorios</code>, <code>huespedes</code> como Integer.</p>
@@ -2686,7 +2714,7 @@
 <p><strong>Utility → If field value is null.</strong> Sustituid nulos de <code>precio</code> y <code>noches_min</code> por <code>-1</code>. Luego el filtro <strong>debe</strong> excluir esos <code>-1</code>: no los coléis como “baratos”.</p>
 <h3 id="filtro-simple-y-filtro-java">Filtro simple y filtro Java<a class="headerlink" href="#filtro-simple-y-filtro-java" title="Permanent link">&para;</a></h3>
 <p><strong>Filter rows</strong> basta para <code>precio &lt; 200</code>. Condiciones con <code>&amp;&amp;</code> / <code>||</code> y texto se leen mejor en <strong>Flow → Java Filter</strong>. Ejemplo (ajustadlo a <strong>vuestros</strong> nombres de campo):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(precio &gt;= 0 &amp;&amp; precio &lt; 200) &amp;&amp; (noches_min &gt;= 0 &amp;&amp; noches_min &lt;= 4) &amp;&amp; !alojamiento_tipo.equals("Habitacion privada")
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>(precio &gt;= 0 &amp;&amp; precio &lt; 200) &amp;&amp; (noches_min &gt;= 0 &amp;&amp; noches_min &lt;= 4) &amp;&amp; !alojamiento_tipo.equals(&quot;Habitacion privada&quot;)
 </span></code></pre></div>
 <p>Podéis poner <strong>Dummy</strong> en la rama que no cumple (no hace nada; cierra el camino) y la salida JSON en la que sí.</p>
 <h3 id="json">JSON<a class="headerlink" href="#json" title="Permanent link">&para;</a></h3>
@@ -2702,7 +2730,7 @@
 <h2 id="taller-4-formula-y-dejar-el-informe-en-la-nube">Taller 4 — Fórmula y dejar el informe en la nube<a class="headerlink" href="#taller-4-formula-y-dejar-el-informe-en-la-nube" title="Permanent link">&para;</a></h2>
 <p>La media solicitada es una <strong>media ponderada por noches</strong>: sumamos los importes y dividimos por la suma de noches. Promediar los precios medios de reservas de distinta duración daría otro resultado. Antes de dividir, comprobad que <code>noches_total</code> sea mayor que cero.</p>
 <p>La publicación en S3, Azure o carpeta se realiza después de validar el CSV local. El cambio de destino no debe cambiar ni los grupos ni los totales. Si falla la subida, el proceso debe informar del fallo y conservar una salida que permita repetir la publicación.</p>
-<p>Cliente: <em>“Por <strong>costa / ciudad / interior</strong>: noches cobradas, importe cobrado y <strong>precio medio por noche</strong>. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”</em></p>
+<p>Cliente: <em>“Por </em><em>costa / ciudad / interior</em><em>: noches cobradas, importe cobrado y </em><em>precio medio por noche</em><em>. El CSV tiene que acabar en el almacenamiento del centro (S3, Azure o la carpeta que diga el profesor).”</em></p>
 <p>Partís de una <strong>copia</strong> del taller 2 <strong>hasta el segundo Merge join</strong> (reservas ⋈ cobros ⋈ hoteles), <strong>antes</strong> del <em>Group by</em>. Si partís del <code>informe_hotel_canal.csv</code>, ya no están <code>noches</code>, <code>cobrado</code> ni <code>id_cadena</code>: el agregado del taller 2 se los quedó. Este taller <strong>vuelve a leer</strong> los CSV; no consume ese informe. En la copia, cada fila sigue siendo <strong>una reserva cobrada</strong>.</p>
 <p>Añadís <a href="../../assets/practicas/cadenas_pdi.csv" rel="noopener" target="_blank">cadenas_pdi.csv</a> (<code>Costa</code>, <code>Ciudad</code>, <code>Interior</code>):</p>
 <ol>
@@ -2783,14 +2811,14 @@
 <li>Segunda <strong>Transformation</strong> (taller 4). Si comprobáis objeto en S3/Azure, el mismo <em>File exists</em> admite esquema S3 (URL del <em>bucket</em>) en muchas versiones; si no, un paso <em>Shell</em> / script del aula. Sin cubo: comprobad el CSV local.</li>
 </ol>
 <p>Guardad <code>taller5_noche.kjb</code>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kitchen.bat /file="C:\ruta\taller5_noche.kjb" /level:Basic
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kitchen.bat /file=&quot;C:\ruta\taller5_noche.kjb&quot; /level:Basic
 </span></code></pre></div>
 <p>Linux: <code>kitchen.sh /file=taller5_noche.kjb</code>.</p>
 <hr />
 <h2 id="taller-6-hablar-con-una-base-de-datos">Taller 6 — Hablar con una base de datos<a class="headerlink" href="#taller-6-hablar-con-una-base-de-datos" title="Permanent link">&para;</a></h2>
 <p>Este taller distingue tres operaciones. Un <strong>lookup</strong> consulta una tabla para añadir información al flujo. Un <strong>insert</strong> crea una fila nueva. Un <strong>update</strong> busca una fila existente y modifica sus campos. La combinación <strong>insert/update</strong> decide entre las dos últimas según las claves configuradas.</p>
 <p>Antes de ejecutar, revisad el esquema SQL y los tipos de fecha. La columna <code>fecha</code> del CSV corresponde a <code>fecha_inicio</code> en el destino; no son dos fechas diferentes. Para repetir las pruebas, utilizad un estado inicial conocido y comprobad si una ejecución anterior ya insertó filas. Así no confundiréis un duplicado de pruebas con un fallo del paso.</p>
-<p>Cliente: <em>“Las incidencias del mostrador llegan en CSV; los nombres están en la tabla de huéspedes. Inserta el cierre, actualiza si ya existía, y si el id no encaja, que se vea <strong>por qué</strong> falló.”</em></p>
+<p>Cliente: <em>“Las incidencias del mostrador llegan en CSV; los nombres están en la tabla de huéspedes. Inserta el cierre, actualiza si ya existía, y si el id no encaja, que se vea </em><em>por qué</em><em> falló.”</em></p>
 <p>En el PDF el ejemplo es RDS y deporte. Aquí el esquema es el <strong>hotel</strong>, en <strong>local</strong> (PostgreSQL o MariaDB). RDS vale si el profesor lo monta; el oficio no cambia.</p>
 <h3 id="preparar">Preparar<a class="headerlink" href="#preparar" title="Permanent link">&para;</a></h3>
 <ol>
