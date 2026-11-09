@@ -91,13 +91,14 @@ Utilizad esta tabla para localizar dónde se trabaja cada criterio del [RA2](ra2
 | [2.7 Modelado documental](modelado.md) | **d)** | Diseñar documentos y reglas de validación según las operaciones del hotel y la evolución de sus datos. |
 | [2.8 Réplicas y particiones](replicas-shards.md) | **c)** / **e)** | Probar la respuesta ante la caída de un miembro y razonar cómo repartir los datos para crecer. |
 | [2.9 MongoDB y Python](pymongo.md) | **d)** / **c)**; apoyo a **b)** | Consultar, agregar y modificar desde Python; aplicar las opciones de acceso al conjunto de réplicas. |
+| [Práctica Integradora de la UT2](practica-integradora.md) | **a–e** | Reunir el histórico del cierre y la recepción viva, con datos ficticios de cerca de 1 GB y pruebas de los cinco criterios. |
 | [Autoevaluación](autoevaluacion.md) | — | Repasar la unidad y revisar la explicación de los errores. No puntúa en Moodle. |
 
 En **2.9**, ejecutar una agregación en el servidor permite practicar procesamiento, pero **no demuestra por sí solo computación distribuida**. La evidencia del criterio **b)** se trabaja en 2.2 y 2.4, indicando qué distribución permite observar el entorno disponible.
 
 ## Prácticas y comprobaciones
 
-Trabajamos con conjuntos pequeños para poder revisar los resultados. El volumen del escenario empresarial justifica las preguntas de la unidad; los ficheros de aula permiten aprender los procedimientos. Las pruebas de rendimiento requieren los datos y condiciones indicados en 2.4.
+En las prácticas guiadas trabajamos con conjuntos pequeños para poder revisar los resultados. El volumen del escenario empresarial justifica las preguntas de la unidad; los ficheros de aula permiten aprender los procedimientos. Las pruebas de rendimiento de estos apartados requieren los datos y condiciones indicados en 2.4. La [práctica integradora](practica-integradora.md) usa otro conjunto, ficticio y de cerca de 1 GB, con los cuatro hoteles del caso. No reutiliza los totales de la tabla siguiente.
 
 | Práctica | Datos iniciales | Qué comprobáis |
 | --- | --- | --- |
@@ -119,4 +120,4 @@ Para observar el crecimiento del sistema, relacionad cada recurso añadido con l
 
 En cada práctica conservad **entrada, configuración, operación, resultado y explicación**. Una captura sin interpretación no permite saber si el resultado es correcto. Contrastad recuentos, totales y reglas de negocio; al probar un fallo, registrad el estado inicial, la interrupción y la recuperación. Si el entorno no permite demostrar una propiedad, explicad la limitación y qué prueba adicional necesitaríais.
 
-Terminad con la [autoevaluación](autoevaluacion.md) y revisad los criterios del [RA2](ra2.md). Debéis poder explicar a un compañero qué necesidad resuelve cada sistema, qué habéis comprobado y bajo qué condiciones se mantiene el resultado.
+Después del 2.9, cerrad la unidad con la [práctica integradora](practica-integradora.md). El repaso de conceptos sigue en la [autoevaluación](autoevaluacion.md); no sustituye a ese expediente. Revisad también los criterios del [RA2](ra2.md). Debéis poder explicar a un compañero qué necesidad resuelve cada sistema, qué habéis comprobado y bajo qué condiciones se mantiene el resultado.

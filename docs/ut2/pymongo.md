@@ -535,12 +535,12 @@ flask --app app run --debug
 
 `http://127.0.0.1:5000/ocupacion`. Jinja usa `{{ variable }}` para mostrar valores y `{% for %}` para recorrer filas. MongoDB calcula el resumen y Flask lo presenta; esta separación no demuestra por sí sola distribución ni rendimiento con grandes volúmenes.
 
-## Cómo se cierra el apartado (y la UT2)
+## Cómo se cierra el apartado
 
 Un script que suma noches practica procesamiento en MongoDB. Para comprobar el modelo distribuido del criterio **b)** se mantiene la evidencia de 2.4. Añadir `mascota` permite ensayar evolución del documento, pero el criterio **d)** también requiere explicar qué datos se conservan, sus límites y cómo se reutilizan.
 
-!!! success "Cerrar la UT2"
-    HDFS permite almacenar bloques y recuperarlos según la configuración; MapReduce y YARN permiten ejecutar y observar tareas distribuidas. MongoDB aporta otro modelo de almacenamiento y consulta. Las réplicas y particiones responden a necesidades diferentes, con recursos y fallos concretos. PyMongo conecta ese sistema con una aplicación que consulta, modifica y comprueba resultados. Ninguna de estas herramientas elimina por sí sola los límites de capacidad ni todos los fallos.
+!!! success "Cerrar el 2.9"
+    HDFS permite almacenar bloques y recuperarlos según la configuración; MapReduce y YARN permiten ejecutar y observar tareas distribuidas. MongoDB aporta otro modelo de almacenamiento y consulta. Las réplicas y particiones responden a necesidades diferentes, con recursos y fallos concretos. PyMongo conecta ese sistema con una aplicación que consulta, modifica y comprueba resultados. Ninguna de estas herramientas elimina por sí sola los límites de capacidad ni todos los fallos. La unidad se cierra después, en la [práctica integradora](practica-integradora.md), con otro conjunto de datos.
 
 ## Relación con el RA2
 
