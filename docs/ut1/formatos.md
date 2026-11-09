@@ -42,7 +42,9 @@ Los talleres comparan formatos de intercambio y almacenamiento, y presentan Arro
 El criterio **c)** es este: **en qué forma dejáis el dato** para que el siguiente paso pueda procesarlo de forma adecuada. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.
 
 !!! info "Cómo se lee esta página"
-    Primero el **caso** y la tarjeta (fila frente a columna). Luego **Avro** (talleres 1–2: el mensaje). Después **Parquet + DuckDB** (el lago del panel). El **taller medido** va al final. ORC y Delta son una idea, no un segundo curso. Los relojes: gerencia a las **8** ve el cierre de **ayer**.
+    Seguimos una pregunta: **¿cómo guardamos y recuperamos las reservas sin perder información, y qué representación conviene para cada uso?** Primero creamos una tabla de referencia. Aprendemos Avro con dos reservas fáciles de inspeccionar y después lo aplicamos a las reservas de Laredo del conjunto grande. Con Arrow y Parquet repetimos el paso de ejemplo pequeño a consulta del conjunto completo. Finalmente comparamos formatos con datos equivalentes. ORC completa la comparación; los formatos de tabla y HDFS se presentan como ampliación.
+
+    Ejecutad las celdas en orden en un mismo cuaderno. Cada taller indicará su entrada, su salida y una comprobación. Que una celda no muestre errores no basta: leeremos lo escrito y lo compararemos con su referencia.
 
 ## Un caso para no perderse
 
@@ -51,6 +53,18 @@ El [grupo hotelero de Cantabria](caso-hotel.md){target="_blank" rel="noopener"} 
 Esa es la pregunta del apartado: ¿el dato viaja **fila a fila** (bien para *esta* reserva en un mensaje o en el PMS) o **campo a campo** (bien para el panel)? ¿Hace falta que un humano lo abra, o que Spark lo **trocee** entre nodos?
 
 Las prácticas **no dependen de un CSV ajeno**. Generáis el dataset en el cuaderno (Jupyter o un [Colab](https://colab.research.google.com/){target="_blank" rel="noopener"} en blanco). Esquema Avro: [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. **Noja** es el “mañana abre otro”, no un quinto hotel del esqueleto. Este `reservas.csv` **no** es el de [Hola ETL](ingesta.md){target="_blank" rel="noopener"} (allí había cobros).
+
+Antes de ejecutar los ejemplos, preparad las bibliotecas en una celda de Colab o Jupyter:
+
+```python
+%pip install numpy "pandas==2.3.3" avro fastavro pyarrow duckdb
+```
+
+Fijamos pandas 2.3.3 para reproducir el contrato de tipos de este taller, que utiliza `object` para el texto. Otras versiones pueden recuperar el mismo texto como `str`/`StringDtype`: una diferencia de representación no demuestra pérdida de valores. Para seguir estas comprobaciones sin adaptar el contrato, utilizad la versión indicada y anotad las versiones de las demás bibliotecas.
+
+En una terminal se utiliza `pip install` sin `%`. Tras instalar o cambiar la versión de pandas, reiniciad el entorno de ejecución de Colab/Jupyter antes de continuar, para que no conserve una versión importada previamente. Después ejecutad las celdas de datos en orden. Las instalaciones que aparecen después recuerdan qué biblioteca corresponde a cada formato; no es necesario repetirlas si ya está instalada.
+
+**Entrada:** datos sintéticos generados aquí, no una descarga de reservas reales. **Salida:** `df`, una tabla de pandas en memoria con 200.000 filas y ocho columnas, y `reservas.csv`, una copia de esa tabla en disco. Guardar el CSV no elimina `df`; los talleres posteriores pueden utilizarlo sin volver a leer el archivo.
 
 ```python
 import numpy as np
@@ -83,6 +97,28 @@ df.to_csv("reservas.csv", index=False, encoding="utf-8")
 El generador contiene cadenas vacías (`""`) en `comentarios`, pero no valores nulos. Son estados distintos: una cadena vacía es un texto de longitud cero; un nulo indica ausencia de valor. Para recuperar estos datos desde CSV, utilizad el [contrato de lectura del taller medido](#contrato-csv-del-taller), sin dejar los tipos y los nulos a la inferencia.
 
 Con `n = 200_000` ya notáis tamaño y tiempo. Subid a un millón si la máquina lo aguanta. `regimen` y `comentarios` están para que veáis **lo que el informe no debe leer**.
+
+Antes de continuar, observad la referencia:
+
+```python
+print("Filas y columnas:", df.shape)
+print(df.head())
+print("Nulos por columna:\n", df.isna().sum())
+assert df.shape == (n, 8)
+assert not df.isna().any().any()
+```
+
+Con el valor inicial de `n`, deben aparecer 200.000 filas, ocho columnas y cero nulos. No confundáis las cinco filas de `head()` con el tamaño total. Conservad `df` sin sobrescribirlo: será nuestra referencia para comprobar las conversiones.
+
+| Paso | Datos utilizados | Qué queremos comprobar |
+| --- | --- | --- |
+| Talleres 1 y 2 | Dos reservas escritas a mano, independientes de `df` | Cómo funcionan el esquema Avro y un importe ausente |
+| Taller 3 | Todas las filas de Laredo de `df`, con cinco columnas | Guardar y recuperar una selección sin cambiar sus valores |
+| Arrow y talleres 4 y 5 | Un ejemplo de dos reservas, con tres campos | Representación en memoria y conservación al escribir Parquet |
+| Taller 6, DuckDB, Feather y ORC | El conjunto grande `df` | Guardar, recuperar y consultar datos de la referencia común |
+| Taller medido | Conjunto completo y, por separado, selección de Laredo | Comparar tamaños y tiempos después de validar los resultados |
+
+Los ejemplos pequeños sirven para entender el mecanismo. No compararemos sus tamaños con los archivos de 200.000 filas.
 
 ## Qué tiene que cumplir el formato
 
@@ -192,9 +228,7 @@ El algoritmo busca **repeticiones** (`Laredo, Laredo, Laredo…`) y las recodifi
 | Snappy | Alta | Medio | Avro, Parquet, ORC |
 | Zstandard (zstd) | Alta | Alto | Parquet reciente |
 
-```python
-df.to_parquet("reservas_zstd.parquet", compression="zstd")
-```
+En el Taller 6 escribiremos también una variante Parquet con Zstandard usando `compression="zstd"`. Así comprobaremos primero los valores y después mediremos cuánto ocupa. Aquí basta con entender la decisión; todavía no creamos otro archivo.
 
 ```bash
 pip install python-snappy   # si usáis Snappy con Avro
@@ -204,11 +238,23 @@ No memoricéis megas de un recorte ajeno. **Medid el vuestro** al final del tall
 
 ## Avro: el mensaje que se explica solo
 
-El esquema especifica qué campos forman cada registro y qué valores son válidos. Un campo que admite nulo debe declararlo; nulo representa ausencia de valor y se distingue de cero o de una cadena vacía. Cuando el esquema cambia, escritor y lector deben aplicar reglas compatibles.
+Hasta aquí tenemos reservas en una tabla de pandas y una copia CSV. Imaginad ahora que recepción quiere entregar registros a otro programa: ese programa necesita saber qué campos recibe, cuáles son números y si un importe puede faltar. En CSV podemos acordarlo mediante un contrato externo, como haremos al final. **Avro ofrece otra forma de representar esos registros con un esquema explícito.**
 
-En un **archivo contenedor Avro**, el esquema se conserva en la cabecera. En mensajería, los sistemas pueden utilizar un identificador y un registro externo de esquemas: no debe suponerse que cada mensaje contiene la cabecera completa de un archivo. Los talleres siguientes trabajan con archivos contenedores.
+[Avro](https://avro.apache.org/){target="_blank" rel="noopener"} es un sistema de serialización: convierte registros en bytes y permite reconstruirlos con un lector compatible. En estos talleres utilizaremos su formato de **archivo contenedor binario**, organizado por registros. No se inspecciona como un CSV en un editor de texto; lo leeremos con Python.
 
-[Avro](https://avro.apache.org/){target="_blank" rel="noopener"} guarda **por filas**, en binario. El esquema (JSON) viaja en la **cabecera**. Quien lee sabe cómo se escribió. Encaja cuando **escribís mucho**, el esquema **cambia** y el destino es un bus ([Kafka](ingesta.md){target="_blank" rel="noopener"}), no el PMS. Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/){target="_blank" rel="noopener"}.
+El **esquema** describe los campos y sus tipos. Es parecido a una ficha que dice «cada reserva tiene identificador entero, hotel de texto, noches enteras e importe numérico o ausente». El archivo contenedor guarda ese esquema en su cabecera. El esquema no contiene las reservas: describe cómo interpretarlas.
+
+| Elemento del ejemplo | Qué representa |
+| --- | --- |
+| `reserva.avsc` | Un archivo de texto JSON con el esquema de las dos reservas de prueba |
+| `reservas.avro` | Un archivo binario con el esquema y los registros escritos en el Taller 1 |
+| `avro` / `fastavro` | Dos bibliotecas de Python capaces de leer y escribir Avro; no son dos formatos distintos |
+
+¿Por qué lo estudiamos ahora? Porque permite comprender el intercambio de registros tipados antes de pasar a las consultas por columnas. Puede utilizarse en archivos y en mensajería, por ejemplo con [Kafka](ingesta.md){target="_blank" rel="noopener"}; **aquí no instalamos Kafka ni simulamos un PMS: escribimos y leemos archivos locales**. En mensajería puede utilizarse un identificador y un registro externo de esquemas, por lo que no todos los mensajes llevan la cabecera de un archivo contenedor.
+
+Avro también establece reglas para que lectores y escritores puedan trabajar con versiones de esquema compatibles. Esa compatibilidad debe comprobarse; añadir cualquier campo no garantiza que cualquier lector antiguo lo entienda. Guía: [Getting started (Python)](https://avro.apache.org/docs/1.11.1/getting-started-python/){target="_blank" rel="noopener"}.
+
+Ahora dejamos temporalmente `df` y `reservas.csv`. Empezamos con dos reservas manuales para poder ver todos sus campos y un nulo. En el Taller 3 volveremos al conjunto grande.
 
 !!! tip "Orden de los talleres"
     1–2: Avro con nulos. 3: del `df` a Avro; forma parte de la práctica guiada y prepara `laredo.avro`, necesario para el taller medido. 4–6: Parquet; el 6 filtra **al leer**. DuckDB: preguntar sin tragarse el fichero. Luego el [taller medido](#taller-medido-lo-que-se-examina){target="_blank" rel="noopener"}.
@@ -216,7 +262,7 @@ En un **archivo contenedor Avro**, el esquema se conserva en la cabecera. En men
 Tipos simples: `null`, `boolean`, `int`, `long`, `float`, `double`, `bytes`, `string`.  
 Compuestos: `record`, `enum`, `array`, `map`, `union`, `fixed`.
 
-El paquete viejo `avro-python3` está muerto. Instalad `avro` (o **fastavro** si el volumen duele: [GitHub](https://github.com/fastavro/fastavro){target="_blank" rel="noopener"}).
+Utilizaremos `avro` y [fastavro](https://github.com/fastavro/fastavro){target="_blank" rel="noopener"}. No instaléis el antiguo paquete `avro-python3`. Cambiar de biblioteca mantiene el formato; cualquier ventaja de rendimiento debe medirse.
 
 ```bash
 pip install avro fastavro
@@ -228,7 +274,11 @@ pip install avro fastavro
 
 **Comprobación:** deben recuperarse dos reservas. La primera conserva el importe 186,5; la segunda tiene importe nulo. El nulo no significa que la estancia sea gratuita. Si cambiáis `noches` por un texto incompatible con el esquema, la escritura debe rechazarlo.
 
-Descargad [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. La segunda reserva no trae importe: el esquema admite nulo.
+**Entrada:** dos reservas manuales y el esquema [reserva.avsc](../assets/practicas/reserva.avsc){target="_blank" rel="noopener"}. Descargadlo en la carpeta de trabajo del cuaderno; en Colab, subidlo desde el panel de archivos. **Salida:** `reservas.avro`, con dos registros, no con los datos de `reservas.csv`.
+
+Abrid el esquema como texto antes de ejecutar el código. `record` describe un registro; `fields` enumera sus campos. En `importe`, `["null", "float"]` admite ausencia o un número, y `default: null` declara un valor por defecto para la resolución de esquemas. En este ejemplo las bibliotecas utilizadas aceptan omitir ese campo al escribir y lo representan como nulo. No interpretéis un valor por defecto como permiso universal para omitir campos en cualquier escritor o esquema.
+
+El recorrido será **esquema → escribir registros → cerrar archivo → volver a leer → comparar**. Los modos `wb` y `rb` significan escritura y lectura binarias.
 
 ```python
 import copy
@@ -238,10 +288,11 @@ import avro.schema
 from avro.datafile import DataFileReader, DataFileWriter
 from avro.io import DatumReader, DatumWriter
 
-schema = avro.schema.parse(open("reserva.avsc", "rb").read())
+with open("reserva.avsc", encoding="utf-8") as f:
+    esquema_avro_pequeno = avro.schema.parse(f.read())
 
 with open("reservas.avro", "wb") as f:
-    w = DataFileWriter(f, DatumWriter(), schema)
+    w = DataFileWriter(f, DatumWriter(), esquema_avro_pequeno)
     w.append({"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5})
     w.append({"id_reserva": 2, "hotel": "Potes", "noches": 2})
     w.close()
@@ -250,43 +301,82 @@ with open("reservas.avro", "rb") as f:
     r = DataFileReader(f, DatumReader())
     meta = copy.deepcopy(r.meta)
     print(json.loads(meta["avro.schema"]))
-    print(list(r))
+    recuperadas_avro = list(r)
+    print(recuperadas_avro)
     r.close()
 ```
 
-En pantalla veréis `importe: None`: eso es Python. En el fichero el nulo es Avro.
+En pantalla veréis `importe: None`: eso es Python. En el fichero el nulo es Avro. Comprobad también los valores, no solo que el archivo exista:
 
-### Taller 2 — Lo mismo, más rápido (fastavro)
+```python
+esperadas_pequenas = [
+    {"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5},
+    {"id_reserva": 2, "hotel": "Potes", "noches": 2, "importe": None},
+]
+assert recuperadas_avro == esperadas_pequenas
+print("Taller 1: dos reservas recuperadas; se conserva el importe ausente.")
+```
 
-Este taller conserva el objetivo y cambia la biblioteca. Comparad los registros leídos de ambos archivos, no sus bytes: dos escritores pueden producir archivos diferentes que representan los mismos datos. La ventaja de rendimiento debe medirse para vuestro volumen y entorno; con dos registros apenas es representativa.
+`assert` comprueba una condición: si no se cumple, detiene la celda con un error. Investigad la diferencia antes de seguir. Hasta aquí no se ha convertido ni cambiado el CSV grande.
+
+<span id="taller-2-lo-mismo-mas-rapido-fastavro"></span>
+
+### Taller 2 — Mismas reservas con otra biblioteca (fastavro)
+
+**Entrada:** las mismas dos reservas y el mismo archivo de esquema del Taller 1. **Salida:** `reservas_fa.avro`. Este taller conserva el objetivo y cambia la biblioteca. Comparad los registros leídos de ambos archivos, no sus bytes: dos escritores pueden producir archivos diferentes que representan los mismos datos. La ventaja de rendimiento debe medirse para vuestro volumen y entorno; con dos registros apenas es representativa.
 
 ```python
 import json
 import fastavro
 
 with open("reserva.avsc", "rb") as f:
-    schema = fastavro.parse_schema(json.load(f))
+    esquema_fastavro_pequeno = fastavro.parse_schema(json.load(f))
 
-filas = [
+filas_pequenas = [
     {"id_reserva": 1, "hotel": "Laredo", "noches": 3, "importe": 186.5},
     {"id_reserva": 2, "hotel": "Potes", "noches": 2},
 ]
 with open("reservas_fa.avro", "wb") as f:
-    fastavro.writer(f, schema, filas)
+    fastavro.writer(f, esquema_fastavro_pequeno, filas_pequenas)
+
+with open("reservas_fa.avro", "rb") as f:
+    recuperadas_fastavro = list(fastavro.reader(f))
+
+assert recuperadas_fastavro == recuperadas_avro == esperadas_pequenas
+print("Taller 2: ambas bibliotecas recuperan las mismas reservas y el mismo nulo.")
 ```
 
 ### Taller 3 — Del DataFrame al Avro
 
-Aquí seleccionamos Laredo y cinco columnas del conjunto generado. Por tanto, el archivo resultante no contiene todo el DataFrame original. Anotad el número de filas filtradas y verificad que coincide con el número de registros recuperados de Avro.
+Ahora volvemos a `df`, la tabla de 200.000 reservas del principio. Supongamos que otro programa solo necesita las reservas de Laredo y cinco campos de cada una. **Entrada:** ese subconjunto de `df`. **Salida:** `laredo.avro`, con todas las reservas seleccionadas, no una única reserva.
+
+Este taller enlaza el ejemplo pequeño con los datos de referencia. Primero filtramos **filas** por hotel y después seleccionamos **columnas**. Las columnas excluidas no se convierten en nulos: simplemente no se incluyen en el archivo. Sus valores siguen en `df`, que no modificamos.
+
+El esquema también cambia: incorpora `canal`, usa `double` para conservar la representación de `importe` del conjunto grande y no admite nulos, porque el generador no los produce. No reutilizamos el esquema de cuatro campos de los talleres 1–2. Este cambio prepara otro archivo; no es una demostración de compatibilidad entre lectores de versiones distintas.
 
 El ejemplo utiliza números en coma flotante con fines didácticos. Para importes contables se debe acordar una representación decimal exacta o unidades enteras, como céntimos. Cambiar el formato no elimina los errores de redondeo de una representación numérica inadecuada.
 
-Usad el `df` del generador (o filtrarlo: solo `hotel == "Laredo"`).
+**Paso 1. Preparar e inspeccionar la selección.** Ejecutad el generador si no existe `df`. Separar el filtro de la selección de columnas permite ver qué hace cada operación:
+
+```python
+columnas_laredo = ["id_reserva", "hotel", "noches", "importe", "canal"]
+reservas_laredo = df.loc[df["hotel"] == "Laredo"]
+laredo = reservas_laredo.loc[:, columnas_laredo].copy()
+print("Filas originales:", len(df), "Filas de Laredo:", len(laredo))
+print(laredo.head())
+print("Nulos por columna:\n", laredo.isna().sum())
+assert len(laredo) == df["hotel"].eq("Laredo").sum()
+assert not laredo.isna().any().any()
+```
+
+No fijamos a mano el número de reservas de Laredo: lo obtenemos del conjunto generado. Deben conservarse sus noches, importes y canales.
+
+**Paso 2. Definir el esquema y escribir.** `to_dict("records")` crea un diccionario por fila. Las conversiones explícitas preparan tipos de Python para el escritor; no rellenan campos con nulos. Usamos `deflate` para comprimir los bloques del archivo.
 
 ```python
 from fastavro import parse_schema, writer
 
-schema = parse_schema({
+esquema_avro_laredo = parse_schema({
     "name": "Reserva",
     "namespace": "bda.ut1",
     "type": "record",
@@ -298,9 +388,8 @@ schema = parse_schema({
         {"name": "canal", "type": "string"},
     ],
 })
-laredo = df[df["hotel"] == "Laredo"][["id_reserva", "hotel", "noches", "importe", "canal"]]
 # Convertimos explícitamente a tipos de Python compatibles con el esquema
-filas = [
+filas_laredo = [
     {
         "id_reserva": int(fila["id_reserva"]),
         "hotel": str(fila["hotel"]),
@@ -311,12 +400,28 @@ filas = [
     for fila in laredo.to_dict("records")
 ]
 with open("laredo.avro", "wb") as f:
-    writer(f, schema, filas, codec="deflate")
+    writer(f, esquema_avro_laredo, filas_laredo, codec="deflate")
 ```
+
+**Paso 3. Recuperar y contrastar.** El escritor ya ha cerrado el archivo; ahora comprobamos todos los registros y valores:
+
+```python
+from fastavro import reader
+
+with open("laredo.avro", "rb") as f:
+    recuperadas_laredo = list(reader(f))
+assert len(recuperadas_laredo) == len(laredo)
+assert recuperadas_laredo == filas_laredo
+print("Taller 3:", len(recuperadas_laredo), "reservas de Laredo conservadas.")
+```
+
+La lectura devuelve diccionarios con tipos de Python, no columnas pandas con `dtype`. La igualdad comprueba contenido y orden; el esquema del archivo declara los tipos Avro. Para comparar después tamaño o tiempo, generaremos CSV y Parquet desde **este mismo `laredo`**, no desde las 200.000 filas completas.
 
 Si algún día lo escribís en HDFS, cambiad el host por el de **vuestro** lab; el patrón es el de la librería `hdfs` (`InsecureClient` + `AvroWriter`). No copiéis un nombre de máquina de otro ciclo.
 
 ## Arrow: el dato *en la RAM*
+
+Ya sabemos guardar registros con Avro. Para preparar las consultas analíticas necesitamos introducir otra pieza: **cómo representa una tabla el programa en memoria**. Aquí aparece Arrow, cuyo nombre se parece a Avro pero cumple otra función. Usaremos dos reservas con tres campos, retomando el ejemplo de Laredo y Potes y el importe ausente. No estamos leyendo `laredo.avro` ni sustituyendo `df`.
 
 El formato en disco responde a cómo conservar y leer bytes; la representación en memoria responde a cómo trabaja el programa con los valores ya disponibles. Arrow organiza columnas con tipos y una representación explícita de los nulos. Esa disposición facilita intercambios entre herramientas compatibles.
 
@@ -331,27 +436,31 @@ pip install pyarrow
 ```python
 import pyarrow as pa
 
-schema = pa.schema([
+esquema_arrow_pequeno = pa.schema([
     ("hotel", pa.string()),
     ("noches", pa.int32()),
     ("importe", pa.float32()),
 ])
-tabla = pa.Table.from_pydict(
+tabla_pequena = pa.Table.from_pydict(
     {"hotel": ["Laredo", "Potes"], "noches": [3, 2], "importe": [186.5, None]},
-    schema=schema,
+    schema=esquema_arrow_pequeno,
 )
-print(tabla)
+print(tabla_pequena)
+assert tabla_pequena.num_rows == 2
+assert tabla_pequena.column("importe").null_count == 1
 ```
 
 En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra. Esta llamada ilustra las opciones del lector; no sustituye el [contrato CSV del taller](#contrato-csv-del-taller). Si probáis otro motor o backend, verificad qué opciones admite y documentad las diferencias de representación antes de comparar.
 
-**Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
+**Para conservar en disco una tabla representada con Arrow**, podemos utilizar Feather. Volvemos aquí al `df` completo: **Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
 
 ```python
 import pyarrow.feather as feather
 
 feather.write_feather(df, "reservas.feather")
-otro = feather.read_feather("reservas.feather")
+recuperado_feather = feather.read_feather("reservas.feather")
+pd.testing.assert_frame_equal(df, recuperado_feather, check_exact=True)
+print("Feather: conservadas las filas, columnas, tipos y valores de df.")
 ```
 
 !!! tip "Dos sitios, dos ficheros"
@@ -359,20 +468,28 @@ otro = feather.read_feather("reservas.feather")
 
 ## Parquet: el lago del informe
 
+Ahora cambia la necesidad: gerencia quiere resumir muchas reservas leyendo pocos campos. Ya sabemos intercambiar registros; probaremos una organización por columnas. Primero verificamos Parquet con la tabla pequeña de Arrow y después lo aplicamos a `df` completo. No es necesario convertir antes los datos a Avro para escribir Parquet.
+
 [Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"} es **columnar**, lleva el esquema consigo y parte en *row groups*. El informe que pide `hotel` e `importe` no arrastra `canal`. pandas: `to_parquet` / `read_parquet`.
 
 ### Taller 4 — Tabla Arrow → Parquet
 
-Escribimos la tabla pequeña creada en el apartado Arrow. El resultado debe mantener sus dos filas, los tres campos y el importe nulo. Después de leerlo, comparad el esquema y los valores. Este taller comprueba conservación de datos, no velocidad a gran escala.
+**Entrada:** `tabla_pequena`, creada en Arrow, con dos reservas y tres campos. **Salida:** `reservas_pequenas.parquet`. Escribimos la tabla pequeña creada en el apartado Arrow. El resultado debe mantener sus dos filas, los tres campos y el importe nulo. Después de leerlo, comparad el esquema y los valores. Este taller comprueba conservación de datos, no velocidad a gran escala.
 
 ```python
 import pyarrow.parquet as pq
 
-pq.write_table(tabla, "reservas.parquet")
-print(pq.read_table("reservas.parquet"))
+pq.write_table(tabla_pequena, "reservas_pequenas.parquet")
+recuperada_pequena = pq.read_table("reservas_pequenas.parquet")
+print(recuperada_pequena)
+assert recuperada_pequena.schema == tabla_pequena.schema
+assert recuperada_pequena.equals(tabla_pequena)
+print("Taller 4: se conservan las dos filas, los tipos y el importe nulo.")
 ```
 
 ### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md){target="_blank" rel="noopener"})
+
+El hotel también podría recibir esas dos reservas como texto JSONL. **Entrada:** `reservas.jsonl`, creado para este ejemplo. **Salida:** `reservas_desde_json.parquet`. Es otra vía de entrada a Parquet; no utiliza el CSV grande ni el Avro del Taller 3.
 
 Cread primero un archivo de texto con exactamente los dos objetos mostrados, uno por línea, y guardadlo como `reservas.jsonl`. El lector infiere un esquema y produce una tabla Arrow; el escritor genera Parquet. Comprobad que la ausencia de `importe` en la segunda línea se representa como nulo, no como cero.
 
@@ -383,34 +500,81 @@ Cread primero un archivo de texto con exactamente los dos objetos mostrados, uno
 {"hotel": "Potes", "noches": 2}
 ```
 
+También podéis crear `reservas.jsonl` desde una celda, sin salir de Colab:
+
+```python
+import json
+
+filas_json_pequenas = [
+    {"hotel": "Laredo", "noches": 3, "importe": 186.5},
+    {"hotel": "Potes", "noches": 2},
+]
+with open("reservas.jsonl", "w", encoding="utf-8") as f:
+    for reserva in filas_json_pequenas:
+        f.write(json.dumps(reserva, ensure_ascii=False) + "\n")
+```
+
+Una vez creado, lo convertimos y comprobamos:
+
 ```python
 import pyarrow.parquet as pq
 from pyarrow import json as pajson
 
-pq.write_table(pajson.read_json("reservas.jsonl"), "reservas_desde_json.parquet")
+tabla_desde_json = pajson.read_json("reservas.jsonl")
+pq.write_table(tabla_desde_json, "reservas_desde_json.parquet")
+recuperada_json = pq.read_table("reservas_desde_json.parquet")
+assert recuperada_json.equals(tabla_desde_json)
+assert recuperada_json.to_pylist() == [
+    {"hotel": "Laredo", "noches": 3, "importe": 186.5},
+    {"hotel": "Potes", "noches": 2, "importe": None},
+]
+print(recuperada_json.schema)
+print("Taller 5: dos reservas conservadas; el importe ausente sigue siendo nulo.")
 ```
+
+El lector JSON puede inferir `int64` y `double`, mientras que la tabla manual de Arrow declara `int32` y `float32`. Inspeccionad ambos esquemas: conservar los valores del ejemplo no significa que los tipos inferidos sean idénticos a los elegidos a mano. Cada escritura se contrasta primero con su propia tabla de entrada.
 
 ### Taller 6 — Filtrar *al leer* (no tragarse el Parquet)
 
-Se utiliza ahora el DataFrame grande del generador. La opción `columns` solicita solo las columnas necesarias y `filters` expresa la condición que el lector puede aplicar. El ahorro efectivo depende de cómo estén distribuidos los valores y de las estadísticas disponibles: si todos los grupos contienen Laredo, el motor quizá tenga que leerlos todos, aunque descarte las filas restantes.
+**Entrada:** el `df` grande del generador. **Salida:** `reservas.parquet`, con las 200.000 reservas, y `solo_laredo`, una tabla en memoria con las filas y columnas solicitadas. El nombre distingue este archivo del pequeño `reservas_pequenas.parquet`. Se utiliza ahora el DataFrame grande del generador. La opción `columns` solicita solo las columnas necesarias y `filters` expresa la condición que el lector puede aplicar. El ahorro efectivo depende de cómo estén distribuidos los valores y de las estadísticas disponibles: si todos los grupos contienen Laredo, el motor quizá tenga que leerlos todos, aunque descarte las filas restantes.
 
 Comprobad que el resultado tiene únicamente `hotel` e `importe`, que todas sus filas son de Laredo y que su recuento coincide con el filtro equivalente sobre `df`. Medid después el tiempo; primero debe ser correcto.
 
-Escribir Parquet y luego hacer `read_parquet` **entero** + un filtro en pandas es usar el lago **como un CSV**. El formato sirve si recortáis **en la lectura**:
+Leer Parquet completo y filtrar después es válido, pero no aprovecha la selección de columnas y filtros en la lectura. En esta prueba solicitamos al lector solo lo necesario:
 
 ```python
-df.to_parquet("reservas.parquet")
+df.to_parquet("reservas.parquet", index=False)
 # Solo Laredo, solo las columnas del panel
 solo_laredo = pd.read_parquet(
     "reservas.parquet",
     columns=["hotel", "importe"],
     filters=[("hotel", "==", "Laredo")],
 )
+referencia_panel = df.loc[df["hotel"] == "Laredo", ["hotel", "importe"]]
+pd.testing.assert_frame_equal(
+    solo_laredo.reset_index(drop=True),
+    referencia_panel.reset_index(drop=True),
+    check_exact=True,
+)
+print("Taller 6:", len(solo_laredo), "filas; coinciden todos los valores solicitados.")
 ```
+
+**Otra compresión, los mismos datos.** Retomamos ahora Zstandard, presentado antes. Esta variante usa todo `df`, no solo Laredo:
+
+```python
+df.to_parquet("reservas_zstd.parquet", compression="zstd", index=False)
+for ruta_parquet in ["reservas.parquet", "reservas_zstd.parquet"]:
+    pd.testing.assert_frame_equal(df, pd.read_parquet(ruta_parquet), check_exact=True)
+print("Parquet: ambas variantes conservan el conjunto completo.")
+```
+
+Esta lectura completa sirve para validar la conversión; no forma parte del tiempo de la consulta filtrada. En el taller medido separaremos ambas operaciones.
 
 **Ampliación, no requisito del taller local.** La escritura en HDFS requiere el cliente y las bibliotecas de HDFS compatibles con PyArrow, conectividad y permisos; una URL por sí sola no configura el acceso. Si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.
 
 ### Preguntar sin cargarlo: DuckDB
+
+Con `reservas.parquet` completo del Taller 6 podemos responder ahora a gerencia: **¿cuál es el importe medio por reserva en cada hotel?** Avro y Parquet representan datos; DuckDB ejecuta consultas. La media se calcula sobre reservas sintéticas, no acredita cobros ni un porcentaje de ocupación.
 
 [DuckDB](https://duckdb.org/){target="_blank" rel="noopener"} es SQL **dentro** del cuaderno (como SQLite, pensado para resúmenes). Procesa los archivos mediante su motor y no exige convertir previamente el conjunto completo en un DataFrame. Aun así, utiliza memoria y puede necesitar espacio temporal.
 
@@ -421,10 +585,22 @@ pip install duckdb
 ```python
 import duckdb
 
-print(duckdb.sql(
+resumen_sql = duckdb.sql(
     "SELECT hotel, AVG(importe) AS media, COUNT(*) AS n "
     "FROM 'reservas.parquet' GROUP BY hotel ORDER BY media DESC"
-))
+).df()
+print(resumen_sql)
+
+# Comprobación fuera del tiempo de consulta; df es la referencia original.
+referencia_resumen = df.groupby("hotel", as_index=False).agg(
+    media=("importe", "mean"), n=("importe", "size")
+)
+resultado = resumen_sql.sort_values("hotel").reset_index(drop=True)
+referencia = referencia_resumen.sort_values("hotel").reset_index(drop=True)
+assert resultado["hotel"].tolist() == referencia["hotel"].tolist()
+assert resultado["n"].tolist() == referencia["n"].tolist()
+np.testing.assert_allclose(resultado["media"], referencia["media"], rtol=1e-12, atol=1e-9)
+print("DuckDB: recuentos iguales y medias equivalentes con la tolerancia indicada.")
 ```
 
 Sobre el DataFrame que ya tenéis:
@@ -439,26 +615,31 @@ Si las particiones están en subcarpetas como `reservas/anio=2026/parte.parquet`
 
 ## ORC: cuando el ecosistema es Hive
 
-ORC también organiza datos por columnas y conserva información que ayuda a evitar lecturas innecesarias. Compararlo con Parquet exige comprobar las operaciones y versiones del motor que se utilizará. La compatibilidad del equipo y de los lectores puede pesar más que una pequeña diferencia de tamaño en una prueba aislada.
+**Entrada:** el mismo `df` completo; **salidas:** las variantes ORC siguientes. Así añadimos otra representación columnar a la comparación, manteniendo datos y pregunta. ORC también organiza datos por columnas y conserva información que ayuda a evitar lecturas innecesarias. Compararlo con Parquet exige comprobar las operaciones y versiones del motor que se utilizará. La compatibilidad del equipo y de los lectores puede pesar más que una pequeña diferencia de tamaño en una prueba aislada.
 
 [ORC](https://orc.apache.org/){target="_blank" rel="noopener"} (*Optimized Row Columnar*) nació para **Hive**. Tiras (*stripes*) con mín/máx para **no leer** lo que no puede cumplir el filtro. Compresión habitual `zlib`. pandas `to_orc` (desde 1.5) sale **sin** comprimir si no lo pides.
 
 ```python
 df.to_orc("reservas.orc")
 df.to_orc("reservas_zlib.orc", engine_kwargs={"compression": "zlib"})
+for ruta_orc in ["reservas.orc", "reservas_zlib.orc"]:
+    pd.testing.assert_frame_equal(df, pd.read_orc(ruta_orc), check_exact=True)
+print("ORC: ambas variantes conservan la tabla de referencia.")
 ```
 
 ```python
 import pyarrow.orc as orc
 
-orc.write_table(pa.Table.from_pandas(df, preserve_index=False), "reservas_pa.orc")
+tabla_grande_arrow = pa.Table.from_pandas(df, preserve_index=False)
+orc.write_table(tabla_grande_arrow, "reservas_pa.orc")
+assert orc.read_table("reservas_pa.orc").equals(tabla_grande_arrow)
 ```
 
 Si el equipo “es Spark”, veréis más Parquet. No es que ORC sea peor: es **dónde vive el SQL**.
 
 ## Cuando el lago también tiene que *actualizar*
 
-Un formato de archivo describe un archivo; un formato de tabla gestiona el conjunto de archivos que constituye una tabla. Al actualizar una reserva, el sistema registra una nueva versión lógica y coordina qué archivos o registros de borrado deben consultar los lectores. Los mecanismos concretos varían entre Delta Lake, Iceberg y Hudi.
+Hasta aquí hemos guardado y consultado archivos. La siguiente pregunta del hotel sería cómo gestionar correcciones y versiones de una tabla formada por varios archivos. Este bloque es conceptual: no añade un séptimo taller obligatorio ni requiere transformar los archivos anteriores. Un formato de archivo describe un archivo; un formato de tabla gestiona el conjunto de archivos que constituye una tabla. Al actualizar una reserva, el sistema registra una nueva versión lógica y coordina qué archivos o registros de borrado deben consultar los lectores. Los mecanismos concretos varían entre Delta Lake, Iceberg y Hudi.
 
 Conservar versiones permite recuperar estados anteriores, pero requiere políticas de mantenimiento. Borrar una fila de la versión actual no implica necesariamente eliminar de inmediato todas sus copias históricas. Hay que distinguir la modificación lógica de la limpieza física de archivos antiguos.
 
@@ -576,7 +757,32 @@ Aquí `keep_default_na=False` conserva los textos vacíos y `na_values` reconoce
 
 ### Medir después de comprobar
 
-Abrid un cuaderno **en blanco**. Generad el `df` (`n ≥ 200_000`) con su contrato y comprobad las lecturas. Cronometrad y anotad tamaños (`os.path.getsize`) de:
+Continuad en el mismo cuaderno: ya tenéis `df`, `TIPOS` y `laredo`. Si preferís un cuaderno en blanco para entregar, repetid primero el generador, el contrato CSV y los pasos de creación y comprobación de los archivos que vais a medir, incluido el Taller 3. No basta con copiar únicamente las celdas de cronometraje.
+
+Ahora reunimos lo aprendido en dos comparaciones separadas:
+
+- **Conjunto completo:** las `n ≥ 200_000` filas y ocho columnas de `df`.
+- **Selección de Laredo:** las mismas filas y cinco columnas de `laredo` en Avro, CSV y Parquet. Las dos reservas manuales de los primeros talleres quedan fuera de las medidas de volumen.
+
+Preparad las otras representaciones de la selección y comprobádlas:
+
+```python
+laredo.to_csv("laredo.csv", index=False, encoding="utf-8")
+laredo.to_parquet("laredo.parquet", index=False)
+recuperado_laredo_csv = pd.read_csv(
+    "laredo.csv", dtype={c: TIPOS[c] for c in columnas_laredo},
+    keep_default_na=False, engine="c", float_precision="round_trip",
+)
+referencia_laredo = laredo.reset_index(drop=True)
+pd.testing.assert_frame_equal(referencia_laredo, recuperado_laredo_csv, check_exact=True)
+pd.testing.assert_frame_equal(
+    referencia_laredo, pd.read_parquet("laredo.parquet"), check_exact=True,
+)
+```
+
+El índice de pandas no es un campo de reserva; escribimos sin él y lo reiniciamos al comparar. Avro ya se contrastó con `filas_laredo` en el Taller 3. No comparéis `laredo.avro` con `reservas.csv`: contienen cantidades y columnas distintas.
+
+Cronometrad por separado escritura y lectura, y anotad tamaños (`os.path.getsize`) de:
 
 1. `reservas.csv`
 2. `reservas.parquet` y `reservas_zstd.parquet`
@@ -595,7 +801,7 @@ import os
 import time
 
 t0 = time.perf_counter()
-df.to_parquet("reservas.parquet")
+df.to_parquet("reservas.parquet", index=False)
 print("escritura s:", round(time.perf_counter() - t0, 3))
 print("bytes:", os.path.getsize("reservas.parquet"))
 ```
