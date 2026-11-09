@@ -42,7 +42,7 @@ Los talleres comparan formatos de intercambio y almacenamiento, y presentan Arro
 El criterio **c)** es este: **en qué forma dejáis el dato** para que el siguiente paso pueda procesarlo de forma adecuada. No es una moda. Es una decisión de diseño, igual que elegir lago o warehouse.
 
 !!! info "Cómo se lee esta página"
-    Seguimos una pregunta: **¿cómo guardamos y recuperamos las reservas sin perder información, y qué representación conviene para cada uso?** Primero creamos una tabla de referencia. Aprendemos Avro con dos reservas fáciles de inspeccionar y después lo aplicamos a las reservas de Laredo del conjunto grande. Con Arrow y Parquet repetimos el paso de ejemplo pequeño a consulta del conjunto completo. Finalmente comparamos formatos con datos equivalentes. ORC completa la comparación; los formatos de tabla y HDFS se presentan como ampliación.
+    Seguimos una pregunta: **¿cómo guardamos y recuperamos las reservas sin perder información, y qué representación conviene para cada uso?** Primero creamos una tabla de referencia. Aprendemos Avro con dos reservas fáciles de inspeccionar y después lo aplicamos a las reservas de Laredo del conjunto grande. Arrow prepara la tabla pequeña para Parquet: el Taller 4 la guarda, el 5 muestra otra entrada desde JSONL y el 6 aplica la lectura selectiva al conjunto grande. DuckDB obtiene el resumen de gerencia. Después presentamos Feather y ORC como otras opciones y comparamos formatos con datos equivalentes; los formatos de tabla y HDFS se presentan como ampliación.
 
     Ejecutad las celdas en orden en un mismo cuaderno. Cada taller indicará su entrada, su salida y una comprobación. Que una celda no muestre errores no basta: leeremos lo escrito y lo compararemos con su referencia.
 
@@ -257,7 +257,7 @@ Avro también establece reglas para que lectores y escritores puedan trabajar co
 Ahora dejamos temporalmente `df` y `reservas.csv`. Empezamos con dos reservas manuales para poder ver todos sus campos y un nulo. En el Taller 3 volveremos al conjunto grande.
 
 !!! tip "Orden de los talleres"
-    1–2: Avro con nulos. 3: del `df` a Avro; forma parte de la práctica guiada y prepara `laredo.avro`, necesario para el taller medido. 4–6: Parquet; el 6 filtra **al leer**. DuckDB: preguntar sin tragarse el fichero. Luego el [taller medido](#taller-medido-lo-que-se-examina){target="_blank" rel="noopener"}.
+    1–2: Avro con nulos. 3: del `df` a Avro; forma parte de la práctica guiada y prepara `laredo.avro`, necesario para el taller medido. Arrow prepara el ejemplo del 4; el 5 llega a Parquet desde JSONL y el 6 vuelve a `df` para filtrar **al leer**. DuckDB completa el informe. Después, Feather y ORC aportan otras opciones para el [taller medido](#taller-medido-lo-que-se-examina){target="_blank" rel="noopener"}.
 
 Tipos simples: `null`, `boolean`, `int`, `long`, `float`, `double`, `bytes`, `string`.  
 Compuestos: `record`, `enum`, `array`, `map`, `union`, `fixed`.
@@ -421,7 +421,23 @@ Si algún día lo escribís en HDFS, cambiad el host por el de **vuestro** lab; 
 
 ## Arrow: el dato *en la RAM*
 
-Ya sabemos guardar registros con Avro. Para preparar las consultas analíticas necesitamos introducir otra pieza: **cómo representa una tabla el programa en memoria**. Aquí aparece Arrow, cuyo nombre se parece a Avro pero cumple otra función. Usaremos dos reservas con tres campos, retomando el ejemplo de Laredo y Potes y el importe ausente. No estamos leyendo `laredo.avro` ni sustituyendo `df`.
+Hasta el Taller 3, el hotel quería **entregar registros a otro programa con sus campos y tipos definidos**. Por eso hemos utilizado Avro. Ahora gerencia plantea otra necesidad: calcular el importe medio de muchas reservas leyendo solo los campos necesarios. Vamos a estudiar **Parquet**, un formato de archivo organizado por columnas, para responder a esa consulta.
+
+¿Por qué aparece Arrow antes de escribir Parquet? Porque utilizaremos **PyArrow**, una biblioteca de Python que permite preparar tablas en memoria y leer y escribir archivos como Parquet. **Arrow es la representación de la tabla en memoria; PyArrow es la biblioteca con la que trabajamos; Parquet será el archivo que guardaremos.** Son piezas que colaboran, no tres nombres para lo mismo.
+
+Ya conocemos `df`, una tabla de pandas. Una tabla Arrow representa también datos tabulares, con sus propios tipos y organización en memoria. En el ejemplo la construiremos directamente con dos reservas para inspeccionar todos los valores. No necesitamos convertir antes a Avro ni leer `laredo.avro`. Tampoco sustituimos `df`: lo conservamos para volver a las 200.000 reservas en el Taller 6.
+
+Este será el recorrido:
+
+| Paso | Pregunta del hotel | Qué hacemos |
+| --- | --- | --- |
+| Preparación con Arrow | ¿Cómo representamos las dos reservas y el importe ausente dentro del programa? | Creamos `tabla_pequena` en memoria |
+| Taller 4 | ¿Podemos guardarlas en Parquet y recuperarlas sin cambios? | Escribimos y leemos `reservas_pequenas.parquet` |
+| Taller 5 | ¿Y si esas reservas llegan desde un archivo JSONL? | Probamos otra entrada: JSONL → tabla Arrow → Parquet |
+| Taller 6 | ¿Podemos aplicar la lectura selectiva al conjunto grande? | Guardamos todo `df` y solicitamos solo filas de Laredo y dos columnas |
+| DuckDB | ¿Cómo obtenemos el resumen que necesita gerencia? | Consultamos el Parquet completo y contrastamos el agregado |
+
+Los talleres 4 y 5 son ejemplos pequeños para entender el mecanismo. El 5 muestra una **vía alternativa de entrada**, no una transformación obligatoria del archivo creado en el 4. Después de completar la consulta veremos Feather y ORC como otras opciones; no hay que pasar por todos los formatos en cadena.
 
 El formato en disco responde a cómo conservar y leer bytes; la representación en memoria responde a cómo trabaja el programa con los valores ya disponibles. Arrow organiza columnas con tipos y una representación explícita de los nulos. Esa disposición facilita intercambios entre herramientas compatibles.
 
@@ -432,6 +448,8 @@ La ausencia de copias no está garantizada en todas las conversiones: cambiar ti
 ```bash
 pip install pyarrow
 ```
+
+**Preparación para el Taller 4.** Retomamos los valores de Laredo y Potes del ejemplo pequeño, pero aquí solo necesitamos `hotel`, `noches` e `importe`. Declaramos sus tipos y construimos `tabla_pequena`. Las comprobaciones deben confirmar dos filas y un único importe nulo; ese nulo debe seguir presente después de guardar y recuperar la tabla.
 
 ```python
 import pyarrow as pa
@@ -450,29 +468,19 @@ assert tabla_pequena.num_rows == 2
 assert tabla_pequena.column("importe").null_count == 1
 ```
 
-En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra. Esta llamada ilustra las opciones del lector; no sustituye el [contrato CSV del taller](#contrato-csv-del-taller). Si probáis otro motor o backend, verificad qué opciones admite y documentad las diferencias de representación antes de comparar.
-
-**Para conservar en disco una tabla representada con Arrow**, podemos utilizar Feather. Volvemos aquí al `df` completo: **Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
-
-```python
-import pyarrow.feather as feather
-
-feather.write_feather(df, "reservas.feather")
-recuperado_feather = feather.read_feather("reservas.feather")
-pd.testing.assert_frame_equal(df, recuperado_feather, check_exact=True)
-print("Feather: conservadas las filas, columnas, tipos y valores de df.")
-```
-
-!!! tip "Dos sitios, dos ficheros"
-    Feather = “se lo paso al script de al lado”. Parquet = “lo dejo en el lago para Spark o Athena”.
+**Qué acabamos de preparar:** `tabla_pequena` está en memoria, tiene dos filas y tres columnas, y conserva un importe ausente. Todavía no hemos creado un archivo Parquet. La llevaremos directamente al Taller 4 para guardarla y comprobar que podemos recuperarla.
 
 ## Parquet: el lago del informe
 
-Ahora cambia la necesidad: gerencia quiere resumir muchas reservas leyendo pocos campos. Ya sabemos intercambiar registros; probaremos una organización por columnas. Primero verificamos Parquet con la tabla pequeña de Arrow y después lo aplicamos a `df` completo. No es necesario convertir antes los datos a Avro para escribir Parquet.
+Tenemos preparada `tabla_pequena` en memoria. El siguiente paso es **conservarla en un archivo**. Elegimos Parquet para aprender cómo almacenar datos por columnas antes de consultar el conjunto grande. En el Taller 4 comprobaremos que la escritura y la lectura mantienen la información; en el 6 utilizaremos la selección de columnas y filas para la consulta de gerencia.
+
+No es necesario convertir antes los datos a Avro para escribir Parquet. Aquí creamos una tabla Arrow explícita para entender el mecanismo; en el Taller 6 utilizaremos directamente `df.to_parquet(...)` desde pandas, con un motor de escritura compatible.
 
 [Parquet](https://parquet.apache.org/){target="_blank" rel="noopener"} es **columnar**, lleva el esquema consigo y parte en *row groups*. El informe que pide `hotel` e `importe` no arrastra `canal`. pandas: `to_parquet` / `read_parquet`.
 
 ### Taller 4 — Tabla Arrow → Parquet
+
+**Propósito:** completar el viaje de ida y vuelta de la tabla que acabamos de preparar: **tabla en memoria → archivo Parquet → tabla recuperada**. Queremos saber que guardar la información no cambia su significado.
 
 **Entrada:** `tabla_pequena`, creada en Arrow, con dos reservas y tres campos. **Salida:** `reservas_pequenas.parquet`. Escribimos la tabla pequeña creada en el apartado Arrow. El resultado debe mantener sus dos filas, los tres campos y el importe nulo. Después de leerlo, comparad el esquema y los valores. Este taller comprueba conservación de datos, no velocidad a gran escala.
 
@@ -487,7 +495,11 @@ assert recuperada_pequena.equals(tabla_pequena)
 print("Taller 4: se conservan las dos filas, los tipos y el importe nulo.")
 ```
 
+Si las comprobaciones anteriores pasan, ya sabemos escribir y recuperar Parquet desde una tabla preparada por nosotros. Ahora cambiamos únicamente la procedencia de los datos: una aplicación del hotel nos los entrega en JSONL.
+
 ### Taller 5 — JSONL → Parquet (la L de un [ETL](ingesta.md){target="_blank" rel="noopener"})
+
+**Propósito:** aprender una segunda forma de llegar a Parquet cuando los datos vienen de otro programa. El lector transforma el texto JSONL en una tabla Arrow; después utilizamos el mismo mecanismo de escritura del Taller 4. No se lee ni se convierte `reservas_pequenas.parquet`.
 
 El hotel también podría recibir esas dos reservas como texto JSONL. **Entrada:** `reservas.jsonl`, creado para este ejemplo. **Salida:** `reservas_desde_json.parquet`. Es otra vía de entrada a Parquet; no utiliza el CSV grande ni el Avro del Taller 3.
 
@@ -536,6 +548,10 @@ El lector JSON puede inferir `int64` y `double`, mientras que la tabla manual de
 
 ### Taller 6 — Filtrar *al leer* (no tragarse el Parquet)
 
+**Propósito:** volver al problema de gerencia con las 200.000 reservas. Los ejemplos de dos filas ya nos han permitido comprobar cómo se escribe y se recupera Parquet. Ahora guardaremos el conjunto completo y pediremos solo lo que necesita una consulta concreta.
+
+Volvemos al `df` del principio, no al archivo JSONL del Taller 5. No vamos añadiendo las reservas pequeñas al conjunto grande. Primero creamos el archivo completo; después solicitamos las reservas de Laredo y las columnas `hotel` e `importe`. El filtro afecta al resultado leído, no borra las demás reservas del archivo.
+
 **Entrada:** el `df` grande del generador. **Salida:** `reservas.parquet`, con las 200.000 reservas, y `solo_laredo`, una tabla en memoria con las filas y columnas solicitadas. El nombre distingue este archivo del pequeño `reservas_pequenas.parquet`. Se utiliza ahora el DataFrame grande del generador. La opción `columns` solicita solo las columnas necesarias y `filters` expresa la condición que el lector puede aplicar. El ahorro efectivo depende de cómo estén distribuidos los valores y de las estadísticas disponibles: si todos los grupos contienen Laredo, el motor quizá tenga que leerlos todos, aunque descarte las filas restantes.
 
 Comprobad que el resultado tiene únicamente `hotel` e `importe`, que todas sus filas son de Laredo y que su recuento coincide con el filtro equivalente sobre `df`. Medid después el tiempo; primero debe ser correcto.
@@ -570,7 +586,7 @@ print("Parquet: ambas variantes conservan el conjunto completo.")
 
 Esta lectura completa sirve para validar la conversión; no forma parte del tiempo de la consulta filtrada. En el taller medido separaremos ambas operaciones.
 
-**Ampliación, no requisito del taller local.** La escritura en HDFS requiere el cliente y las bibliotecas de HDFS compatibles con PyArrow, conectividad y permisos; una URL por sí sola no configura el acceso. Si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. DuckDB, en el apartado siguiente, permite expresar la consulta con SQL sin crear previamente un DataFrame con todo el fichero.
+**Qué hemos aprendido hasta aquí:** el Taller 4 comprueba la conservación desde una tabla pequeña; el 5 demuestra otra entrada desde JSONL; el 6 utiliza el conjunto grande para seleccionar datos durante la lectura. Falta convertir esos datos en el resumen de gerencia: ese es el siguiente paso con DuckDB.
 
 ### Preguntar sin cargarlo: DuckDB
 
@@ -613,7 +629,35 @@ print(duckdb.sql(
 
 Si las particiones están en subcarpetas como `reservas/anio=2026/parte.parquet`, usad el patrón recursivo `FROM 'reservas/**/*.parquet'`. La conversión a pandas puede requerir copias según tipos y representación; compartir Arrow no garantiza siempre *zero-copy*.
 
+## Feather: otra opción para intercambiar tablas
+
+El recorrido principal ya está completo: hemos guardado las reservas en Parquet, seleccionado los datos necesarios y obtenido un resumen con DuckDB. Ahora añadimos una comparación: **¿qué utilizaríamos si otro programa necesitara recuperar la tabla para seguir trabajando con ella, en lugar de consultar directamente el archivo del informe?**
+
+Feather permite persistir e intercambiar tablas mediante Arrow IPC. Lo presentamos aquí como otra opción para herramientas compatibles con Arrow. No consume el resultado de DuckDB, ni necesitamos convertir `reservas.parquet` a Feather: escribiremos otra representación del mismo `df` para compararla después en el taller medido.
+
+**Entrada:** el mismo `df` completo, sin modificar. **Salida:** `reservas.feather`. **Comprobación:** recuperar la tabla y contrastar filas, columnas, tipos y valores con `df`. **Feather** utiliza Arrow IPC para persistir e intercambiar tablas. Es útil entre pasos de trabajo compatibles. Para el lago de esta unidad elegimos Parquet por su encaje con las consultas y herramientas previstas; Feather no está limitado a dos celdas de un cuaderno.
+
+```python
+import pyarrow.feather as feather
+
+feather.write_feather(df, "reservas.feather")
+recuperado_feather = feather.read_feather("reservas.feather")
+pd.testing.assert_frame_equal(df, recuperado_feather, check_exact=True)
+print("Feather: conservadas las filas, columnas, tipos y valores de df.")
+```
+
+!!! tip "Dos usos del ejemplo, no destinos exclusivos"
+    Para intercambiar una tabla entre herramientas compatibles podemos valorar Feather; para las consultas del lago de esta unidad elegimos Parquet. Ambos conservan datos en archivos. La elección depende de los lectores y del uso; Feather no es un paso previo obligatorio a Parquet.
+
+**Otra posibilidad de PyArrow, fuera del recorrido anterior.** También puede intervenir al leer CSV desde pandas. No necesitamos esta variante para completar los talleres 4–6; sirve para distinguir el lector utilizado de los tipos de la tabla resultante.
+
+En pandas, `engine="pyarrow"` selecciona el lector CSV y `dtype_backend="pyarrow"` selecciona los tipos de las columnas resultantes. Son opciones distintas. Por ejemplo: `pd.read_csv("reservas.csv", engine="pyarrow", dtype_backend="pyarrow")`. Comparad compatibilidad, tipos, nulos y tiempo antes de afirmar que una opción mejora la otra. Esta llamada ilustra las opciones del lector; no sustituye el [contrato CSV del taller](#contrato-csv-del-taller). Si probáis otro motor o backend, verificad qué opciones admite y documentad las diferencias de representación antes de comparar.
+
+**Ampliación, no requisito del taller local.** La escritura en HDFS requiere el cliente y las bibliotecas de HDFS compatibles con PyArrow, conectividad y permisos; una URL por sí sola no configura el acceso. Si el clúster define `fs.defaultFS`: `df.to_parquet("hdfs://TU-NODO:PUERTO/reservas.parquet")`. En el Docker de la [UT2](../ut2/hdfs.md){target="_blank" rel="noopener"} ese puerto es el **8020** (`namenode`), no el 9000 de otras guías. La consulta con DuckDB que acabamos de realizar no necesitaba HDFS; trasladar los archivos a otro sistema requiere preparar ese acceso por separado.
+
 ## ORC: cuando el ecosistema es Hive
+
+Después de Parquet y Feather, valoramos una alternativa para el almacenamiento columnar: **ORC**. La pregunta vuelve a ser qué formato encaja con las consultas y herramientas del hotel. No es una etapa posterior que necesiten los archivos anteriores: guardamos otra representación del conjunto original para compararla.
 
 **Entrada:** el mismo `df` completo; **salidas:** las variantes ORC siguientes. Así añadimos otra representación columnar a la comparación, manteniendo datos y pregunta. ORC también organiza datos por columnas y conserva información que ayuda a evitar lecturas innecesarias. Compararlo con Parquet exige comprobar las operaciones y versiones del motor que se utilizará. La compatibilidad del equipo y de los lectores puede pesar más que una pequeña diferencia de tamaño en una prueba aislada.
 
