@@ -8,6 +8,8 @@ tags:
 
 # 2.4. Computación distribuida
 
+Revisad las cinco filas de Laredo en el [CSV de reservas](../assets/practicas/hotel-hadoop/reservas.csv). Sus noches son 3, 2, 1, 4 y 2. Un compañero suma las dos primeras y otro las tres restantes. **¿Qué total tiene que recibir gerencia?** Conservad ese 12 como referencia mientras cambiáis el reparto. En la prueba de tiempos haréis el mismo contraste con la entrada de mayor tamaño y sus propios totales.
+
 !!! info "Ruta de estudio"
     **Esencial:** seguir el cálculo map → shuffle/sort → reduce; distinguir tareas, simultaneidad y máquinas; comprobar resultados antes de comparar tiempos.
 
@@ -15,11 +17,7 @@ tags:
 
     **Evidencia común de b):** comparar dos configuraciones de ejecución, en el equipo del alumno o mediante demostración docente, con resultados y tiempos contrastados. Ampliar a otras cargas o máquinas físicas es profundización; no se exige obtener aceleración.
 
-En los apartados anteriores hemos separado almacenamiento y ejecución. Ahora comprobaremos **cómo se divide un cálculo, cómo se reúnen sus resultados y cuándo compensa hacerlo**. El criterio **b)** exige observar el procesamiento distribuido y medirlo; no basta con afirmar que añadir máquinas siempre acelera un programa.
-
-La pregunta de gerencia será: **¿cuántas noches reservadas aparecen en el fichero para cada hotel?** No son necesariamente noches cobradas ni habitaciones ocupadas en una fecha: el CSV no contiene estado del pago ni calendario de ocupación.
-
-En 2.2 conocimos las piezas y en 2.3 seguimos el archivo dentro de HDFS. Ahora preguntamos: **si repartimos la lectura, cómo obtenemos el mismo resultado y cómo sabemos si compensa**. La validación de la UT1 sigue vigente: ni una salida generada ni un tiempo menor bastan si cambia el significado del informe.
+En [1.4](../ut1/procesamiento.md) distinguisteis paralelismo local y distribución. Aquí vais a observar dónde se ejecutan las tareas, reunir los subtotales de todos los hoteles y medir el efecto de añadir un trabajador. Indicad en el resultado que habéis contado noches reservadas. Para calcular ocupación os haría falta también el inventario de habitaciones y su uso por fecha.
 
 | Concepto | Qué describe | Qué debemos observar |
 | --- | --- | --- |

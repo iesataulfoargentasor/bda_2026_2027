@@ -8,6 +8,8 @@ tags:
 
 # 2.1. Por qué un almacén masivo
 
+En la [transición de los 500 GB](../ut1/transicion-ut2.md) estimasteis que, a 100 MB/s sostenidos, una sola lectura del histórico lleva al menos 83 minutos. Volved a la hoja de decisiones de la UT1. **¿Qué os falta cronometrar para prometer a gerencia el informe de las 8:00?** Seguid el cierre desde que llega la última entrada hasta que el CSV comprobado queda disponible.
+
 !!! info "Ruta de estudio"
     **Esencial:** relacionar capacidad, rendimiento y continuidad con las necesidades del hotel; distinguir guardar datos, interpretarlos y procesarlos.
 
@@ -16,8 +18,6 @@ tags:
     **Ampliación:** comparar qué cambia al conservar varias copias del histórico. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
 ## El hotel necesita seguir cumpliendo el plazo
-
-En la [UT1](../ut1/index.md) construisteis un informe con datos integrados y comprobados. La [transición de los 500 GB](../ut1/transicion-ut2.md) plantea qué ocurre cuando crece el histórico. Ahora necesitamos justificar cómo conservar esos datos y utilizarlos sin que el crecimiento impida cumplir los requisitos del [grupo hotelero de Cantabria](../ut1/caso-hotel.md).
 
 Recepción registra reservas, mantenimiento recibe medidas de sensores y finanzas registra cobros. Las **23:00 marcan el corte de negocio**; gerencia necesita el informe de ese cierre a las **8:00 del día siguiente**. En una noche sin cambio de hora hay nueve horas entre ambos momentos, pero dentro de ese margen deben caber la preparación, el procesamiento, la validación y la publicación del resultado. Si los datos llegan tarde o el trabajo empieza después, queda menos tiempo.
 

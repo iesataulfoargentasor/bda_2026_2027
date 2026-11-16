@@ -8,14 +8,14 @@ tags:
 
 # 2.8. Réplicas y particiones
 
+Una recepcionista acaba de guardar una reserva de dos noches en Laredo. El proceso que aceptó la escritura se detiene. Su compañero necesita abrir la misma ficha y registrar la siguiente reserva. En [1.2](../ut1/clusters.md) propusisteis qué tendría que pasar si fallaba un nodo. **¿Qué lectura y qué escritura haríais ahora para comprobar vuestra predicción?**
+
 !!! info "Ruta de estudio"
     **Esencial:** distinguir copias y particiones, calcular mayorías y separar preferencias de lectura, confirmaciones y visibilidad.
 
     **Práctica común:** conjunto de tres miembros; comprobar una escritura, una lectura de secundario, un relevo y la recuperación tras detener un proceso.
 
     **Evidencia común de e):** observar registro de shards y movimiento de un rango, ejecutándolo o siguiendo una demostración docente. La instalación individual del laboratorio de particionado es opcional; sus conjuntos reducidos no ofrecen alta disponibilidad completa. Las entregas se concretan en Moodle.
-
-En [2.6](mongodb.md) consultamos y modificamos documentos; en [2.7](modelado.md) comprobamos que un rediseño conserva su significado. Ahora preguntamos **dónde viven los datos y qué sucede cuando falla un componente o añadimos recursos**.
 
 Si deja de responder el primario, otro miembro puede asumir su función cuando hay mayoría, un candidato elegible y los datos necesarios. Puede haber una pausa. El objetivo del criterio **c)** es provocar un fallo concreto y comprobar la recuperación; no afirmar que un cobro externo se completa por disponer de réplicas.
 

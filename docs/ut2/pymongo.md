@@ -8,9 +8,9 @@ tags:
 
 # 2.9. MongoDB y Python
 
-En los apartados anteriores hemos aprendido a consultar MongoDB, modelar documentos y comprobar qué sucede cuando falla un miembro del conjunto. Ahora gerencia necesita repetir el parte sin escribir cada consulta a mano. **PyMongo permite ejecutar esas operaciones desde un programa Python**: el programa prepara la petición y MongoDB la resuelve según su configuración.
+En la [práctica de Pentaho](../ut1/tarea-clase.md) dejasteis a gerencia un informe que podía volver a generarse. Ahora os pide repetir desde Python el parte de noches que habéis consultado en MongoDB. Volved a las **15 reservas originales de 2.6**. Si la consulta manual da **11 noches en Laredo y 46 en total**, ¿qué esperáis que muestre el programa al leer los mismos documentos? Comprobar ambos números os ayudará a detectar tanto una base equivocada como un error de agrupación.
 
-Continuamos con las reservas y opiniones del grupo hotelero. Como en la UT1, comprobaremos el resultado: que un programa termine no demuestra que haya leído la base correcta ni aplicado la regla de negocio.
+**PyMongo** permite enviar la consulta desde Python. MongoDB calcula los subtotales y el programa los presenta. Después probaréis qué ocurre al modificar una reserva en la base de ejercicios.
 
 !!! info "Ruta de estudio"
     **Esencial:** preparar la conexión, consultar sin alterar los originales, interpretar el cursor y las agregaciones, y comprobar las escrituras en una base de ejercicios.

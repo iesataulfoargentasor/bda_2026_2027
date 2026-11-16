@@ -8,6 +8,8 @@ tags:
 
 # 2.7. Modelado documental
 
+En la [práctica de Pentaho](../ut1/tarea-clase.md) usasteis `id_hotel` para recuperar el nombre de cada hotel. Imaginad que mañana cambia el nombre del establecimiento de Laredo. **¿Qué nombre querríais ver en la reserva que se confirmó ayer? ¿Qué teléfono daríais a quien llama hoy?** Seguid esas dos preguntas en la ficha de prueba `R27-1`, que guarda el nombre histórico y una referencia al hotel.
+
 !!! info "Ruta de estudio"
     **Esencial:** decidir qué embeber y qué referenciar, limitar el crecimiento y definir reglas de validación y evolución del esquema.
 
@@ -15,7 +17,7 @@ tags:
 
     **Ampliación:** diseñar el caso completo, probar datos tardíos y estudiar otros patrones. Las condiciones de entrega se concretan en Moodle.
 
-En [2.6](mongodb.md) aprendimos a consultar y cambiar documentos. Ahora decidimos **cómo organizarlos para las operaciones del hotel**. Una reserva puede guardar huéspedes dentro, referenciar el hotel y conservar una copia del nombre o precio acordado. Cada decisión tiene consecuencias cuando leemos, actualizamos o conservamos el histórico.
+Ya sabéis consultar una ficha en MongoDB. Ahora decidiréis qué datos guardar con la reserva, cuáles consultar en otra colección y qué información debe seguir siendo legible si cambia el formato de las nuevas fichas.
 
 Tanto en SQL como en MongoDB partimos de datos, consultas y reglas de negocio. Una escritura en un documento es atómica; modificar varios documentos como una unidad requiere una transacción explícita en una topología compatible. El servidor independiente de 2.6 permite esta práctica, pero no transacciones multidocumento.
 

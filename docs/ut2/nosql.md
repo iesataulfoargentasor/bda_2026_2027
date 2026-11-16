@@ -8,6 +8,8 @@ tags:
 
 # 2.5. Familias NoSQL
 
+Gerencia ya tiene su total de noches. En el mostrador de Laredo, Ana pide añadir parking a la reserva de tres noches que conocéis de la UT1. **Si la atendierais vosotros, ¿qué dato buscaríais y qué dato cambiaríais?** El informe agregado ha perdido el detalle de cada reserva. Volved al [caso del hotel](../ut1/caso-hotel.md) y pensad cómo querríais recuperar una ficha con sus extras.
+
 !!! info "Ruta de estudio"
     **Esencial:** elegir entre clave-valor, documento, familias de columnas y grafo según las consultas; distinguir modelo, esquema, particionado y replicación.
 
@@ -15,9 +17,7 @@ tags:
 
     **Ampliación:** contrastar productos con su documentación y estudiar SQL distribuido. Las condiciones de entrega se concretan en Moodle.
 
-En [2.4](computacion-distribuida.md) recorrimos un fichero de reservas para sumar noches por hotel. Ahora recepción necesita **recuperar una reserva concreta, actualizar sus extras o consultar las recomendaciones de un huésped**. Son preguntas diferentes: el modelo que organiza los datos debe facilitar las operaciones previstas.
-
-Seguimos con el grupo hotelero de la UT1. No cambiamos de tecnología porque los datos hayan alcanzado un tamaño mágico: primero describimos la consulta, el volumen, la frecuencia de cambios y las garantías. Un sistema relacional puede seguir siendo una buena elección, incluso con datos semiestructurados o despliegues distribuidos.
+Antes de elegir un modelo, describid qué se consulta junto, con qué frecuencia cambia y qué hay que garantizar al escribir. Si el PMS relacional ya resuelve una operación, explicad qué necesidad justificaría incorporar otro almacén. Los ejemplos de esta página incluyen la ficha de reserva, la sesión de un usuario y las recomendaciones entre huéspedes.
 
 Como contexto histórico, se suele hablar de tres etapas que **coexisten**, no de sustituciones completas:
 

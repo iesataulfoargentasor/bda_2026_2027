@@ -8,6 +8,8 @@ tags:
 
 # 2.6. MongoDB
 
+En el taller de [formatos de la UT1](../ut1/formatos.md) leísteis registros con campos diferentes. Abrid ahora las dos primeras líneas de [reservas_mongo.jsonl](../assets/practicas/reservas_mongo.jsonl). La reserva de Laredo incluye parking y la de Potes carece del campo `extras`. **¿Cómo pediríais a la base que os devolviera las reservas de Laredo con parking?** Escribid primero la condición en palabras y contrastad después los documentos que devuelve.
+
 !!! info "Ruta de estudio"
     **Esencial:** documentos y tipos BSON; carga comprobada; filtros, proyecciones, arrays, fechas y recuentos; escrituras con resultado verificado.
 
@@ -15,9 +17,7 @@ tags:
 
     **Ampliación:** Atlas, copias y restauración, operadores menos frecuentes y análisis de índices. Las entregas evaluables se concretan en Moodle.
 
-En [2.5](nosql.md) elegimos un modelo según las consultas y las garantías. Ahora lo aplicamos: recepción busca una reserva, consulta sus extras y modifica información concreta. Conservamos la idea de la UT1: **una operación terminada no basta; hay que comprobar qué datos ha leído o cambiado**.
-
-Trabajaremos con **15 reservas y 6 opiniones**, diferentes de las 20 reservas de Hadoop. Las noches e importes de estos documentos describen reservas, no ocupación real ni cobros confirmados. El fichero no incorpora un identificador de negocio; los ejemplos usarán el `_id` de MongoDB o identificadores explícitos de laboratorio.
+Trabajaremos con **15 reservas y 6 opiniones**. Es un juego de datos distinto del CSV de Hadoop. Los documentos de reservas suman 46 noches entre seis hoteles, incluidos Noja y Reinosa. El fichero carece de identificador de negocio y de nombre de titular en cada reserva. Para cambiar una ficha concreta usaréis su `_id` en la copia de ejercicios. Para comprobar el importe cobrado haría falta la fuente de pagos.
 
 [MongoDB](https://www.mongodb.com/) es la NoSQL **documental** del aula. Los documentos se basan en JSON; por dentro el motor guarda **BSON**. El nombre viene de *humongous*: gigantesco.
 

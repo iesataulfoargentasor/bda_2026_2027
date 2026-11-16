@@ -31,7 +31,7 @@ flowchart LR
   R[Recepción en vivo] --> P[Consulta y cambio de una reserva]
 ```
 
-El informe de las 8:00 no es el estado de recepción en ese instante. Conservad en el resultado la fecha de cierre y la hora de generación, como en el [caso](../ut1/caso-hotel.md). Esta práctica no vuelve a construir el flujo de Pentaho de la [UT1](../ut1/tarea-clase.md).
+En la [práctica de Pentaho](../ut1/tarea-clase.md) dirección recibía un CSV con las reservas cobradas y el importe por hotel y canal. Recuperad dos decisiones de aquel trabajo. Para informar de lo cobrado hay que cruzar reservas y pagos por `id_reserva` y sumar `cobrado`. Para publicar hay que contrastar el resultado. Aquí aplicaréis ambos controles después de repartir el cálculo. Un cambio posterior en recepción pertenece al trabajo del mostrador y se conserva separado del histórico empleado en el informe.
 
 ## Qué tenéis que demostrar
 
@@ -67,7 +67,12 @@ El perfil de aula ocupa **1 037 243 783 bytes** (1,037 GB) en bruto, antes de co
 | Opiniones | Texto y valoración que no cabe tratar como una tabla estrecha | 1.000.000 |
 | Sensores | Lecturas de zona; el cierre cuenta cuántas hay por hotel | 15.000.000 |
 
-`totales_esperados.json` fija, para esa semilla, las noches y el importe por hotel, las cancelaciones por canal y los recuentos de sensores. Contrastad vuestro cierre con ese fichero antes de interpretar tiempos o fallos. Un resultado distinto obliga a revisar la lectura, el filtro del cierre y la agregación; no se corrige cambiando el esperado.
+!!! example "Qué periodo y qué cifras vais a comprobar"
+    En el hotel, el cierre de negocio es a las 23:00 y se publica a las 8:00 del día siguiente. En el laboratorio, el generador entrega un **lote histórico completo** con registros de distintos meses. El fichero de referencia suma todo ese lote. Identificad en el informe el perfil, la semilla, el alcance «histórico completo» y la fecha y hora de generación. Aplicar a esos totales un filtro de «ayer» cambiaría la pregunta. El fichero de cobros tampoco incluye la hora del pago.
+
+    Sumad las **noches de las reservas confirmadas** por hotel. Para el importe, sumad el campo **`cobrado`** por hotel tras el cruce. Contad las **reservas canceladas** por canal y las **filas de sensores** por hotel. Una lectura de sensor cuenta como una observación, con independencia de su valor.
+
+Contrastad esas cuatro salidas con `totales_esperados.json` antes de interpretar tiempos o fallos. Si una cifra difiere, revisad la entrada, la regla de inclusión y la agrupación.
 
 El perfil de **5 a 10 GB** es una ampliación. Usadlo solo si el equipo tiene memoria y disco suficientes y el profesor lo ha anunciado. En un laboratorio de particiones documentales, podéis bajar el tamaño de *chunk* para ver el reparto sin cargar varios gigabytes en esa base. Anotad el valor usado: el reparto observado depende de esa configuración.
 
@@ -119,7 +124,7 @@ Cargad los datos y contrastad recuentos con `totales_esperados.json` antes de se
 
 Calculad noches e importe por hotel, cancelaciones por canal y el recuento de sensores del cierre. Haced primero el mismo agregado con una herramienta local, sobre el mismo corte, y guardad esos totales como referencia. Después ejecutadlo en el motor repartido.
 
-Registrad tareas o etapas, nodos y tres tiempos por configuración, con una ejecución de calentamiento fuera de la mediana. Comparad una y dos trabajadores, o el equivalente en la tecnología elegida. Si añadir un trabajador no reduce el tiempo, el criterio **b)** sigue cubierto: explicad el coste de arranque o de la mezcla, como en [2.4](computacion-distribuida.md). Un total distinto del esperado anula la comparación de tiempos.
+Registrad tareas o etapas, nodos y tres tiempos por configuración, con una ejecución de calentamiento fuera de la mediana. Comparad uno y dos trabajadores, o el equivalente en la tecnología elegida. Si añadir un trabajador no reduce el tiempo, el criterio **b)** sigue cubierto: explicad el coste de arranque o de la mezcla, como en [2.4](computacion-distribuida.md). Un total distinto del esperado anula la comparación de tiempos.
 
 Repetid una de las preguntas en un segundo motor, aunque sea de forma acotada. El segundo resultado tiene que coincidir con el primero. Así se ve que el criterio depende del cálculo repartido y comprobable, no de un producto concreto.
 
@@ -143,7 +148,7 @@ La evidencia común de [2.8](replicas-shards.md#evidencia-comun-del-criterio-e-o
 
 ### 6. Una pregunta posterior
 
-Con el histórico ya cargado, responded una pregunta que no formaba parte del primer panel. Puede ser el importe cobrado de un canal en un hotel y un mes, o las lecturas de sensores por encima de un umbral en una sede. No reescribáis el histórico para poder contestarla: usad metadatos y un lector compatible. Contrastad el nuevo total con un cálculo independiente sobre el mismo corte.
+Con el histórico ya cargado, responded una pregunta que no formaba parte del primer panel. Por ejemplo, ¿cuánto se cobró por las reservas web de Laredo cuya `fecha` de reserva cae en julio? También podéis contar las lecturas de sensores que superan un umbral en una sede. Indicad el campo que fija el periodo, conservad el histórico original y contrastad el nuevo total con un cálculo independiente sobre el mismo corte.
 
 En el mismo bloque, provocad o describid con una prueba pequeña la diferencia entre réplica y copia de seguridad. Una réplica puede propagar un borrado o una corrección errónea. La copia de seguridad tiene que permitir volver a una versión anterior. Decid cuál de las dos habéis probado y cuál queda solo diseñada.
 

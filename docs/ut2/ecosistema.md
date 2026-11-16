@@ -8,6 +8,8 @@ tags:
 
 # 2.2. Ecosistema Hadoop
 
+En Pentaho agrupasteis por hotel y canal para saber cuánto se había cobrado. Gerencia os pide ahora **las noches reservadas por hotel**. Abrid el [CSV de este taller](../assets/practicas/hotel-hadoop/reservas.csv). La primera reserva aporta tres noches a Laredo. Si cada trabajador lee una parte del fichero, ¿cómo llegarán todas las filas de Laredo a la misma suma? Seguid esa primera fila mientras identificáis las piezas de Hadoop.
+
 !!! info "Ruta de estudio"
     **Esencial:** distinguir HDFS, YARN y MapReduce; seguir una reserva desde el fichero hasta el resultado comprobado.
 
@@ -19,7 +21,7 @@ En [2.1](por-que-almacenamiento.md) justificamos tres necesidades del hotel: con
 
 Hadoop reúne herramientas de almacenamiento y procesamiento. Puede utilizarse en grandes clústeres o en un entorno pequeño para aprender. **No es un requisito de cualquier problema Big Data:** su elección depende de los datos, las operaciones y los recursos.
 
-Calcularemos **noches reservadas por hotel**, una pregunta más sencilla que el informe de cobros de Pentaho. Así podemos concentrarnos en guardar la entrada, asignar recursos y reunir el cálculo. Como en la UT1, comprobaremos el resultado: terminar sin errores no basta.
+El fichero incluye el precio de la reserva. Para averiguar cuánto se ha cobrado necesitaríamos relacionarlo con los pagos, como hicisteis en la [práctica de la UT1](../ut1/tarea-clase.md).
 
 Las prácticas utilizan Hadoop **3.x**. Anotad la versión efectiva con `hadoop version` y la imagen indicada por el profesor: la etiqueta `apache/hadoop:3` puede cambiar. Las referencias a Hadoop 1 permiten interpretar materiales antiguos.
 

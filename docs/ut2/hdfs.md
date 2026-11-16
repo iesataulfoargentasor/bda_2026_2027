@@ -8,14 +8,14 @@ tags:
 
 # 2.3. HDFS
 
+En el [taller de S3](../ut1/aws-academy-s3.md) subisteis una copia a un cubo privado y comprobasteis que podíais recuperarla. Ahora tenéis el CSV de reservas del 2.2 en el sistema de ficheros de Hadoop. **¿Cómo comprobaríais que al descargarlo recuperáis la misma entrada? ¿Qué tendríais que mirar además para saber si existe otra copia en otro nodo?**
+
 !!! info "Ruta de estudio"
     **Esencial:** distinguir archivos, bloques y réplicas; explicar el papel del NameNode y los DataNodes y seguir una lectura y una escritura.
 
     **Práctica guiada:** utilizar el entorno de 2.2 para subir, consultar, copiar y descargar datos, comprobando contenido, rutas y estado.
 
     **Ampliación:** ficheros grandes, inspección interna, snapshots, checkpoint manual, Python y Hue. Las pruebas de fallo o ampliación necesitan un entorno preparado por el profesor. Moodle concreta las entregas.
-
-En [2.2](ecosistema.md) distinguimos almacenamiento, recursos y cálculo. Ahora seguiremos el recorrido de **reservas.csv**: dónde se guarda, cómo lo recupera un programa y qué necesita el sistema para conservarlo ante un fallo.
 
 **HDFS** (*Hadoop Distributed File System*) es el sistema de ficheros de Hadoop. Organiza archivos en bloques y puede distribuirlos entre DataNodes. Se diseñó para grandes archivos y accesos de alto rendimiento, inspirado en el *Google File System* (2003). **Almacena bytes; no interpreta reservas ni calcula sus totales.**
 
