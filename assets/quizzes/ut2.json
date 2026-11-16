@@ -1,6 +1,7 @@
 {
-  "unit": "UT2",
+  "unit": "la UT2",
   "title": "Autoevaluación de la UT2",
+  "mode": "each",
   "questions": [
     {
       "topic": "2.1 Almacén masivo",

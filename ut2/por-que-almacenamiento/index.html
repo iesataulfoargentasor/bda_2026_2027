@@ -1687,6 +1687,7 @@
 
 
 <h1 id="21-por-que-un-almacen-masivo">2.1. Por qué un almacén masivo<a class="headerlink" href="#21-por-que-un-almacen-masivo" title="Permanent link">&para;</a></h1>
+<p>En la <a href="../../ut1/transicion-ut2/">transición de los 500 GB</a> estimasteis que, a 100 MB/s sostenidos, una sola lectura del histórico lleva al menos 83 minutos. Volved a la hoja de decisiones de la UT1. <strong>¿Qué os falta cronometrar para prometer a gerencia el informe de las 8:00?</strong> Seguid el cierre desde que llega la última entrada hasta que el CSV comprobado queda disponible.</p>
 <div class="admonition info">
 <p class="admonition-title">Ruta de estudio</p>
 <p><strong>Esencial:</strong> relacionar capacidad, rendimiento y continuidad con las necesidades del hotel; distinguir guardar datos, interpretarlos y procesarlos.</p>
@@ -1694,7 +1695,6 @@
 <p><strong>Ampliación:</strong> comparar qué cambia al conservar varias copias del histórico. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase <a href="../#como-trabajar-la-unidad">cómo trabajar la unidad</a>).</p>
 </div>
 <h2 id="el-hotel-necesita-seguir-cumpliendo-el-plazo">El hotel necesita seguir cumpliendo el plazo<a class="headerlink" href="#el-hotel-necesita-seguir-cumpliendo-el-plazo" title="Permanent link">&para;</a></h2>
-<p>En la <a href="../../ut1/">UT1</a> construisteis un informe con datos integrados y comprobados. La <a href="../../ut1/transicion-ut2/">transición de los 500 GB</a> plantea qué ocurre cuando crece el histórico. Ahora necesitamos justificar cómo conservar esos datos y utilizarlos sin que el crecimiento impida cumplir los requisitos del <a href="../../ut1/caso-hotel/">grupo hotelero de Cantabria</a>.</p>
 <p>Recepción registra reservas, mantenimiento recibe medidas de sensores y finanzas registra cobros. Las <strong>23:00 marcan el corte de negocio</strong>; gerencia necesita el informe de ese cierre a las <strong>8:00 del día siguiente</strong>. En una noche sin cambio de hora hay nueve horas entre ambos momentos, pero dentro de ese margen deben caber la preparación, el procesamiento, la validación y la publicación del resultado. Si los datos llegan tarde o el trabajo empieza después, queda menos tiempo.</p>
 <p>Una máquina puede ser suficiente mientras cumpla los requisitos. El problema aparece si el histórico ya no cabe, las consultas compiten con las cargas o una avería impide entregar el informe. Que un fichero no abra en Excel solo demuestra un límite de esa herramienta: para decidir si necesitamos más recursos hay que estudiar el proceso completo.</p>
 <p>En este apartado, <strong>sistema de almacenamiento masivo</strong> designa una solución para conservar y dar acceso a grandes volúmenes de datos, con mecanismos de organización, protección y crecimiento. Trabaja con herramientas de procesamiento; guardar los datos y calcular sobre ellos son funciones distintas. La expresión no identifica un producto concreto ni un volumen mínimo universal.</p>
