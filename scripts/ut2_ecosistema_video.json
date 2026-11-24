@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Una reserva recorre Hadoop",
+    "label": "Del fichero de reservas a un resultado que podemos comprobar.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["La pregunta", "¿Cuántas noches se han reservado por hotel?"], ["La primera reserva", "Laredo · 3 noches"], ["Nuestro recorrido", "Guardar, repartir el trabajo y comprobar."]],
+    "takeaway": "Seguimos con el hotel y el informe de la mañana.",
+    "narration": "En el apartado anterior vimos que el hotel necesita espacio, resultados a tiempo y capacidad para recuperarse de ciertos fallos. Ahora vamos a conocer Hadoop siguiendo una reserva. Gerencia pregunta cuántas noches se han reservado en cada hotel. La primera fila de nuestro fichero aporta tres noches a Laredo. ¿Dónde guardamos esa fila? ¿Quién consigue recursos para procesarla? ¿Cómo reunimos sus noches con las demás reservas de Laredo? Ese será nuestro recorrido."
+  },
+  {
+    "title": "Imaginad una oficina con muchas carpetas",
+    "label": "Una comparación para reconocer tres responsabilidades.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["El archivo", "Conserva las carpetas. HDFS."], ["La organización", "Asigna puestos y recursos. YARN."], ["El procedimiento", "Extraer, agrupar y sumar. MapReduce."]],
+    "takeaway": "Guardar datos, asignar recursos y calcular son trabajos distintos.",
+    "narration": "Imaginad una oficina que recibe muchas carpetas. El archivo conserva los documentos. Otra persona organiza los puestos disponibles. Y los empleados siguen un procedimiento para preparar el informe. En Hadoop distinguimos esas mismas responsabilidades. HDFS guarda los archivos. YARN administra los recursos para ejecutar aplicaciones. MapReduce organiza el cálculo en tareas. La comparación sirve para recordar sus funciones. Un clúster reúne equipos conectados, y cada equipo puede desempeñar una o varias responsabilidades."
+  },
+  {
+    "title": "HDFS · el índice y las carpetas",
+    "label": "Los archivos se almacenan en bloques.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["NameNode", "Conoce los archivos, sus bloques y sus ubicaciones."], ["DataNode", "Guarda y sirve los bloques de datos."]],
+    "takeaway": "El índice permite localizar los datos; las copias dependen del despliegue.",
+    "narration": "Dentro del archivo hay un índice y lugares donde guardar los documentos. El NameNode mantiene la información que permite localizar los bloques de cada archivo. Los DataNodes guardan y sirven esos bloques. Para leer, el cliente consulta las ubicaciones y obtiene los datos de los DataNodes. Según la configuración, puede haber copias en distintos nodos. Si falla uno, una copia sana puede ayudar a seguir trabajando, siempre que los servicios necesarios estén disponibles. El detalle de HDFS llegará en el siguiente apartado."
+  },
+  {
+    "title": "Los datos y las tareas pueden estar cerca",
+    "label": "Localidad: reducir el traslado de la entrada cuando sea posible.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["DataNode", "Almacena los bloques."], ["NodeManager", "Lanza y supervisa procesos de ejecución."]],
+    "takeaway": "Pueden compartir una máquina, pero realizan funciones diferentes.",
+    "narration": "Si una persona trabaja junto al archivo que necesita, evitamos trasladar todas las carpetas a otra oficina. Hadoop intenta aprovechar una idea parecida: ejecutar las tareas cerca de sus datos cuando los recursos y la planificación lo permiten. En una máquina pueden convivir un DataNode y un NodeManager. El primero sirve bloques; el segundo permite ejecutar procesos. Los datos también pueden estar en otra máquina. Además, reunir resultados parciales genera comunicación por la red."
+  },
+  {
+    "title": "YARN · organizar los recursos",
+    "label": "Quién asigna, quién coordina y quién ejecuta.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["ResourceManager", "Administra los recursos del conjunto."], ["ApplicationMaster", "Coordina una aplicación y solicita recursos."], ["NodeManager", "Lanza y supervisa procesos en su nodo."]],
+    "takeaway": "El cliente envía la aplicación; YARN permite obtener recursos.",
+    "narration": "Volvamos a la oficina. El ResourceManager organiza los recursos disponibles para las distintas aplicaciones. Cada aplicación tiene un ApplicationMaster que solicita recursos y sigue su trabajo. Los NodeManagers ponen en marcha y supervisan los procesos en sus nodos. Si todos los puestos están ocupados, una aplicación puede esperar. Que haya sido aceptada todavía no significa que sus tareas estén ejecutándose. Y conseguir recursos tampoco comprueba que hayamos elegido bien la fórmula del informe."
+  },
+  {
+    "title": "Un puesto asignado para trabajar",
+    "label": "Contenedor YARN y contenedor Docker tienen significados distintos.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Contenedor YARN", "Recursos asignados para ejecutar un proceso."], ["Contenedor Docker", "Entorno donde alojamos servicios del laboratorio."]],
+    "takeaway": "Varias tareas pueden ejecutarse por turnos si faltan recursos.",
+    "narration": "Un contenedor de YARN representa recursos asignados a un proceso, como memoria y capacidad de cálculo. Pensad en un puesto que la oficina presta mientras dura un trabajo. En el laboratorio utilizamos también contenedores Docker para alojar servicios. Son conceptos diferentes. Tener ocho tareas preparadas no asegura que las ocho funcionen a la vez. La simultaneidad depende de los recursos y de las reglas de planificación. Cuando termina la aplicación, sus recursos quedan disponibles para otras."
+  },
+  {
+    "title": "Map · una ficha por cada reserva",
+    "label": "Ejemplo reducido: solo tres filas del fichero.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["Reserva 1", "Laredo · web · 3 noches → Laredo, 3"], ["Reserva 2", "Laredo · ota · 2 noches → Laredo, 2"], ["Reserva 3", "Potes · recepción · 5 noches → Potes, 5"]],
+    "takeaway": "La clave es el hotel; el valor es el número de noches.",
+    "narration": "Veamos el cálculo con solo las tres primeras reservas del fichero. Una aporta tres noches a Laredo. Otra, dos noches a Laredo. La tercera, cinco noches a Potes. En la fase map, cada tarea lee los registros que le corresponden y prepara parejas: hotel y noches. El hotel es la clave; las noches son el valor. Es como escribir una ficha por reserva. Para esta pregunta no sumamos el precio ni el número de reservas: sumamos noches."
+  },
+  {
+    "title": "Shuffle · reunir las fichas del mismo hotel",
+    "label": "Las parejas pueden proceder de tareas diferentes.",
+    "active": 2,
+    "kind": "two",
+    "cards": [["Bandeja Laredo", "Laredo, 3 · Laredo, 2"], ["Bandeja Potes", "Potes, 5"]],
+    "takeaway": "Todas las parejas con la misma clave llegan al mismo reducer.",
+    "narration": "Ahora imaginad una bandeja por hotel. Aunque las fichas las hayan preparado personas diferentes, todas las de Laredo deben reunirse. Hadoop realiza este reparto y la ordenación por clave en la fase llamada shuffle y sort. Así, el reducer recibe juntos los valores que corresponden al mismo hotel. Un reducer puede encargarse de varios hoteles. Esta reunión puede mover datos por la red y consumir tiempo. Es una parte del trabajo que debemos tener en cuenta al medir."
+  },
+  {
+    "title": "Reduce · sumar cada grupo",
+    "label": "Resultado del ejemplo reducido de tres reservas.",
+    "active": 2,
+    "kind": "two",
+    "cards": [["Laredo", "3 + 2 = 5 noches"], ["Potes", "5 noches"]],
+    "takeaway": "Estas cifras corresponden solo a las tres filas del ejemplo.",
+    "narration": "En la fase reduce sumamos cada grupo. Laredo tiene tres más dos: cinco noches. Potes tiene cinco. Escribimos esos resultados en archivos de salida. Recordad que hemos utilizado solo tres reservas para entender el mecanismo. Las cinco noches de Laredo todavía no son su total en el fichero completo. El recorrido es sencillo: extraer parejas, reunir las del mismo hotel y sumar. Hadoop se ocupa de organizar las tareas y de comunicar los datos entre ellas."
+  },
+  {
+    "title": "Con el fichero completo · 62 noches",
+    "label": "Subtotales comprobados sobre reservas.csv del apartado.",
+    "active": 3,
+    "kind": "totals",
+    "totals": [["Comillas", 11], ["Laredo", 12], ["Noja", 15], ["Potes", 14], ["Santander", 10]],
+    "takeaway": "Son noches reservadas: cada hotel debe coincidir con la comprobación.",
+    "narration": "Al procesar las veinte reservas del fichero completo obtenemos cinco resultados. Comillas suma once noches; Laredo, doce; Noja, quince; Potes, catorce; y Santander, diez. En total son sesenta y dos noches. Podéis pausar el vídeo y comprobarlo. Debe coincidir cada hotel, además del total general. Estas cifras representan noches reservadas. Para calcular dinero cobrado necesitamos los pagos. Para obtener un porcentaje de ocupación necesitamos también las habitaciones disponibles y ocupadas durante el periodo."
+  },
+  {
+    "title": "Repartir tareas requiere organización",
+    "label": "Una parte lógica de entrada se llama split.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["Split", "Entrada asignada a una tarea map."], ["Intento", "Una ejecución de esa tarea."], ["Combiner", "Puede resumir sumas antes del envío."]],
+    "takeaway": "El número de tareas no indica cuántas máquinas trabajan a la vez.",
+    "narration": "Cada tarea map procesa una parte lógica de entrada, llamada split. Un split y un bloque de HDFS son conceptos distintos. Una tarea puede necesitar otro intento si falla. Por eso contar intentos tampoco nos dice cuántas máquinas participaron. En algunas sumas, un combiner puede juntar valores locales antes de enviarlos y ahorrar comunicación. El resultado debe ser correcto aunque ese paso no se ejecute. Para combinar medias necesitamos conservar la suma y el recuento; promediar medias sin tener en cuenta sus tamaños puede dar un resultado incorrecto."
+  },
+  {
+    "title": "Un núcleo y herramientas según la necesidad",
+    "label": "Hadoop Common aporta bibliotecas y utilidades compartidas.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["HDFS", "Conservar archivos."], ["YARN", "Administrar recursos."], ["MapReduce", "Organizar el cálculo por lotes."]],
+    "takeaway": "Cada herramienta del ecosistema debe resolver una necesidad concreta.",
+    "narration": "Ya conocemos tres piezas del núcleo. La cuarta es Hadoop Common: bibliotecas y utilidades compartidas que ayudan a que funcionen los demás componentes. Alrededor encontramos herramientas para consultar, procesar, introducir datos y administrar servicios. No necesitamos instalarlas todas para hacer el ejercicio. Elegimos cada una según una necesidad. MapReduce es útil para trabajos por lotes, como este agregado. El arranque y los datos intermedios pueden resultar costosos en consultas interactivas o cálculos que recorren muchas veces la misma entrada."
+  },
+  {
+    "title": "Hive y HBase · dos formas de acceso",
+    "label": "Consultar un histórico y acceder a registros plantean necesidades diferentes.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Hive", "Consultar con SQL y metadatos sobre los datos."], ["HBase", "Consultar y actualizar registros por clave."]],
+    "takeaway": "HDFS guarda archivos; Parquet es un formato; HBase es una base de datos.",
+    "narration": "Si un analista quiere preguntar por las noches usando SQL, podemos valorar Hive. Hace falta definir cómo interpretar los datos y disponer de almacenamiento y ejecución. Si necesitamos consultar o actualizar registros por su clave, podemos valorar HBase, una base de datos de familias de columnas que habitualmente utiliza HDFS. Conviene separar tres nombres: HDFS guarda archivos, Parquet describe un formato y HBase ofrece operaciones sobre registros. Elegir uno depende de la forma de acceso que necesitamos."
+  },
+  {
+    "title": "Spark y Pig · expresar otros cálculos",
+    "label": "Relacionamos cada herramienta con el trabajo que facilita.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Spark", "Motor para lotes, consultas y flujos."], ["Pig", "Transformaciones expresadas con Pig Latin."]],
+    "takeaway": "La utilidad y el rendimiento se comprueban con la carga concreta.",
+    "narration": "Spark es otro motor de procesamiento. Puede reutilizar datos en memoria y también utiliza disco. Eso puede ayudar en cálculos repetidos, como entrenar un modelo sobre cancelaciones. Puede funcionar localmente o de forma distribuida y utilizar YARN u otros gestores. La mejora de tiempo debe medirse. Pig permite expresar transformaciones mediante un lenguaje llamado Pig Latin. En este apartado lo reconocemos como referencia para interpretar materiales del ecosistema; la práctica utiliza MapReduce y no requiere instalar Pig."
+  },
+  {
+    "title": "Entrada de datos, coordinación y gestión",
+    "label": "Otras herramientas que aparecen en el mapa del ecosistema.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["Flume", "Recoge y transporta eventos, como logs."], ["ZooKeeper", "Ayuda a coordinar sistemas que lo integran."], ["Ambari", "Configura y supervisa servicios compatibles."]],
+    "takeaway": "Sqoop es una referencia histórica para transferencias desde bases relacionales.",
+    "narration": "Flume puede recoger y transportar eventos, como registros de actividad del hotel. ZooKeeper aporta mecanismos de coordinación a los sistemas que lo integran. Ambari facilita la instalación, configuración y supervisión de servicios compatibles. También encontraréis Sqoop en materiales antiguos: transfería datos entre bases relacionales y Hadoop, y está retirado. Reconocer estos nombres ayuda a leer un esquema. Antes de elegir una herramienta para un proyecto nuevo, comprobamos su mantenimiento, compatibilidad y función. Instalarla exige después configurar y verificar el servicio."
+  },
+  {
+    "title": "Qué demuestra el laboratorio del aula",
+    "label": "Varios servicios se ejecutan dentro de un mismo ordenador.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["Podemos observar", "Archivos, servicios, aplicaciones y resultados."], ["Un único equipo", "Comparte CPU, memoria y su posible fallo."]],
+    "takeaway": "El Compose básico tiene un DataNode, un NodeManager y una copia por bloque.",
+    "narration": "En clase seguimos el entorno preparado por el profesor. El laboratorio Docker básico reúne los servicios en un ordenador y utiliza un DataNode y un NodeManager. Solicita una sola copia de cada bloque. Así podemos aprender el recorrido, pero no demostrar recuperación mediante otra copia en una máquina independiente. Crear más contenedores tampoco añade hardware al portátil. Revisamos versiones, servicios y recursos antes de ejecutar. Las instrucciones de una instalación tradicional corresponden a otro camino; no se añaden como un segundo arranque dentro del laboratorio Docker."
+  },
+  {
+    "title": "Preparar, ejecutar y mirar",
+    "label": "Primero contamos palabras; después calculamos noches por hotel.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Preparar", "Entrada local y copia en HDFS."], ["Ejecutar", "Enviar el trabajo con una salida nueva."], ["Mirar", "Estado, tareas y todas las partes del resultado."]],
+    "takeaway": "La interfaz de HDFS muestra archivos; la de YARN muestra aplicaciones.",
+    "narration": "Primero comprobamos los servicios y localizamos los archivos de prácticas. La ruta del portátil y la ruta de HDFS pertenecen a espacios diferentes. Cargamos la entrada y usamos una carpeta de salida nueva para cada ejecución. El primer ejemplo cuenta palabras de opiniones del hotel. Después usamos los programas específicos para sumar noches. La interfaz de HDFS permite revisar archivos y nodos. La de YARN muestra aplicaciones y recursos. Los contadores ayudan a entender lo ocurrido, junto con los registros de ejecución."
+  },
+  {
+    "title": "Hadoop Streaming · dos programas sencillos",
+    "label": "El trabajo de este apartado sigue siendo por lotes.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["Mapper en Python", "Lee reservas y emite hotel y noches."], ["Hadoop", "Transporta y agrupa las parejas por clave."], ["Reducer en Python", "Recibe cada grupo y suma sus noches."]],
+    "takeaway": "Python debe estar disponible donde se ejecutan los programas.",
+    "narration": "Hadoop Streaming permite escribir el mapper y el reducer en Python utilizando entrada y salida estándar. Aquí la palabra streaming describe cómo se comunican esos programas. Seguimos procesando un fichero finito por lotes. El mapper extrae hotel y noches; Hadoop agrupa las parejas; el reducer suma cada hotel. Primero probamos los programas localmente, con las claves ordenadas. Para ejecutarlos en el clúster, distribuimos los scripts y comprobamos que Python existe en los nodos ejecutores. Los errores se revisan antes de aceptar la salida."
+  },
+  {
+    "title": "Terminar y acertar necesitan dos comprobaciones",
+    "label": "El marcador _SUCCESS informa de la finalización técnica.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["La ejecución", "Estado final, tareas, intentos y errores."], ["El contenido", "Cinco hoteles y sus subtotales; 62 noches."]],
+    "takeaway": "Leemos todos los archivos part-* y contrastamos el cálculo.",
+    "narration": "Un trabajo puede terminar correctamente y responder a una pregunta equivocada. Por eso comprobamos su estado y después el contenido. El marcador de éxito indica que el proceso terminó. Los archivos de partes contienen los resultados: hay que leerlos todos. Contrastamos cada subtotal con un cálculo independiente sobre el mismo fichero. Si faltan noches, revisamos la entrada, los filtros, los campos utilizados y las partes leídas. En el apartado de computación distribuida mediremos también el tiempo con condiciones comparables."
+  },
+  {
+    "title": "Elegir una ampliación con sentido",
+    "label": "Recuperamos las necesidades que justificamos en el apartado 2.1.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Falta espacio", "Valorar capacidad HDFS y DataNodes."], ["Faltan recursos", "Revisar YARN, CPU y memoria."], ["Piden SQL", "Valorar una herramienta como Hive."]],
+    "takeaway": "HDFS guarda; YARN administra recursos; MapReduce organiza el cálculo.",
+    "narration": "Para terminar, relacionad cada problema con su posible solución. Si falta espacio, revisamos el almacenamiento. Si las aplicaciones esperan, miramos los recursos y la planificación. Si el analista pide SQL, valoramos una herramienta de consulta. Cada cambio necesita configuración y comprobaciones. Podéis explicar el recorrido con tres frases: HDFS conserva los archivos. YARN administra los recursos. MapReduce organiza el cálculo. Después verificamos que el resultado responde a la pregunta del hotel. En el próximo apartado veremos HDFS con más detalle."
+  }
+]

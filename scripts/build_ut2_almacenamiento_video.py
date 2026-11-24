@@ -22,6 +22,10 @@ OUTPUT = ROOT / "docs/assets/ut2"
 NAME = "por-que-almacenamiento"
 VOICE = "es-ES-XimenaNeural"
 RATE = "-5%"
+HEADER = "UT2 · 2.1  /  POR QUÉ UN ALMACÉN MASIVO"
+TRANSCRIPT_TITLE = "UT2 · 2.1 · POR QUÉ UN ALMACÉN MASIVO"
+SOURCE_URL = "https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/por-que-almacenamiento/"
+TABS = ["EL HOTEL", "LOS DATOS", "EL TIEMPO", "RECUPERACIÓN"]
 SCENES = json.loads(
     (ROOT / "scripts/ut2_almacenamiento_video.json").read_text(encoding="utf-8")
 )
@@ -39,7 +43,7 @@ def render(scene, index):
     image = base.Image.new("RGB", (1280, 720), base.BG)
     draw = base.ImageDraw.Draw(image)
     draw.rectangle((0, 0, 1280, 8), fill=base.TEAL)
-    base.text(draw, (44, 24), "UT2 · 2.1  /  POR QUÉ UN ALMACÉN MASIVO",
+    base.text(draw, (44, 24), HEADER,
               18, base.MUTED, bold=True)
     draw.text((1235, 25), f"{index + 1} / {len(SCENES)}",
               font=base.font(18), fill=base.MUTED, anchor="ra")
@@ -48,7 +52,7 @@ def render(scene, index):
         raise ValueError(f"Título demasiado largo: {scene['title']}")
     base.text(draw, (46, 130), scene["label"], 23, base.TEAL, 1180)
 
-    for position, name in enumerate(["EL HOTEL", "LOS DATOS", "EL TIEMPO", "RECUPERACIÓN"]):
+    for position, name in enumerate(TABS):
         left = 45 + position * 310
         active = scene["active"] == position
         draw.rounded_rectangle((left, 200, left + 265, 263), radius=12,
@@ -190,10 +194,10 @@ async def main():
     )
 
     transcript = (
-        "UT2 · 2.1 · POR QUÉ UN ALMACÉN MASIVO\n"
+        f"{TRANSCRIPT_TITLE}\n"
         "BDA · IES Ataúlfo Argenta\n"
         "Voz sintética Ximena, español de España. Ejemplos ficticios.\n"
-        "Fuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/por-que-almacenamiento/\n\n"
+        f"Fuente: {SOURCE_URL}\n\n"
     )
     transcript += "\n\n".join(
         f"{base.stamp(chapter['inicio'], '.')[:8]} · {scene['title']}\n{scene['narration']}"
