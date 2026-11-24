@@ -17,6 +17,21 @@ En el [taller de S3](../ut1/aws-academy-s3.md) subisteis una copia a un cubo pri
 
     **Ampliación:** ficheros grandes, inspección interna, snapshots, checkpoint manual, Python y Hue. Las pruebas de fallo o ampliación necesitan un entorno preparado por el profesor. Moodle concreta las entregas.
 
+## Vídeo introductorio
+
+Seguimos el fichero de reservas del hotel para entender cómo se divide en bloques, dónde se guardan sus copias y qué hacen el NameNode y los DataNodes. Un archivo con índice y estanterías nos ayuda a situarnos; después vemos el recorrido de una lectura y una escritura y las comprobaciones del laboratorio. La explicación también distingue réplicas, snapshots y copias de seguridad, y sitúa las ampliaciones con Python y Hue. **Duración de 13 minutos y 25 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/hdfs-explicado-portada.jpg" aria-label="HDFS. Bloques, réplicas y recorrido de los archivos del hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/hdfs-explicado.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los esquemas y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/hdfs-explicado.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/hdfs-explicado.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/hdfs-explicado.es.srt){target="_blank" rel="noopener"}
+
+## Del archivo del hotel a sus bloques
+
 **HDFS** (*Hadoop Distributed File System*) es el sistema de ficheros de Hadoop. Organiza archivos en bloques y puede distribuirlos entre DataNodes. Se diseñó para grandes archivos y accesos de alto rendimiento, inspirado en el *Google File System* (2003). **Almacena bytes; no interpreta reservas ni calcula sus totales.**
 
 Su tolerancia a fallos depende de copias sanas, servicios disponibles y configuración. Añadir nodos puede ampliar capacidad, pero no garantiza acelerar un cálculo ni conservar datos ante cualquier avería. Son las condiciones que aprendimos a comprobar en la UT1 y en 2.1.

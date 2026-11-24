@@ -1,0 +1,178 @@
+[
+  {
+    "title": "¿Dónde han ido nuestras reservas?",
+    "label": "Seguimos el fichero del hotel dentro de HDFS.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["Guardar", "El fichero entra en el sistema."], ["Recuperar", "Comprobamos que vuelve completo."], ["Inspeccionar", "Averiguamos dónde están sus copias."]],
+    "takeaway": "Guardar, recuperar y comprobar: el hilo que ya conocemos.",
+    "narration": "Vamos a retomar el fichero de reservas de nuestro hotel. En el taller de S3 aprendimos a subirlo y recuperarlo, y en el apartado anterior lo utilizamos para calcular las noches por hotel. Pues bien, ahora vamos a mirar qué ocurre cuando lo guardamos en HDFS. Os propongo dos preguntas para acompañar el recorrido: ¿cómo sabemos que al descargarlo vuelve exactamente el mismo fichero? Y, además, ¿cómo podemos comprobar si hay otra copia en otro equipo? Para responderlas iremos paso a paso, desde el archivo que vemos hasta los bloques que guarda el sistema."
+  },
+  {
+    "title": "Un archivo con índice y estanterías",
+    "label": "Una comparación para situarnos antes de entrar en los detalles.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["El índice", "Indica qué buscamos y dónde está."], ["Las estanterías", "Conservan el contenido."], ["El informe", "Necesita un trabajo de cálculo."]],
+    "takeaway": "HDFS guarda los datos; otra herramienta interpreta las reservas.",
+    "narration": "Imaginad el archivo de una oficina: tenemos un índice para localizar documentos y unas estanterías donde se guardan. Esa comparación nos ayudará a entender HDFS. El sistema conserva el contenido de los ficheros y la información necesaria para encontrarlo. Sin embargo, guardar las reservas no equivale a entenderlas. Si recordáis las sesenta y dos noches del ejemplo anterior, ese total lo obtuvo el procesamiento, no el almacén. Aquí nos ocuparemos de que el fichero esté disponible y podamos leerlo. Después, otra herramienta interpretará sus columnas y hará las operaciones que necesitemos."
+  },
+  {
+    "title": "El informe nocturno y la recepción",
+    "label": "La forma de acceder a los datos ayuda a elegir la herramienta.",
+    "active": 0,
+    "kind": "two",
+    "cards": [["Informe del histórico", "Recorrer muchas reservas de principio a fin."], ["Atención en recepción", "Buscar y cambiar una reserva concreta al instante."]],
+    "takeaway": "HDFS encaja especialmente bien con archivos grandes y lecturas largas.",
+    "narration": "Pensad ahora en dos situaciones del hotel. Durante la noche queremos recorrer todas las reservas para preparar un informe. En recepción, en cambio, una persona necesita cambiar una reserva concreta en un momento. HDFS encaja especialmente bien con el primer caso: archivos grandes que se recorren para analizar muchos datos. Para las búsquedas y modificaciones rápidas de recepción necesitaremos un motor de base de datos adecuado. En HDFS podemos añadir contenido al final mediante operaciones compatibles, pero no editar libremente una fila en mitad del fichero. Por eso conviene pensar primero en cómo vamos a utilizar los datos."
+  },
+  {
+    "title": "Un fichero grande se divide en bloques",
+    "label": "Ejemplo: 600 MiB con un tamaño de bloque de 128 MiB.",
+    "active": 1,
+    "kind": "blocks",
+    "takeaway": "Son cinco partes del mismo archivo; la última contiene 88 MiB.",
+    "narration": "Veamos un ejemplo más grande que nuestro pequeño fichero de clase. Imaginad que el histórico ocupa seiscientos mebibytes y que hemos configurado bloques de ciento veintiocho. La abreviatura que veis en pantalla corresponde a mebibytes, una unidad binaria que no es exactamente lo mismo que el megabyte decimal. ¿Cómo se reparte el archivo? Caben cuatro bloques completos de ciento veintiocho, y quedan ochenta y ocho para el quinto. Por tanto, tenemos cinco bloques. Cada uno contiene una parte del fichero, y necesitamos reunir todas esas partes para recuperarlo completo. Dividirlo todavía no significa hacer copias."
+  },
+  {
+    "title": "Ahora hacemos copias de cada bloque",
+    "label": "Esquema con tres DataNodes disponibles y factor de réplica 3.",
+    "active": 1,
+    "kind": "replicas",
+    "takeaway": "5 bloques × 3 copias = 15 copias de bloque; 1.800 MiB de contenido.",
+    "narration": "Ahora sí, vamos a hacer copias. Supongamos que tenemos tres nodos disponibles y pedimos un factor de réplica de tres. Eso significa tres copias en total de cada bloque, incluida la primera. En el esquema, cada columna representa un nodo que guarda una copia de las cinco partes. Son quince copias de bloque, que contienen en conjunto mil ochocientos mebibytes, más la información adicional del sistema. Fijaos en la diferencia: un bloque es una parte del archivo; una réplica repite esa misma parte. Y pedir tres copias solo puede cumplirse si existen suficientes destinos adecuados para guardarlas."
+  },
+  {
+    "title": "¿Y si el fichero es muy pequeño?",
+    "label": "El tamaño de bloque no obliga a rellenar espacio vacío.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Un fichero de 1 MiB", "Un bloque con 1 MiB de contenido por copia."], ["Muchos ficheros pequeños", "Más nombres y bloques que gestionar en el índice."]],
+    "takeaway": "El último bloque guarda los bytes que quedan, aunque no llegue al máximo.",
+    "narration": "A lo mejor estáis pensando: entonces, ¿nuestro pequeño fichero de reservas va a ocupar ciento veintiocho mebibytes aunque apenas tenga datos? No. Un fichero de un mebibyte utiliza un bloque con aproximadamente un mebibyte de contenido por copia, más los datos auxiliares. No se rellena hasta el tamaño máximo. Lo mismo ocurría con los ochenta y ocho del último bloque del ejemplo. El problema de tener muchísimos ficheros pequeños es otro: hay que gestionar todos sus nombres y sus bloques en el índice. Por eso, cuando sea adecuado, conviene organizar las entradas en archivos de mayor tamaño."
+  },
+  {
+    "title": "NameNode y DataNodes: dos funciones",
+    "label": "Volvemos al índice y a las estanterías de nuestra oficina.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["NameNode · el índice", "Nombres, permisos, bloques y ubicaciones."], ["DataNodes · el contenido", "Guardan bloques, los entregan e informan de su estado."]],
+    "takeaway": "El NameNode permite localizar; los DataNodes almacenan y sirven.",
+    "narration": "Con los bloques y las copias claros, ya podemos poner nombre a los responsables. El NameNode mantiene el índice: conoce los archivos, sus permisos y los bloques que los forman, y gestiona la información sobre sus ubicaciones. Los DataNodes guardan el contenido y lo entregan cuando hace falta. Además, envían señales periódicas para indicar que siguen activos e informes sobre sus bloques. Es como si las estanterías pudieran avisar de qué documentos conservan. Ambos servicios pueden compartir una máquina, pero sus funciones siguen siendo distintas. Esta separación nos permite entender por dónde viajan los datos."
+  },
+  {
+    "title": "Leer: primero localizar, después recibir",
+    "label": "El cliente es el programa que solicita el fichero.",
+    "active": 2,
+    "kind": "read",
+    "takeaway": "El contenido viaja del DataNode al cliente, sin pasar por el NameNode.",
+    "narration": "Vamos a descargar las reservas. Nuestro programa, al que llamaremos cliente, pregunta primero al NameNode dónde están los bloques. El NameNode devuelve sus ubicaciones. A partir de ahí, el cliente contacta directamente con los DataNodes y recibe el contenido. Es parecido a consultar el índice de una biblioteca y acudir después a la estantería indicada. Los bytes del fichero no atraviesan el NameNode. Si una copia no responde o presenta un problema, el cliente puede intentar leer otra disponible. Para recuperar el archivo completo necesitamos una copia accesible y sana de cada uno de sus bloques."
+  },
+  {
+    "title": "Escribir: los bloques siguen una cadena",
+    "label": "Ejemplo de escritura con tres copias; no es el despliegue del aula.",
+    "active": 2,
+    "kind": "write",
+    "takeaway": "Las confirmaciones regresan por la cadena hasta el cliente.",
+    "narration": "Ahora hagamos el camino de subida. El cliente solicita crear el archivo y el NameNode comprueba las condiciones, como los permisos, e indica los destinos. Con tres copias, el cliente envía los datos de un bloque al primer DataNode; este los pasa al segundo, y el segundo al tercero. Las confirmaciones regresan por esa cadena. De nuevo, el contenido no pasa por el NameNode. Al finalizar se completan los envíos y se cierra el archivo. Si algo falla, el sistema intenta reorganizar la escritura según los nodos y recursos disponibles; la recuperación depende de esas condiciones."
+  },
+  {
+    "title": "Comprobar los bytes y entender los datos",
+    "label": "Son dos preguntas diferentes, y las dos importan.",
+    "active": 2,
+    "kind": "two",
+    "cards": [["Integridad del contenido", "Las sumas de comprobación detectan alteraciones."], ["Sentido de las reservas", "Hay que validar fechas, noches y reglas del negocio."]],
+    "takeaway": "Recuperar los mismos bytes no demuestra que las reservas sean correctas.",
+    "narration": "Mientras se leen los bloques, las sumas de comprobación ayudan a detectar si su contenido se ha alterado. Pensad en ellas como una señal de que algo no coincide. Por sí solas no reconstruyen los datos: para continuar puede hacer falta otra copia sana. En la práctica, además, compararemos el fichero descargado con el original. Si son idénticos, habremos comprobado que recuperamos los mismos bytes. Aun así, una reserva con una fecha equivocada seguirá teniendo esa fecha al volver. La integridad del fichero y la validez de lo que cuentan sus filas requieren comprobaciones diferentes."
+  },
+  {
+    "title": "Menos copias y bloques desaparecidos",
+    "label": "Dos situaciones con consecuencias distintas para la lectura.",
+    "active": 2,
+    "kind": "two",
+    "cards": [["Réplica insuficiente", "Quedan menos copias de las solicitadas."], ["Bloque sin copia accesible", "No podemos leer el archivo completo."]],
+    "takeaway": "Hay que mirar las copias efectivas de cada bloque, no solo lo solicitado.",
+    "narration": "Imaginad que pedimos tres copias y solo quedan dos. Tenemos menos protección de la deseada, pero podríamos seguir leyendo si todos los bloques conservan alguna copia sana y accesible. Es distinto de perder todas las copias de uno de ellos: en ese caso ya falta una parte del fichero. Cuando hay destinos y capacidad suficientes, HDFS puede intentar recuperar el nivel de réplica. Por eso, al revisar el estado, miraremos las copias que existen realmente. Incluso un mensaje que diga saludable debe interpretarse junto con la configuración; no significa automáticamente que haya tres copias ni una copia de seguridad independiente."
+  },
+  {
+    "title": "El índice también necesita conservarse",
+    "label": "Una imagen del estado y un registro de los cambios.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["fsimage", "Imagen persistente del índice."], ["edits", "Registro de sus cambios."], ["checkpoint", "Consolida la imagen y los cambios."]],
+    "takeaway": "Un Secondary NameNode no sustituye automáticamente al NameNode.",
+    "narration": "Hasta ahora hemos hablado mucho del contenido, pero también necesitamos conservar su índice. El NameNode trabaja con metadatos en memoria y mantiene información persistente. Para entenderlo, imaginad una fotografía del índice y un cuaderno donde anotamos los cambios posteriores. La imagen se llama fsimage y el registro, edits. Un checkpoint consolida ambos. Aquí aparece un nombre que puede confundir: Secondary NameNode. Su función de checkpoint no lo convierte en un sustituto automático del principal. La alta disponibilidad requiere una configuración específica con servicios preparados para asumir el relevo. Nuestro laboratorio sencillo no tiene ese despliegue."
+  },
+  {
+    "title": "Tres formas de protegernos",
+    "label": "Cada una responde a problemas distintos.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Réplicas", "Copias de bloques para ciertos fallos."], ["Snapshot", "Vista de una carpeta en un momento."], ["Copia externa", "Respaldo independiente del clúster."]],
+    "takeaway": "Repetir bloques dentro del clúster no equivale a tener un respaldo externo.",
+    "narration": "Volvamos a una situación cotidiana: alguien borra una carpeta por error. Las réplicas no son un historial de versiones al que podamos volver sin más. Para eso puede ayudarnos un snapshot, si estaba preparado y conservaba el estado que necesitamos. Es una vista de una carpeta en un momento, apoyada en los bloques del propio sistema. Por tanto, tampoco sustituye a una copia externa que permita recuperarnos si perdemos el clúster. Además, si todas las máquinas dependen de la misma alimentación o están dentro del mismo ordenador físico, comparten riesgos que tener varias copias no elimina."
+  },
+  {
+    "title": "Nuestro laboratorio tiene una sola copia",
+    "label": "Reutilizamos el entorno del apartado anterior.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["Un DataNode", "El laboratorio solicita una copia por bloque."], ["Un objetivo inicial", "Aprender el recorrido y comprobar lo observado."]],
+    "takeaway": "Una copia permite practicar, pero no aporta redundancia entre DataNodes.",
+    "narration": "Todo esto nos ayuda a interpretar el entorno de clase. Nuestro laboratorio tiene un único DataNode y solicita una copia por bloque. Es suficiente para aprender a subir, localizar y descargar archivos, pero no demuestra tolerancia a la pérdida de ese nodo. Tampoco basta con cambiar un número para obtener tres copias cuando solo existe un destino. Las pruebas de fallo necesitan un entorno preparado y copias verificadas de antemano, siguiendo las indicaciones del profesor. De momento, lo importante es describir lo que tenemos realmente y reconocer hasta dónde llegan nuestras comprobaciones."
+  },
+  {
+    "title": "Antes de copiar, situad cada ruta",
+    "label": "Local significa local al proceso que ejecuta el comando.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["put · subir", "Local → HDFS"], ["cp · copiar", "HDFS → HDFS"], ["get · descargar", "HDFS → local"]],
+    "takeaway": "El disco del contenedor y el disco de Windows son espacios distintos.",
+    "narration": "Antes de escribir comandos, merece la pena pararse en las rutas. Vamos a trabajar desde un contenedor, así que una ruta local se refiere a ese contenedor, no directamente al disco de Windows. Subir con put lleva un fichero local a HDFS. Copiar con cp crea otra copia entre rutas de HDFS. Descargar con get lo lleva desde HDFS al espacio local del proceso. En la práctica, la carpeta de entrada está protegida frente a escritura; por eso prepararemos una carpeta temporal escribible para recuperar los datos. Si queremos llevarlos después a Windows, hará falta otro paso de copia."
+  },
+  {
+    "title": "Un recorrido que podemos demostrar",
+    "label": "Subir, consultar, recuperar y comparar.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Preparar y subir", "Carpeta propia y destino nuevo."], ["Listar y descargar", "Comprobar la ruta y recuperar el fichero."], ["Comparar", "Original y descarga: mismos bytes."]],
+    "takeaway": "Una comparación idéntica y sin errores demuestra la recuperación del contenido.",
+    "narration": "Con esas rutas situadas, el ejercicio tiene un recorrido sencillo. Preparamos nuestra carpeta, subimos el fichero, comprobamos que aparece y lo descargamos en una ubicación escribible. Después comparamos el original y la descarga con la herramienta indicada, cmp. Cuando coinciden, termina correctamente y no muestra diferencias. Conviene revisar también que no haya ocurrido un error al ejecutar la comparación. Si repetimos la práctica, utilizaremos destinos nuevos para distinguir los resultados. Así obtenemos una evidencia concreta: hemos recuperado los mismos bytes. Para saber cuántas copias había mientras estaban en HDFS, todavía necesitamos una inspección adicional."
+  },
+  {
+    "title": "Mirar dentro: nodos, bloques y copias",
+    "label": "Relacionamos cada conclusión con una evidencia.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["dfsadmin -report", "Nodos activos y capacidad del sistema."], ["fsck con ubicaciones", "Bloques del fichero y copias efectivas."]],
+    "takeaway": "La configuración expresa una intención; los informes muestran el estado.",
+    "narration": "Para completar la comprobación utilizaremos dos tipos de informe. Uno nos permite ver los nodos activos y la capacidad disponible. El otro inspecciona el fichero y, con las opciones adecuadas, muestra sus bloques y ubicaciones. Los comandos aparecen en pantalla y en la práctica, así que no hace falta memorizarlos ahora. La idea es relacionar cada afirmación con una evidencia: qué archivo hemos recuperado, cuántos bloques tiene y dónde están sus copias. Si una operación falla, revisaremos el mensaje, los permisos y el estado del servicio antes de repetirla o cambiar opciones a ciegas."
+  },
+  {
+    "title": "Otras puertas de entrada: Python y Hue",
+    "label": "Ampliaciones para trabajar con el mismo sistema de archivos.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["Python", "Automatizar accesos mediante un cliente compatible."], ["Hue", "Utilizar una interfaz web configurada para el clúster."]],
+    "takeaway": "Cambiar de interfaz no elimina los permisos ni los requisitos de conexión.",
+    "narration": "Cuando dominemos ese recorrido, podremos explorar otras formas de acceder a HDFS, como un programa de Python o una interfaz web como Hue. Son ampliaciones: no necesitamos instalarlo todo para entender la parte esencial. En cualquier caso, hará falta un cliente compatible, permisos y una conexión que alcance los servicios necesarios. Ver la página del NameNode no garantiza que nuestro programa pueda recibir los bloques de los DataNodes. Además, leer un archivo de reservas implica interpretar su formato con la herramienta adecuada; HDFS sigue encargándose de guardar y entregar sus bytes."
+  },
+  {
+    "title": "Crecer y preparar el siguiente trabajo",
+    "label": "Más almacenamiento y más capacidad de cálculo son cuestiones distintas.",
+    "active": 3,
+    "kind": "two",
+    "cards": [["Ampliar el almacén", "Nuevos DataNodes y distribución de los bloques."], ["Preparar el análisis", "Formato, permisos, organización y recursos de ejecución."]],
+    "takeaway": "Añadir almacenamiento no garantiza que un cálculo termine antes.",
+    "narration": "Si el histórico del hotel crece, añadir DataNodes puede ampliar el almacenamiento. También puede ser necesario equilibrar cómo se reparten los bloques. Pero disponer de más espacio no añade automáticamente recursos de cálculo a YARN ni asegura que el informe sea más rápido. Seguiremos cuidando el formato, los permisos, la organización de los archivos y cuánto tiempo los conservamos. Por ejemplo, convertir datos a Parquet requiere una herramienta que realice esa conversión; HDFS no lo hace por guardarlos. Son decisiones que preparan el trabajo de análisis que viene después."
+  },
+  {
+    "title": "Lo que debemos poder explicar",
+    "label": "Del fichero guardado al siguiente cálculo distribuido.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Dónde está", "Índice, bloques y DataNodes."], ["Cómo vuelve", "Lectura directa y contenido comprobado."], ["Qué protección tiene", "Copias reales y límites del entorno."]],
+    "takeaway": "Ya podemos recuperar la entrada; después mediremos cómo se procesa.",
+    "narration": "Para terminar, volved a imaginar nuestro fichero de reservas. Ahora podéis explicar cómo se divide en bloques, quién sabe dónde están y quién entrega su contenido. También podéis distinguir entre recuperar los mismos bytes y demostrar que existen copias en otros nodos. Esa es la base del apartado. Os propongo contar el recorrido a un compañero usando el índice y las estanterías, y después comprobarlo con la práctica. Con el archivo localizado y recuperable, en el siguiente apartado daremos un paso más: repartir el procesamiento y medir qué ocurre, en lugar de dar por hecho que siempre será más rápido."
+  }
+]
