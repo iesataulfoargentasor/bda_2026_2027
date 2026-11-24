@@ -1,0 +1,1211 @@
+1
+00:00:00,100 --> 00:00:01,650
+Vamos a retomar el fichero
+
+2
+00:00:01,662 --> 00:00:03,150
+de reservas de nuestro hotel.
+
+3
+00:00:04,012 --> 00:00:06,388
+En el taller de S3 aprendimos a subirlo
+
+4
+00:00:06,400 --> 00:00:08,725
+y recuperarlo, y en el apartado anterior
+
+5
+00:00:08,738 --> 00:00:11,275
+lo utilizamos para calcular las noches por
+hotel.
+
+6
+00:00:12,138 --> 00:00:13,838
+Pues bien, ahora vamos a mirar
+
+7
+00:00:13,850 --> 00:00:16,500
+qué ocurre cuando lo guardamos en HDFS.
+
+8
+00:00:17,388 --> 00:00:20,812
+Os propongo dos preguntas para acompañar el
+recorrido: ¿cómo
+
+9
+00:00:20,825 --> 00:00:24,212
+sabemos que al descargarlo vuelve
+exactamente el mismo fichero?
+
+10
+00:00:25,075 --> 00:00:27,500
+Y, además, ¿cómo podemos comprobar si
+
+11
+00:00:27,512 --> 00:00:29,150
+hay otra copia en otro equipo?
+
+12
+00:00:30,025 --> 00:00:33,200
+Para responderlas iremos paso a paso, desde
+el archivo
+
+13
+00:00:33,212 --> 00:00:35,600
+que vemos hasta los bloques que guarda el
+sistema.
+
+14
+00:00:36,488 --> 00:00:39,838
+Imaginad el archivo de una oficina: tenemos
+un índice
+
+15
+00:00:39,850 --> 00:00:43,312
+para localizar documentos y unas estanterías
+donde se guardan.
+
+16
+00:00:44,200 --> 00:00:47,362
+Esa comparación nos ayudará a entender HDFS.
+
+17
+00:00:48,250 --> 00:00:50,400
+El sistema conserva el contenido de los
+
+18
+00:00:50,412 --> 00:00:53,388
+ficheros y la información necesaria para
+encontrarlo.
+
+19
+00:00:54,288 --> 00:00:57,850
+Sin embargo, guardar las reservas no
+equivale a entenderlas.
+
+20
+00:00:58,712 --> 00:01:00,475
+Si recordáis las sesenta y dos
+
+21
+00:01:00,488 --> 00:01:02,912
+noches del ejemplo anterior, ese total lo
+
+22
+00:01:02,925 --> 00:01:05,188
+obtuvo el procesamiento, no el almacén.
+
+23
+00:01:06,050 --> 00:01:07,512
+Aquí nos ocuparemos de que el
+
+24
+00:01:07,525 --> 00:01:09,925
+fichero esté disponible y podamos leerlo.
+
+25
+00:01:10,800 --> 00:01:13,675
+Después, otra herramienta interpretará sus
+columnas
+
+26
+00:01:13,688 --> 00:01:15,788
+y hará las operaciones que necesitemos.
+
+27
+00:01:16,638 --> 00:01:19,012
+Pensad ahora en dos situaciones del hotel.
+
+28
+00:01:19,888 --> 00:01:21,875
+Durante la noche queremos recorrer todas
+
+29
+00:01:21,888 --> 00:01:23,875
+las reservas para preparar un informe.
+
+30
+00:01:24,738 --> 00:01:27,625
+En recepción, en cambio, una persona
+necesita
+
+31
+00:01:27,638 --> 00:01:30,000
+cambiar una reserva concreta en un momento.
+
+32
+00:01:30,862 --> 00:01:34,425
+HDFS encaja especialmente bien con el primer
+caso:
+
+33
+00:01:34,700 --> 00:01:38,075
+archivos grandes que se recorren para
+analizar muchos datos.
+
+34
+00:01:38,938 --> 00:01:41,938
+Para las búsquedas y modificaciones rápidas
+de recepción
+
+35
+00:01:41,950 --> 00:01:44,675
+necesitaremos un motor de base de datos
+adecuado.
+
+36
+00:01:45,575 --> 00:01:48,500
+En HDFS podemos añadir contenido al final
+
+37
+00:01:48,512 --> 00:01:51,388
+mediante operaciones compatibles, pero no
+editar
+
+38
+00:01:51,400 --> 00:01:53,588
+libremente una fila en mitad del fichero.
+
+39
+00:01:54,462 --> 00:01:56,250
+Por eso conviene pensar primero en
+
+40
+00:01:56,262 --> 00:01:58,138
+cómo vamos a utilizar los datos.
+
+41
+00:01:59,012 --> 00:02:00,800
+Veamos un ejemplo más grande que
+
+42
+00:02:00,812 --> 00:02:02,612
+nuestro pequeño fichero de clase.
+
+43
+00:02:03,538 --> 00:02:06,575
+Imaginad que el histórico ocupa seiscientos
+mebibytes y
+
+44
+00:02:06,588 --> 00:02:09,212
+que hemos configurado bloques de ciento
+veintiocho.
+
+45
+00:02:10,075 --> 00:02:12,488
+La abreviatura que veis en pantalla
+corresponde
+
+46
+00:02:12,500 --> 00:02:14,975
+a mebibytes, una unidad binaria que no es
+
+47
+00:02:14,988 --> 00:02:17,388
+exactamente lo mismo que el megabyte
+decimal.
+
+48
+00:02:18,262 --> 00:02:19,788
+¿Cómo se reparte el archivo?
+
+49
+00:02:20,650 --> 00:02:23,588
+Caben cuatro bloques completos de ciento
+veintiocho, y
+
+50
+00:02:23,600 --> 00:02:25,450
+quedan ochenta y ocho para el quinto.
+
+51
+00:02:26,325 --> 00:02:28,412
+Por tanto, tenemos cinco bloques.
+
+52
+00:02:29,288 --> 00:02:31,775
+Cada uno contiene una parte del fichero, y
+
+53
+00:02:31,788 --> 00:02:35,388
+necesitamos reunir todas esas partes para
+recuperarlo completo.
+
+54
+00:02:36,250 --> 00:02:38,975
+Dividirlo todavía no significa hacer copias.
+
+55
+00:02:39,862 --> 00:02:41,950
+Ahora sí, vamos a hacer copias.
+
+56
+00:02:42,825 --> 00:02:45,438
+Supongamos que tenemos tres nodos
+disponibles y
+
+57
+00:02:45,450 --> 00:02:47,450
+pedimos un factor de réplica de tres.
+
+58
+00:02:48,325 --> 00:02:50,388
+Eso significa tres copias en total
+
+59
+00:02:50,400 --> 00:02:52,438
+de cada bloque, incluida la primera.
+
+60
+00:02:53,300 --> 00:02:55,975
+En el esquema, cada columna representa un
+nodo
+
+61
+00:02:55,988 --> 00:02:58,238
+que guarda una copia de las cinco partes.
+
+62
+00:02:59,125 --> 00:03:02,075
+Son quince copias de bloque, que contienen
+en conjunto
+
+63
+00:03:02,088 --> 00:03:06,188
+mil ochocientos mebibytes, más la
+información adicional del sistema.
+
+64
+00:03:07,050 --> 00:03:09,438
+Fijaos en la diferencia: un bloque es una
+
+65
+00:03:09,450 --> 00:03:12,638
+parte del archivo; una réplica repite esa
+misma parte.
+
+66
+00:03:13,538 --> 00:03:15,812
+Y pedir tres copias solo puede cumplirse
+
+67
+00:03:15,825 --> 00:03:19,212
+si existen suficientes destinos adecuados
+para guardarlas.
+
+68
+00:03:20,088 --> 00:03:23,238
+A lo mejor estáis pensando: entonces,
+¿nuestro
+
+69
+00:03:23,250 --> 00:03:25,388
+pequeño fichero de reservas va a ocupar
+
+70
+00:03:25,400 --> 00:03:28,338
+ciento veintiocho mebibytes aunque apenas
+tenga datos?
+
+71
+00:03:29,212 --> 00:03:29,438
+No.
+
+72
+00:03:29,450 --> 00:03:31,325
+Un fichero de un mebibyte utiliza un
+
+73
+00:03:31,338 --> 00:03:33,412
+bloque con aproximadamente un mebibyte de
+
+74
+00:03:33,425 --> 00:03:36,575
+contenido por copia, más los datos
+auxiliares.
+
+75
+00:03:37,450 --> 00:03:39,675
+No se rellena hasta el tamaño máximo.
+
+76
+00:03:40,562 --> 00:03:42,325
+Lo mismo ocurría con los ochenta
+
+77
+00:03:42,338 --> 00:03:44,250
+y ocho del último bloque del ejemplo.
+
+78
+00:03:45,125 --> 00:03:47,925
+El problema de tener muchísimos ficheros
+pequeños
+
+79
+00:03:47,938 --> 00:03:50,100
+es otro: hay que gestionar todos sus
+
+80
+00:03:50,112 --> 00:03:52,000
+nombres y sus bloques en el índice.
+
+81
+00:03:52,862 --> 00:03:55,800
+Por eso, cuando sea adecuado, conviene
+organizar
+
+82
+00:03:55,812 --> 00:03:58,112
+las entradas en archivos de mayor tamaño.
+
+83
+00:03:59,092 --> 00:04:01,030
+Con los bloques y las copias claros,
+
+84
+00:04:01,180 --> 00:04:03,580
+ya podemos poner nombre a los responsables.
+
+85
+00:04:04,454 --> 00:04:07,554
+El NameNode mantiene el índice: conoce los
+archivos,
+
+86
+00:04:07,680 --> 00:04:09,380
+sus permisos y los bloques que los
+
+87
+00:04:09,392 --> 00:04:12,942
+forman, y gestiona la información sobre sus
+ubicaciones.
+
+88
+00:04:13,804 --> 00:04:15,792
+Los DataNodes guardan el contenido y
+
+89
+00:04:15,804 --> 00:04:17,504
+lo entregan cuando hace falta.
+
+90
+00:04:18,380 --> 00:04:21,392
+Además, envían señales periódicas para
+indicar que
+
+91
+00:04:21,404 --> 00:04:23,842
+siguen activos e informes sobre sus bloques.
+
+92
+00:04:24,717 --> 00:04:26,642
+Es como si las estanterías pudieran
+
+93
+00:04:26,654 --> 00:04:28,580
+avisar de qué documentos conservan.
+
+94
+00:04:29,454 --> 00:04:31,942
+Ambos servicios pueden compartir una
+máquina,
+
+95
+00:04:32,154 --> 00:04:34,542
+pero sus funciones siguen siendo distintas.
+
+96
+00:04:35,404 --> 00:04:37,454
+Esta separación nos permite entender
+
+97
+00:04:37,467 --> 00:04:39,067
+por dónde viajan los datos.
+
+98
+00:04:39,942 --> 00:04:41,867
+Vamos a descargar las reservas.
+
+99
+00:04:42,742 --> 00:04:45,992
+Nuestro programa, al que llamaremos cliente,
+pregunta
+
+100
+00:04:46,004 --> 00:04:48,354
+primero al NameNode dónde están los bloques.
+
+101
+00:04:49,217 --> 00:04:51,517
+El NameNode devuelve sus ubicaciones.
+
+102
+00:04:52,380 --> 00:04:55,242
+A partir de ahí, el cliente contacta
+directamente
+
+103
+00:04:55,254 --> 00:04:57,454
+con los DataNodes y recibe el contenido.
+
+104
+00:04:58,317 --> 00:05:00,467
+Es parecido a consultar el índice de una
+
+105
+00:05:00,480 --> 00:05:03,467
+biblioteca y acudir después a la estantería
+indicada.
+
+106
+00:05:04,367 --> 00:05:06,954
+Los bytes del fichero no atraviesan el
+NameNode.
+
+107
+00:05:07,854 --> 00:05:09,980
+Si una copia no responde o presenta un
+
+108
+00:05:09,992 --> 00:05:13,330
+problema, el cliente puede intentar leer
+otra disponible.
+
+109
+00:05:14,204 --> 00:05:17,254
+Para recuperar el archivo completo
+necesitamos una copia
+
+110
+00:05:17,267 --> 00:05:19,667
+accesible y sana de cada uno de sus bloques.
+
+111
+00:05:20,542 --> 00:05:22,580
+Ahora hagamos el camino de subida.
+
+112
+00:05:23,454 --> 00:05:25,654
+El cliente solicita crear el archivo
+
+113
+00:05:25,667 --> 00:05:28,117
+y el NameNode comprueba las condiciones,
+como
+
+114
+00:05:28,130 --> 00:05:30,580
+los permisos, e indica los destinos.
+
+115
+00:05:31,480 --> 00:05:34,080
+Con tres copias, el cliente envía los datos
+
+116
+00:05:34,092 --> 00:05:36,280
+de un bloque al primer DataNode; este los
+
+117
+00:05:36,292 --> 00:05:38,930
+pasa al segundo, y el segundo al tercero.
+
+118
+00:05:39,792 --> 00:05:42,304
+Las confirmaciones regresan por esa cadena.
+
+119
+00:05:43,180 --> 00:05:45,880
+De nuevo, el contenido no pasa por el
+NameNode.
+
+120
+00:05:46,754 --> 00:05:48,830
+Al finalizar se completan los envíos
+
+121
+00:05:48,842 --> 00:05:50,092
+y se cierra el archivo.
+
+122
+00:05:50,954 --> 00:05:53,792
+Si algo falla, el sistema intenta
+reorganizar
+
+123
+00:05:53,804 --> 00:05:55,942
+la escritura según los nodos y recursos
+
+124
+00:05:55,954 --> 00:05:59,567
+disponibles; la recuperación depende de esas
+condiciones.
+
+125
+00:06:00,442 --> 00:06:03,380
+Mientras se leen los bloques, las sumas de
+comprobación
+
+126
+00:06:03,392 --> 00:06:06,042
+ayudan a detectar si su contenido se ha
+alterado.
+
+127
+00:06:06,917 --> 00:06:08,667
+Pensad en ellas como una señal
+
+128
+00:06:08,680 --> 00:06:10,017
+de que algo no coincide.
+
+129
+00:06:10,917 --> 00:06:13,580
+Por sí solas no reconstruyen los datos: para
+
+130
+00:06:13,592 --> 00:06:16,042
+continuar puede hacer falta otra copia sana.
+
+131
+00:06:16,904 --> 00:06:19,392
+En la práctica, además, compararemos el
+
+132
+00:06:19,404 --> 00:06:21,330
+fichero descargado con el original.
+
+133
+00:06:22,204 --> 00:06:24,430
+Si son idénticos, habremos comprobado
+
+134
+00:06:24,442 --> 00:06:26,180
+que recuperamos los mismos bytes.
+
+135
+00:06:27,042 --> 00:06:29,167
+Aun así, una reserva con una fecha
+
+136
+00:06:29,180 --> 00:06:31,792
+equivocada seguirá teniendo esa fecha al
+volver.
+
+137
+00:06:32,667 --> 00:06:34,692
+La integridad del fichero y la validez de
+
+138
+00:06:34,704 --> 00:06:37,880
+lo que cuentan sus filas requieren
+comprobaciones diferentes.
+
+139
+00:06:38,742 --> 00:06:41,654
+Imaginad que pedimos tres copias y solo
+quedan dos.
+
+140
+00:06:42,517 --> 00:06:45,142
+Tenemos menos protección de la deseada, pero
+
+141
+00:06:45,154 --> 00:06:47,117
+podríamos seguir leyendo si todos los
+
+142
+00:06:47,130 --> 00:06:49,942
+bloques conservan alguna copia sana y
+accesible.
+
+143
+00:06:50,830 --> 00:06:52,854
+Es distinto de perder todas las copias
+
+144
+00:06:52,867 --> 00:06:54,254
+de uno de ellos: en ese
+
+145
+00:06:54,267 --> 00:06:56,292
+caso ya falta una parte del fichero.
+
+146
+00:06:57,167 --> 00:07:00,792
+Cuando hay destinos y capacidad suficientes,
+HDFS
+
+147
+00:07:00,804 --> 00:07:03,192
+puede intentar recuperar el nivel de
+réplica.
+
+148
+00:07:04,054 --> 00:07:05,904
+Por eso, al revisar el estado,
+
+149
+00:07:06,104 --> 00:07:08,567
+miraremos las copias que existen realmente.
+
+150
+00:07:09,442 --> 00:07:12,604
+Incluso un mensaje que diga saludable debe
+interpretarse
+
+151
+00:07:12,617 --> 00:07:16,542
+junto con la configuración; no significa
+automáticamente que haya
+
+152
+00:07:16,554 --> 00:07:19,454
+tres copias ni una copia de seguridad
+independiente.
+
+153
+00:07:20,330 --> 00:07:22,042
+Hasta ahora hemos hablado mucho del
+
+154
+00:07:22,054 --> 00:07:25,330
+contenido, pero también necesitamos
+conservar su índice.
+
+155
+00:07:26,192 --> 00:07:28,142
+El NameNode trabaja con metadatos en
+
+156
+00:07:28,154 --> 00:07:30,654
+memoria y mantiene información persistente.
+
+157
+00:07:31,530 --> 00:07:34,692
+Para entenderlo, imaginad una fotografía del
+índice y
+
+158
+00:07:34,704 --> 00:07:37,504
+un cuaderno donde anotamos los cambios
+posteriores.
+
+159
+00:07:38,392 --> 00:07:41,542
+La imagen se llama fsimage y el registro,
+edits.
+
+160
+00:07:42,442 --> 00:07:44,354
+Un checkpoint consolida ambos.
+
+161
+00:07:45,230 --> 00:07:48,780
+Aquí aparece un nombre que puede confundir:
+Secondary NameNode.
+
+162
+00:07:49,692 --> 00:07:51,330
+Su función de checkpoint no lo
+
+163
+00:07:51,342 --> 00:07:54,104
+convierte en un sustituto automático del
+principal.
+
+164
+00:07:54,980 --> 00:07:58,367
+La alta disponibilidad requiere una
+configuración específica
+
+165
+00:07:58,380 --> 00:08:00,942
+con servicios preparados para asumir el
+relevo.
+
+166
+00:08:01,804 --> 00:08:04,692
+Nuestro laboratorio sencillo no tiene ese
+despliegue.
+
+167
+00:08:05,692 --> 00:08:08,267
+Volvamos a una situación cotidiana: alguien
+
+168
+00:08:08,280 --> 00:08:09,854
+borra una carpeta por error.
+
+169
+00:08:10,717 --> 00:08:12,492
+Las réplicas no son un historial de
+
+170
+00:08:12,504 --> 00:08:14,654
+versiones al que podamos volver sin más.
+
+171
+00:08:15,530 --> 00:08:18,267
+Para eso puede ayudarnos un snapshot, si
+estaba
+
+172
+00:08:18,280 --> 00:08:21,004
+preparado y conservaba el estado que
+necesitamos.
+
+173
+00:08:21,892 --> 00:08:23,704
+Es una vista de una carpeta en un
+
+174
+00:08:23,717 --> 00:08:26,604
+momento, apoyada en los bloques del propio
+sistema.
+
+175
+00:08:27,480 --> 00:08:30,467
+Por tanto, tampoco sustituye a una copia
+externa
+
+176
+00:08:30,480 --> 00:08:33,054
+que permita recuperarnos si perdemos el
+clúster.
+
+177
+00:08:33,929 --> 00:08:36,380
+Además, si todas las máquinas dependen de la
+
+178
+00:08:36,392 --> 00:08:39,842
+misma alimentación o están dentro del mismo
+ordenador físico,
+
+179
+00:08:40,054 --> 00:08:43,017
+comparten riesgos que tener varias copias no
+elimina.
+
+180
+00:08:43,904 --> 00:08:45,117
+Todo esto nos ayuda a
+
+181
+00:08:45,130 --> 00:08:46,880
+interpretar el entorno de clase.
+
+182
+00:08:47,780 --> 00:08:50,130
+Nuestro laboratorio tiene un único DataNode
+
+183
+00:08:50,142 --> 00:08:52,030
+y solicita una copia por bloque.
+
+184
+00:08:52,954 --> 00:08:55,530
+Es suficiente para aprender a subir,
+localizar
+
+185
+00:08:55,542 --> 00:08:57,792
+y descargar archivos, pero no demuestra
+
+186
+00:08:57,804 --> 00:08:59,792
+tolerancia a la pérdida de ese nodo.
+
+187
+00:09:00,692 --> 00:09:03,180
+Tampoco basta con cambiar un número para
+obtener
+
+188
+00:09:03,192 --> 00:09:05,642
+tres copias cuando solo existe un destino.
+
+189
+00:09:06,554 --> 00:09:09,430
+Las pruebas de fallo necesitan un entorno
+preparado y
+
+190
+00:09:09,442 --> 00:09:13,680
+copias verificadas de antemano, siguiendo
+las indicaciones del profesor.
+
+191
+00:09:14,554 --> 00:09:17,280
+De momento, lo importante es describir lo
+que
+
+192
+00:09:17,292 --> 00:09:21,154
+tenemos realmente y reconocer hasta dónde
+llegan nuestras comprobaciones.
+
+193
+00:09:22,017 --> 00:09:24,242
+Antes de escribir comandos, merece la
+
+194
+00:09:24,254 --> 00:09:25,742
+pena pararse en las rutas.
+
+195
+00:09:26,617 --> 00:09:29,080
+Vamos a trabajar desde un contenedor, así
+
+196
+00:09:29,092 --> 00:09:30,930
+que una ruta local se refiere a ese
+
+197
+00:09:30,942 --> 00:09:33,930
+contenedor, no directamente al disco de
+Windows.
+
+198
+00:09:34,817 --> 00:09:38,017
+Subir con put lleva un fichero local a HDFS.
+
+199
+00:09:38,904 --> 00:09:40,404
+Copiar con cp crea otra
+
+200
+00:09:40,417 --> 00:09:42,530
+copia entre rutas de HDFS.
+
+201
+00:09:43,430 --> 00:09:45,192
+Descargar con get lo lleva desde
+
+202
+00:09:45,204 --> 00:09:47,742
+HDFS al espacio local del proceso.
+
+203
+00:09:48,642 --> 00:09:51,067
+En la práctica, la carpeta de entrada está
+
+204
+00:09:51,080 --> 00:09:54,004
+protegida frente a escritura; por eso
+prepararemos
+
+205
+00:09:54,017 --> 00:09:57,167
+una carpeta temporal escribible para
+recuperar los datos.
+
+206
+00:09:58,030 --> 00:10:00,254
+Si queremos llevarlos después a Windows,
+
+207
+00:10:00,417 --> 00:10:02,167
+hará falta otro paso de copia.
+
+208
+00:10:03,030 --> 00:10:04,767
+Con esas rutas situadas, el
+
+209
+00:10:04,780 --> 00:10:06,880
+ejercicio tiene un recorrido sencillo.
+
+210
+00:10:07,730 --> 00:10:11,580
+Preparamos nuestra carpeta, subimos el
+fichero, comprobamos que
+
+211
+00:10:11,592 --> 00:10:14,604
+aparece y lo descargamos en una ubicación
+escribible.
+
+212
+00:10:15,480 --> 00:10:17,430
+Después comparamos el original y la
+
+213
+00:10:17,442 --> 00:10:20,180
+descarga con la herramienta indicada, cmp.
+
+214
+00:10:21,054 --> 00:10:24,842
+Cuando coinciden, termina correctamente y no
+muestra diferencias.
+
+215
+00:10:25,730 --> 00:10:27,580
+Conviene revisar también que no haya
+
+216
+00:10:27,592 --> 00:10:29,967
+ocurrido un error al ejecutar la
+comparación.
+
+217
+00:10:30,830 --> 00:10:33,704
+Si repetimos la práctica, utilizaremos
+destinos
+
+218
+00:10:33,717 --> 00:10:35,830
+nuevos para distinguir los resultados.
+
+219
+00:10:36,692 --> 00:10:38,942
+Así obtenemos una evidencia concreta:
+
+220
+00:10:39,104 --> 00:10:40,917
+hemos recuperado los mismos bytes.
+
+221
+00:10:41,780 --> 00:10:44,267
+Para saber cuántas copias había mientras
+estaban
+
+222
+00:10:44,280 --> 00:10:48,280
+en HDFS, todavía necesitamos una inspección
+adicional.
+
+223
+00:10:49,180 --> 00:10:52,667
+Para completar la comprobación utilizaremos
+dos tipos de informe.
+
+224
+00:10:53,554 --> 00:10:55,130
+Uno nos permite ver los nodos
+
+225
+00:10:55,142 --> 00:10:57,154
+activos y la capacidad disponible.
+
+226
+00:10:58,042 --> 00:11:00,342
+El otro inspecciona el fichero y, con las
+
+227
+00:11:00,354 --> 00:11:03,604
+opciones adecuadas, muestra sus bloques y
+ubicaciones.
+
+228
+00:11:04,480 --> 00:11:06,680
+Los comandos aparecen en pantalla y en la
+
+229
+00:11:06,692 --> 00:11:09,667
+práctica, así que no hace falta memorizarlos
+ahora.
+
+230
+00:11:10,530 --> 00:11:12,842
+La idea es relacionar cada afirmación con
+
+231
+00:11:12,854 --> 00:11:16,017
+una evidencia: qué archivo hemos recuperado,
+cuántos
+
+232
+00:11:16,030 --> 00:11:18,192
+bloques tiene y dónde están sus copias.
+
+233
+00:11:19,054 --> 00:11:22,030
+Si una operación falla, revisaremos el
+mensaje,
+
+234
+00:11:22,267 --> 00:11:24,617
+los permisos y el estado del servicio antes
+
+235
+00:11:24,630 --> 00:11:27,004
+de repetirla o cambiar opciones a ciegas.
+
+236
+00:11:27,880 --> 00:11:31,504
+Cuando dominemos ese recorrido, podremos
+explorar otras formas
+
+237
+00:11:31,517 --> 00:11:34,154
+de acceder a HDFS, como un programa
+
+238
+00:11:34,167 --> 00:11:36,392
+de Python o una interfaz web como Hue.
+
+239
+00:11:37,267 --> 00:11:40,254
+Son ampliaciones: no necesitamos instalarlo
+todo
+
+240
+00:11:40,267 --> 00:11:41,954
+para entender la parte esencial.
+
+241
+00:11:42,817 --> 00:11:45,867
+En cualquier caso, hará falta un cliente
+compatible,
+
+242
+00:11:46,054 --> 00:11:49,592
+permisos y una conexión que alcance los
+servicios necesarios.
+
+243
+00:11:50,454 --> 00:11:52,742
+Ver la página del NameNode no garantiza que
+
+244
+00:11:52,754 --> 00:11:55,767
+nuestro programa pueda recibir los bloques
+de los DataNodes.
+
+245
+00:11:56,667 --> 00:11:59,942
+Además, leer un archivo de reservas implica
+interpretar
+
+246
+00:11:59,954 --> 00:12:03,192
+su formato con la herramienta adecuada; HDFS
+
+247
+00:12:03,204 --> 00:12:05,980
+sigue encargándose de guardar y entregar sus
+bytes.
+
+248
+00:12:06,940 --> 00:12:08,640
+Si el histórico del hotel crece,
+
+249
+00:12:08,840 --> 00:12:11,502
+añadir DataNodes puede ampliar el
+almacenamiento.
+
+250
+00:12:12,365 --> 00:12:14,378
+También puede ser necesario equilibrar
+
+251
+00:12:14,390 --> 00:12:15,990
+cómo se reparten los bloques.
+
+252
+00:12:16,865 --> 00:12:18,878
+Pero disponer de más espacio no añade
+
+253
+00:12:18,890 --> 00:12:21,378
+automáticamente recursos de cálculo a YARN
+ni
+
+254
+00:12:21,390 --> 00:12:24,078
+asegura que el informe sea más rápido.
+
+255
+00:12:24,965 --> 00:12:28,702
+Seguiremos cuidando el formato, los
+permisos, la organización
+
+256
+00:12:28,715 --> 00:12:31,352
+de los archivos y cuánto tiempo los
+conservamos.
+
+257
+00:12:32,240 --> 00:12:34,515
+Por ejemplo, convertir datos a Parquet
+
+258
+00:12:34,528 --> 00:12:37,352
+requiere una herramienta que realice esa
+conversión;
+
+259
+00:12:37,628 --> 00:12:40,040
+HDFS no lo hace por guardarlos.
+
+260
+00:12:40,902 --> 00:12:42,952
+Son decisiones que preparan el trabajo
+
+261
+00:12:42,965 --> 00:12:44,552
+de análisis que viene después.
+
+262
+00:12:45,428 --> 00:12:48,990
+Para terminar, volved a imaginar nuestro
+fichero de reservas.
+
+263
+00:12:49,852 --> 00:12:52,540
+Ahora podéis explicar cómo se divide en
+bloques,
+
+264
+00:12:52,715 --> 00:12:55,365
+quién sabe dónde están y quién entrega su
+contenido.
+
+265
+00:12:56,228 --> 00:12:59,165
+También podéis distinguir entre recuperar
+los mismos bytes
+
+266
+00:12:59,178 --> 00:13:01,852
+y demostrar que existen copias en otros
+nodos.
+
+267
+00:13:02,715 --> 00:13:04,415
+Esa es la base del apartado.
+
+268
+00:13:05,278 --> 00:13:07,128
+Os propongo contar el recorrido a un
+
+269
+00:13:07,140 --> 00:13:08,890
+compañero usando el índice y las
+
+270
+00:13:08,902 --> 00:13:12,028
+estanterías, y después comprobarlo con la
+práctica.
+
+271
+00:13:12,890 --> 00:13:15,540
+Con el archivo localizado y recuperable, en
+el
+
+272
+00:13:15,552 --> 00:13:18,528
+siguiente apartado daremos un paso más:
+repartir el
+
+273
+00:13:18,540 --> 00:13:21,140
+procesamiento y medir qué ocurre, en lugar
+de
+
+274
+00:13:21,152 --> 00:13:23,240
+dar por hecho que siempre será más rápido.
