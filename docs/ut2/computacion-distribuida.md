@@ -17,6 +17,21 @@ Revisad las cinco filas de Laredo en el [CSV de reservas](../assets/practicas/ho
 
     **Evidencia común de b):** comparar dos configuraciones de ejecución, en el equipo del alumno o mediante demostración docente, con resultados y tiempos contrastados. Ampliar a otras cargas o máquinas físicas es profundización; no se exige obtener aceleración.
 
+## Vídeo introductorio
+
+Partimos de las doce noches de Laredo para entender cómo repartir una suma y conservar el resultado. Una oficina con carpetas y encargos nos ayuda a distinguir tareas, paralelismo y distribución. Después seguimos map, shuffle y reduce, comprobamos los cinco hoteles y aprendemos a comparar uno y dos trabajadores. Los tiempos utilizados para explicar medianas y aceleración son un ejemplo hipotético, no una medición del laboratorio. **Duración de 14 minutos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/computacion-distribuida-portada.jpg" aria-label="Computación distribuida. Repartir, comprobar y medir el cálculo de noches por hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/computacion-distribuida.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/computacion-distribuida.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/computacion-distribuida.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/computacion-distribuida.es.srt){target="_blank" rel="noopener"}
+
+## Del fichero recuperado al cálculo
+
 En [1.4](../ut1/procesamiento.md) distinguisteis paralelismo local y distribución. Aquí vais a observar dónde se ejecutan las tareas, reunir los subtotales de todos los hoteles y medir el efecto de añadir un trabajador. Indicad en el resultado que habéis contado noches reservadas. Para calcular ocupación os haría falta también el inventario de habitaciones y su uso por fecha.
 
 | Concepto | Qué describe | Qué debemos observar |

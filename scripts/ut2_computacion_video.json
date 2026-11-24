@@ -1,0 +1,186 @@
+[
+  {
+    "title": "El fichero ya está guardado. ¿Cómo calculamos?",
+    "label": "Seguimos con las noches reservadas en nuestros hoteles.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["La entrada", "El mismo fichero de reservas."], ["La pregunta", "¿Cuántas noches corresponden a cada hotel?"], ["La comprobación", "Mismo resultado, aunque cambie el reparto."]],
+    "takeaway": "Primero comprobamos el cálculo; después observamos el reparto y el tiempo.",
+    "narration": "En el apartado anterior aprendimos dónde guarda HDFS nuestro fichero y cómo recuperarlo. Ahora vamos a trabajar con su contenido. Gerencia quiere saber cuántas noches se han reservado en cada hotel, y nos preguntamos si repartir el cálculo puede ayudarnos. Para verlo, seguiremos las reservas de Laredo y después comprobaremos el fichero completo. Os propongo mantener tres preguntas durante el recorrido: ¿sale bien la suma?, ¿dónde y cuándo se hacen las tareas?, y ¿cuánto tarda todo? Cada pregunta necesita su propia comprobación. Un resultado correcto, por sí solo, todavía no nos dice si hemos ganado tiempo."
+  },
+  {
+    "title": "Repartir el informe entre compañeros",
+    "label": "Una oficina nos ayuda a distinguir tres ideas.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["Dividir el trabajo", "Preparar varios encargos."], ["Trabajar en paralelo", "Resolver encargos al mismo tiempo."], ["Distribuir", "Coordinar el trabajo entre nodos."]],
+    "takeaway": "Varias tareas, simultaneidad y varios equipos no significan lo mismo.",
+    "narration": "Imaginad a un equipo preparando el informe del hotel. Primero reparte las carpetas: eso divide el trabajo en tareas. Si varias personas revisan carpetas al mismo tiempo, hay paralelismo. Si además trabajan desde oficinas diferentes y se envían información para coordinarse, tenemos una comparación con la distribución entre nodos. Sin embargo, preparar seis encargos no significa disponer de seis personas, ni que todas empiecen juntas. En informática ocurre algo parecido: puede haber paralelismo dentro de un ordenador y también esperas en un sistema distribuido. Tendremos que observar la ejecución real."
+  },
+  {
+    "title": "Seis tareas pueden necesitar turnos",
+    "label": "Esquema ilustrativo: un nodo y capacidad para dos maps a la vez.",
+    "active": 0,
+    "kind": "queue",
+    "takeaway": "El número de tareas no permite deducir máquinas, simultaneidad ni tiempo.",
+    "narration": "Fijaos en este esquema. Tenemos seis tareas map preparadas, pero el nodo solo puede ejecutar dos a la vez. Por tanto, irán pasando por turnos. El dibujo simplifica sus duraciones para que se vea la idea; no es una medición ni significa que todas tarden igual. Una tarea map procesa una división lógica de la entrada, llamada split. Aunque con ciertos archivos de texto exista relación entre splits y bloques de HDFS, no son lo mismo. El formato y la compresión pueden cambiar ese reparto, así que no contaremos máquinas a partir de los bloques."
+  },
+  {
+    "title": "Laredo debe seguir sumando doce",
+    "label": "Las cinco reservas de Laredo tienen 3, 2, 1, 4 y 2 noches.",
+    "active": 0,
+    "kind": "partials",
+    "takeaway": "Podemos agrupar la suma de enteros de formas distintas y conservar el total.",
+    "narration": "Vamos a hacer el reparto con números que podamos seguir sin ordenador. Un compañero toma las dos primeras reservas de Laredo: tres y dos noches, que suman cinco. Otro toma las tres restantes: una, cuatro y dos, que suman siete. Al reunir cinco y siete obtenemos doce. También llegaríamos a doce sumando las cinco reservas directamente. Podemos hacerlo porque la suma de enteros permite agrupar así las operaciones. Eso sí, cada reserva debe contribuir como corresponde: no podemos olvidar una fila ni contarla dos veces. Con esta idea ya podemos entender las fases de MapReduce."
+  },
+  {
+    "title": "Map: quedarse con hotel y noches",
+    "label": "Para seguir el recorrido usamos solo tres filas, no todo el CSV.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Leemos cada reserva", "Hotel, canal, noches, importe y otros datos."], ["Emitimos un par", "Laredo → 3 · Laredo → 2 · Potes → 5"]],
+    "takeaway": "El hotel es la clave de agrupación; las noches son el valor que sumaremos.",
+    "narration": "La primera fase se llama map. Vamos a seguir solamente tres filas: Laredo con tres noches, Laredo con dos y Potes con cinco. El mapper lee cada reserva, comprueba los datos y emite un par formado por el hotel y las noches. El hotel será la clave para reunir registros; las noches, el valor que queremos sumar. Elegir bien ambas cosas es fundamental. Si enviáramos el importe, estaríamos calculando otra magnitud, aunque el programa terminara sin errores. Y contar noches reservadas tampoco basta para calcular la ocupación: necesitaríamos información adicional sobre habitaciones y fechas."
+  },
+  {
+    "title": "Shuffle y sort: reunir la misma clave",
+    "label": "Los pares de un hotel pueden proceder de distintos mappers.",
+    "active": 1,
+    "kind": "shuffle",
+    "takeaway": "Se agrupa y ordena por la clave del hotel, no por el número de noches.",
+    "narration": "Ahora imaginad que las fichas de Laredo han salido de mesas diferentes. Antes de sumar, tenemos que reunirlas. Eso hace la fase de shuffle y sort: lleva los pares de una misma clave al mismo reducer y los ordena por clave. En nuestro pequeño recorrido, Laredo reúne tres y dos, mientras Potes recibe cinco. No estamos ordenando las reservas por su número de noches. Además, mover y organizar esos datos tiene un coste: puede utilizar red, memoria y disco. Por eso, repartir el trabajo no elimina el tiempo necesario para comunicarse y reunir los resultados."
+  },
+  {
+    "title": "Reduce: sumar cada grupo y escribir",
+    "label": "Resultado de las tres filas del ejemplo reducido.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Laredo", "3 + 2 = 5 noches"], ["Potes", "5 = 5 noches"]],
+    "takeaway": "Cinco noches de Laredo en estas tres filas; doce en el CSV completo.",
+    "narration": "Una vez reunidas las claves, llega reduce. El reducer va acumulando las noches de un hotel y, cuando cambia de clave, escribe su total y empieza el siguiente. Con estas tres filas obtenemos cinco noches para Laredo y cinco para Potes. Fijaos en el alcance del ejemplo: esas cinco de Laredo no sustituyen a las doce del fichero completo. Solo hemos seguido una parte para entender el recorrido. Un reducer puede procesar varios hoteles; no necesitamos obligatoriamente uno por hotel. La salida se guarda en HDFS y puede quedar repartida entre varios archivos."
+  },
+  {
+    "title": "¿Y si casi todo pertenece a Laredo?",
+    "label": "Ejemplo hipotético: el 95 % de las reservas comparte la misma clave.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Un reducer muy ocupado", "Recibe todas las emisiones de Laredo."], ["Otros con poca carga", "Se reparten las demás claves."]],
+    "takeaway": "Añadir reducers no divide automáticamente el trabajo de una misma clave.",
+    "narration": "Supongamos ahora que casi todas las reservas pertenecen a Laredo. El particionador decide qué reducer recibe cada clave y, con este reparto por hotel, todas las emisiones de Laredo llegan al mismo. Aunque añadamos reducers, uno puede seguir concentrando casi todo el trabajo mientras los demás terminan pronto. Ese desequilibrio se conoce como skew. Pensad en una oficina con una ventanilla llena de gente y varias casi vacías. Para mejorar la situación quizá necesitemos rediseñar la agregación; no basta con cambiar el número de ventanillas. Los registros de ejecución nos ayudarán a reconocer ese cuello de botella."
+  },
+  {
+    "title": "Combiner: enviar menos datos cuando se puede",
+    "label": "Una optimización opcional para cálculos que se puedan combinar.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Antes de enviar", "Sumar parciales del mismo hotel."], ["Después de reunir", "Combinar los parciales y obtener el total."]],
+    "takeaway": "La corrección debe mantenerse aunque el combiner no se ejecute.",
+    "narration": "Para reducir parte de ese tráfico podemos utilizar un combiner. En nuestra suma sería como reunir en cada mesa algunas fichas del mismo hotel y enviar su subtotal. Así podrían viajar menos pares. Pero hay una condición: combinar esos parciales debe conservar el resultado. Además, el combiner es opcional; puede no ejecutarse o hacerlo varias veces, y el cálculo debe seguir siendo correcto. El comando básico de nuestra práctica no lo configura. Lo presentamos para entender una posible mejora, no como un paso obligatorio que siempre vaya a ocurrir. Con las medias, por ejemplo, hace falta más cuidado."
+  },
+  {
+    "title": "Una media necesita la suma y el recuento",
+    "label": "Dos grupos: [2, 4] y [10]. Tienen tamaños distintos.",
+    "active": 1,
+    "kind": "average",
+    "takeaway": "La media conjunta es 16 / 3 ≈ 5,33; promediar 3 y 10 daría 6,5.",
+    "narration": "Veámoslo con tres reservas que tienen dos, cuatro y diez noches. Si un grupo recibe las dos primeras, su media es tres. Si el otro recibe solo la última, su media es diez. Promediar tres y diez daría seis y medio, pero estaríamos dando el mismo peso a un grupo de dos reservas y a otro de una. Para combinar correctamente conservamos la suma y el número de registros: seis y dos en el primer grupo; diez y uno en el segundo. Después dividimos dieciséis entre tres. La media correcta es aproximadamente cinco coma treinta y tres."
+  },
+  {
+    "title": "YARN organiza los recursos para trabajar",
+    "label": "Guardar, asignar recursos y calcular siguen siendo responsabilidades distintas.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["ResourceManager", "Administra recursos del conjunto."], ["ApplicationMaster", "Coordina una aplicación y pide recursos."], ["NodeManager", "Lanza y supervisa procesos en su nodo."]],
+    "takeaway": "Un contenedor YARN asigna recursos; Docker aloja los servicios del aula.",
+    "narration": "Ya conocemos el cálculo, así que vamos a situar quién consigue los recursos para ejecutarlo. El cliente envía el trabajo y YARN permite reservar recursos para su coordinación y sus tareas. El ResourceManager administra el conjunto; cada aplicación tiene un ApplicationMaster que solicita recursos y sigue su ejecución; y los NodeManagers lanzan y supervisan los procesos. Recordad la diferencia del apartado anterior: un contenedor YARN representa una asignación de recursos, mientras Docker aloja los servicios de nuestro laboratorio. Tener tareas preparadas no significa que todas puedan empezar inmediatamente; puede haber esperas hasta disponer de capacidad."
+  },
+  {
+    "title": "Una tarea puede volver a ejecutarse",
+    "label": "Los reintentos ayudan ante ciertos fallos, pero tienen consecuencias.",
+    "active": 2,
+    "kind": "two",
+    "cards": [["Tarea lógica", "El encargo que queremos completar."], ["Intentos", "Las veces que se ha intentado ejecutarlo."]],
+    "takeaway": "El mapper analítico produce datos; no debe realizar cobros externos.",
+    "narration": "Si una tarea falla, el framework puede volver a intentarla. Por eso distinguimos el encargo lógico de sus intentos de ejecución. Imaginad que, además de leer una reserva, el mapper ordenase un cobro y después fallara. Al repetirse la tarea podría repetir también ese cobro. El sistema no deshace automáticamente un efecto ocurrido en otro servicio. En nuestra práctica, los programas se limitan al cálculo y a producir datos. Y cuando revisemos los registros, no interpretaremos un contador de intentos como si fuera necesariamente el número de tareas distintas o de máquinas utilizadas."
+  },
+  {
+    "title": "Primero, comprobar el cálculo en pequeño",
+    "label": "Usamos el CSV de UT2 y sus programas, con el mismo contrato de datos.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["Leer y validar", "Columnas y valores esperados."], ["Agrupar claves exactas", "Laredo y laredo siguen siendo diferentes."], ["Sumar y contrastar", "Un error invalida la salida parcial."]],
+    "takeaway": "La prueba local comprueba la lógica; no demuestra toda la distribución.",
+    "narration": "Antes de lanzar un trabajo mayor, comprobaremos el cálculo con el fichero pequeño de UT2. Los scripts esperan unas columnas concretas y rechazan datos incompatibles. También conservan los nombres exactos: Laredo con mayúscula y laredo con minúscula son claves distintas. Si queremos unificarlas, primero debemos acordar una regla y aplicarla también a la referencia. En local ejecutamos las fases y agrupamos las claves, comprobando los errores de cada paso. Eso ayuda a revisar la lógica, pero no reproduce toda la comunicación del shuffle. Una salida parcial de una ejecución fallida tampoco se acepta como resultado."
+  },
+  {
+    "title": "Veinte reservas, cinco hoteles, sesenta y dos noches",
+    "label": "Estos son los resultados del CSV pequeño original.",
+    "active": 2,
+    "kind": "totals",
+    "takeaway": "Comprobamos cada hotel: dos errores pueden compensarse en el total global.",
+    "narration": "Con las veinte reservas originales debemos obtener once noches en Comillas, doce en Laredo, quince en Noja, catorce en Potes y diez en Santander. En conjunto son sesenta y dos. Sin embargo, mirar solo ese total no basta. Si por error quitamos una noche a Laredo y se la añadimos a Potes, la suma global seguirá siendo la misma y el informe estará mal. Por eso el comprobador contrasta todos los hoteles con una referencia calculada de forma independiente. Estos números pertenecen a este fichero: cuando generemos una entrada mayor, tendremos que calcular sus propios totales."
+  },
+  {
+    "title": "Después, el mismo agregado en Hadoop",
+    "label": "Observamos la ejecución y recuperamos todas las partes de la salida.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["Preparar el entorno", "Servicios y Python disponibles."], ["Ejecutar y observar", "Aplicación, tareas, nodos e intentos."], ["Leer y verificar", "Todos los part-* y la misma entrada."]],
+    "takeaway": "_SUCCESS indica finalización técnica; la fórmula se comprueba aparte.",
+    "narration": "Después llevaremos el mismo agregado al entorno de Hadoop. Comprobaremos los servicios y que los ejecutores tengan Python: distribuir un script no instala sus dependencias. Usaremos una salida nueva y revisaremos el estado del trabajo. Si termina correctamente, recuperaremos todos los archivos de resultados y los contrastaremos con la misma entrada. El marcador de éxito indica finalización técnica, pero no valida nuestra fórmula. También anotaremos la aplicación, las tareas y los nodos donde se ejecutaron. Así podemos separar lo que demuestra la salida de lo que muestran los registros sobre el reparto del trabajo."
+  },
+  {
+    "title": "Comparar uno y dos trabajadores",
+    "label": "Las dos configuraciones del aula comparten el mismo ordenador físico.",
+    "active": 3,
+    "kind": "workers",
+    "takeaway": "Dos trabajadores registrados no demuestran que ambos hayan calculado.",
+    "narration": "La comparación común del apartado utiliza primero un NodeManager y después añade un segundo. Ambos comparten el ordenador del aula, por lo que no estamos demostrando reparto entre dos máquinas físicas. Cambian los ejecutores y la capacidad que anuncian a YARN, dentro de los límites de ese equipo. Para que haya trabajo repartible necesitaremos una entrada que produzca al menos dos splits. Además, comprobaremos dónde se ejecutan las tareas. Ver dos trabajadores registrados no demuestra que ambos hayan calculado; si solo trabaja uno, habrá que revisar el reparto, los recursos y las esperas."
+  },
+  {
+    "title": "Medir el mismo trabajo en condiciones comparables",
+    "label": "La entrada pequeña comprueba el algoritmo; la mayor permite estudiar tiempos.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Mantener", "Datos, programas y número de reducers."], ["Cambiar y anotar", "Los recursos de ejecución definidos."], ["Medir el intervalo", "Desde el envío del trabajo hasta su finalización."]],
+    "takeaway": "Generar, cargar y comprobar quedan fuera del intervalo de esta práctica.",
+    "narration": "Para comparar tiempos debemos mantener los mismos datos, programas y número de reducers, y describir el recurso que cambiamos. El fichero de veinte filas sirve para comprobar la lógica, pero el arranque puede costar mucho más que sumar sus reservas. Por eso prepararemos una entrada mayor, identificando su tamaño y sus registros. En este protocolo medimos desde el envío del trabajo hasta su finalización. La generación, la carga previa y la comprobación posterior quedan fuera. También anotaremos otras cargas y las condiciones del equipo. Cambiar a la vez el formato o los datos introduciría otras posibles causas del resultado."
+  },
+  {
+    "title": "Calentar, repetir y comparar la mediana",
+    "label": "Ejemplo hipotético para aprender a interpretar medidas; no es una prueba del aula.",
+    "active": 3,
+    "kind": "medians",
+    "takeaway": "Conservamos los tres tiempos y verificamos cada resultado antes de compararlos.",
+    "narration": "En cada configuración hacemos un calentamiento y después tres ejecuciones medidas, siempre con salidas distintas. Comprobamos cada resultado y conservamos los tres tiempos. Vamos a utilizar un ejemplo inventado: la configuración A tarda ciento dieciocho, ciento veinte y ciento veintitrés segundos; la B, setenta y nueve, ochenta y ochenta y cuatro. Al ordenar tres medidas, la mediana es la que queda en medio: ciento veinte y ochenta. No elegimos simplemente el mejor tiempo. Si las medidas varían mucho, investigaremos la causa antes de sacar conclusiones. Una ejecución fallida o incorrecta no sirve para demostrar aceleración."
+  },
+  {
+    "title": "Aceleración y reducción del tiempo",
+    "label": "Seguimos con las medianas hipotéticas de 120 y 80 segundos.",
+    "active": 3,
+    "kind": "formula",
+    "formula": "120 / 80 = 1,5",
+    "heading": "De 120 a 80 segundos: ahorramos 40 segundos.",
+    "body": "40 / 120 ≈ 33,3 % de reducción del tiempo.",
+    "takeaway": "Una aceleración menor que 1 indica que la configuración nueva tarda más.",
+    "narration": "Con esas medianas podemos calcular la aceleración: dividimos el tiempo inicial entre el nuevo. Ciento veinte entre ochenta da uno coma cinco. La reducción del tiempo es otra medida: hemos ahorrado cuarenta segundos de los ciento veinte iniciales, aproximadamente un treinta y tres por ciento. Fijaos en que eso no es reducir el tiempo a la mitad. Y si la configuración nueva tardara más, la razón sería menor que uno. Ese resultado también sería válido si hemos medido bien y los cálculos son correctos. La práctica no exige conseguir una mejora; exige observarla o explicar por qué no aparece."
+  },
+  {
+    "title": "Buscar qué limita la mejora",
+    "label": "El tiempo total incluye algo más que sumar registros.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Preparar y esperar", "Arranque, recursos y partes secuenciales."], ["Mover y reunir", "Lectura, red, shuffle y disco."], ["Repartir la carga", "Claves desequilibradas y tareas más lentas."]],
+    "takeaway": "Elegimos el modelo según el trabajo y los recursos; después medimos.",
+    "narration": "Si añadir un trabajador ayuda poco, volveremos a mirar el recorrido completo. Puede dominar el arranque, la lectura, el movimiento de datos o una clave que concentra casi toda la carga. También hay partes que no se reparten del mismo modo. MapReduce encaja bien en muchos recorridos por lotes y agregaciones. Para cálculos que repiten operaciones sobre los mismos datos, otros modelos, como Spark, pueden aprovechar su reutilización en memoria cuando hay capacidad, aunque también pueden escribir a disco. La elección depende del algoritmo y del entorno. Ningún nombre sustituye a comprobar resultados y medir."
+  },
+  {
+    "title": "Tres evidencias para explicar lo observado",
+    "label": "Cerramos el cálculo y preparamos la siguiente necesidad del hotel.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Corrección", "Cada hotel coincide con su referencia."], ["Reparto", "Sabemos dónde y cuándo trabajó cada tarea."], ["Rendimiento", "Tiempos comparables y límites explicados."]],
+    "takeaway": "Después compararemos modelos para localizar y actualizar información concreta.",
+    "narration": "Para terminar, os propongo explicar el experimento con tres evidencias: los totales comprobados, las tareas observadas y los tiempos de ambas configuraciones. La comparación puede hacerse en vuestro equipo o mediante una demostración del profesor, pero cada uno debe interpretar lo observado y sus límites. Así cerramos el primer bloque: guardar archivos, calcular sobre ellos y comprobar el resultado. En el siguiente apartado cambia la necesidad. Además de recorrer el histórico, querremos localizar y actualizar información concreta. Compararemos familias de bases de datos según esas operaciones; tener mucho volumen no obliga, por sí solo, a abandonar las relacionales."
+  }
+]
