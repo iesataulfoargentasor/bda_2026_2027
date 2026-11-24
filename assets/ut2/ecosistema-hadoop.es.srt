@@ -1,1058 +1,1124 @@
 1
-00:00:00,100 --> 00:00:02,060
-En el apartado anterior vimos que el
+00:00:00,100 --> 00:00:02,300
+Vamos a volver un momento a nuestro hotel.
 
 2
-00:00:02,074 --> 00:00:05,010
-hotel necesita espacio, resultados a tiempo
+00:00:03,175 --> 00:00:05,262
+En el apartado anterior vimos que hacía
 
 3
-00:00:05,024 --> 00:00:07,721
-y capacidad para recuperarse de ciertos
-fallos.
+00:00:05,275 --> 00:00:08,275
+falta guardar más datos, entregar los
+informes a
 
 4
-00:00:08,629 --> 00:00:11,734
-Ahora vamos a conocer Hadoop siguiendo una
-reserva.
+00:00:08,288 --> 00:00:10,850
+tiempo y poder recuperarnos de ciertos
+fallos.
 
 5
-00:00:12,642 --> 00:00:14,682
-Gerencia pregunta cuántas noches se
+00:00:11,700 --> 00:00:13,100
+Pues bien, ahora vamos a
 
 6
-00:00:14,695 --> 00:00:16,234
-han reservado en cada hotel.
+00:00:13,112 --> 00:00:15,162
+descubrir cómo puede ayudarnos Hadoop.
 
 7
-00:00:17,142 --> 00:00:19,011
-La primera fila de nuestro fichero
+00:00:16,025 --> 00:00:18,288
+Para verlo con calma, os propongo seguir
 
 8
-00:00:19,024 --> 00:00:20,774
-aporta tres noches a Laredo.
+00:00:18,300 --> 00:00:20,050
+una sola reserva: la primera del
 
 9
-00:00:21,310 --> 00:00:23,020
-¿Dónde guardamos esa fila?
+00:00:20,062 --> 00:00:22,662
+fichero, que aporta tres noches a Laredo.
 
 10
-00:00:23,942 --> 00:00:26,205
-¿Quién consigue recursos para procesarla?
+00:00:23,538 --> 00:00:25,538
+A partir de ahí iremos viendo dónde se
 
 11
-00:00:27,126 --> 00:00:28,705
-¿Cómo reunimos sus noches con
+00:00:25,550 --> 00:00:28,600
+guarda, quién consigue los recursos para
+procesarla y
 
 12
-00:00:28,718 --> 00:00:30,310
-las demás reservas de Laredo?
+00:00:28,612 --> 00:00:30,712
+cómo se suman sus noches con las demás.
 
 13
-00:00:31,231 --> 00:00:32,968
-Ese será nuestro recorrido.
+00:00:31,600 --> 00:00:33,738
+Para empezar, imaginad una oficina a
 
 14
-00:00:33,889 --> 00:00:36,942
-Imaginad una oficina que recibe muchas
-carpetas.
+00:00:33,750 --> 00:00:35,412
+la que llegan muchas carpetas.
 
 15
-00:00:37,876 --> 00:00:40,113
-El archivo conserva los documentos.
+00:00:36,300 --> 00:00:39,038
+Alguien tiene que guardarlas, alguien
+organiza los
 
 16
-00:00:41,020 --> 00:00:43,889
-Otra persona organiza los puestos
-disponibles.
+00:00:39,050 --> 00:00:42,262
+puestos disponibles y, mientras tanto, los
+empleados
 
 17
-00:00:44,797 --> 00:00:46,165
-Y los empleados siguen un
+00:00:42,275 --> 00:00:44,862
+siguen unas instrucciones para preparar el
+informe.
 
 18
-00:00:46,178 --> 00:00:48,336
-procedimiento para preparar el informe.
+00:00:45,738 --> 00:00:47,675
+Esa imagen nos ayuda a situar las
 
 19
-00:00:49,257 --> 00:00:52,481
-En Hadoop distinguimos esas mismas
-responsabilidades.
+00:00:47,688 --> 00:00:50,675
+tres piezas que veis en pantalla: HDFS
 
 20
-00:00:53,389 --> 00:00:55,705
-HDFS guarda los archivos.
+00:00:50,688 --> 00:00:53,262
+se encarga de los archivos, YARN administra
 
 21
-00:00:56,613 --> 00:01:00,020
-YARN administra los recursos para ejecutar
-aplicaciones.
+00:00:53,275 --> 00:00:55,938
+los recursos y MapReduce organiza el
+cálculo.
 
 22
-00:01:00,942 --> 00:01:03,573
-MapReduce organiza el cálculo en tareas.
+00:00:56,812 --> 00:00:59,388
+De momento, quedaos con lo que hace cada
+una.
 
 23
-00:01:04,481 --> 00:01:07,481
-La comparación sirve para recordar sus
-funciones.
+00:01:00,262 --> 00:01:03,112
+Después las veremos trabajando juntas en un
+clúster,
 
 24
-00:01:08,389 --> 00:01:11,178
-Un clúster reúne equipos conectados, y cada
+00:01:03,250 --> 00:01:05,912
+es decir, en un conjunto de equipos
+conectados.
 
 25
-00:01:11,192 --> 00:01:14,363
-equipo puede desempeñar una o varias
-responsabilidades.
+00:01:06,775 --> 00:01:09,388
+Entremos primero en el archivo de esa
+oficina.
 
 26
-00:01:15,270 --> 00:01:17,126
-Dentro del archivo hay un índice
+00:01:10,250 --> 00:01:12,862
+Para encontrar una carpeta necesitamos un
+índice
 
 27
-00:01:17,139 --> 00:01:19,402
-y lugares donde guardar los documentos.
+00:01:12,875 --> 00:01:15,138
+y, claro, un lugar donde esté guardada.
 
 28
-00:01:20,310 --> 00:01:22,534
-El NameNode mantiene la información que
+00:01:16,038 --> 00:01:19,275
+En HDFS, el NameNode mantiene la información
 
 29
-00:01:22,547 --> 00:01:25,073
-permite localizar los bloques de cada
-archivo.
+00:01:19,288 --> 00:01:21,212
+que permite localizar los bloques de cada
 
 30
-00:01:25,981 --> 00:01:28,678
-Los DataNodes guardan y sirven esos bloques.
+00:01:21,225 --> 00:01:24,388
+archivo, mientras que los DataNodes guardan
+esos bloques
 
 31
-00:01:29,599 --> 00:01:32,573
-Para leer, el cliente consulta las
-ubicaciones
+00:01:24,400 --> 00:01:26,425
+y nos los entregan cuando los leemos.
 
 32
-00:01:32,586 --> 00:01:34,534
-y obtiene los datos de los DataNodes.
+00:01:27,300 --> 00:01:29,888
+Además, según la configuración, podemos
 
 33
-00:01:35,468 --> 00:01:39,270
-Según la configuración, puede haber copias
-en distintos nodos.
+00:01:29,900 --> 00:01:31,788
+tener copias en distintos nodos.
 
 34
-00:01:40,192 --> 00:01:42,823
-Si falla uno, una copia sana puede ayudar a
+00:01:32,650 --> 00:01:35,862
+Así, si uno falla, otra copia sana puede
+ayudarnos
 
 35
-00:01:42,836 --> 00:01:47,534
-seguir trabajando, siempre que los servicios
-necesarios estén disponibles.
+00:01:35,875 --> 00:01:39,912
+a continuar, siempre que los servicios
+necesarios sigan disponibles.
 
 36
-00:01:48,442 --> 00:01:52,034
-El detalle de HDFS llegará en el siguiente
+00:01:40,775 --> 00:01:43,512
+Ya profundizaremos en ello en el siguiente
 apartado.
 
 37
-00:01:52,955 --> 00:01:55,455
-Si una persona trabaja junto al archivo que
+00:01:44,388 --> 00:01:46,000
+Ahora pensad en la persona que
 
 38
-00:01:55,468 --> 00:01:59,626
-necesita, evitamos trasladar todas las
-carpetas a otra oficina.
+00:01:46,012 --> 00:01:47,662
+va a revisar esas carpetas.
 
 39
-00:02:00,534 --> 00:02:04,270
-Hadoop intenta aprovechar una idea parecida:
-ejecutar
+00:01:48,538 --> 00:01:50,488
+Si puede trabajar cerca del archivo,
 
 40
-00:02:04,284 --> 00:02:06,165
-las tareas cerca de sus datos cuando
+00:01:50,612 --> 00:01:52,712
+se ahorra llevarlo todo a otra oficina.
 
 41
-00:02:06,178 --> 00:02:08,757
-los recursos y la planificación lo permiten.
+00:01:53,600 --> 00:01:56,188
+Hadoop intenta aprovechar esa cercanía
+cuando
 
 42
-00:02:09,678 --> 00:02:11,415
-En una máquina pueden convivir
+00:01:56,200 --> 00:01:58,638
+la planificación y los recursos lo permiten.
 
 43
-00:02:11,428 --> 00:02:13,284
-un DataNode y un NodeManager.
+00:01:59,500 --> 00:02:01,725
+Por eso, una misma máquina puede alojar
 
 44
-00:02:14,192 --> 00:02:18,244
-El primero sirve bloques; el segundo permite
-ejecutar procesos.
+00:02:01,738 --> 00:02:03,900
+un DataNode, que sirve los bloques, y
 
 45
-00:02:19,165 --> 00:02:21,823
-Los datos también pueden estar en otra
-máquina.
+00:02:03,912 --> 00:02:07,050
+un NodeManager, que permite ejecutar los
+procesos.
 
 46
-00:02:22,744 --> 00:02:25,205
-Además, reunir resultados parciales
+00:02:07,900 --> 00:02:09,875
+Fijaos en la diferencia entre ambos
 
 47
-00:02:25,218 --> 00:02:26,968
-genera comunicación por la red.
+00:02:09,887 --> 00:02:11,862
+nombres: uno se ocupa de los datos
 
 48
-00:02:27,876 --> 00:02:29,428
-Volvamos a la oficina.
+00:02:11,875 --> 00:02:13,312
+y el otro de la ejecución.
 
 49
-00:02:30,349 --> 00:02:32,810
-El ResourceManager organiza los recursos
+00:02:14,188 --> 00:02:16,225
+Aun así, seguiremos usando la red
 
 50
-00:02:32,823 --> 00:02:35,455
-disponibles para las distintas aplicaciones.
+00:02:16,238 --> 00:02:18,912
+para lecturas remotas y para reunir
+resultados.
 
 51
-00:02:36,363 --> 00:02:39,060
-Cada aplicación tiene un ApplicationMaster
-que
+00:02:19,775 --> 00:02:21,700
+Ya sabemos dónde están los datos,
 
 52
-00:02:39,073 --> 00:02:41,455
-solicita recursos y sigue su trabajo.
+00:02:21,862 --> 00:02:23,862
+así que vamos a organizar el trabajo.
 
 53
-00:02:42,363 --> 00:02:44,389
-Los NodeManagers ponen en marcha y
+00:02:24,725 --> 00:02:25,800
+Aquí entra YARN.
 
 54
-00:02:44,402 --> 00:02:46,678
-supervisan los procesos en sus nodos.
+00:02:26,675 --> 00:02:30,325
+El ResourceManager administra los recursos
+del conjunto; por
 
 55
-00:02:47,586 --> 00:02:49,139
-Si todos los puestos están
+00:02:30,338 --> 00:02:33,675
+su parte, cada aplicación tiene un
+ApplicationMaster que
 
 56
-00:02:49,152 --> 00:02:51,586
-ocupados, una aplicación puede esperar.
+00:02:33,688 --> 00:02:36,188
+solicita lo que necesita y sigue sus tareas.
 
 57
-00:02:52,507 --> 00:02:54,415
-Que haya sido aceptada todavía no
+00:02:37,062 --> 00:02:39,538
+Después, los NodeManagers ponen en marcha
 
 58
-00:02:54,428 --> 00:02:57,099
-significa que sus tareas estén ejecutándose.
+00:02:39,550 --> 00:02:41,800
+y supervisan los procesos en sus nodos.
 
 59
-00:02:58,034 --> 00:03:00,547
-Y conseguir recursos tampoco comprueba que
+00:02:42,650 --> 00:02:44,838
+En nuestra oficina sería algo parecido a
 
 60
-00:03:00,560 --> 00:03:03,073
-hayamos elegido bien la fórmula del informe.
+00:02:44,850 --> 00:02:47,412
+organizar los puestos y coordinar cada
+encargo.
 
 61
-00:03:03,994 --> 00:03:07,165
-Un contenedor de YARN representa recursos
-asignados a
+00:02:48,275 --> 00:02:50,338
+Si todos están ocupados, habrá que
 
 62
-00:03:07,178 --> 00:03:10,231
+00:02:50,350 --> 00:02:52,788
+esperar, aunque el encargo ya esté aceptado.
+
+63
+00:02:53,662 --> 00:02:56,062
+Y disponer de un puesto todavía no garantiza
+
+64
+00:02:56,075 --> 00:02:58,288
+que la fórmula del informe sea correcta.
+
+65
+00:02:59,162 --> 00:03:02,100
+Siguiendo con esa comparación, un contenedor
+de YARN
+
+66
+00:03:02,112 --> 00:03:03,738
+sería el puesto que se presta para
+
+67
+00:03:03,750 --> 00:03:07,100
+realizar un trabajo: representa recursos
+asignados a
+
+68
+00:03:07,112 --> 00:03:09,975
 un proceso, como memoria y capacidad de
 cálculo.
 
-63
-00:03:11,139 --> 00:03:12,507
-Pensad en un puesto que la
-
-64
-00:03:12,520 --> 00:03:14,849
-oficina presta mientras dura un trabajo.
-
-65
-00:03:15,757 --> 00:03:17,797
-En el laboratorio utilizamos también
-
-66
-00:03:17,810 --> 00:03:20,231
-contenedores Docker para alojar servicios.
-
-67
-00:03:21,139 --> 00:03:22,902
-Son conceptos diferentes.
-
-68
-00:03:23,810 --> 00:03:26,060
-Tener ocho tareas preparadas no asegura
-
 69
-00:03:26,073 --> 00:03:27,784
-que las ocho funcionen a la vez.
+00:03:10,838 --> 00:03:13,050
+En el laboratorio también oiréis hablar de
 
 70
-00:03:28,705 --> 00:03:31,073
-La simultaneidad depende de los recursos
+00:03:13,062 --> 00:03:16,412
+contenedores Docker, que utilizamos para
+alojar servicios.
 
 71
-00:03:31,086 --> 00:03:32,915
-y de las reglas de planificación.
+00:03:17,288 --> 00:03:19,562
+Conviene distinguirlos desde el principio.
 
 72
-00:03:33,823 --> 00:03:35,915
-Cuando termina la aplicación, sus
+00:03:20,438 --> 00:03:23,612
+Además, aunque tengamos ocho tareas
+preparadas, quizá
 
 73
-00:03:35,928 --> 00:03:38,297
-recursos quedan disponibles para otras.
+00:03:23,625 --> 00:03:26,400
+deban ejecutarse por turnos si faltan
+recursos.
 
 74
-00:03:39,231 --> 00:03:41,205
-Veamos el cálculo con solo las
+00:03:27,275 --> 00:03:29,825
+Al terminar una aplicación, esos recursos
 
 75
-00:03:41,218 --> 00:03:43,165
-tres primeras reservas del fichero.
+00:03:29,838 --> 00:03:31,988
+se liberan y pueden aprovecharlos otras.
 
 76
-00:03:44,086 --> 00:03:46,113
-Una aporta tres noches a Laredo.
+00:03:32,862 --> 00:03:34,975
+Con esto ya podemos pasar al cálculo.
 
 77
-00:03:47,034 --> 00:03:48,876
-Otra, dos noches a Laredo.
+00:03:35,838 --> 00:03:37,312
+Vamos a hacerlo con las tres
 
 78
-00:03:49,408 --> 00:03:51,842
-La tercera, cinco noches a Potes.
+00:03:37,325 --> 00:03:40,275
+primeras reservas, para que resulte fácil
+seguirlo.
 
 79
-00:03:52,763 --> 00:03:55,579
-En la fase map, cada tarea lee los registros
+00:03:41,138 --> 00:03:43,425
+Tenemos tres noches en Laredo, otras dos
 
 80
-00:03:55,592 --> 00:03:58,737
-que le corresponden y prepara parejas: hotel
-y noches.
+00:03:43,438 --> 00:03:45,462
+también en Laredo y cinco en Potes.
 
 81
-00:03:59,658 --> 00:04:00,895
-El hotel es la clave;
+00:03:46,325 --> 00:03:48,612
+Durante la fase map, cada tarea lee
 
 82
-00:04:01,039 --> 00:04:02,355
-las noches son el valor.
+00:03:48,625 --> 00:03:50,725
+los registros que le corresponden y prepara
 
 83
-00:04:03,355 --> 00:04:05,763
-Es como escribir una ficha por reserva.
+00:03:50,738 --> 00:03:52,175
+una pareja con el hotel y sus
 
 84
-00:04:06,671 --> 00:04:08,882
-Para esta pregunta no sumamos el precio
+00:03:52,188 --> 00:03:55,088
+noches, como si escribiera una pequeña
+ficha.
 
 85
-00:04:08,895 --> 00:04:11,500
-ni el número de reservas: sumamos noches.
+00:03:55,962 --> 00:03:57,488
+Al hotel lo llamamos clave,
 
 86
-00:04:12,421 --> 00:04:14,737
-Ahora imaginad una bandeja por hotel.
+00:03:57,612 --> 00:03:58,912
+y a las noches, valor.
 
 87
-00:04:15,645 --> 00:04:18,132
-Aunque las fichas las hayan preparado
-personas
+00:03:59,825 --> 00:04:01,825
+Así nos quedamos con lo que responde a la
 
 88
-00:04:18,145 --> 00:04:21,158
-diferentes, todas las de Laredo deben
-reunirse.
+00:04:01,838 --> 00:04:05,525
+pregunta de gerencia: las noches reservadas,
+sin confundirlas
 
 89
-00:04:22,066 --> 00:04:24,987
-Hadoop realiza este reparto y la ordenación
-por
+00:04:05,538 --> 00:04:07,738
+con el precio o con el número de reservas.
 
 90
-00:04:25,000 --> 00:04:27,210
-clave en la fase llamada shuffle y sort.
+00:04:08,716 --> 00:04:12,041
+Bien, ya tenemos las fichas, pero todavía
+necesitamos
 
 91
-00:04:28,132 --> 00:04:30,276
-Así, el reducer recibe juntos los
+00:04:12,054 --> 00:04:14,116
+reunir las que pertenecen al mismo hotel.
 
 92
-00:04:30,289 --> 00:04:32,539
-valores que corresponden al mismo hotel.
+00:04:14,978 --> 00:04:17,654
+Imaginad que las colocamos en bandejas: las
+de
 
 93
-00:04:33,461 --> 00:04:36,158
-Un reducer puede encargarse de varios
-hoteles.
+00:04:17,666 --> 00:04:19,304
+Laredo juntas y las de Potes en
 
 94
-00:04:37,066 --> 00:04:39,092
-Esta reunión puede mover datos por
+00:04:19,316 --> 00:04:22,691
+otro grupo, aunque las hayan preparado
+personas diferentes.
 
 95
-00:04:39,105 --> 00:04:40,566
-la red y consumir tiempo.
+00:04:23,566 --> 00:04:26,341
+Hadoop realiza ese reparto y la ordenación
+por
 
 96
-00:04:41,474 --> 00:04:43,039
-Es una parte del trabajo que
+00:04:26,354 --> 00:04:28,491
+clave en la fase llamada shuffle y sort.
 
 97
-00:04:43,053 --> 00:04:44,763
-debemos tener en cuenta al medir.
+00:04:29,366 --> 00:04:32,304
+De ese modo, el reducer recibe juntos los
+valores
 
 98
-00:04:45,671 --> 00:04:48,026
-En la fase reduce sumamos cada grupo.
+00:04:32,316 --> 00:04:34,966
+de cada hotel y puede encargarse de varios
+grupos.
 
 99
-00:04:48,934 --> 00:04:51,592
-Laredo tiene tres más dos: cinco noches.
+00:04:35,841 --> 00:04:38,666
+Eso sí, reunirlos puede mover datos por la
+red
 
 100
-00:04:52,513 --> 00:04:53,855
-Potes tiene cinco.
+00:04:38,678 --> 00:04:41,816
+y llevar tiempo; también tendremos que medir
+esa parte.
 
 101
-00:04:54,776 --> 00:04:57,934
-Escribimos esos resultados en archivos de
-salida.
+00:04:42,704 --> 00:04:46,041
+Una vez reunidas las fichas, la suma resulta
+sencilla.
 
 102
-00:04:58,546 --> 00:05:00,809
-Recordad que hemos utilizado solo tres
+00:04:46,904 --> 00:04:49,154
+En la fase reduce, las tres noches de
 
 103
-00:05:00,823 --> 00:05:02,941
-reservas para entender el mecanismo.
+00:04:49,166 --> 00:04:51,054
+Laredo se juntan con las otras dos
 
 104
-00:05:03,852 --> 00:05:05,983
-Las cinco noches de Laredo todavía no
+00:04:51,066 --> 00:04:54,304
+y obtenemos cinco; para Potes también
+tenemos cinco.
 
 105
-00:05:05,996 --> 00:05:08,023
-son su total en el fichero completo.
+00:04:55,166 --> 00:04:58,654
+Después guardamos esos resultados en los
+archivos de salida.
 
 106
-00:05:08,930 --> 00:05:11,759
-El recorrido es sencillo: extraer parejas,
+00:04:59,541 --> 00:05:02,441
+Recordad que estamos usando solo tres
+reservas para
 
 107
-00:05:11,865 --> 00:05:13,904
-reunir las del mismo hotel y sumar.
+00:05:02,454 --> 00:05:05,066
+entender el recorrido, así que estas cifras
 
 108
-00:05:14,825 --> 00:05:17,141
-Hadoop se ocupa de organizar las tareas
+00:05:05,078 --> 00:05:07,428
+aún no son los totales del fichero completo.
 
 109
-00:05:17,154 --> 00:05:19,259
-y de comunicar los datos entre ellas.
+00:05:08,304 --> 00:05:10,304
+Lo que acabamos de hacer ha sido extraer
 
 110
-00:05:20,167 --> 00:05:22,167
-Al procesar las veinte reservas del
+00:05:10,316 --> 00:05:13,804
+parejas, reunirlas por hotel y sumarlas,
+mientras Hadoop
 
 111
-00:05:22,180 --> 00:05:24,865
-fichero completo obtenemos cinco resultados.
+00:05:13,816 --> 00:05:16,566
+organiza las tareas y la comunicación entre
+ellas.
 
 112
-00:05:25,759 --> 00:05:28,720
-Comillas suma once noches; Laredo, doce;
+00:05:17,428 --> 00:05:20,428
+Ahora sí, vamos a utilizar las veinte
+reservas.
 
 113
-00:05:28,878 --> 00:05:32,733
-Noja, quince; Potes, catorce; y Santander,
-diez.
+00:05:21,291 --> 00:05:24,516
+En pantalla tenéis los cinco resultados:
+once noches
 
 114
-00:05:33,667 --> 00:05:35,930
-En total son sesenta y dos noches.
+00:05:24,528 --> 00:05:26,816
+en Comillas, doce en Laredo, quince en
 
 115
-00:05:36,838 --> 00:05:39,128
-Podéis pausar el vídeo y comprobarlo.
+00:05:26,828 --> 00:05:29,628
+Noja, catorce en Potes y diez en Santander.
 
 116
-00:05:39,635 --> 00:05:42,911
-Debe coincidir cada hotel, además del total
-general.
+00:05:30,504 --> 00:05:32,578
+Al sumarlas obtenemos sesenta y dos.
 
 117
-00:05:43,832 --> 00:05:46,595
-Estas cifras representan noches reservadas.
+00:05:33,454 --> 00:05:36,316
+Podéis pausar el vídeo y comprobarlo a
+vuestro ritmo,
 
 118
-00:05:47,503 --> 00:05:50,595
-Para calcular dinero cobrado necesitamos los
-pagos.
+00:05:36,554 --> 00:05:39,791
+porque debe coincidir cada hotel, además del
+total general.
 
 119
-00:05:51,556 --> 00:05:54,832
-Para obtener un porcentaje de ocupación
-necesitamos también
+00:05:40,666 --> 00:05:43,978
+Y recordad qué estamos midiendo: son noches
+reservadas.
 
 120
-00:05:54,845 --> 00:05:58,187
+00:05:44,841 --> 00:05:47,778
+Si nos pidieran el dinero cobrado,
+necesitaríamos los
+
+121
+00:05:47,791 --> 00:05:51,366
+pagos; para calcular la ocupación, harían
+falta también
+
+122
+00:05:51,378 --> 00:05:54,578
 las habitaciones disponibles y ocupadas
 durante el periodo.
 
-121
-00:05:58,398 --> 00:06:00,293
-Cada tarea map procesa una parte
-
-122
-00:06:00,306 --> 00:06:02,451
-lógica de entrada, llamada split.
-
 123
-00:06:03,372 --> 00:06:04,595
-Un split y un bloque
+00:05:55,454 --> 00:05:57,678
+Antes de seguir, vamos a poner nombre a
 
 124
-00:06:04,608 --> 00:06:07,253
-de HDFS son conceptos distintos.
+00:05:57,691 --> 00:06:00,104
+tres detalles que encontraréis en la
+práctica.
 
 125
-00:06:08,161 --> 00:06:11,056
-Una tarea puede necesitar otro intento si
-falla.
+00:06:00,966 --> 00:06:02,704
+La parte lógica que recibe cada
 
 126
-00:06:11,977 --> 00:06:13,845
-Por eso contar intentos tampoco
+00:06:02,716 --> 00:06:05,016
+tarea map se llama split, y conviene
 
 127
-00:06:13,858 --> 00:06:16,148
-nos dice cuántas máquinas participaron.
+00:06:05,028 --> 00:06:07,466
+distinguirla de un bloque de HDFS.
 
 128
-00:06:17,069 --> 00:06:20,174
-En algunas sumas, un combiner puede juntar
-valores
+00:06:08,354 --> 00:06:11,141
+Si una tarea falla, puede repetirse: por
+eso,
 
 129
-00:06:20,187 --> 00:06:23,108
-locales antes de enviarlos y ahorrar
-comunicación.
+00:06:11,241 --> 00:06:14,341
+contar intentos no nos dice cuántas máquinas
+trabajaron.
 
 130
-00:06:24,016 --> 00:06:26,148
-El resultado debe ser correcto aunque
+00:06:15,216 --> 00:06:17,616
+Por otra parte, un combiner puede adelantar
 
 131
-00:06:26,161 --> 00:06:27,661
-ese paso no se ejecute.
+00:06:17,628 --> 00:06:20,241
+algunas sumas locales para enviar menos
+datos.
 
 132
-00:06:28,595 --> 00:06:31,674
-Para combinar medias necesitamos conservar
-la suma y
+00:06:21,116 --> 00:06:23,241
+Es una ayuda opcional; el resultado
 
 133
-00:06:31,687 --> 00:06:34,293
-el recuento; promediar medias sin tener en
+00:06:23,254 --> 00:06:25,278
+debe seguir siendo correcto sin ella.
 
 134
-00:06:34,306 --> 00:06:37,358
-cuenta sus tamaños puede dar un resultado
-incorrecto.
+00:06:26,154 --> 00:06:27,816
+Con las medias hay que conservar la
 
 135
-00:06:38,280 --> 00:06:40,543
-Ya conocemos tres piezas del núcleo.
+00:06:27,828 --> 00:06:29,554
+suma y el recuento, para tener
 
 136
-00:06:41,074 --> 00:06:44,324
-La cuarta es Hadoop Common: bibliotecas y
-utilidades
+00:06:29,566 --> 00:06:31,341
+en cuenta el tamaño de cada grupo.
 
 137
-00:06:44,337 --> 00:06:47,705
-compartidas que ayudan a que funcionen los
-demás componentes.
+00:06:32,204 --> 00:06:34,978
+Con el recorrido claro, podemos mirar el
+conjunto
 
 138
-00:06:48,613 --> 00:06:52,271
-Alrededor encontramos herramientas para
-consultar, procesar,
+00:06:34,991 --> 00:06:37,716
+de herramientas sin perdernos entre tantos
+nombres.
 
 139
-00:06:52,403 --> 00:06:54,916
-introducir datos y administrar servicios.
+00:06:38,591 --> 00:06:40,516
+A las tres piezas que ya conocemos se
 
 140
-00:06:55,824 --> 00:06:59,192
-No necesitamos instalarlas todas para hacer
-el ejercicio.
+00:06:40,528 --> 00:06:44,516
+añade Hadoop Common, que aporta bibliotecas
+y utilidades compartidas.
 
 141
-00:07:00,113 --> 00:07:02,468
-Elegimos cada una según una necesidad.
+00:06:45,378 --> 00:06:48,004
+Alrededor aparecen otras herramientas que
+elegimos
 
 142
-00:07:02,966 --> 00:07:04,966
-MapReduce es útil para trabajos
+00:06:48,016 --> 00:06:49,641
+según lo que necesitamos hacer.
 
 143
-00:07:04,980 --> 00:07:06,940
-por lotes, como este agregado.
+00:06:50,504 --> 00:06:53,578
+Por ejemplo, MapReduce resulta útil para
+trabajos por
 
 144
-00:07:07,459 --> 00:07:09,827
-El arranque y los datos intermedios pueden
+00:06:53,591 --> 00:06:55,841
+lotes como nuestra suma de noches, pero
 
 145
-00:07:09,840 --> 00:07:13,130
-resultar costosos en consultas interactivas
-o cálculos
+00:06:55,854 --> 00:06:57,904
+el arranque y los datos intermedios pueden
 
 146
-00:07:13,143 --> 00:07:15,998
-que recorren muchas veces la misma entrada.
+00:06:57,916 --> 00:07:01,441
+pesar bastante en consultas interactivas o
+cálculos repetidos.
 
 147
-00:07:16,946 --> 00:07:18,933
-Si un analista quiere preguntar por
+00:07:02,328 --> 00:07:05,578
+Por eso tiene sentido conocer otras
+posibilidades, aunque
 
 148
-00:07:18,946 --> 00:07:22,038
-las noches usando SQL, podemos valorar Hive.
+00:07:05,591 --> 00:07:08,591
+para este ejercicio no necesitemos
+instalarlas todas.
 
 149
-00:07:22,959 --> 00:07:25,183
-Hace falta definir cómo interpretar los
+00:07:09,466 --> 00:07:11,866
+Imaginad que un compañero prefiere preguntar
 
 150
-00:07:25,196 --> 00:07:27,985
-datos y disponer de almacenamiento y
-ejecución.
+00:07:11,878 --> 00:07:13,791
+por las noches mediante SQL.
 
 151
-00:07:28,906 --> 00:07:32,117
-Si necesitamos consultar o actualizar
-registros por su
+00:07:14,678 --> 00:07:17,941
+En ese caso podríamos valorar Hive,
+definiendo cómo
 
 152
-00:07:32,130 --> 00:07:35,472
-clave, podemos valorar HBase, una base de
-datos
+00:07:17,954 --> 00:07:21,441
+interpretar los datos y contando con
+almacenamiento y ejecución.
 
 153
-00:07:35,485 --> 00:07:39,314
-de familias de columnas que habitualmente
-utiliza HDFS.
+00:07:22,316 --> 00:07:25,991
+En cambio, si necesitamos consultar o
+actualizar registros por
 
 154
-00:07:39,900 --> 00:07:44,466
-Conviene separar tres nombres: HDFS guarda
-archivos, Parquet
+00:07:26,004 --> 00:07:29,028
+su clave, podemos estudiar HBase, una base
+de
 
 155
-00:07:44,479 --> 00:07:48,440
-describe un formato y HBase ofrece
-operaciones sobre registros.
+00:07:29,041 --> 00:07:32,591
+datos de familias de columnas que suele
+utilizar HDFS.
 
 156
-00:07:49,400 --> 00:07:50,716
-Elegir uno depende de la
+00:07:33,554 --> 00:07:35,966
+Para situarlo, recuperad lo que ya sabéis:
 
 157
-00:07:50,729 --> 00:07:52,716
-forma de acceso que necesitamos.
+00:07:36,141 --> 00:07:39,378
+HDFS guarda los archivos, Parquet describe
+un
 
 158
-00:07:53,468 --> 00:07:55,757
-Spark es otro motor de procesamiento.
+00:07:39,391 --> 00:07:42,416
+formato y HBase permite trabajar sobre
+registros.
 
 159
-00:07:56,665 --> 00:08:00,205
-Puede reutilizar datos en memoria y también
-utiliza disco.
+00:07:43,316 --> 00:07:45,578
+Así es más fácil elegir según la forma
 
 160
-00:08:01,113 --> 00:08:03,376
-Eso puede ayudar en cálculos repetidos,
+00:07:45,591 --> 00:07:47,404
+en que queramos acceder a los datos.
 
 161
-00:08:03,586 --> 00:08:06,113
-como entrenar un modelo sobre cancelaciones.
+00:07:48,266 --> 00:07:50,241
+Si ahora pensamos en cálculos que se
 
 162
-00:08:07,020 --> 00:08:09,073
-Puede funcionar localmente o de forma
+00:07:50,254 --> 00:07:52,878
+repiten sobre los mismos datos, como
+entrenar un
 
 163
-00:08:09,086 --> 00:08:11,889
-distribuida y utilizar YARN u otros
-gestores.
+00:07:52,891 --> 00:07:56,441
+modelo de cancelaciones, aparece otra
+posibilidad: Spark.
 
 164
-00:08:12,810 --> 00:08:14,849
-La mejora de tiempo debe medirse.
+00:07:57,328 --> 00:08:00,528
+Este motor puede reutilizar datos en
+memoria, además
 
 165
-00:08:15,770 --> 00:08:18,494
-Pig permite expresar transformaciones
-mediante
+00:08:00,541 --> 00:08:03,216
+de utilizar disco, y funcionar localmente o
 
 166
-00:08:18,507 --> 00:08:20,376
-un lenguaje llamado Pig Latin.
+00:08:03,228 --> 00:08:06,128
+de forma distribuida, con YARN u otros
+gestores.
 
 167
-00:08:21,297 --> 00:08:24,073
-En este apartado lo reconocemos como
-referencia
+00:08:06,991 --> 00:08:09,766
+Esa reutilización puede ayudar, aunque
+tendremos
 
 168
-00:08:24,086 --> 00:08:27,494
-para interpretar materiales del ecosistema;
-la práctica
+00:08:09,778 --> 00:08:11,466
+que medir cuánto mejora el tiempo.
 
 169
-00:08:27,507 --> 00:08:30,178
-utiliza MapReduce y no requiere instalar
-Pig.
+00:08:12,328 --> 00:08:14,604
+También veréis Pig, que permite expresar
 
 170
-00:08:31,099 --> 00:08:33,573
-Flume puede recoger y transportar eventos,
+00:08:14,616 --> 00:08:17,416
+transformaciones con un lenguaje llamado Pig
+Latin.
 
 171
-00:08:33,757 --> 00:08:35,810
-como registros de actividad del hotel.
+00:08:18,304 --> 00:08:20,628
+Aquí nos basta con reconocer su función para
 
 172
-00:08:36,718 --> 00:08:39,455
-ZooKeeper aporta mecanismos de coordinación
-a
+00:08:20,641 --> 00:08:24,991
+entender otros materiales; nuestra práctica
+sigue utilizando MapReduce.
 
 173
-00:08:39,468 --> 00:08:41,034
-los sistemas que lo integran.
+00:08:25,972 --> 00:08:28,860
+Nos quedan algunas herramientas que
+completan el mapa.
 
 174
-00:08:41,941 --> 00:08:44,915
-Ambari facilita la instalación,
-configuración
+00:08:29,734 --> 00:08:32,822
+Para recoger y transportar eventos, como los
+registros
 
 175
-00:08:44,928 --> 00:08:47,310
-y supervisión de servicios compatibles.
+00:08:32,835 --> 00:08:35,534
+de actividad del hotel, podemos encontrar
+Flume.
 
 176
-00:08:48,231 --> 00:08:52,599
-También encontraréis Sqoop en materiales
-antiguos: transfería datos
+00:08:36,397 --> 00:08:38,922
+Por su parte, ZooKeeper aporta mecanismos
 
 177
-00:08:52,613 --> 00:08:56,060
-entre bases relacionales y Hadoop, y está
-retirado.
+00:08:38,934 --> 00:08:41,247
+de coordinación, mientras que Ambari ayuda a
 
 178
-00:08:56,968 --> 00:08:59,968
-Reconocer estos nombres ayuda a leer un
-esquema.
+00:08:41,260 --> 00:08:44,834
+instalar, configurar y supervisar servicios
+compatibles.
 
 179
-00:09:00,876 --> 00:09:03,389
-Antes de elegir una herramienta para un
-proyecto
+00:08:45,697 --> 00:08:49,797
+En materiales antiguos también aparece
+Sqoop, que transfería datos
 
 180
-00:09:03,402 --> 00:09:07,284
-nuevo, comprobamos su mantenimiento,
-compatibilidad y función.
+00:08:49,810 --> 00:08:52,822
+entre bases relacionales y Hadoop y ya está
+retirado.
 
 181
-00:09:08,191 --> 00:09:11,941
-Instalarla exige después configurar y
-verificar el servicio.
+00:08:53,697 --> 00:08:56,884
+No hace falta memorizar ahora toda la lista:
+relacionad
 
 182
-00:09:12,863 --> 00:09:16,007
-En clase seguimos el entorno preparado por
-el profesor.
+00:08:56,897 --> 00:08:59,222
+cada nombre con su función y, antes de
 
 183
-00:09:16,941 --> 00:09:19,981
-El laboratorio Docker básico reúne los
-servicios en
+00:08:59,234 --> 00:09:03,047
+elegirlo para un proyecto, comprobad su
+mantenimiento y compatibilidad.
 
 184
-00:09:19,994 --> 00:09:23,165
-un ordenador y utiliza un DataNode y un
-NodeManager.
+00:09:03,910 --> 00:09:06,447
+Después habrá que configurarlo y
+verificarlo.
 
 185
-00:09:24,073 --> 00:09:26,520
-Solicita una sola copia de cada bloque.
+00:09:07,322 --> 00:09:08,847
+Y ahora que tenemos situado el
 
 186
-00:09:27,072 --> 00:09:30,256
-Así podemos aprender el recorrido, pero no
-demostrar
+00:09:08,860 --> 00:09:11,084
+ecosistema, vamos a llevarlo al aula.
 
 187
-00:09:30,269 --> 00:09:33,690
-recuperación mediante otra copia en una
-máquina independiente.
+00:09:11,947 --> 00:09:14,484
+Seguiremos el entorno preparado por el
+profesor:
 
 188
-00:09:34,598 --> 00:09:38,058
-Crear más contenedores tampoco añade
-hardware al portátil.
+00:09:14,710 --> 00:09:17,472
+el laboratorio Docker básico reúne los
+servicios
 
 189
-00:09:38,980 --> 00:09:42,953
-Revisamos versiones, servicios y recursos
-antes de ejecutar.
+00:09:17,484 --> 00:09:19,772
+en un ordenador, con un DataNode, un
 
 190
-00:09:43,874 --> 00:09:47,889
-Las instrucciones de una instalación
-tradicional corresponden
+00:09:19,784 --> 00:09:22,034
+NodeManager y una copia de cada bloque.
 
 191
-00:09:47,902 --> 00:09:49,823
-a otro camino; no se añaden como
+00:09:22,922 --> 00:09:24,297
+Nos sirve para aprender el
 
 192
-00:09:49,836 --> 00:09:52,442
-un segundo arranque dentro del laboratorio
-Docker.
+00:09:24,310 --> 00:09:26,322
+recorrido y observar los servicios.
 
 193
-00:09:53,352 --> 00:09:55,326
-Primero comprobamos los servicios y
+00:09:27,172 --> 00:09:29,597
+Para demostrar recuperación desde otra
+máquina,
 
 194
-00:09:55,339 --> 00:09:57,642
-localizamos los archivos de prácticas.
+00:09:29,710 --> 00:09:32,584
+en cambio, necesitaríamos un despliegue
+adecuado.
 
 195
-00:09:58,549 --> 00:09:59,970
-La ruta del portátil y la
+00:09:33,447 --> 00:09:35,847
+Recordad también que más contenedores siguen
 
 196
-00:09:59,984 --> 00:10:03,378
-ruta de HDFS pertenecen a espacios
-diferentes.
+00:09:35,860 --> 00:09:37,872
+compartiendo el hardware del portátil.
 
 197
-00:10:04,299 --> 00:10:06,220
-Cargamos la entrada y usamos una
+00:09:38,747 --> 00:09:41,784
+Antes de ejecutar, revisamos versiones y
+recursos,
 
 198
-00:10:06,234 --> 00:10:08,826
-carpeta de salida nueva para cada ejecución.
+00:09:41,972 --> 00:09:44,110
+y seguimos las instrucciones de Docker sin
 
 199
-00:10:09,747 --> 00:10:12,892
-El primer ejemplo cuenta palabras de
-opiniones del hotel.
+00:09:44,122 --> 00:09:46,772
+añadir el arranque de una instalación
+tradicional.
 
 200
-00:10:13,799 --> 00:10:17,444
-Después usamos los programas específicos
-para sumar noches.
+00:09:47,660 --> 00:09:50,460
+Con el entorno listo, empezamos localizando
+los
 
 201
-00:10:18,352 --> 00:10:22,273
-La interfaz de HDFS permite revisar archivos
-y nodos.
+00:09:50,472 --> 00:09:53,110
+archivos de prácticas y comprobando los
+servicios.
 
 202
-00:10:23,181 --> 00:10:25,865
-La de YARN muestra aplicaciones y recursos.
+00:09:53,984 --> 00:09:56,410
+Al cargar la entrada, fijaos en la ruta:
 
 203
-00:10:26,773 --> 00:10:28,852
-Los contadores ayudan a entender lo
+00:09:56,584 --> 00:09:59,772
+el portátil y HDFS son espacios distintos.
 
 204
-00:10:28,865 --> 00:10:31,668
-ocurrido, junto con los registros de
-ejecución.
+00:10:00,647 --> 00:10:03,497
+Para cada ejecución elegimos una salida
+nueva, de
 
 205
-00:10:32,576 --> 00:10:35,194
-Hadoop Streaming permite escribir el mapper
-y el
+00:10:03,510 --> 00:10:06,397
+modo que podamos conservar y comparar los
+resultados.
 
 206
-00:10:35,207 --> 00:10:38,563
-reducer en Python utilizando entrada y
-salida estándar.
+00:10:07,272 --> 00:10:09,910
+Primero contaremos palabras de opiniones del
+hotel y,
 
 207
-00:10:39,470 --> 00:10:41,405
-Aquí la palabra streaming describe
+00:10:10,047 --> 00:10:13,147
+después, utilizaremos los programas que
+suman noches.
 
 208
-00:10:41,418 --> 00:10:43,405
-cómo se comunican esos programas.
+00:10:14,034 --> 00:10:16,597
+Mientras tanto, podremos mirar los archivos
+y
 
 209
-00:10:44,339 --> 00:10:47,326
-Seguimos procesando un fichero finito por
-lotes.
+00:10:16,610 --> 00:10:19,360
+nodos en la interfaz de HDFS, y las
 
 210
-00:10:48,247 --> 00:10:51,234
-El mapper extrae hotel y noches; Hadoop
-agrupa
+00:10:19,372 --> 00:10:21,510
+aplicaciones y recursos en la de YARN.
 
 211
-00:10:51,247 --> 00:10:53,760
-las parejas; el reducer suma cada hotel.
+00:10:22,372 --> 00:10:24,672
+Los contadores y registros nos ayudarán
 
 212
-00:10:54,668 --> 00:10:56,286
-Primero probamos los programas
+00:10:24,684 --> 00:10:26,222
+a entender lo que ha ocurrido.
 
 213
-00:10:56,299 --> 00:10:58,668
-localmente, con las claves ordenadas.
+00:10:27,097 --> 00:10:29,522
+Para escribir nuestros propios cálculos
+podemos
 
 214
-00:10:59,576 --> 00:11:03,194
-Para ejecutarlos en el clúster, distribuimos
-los scripts
+00:10:29,534 --> 00:10:31,984
+utilizar Python gracias a Hadoop Streaming.
 
 215
-00:11:03,207 --> 00:11:06,563
-y comprobamos que Python existe en los nodos
-ejecutores.
+00:10:32,884 --> 00:10:35,210
+Aquí ese nombre se refiere a la comunicación
 
 216
-00:11:07,484 --> 00:11:10,418
-Los errores se revisan antes de aceptar la
-salida.
+00:10:35,222 --> 00:10:37,847
+por entrada y salida estándar entre los
+programas;
 
 217
-00:11:11,365 --> 00:11:13,694
-Un trabajo puede terminar correctamente y
+00:10:38,147 --> 00:10:41,260
+seguimos trabajando por lotes sobre un
+fichero finito.
 
 218
-00:11:13,707 --> 00:11:15,760
-responder a una pregunta equivocada.
+00:10:42,147 --> 00:10:44,760
+El recorrido os resultará familiar: el
+mapper
 
 219
-00:11:16,681 --> 00:11:19,707
-Por eso comprobamos su estado y después el
-contenido.
+00:10:44,772 --> 00:10:47,410
+extrae hotel y noches, Hadoop reúne las
 
 220
-00:11:20,628 --> 00:11:23,720
-El marcador de éxito indica que el proceso
-terminó.
+00:10:47,422 --> 00:10:49,584
+parejas y el reducer suma cada grupo.
 
 221
-00:11:24,628 --> 00:11:26,668
-Los archivos de partes contienen los
+00:10:50,447 --> 00:10:53,722
+Primero lo probamos localmente, con las
+claves ordenadas.
 
 222
-00:11:26,681 --> 00:11:28,865
-resultados: hay que leerlos todos.
+00:10:54,584 --> 00:10:57,784
+Después distribuimos los scripts al clúster
+y comprobamos
 
 223
-00:11:29,773 --> 00:11:32,168
-Contrastamos cada subtotal con un cálculo
+00:10:57,797 --> 00:11:00,622
+que Python esté disponible donde van a
+ejecutarse.
 
 224
-00:11:32,181 --> 00:11:34,194
-independiente sobre el mismo fichero.
+00:11:01,497 --> 00:11:03,472
+Si aparece un error, lo revisamos
 
 225
-00:11:35,115 --> 00:11:38,602
+00:11:03,484 --> 00:11:05,272
+antes de dar la salida por válida.
+
+226
+00:11:06,160 --> 00:11:08,160
+Cuando el trabajo termine, todavía
+
+227
+00:11:08,172 --> 00:11:10,222
+nos queda una comprobación importante.
+
+228
+00:11:11,097 --> 00:11:12,960
+El marcador de éxito nos dice que
+
+229
+00:11:12,972 --> 00:11:16,122
+el proceso ha acabado, pero podríamos haber
+calculado
+
+230
+00:11:16,134 --> 00:11:18,184
+algo distinto de lo que pedía gerencia.
+
+231
+00:11:19,110 --> 00:11:21,010
+Por eso leemos todos los archivos de
+
+232
+00:11:21,022 --> 00:11:23,434
+resultados y contrastamos cada subtotal con
+
+233
+00:11:23,447 --> 00:11:26,484
+un cálculo independiente sobre el mismo
+fichero.
+
+234
+00:11:27,372 --> 00:11:30,634
 Si faltan noches, revisamos la entrada, los
 filtros,
 
-226
-00:11:38,760 --> 00:11:41,431
-los campos utilizados y las partes leídas.
-
-227
-00:11:42,339 --> 00:11:44,707
-En el apartado de computación distribuida
-
-228
-00:11:44,720 --> 00:11:47,944
-mediremos también el tiempo con condiciones
-comparables.
-
-229
-00:11:48,865 --> 00:11:52,694
-Para terminar, relacionad cada problema con
-su posible solución.
-
-230
-00:11:53,589 --> 00:11:56,628
-Si falta espacio, revisamos el
-almacenamiento.
-
-231
-00:11:57,536 --> 00:11:59,865
-Si las aplicaciones esperan, miramos
-
-232
-00:11:59,878 --> 00:12:01,826
-los recursos y la planificación.
-
-233
-00:12:02,747 --> 00:12:04,655
-Si el analista pide SQL,
-
-234
-00:12:04,813 --> 00:12:07,010
-valoramos una herramienta de consulta.
-
 235
-00:12:07,918 --> 00:12:11,168
-Cada cambio necesita configuración y
-comprobaciones.
+00:11:30,760 --> 00:11:32,947
+los campos y las partes que hemos leído.
 
 236
-00:12:12,076 --> 00:12:14,220
-Podéis explicar el recorrido con tres
+00:11:33,822 --> 00:11:35,884
+Una vez que el resultado sea correcto,
 
 237
-00:12:14,234 --> 00:12:17,418
-frases: HDFS conserva los archivos.
+00:11:35,997 --> 00:11:38,472
+podremos comparar también los tiempos, como
 
 238
-00:12:18,339 --> 00:12:20,220
-YARN administra los recursos.
+00:11:38,484 --> 00:11:41,097
+haremos en el apartado de computación
+distribuida.
 
 239
-00:12:21,128 --> 00:12:23,260
-MapReduce organiza el cálculo.
+00:11:41,984 --> 00:11:43,722
+Para cerrar, os propongo volver
 
 240
-00:12:24,181 --> 00:12:26,813
-Después verificamos que el resultado
-responde
+00:11:43,734 --> 00:11:45,197
+a las necesidades del hotel.
 
 241
-00:12:26,826 --> 00:12:28,023
-a la pregunta del hotel.
+00:11:46,060 --> 00:11:49,122
+Si nos falta espacio, revisamos el
+almacenamiento;
 
 242
-00:12:28,944 --> 00:12:32,655
-En el próximo apartado veremos HDFS con más
-detalle.
+00:11:49,284 --> 00:11:52,372
+si las aplicaciones esperan, miramos los
+recursos
+
+243
+00:11:52,384 --> 00:11:54,547
+y la planificación; y si un compañero
+
+244
+00:11:54,560 --> 00:11:58,334
+necesita SQL, valoramos una herramienta de
+consulta.
+
+245
+00:11:59,222 --> 00:12:00,934
+Así elegimos cada cambio por lo
+
+246
+00:12:00,947 --> 00:12:02,910
+que aporta y comprobamos que funciona.
+
+247
+00:12:03,772 --> 00:12:07,672
+Quedaos con este recorrido: HDFS conserva
+los archivos,
+
+248
+00:12:07,860 --> 00:12:11,447
+YARN administra los recursos y MapReduce
+organiza el cálculo.
+
+249
+00:12:12,322 --> 00:12:14,397
+A nosotros nos corresponde verificar que
+
+250
+00:12:14,410 --> 00:12:16,547
+la respuesta tenga sentido para el hotel.
+
+251
+00:12:17,422 --> 00:12:19,234
+Con esa idea clara, ya podemos
+
+252
+00:12:19,247 --> 00:12:21,860
+pasar a conocer HDFS con más detalle.
