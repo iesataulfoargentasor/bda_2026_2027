@@ -1,0 +1,284 @@
+[
+  {
+    "title": "El informe tiene que llegar a las ocho",
+    "label": "UT2 · 2.1 · Por qué un almacén masivo",
+    "active": 0,
+    "heading": "Seguimos con el grupo hotelero",
+    "body": "Santander · Laredo · Comillas · Potes",
+    "takeaway": "El cierre debe ser correcto y estar disponible a tiempo.",
+    "narration": "En la unidad anterior seguimos la reserva de Ana en Laredo. Reunimos reservas y cobros y comprobamos el informe que recibe gerencia. Ahora el hotel conserva cada vez más datos. Un día, el informe termina a las diez de la mañana y la directora lo necesitaba a las ocho. Vamos a averiguar qué debemos medir para resolver ese retraso, conservar el histórico y recuperar el servicio cuando una pieza deja de funcionar.",
+    "kind": "hotels"
+  },
+  {
+    "title": "El reloj del hotel",
+    "label": "Finanzas cierra y gerencia espera el resultado.",
+    "active": 0,
+    "heading": "Una noche sin cambio de hora",
+    "body": "Preparar → procesar → comprobar → publicar",
+    "takeaway": "Todo el recorrido tiene que caber en el tiempo disponible.",
+    "narration": "Finanzas fija el corte de negocio a las once de la noche. El informe de ese cierre debe estar disponible a las ocho del día siguiente. Tenemos nueve horas en una noche sin cambio de hora. Dentro de ese margen debemos recibir las entradas, preparar los datos, hacer los cálculos, revisar el resultado y publicarlo. Si una entrada llega tarde, parte de esas nueve horas ya se habrá consumido. Mientras tanto, recepción continúa atendiendo reservas.",
+    "kind": "clock"
+  },
+  {
+    "title": "Tres preguntas antes de ampliar el sistema",
+    "label": "Cada problema necesita su propia comprobación.",
+    "active": 0,
+    "cards": [
+      [
+        "Capacidad",
+        "¿Tenemos espacio suficiente?"
+      ],
+      [
+        "Rendimiento",
+        "¿Terminamos dentro del plazo?"
+      ],
+      [
+        "Continuidad",
+        "¿Podemos recuperarnos ante un fallo?"
+      ]
+    ],
+    "takeaway": "Empezamos por medir lo que necesita el hotel.",
+    "narration": "Pensad en el archivo de recepción. Podemos tener tres dificultades. La primera es que los documentos ya ocupen todas las estanterías. La segunda es que buscar y sumar la información lleve demasiado tiempo. La tercera es que una avería deje el archivo inaccesible. En los sistemas informáticos estudiamos esas mismas necesidades. Capacidad es cuánto podemos guardar. Rendimiento es cuánto tardamos en realizar el trabajo. Continuidad es cómo mantenemos o recuperamos el servicio ante un fallo.",
+    "kind": "three"
+  },
+  {
+    "title": "Guardar, leer y calcular",
+    "label": "El fichero necesita un programa que interprete su contenido.",
+    "active": 1,
+    "cards": [
+      [
+        "Guardar",
+        "Conservar el archivo de reservas."
+      ],
+      [
+        "Interpretar",
+        "Reconocer hotel, noches e importe."
+      ],
+      [
+        "Calcular",
+        "Obtener las noches de cada hotel."
+      ]
+    ],
+    "takeaway": "Almacenamiento y procesamiento colaboran.",
+    "narration": "Imaginad una caja que contiene las fichas de reservas. La caja las conserva. Una persona abre las fichas, entiende los campos y suma las noches. En el ordenador también intervienen esas funciones. El almacenamiento conserva el fichero. Un programa reconoce sus columnas y calcula el resultado. Con una fotografía ocurre algo parecido. Podemos conservarla y anotar a qué habitación pertenece. Reconocer lo que aparece en la imagen requiere un programa capaz de analizarla.",
+    "kind": "three"
+  },
+  {
+    "title": "Cada dato se utiliza de una forma",
+    "label": "La operación que necesitamos ayuda a elegir el almacén.",
+    "active": 1,
+    "cards": [
+      [
+        "Histórico",
+        "Leer muchas reservas para un informe."
+      ],
+      [
+        "Una reserva",
+        "Localizarla y modificar sus extras."
+      ],
+      [
+        "Fotografías",
+        "Recuperarlas por hotel y habitación."
+      ]
+    ],
+    "takeaway": "Primero describimos qué queremos hacer con los datos.",
+    "narration": "La directora pide un resumen de miles de reservas. Recepción busca una reserva concreta para añadir parking. Mantenimiento necesita la fotografía de una habitación. Cada tarea accede a la información de una forma. Un sistema de almacenamiento masivo organiza y conserva grandes volúmenes y permite acceder a ellos. La elección depende de esas operaciones, del tamaño y del plazo. Una máquina puede ser suficiente mientras cumpla lo que necesita el hotel.",
+    "kind": "three"
+  },
+  {
+    "title": "Capacidad · el histórico crece",
+    "label": "Supuesto del ejercicio durante los primeros 365 días.",
+    "active": 1,
+    "formula": "20 GB × 365 = 7.300 GB",
+    "heading": "7,3 TB de datos nuevos",
+    "body": "Volumen decimal, antes de compresión y copias.",
+    "takeaway": "Después sumamos el histórico anterior y el espacio auxiliar.",
+    "narration": "Para practicar, suponemos que llegan veinte gigabytes nuevos cada día y que conservamos todo lo recibido durante los primeros trescientos sesenta y cinco días. Multiplicamos veinte por trescientos sesenta y cinco. Obtenemos siete mil trescientos gigabytes, equivalentes a siete coma tres terabytes decimales. Es una cifra del ejercicio. Además, debemos contar el histórico anterior que se mantenga y el espacio de trabajo que necesita el proceso. También hay que conocer cuánto espacio libre queda.",
+    "kind": "formula"
+  },
+  {
+    "title": "Las copias también ocupan espacio",
+    "label": "Ejemplo con tres copias completas en total.",
+    "active": 1,
+    "formula": "7,3 TB × 3 = 21,9 TB",
+    "heading": "Original y dos copias adicionales",
+    "body": "Aún faltan índices, archivos temporales y otras necesidades.",
+    "takeaway": "La capacidad se planifica según la conservación y las copias.",
+    "narration": "Supongamos que queremos mantener tres copias completas de esos datos, contando la primera. Siete coma tres multiplicado por tres da veintiuno coma nueve terabytes, antes de compresión y otros gastos de espacio. Las copias de seguridad se planifican además según su tamaño y frecuencia. Hay que acordar durante cuánto tiempo conservamos cada dato. El espacio que se ocupa a lo largo de los años depende también de qué archivos se archivan o se eliminan al vencer ese plazo.",
+    "kind": "formula"
+  },
+  {
+    "title": "Rendimiento · el cierre llega tarde",
+    "label": "Supuesto del ejercicio en una noche sin cambio de hora.",
+    "active": 2,
+    "formula": "23:00 + 11 horas = 10:00",
+    "heading": "Llegamos dos horas después del plazo",
+    "body": "Medimos cuánto tarda cada fase del recorrido.",
+    "takeaway": "Localizar la fase lenta permite proponer una mejora.",
+    "narration": "Ahora imaginad que hay espacio suficiente, pero el recorrido completo tarda once horas. Si empieza a las once de la noche, termina a las diez de la mañana. Llega dos horas tarde. Necesitamos cronometrar cada fase. Quizá la mayor parte del tiempo se consume leyendo por la red. Quizá el programa carga demasiados datos en memoria. Quizá el cálculo es costoso. Cada medida nos ayudará a elegir entre mejorar el procedimiento, ampliar recursos o repartir el trabajo.",
+    "kind": "formula"
+  },
+  {
+    "title": "Leer 500 GB lleva tiempo",
+    "label": "Estimación con 100 MB por segundo sostenidos.",
+    "active": 2,
+    "formula": "500.000 MB ÷ 100 MB/s",
+    "heading": "5.000 segundos ≈ 83 minutos",
+    "body": "Una lectura completa, con unidades decimales.",
+    "takeaway": "También necesitamos tiempo para interpretar, calcular y comprobar.",
+    "narration": "Recuperemos el histórico de quinientos gigabytes de la transición. Con unidades decimales son quinientos mil megabytes. Si conseguimos leer cien megabytes por segundo de forma sostenida, una lectura completa necesita cinco mil segundos. Son unos ochenta y tres minutos. Esta cuenta estima solo el tiempo de lectura en esas condiciones. El proceso completo incluye otras tareas. Leer por bloques permite trabajar con una parte cada vez y controlar la memoria utilizada. La información sigue viajando por la red.",
+    "kind": "formula"
+  },
+  {
+    "title": "Repartir la lectura y reunir el resultado",
+    "label": "Ejemplo pequeño de noches reservadas en Laredo.",
+    "active": 2,
+    "cards": [
+      [
+        "Una parte",
+        "Laredo · 3 noches"
+      ],
+      [
+        "Otra parte",
+        "Laredo · 2 noches"
+      ],
+      [
+        "Resultado",
+        "Laredo · 5 noches"
+      ]
+    ],
+    "takeaway": "Agrupamos por hotel y comprobamos la suma.",
+    "narration": "Imaginad que el histórico ya está repartido entre varios equipos. Podemos acercar cada tarea a los datos que necesita. Para entenderlo, tomamos dos reservas de Laredo. Una tiene tres noches y otra tiene dos. Cada tarea lee su parte y produce el nombre del hotel junto a las noches. Después reunimos los registros del mismo hotel y sumamos. Laredo aporta cinco noches. Esa es la idea que desarrollaremos con MapReduce. El sistema necesita comunicar y reunir resultados.",
+    "kind": "three"
+  },
+  {
+    "title": "Comprobar antes de comparar tiempos",
+    "label": "Las dos ejecuciones deben responder a la misma pregunta.",
+    "active": 2,
+    "cards": [
+      [
+        "Misma entrada",
+        "Las mismas reservas y el mismo periodo."
+      ],
+      [
+        "Mismo resultado",
+        "Cinco noches en el ejemplo de Laredo."
+      ],
+      [
+        "Tiempo medido",
+        "Anotamos los recursos y la duración."
+      ]
+    ],
+    "takeaway": "Repartir trabajo tiene un coste de coordinación.",
+    "narration": "Para saber si repartir el cálculo ayuda, usamos la misma entrada y la misma operación. Comprobamos primero que coinciden las noches de cada hotel y después comparamos los tiempos. Con pocos datos, arrancar tareas y reunirlas puede costar más que calcularlo todo en un equipo. Con otra carga, el reparto puede aportar una mejora. Las cinco noches de nuestro ejemplo representan noches reservadas. Para calcular un porcentaje de ocupación necesitamos además las habitaciones disponibles y las ocupadas durante el periodo.",
+    "kind": "three"
+  },
+  {
+    "title": "Continuidad · un fallo a las tres",
+    "label": "Supuesto con restauración y repetición completa del trabajo.",
+    "active": 3,
+    "cards": [
+      [
+        "03:00",
+        "El disco falla."
+      ],
+      [
+        "05:00",
+        "Termina la restauración de dos horas."
+      ],
+      [
+        "09:00",
+        "Terminan cuatro horas de procesamiento."
+      ]
+    ],
+    "takeaway": "Recuperar los datos y llegar a las ocho requieren dos comprobaciones.",
+    "narration": "A las tres de la madrugada falla un disco. En este supuesto, restaurar los datos lleva dos horas. A las cinco podemos leerlos otra vez. Repetir el trabajo completo necesita cuatro horas más, así que el informe termina a las nueve. Hemos recuperado los datos y el informe llega una hora después del plazo. Este cálculo ayuda a decidir qué debemos mejorar. Podríamos investigar una recuperación más rápida o la posibilidad de continuar desde un punto del proceso ya comprobado.",
+    "kind": "three"
+  },
+  {
+    "title": "Preparar la recuperación",
+    "label": "Dos formas de protección con funciones diferentes.",
+    "active": 3,
+    "cards": [
+      [
+        "Réplica",
+        "Otra copia disponible en otro nodo."
+      ],
+      [
+        "Copia de seguridad",
+        "Una versión anterior que podemos restaurar."
+      ]
+    ],
+    "takeaway": "Probamos el fallo, la recuperación y el tiempo empleado.",
+    "narration": "Una réplica mantiene otra copia de los datos en otro nodo. Ante ciertos fallos, el sistema puede utilizar una copia sana si los servicios necesarios siguen disponibles. Pero un borrado equivocado puede propagarse también a las réplicas. La copia de seguridad conserva una versión recuperable de un momento anterior. Por eso tenemos que probar la restauración. En ambos casos anotamos qué fallo hemos provocado, qué datos se conservan y cuánto tarda el servicio en volver a funcionar.",
+    "kind": "two"
+  },
+  {
+    "title": "Copiar y repartir",
+    "label": "Podemos combinar ambas decisiones.",
+    "active": 3,
+    "cards": [
+      [
+        "Replicar",
+        "La carpeta completa tiene otra copia."
+      ],
+      [
+        "Particionar",
+        "Cada equipo guarda una parte del conjunto."
+      ]
+    ],
+    "takeaway": "Cada parte también puede tener sus propias réplicas.",
+    "narration": "Volvamos a las carpetas del archivo. Replicar sería conservar una copia completa de una carpeta en otro lugar. Particionar sería distribuir el conjunto entre varias carpetas y asignarlas a diferentes equipos. Podemos combinarlo y mantener copias de cada parte. También debemos comprobar qué ocurre si falla el componente que coordina el acceso. En clase podemos detener un proceso y observar la recuperación. Para estudiar la pérdida de un ordenador completo necesitamos copias y servicios en máquinas independientes.",
+    "kind": "two"
+  },
+  {
+    "title": "Guardar hoy para preguntar después",
+    "label": "El histórico permite investigar nuevas necesidades.",
+    "active": 1,
+    "heading": "Una consulta nueva sobre los mismos registros",
+    "body": "¿Cuánto se cobró por las reservas web de Laredo?",
+    "takeaway": "Conservamos los datos junto con su significado.",
+    "narration": "El primer informe agrupa los cobros por hotel. Una semana después, dirección pregunta cuánto se cobró por las reservas que llegaron a través de la web de Laredo. Si conservamos las reservas, los cobros y la forma de relacionarlos, podemos preparar esa consulta nueva. Los metadatos nos ayudan a interpretar lo guardado. Anotamos de dónde viene, cuándo se extrajo, qué formato tiene y qué significa cada campo. También indicamos la moneda y el periodo de la consulta.",
+    "kind": "normal"
+  },
+  {
+    "title": "El significado acompaña a la cifra",
+    "label": "Una reserva y un cobro aportan información distinta.",
+    "active": 1,
+    "cards": [
+      [
+        "Precio de la reserva",
+        "El importe previsto de la estancia."
+      ],
+      [
+        "Cobro confirmado",
+        "El dinero registrado por el sistema de pagos."
+      ]
+    ],
+    "takeaway": "Elegimos el campo y la fecha que responden a la pregunta.",
+    "narration": "Una reserva puede indicar un precio de ciento ochenta euros y tener un cobro confirmado de sesenta. Para informar del dinero recibido usamos los sesenta del cobro. También revisamos si la fecha describe la reserva, la estancia o el pago. A veces damos estructura a un archivo cuando lo consultamos. Esto se llama esquema al leer. En todos los casos necesitamos datos comprensibles y un lector adecuado. La capacidad, los permisos y el plazo de conservación forman parte de esa planificación.",
+    "kind": "two"
+  },
+  {
+    "title": "Vuestra primera decisión en la UT2",
+    "label": "Aplicad las medidas al supuesto del hotel.",
+    "active": 0,
+    "cards": [
+      [
+        "Espacio",
+        "20 GB al día durante 365 días."
+      ],
+      [
+        "Plazo",
+        "Once horas desde las 23:00."
+      ],
+      [
+        "Recuperación",
+        "Qué ocurre si se pierde un disco."
+      ]
+    ],
+    "takeaway": "Anotad qué sabéis, qué falta medir y qué cambio comprobaríais.",
+    "narration": "Ahora podéis preparar vuestra propuesta. En el ejercicio llegan veinte gigabytes al día durante trescientos sesenta y cinco días. El cierre tarda once horas desde las once de la noche. Calculad el crecimiento y la hora de llegada. Después anotad qué información falta para elegir una mejora. Explicad cómo comprobaríais que el cambio ayuda y conserva un resultado correcto. En el siguiente apartado conoceremos las piezas de Hadoop que guardan archivos, asignan recursos y ejecutan el trabajo.",
+    "kind": "three"
+  }
+]

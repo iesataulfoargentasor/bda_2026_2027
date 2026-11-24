@@ -17,6 +17,19 @@ En la [transición de los 500 GB](../ut1/transicion-ut2.md) estimasteis que, a 1
 
     **Ampliación:** comparar qué cambia al conservar varias copias del histórico. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
+## Vídeo introductorio
+
+El hotel acumula datos y el informe debe llegar a las ocho. Esta explicación retoma el caso de la UT1 y recorre, paso a paso, la capacidad, el tiempo de procesamiento y la recuperación ante un fallo. Incluye ejemplos de espacio, lectura de 500 GB, copias y consultas futuras. **Duración de 9 minutos y 44 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/por-que-almacenamiento-portada.jpg" aria-label="Por qué un almacén masivo. Capacidad, rendimiento y continuidad en el hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/por-que-almacenamiento.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, como los vídeos de la UT1. Los subtítulos están visibles en la imagen. Podéis pausar los cálculos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/por-que-almacenamiento.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/por-que-almacenamiento.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/por-que-almacenamiento.es.srt){target="_blank" rel="noopener"}
+
 ## El hotel necesita seguir cumpliendo el plazo
 
 Recepción registra reservas, mantenimiento recibe medidas de sensores y finanzas registra cobros. Las **23:00 marcan el corte de negocio**; gerencia necesita el informe de ese cierre a las **8:00 del día siguiente**. En una noche sin cambio de hora hay nueve horas entre ambos momentos, pero dentro de ese margen deben caber la preparación, el procesamiento, la validación y la publicación del resultado. Si los datos llegan tarde o el trabajo empieza después, queda menos tiempo.
