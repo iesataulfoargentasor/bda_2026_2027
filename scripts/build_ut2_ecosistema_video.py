@@ -6,8 +6,12 @@ import json
 import build_ut2_almacenamiento_video as video
 
 video.NAME = "ecosistema-hadoop"
-video.BUILD = video.ROOT / ".venv/ut2-ecosistema-video"
+video.BUILD = video.ROOT / ".venv/ut2-ecosistema-natural-video"
 video.BUILD.mkdir(parents=True, exist_ok=True)
+# Texto pensado para escucharse: velocidad propia de la voz y pausas sin recortar.
+video.RATE = "+0%"
+video.NARRATION_SEPARATOR = "\n\n"
+video.PRESERVE_NATURAL_PAUSES = True
 video.HEADER = "UT2 · 2.2  /  ECOSISTEMA HADOOP"
 video.TRANSCRIPT_TITLE = "UT2 · 2.2 · ECOSISTEMA HADOOP"
 video.SOURCE_URL = "https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/ecosistema/"

@@ -19,16 +19,16 @@ En Pentaho agrupasteis por hotel y canal para saber cuánto se había cobrado. G
 
 ## Vídeo introductorio
 
-Seguimos una reserva de Laredo para entender qué guarda HDFS, cómo administra recursos YARN y cómo calcula MapReduce. Una oficina con carpetas y puestos de trabajo nos ayuda a distinguir las funciones; después reunimos las noches por hotel y comprobamos el resultado del fichero completo. La explicación también sitúa las herramientas del ecosistema, el laboratorio y Hadoop Streaming. **Duración de 12 minutos y 34 segundos.**
+Seguimos una reserva de Laredo para entender qué guarda HDFS, cómo administra recursos YARN y cómo calcula MapReduce. Una oficina con carpetas y puestos de trabajo nos ayuda a distinguir las funciones; después reunimos las noches por hotel y comprobamos el resultado del fichero completo. La explicación también sitúa las herramientas del ecosistema, el laboratorio y Hadoop Streaming. **Duración de 12 minutos y 23 segundos.**
 
 <video controls playsinline preload="metadata" poster="../../assets/ut2/ecosistema-hadoop-portada.jpg" aria-label="Ecosistema Hadoop. El recorrido de una reserva por HDFS, YARN y MapReduce" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
-  <source src="../../assets/ut2/ecosistema-hadoop.mp4" type="video/mp4">
+  <source src="../../assets/ut2/ecosistema-hadoop.mp4?v=voz-natural-20261124" type="video/mp4">
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-La narración utiliza la voz sintética Ximena, en español de España, como los vídeos de la UT1 y del apartado 2.1. Los subtítulos están visibles en la imagen. Podéis pausar el ejemplo y consultar la transcripción con las marcas de tiempo.
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar el ejemplo y consultar la transcripción con las marcas de tiempo.
 
-[Descargar el vídeo](../assets/ut2/ecosistema-hadoop.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/ecosistema-hadoop.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/ecosistema-hadoop.es.srt){target="_blank" rel="noopener"}
+[Descargar el vídeo](../assets/ut2/ecosistema-hadoop.mp4?v=voz-natural-20261124){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/ecosistema-hadoop.txt?v=voz-natural-20261124){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/ecosistema-hadoop.es.srt?v=voz-natural-20261124){target="_blank" rel="noopener"}
 
 ## Del problema del hotel a las piezas de Hadoop
 

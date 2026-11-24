@@ -22,6 +22,8 @@ OUTPUT = ROOT / "docs/assets/ut2"
 NAME = "por-que-almacenamiento"
 VOICE = "es-ES-XimenaNeural"
 RATE = "-5%"
+NARRATION_SEPARATOR = " "
+PRESERVE_NATURAL_PAUSES = False
 HEADER = "UT2 · 2.1  /  POR QUÉ UN ALMACÉN MASIVO"
 TRANSCRIPT_TITLE = "UT2 · 2.1 · POR QUÉ UN ALMACÉN MASIVO"
 SOURCE_URL = "https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/por-que-almacenamiento/"
@@ -111,7 +113,7 @@ def render_preview():
 
 
 async def speech():
-    narration = " ".join(NARRATIONS)
+    narration = NARRATION_SEPARATOR.join(NARRATIONS)
     fingerprint = hashlib.sha256((VOICE + RATE + narration).encode("utf-8")).hexdigest()
     metadata_path = BUILD / "marcas.json"
     audio_path = BUILD / "narracion.mp3"
@@ -122,7 +124,7 @@ async def speech():
             return metadata["events"]
 
     temporary_audio = BUILD / "narracion-parcial.mp3"
-    print("Generando narración continua con Ximena, ritmo -5%.", flush=True)
+    print(f"Generando narración continua con Ximena, ritmo {RATE}.", flush=True)
     for attempt in range(3):
         try:
             events = []
@@ -159,7 +161,13 @@ async def speech():
 
 async def main():
     render_preview()
-    events = reference.smooth_audio(await speech())
+    events = await speech()
+    if PRESERVE_NATURAL_PAUSES:
+        base.run(["-i", "narracion.mp3", "-ac", "1", "-ar", "24000",
+                  "-c:a", "pcm_s16le", "narracion.wav"])
+        print("Conservadas la entonación y las pausas originales de la voz.", flush=True)
+    else:
+        events = reference.smooth_audio(events)
     (BUILD / "marcas-ajustadas.json").write_text(
         json.dumps(events, ensure_ascii=False), encoding="utf-8"
     )
