@@ -17,6 +17,21 @@ Gerencia ya tiene su total de noches. En el mostrador de Laredo, Ana pide añadi
 
     **Ampliación:** contrastar productos con su documentación y estudiar SQL distribuido. Las condiciones de entrega se concretan en Moodle.
 
+## Vídeo introductorio
+
+Volvemos a recepción para localizar la reserva de Ana y añadirle parking. Un guardarropa con tickets, una ficha, un cuaderno de medidas y un mapa de relaciones nos ayudan a entender las cuatro familias NoSQL. Después distinguimos esquema flexible, particionado y réplicas, y usamos la última plaza de parking para explicar las garantías de las transacciones y CAP. Terminamos con una ficha sencilla para justificar cada elección. **Duración de 14 minutos y 33 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/familias-nosql-portada.jpg" aria-label="Familias NoSQL. Elegir modelos para las consultas y garantías del hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/familias-nosql.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/familias-nosql.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/familias-nosql.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/familias-nosql.es.srt){target="_blank" rel="noopener"}
+
+## De la operación del hotel al modelo de datos
+
 Antes de elegir un modelo, describid qué se consulta junto, con qué frecuencia cambia y qué hay que garantizar al escribir. Si el PMS relacional ya resuelve una operación, explicad qué necesidad justificaría incorporar otro almacén. Los ejemplos de esta página incluyen la ficha de reserva, la sesión de un usuario y las recomendaciones entre huéspedes.
 
 Como contexto histórico, se suele hablar de tres etapas que **coexisten**, no de sustituciones completas:

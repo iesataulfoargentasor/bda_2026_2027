@@ -1,0 +1,1297 @@
+1
+00:00:00,100 --> 00:00:02,650
+Gerencia ya tiene su informe de noches por
+hotel.
+
+2
+00:00:03,512 --> 00:00:06,238
+Ahora volvemos al mostrador de Laredo: Ana
+quiere
+
+3
+00:00:06,250 --> 00:00:08,638
+añadir parking a su reserva de tres noches.
+
+4
+00:00:09,500 --> 00:00:11,975
+El total que calculamos antes no nos permite
+
+5
+00:00:11,988 --> 00:00:14,275
+encontrar su ficha ni cambiar sus extras.
+
+6
+00:00:15,162 --> 00:00:17,375
+Necesitamos recuperar el detalle de esa
+
+7
+00:00:17,388 --> 00:00:19,488
+reserva y saber qué podemos confirmar.
+
+8
+00:00:20,350 --> 00:00:22,062
+Este cambio de pregunta nos lleva
+
+9
+00:00:22,075 --> 00:00:24,175
+al apartado de familias NoSQL.
+
+10
+00:00:25,050 --> 00:00:27,675
+Vamos a comparar formas de organizar los
+datos,
+
+11
+00:00:27,888 --> 00:00:30,400
+pensando siempre en lo que necesita hacer el
+hotel.
+
+12
+00:00:31,275 --> 00:00:34,000
+Y, si nuestra base relacional ya resuelve
+bien esa
+
+13
+00:00:34,012 --> 00:00:38,275
+operación, tendremos que explicar qué
+aportaría incorporar otra herramienta.
+
+14
+00:00:39,138 --> 00:00:42,338
+Antes de ver las familias, conviene separar
+tres ideas.
+
+15
+00:00:43,212 --> 00:00:46,762
+SQL es un lenguaje para expresar
+operaciones; relacional
+
+16
+00:00:46,775 --> 00:00:49,588
+es un modelo de datos; y distribuido
+describe
+
+17
+00:00:49,600 --> 00:00:52,012
+una forma de desplegar y ejecutar el
+sistema.
+
+18
+00:00:52,875 --> 00:00:55,000
+Pueden combinarse: también existen
+
+19
+00:00:55,012 --> 00:00:56,950
+bases relacionales distribuidas.
+
+20
+00:00:57,825 --> 00:01:01,062
+NoSQL suele entenderse como no solo SQL y
+
+21
+00:01:01,075 --> 00:01:04,475
+reúne alternativas que pueden complementar a
+las relacionales.
+
+22
+00:01:04,662 --> 00:01:07,038
+No significa que todo lo anterior haya
+quedado
+
+23
+00:01:07,050 --> 00:01:10,438
+obsoleto, ni garantiza más velocidad por
+tener más datos.
+
+24
+00:01:11,300 --> 00:01:14,300
+Las transacciones, el rendimiento y la
+distribución
+
+25
+00:01:14,312 --> 00:01:16,862
+dependen del producto, de su configuración
+
+26
+00:01:16,875 --> 00:01:18,838
+y de la operación que queremos realizar.
+
+27
+00:01:19,712 --> 00:01:22,800
+Para situarnos, vamos a utilizar cuatro
+imágenes.
+
+28
+00:01:23,688 --> 00:01:26,775
+Clave y valor se parece a un guardarropa:
+entregamos
+
+29
+00:01:26,788 --> 00:01:29,462
+un ticket y recuperamos lo asociado a ese
+número.
+
+30
+00:01:30,325 --> 00:01:31,950
+Un documento se parece a una
+
+31
+00:01:31,962 --> 00:01:34,462
+ficha de reserva con información
+relacionada.
+
+32
+00:01:35,338 --> 00:01:38,362
+Las familias de columnas pueden ayudarnos a
+organizar un
+
+33
+00:01:38,375 --> 00:01:41,450
+cuaderno de medidas que consultamos por
+entidad y periodo.
+
+34
+00:01:41,625 --> 00:01:42,912
+Y un grafo se parece a
+
+35
+00:01:42,925 --> 00:01:44,900
+un mapa de personas y conexiones.
+
+36
+00:01:45,775 --> 00:01:47,800
+Son comparaciones para empezar, no
+
+37
+00:01:47,812 --> 00:01:49,975
+descripciones completas de los motores.
+
+38
+00:01:50,850 --> 00:01:53,062
+Ahora veremos qué pregunta encaja en cada
+
+39
+00:01:53,075 --> 00:01:55,800
+caso y qué decisiones siguen siendo
+necesarias.
+
+40
+00:01:56,688 --> 00:01:59,325
+Imaginad que dejáis un abrigo en el
+guardarropa.
+
+41
+00:02:00,188 --> 00:02:03,600
+Con vuestro ticket, la persona encargada
+sabe qué devolveros.
+
+42
+00:02:04,475 --> 00:02:06,788
+Esa es la idea básica de clave y valor.
+
+43
+00:02:07,675 --> 00:02:09,512
+En el hotel podríamos recuperar la
+
+44
+00:02:09,525 --> 00:02:12,062
+sesión de un usuario mediante su
+identificador.
+
+45
+00:02:12,938 --> 00:02:15,862
+Sin embargo, pedir todos los abrigos rojos
+sería
+
+46
+00:02:15,875 --> 00:02:18,975
+otra búsqueda y necesitaría una organización
+adicional.
+
+47
+00:02:19,850 --> 00:02:22,300
+Del mismo modo, buscar dentro de todos los
+
+48
+00:02:22,312 --> 00:02:25,100
+valores puede exigir índices u otros
+mecanismos.
+
+49
+00:02:25,975 --> 00:02:27,788
+Redis es un ejemplo conocido y
+
+50
+00:02:27,800 --> 00:02:30,675
+ofrece también estructuras como listas y
+conjuntos.
+
+51
+00:02:31,538 --> 00:02:33,275
+Por tanto, la idea básica no
+
+52
+00:02:33,288 --> 00:02:35,762
+resume todas las capacidades de cada
+producto.
+
+53
+00:02:36,638 --> 00:02:38,825
+Siguiendo con clave y valor, una caché
+
+54
+00:02:38,838 --> 00:02:42,138
+puede guardar información que queremos
+consultar rápidamente.
+
+55
+00:02:43,025 --> 00:02:45,262
+Pero imaginad que indica que queda una plaza
+
+56
+00:02:45,275 --> 00:02:47,838
+de parking y otra persona acaba de
+reservarla.
+
+57
+00:02:48,750 --> 00:02:50,762
+Ese dato podría estar atrasado.
+
+58
+00:02:51,638 --> 00:02:54,950
+Para confirmar a Ana, necesitamos acudir al
+sistema
+
+59
+00:02:54,962 --> 00:02:58,550
+que protege la disponibilidad y realizar
+correctamente la operación.
+
+60
+00:02:59,412 --> 00:03:02,100
+También debemos decidir cuándo caducan los
+datos y
+
+61
+00:03:02,112 --> 00:03:04,325
+cómo reconstruir la caché si se vacía.
+
+62
+00:03:05,250 --> 00:03:08,712
+Guardar información en memoria o escribirla
+en disco influye
+
+63
+00:03:08,725 --> 00:03:11,300
+en su recuperación, pero no determina por sí
+
+64
+00:03:11,312 --> 00:03:14,588
+solo qué versión observan los clientes de
+distintas réplicas.
+
+65
+00:03:15,462 --> 00:03:16,988
+Pasemos a la ficha de Ana.
+
+66
+00:03:17,900 --> 00:03:20,988
+Si solemos consultar juntos el hotel, la
+estancia,
+
+67
+00:03:21,100 --> 00:03:24,200
+el huésped y sus extras, un documento
+permite agrupar
+
+68
+00:03:24,212 --> 00:03:27,438
+esa información, incluso con listas y campos
+anidados.
+
+69
+00:03:28,300 --> 00:03:31,100
+MongoDB organiza documentos en colecciones y
+
+70
+00:03:31,112 --> 00:03:33,250
+es el motor que utilizaremos después.
+
+71
+00:03:34,112 --> 00:03:36,800
+La idea resulta cómoda para ciertos accesos,
+
+72
+00:03:36,975 --> 00:03:38,662
+pero no elimina las relaciones ni
+
+73
+00:03:38,675 --> 00:03:40,600
+obliga a meterlo todo en una ficha.
+
+74
+00:03:41,512 --> 00:03:43,675
+También podemos utilizar referencias.
+
+75
+00:03:44,550 --> 00:03:47,062
+Hay que estimar cuánto crecerá el documento,
+qué
+
+76
+00:03:47,075 --> 00:03:50,350
+cambia con frecuencia y qué operaciones
+deben ser atómicas.
+
+77
+00:03:51,225 --> 00:03:53,662
+Y buscar por otros campos sigue necesitando
+
+78
+00:03:53,675 --> 00:03:56,175
+índices adecuados cuando el volumen lo
+requiere.
+
+79
+00:03:57,148 --> 00:03:59,373
+Imaginad ahora que empezamos a preguntar
+
+80
+00:03:59,386 --> 00:04:01,198
+si el huésped viaja con mascota.
+
+81
+00:04:02,060 --> 00:04:04,286
+Algunas reservas antiguas no tienen ese
+
+82
+00:04:04,298 --> 00:04:05,586
+campo y las nuevas sí.
+
+83
+00:04:06,460 --> 00:04:08,848
+¿Podemos interpretar la ausencia como un no?
+
+84
+00:04:09,723 --> 00:04:11,786
+Quizá simplemente no lo preguntamos.
+
+85
+00:04:12,710 --> 00:04:15,873
+La flexibilidad del esquema permite esa
+coexistencia,
+
+86
+00:04:16,148 --> 00:04:18,698
+pero la aplicación debe definir su
+significado.
+
+87
+00:04:19,560 --> 00:04:22,748
+Podemos admitir campos opcionales y, al
+mismo tiempo,
+
+88
+00:04:23,036 --> 00:04:25,698
+exigir que las noches sean un entero
+positivo.
+
+89
+00:04:26,560 --> 00:04:28,673
+Si cambia el tipo o el significado de
+
+90
+00:04:28,686 --> 00:04:31,486
+un dato, también puede hacer falta una
+migración.
+
+91
+00:04:32,348 --> 00:04:33,823
+Y añadir una columna en una
+
+92
+00:04:33,836 --> 00:04:37,060
+base relacional no exige siempre detenerla:
+depende
+
+93
+00:04:37,073 --> 00:04:38,648
+del sistema y de la operación.
+
+94
+00:04:39,510 --> 00:04:41,223
+Para acercarnos a las familias de
+
+95
+00:04:41,236 --> 00:04:43,786
+columnas, imaginad un cuaderno de medidas
+con
+
+96
+00:04:43,798 --> 00:04:46,386
+separadores por hotel, habitación y día.
+
+97
+00:04:47,260 --> 00:04:49,760
+Si queremos leer las temperaturas de la
+habitación
+
+98
+00:04:49,773 --> 00:04:53,798
+doscientos catorce durante ese día, sabemos
+qué grupo consultar.
+
+99
+00:04:54,673 --> 00:04:56,973
+En Cassandra podríamos diseñar una clave de
+
+100
+00:04:56,986 --> 00:04:58,910
+partición con esos datos y ordenar
+
+101
+00:04:58,923 --> 00:05:01,636
+las medidas por instante dentro del grupo.
+
+102
+00:05:02,510 --> 00:05:04,636
+Acotar el periodo ayuda a controlar su
+
+103
+00:05:04,648 --> 00:05:08,060
+crecimiento, aunque debemos estimar cuántas
+medidas llegan.
+
+104
+00:05:08,923 --> 00:05:12,023
+Cassandra declara columnas y claves; HBase
+tiene
+
+105
+00:05:12,036 --> 00:05:14,636
+otras reglas para sus familias y
+calificadores.
+
+106
+00:05:15,498 --> 00:05:17,773
+Comparten una familia general, pero no
+
+107
+00:05:17,786 --> 00:05:19,836
+un esquema ni una interfaz idénticos.
+
+108
+00:05:20,723 --> 00:05:24,010
+Aquí aparece una palabra que puede
+despistarnos: columna.
+
+109
+00:05:24,873 --> 00:05:27,848
+Un archivo Parquet organiza valores por
+columnas y puede
+
+110
+00:05:27,860 --> 00:05:30,736
+ayudar a analizar unos pocos campos de
+muchas filas.
+
+111
+00:05:31,610 --> 00:05:32,973
+Eso no lo convierte en una
+
+112
+00:05:32,986 --> 00:05:35,360
+base de familias de columnas como Cassandra.
+
+113
+00:05:36,223 --> 00:05:39,186
+Estamos hablando de niveles distintos: un
+formato de
+
+114
+00:05:39,198 --> 00:05:42,198
+archivo y un motor con claves y operaciones
+propias.
+
+115
+00:05:43,073 --> 00:05:45,298
+Tampoco se coloca automáticamente cada
+
+116
+00:05:45,310 --> 00:05:47,173
+columna en un servidor diferente.
+
+117
+00:05:48,036 --> 00:05:50,786
+Por otra parte, el lenguaje de Cassandra se
+parece
+
+118
+00:05:50,798 --> 00:05:54,048
+a SQL, pero sus consultas se diseñan
+alrededor de
+
+119
+00:05:54,060 --> 00:05:57,386
+las claves y no ofrecen los joins
+relacionales habituales.
+
+120
+00:05:58,298 --> 00:06:01,036
+El parecido del lenguaje no iguala los
+modelos.
+
+121
+00:06:01,898 --> 00:06:03,923
+Ahora vamos a seguir conexiones.
+
+122
+00:06:04,798 --> 00:06:06,273
+Luis conoce a Ana y Ana
+
+123
+00:06:06,286 --> 00:06:07,910
+recomendó el hotel de Potes.
+
+124
+00:06:08,786 --> 00:06:11,536
+En un grafo representamos personas y hoteles
+como
+
+125
+00:06:11,548 --> 00:06:14,836
+nodos, y las relaciones como enlaces con
+significado.
+
+126
+00:06:15,698 --> 00:06:17,823
+Podemos recorrer el camino para responder
+
+127
+00:06:17,836 --> 00:06:18,948
+a la pregunta de Luis.
+
+128
+00:06:19,823 --> 00:06:22,598
+La dirección importa: que Ana recomiende un
+hotel
+
+129
+00:06:22,610 --> 00:06:24,910
+no significa que el hotel recomiende a Ana.
+
+130
+00:06:25,773 --> 00:06:28,710
+Neo4j es un ejemplo de este tipo de motor.
+
+131
+00:06:29,586 --> 00:06:32,160
+Aun así, tendremos que diseñar propiedades,
+
+132
+00:06:32,273 --> 00:06:34,123
+índices y límites del recorrido.
+
+133
+00:06:34,998 --> 00:06:37,873
+Visitar muchísimos vecinos puede ser
+costoso.
+
+134
+00:06:38,760 --> 00:06:41,873
+Las bases relacionales también representan
+relaciones;
+
+135
+00:06:42,023 --> 00:06:45,036
+el grafo facilita expresar determinados
+recorridos.
+
+136
+00:06:45,898 --> 00:06:48,923
+Ya conocemos las cuatro familias, pero
+elegir cómo
+
+137
+00:06:48,936 --> 00:06:51,886
+organizar los datos no resuelve todas las
+garantías.
+
+138
+00:06:52,773 --> 00:06:55,136
+Recordad la transferencia de un depósito:
+
+139
+00:06:55,336 --> 00:06:58,048
+si requiere dos cambios relacionados,
+queremos que
+
+140
+00:06:58,060 --> 00:06:59,748
+se completen los dos o ninguno.
+
+141
+00:07:00,623 --> 00:07:02,048
+Esa es la atomicidad.
+
+142
+00:07:02,923 --> 00:07:05,923
+La consistencia de una transacción exige
+respetar las
+
+143
+00:07:05,936 --> 00:07:10,823
+reglas definidas; el aislamiento controla
+cómo interfieren operaciones concurrentes,
+
+144
+00:07:11,010 --> 00:07:14,048
+según el nivel elegido; y la durabilidad
+conserva lo
+
+145
+00:07:14,060 --> 00:07:17,310
+confirmado ante los fallos cubiertos por la
+configuración.
+
+146
+00:07:18,186 --> 00:07:19,686
+Son las propiedades ACID.
+
+147
+00:07:20,548 --> 00:07:24,123
+Algunos motores NoSQL también ofrecen
+transacciones.
+
+148
+00:07:24,998 --> 00:07:27,773
+Por eso no podemos deducir sus garantías
+simplemente
+
+149
+00:07:27,786 --> 00:07:29,873
+al ver que guardan documentos o claves.
+
+150
+00:07:30,760 --> 00:07:32,086
+Volvamos al parking.
+
+151
+00:07:32,960 --> 00:07:35,098
+Dos recepcionistas pueden leer que queda
+
+152
+00:07:35,110 --> 00:07:37,248
+una plaza y tratar de venderla después.
+
+153
+00:07:38,110 --> 00:07:40,810
+Aunque ambas lecturas fueran recientes, eso
+no
+
+154
+00:07:40,823 --> 00:07:43,398
+protege el intervalo entre consultar y
+descontar.
+
+155
+00:07:44,286 --> 00:07:47,136
+Necesitamos una operación que compruebe y
+modifique
+
+156
+00:07:47,148 --> 00:07:49,373
+la disponibilidad preservando la regla de no
+
+157
+00:07:49,386 --> 00:07:51,573
+vender más plazas de las que hay.
+
+158
+00:07:52,436 --> 00:07:54,560
+Puede requerir una operación atómica o
+
+159
+00:07:54,573 --> 00:07:56,573
+una transacción adecuada al diseño.
+
+160
+00:07:57,436 --> 00:07:59,748
+Este detalle será importante cuando hablemos
+
+161
+00:07:59,760 --> 00:08:00,823
+de réplicas y de CAP.
+
+162
+00:08:01,698 --> 00:08:04,610
+Elegir una garantía de lectura no sustituye
+a diseñar
+
+163
+00:08:04,623 --> 00:08:07,848
+correctamente la operación de negocio que
+confirma la reserva.
+
+164
+00:08:08,116 --> 00:08:11,466
+Vamos a distinguir dos formas de organizar
+el almacenamiento.
+
+165
+00:08:12,328 --> 00:08:14,478
+Particionar divide los datos en partes;
+
+166
+00:08:14,604 --> 00:08:17,228
+replicar conserva copias de los mismos
+datos.
+
+167
+00:08:18,104 --> 00:08:19,566
+Podemos combinar ambas.
+
+168
+00:08:20,441 --> 00:08:23,141
+Imaginad noventa gigabytes repartidos por
+igual
+
+169
+00:08:23,154 --> 00:08:25,666
+en tres shards: cada parte contiene treinta.
+
+170
+00:08:26,528 --> 00:08:29,191
+Si guardamos dos copias completas de cada
+parte,
+
+171
+00:08:29,454 --> 00:08:32,554
+tenemos seis miembros y ciento ochenta
+gigabytes físicos
+
+172
+00:08:32,566 --> 00:08:35,541
+de contenido, sin contar índices ni otros
+costes.
+
+173
+00:08:36,404 --> 00:08:38,804
+Los datos lógicos siguen siendo noventa.
+
+174
+00:08:39,666 --> 00:08:41,428
+Ampliar una máquina es crecer en
+
+175
+00:08:41,441 --> 00:08:44,504
+vertical; añadir servidores es crecer en
+horizontal.
+
+176
+00:08:45,404 --> 00:08:48,678
+Ninguna de esas decisiones demuestra, por sí
+sola, que
+
+177
+00:08:48,691 --> 00:08:51,766
+el servicio será más rápido o soportará
+cualquier fallo.
+
+178
+00:08:52,641 --> 00:08:55,216
+Recordad el desequilibrio del apartado
+anterior,
+
+179
+00:08:55,478 --> 00:08:58,054
+cuando muchas reservas llegaban al mismo
+reducer.
+
+180
+00:08:58,916 --> 00:09:00,778
+Aquí puede ocurrir algo parecido.
+
+181
+00:09:01,654 --> 00:09:03,978
+Si el noventa por ciento pertenece a Laredo
+
+182
+00:09:03,991 --> 00:09:07,091
+y aplicamos un hash solamente al hotel,
+todas esas
+
+183
+00:09:07,104 --> 00:09:09,928
+reservas comparten el mismo resultado de la
+función.
+
+184
+00:09:10,791 --> 00:09:12,691
+No se reparten por arte de magia.
+
+185
+00:09:13,566 --> 00:09:16,466
+Tendremos que estudiar una clave adecuada,
+su variedad
+
+186
+00:09:16,478 --> 00:09:19,554
+de valores y las consultas que después
+reunirán datos.
+
+187
+00:09:20,441 --> 00:09:24,266
+Algunos motores automatizan distribución y
+enrutamiento, pero
+
+188
+00:09:24,278 --> 00:09:26,941
+no eligen por nosotros todas esas
+decisiones.
+
+189
+00:09:27,804 --> 00:09:31,166
+Antes de añadir nodos conviene revisar
+también consultas,
+
+190
+00:09:31,278 --> 00:09:34,228
+índices, recursos y conservación de los
+datos.
+
+191
+00:09:35,104 --> 00:09:37,891
+Las réplicas ayudan ante ciertos fallos,
+pero
+
+192
+00:09:37,904 --> 00:09:40,504
+hay que preguntar qué operaciones siguen
+disponibles.
+
+193
+00:09:41,366 --> 00:09:43,616
+En un sistema con primario y secundarios
+
+194
+00:09:43,628 --> 00:09:45,891
+puede haber una interrupción mientras se
+detecta el
+
+195
+00:09:45,904 --> 00:09:48,428
+fallo y se elige un nuevo primario.
+
+196
+00:09:49,304 --> 00:09:51,854
+Si tenemos exactamente dos miembros votantes
+y
+
+197
+00:09:51,866 --> 00:09:54,691
+se exige mayoría, necesitamos los dos votos.
+
+198
+00:09:55,554 --> 00:09:58,791
+Perder uno deja una copia, pero impide esa
+elección.
+
+199
+00:09:59,666 --> 00:10:01,954
+También debemos configurar bien el cliente
+
+200
+00:10:01,966 --> 00:10:03,954
+y comprobar el retraso de las copias.
+
+201
+00:10:04,841 --> 00:10:08,266
+Además, un borrado equivocado puede
+replicarse: por eso
+
+202
+00:10:08,278 --> 00:10:11,854
+seguimos necesitando copias de seguridad y
+recuperación probada.
+
+203
+00:10:12,728 --> 00:10:14,441
+Replicar no equivale a ampliar
+
+204
+00:10:14,454 --> 00:10:16,166
+la capacidad útil del conjunto.
+
+205
+00:10:17,028 --> 00:10:19,178
+Cuando hay varias copias, otra pregunta
+
+206
+00:10:19,191 --> 00:10:20,841
+es qué versión ve cada cliente.
+
+207
+00:10:21,716 --> 00:10:24,778
+La consistencia linealizable exige que las
+operaciones
+
+208
+00:10:24,791 --> 00:10:26,641
+se comporten como si actuaran sobre
+
+209
+00:10:26,654 --> 00:10:29,791
+una única copia, respetando el orden
+temporal.
+
+210
+00:10:30,666 --> 00:10:33,254
+En un modelo eventual, las copias convergen
+
+211
+00:10:33,266 --> 00:10:35,354
+si dejan de llegar cambios y se recupera
+
+212
+00:10:35,366 --> 00:10:38,504
+la comunicación, siguiendo las reglas del
+protocolo.
+
+213
+00:10:39,378 --> 00:10:41,516
+Mientras tanto puede haber diferencias.
+
+214
+00:10:42,428 --> 00:10:44,591
+Un contador de visitas quizá admita un
+
+215
+00:10:44,604 --> 00:10:48,004
+retraso; confirmar una plaza requiere otras
+precauciones.
+
+216
+00:10:48,866 --> 00:10:52,266
+Esta consistencia entre réplicas no es
+exactamente la misma
+
+217
+00:10:52,278 --> 00:10:54,566
+idea que la consistencia de ACID, que se
+
+218
+00:10:54,578 --> 00:10:57,616
+refiere a las reglas que deben respetar las
+transacciones.
+
+219
+00:10:58,491 --> 00:11:00,916
+Imaginad ahora que dos grupos de nodos
+pierden
+
+220
+00:11:00,928 --> 00:11:04,141
+la comunicación y ambos quieren confirmar la
+última plaza.
+
+221
+00:11:05,016 --> 00:11:07,316
+CAP estudia qué garantías podemos mantener
+
+222
+00:11:07,328 --> 00:11:08,804
+durante ese problema de red.
+
+223
+00:11:09,666 --> 00:11:12,104
+Si queremos preservar una visión
+linealizable,
+
+224
+00:11:12,278 --> 00:11:14,966
+alguna operación tendrá que esperar o
+rechazarse.
+
+225
+00:11:15,828 --> 00:11:17,716
+Eso reduce la disponibilidad en el
+
+226
+00:11:17,728 --> 00:11:19,966
+sentido de CAP: devolver un error no
+
+227
+00:11:19,978 --> 00:11:22,441
+equivale a realizar la operación solicitada.
+
+228
+00:11:23,316 --> 00:11:25,278
+Si ambos lados aceptan cambios sin
+
+229
+00:11:25,291 --> 00:11:28,341
+coordinarse, pueden aparecer versiones
+divergentes.
+
+230
+00:11:29,204 --> 00:11:31,691
+CAP no significa elegir dos propiedades para
+
+231
+00:11:31,704 --> 00:11:34,528
+siempre, ni asignar una etiqueta invariable
+
+232
+00:11:34,541 --> 00:11:36,178
+a cada marca de base de datos.
+
+233
+00:11:37,091 --> 00:11:39,716
+Hay que concretar la configuración y la
+operación.
+
+234
+00:11:40,578 --> 00:11:43,528
+Quizá para registrar comentarios aceptemos
+que cada lado
+
+235
+00:11:43,541 --> 00:11:47,578
+trabaje un tiempo y sincronice después,
+resolviendo los conflictos.
+
+236
+00:11:48,441 --> 00:11:50,941
+En diseños así aparece el término BASE.
+
+237
+00:11:51,828 --> 00:11:55,316
+Reúne la idea de mantener servicio con
+ciertas limitaciones,
+
+238
+00:11:55,504 --> 00:11:59,154
+un estado observado que puede cambiar cuando
+llegan actualizaciones
+
+239
+00:11:59,166 --> 00:12:03,054
+y una convergencia eventual bajo las
+condiciones del protocolo.
+
+240
+00:12:03,928 --> 00:12:05,204
+No es una promesa de que
+
+241
+00:12:05,216 --> 00:12:08,104
+cualquier dato siempre estará disponible, ni
+una
+
+242
+00:12:08,116 --> 00:12:10,666
+especificación equivalente y opuesta a ACID.
+
+243
+00:12:11,541 --> 00:12:13,854
+Un sistema puede combinar transacciones en
+
+244
+00:12:13,866 --> 00:12:16,104
+un ámbito y propagación eventual en otro.
+
+245
+00:12:16,966 --> 00:12:19,328
+Lo que aceptamos para comentarios no tiene
+por
+
+246
+00:12:19,341 --> 00:12:21,616
+qué servir para confirmar la última plaza.
+
+247
+00:12:22,588 --> 00:12:24,826
+En el hotel podríamos mantener los cobros
+
+248
+00:12:24,838 --> 00:12:27,288
+en una base relacional, ciertas fichas en
+
+249
+00:12:27,300 --> 00:12:30,300
+un almacén documental, sesiones en clave y
+valor
+
+250
+00:12:30,313 --> 00:12:32,788
+y el histórico de archivos en HDFS.
+
+251
+00:12:33,700 --> 00:12:36,826
+A esa combinación se la llama persistencia
+políglota.
+
+252
+00:12:37,688 --> 00:12:42,100
+Puede resultar útil, pero añade integración,
+mantenimiento y decisiones
+
+253
+00:12:42,113 --> 00:12:44,663
+sobre qué sistema es la referencia de cada
+dato.
+
+254
+00:12:45,538 --> 00:12:47,176
+La caché no debe confirmar una
+
+255
+00:12:47,188 --> 00:12:50,400
+reserva solo porque conserve una
+disponibilidad antigua.
+
+256
+00:12:51,276 --> 00:12:54,376
+Tampoco estamos obligados a instalar cuatro
+motores.
+
+257
+00:12:55,250 --> 00:12:57,276
+Si uno resuelve bien los requisitos,
+
+258
+00:12:57,388 --> 00:12:59,600
+simplificar puede ser una buena decisión.
+
+259
+00:13:00,488 --> 00:13:02,376
+La elección necesita una ventaja
+
+260
+00:13:02,388 --> 00:13:04,326
+concreta que compense sus costes.
+
+261
+00:13:05,200 --> 00:13:08,400
+Para las actividades utilizaremos una ficha
+sencilla: qué
+
+262
+00:13:08,413 --> 00:13:11,538
+dato guardamos, qué consulta hacemos, qué
+garantía
+
+263
+00:13:11,550 --> 00:13:14,750
+necesitamos, qué modelo encaja y qué cuesta
+mantenerlo.
+
+264
+00:13:15,613 --> 00:13:18,738
+Por ejemplo, una sesión se recupera por
+identificador,
+
+265
+00:13:18,876 --> 00:13:20,988
+puede caducar y podría encajar en clave
+
+266
+00:13:21,000 --> 00:13:24,526
+y valor; debemos definir su expiración y
+reconstrucción.
+
+267
+00:13:25,400 --> 00:13:28,800
+Después contrastaremos las capacidades del
+producto elegido:
+
+268
+00:13:28,938 --> 00:13:33,176
+versión, índices, seguridad, copias, soporte
+y costes.
+
+269
+00:13:34,050 --> 00:13:36,726
+Contratarlo en la nube cambia quién
+administra parte
+
+270
+00:13:36,738 --> 00:13:39,726
+de la infraestructura, pero no elimina esos
+costes.
+
+271
+00:13:40,600 --> 00:13:42,938
+Dibujar un reparto o explicar una réplica
+
+272
+00:13:42,950 --> 00:13:45,976
+justifica un diseño; para afirmar que
+funciona ante
+
+273
+00:13:45,988 --> 00:13:48,650
+un fallo, hace falta observar una prueba.
+
+274
+00:13:49,500 --> 00:13:51,813
+Para cerrar, volved a la petición de Ana.
+
+275
+00:13:52,688 --> 00:13:55,013
+¿Qué información consultaríais junta y cómo
+
+276
+00:13:55,026 --> 00:13:57,276
+protegeríais la confirmación del parking?
+
+277
+00:13:58,138 --> 00:14:00,088
+Esa explicación vale más que elegir
+
+278
+00:14:00,100 --> 00:14:02,126
+un producto solo porque admite JSON.
+
+279
+00:14:03,000 --> 00:14:05,188
+Ahora podéis distinguir el ticket de clave
+
+280
+00:14:05,200 --> 00:14:08,538
+y valor, la ficha documental, las medidas
+organizadas
+
+281
+00:14:08,550 --> 00:14:10,600
+por claves y el mapa de relaciones.
+
+282
+00:14:11,488 --> 00:14:14,300
+En el siguiente apartado trabajaremos con
+MongoDB y
+
+283
+00:14:14,313 --> 00:14:17,376
+sus propios archivos de reservas y
+opiniones: no
+
+284
+00:14:17,388 --> 00:14:20,663
+suponemos una migración automática del CSV
+de Hadoop.
+
+285
+00:14:21,538 --> 00:14:25,500
+Más adelante profundizaremos en modelado,
+réplicas y particiones.
+
+286
+00:14:26,388 --> 00:14:28,626
+Primero expresaremos la pregunta y después
+
+287
+00:14:28,638 --> 00:14:31,350
+comprobaremos qué documentos devuelve la
+consulta.
