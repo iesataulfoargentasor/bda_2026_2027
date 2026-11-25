@@ -1,0 +1,1018 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:01.850
+En el vídeo anterior aprendimos a
+
+00:00:01.862 --> 00:00:04.362
+consultar y modificar una ficha en MongoDB.
+
+00:00:05.238 --> 00:00:07.612
+Ahora vamos a decidir cómo organizarla.
+
+00:00:08.488 --> 00:00:09.675
+Imaginad que el hotel de
+
+00:00:09.688 --> 00:00:11.438
+Laredo cambia mañana de nombre.
+
+00:00:12.325 --> 00:00:15.312
+Una persona conserva una reserva confirmada ayer y
+
+00:00:15.325 --> 00:00:18.288
+otra llama hoy para pedir el teléfono del establecimiento.
+
+00:00:19.150 --> 00:00:21.700
+¿Necesitan exactamente la misma información?
+
+00:00:22.575 --> 00:00:24.712
+La primera puede necesitar lo que se acordó
+
+00:00:24.725 --> 00:00:27.712
+entonces; la segunda necesita el contacto actual.
+
+00:00:28.575 --> 00:00:31.388
+Esta diferencia nos acompañará durante el apartado.
+
+00:00:32.263 --> 00:00:34.638
+Modelar documentos consiste en decidir qué
+
+00:00:34.650 --> 00:00:37.562
+guardamos, dónde lo guardamos y qué significado
+
+00:00:37.575 --> 00:00:39.800
+debe conservar cuando las cosas cambian.
+
+00:00:40.675 --> 00:00:43.200
+Antes de dibujar colecciones, pensemos en
+
+00:00:43.212 --> 00:00:44.675
+las personas que las usarán.
+
+00:00:45.525 --> 00:00:48.438
+Recepción abre una reserva; gerencia consulta
+
+00:00:48.450 --> 00:00:51.712
+un resumen; mantenimiento revisa años de incidencias.
+
+00:00:52.588 --> 00:00:55.250
+Aunque hablen del mismo hotel, no necesitan leer
+
+00:00:55.262 --> 00:00:57.200
+lo mismo ni con la misma frecuencia.
+
+00:00:58.062 --> 00:01:01.038
+Por eso anotamos las preguntas, los filtros, las
+
+00:01:01.050 --> 00:01:03.488
+escrituras y el tiempo de respuesta esperado.
+
+00:01:04.362 --> 00:01:06.062
+También distinguimos lo que cambia
+
+00:01:06.075 --> 00:01:07.475
+de lo que debe conservarse.
+
+00:01:08.350 --> 00:01:10.662
+Como ya vimos, sumar noches reservadas
+
+00:01:10.675 --> 00:01:12.888
+no basta para calcular la ocupación real:
+
+00:01:13.188 --> 00:01:16.375
+harían falta fechas, habitaciones y disponibilidad.
+
+00:01:17.250 --> 00:01:20.588
+La pregunta concreta determina qué información necesitamos.
+
+00:01:21.450 --> 00:01:23.450
+Imaginad una carpeta de reserva.
+
+00:01:24.312 --> 00:01:26.425
+Podemos guardar dentro la pequeña ficha
+
+00:01:26.438 --> 00:01:28.362
+de llegada, o apuntar el número de
+
+00:01:28.375 --> 00:01:31.100
+otra carpeta que contiene información compartida.
+
+00:01:31.988 --> 00:01:33.788
+Guardar dentro se llama embeber;
+
+00:01:33.950 --> 00:01:35.900
+señalar fuera se llama referenciar.
+
+00:01:36.775 --> 00:01:39.688
+Para elegir, hacemos cuatro preguntas: si se lee
+
+00:01:39.700 --> 00:01:42.738
+junto, si cambia junto, si su crecimiento está
+
+00:01:42.750 --> 00:01:45.475
+limitado y si debe actualizarse como una unidad.
+
+00:01:46.400 --> 00:01:48.738
+Embeber puede facilitar una lectura conjunta
+
+00:01:48.750 --> 00:01:51.150
+y una actualización atómica del documento.
+
+00:01:52.025 --> 00:01:54.438
+Referenciar permite que la otra información
+
+00:01:54.450 --> 00:01:56.012
+tenga su propio ciclo de vida.
+
+00:01:56.900 --> 00:02:00.038
+Ninguna opción gana siempre: depende de la operación.
+
+00:02:00.900 --> 00:02:02.662
+Volvamos al cambio de nombre.
+
+00:02:03.538 --> 00:02:05.550
+Una fotografía conserva cómo eran
+
+00:02:05.562 --> 00:02:07.000
+las cosas cuando se tomó.
+
+00:02:07.862 --> 00:02:11.525
+Una agenda, en cambio, pretende ofrecer el contacto vigente.
+
+00:02:12.400 --> 00:02:14.800
+La reserva de prueba guarda el nombre histórico
+
+00:02:14.812 --> 00:02:16.775
+de Laredo y una referencia al hotel.
+
+00:02:17.625 --> 00:02:20.938
+Si cambia el establecimiento, podemos conservar ese nombre
+
+00:02:20.950 --> 00:02:23.812
+y consultar el teléfono actual en la otra colección.
+
+00:02:24.675 --> 00:02:27.225
+Lo mismo ocurre con el precio acordado: una
+
+00:02:27.238 --> 00:02:30.762
+nueva tarifa no reescribe automáticamente el contrato anterior.
+
+00:02:31.612 --> 00:02:34.975
+Eso sí, precio acordado no significa importe cobrado.
+
+00:02:35.850 --> 00:02:38.862
+Para conocer pagos, devoluciones y rectificaciones
+
+00:02:38.875 --> 00:02:41.175
+necesitamos sus propios datos y reglas.
+
+00:02:42.062 --> 00:02:44.275
+Una referencia se parece al número de una
+
+00:02:44.288 --> 00:02:46.525
+ficha que debemos buscar en otro archivador.
+
+00:02:47.400 --> 00:02:49.538
+Para que funcione, tienen que coincidir
+
+00:02:49.550 --> 00:02:51.000
+tanto el valor como el tipo.
+
+00:02:51.862 --> 00:02:53.925
+Escribir como texto los caracteres de
+
+00:02:53.938 --> 00:02:56.550
+un ObjectId no produce el mismo identificador.
+
+00:02:57.400 --> 00:02:59.050
+La operación de unión que aparece
+
+00:02:59.062 --> 00:03:01.538
+en pantalla devuelve una lista de coincidencias;
+
+00:03:01.800 --> 00:03:03.975
+para nuestra reserva esperamos un hotel.
+
+00:03:04.850 --> 00:03:07.362
+Si está vacía, revisamos la referencia.
+
+00:03:08.238 --> 00:03:10.250
+MongoDB no garantiza por sí solo
+
+00:03:10.262 --> 00:03:13.075
+que esa relación exista ni elimina automáticamente
+
+00:03:13.088 --> 00:03:15.762
+las referencias cuando borramos el hotel.
+
+00:03:16.638 --> 00:03:19.350
+Mantener su coherencia forma parte del diseño.
+
+00:03:20.225 --> 00:03:22.725
+Una reserva familiar puede contener hasta cuatro
+
+00:03:22.738 --> 00:03:25.412
+huéspedes, según la regla que hayamos definido.
+
+00:03:26.288 --> 00:03:27.888
+Si siempre se leen juntos,
+
+00:03:28.025 --> 00:03:30.138
+una lista pequeña resulta razonable.
+
+00:03:31.012 --> 00:03:33.525
+En cambio, un hotel puede acumular decenas de
+
+00:03:33.538 --> 00:03:36.338
+miles de reservas: cada reserva puede señalar al
+
+00:03:36.350 --> 00:03:39.088
+hotel, sin meterlas todas dentro de su ficha.
+
+00:03:40.000 --> 00:03:42.138
+Y los eventos de una puerta pueden crecer
+
+00:03:42.150 --> 00:03:45.250
+durante años, así que necesitan otra organización.
+
+00:03:46.112 --> 00:03:48.500
+Además, la habitación doscientos catorce
+
+00:03:48.512 --> 00:03:50.225
+puede existir en varias sedes.
+
+00:03:51.088 --> 00:03:52.750
+Identificamos también el hotel y
+
+00:03:52.762 --> 00:03:55.000
+diseñamos cómo consultar cada periodo.
+
+00:03:55.875 --> 00:03:57.300
+Tener una relación de uno a
+
+00:03:57.312 --> 00:03:59.388
+muchos no obliga a utilizar un array.
+
+00:04:00.364 --> 00:04:03.664
+El documento tiene un límite de dieciséis mebibytes, pero
+
+00:04:03.676 --> 00:04:06.664
+no debemos esperar a alcanzarlo para revisar el diseño.
+
+00:04:07.526 --> 00:04:09.102
+Una lista sin final seguirá
+
+00:04:09.114 --> 00:04:11.489
+creciendo, aunque hoy quepa perfectamente.
+
+00:04:12.364 --> 00:04:14.314
+Medimos el tamaño y estimamos qué
+
+00:04:14.326 --> 00:04:16.239
+ocurrirá dentro de un año, quién lo
+
+00:04:16.252 --> 00:04:18.264
+actualizará y qué parte se consulta.
+
+00:04:19.139 --> 00:04:22.014
+Para archivos grandes podemos estudiar almacenamiento de
+
+00:04:22.026 --> 00:04:25.802
+objetos, GridFS o un sistema de ficheros, conservando
+
+00:04:25.814 --> 00:04:28.002
+en la ficha su referencia y metadatos.
+
+00:04:28.876 --> 00:04:31.452
+Medir los bytes del documento tampoco mide todo
+
+00:04:31.464 --> 00:04:33.764
+el espacio de índices y réplicas, ni
+
+00:04:33.776 --> 00:04:36.514
+demuestra que cualquier consulta vaya a ser rápida.
+
+00:04:37.414 --> 00:04:39.952
+Pensemos ahora en habitaciones y servicios.
+
+00:04:40.814 --> 00:04:43.426
+Una habitación puede ofrecer parking o cuna, y
+
+00:04:43.439 --> 00:04:46.689
+esos servicios pueden relacionarse con muchas habitaciones.
+
+00:04:47.564 --> 00:04:50.202
+Si la relación tiene precio contratado, fechas
+
+00:04:50.214 --> 00:04:52.564
+de vigencia o condiciones propias, puede
+
+00:04:52.576 --> 00:04:55.226
+convenir guardarla como una ficha de asociación.
+
+00:04:56.102 --> 00:04:58.802
+Si solo necesitamos una lista pequeña y estable
+
+00:04:58.814 --> 00:05:02.189
+de identificadores, otra solución podría ser suficiente.
+
+00:05:03.052 --> 00:05:05.352
+Lo que queremos evitar es duplicar la relación
+
+00:05:05.364 --> 00:05:08.314
+en dos lugares sin saber cómo mantenerlos coordinados.
+
+00:05:09.176 --> 00:05:11.489
+Una agregación puede reunir información de
+
+00:05:11.502 --> 00:05:15.502
+varias colecciones: separarlas no significa obligatoriamente hacer
+
+00:05:15.514 --> 00:05:17.564
+un viaje independiente por cada una.
+
+00:05:18.439 --> 00:05:21.052
+Algunas relaciones se parecen a un árbol: una
+
+00:05:21.064 --> 00:05:24.202
+comarca contiene municipios y estos contienen hoteles.
+
+00:05:25.076 --> 00:05:27.026
+Podemos guardar en cada ficha la ruta
+
+00:05:27.039 --> 00:05:29.264
+de sus antecesores, como las carpetas
+
+00:05:29.276 --> 00:05:31.252
+que recorremos para llegar a un archivo.
+
+00:05:32.102 --> 00:05:35.202
+Así resulta sencillo buscar los hoteles de una rama.
+
+00:05:36.064 --> 00:05:38.226
+Pero si movemos una rama, tendremos
+
+00:05:38.239 --> 00:05:40.114
+que actualizar las rutas afectadas.
+
+00:05:41.002 --> 00:05:43.764
+Otra posibilidad es guardar solo una referencia al
+
+00:05:43.776 --> 00:05:46.426
+padre y recorrer los niveles cuando haga falta.
+
+00:05:47.302 --> 00:05:50.364
+De nuevo aparece el mismo intercambio: facilitar una
+
+00:05:50.376 --> 00:05:53.326
+lectura puede añadir trabajo cuando cambian los datos.
+
+00:05:54.189 --> 00:05:56.164
+Elegimos según el uso esperado.
+
+00:05:57.039 --> 00:06:01.089
+Veamos un problema concreto: empezamos con tarifa web, tarifa
+
+00:06:01.102 --> 00:06:04.352
+de plataforma y tarifa de recepción como campos separados.
+
+00:06:05.214 --> 00:06:08.914
+Cuando aparecen más canales, el diseño puede volverse incómodo.
+
+00:06:09.789 --> 00:06:12.352
+El patrón de atributos organiza cada tarifa con
+
+00:06:12.364 --> 00:06:14.989
+canal, precio y moneda dentro de una lista.
+
+00:06:15.852 --> 00:06:18.339
+En la práctica conservamos noventa para web,
+
+00:06:18.476 --> 00:06:20.789
+ciento diez para OTA y cien para recepción;
+
+00:06:21.039 --> 00:06:23.676
+después añadimos agencias a noventa y cinco.
+
+00:06:24.539 --> 00:06:26.639
+Para buscar web por menos de cien, las
+
+00:06:26.652 --> 00:06:29.476
+dos condiciones deben cumplirse en la misma tarifa.
+
+00:06:30.352 --> 00:06:33.526
+Recordad el ejemplo de los comentarios: mezclar datos
+
+00:06:33.539 --> 00:06:36.939
+de elementos diferentes puede producir una respuesta equivocada.
+
+00:06:37.839 --> 00:06:40.514
+Imaginad que cambiamos el formulario de reserva.
+
+00:06:41.376 --> 00:06:43.176
+Antes, hotel era un texto y
+
+00:06:43.189 --> 00:06:45.176
+el teléfono estaba en otra casilla.
+
+00:06:46.039 --> 00:06:47.989
+Ahora hotel es un pequeño documento
+
+00:06:48.002 --> 00:06:50.164
+con identificador, nombre y teléfono.
+
+00:06:51.026 --> 00:06:52.389
+Podemos añadir un número de
+
+00:06:52.402 --> 00:06:54.489
+versión para reconocer cada formato.
+
+00:06:55.352 --> 00:06:57.652
+Pero pegar una etiqueta que diga versión dos
+
+00:06:57.664 --> 00:07:00.352
+sobre una ficha antigua no mueve ninguna casilla.
+
+00:07:01.302 --> 00:07:03.302
+Primero clasificamos la estructura;
+
+00:07:03.439 --> 00:07:05.352
+después la transformamos si procede.
+
+00:07:06.252 --> 00:07:09.102
+En la práctica deben seguir existiendo dos reservas
+
+00:07:09.114 --> 00:07:12.126
+y conservarse sus noches, importes y teléfonos.
+
+00:07:13.014 --> 00:07:15.864
+El teléfono de este ejercicio es una instantánea,
+
+00:07:16.139 --> 00:07:19.102
+sin sincronización automática con el contacto actual.
+
+00:07:20.002 --> 00:07:22.002
+Si recepción recibe dos modelos de
+
+00:07:22.014 --> 00:07:25.176
+formulario, primero necesita aprender a leer ambos.
+
+00:07:26.039 --> 00:07:29.102
+En una aplicación ocurre igual: preparamos un lector
+
+00:07:29.114 --> 00:07:32.289
+compatible con las dos versiones, empezamos después
+
+00:07:32.302 --> 00:07:34.139
+a escribir el formato nuevo y, si
+
+00:07:34.152 --> 00:07:37.214
+hace falta, migramos las fichas antiguas por grupos.
+
+00:07:38.114 --> 00:07:41.376
+También revisamos consultas, índices y validadores.
+
+00:07:42.264 --> 00:07:44.626
+Si falta la etiqueta de versión, el equipo
+
+00:07:44.639 --> 00:07:47.876
+debe haber definido cómo interpretar esa estructura antigua.
+
+00:07:48.739 --> 00:07:50.426
+No basta con cambiar un número
+
+00:07:50.439 --> 00:07:52.602
+y confiar en que todo siga funcionando.
+
+00:07:53.476 --> 00:07:56.652
+La transición se comprueba con datos anteriores y nuevos,
+
+00:07:56.839 --> 00:07:59.964
+y con las operaciones que la aplicación necesita realizar.
+
+00:08:00.940 --> 00:08:04.678
+No todas las reservas necesitan exactamente las mismas casillas.
+
+00:08:05.578 --> 00:08:07.902
+Una reserva de una plataforma puede traer
+
+00:08:07.915 --> 00:08:10.302
+un localizador del proveedor; una hecha en
+
+00:08:10.315 --> 00:08:12.702
+recepción puede indicar el puesto de atención.
+
+00:08:13.578 --> 00:08:16.965
+Si comparten consultas y ciclo de vida, podemos conservar
+
+00:08:16.978 --> 00:08:19.515
+campos comunes y un dato que indique el tipo.
+
+00:08:20.365 --> 00:08:22.890
+Es la idea del patrón polimórfico: fichas
+
+00:08:22.902 --> 00:08:25.265
+de la misma familia con detalles diferentes.
+
+00:08:26.140 --> 00:08:29.665
+La validación puede exigir reglas específicas para cada tipo.
+
+00:08:30.528 --> 00:08:32.477
+Si los usos o los permisos son muy
+
+00:08:32.490 --> 00:08:35.940
+distintos, conviene revisar si deben compartir colección.
+
+00:08:36.802 --> 00:08:38.403
+La flexibilidad no elimina la
+
+00:08:38.415 --> 00:08:40.578
+necesidad de explicar cada diferencia.
+
+00:08:41.452 --> 00:08:43.615
+Supongamos que la ficha del hotel contiene
+
+00:08:43.628 --> 00:08:45.628
+textos legales muy largos, pero el
+
+00:08:45.640 --> 00:08:48.902
+listado solo necesita nombre, comarca y plazas.
+
+00:08:49.790 --> 00:08:52.165
+Antes de crear otra colección, probamos
+
+00:08:52.178 --> 00:08:54.440
+una proyección para devolver esos campos.
+
+00:08:55.302 --> 00:08:56.978
+Si el tamaño y el conjunto de
+
+00:08:56.990 --> 00:08:59.565
+datos que se usa con frecuencia siguen causando
+
+00:08:59.578 --> 00:09:02.890
+problemas, podemos estudiar separar una parte pequeña.
+
+00:09:03.765 --> 00:09:06.165
+Esa es la idea del patrón de subconjunto.
+
+00:09:07.015 --> 00:09:10.352
+Ahora bien, si copiamos información, debemos decidir
+
+00:09:10.365 --> 00:09:12.802
+cuándo se actualiza y cómo se reconstruye.
+
+00:09:13.678 --> 00:09:15.440
+Menos campos en la respuesta no
+
+00:09:15.452 --> 00:09:18.628
+significa necesariamente menos documentos examinados.
+
+00:09:19.490 --> 00:09:22.065
+Hay que medir el problema que intentamos resolver.
+
+00:09:22.928 --> 00:09:26.090
+Para contar visitas, podríamos acumular cien clics y
+
+00:09:26.102 --> 00:09:27.928
+guardar el total de una sola vez.
+
+00:09:28.828 --> 00:09:30.765
+Eso reduce escrituras y puede ser
+
+00:09:30.778 --> 00:09:33.440
+exacto, siempre que no perdamos el acumulador.
+
+00:09:34.302 --> 00:09:36.728
+Otra técnica registra solo algunos eventos
+
+00:09:36.740 --> 00:09:39.228
+elegidos al azar y calcula una estimación.
+
+00:09:40.090 --> 00:09:43.402
+Esa segunda cifra tendrá variación respecto al total real.
+
+00:09:44.278 --> 00:09:47.865
+Son mecanismos diferentes, aunque ambos puedan ahorrar trabajo.
+
+00:09:48.728 --> 00:09:52.028
+Antes de aplicarlos, decidimos qué precisión necesitamos
+
+00:09:52.040 --> 00:09:53.852
+y qué ocurre si falla el proceso.
+
+00:09:54.702 --> 00:09:57.715
+Un contador orientativo de visitas admite decisiones
+
+00:09:57.728 --> 00:09:59.602
+que no podemos trasladar sin más a los
+
+00:09:59.615 --> 00:10:02.202
+cobros o a la última plaza disponible.
+
+00:10:03.078 --> 00:10:05.965
+Si gerencia pide siempre la misma suma, podemos
+
+00:10:05.978 --> 00:10:08.440
+preparar un resumen de noches por hotel y periodo.
+
+00:10:09.315 --> 00:10:10.765
+Es como dejar hecho el parte
+
+00:10:10.778 --> 00:10:12.152
+antes de que lo soliciten.
+
+00:10:13.040 --> 00:10:15.228
+Así ahorramos trabajo al leer, pero
+
+00:10:15.240 --> 00:10:17.265
+asumimos la obligación de mantenerlo.
+
+00:10:18.128 --> 00:10:20.052
+Si se cancela una reserva, el
+
+00:10:20.065 --> 00:10:22.602
+resumen debe reflejarlo; si se reintenta un
+
+00:10:22.615 --> 00:10:24.765
+evento, no debe contarse dos veces.
+
+00:10:25.652 --> 00:10:28.428
+También indicamos hasta qué momento está actualizado
+
+00:10:28.440 --> 00:10:31.152
+y cómo reconstruirlo desde los datos originales.
+
+00:10:32.040 --> 00:10:34.490
+Este patrón calculado intercambia trabajo de
+
+00:10:34.502 --> 00:10:36.602
+lectura por trabajo de actualización.
+
+00:10:37.502 --> 00:10:38.928
+Y sigue siendo un resumen de
+
+00:10:38.940 --> 00:10:41.928
+noches, no un porcentaje de ocupación automática.
+
+00:10:42.790 --> 00:10:44.290
+Pasemos a mantenimiento.
+
+00:10:45.152 --> 00:10:48.228
+Imaginamos ochocientas habitaciones, cada una con un
+
+00:10:48.240 --> 00:10:50.402
+sensor que envía una medida por minuto.
+
+00:10:51.265 --> 00:10:54.302
+Si llegan todas, son ochocientas medidas por minuto y
+
+00:10:54.315 --> 00:10:56.402
+cuarenta y ocho mil por hora para el grupo.
+
+00:10:57.265 --> 00:10:59.390
+Cada sensor aporta sesenta por hora.
+
+00:11:00.252 --> 00:11:03.152
+Este ritmo nos ayuda a estimar crecimiento, pero
+
+00:11:03.165 --> 00:11:06.778
+no obliga a agrupar manualmente: podemos comparar documentos
+
+00:11:06.790 --> 00:11:10.602
+individuales, grupos acotados y colecciones de series temporales.
+
+00:11:11.478 --> 00:11:13.378
+En la práctica reducimos la escala
+
+00:11:13.390 --> 00:11:15.190
+a un sensor durante dos horas.
+
+00:11:16.065 --> 00:11:18.952
+Así podemos comprobar las ciento veinte medidas una por
+
+00:11:18.965 --> 00:11:21.702
+una, en lugar de quedarnos solo con un dibujo.
+
+00:11:22.552 --> 00:11:24.228
+Un bucket se parece a una caja
+
+00:11:24.240 --> 00:11:26.678
+etiquetada para un grupo limitado de medidas.
+
+00:11:27.565 --> 00:11:28.990
+Aquí hacemos una por hora,
+
+00:11:29.152 --> 00:11:31.540
+identificando hotel, habitación y sensor.
+
+00:11:32.402 --> 00:11:36.402
+La primera conserva sesenta lecturas, suma mil cuatrocientos setenta
+
+00:11:36.415 --> 00:11:39.052
+y da una media de veinticuatro coma cinco grados.
+
+00:11:39.915 --> 00:11:42.652
+La segunda conserva otras sesenta, suma mil
+
+00:11:42.665 --> 00:11:45.152
+quinientos noventa y da veintiséis coma cinco.
+
+00:11:46.015 --> 00:11:48.465
+Las medidas llegan desordenadas, así que
+
+00:11:48.478 --> 00:11:50.315
+el cálculo las ordena por instante.
+
+00:11:51.178 --> 00:11:54.702
+La práctica conserva los originales y reconstruye la colección
+
+00:11:54.715 --> 00:11:57.752
+de salida: repetir el cálculo con la misma entrada
+
+00:11:57.765 --> 00:12:00.652
+vuelve a producir dos cajas, sin añadir otras dos.
+
+00:12:01.636 --> 00:12:03.374
+¿Qué ocurre si falta una lectura?
+
+00:12:04.236 --> 00:12:07.561
+Si recibimos cincuenta y nueve valores, dividimos su suma
+
+00:12:07.574 --> 00:12:11.036
+entre cincuenta y nueve, y advertimos que falta información.
+
+00:12:11.898 --> 00:12:14.124
+No suponemos que la hora esté completa.
+
+00:12:14.986 --> 00:12:17.498
+Ahora imaginad una lectura tardía de treinta
+
+00:12:17.511 --> 00:12:19.786
+grados para la segunda hora del ejercicio.
+
+00:12:20.648 --> 00:12:23.298
+Pasaríamos a sesenta y una medidas, suma
+
+00:12:23.311 --> 00:12:25.336
+mil seiscientos veinte y media igual a
+
+00:12:25.348 --> 00:12:27.511
+esa suma dividida entre sesenta y uno.
+
+00:12:28.386 --> 00:12:31.011
+Necesitamos decidir cómo actualizar la caja
+
+00:12:31.024 --> 00:12:33.948
+y cómo reconocer reintentos mediante el identificador.
+
+00:12:34.811 --> 00:12:37.511
+Para intervalos irregulares, además, una media
+
+00:12:37.524 --> 00:12:40.136
+temporal puede requerir ponderaciones diferentes.
+
+00:12:41.048 --> 00:12:43.136
+La mayoría de las reservas tiene pocos
+
+00:12:43.148 --> 00:12:46.098
+extras, pero una agencia puede pedir doscientos.
+
+00:12:46.961 --> 00:12:49.424
+El patrón atípico mantiene sencillo el caso
+
+00:12:49.436 --> 00:12:52.398
+frecuente y guarda fuera la continuación excepcional.
+
+00:12:53.286 --> 00:12:55.761
+En nuestro ejemplo dejamos seis extras dentro y
+
+00:12:55.774 --> 00:12:59.048
+ciento noventa y cuatro fuera, enlazados con la reserva.
+
+00:12:59.898 --> 00:13:02.136
+Una marca indica que hay más información y
+
+00:13:02.148 --> 00:13:05.911
+la lectura debe recuperarla completa, sin pérdidas ni duplicados.
+
+00:13:06.786 --> 00:13:08.448
+También hay que decidir qué ocurre
+
+00:13:08.461 --> 00:13:10.198
+si falla una de las escrituras.
+
+00:13:11.074 --> 00:13:12.774
+Optimizar el caso habitual no
+
+00:13:12.786 --> 00:13:14.674
+autoriza a olvidar la excepción.
+
+00:13:15.536 --> 00:13:16.961
+El límite de seis es una
+
+00:13:16.974 --> 00:13:19.174
+elección didáctica que debemos justificar.
+
+00:13:20.036 --> 00:13:22.786
+Una ficha flexible también puede tener reglas.
+
+00:13:23.674 --> 00:13:25.511
+Pensad en un formulario donde unas
+
+00:13:25.524 --> 00:13:28.198
+casillas son obligatorias y otras opcionales.
+
+00:13:29.074 --> 00:13:32.536
+El validador del ejercicio exige hotel, noches e importe.
+
+00:13:33.424 --> 00:13:35.636
+Las noches deben ser un entero entre uno
+
+00:13:35.648 --> 00:13:38.461
+y sesenta, y el importe un número no negativo.
+
+00:13:39.311 --> 00:13:42.374
+Escribir dos como texto no cumple el tipo exigido.
+
+00:13:43.248 --> 00:13:45.786
+En cambio, añadir mascota puede aceptarse
+
+00:13:45.798 --> 00:13:48.461
+porque este contrato permite campos adicionales.
+
+00:13:49.324 --> 00:13:51.311
+Un contrato cerrado también puede ser
+
+00:13:51.324 --> 00:13:53.448
+adecuado si planificamos su evolución.
+
+00:13:54.311 --> 00:13:57.848
+Para dinero real, además, debemos acordar una representación
+
+00:13:57.861 --> 00:14:01.498
+exacta, como céntimos enteros o un tipo decimal adecuado.
+
+00:14:02.361 --> 00:14:04.911
+Después de definir las reglas, probamos una
+
+00:14:04.924 --> 00:14:07.198
+ficha válida y otra que debe rechazarse.
+
+00:14:08.074 --> 00:14:11.724
+También comprobamos la configuración: rechazar una escritura no
+
+00:14:11.736 --> 00:14:14.074
+es lo mismo que permitirla dejando un aviso.
+
+00:14:14.936 --> 00:14:16.386
+En la práctica se exige el
+
+00:14:16.398 --> 00:14:18.948
+contrato y se rechazan los incumplimientos.
+
+00:14:19.811 --> 00:14:21.961
+Pero activar un validador nuevo no recorre
+
+00:14:21.974 --> 00:14:25.236
+ni repara automáticamente todos los documentos anteriores.
+
+00:14:26.111 --> 00:14:28.024
+Si vamos a cambiar una colección que
+
+00:14:28.036 --> 00:14:31.061
+ya contiene información, primero la inspeccionamos,
+
+00:14:31.274 --> 00:14:34.974
+preparamos lectores compatibles y planificamos la transformación.
+
+00:14:35.836 --> 00:14:37.824
+El mensaje de validación nos ayuda
+
+00:14:37.836 --> 00:14:40.824
+a localizar la regla incumplida; debemos leerlo
+
+00:14:40.836 --> 00:14:42.836
+y contrastarlo con lo que esperábamos.
+
+00:14:43.711 --> 00:14:47.311
+Para practicar utilizaremos otra base, llamada hotel modelado.
+
+00:14:48.186 --> 00:14:50.498
+El preparador crea un hotel, una reserva
+
+00:14:50.511 --> 00:14:53.798
+con referencia, una ficha con tarifas, dos reservas
+
+00:14:53.811 --> 00:14:56.348
+para estudiar versiones y ciento veinte medidas.
+
+00:14:57.211 --> 00:14:59.148
+Las tarifas iniciales están en una
+
+00:14:59.161 --> 00:15:01.248
+sola ficha con tres campos de precio.
+
+00:15:02.124 --> 00:15:05.586
+Antes de trabajar, comprobamos la base y esos recuentos.
+
+00:15:06.448 --> 00:15:08.548
+Si las colecciones ya existen, el
+
+00:15:08.561 --> 00:15:10.848
+preparador se detiene sin sobrescribirlas.
+
+00:15:11.711 --> 00:15:13.736
+No hace falta modificar las reservas
+
+00:15:13.748 --> 00:15:15.948
+originales de los apartados anteriores.
+
+00:15:16.848 --> 00:15:19.686
+Y si una carga se interrumpe, revisamos qué quedó
+
+00:15:19.698 --> 00:15:23.161
+antes de repetirla, conservando el trabajo que ya teníamos.
+
+00:15:24.036 --> 00:15:25.874
+La prueba del rediseño consiste
+
+00:15:25.886 --> 00:15:27.461
+en demostrar qué se conserva.
+
+00:15:28.311 --> 00:15:30.124
+En las tarifas mantenemos los tres
+
+00:15:30.136 --> 00:15:32.548
+importes originales y añadimos el cuarto.
+
+00:15:33.424 --> 00:15:36.211
+En el versionado siguen existiendo dos reservas,
+
+00:15:36.361 --> 00:15:39.098
+con las mismas noches, importes y teléfonos.
+
+00:15:39.974 --> 00:15:41.886
+Y en las medidas no basta con obtener
+
+00:15:41.898 --> 00:15:45.098
+dos cajas y una media correcta: comparamos los ciento
+
+00:15:45.111 --> 00:15:48.798
+veinte identificadores, instantes y temperaturas con el origen.
+
+00:15:49.686 --> 00:15:51.398
+Una omisión y una repetición
+
+00:15:51.411 --> 00:15:53.324
+podrían compensarse en un total.
+
+00:15:54.224 --> 00:15:56.336
+El apartado incluye un comprobador de
+
+00:15:56.348 --> 00:15:58.148
+solo lectura para esa práctica.
+
+00:15:59.036 --> 00:16:01.748
+Reorganizar datos tiene sentido cuando podemos
+
+00:16:01.761 --> 00:16:04.648
+explicar y demostrar que siguen siendo utilizables.
+
+00:16:05.644 --> 00:16:08.019
+Para terminar, no se trata de aplicar todos
+
+00:16:08.032 --> 00:16:10.206
+los patrones ni de memorizar sus nombres.
+
+00:16:11.094 --> 00:16:13.994
+Queremos poder decir: recepción abre estos datos,
+
+00:16:14.119 --> 00:16:15.944
+crecen de esta manera y necesitan
+
+00:16:15.956 --> 00:16:18.756
+estas garantías; por eso los organizo así.
+
+00:16:19.632 --> 00:16:22.169
+Agrupamos lo que conviene leer y cambiar junto,
+
+00:16:22.306 --> 00:16:27.182
+referenciamos lo compartido y planificamos crecimiento, validación y versiones.
+
+00:16:28.044 --> 00:16:30.206
+Después lo comprobamos con ejemplos.
+
+00:16:31.082 --> 00:16:33.156
+Crear una colección o agrupar medidas
+
+00:16:33.169 --> 00:16:35.882
+cambia la organización, pero no demuestra haber
+
+00:16:35.894 --> 00:16:38.419
+añadido servidores ni tolerancia a fallos.
+
+00:16:39.282 --> 00:16:42.619
+En el siguiente apartado estudiaremos copias y particiones.
+
+00:16:43.482 --> 00:16:46.944
+Un sistema distribuido también necesita un modelo coherente.

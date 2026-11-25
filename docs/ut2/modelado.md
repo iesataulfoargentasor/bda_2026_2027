@@ -17,6 +17,21 @@ En la [práctica de Pentaho](../ut1/tarea-clase.md) usasteis `id_hotel` para rec
 
     **Ampliación:** diseñar el caso completo, probar datos tardíos y estudiar otros patrones. Las condiciones de entrega se concretan en Moodle.
 
+## Vídeo introductorio
+
+Si el hotel cambia de nombre, ¿qué debe conservar una reserva antigua y qué teléfono necesitamos consultar hoy? Una fotografía y una agenda nos ayudan a distinguir datos históricos y actuales. A partir de las fichas del hotel explicamos cuándo embeber o referenciar, cómo limitar el crecimiento y cómo evolucionar el esquema. Después agrupamos las medidas del sensor en cajas por hora y entendemos la validación como un contrato, comprobando que el rediseño conserva la información. **Duración de 16 minutos y 48 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/modelado-documental-portada.jpg" aria-label="Modelado documental. Organizar las fichas del hotel y conservar su significado" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/modelado-documental.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/modelado-documental.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/modelado-documental.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/modelado-documental.es.srt){target="_blank" rel="noopener"}
+
+## De las consultas al diseño de las fichas
+
 Ya sabéis consultar una ficha en MongoDB. Ahora decidiréis qué datos guardar con la reserva, cuáles consultar en otra colección y qué información debe seguir siendo legible si cambia el formato de las nuevas fichas.
 
 Tanto en SQL como en MongoDB partimos de datos, consultas y reglas de negocio. Una escritura en un documento es atómica; modificar varios documentos como una unidad requiere una transacción explícita en una topología compatible. El servidor independiente de 2.6 permite esta práctica, pero no transacciones multidocumento.
