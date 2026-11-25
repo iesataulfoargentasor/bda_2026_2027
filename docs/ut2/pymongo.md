@@ -19,6 +19,21 @@ En la [práctica de Pentaho](../ut1/tarea-clase.md) dejasteis a gerencia un info
 
     **Ampliación:** transacción de reserva de parking sobre el replica set y una página local con Flask. Se indican por separado sus requisitos. Las entregas evaluables se concretan en Moodle.
 
+## Vídeo introductorio
+
+Gerencia vuelve a pedir el parte de noches del hotel: ahora un programa de Python enviará la consulta y comprobará la respuesta. Las fichas del archivo nos ayudan a entender filtros, cursores, agregaciones y escrituras; después, una única plaza de parking sirve para explicar las transacciones. El recorrido conecta con Pentaho y con los apartados anteriores de MongoDB, mantiene los datos originales y distingue el trabajo esencial de las ampliaciones. **Duración aproximada de 17 minutos y 40 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/mongodb-python-portada.jpg" aria-label="MongoDB y Python. Del parte de gerencia a una aplicación que comprueba sus resultados" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/mongodb-python.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/mongodb-python.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/mongodb-python.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/mongodb-python.es.srt){target="_blank" rel="noopener"}
+
+## Del parte manual al programa de Python
+
 [PyMongo](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) es el driver oficial. Usaremos Python 3.12, **PyMongo 4.x** y MongoDB 7, en coherencia con el laboratorio. Desde la raíz del repositorio, cread el entorno de Python; si ya existe, reutilizadlo:
 
 ```powershell

@@ -1,0 +1,198 @@
+[
+  {
+    "title": "El mismo parte, ahora desde Python",
+    "label": "Gerencia necesita volver a obtener el informe de noches del hotel.",
+    "active": 0, "kind": "three",
+    "cards": [["UT1 · Pentaho", "Dejamos preparado un informe que podía repetirse."], ["2.6 · MongoDB", "Consultamos las reservas y sumamos las noches."], ["2.9 · Python", "Un programa pide el parte y comprueba el resultado."]],
+    "takeaway": "Los mismos datos y la misma pregunta deben producir el mismo resultado.",
+    "narration": "Imaginad que gerencia vuelve a pedir el parte de noches reservadas. En la unidad uno lo preparábamos con Pentaho, y en esta unidad ya hemos consultado las reservas en MongoDB. Ahora queremos repetir esa tarea desde Python. Si usamos los mismos documentos y hacemos la misma pregunta, esperamos las mismas cifras: once noches en Laredo y cuarenta y seis en total. Ese será nuestro punto de referencia. A lo largo del vídeo veremos cómo pedir el informe, cómo interpretar las respuestas y cómo modificar una reserva sin perder de vista qué datos estamos utilizando."
+  },
+  {
+    "title": "PyMongo lleva la petición al archivo",
+    "label": "El driver oficial comunica el programa de Python con MongoDB.",
+    "active": 0, "kind": "flow",
+    "steps": [["Python", "Prepara la pregunta", "Presenta el resultado"], ["PyMongo", "Envía la operación", "Recibe la respuesta"], ["MongoDB", "Consulta los datos", "Calcula el resumen"]],
+    "takeaway": "En este parte, MongoDB calcula y Python presenta.",
+    "narration": "Para entender PyMongo, pensad en una oficina con un archivo y una persona que lleva las solicitudes. Python prepara la petición: quiero saber cuántas noches tenemos por hotel. PyMongo, el driver oficial, permite enviarla y recibir la respuesta. MongoDB busca y agrupa los documentos. Después, Python muestra el resumen. La comparación ayuda a repartir los papeles, aunque en realidad hablamos de programas que intercambian mensajes. No hace falta descargar todas las reservas para sumarlas en Python. Podemos encargar ese cálculo al motor y recoger únicamente las filas del parte que necesitamos presentar."
+  },
+  {
+    "title": "Preparar el puesto antes de empezar",
+    "label": "El laboratorio utiliza Python 3.12, PyMongo 4.x y MongoDB 7.",
+    "active": 0, "kind": "three",
+    "cards": [["Entorno", "Reutiliza el entorno y comprueba las versiones."], ["Driver", "Instala PyMongo; BSON ya viene incluido."], ["Dirección", "La URI indica a qué servidor vas a pedir los datos."]],
+    "takeaway": "Sigue los pasos del apartado y conserva las credenciales fuera del código.",
+    "narration": "Antes de pedir nada al archivo, preparemos el puesto. El apartado indica las versiones del laboratorio y cómo crear o reutilizar el entorno de Python. Instalamos PyMongo dentro de ese entorno; el soporte de BSON ya viene incluido, así que no necesitamos instalar otro paquete con ese nombre. También revisamos la dirección de conexión, llamada URI. Es como escribir correctamente el destino de la solicitud. Si incluye una contraseña, no debe aparecer en el código que entregamos ni en una captura. Los ejemplos completos descargables nos ayudarán a empezar sin mezclar fragmentos de programas diferentes."
+  },
+  {
+    "title": "Cada ejercicio tiene su carpeta",
+    "label": "Cambiar la conexión no copia los datos entre laboratorios.",
+    "active": 0, "kind": "three",
+    "cards": [["hotel", "Originales para consultas, parte y página de gerencia."], ["hotel_escrituras", "Copia de ejercicios para practicar altas y cambios."], ["Replica set", "hotel_python_lab y hotel_tx tienen sus propios datos."]],
+    "takeaway": "Comprueba servidor y base antes de leer o modificar.",
+    "narration": "Ahora coloquemos cada carpeta en su sitio. Para las consultas volvemos al servidor del apartado dos punto seis y a la base hotel, con sus quince reservas y seis opiniones originales. Para modificar utilizamos hotel escrituras, una copia de trabajo. Las pruebas de confirmación y de transacciones usan el conjunto de réplicas del apartado anterior y bases propias. Cambiar de dirección no traslada documentos entre esos entornos. Además, dos laboratorios no pueden ocupar a la vez el mismo puerto del ordenador. Por eso seguimos las indicaciones de parada y arranque, conservando siempre los volúmenes con los datos."
+  },
+  {
+    "title": "Tener el teléfono no demuestra que respondan",
+    "label": "Crear un cliente, comprobar acceso y revisar los datos son pasos distintos.",
+    "active": 0, "kind": "flow",
+    "steps": [["MongoClient", "Prepara el cliente", "No verifica el parte"], ["ping", "Comprueba acceso", "El servidor responde"], ["Consultas", "Revisan los datos", "15 reservas · 6 opiniones"]],
+    "takeaway": "Una base vacía accesible no equivale a una conexión fallida.",
+    "narration": "Tener un teléfono con un número guardado no demuestra que alguien conteste al otro lado. Con el cliente ocurre algo parecido. Crear MongoClient y obtener una referencia a hotel prepara objetos de Python, pero no confirma que estén los datos esperados. Primero pedimos una operación, como ping, para comprobar acceso al servidor. Después revisamos las colecciones, los recuentos y las consultas necesarias. Un nombre de base mal escrito puede apuntar a una carpeta vacía sin dar un error inmediato. Si aparecen cero reservas, por tanto, revisamos el destino y los datos antes de concluir que la conexión ha fallado."
+  },
+  {
+    "title": "Un cliente reutilizable y esperas con límite",
+    "label": "El pool mantiene conexiones que el programa puede reutilizar.",
+    "active": 0, "kind": "two",
+    "cards": [["Reutilizar", "Un cliente por programa; las operaciones aprovechan sus conexiones."], ["Interpretar", "Conectar, encontrar servidor y esperar confirmación tienen límites distintos."]],
+    "takeaway": "Un tiempo de espera agotado no demuestra que una escritura se haya deshecho.",
+    "narration": "Una vez preparado el cliente, lo reutilizamos. Pensemos en una centralita con varias líneas disponibles: no construimos una centralita nueva por cada ficha que consultamos. El pool mantiene conexiones y crece según la demanda, hasta sus límites; fijar un máximo no significa abrirlas todas inmediatamente. También distinguimos cuánto esperamos para conectar, para encontrar un servidor adecuado y para recibir la confirmación de una escritura. Son esperas diferentes. Si vence un plazo, tendremos que interpretar qué sabemos del resultado. No podemos suponer automáticamente que el cambio se ha deshecho. Al terminar el programa, cerramos el cliente."
+  },
+  {
+    "title": "Traducir una pregunta del mostrador",
+    "label": "Buscamos reservas web de al menos tres noches.",
+    "active": 1, "kind": "flow",
+    "steps": [["Filtrar", "Canal: web", "Noches: 3 o más"], ["Proyectar", "Hotel e importe", "Noches · sin _id"], ["Comprobar", "3 reservas", "Laredo · Potes · Noja"]],
+    "takeaway": "El filtro elige documentos; la proyección elige los campos que recibes.",
+    "narration": "Vamos con una petición concreta: reservas hechas por la web que tengan al menos tres noches. El filtro expresa qué fichas buscamos. La proyección indica qué datos queremos ver de cada una: hotel, importe y noches, por ejemplo. En Python escribimos estas condiciones con diccionarios, conservando los operadores de MongoDB como cadenas. Y recordamos que los valores verdadero, falso y nulo se escriben de forma diferente a JavaScript. Con los originales, esta consulta encuentra tres reservas: Laredo, Potes y Noja. Podemos contrastarlas con la consulta manual del apartado dos punto seis para comprobar que hemos traducido bien la pregunta."
+  },
+  {
+    "title": "El cursor entrega las fichas por lotes",
+    "label": "Recorrer un resultado permite procesarlo sin cargarlo entero en una lista.",
+    "active": 1, "kind": "cursor",
+    "takeaway": "Filtra, pide los campos necesarios y controla cuánto materializas en memoria.",
+    "narration": "Cuando usamos find, recibimos un cursor. Imaginad que el archivo entrega las fichas por lotes y nosotros las vamos revisando. Al recorrer el cursor obtenemos los documentos; no necesitamos traer todo de golpe a una lista. Esto importa cuando el resultado es grande. Convertir el cursor completo en una lista, o exportarlo entero como texto, puede consumir mucha memoria. Además, algunos valores de BSON, como fechas e identificadores, necesitan una conversión apropiada para representarse en JSON. El apartado utiliza las herramientas de BSON y limita el ejemplo de exportación. Consultar pocos campos y pocas filas es una decisión consciente."
+  },
+  {
+    "title": "Una cadena de trabajo para elaborar el parte",
+    "label": "Cada etapa transforma el resultado que recibirá la siguiente.",
+    "active": 1, "kind": "flow",
+    "steps": [["$match", "Elegir reservas", "Aplicar el filtro"], ["$group", "Agrupar por hotel", "Sumar las noches"], ["$sort", "Ordenar el parte", "Preparar la lectura"]],
+    "takeaway": "Sumar noches y contar reservas responden a preguntas distintas.",
+    "narration": "Para elaborar el parte usamos una agregación, una cadena de trabajo con varias etapas. Primero podemos seleccionar las reservas que interesan. Después reunimos las de cada hotel y sumamos sus noches. Finalmente ordenamos el resumen. Es parecido a separar fichas, formar montones por sede y escribir los totales en una hoja. Aquí lo hace MongoDB y Python recibe el resultado. Hay un detalle importante: sumar el campo noches acumula estancias, mientras que sumar uno por documento cuenta reservas. Las dos operaciones son útiles, pero responden a preguntas distintas. Antes de elegirlas, debemos tener claro qué quiere conocer gerencia."
+  },
+  {
+    "title": "Las cifras tienen que contar la misma historia",
+    "label": "El parte completo de los originales suma 46 noches.",
+    "active": 1, "kind": "ledger",
+    "takeaway": "Todos los canales: 46 noches. Solo web y ota: 30 noches.",
+    "narration": "El parte completo devuelve cuarenta y seis noches, repartidas entre los seis hoteles, con once en Laredo. Sin embargo, uno de los ejemplos del apartado filtra los canales web y agencias en línea. Ese resultado suma treinta noches. La diferencia es correcta: hemos cambiado la pregunta. También debemos cuidar las unidades. La media del campo importe es un importe medio por reserva incluida, no un precio medio por noche ni un cobro confirmado. Y sumar noches reservadas tampoco calcula un porcentaje de ocupación: para eso necesitaríamos capacidad y calendario. Un número correcto necesita una explicación igual de correcta."
+  },
+  {
+    "title": "Elegir los dos importes mayores de Potes",
+    "label": "Primero se ordena el conjunto filtrado; después se limita.",
+    "active": 1, "kind": "ranking",
+    "takeaway": "Cursor y pipeline deben usar los mismos datos, filtro y orden.",
+    "narration": "Supongamos ahora que gerencia pide las dos reservas de mayor importe de Potes. Sus importes originales son ciento veinticuatro, cuatrocientos noventa y doscientos ochenta. Primero filtramos Potes, después ordenamos de mayor a menor y, al final, nos quedamos con dos: cuatrocientos noventa y doscientos ochenta. Si limitamos antes de ordenar, podríamos descartar una reserva que debía entrar. Podemos expresar la consulta con un cursor o con un pipeline, manteniendo las mismas condiciones. Si hay empates, añadimos un criterio de desempate. Y para pasar páginas con muchos resultados, tendremos que revisar también el coste de saltar filas."
+  },
+  {
+    "title": "Copiar una opinión en varias fichas no crea opiniones",
+    "label": "Las uniones y los arrays pueden multiplicar las filas del resultado.",
+    "active": 1, "kind": "two",
+    "cards": [["Unir por hotel", "3 reservas de Laredo reciben las mismas 2 opiniones: 6 asociaciones."], ["Separar extras", "Una reserva con 2 extras puede aparecer en 2 filas tras $unwind."]],
+    "takeaway": "Cuenta entidades distintas; revisa qué representa cada fila después de cada etapa.",
+    "narration": "Hay otra trampa fácil de entender con papel. Tenemos tres fichas de reservas de Laredo y dos opiniones sobre ese hotel. Si adjuntamos una copia de las dos opiniones a cada reserva, veremos seis asociaciones, pero siguen existiendo solo dos opiniones diferentes. El cruce del ejemplo usa el nombre del hotel; no identifica una estancia concreta. Algo parecido ocurre al separar los extras de una reserva en varias filas. Si después sumamos el importe de cada fila sin ajustar el cálculo, podemos contarlo varias veces. Por eso, tras cada etapa, nos preguntamos qué representa ahora un documento del resultado."
+  },
+  {
+    "title": "Practicar las escrituras en una copia",
+    "label": "hotel_escrituras permite comprobar cambios conservando los originales.",
+    "active": 2, "kind": "three",
+    "cards": [["Insertar", "Añade una reserva y guarda el identificador recibido."], ["Evolucionar", "El campo mascota puede convivir con fichas antiguas."], ["Verificar", "Consulta el alta y revisa que hotel conserva sus recuentos."]],
+    "takeaway": "Añadir un campo exige revisar lectores, validadores y valores ausentes.",
+    "narration": "Hasta aquí hemos leído. Para practicar escrituras cambiamos a la copia de ejercicios y comprobamos su nombre antes de empezar. Podemos insertar una reserva que incluya el campo mascota, aunque las fichas antiguas no lo tengan. Guardamos el identificador que devuelve la inserción y consultamos esa reserva para verificarla. Si otra colección necesita señalarla, conservamos exactamente el valor y el tipo de ese identificador. La flexibilidad del documento permite incorporar información, pero debemos revisar cómo reaccionan los validadores y los programas lectores cuando falta un campo. Y volvemos a comprobar que los originales siguen intactos para generar el parte."
+  },
+  {
+    "title": "Encontrar una ficha no siempre significa cambiarla",
+    "label": "matched_count y modified_count explican resultados diferentes.",
+    "active": 2, "kind": "metrics",
+    "steps": [["Coincidencias", "1", "La reserva existe"], ["Modificaciones", "0", "Ya tenía ese valor"], ["Comprobación", "Leer", "Confirmar el estado"]],
+    "takeaway": "Interpreta los contadores y revisa el antes y el después.",
+    "narration": "Imaginad que pedimos marcar una reserva como revisada y ya estaba marcada. El filtro encuentra una ficha, pero no hace falta cambiarla. Eso explica un resultado con una coincidencia y cero modificaciones. No es automáticamente un error. Para cambiar campos utilizamos operadores como set o incremento; reemplazar el documento completo es otra operación. También interpretamos el significado de los datos: un importe negativo merece revisión, no convertirlo a cero sin saber por qué aparece. Y al practicar el borrado usamos el identificador del alta que acabamos de crear, comprobando cuántos documentos desaparecen y conservando el resto de la colección."
+  },
+  {
+    "title": "Un sobre con varias órdenes no es una transacción",
+    "label": "bulk_write agrupa operaciones; cada resultado y cada error deben revisarse.",
+    "active": 2, "kind": "two",
+    "cards": [["Lote", "Reduce viajes al servidor; puede dejar operaciones anteriores aplicadas."], ["Errores", "Una clave duplicada y un servidor inaccesible requieren explicaciones distintas."]],
+    "takeaway": "Una respuesta incierta exige comprobar el estado antes de repetir una operación.",
+    "narration": "Enviar varias órdenes en un sobre puede ahorrar viajes al archivo. Esa es una forma sencilla de imaginar una escritura por lotes. Pero el sobre no garantiza que todas las órdenes se apliquen juntas o ninguna. Si aparece un error, algunas anteriores pueden haber quedado hechas. Por eso revisamos el resultado. Una clave duplicada indica un conflicto con un identificador o índice único; no encontrar servidor es un problema diferente. Mostramos mensajes comprensibles y evitamos ocultar el fallo. Si no sabemos si una escritura terminó, comprobamos su identificador antes de repetirla, para no crear una segunda reserva por accidente."
+  },
+  {
+    "title": "Las garantías del 2.8 también llegan a Python",
+    "label": "Elegir dónde leer y pedir confirmación de escritura son decisiones distintas.",
+    "active": 2, "kind": "three",
+    "cards": [["Lectura", "readPreference selecciona el miembro al que se puede consultar."], ["Visibilidad", "readConcern establece qué datos puede mostrar la lectura."], ["Confirmación", "writeConcern fija las condiciones para confirmar una escritura."]],
+    "takeaway": "Una confirmación mayoritaria no significa que todos los secundarios estén al día.",
+    "narration": "Volvamos ahora al conjunto de réplicas. Las decisiones del apartado anterior siguen existiendo cuando usamos Python. La preferencia de lectura ayuda a seleccionar dónde consultamos; las condiciones de lectura definen qué datos son visibles; y la confirmación de escritura establece cuándo damos el cambio por confirmado. Imaginad que una reserva ya tiene confirmación mayoritaria, pero el secundario elegido todavía no la ha aplicado. Esa lectura podría no encontrarla aún. Mayoría no significa todos. Además, pedir lecturas a un secundario no le permite aceptar escrituras ordinarias. El ejemplo utiliza documentos de prueba identificados para observar estas diferencias sin tocar el parte original."
+  },
+  {
+    "title": "El cliente necesita encontrar a los miembros",
+    "label": "Los nombres rs-laredo, rs-potes y rs-noja pertenecen a la red Docker del laboratorio.",
+    "active": 2, "kind": "two",
+    "cards": [["Dentro de la red", "El contenedor de Python puede resolver los nombres del conjunto."], ["Desde otro lugar", "localhost señala al equipo o contenedor donde se ejecuta el cliente."]],
+    "takeaway": "Sigue la conexión indicada para cada práctica; cambiar la URI no cambia el lugar de ejecución.",
+    "narration": "Para que el cliente encuentre a los miembros del conjunto, también importa desde dónde se ejecuta. Los nombres del laboratorio se resuelven dentro de su red de Docker. Por eso el apartado propone ejecutar estas pruebas desde un contenedor de Python conectado a esa red. Dentro de ese contenedor, localhost señala al propio cliente, no al servidor MongoDB de al lado. Es como preguntar por la habitación de al lado usando una dirección que solo significa esta habitación. Seguir la conexión correspondiente evita confundir un problema de nombres o de red con un problema de consultas o de documentos."
+  },
+  {
+    "title": "Una plaza de parking y dos papeles que deben coincidir",
+    "label": "Ampliación: descontar una plaza y crear la reserva como una sola decisión.",
+    "active": 3, "kind": "parking",
+    "takeaway": "La transacción multidocumento del ejercicio necesita el replica set.",
+    "narration": "Veamos la ampliación con un ejemplo cotidiano. Solo queda una plaza de parking. Para reservarla tenemos que actualizar el papel del cupo y escribir la nueva reserva. Si descontamos la plaza pero falla la reserva, el libro queda incoherente. Si creamos la reserva sin descontar cupo, podemos ofrecer la misma plaza otra vez. Queremos confirmar los dos cambios juntos, o descartarlos juntos si la operación aborta. Para eso usamos una transacción explícita. Una actualización de un solo documento ya es atómica; aquí coordinamos documentos diferentes. El ejercicio se ejecuta sobre el conjunto de réplicas, porque el servidor independiente no admite esta transacción multidocumento."
+  },
+  {
+    "title": "La regla del negocio hay que comprobarla",
+    "label": "Solo descontamos cuando hay al menos una plaza libre.",
+    "active": 3, "kind": "flow",
+    "steps": [["Intentar", "Cupo de 1 a 0", "Si hay una plaza"], ["Comprobar", "¿Se modificó 1?", "Sin cupo: rechazar"], ["Crear", "Insertar la reserva", "Misma transacción"]],
+    "takeaway": "No encontrar plazas no provoca por sí solo una excepción.",
+    "narration": "La transacción no adivina las reglas del hotel. Primero intentamos descontar una plaza solo si queda al menos una. Después comprobamos que realmente se ha modificado el documento esperado. Si no había cupo, el resultado puede indicar cero cambios sin provocar una excepción técnica. El programa debe interpretar esa situación y rechazar la reserva. Si hay plaza, continúa con la inserción. Todas las operaciones participantes utilizan la misma sesión. Así la regla queda expresada de forma concreta: no puede confirmarse la reserva si no se ha conseguido descontar su plaza. La garantía técnica necesita acompañarse de una comprobación del negocio."
+  },
+  {
+    "title": "Probar el éxito, el rechazo y el aborto",
+    "label": "Cada prueba responde a una pregunta diferente.",
+    "active": 3, "kind": "three",
+    "cards": [["Éxito", "Con 1 plaza: queda 1 reserva y 0 plazas libres."], ["Sin cupo", "El segundo intento conserva 1 reserva y 0 plazas."], ["Error al insertar", "El comprobador verifica que el descuento se deshace."]],
+    "takeaway": "Para demostrar el aborto, el fallo debe ocurrir después del descuento.",
+    "narration": "Ahora hay que demostrarlo. En una base nueva, la primera ejecución consigue la única plaza: queda una reserva y cero plazas libres. La segunda debe rechazar otra reserva y conservar ese estado. Pero esa segunda prueba no demuestra todavía qué ocurre si falla la inserción después del descuento, porque se detiene antes. Para comprobar el aborto, el apartado ofrece un programa independiente que provoca una clave duplicada en una base temporal propia. Entonces deben conservarse la plaza disponible y la reserva que ya existía. No reponemos cupo en medio de una prueba ni confundimos un resultado esperado con una observación que aún no hemos realizado."
+  },
+  {
+    "title": "Reintentar exige recordar qué estábamos haciendo",
+    "label": "El callback de una transacción puede ejecutarse de nuevo ante ciertos errores.",
+    "active": 3, "kind": "two",
+    "cards": [["Identificador", "Se prepara antes del intento y se conserva durante sus reintentos."], ["Efectos externos", "Un correo o un cobro no se deshacen al abortar MongoDB."]],
+    "takeaway": "Ante un resultado incierto, consulta la operación anterior antes de crear otra.",
+    "narration": "Hay un último detalle en las transacciones: la función que contiene las operaciones puede ejecutarse otra vez ante determinados errores. Por eso preparamos el identificador fuera de esa función y lo conservamos durante los reintentos. Tampoco enviamos dentro un correo que pudiera repetirse: abortar MongoDB no borra un mensaje ya enviado ni anula un cargo bancario externo. Además, volver a arrancar el programa del ejemplo genera otro identificador. Si el resultado anterior quedó incierto, primero consultamos el identificador que habíamos guardado. Los reintentos del driver ayudan, pero no diseñan por nosotros un proceso de reservas sin duplicados entre ejecuciones."
+  },
+  {
+    "title": "Una ventana sencilla para gerencia",
+    "label": "Ampliación con Flask: mostrar en el navegador las noches por hotel.",
+    "active": 3, "kind": "flow",
+    "steps": [["MongoDB", "Agrupa las reservas", "Calcula las noches"], ["Flask", "Recibe el resumen", "Prepara la página"], ["Navegador", "Muestra 6 hoteles", "Total: 46 noches"]],
+    "takeaway": "La página muestra noches reservadas; no calcula un porcentaje de ocupación.",
+    "narration": "La otra ampliación abre una ventana para gerencia mediante Flask. Volvemos al servidor que conserva los originales y comprobamos de nuevo el parte. MongoDB calcula las noches por hotel; Flask recibe esas filas y una plantilla las presenta en el navegador. La aplicación reutiliza su cliente dentro de cada proceso, en lugar de abrir uno nuevo para cada petición. Aunque la dirección de ejemplo se llame ocupación, lo que mostramos son noches reservadas, con sus seis hoteles y cuarenta y seis noches. Tener una página correcta demuestra que hemos conectado esas piezas; no demuestra por sí solo rendimiento con millones de documentos."
+  },
+  {
+    "title": "Un resultado correcto tiene una evidencia concreta",
+    "label": "Objetivo, destino, datos, resultado esperado, resultado observado e interpretación.",
+    "active": 3, "kind": "three",
+    "cards": [["Consulta", "El programa obtiene el parte que hemos contrastado."], ["Distribución", "Se mantiene la evidencia de tareas distribuidas del 2.4."], ["Recuperación", "La caída y la recuperación se comprueban en el 2.8."]],
+    "takeaway": "Cada prueba demuestra una garantía; explica también sus límites.",
+    "narration": "Al preparar la entrega, acompañamos el código con una explicación breve: qué intentamos comprobar, qué servidor y base utilizamos, qué esperábamos y qué ocurrió realmente. El parte obtenido desde Python demuestra que enviamos una agregación al motor y contrastamos su resultado. No sustituye la prueba de computación distribuida del apartado dos punto cuatro, ni la prueba de caída y recuperación del dos punto ocho. Del mismo modo, una transacción demuestra una garantía de atomicidad, no que el servicio sobreviva a cualquier fallo. Separar estas evidencias nos permite explicar lo que hemos aprendido con precisión y sin atribuir al programa más de lo que hemos observado."
+  },
+  {
+    "title": "Un recorrido que puedes hacer paso a paso",
+    "label": "Primero el parte y las escrituras; después las ampliaciones con sus requisitos.",
+    "active": 3, "kind": "three",
+    "cards": [["Leer", "Conecta, comprueba los originales y reproduce el parte."], ["Modificar", "Trabaja en la copia y explica resultados y errores."], ["Ampliar", "Prueba garantías, parking y página de gerencia."]],
+    "takeaway": "Conserva los originales y comprueba cada paso antes de continuar.",
+    "narration": "No hace falta abordar todas las piezas a la vez. Empezad comprobando el acceso y las cifras originales. Después traducid una consulta, recorred su cursor y generad el parte. Cuando eso funcione, pasad a la copia para practicar altas, cambios, borrados concretos y errores comprensibles. Las preferencias de lectura y las transacciones tienen sus propios requisitos, y Flask es otra ampliación. Al terminar, cerrad los clientes y detened el laboratorio correspondiente sin eliminar sus volúmenes. La autoevaluación os ayudará a detectar qué concepto necesita otra lectura antes de continuar. Lo importante es poder explicar por qué el resultado tiene sentido."
+  },
+  {
+    "title": "Del archivo a una aplicación que comprueba",
+    "label": "PyMongo conecta lo aprendido con una tarea útil para el hotel.",
+    "active": 3, "kind": "metrics",
+    "steps": [["Pedir", "Una pregunta", "Con filtros claros"], ["Comprobar", "Una respuesta", "Con significado"], ["Actuar", "Una garantía", "Con límites conocidos"]],
+    "takeaway": "El programa útil consulta, interpreta y verifica sus cambios.",
+    "narration": "Con esto cerramos el recorrido del apartado. Hemos pasado de guardar documentos y organizar sus relaciones a utilizarlos desde una aplicación. PyMongo permite pedir información, modificarla y recibir resultados, pero somos nosotros quienes damos significado a esas respuestas. Volved a la primera pregunta de gerencia: si los originales no han cambiado, el parte debe seguir mostrando once noches en Laredo y cuarenta y seis en total. Y si una operación cambia algo, debemos poder explicar qué cambió, dónde y con qué garantía. Esa forma de trabajar nos prepara para la práctica integradora que cierra la unidad con otro conjunto de datos."
+  }
+]

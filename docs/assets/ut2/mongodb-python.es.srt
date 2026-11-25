@@ -1,0 +1,1577 @@
+1
+00:00:00,100 --> 00:00:02,038
+Imaginad que gerencia vuelve a pedir
+
+2
+00:00:02,050 --> 00:00:03,750
+el parte de noches reservadas.
+
+3
+00:00:04,625 --> 00:00:06,350
+En la unidad uno lo preparábamos
+
+4
+00:00:06,362 --> 00:00:08,250
+con Pentaho, y en esta unidad ya
+
+5
+00:00:08,262 --> 00:00:10,612
+hemos consultado las reservas en MongoDB.
+
+6
+00:00:11,488 --> 00:00:14,138
+Ahora queremos repetir esa tarea desde
+Python.
+
+7
+00:00:15,025 --> 00:00:17,462
+Si usamos los mismos documentos y hacemos la
+
+8
+00:00:17,475 --> 00:00:21,138
+misma pregunta, esperamos las mismas cifras:
+once noches
+
+9
+00:00:21,150 --> 00:00:23,062
+en Laredo y cuarenta y seis en total.
+
+10
+00:00:23,938 --> 00:00:26,088
+Ese será nuestro punto de referencia.
+
+11
+00:00:26,962 --> 00:00:29,062
+A lo largo del vídeo veremos cómo pedir el
+
+12
+00:00:29,075 --> 00:00:32,487
+informe, cómo interpretar las respuestas y
+cómo modificar una
+
+13
+00:00:32,500 --> 00:00:35,775
+reserva sin perder de vista qué datos
+estamos utilizando.
+
+14
+00:00:36,650 --> 00:00:39,862
+Para entender PyMongo, pensad en una oficina
+con
+
+15
+00:00:39,875 --> 00:00:42,675
+un archivo y una persona que lleva las
+solicitudes.
+
+16
+00:00:43,538 --> 00:00:45,862
+Python prepara la petición: quiero saber
+
+17
+00:00:45,875 --> 00:00:47,625
+cuántas noches tenemos por hotel.
+
+18
+00:00:48,488 --> 00:00:51,375
+PyMongo, el driver oficial, permite
+
+19
+00:00:51,388 --> 00:00:53,312
+enviarla y recibir la respuesta.
+
+20
+00:00:54,175 --> 00:00:56,650
+MongoDB busca y agrupa los documentos.
+
+21
+00:00:57,525 --> 00:00:59,925
+Después, Python muestra el resumen.
+
+22
+00:01:00,800 --> 00:01:03,662
+La comparación ayuda a repartir los papeles,
+aunque
+
+23
+00:01:03,675 --> 00:01:06,838
+en realidad hablamos de programas que
+intercambian mensajes.
+
+24
+00:01:07,700 --> 00:01:09,550
+No hace falta descargar todas las
+
+25
+00:01:09,562 --> 00:01:11,462
+reservas para sumarlas en Python.
+
+26
+00:01:12,350 --> 00:01:15,000
+Podemos encargar ese cálculo al motor y
+recoger
+
+27
+00:01:15,012 --> 00:01:18,100
+únicamente las filas del parte que
+necesitamos presentar.
+
+28
+00:01:18,975 --> 00:01:22,075
+Antes de pedir nada al archivo, preparemos
+el puesto.
+
+29
+00:01:22,938 --> 00:01:25,650
+El apartado indica las versiones del
+laboratorio y
+
+30
+00:01:25,662 --> 00:01:28,225
+cómo crear o reutilizar el entorno de
+Python.
+
+31
+00:01:29,175 --> 00:01:32,762
+Instalamos PyMongo dentro de ese entorno; el
+soporte
+
+32
+00:01:32,775 --> 00:01:34,812
+de BSON ya viene incluido, así que
+
+33
+00:01:34,825 --> 00:01:37,638
+no necesitamos instalar otro paquete con ese
+nombre.
+
+34
+00:01:38,500 --> 00:01:41,775
+También revisamos la dirección de conexión,
+llamada URI.
+
+35
+00:01:42,650 --> 00:01:45,788
+Es como escribir correctamente el destino de
+la solicitud.
+
+36
+00:01:46,662 --> 00:01:49,388
+Si incluye una contraseña, no debe aparecer
+en
+
+37
+00:01:49,400 --> 00:01:51,638
+el código que entregamos ni en una captura.
+
+38
+00:01:52,500 --> 00:01:55,375
+Los ejemplos completos descargables nos
+ayudarán a
+
+39
+00:01:55,388 --> 00:01:58,438
+empezar sin mezclar fragmentos de programas
+diferentes.
+
+40
+00:01:59,300 --> 00:02:01,700
+Ahora coloquemos cada carpeta en su sitio.
+
+41
+00:02:02,575 --> 00:02:05,350
+Para las consultas volvemos al servidor del
+apartado
+
+42
+00:02:05,362 --> 00:02:07,262
+dos punto seis y a la base hotel,
+
+43
+00:02:07,462 --> 00:02:10,588
+con sus quince reservas y seis opiniones
+originales.
+
+44
+00:02:11,450 --> 00:02:15,238
+Para modificar utilizamos hotel escrituras,
+una copia de trabajo.
+
+45
+00:02:16,112 --> 00:02:19,050
+Las pruebas de confirmación y de
+transacciones usan el
+
+46
+00:02:19,062 --> 00:02:22,412
+conjunto de réplicas del apartado anterior y
+bases propias.
+
+47
+00:02:23,312 --> 00:02:26,912
+Cambiar de dirección no traslada documentos
+entre esos entornos.
+
+48
+00:02:27,800 --> 00:02:30,325
+Además, dos laboratorios no pueden ocupar a
+
+49
+00:02:30,338 --> 00:02:32,200
+la vez el mismo puerto del ordenador.
+
+50
+00:02:33,062 --> 00:02:35,388
+Por eso seguimos las indicaciones de parada
+y
+
+51
+00:02:35,400 --> 00:02:38,675
+arranque, conservando siempre los volúmenes
+con los datos.
+
+52
+00:02:39,538 --> 00:02:41,738
+Tener un teléfono con un número guardado no
+
+53
+00:02:41,750 --> 00:02:44,038
+demuestra que alguien conteste al otro lado.
+
+54
+00:02:44,912 --> 00:02:47,000
+Con el cliente ocurre algo parecido.
+
+55
+00:02:47,875 --> 00:02:50,362
+Crear MongoClient y obtener una referencia a
+
+56
+00:02:50,375 --> 00:02:52,638
+hotel prepara objetos de Python, pero
+
+57
+00:02:52,650 --> 00:02:54,912
+no confirma que estén los datos esperados.
+
+58
+00:02:55,788 --> 00:02:58,288
+Primero pedimos una operación, como ping,
+
+59
+00:02:58,412 --> 00:03:00,225
+para comprobar acceso al servidor.
+
+60
+00:03:01,088 --> 00:03:03,438
+Después revisamos las colecciones, los
+
+61
+00:03:03,450 --> 00:03:05,712
+recuentos y las consultas necesarias.
+
+62
+00:03:06,588 --> 00:03:08,812
+Un nombre de base mal escrito puede apuntar
+
+63
+00:03:08,825 --> 00:03:11,475
+a una carpeta vacía sin dar un error
+inmediato.
+
+64
+00:03:12,338 --> 00:03:15,800
+Si aparecen cero reservas, por tanto,
+revisamos
+
+65
+00:03:15,812 --> 00:03:17,400
+el destino y los datos antes
+
+66
+00:03:17,412 --> 00:03:19,362
+de concluir que la conexión ha fallado.
+
+67
+00:03:20,238 --> 00:03:23,125
+Una vez preparado el cliente, lo
+reutilizamos.
+
+68
+00:03:24,062 --> 00:03:27,775
+Pensemos en una centralita con varias líneas
+disponibles: no
+
+69
+00:03:27,788 --> 00:03:31,312
+construimos una centralita nueva por cada
+ficha que consultamos.
+
+70
+00:03:32,250 --> 00:03:34,612
+El pool mantiene conexiones y crece según
+
+71
+00:03:34,625 --> 00:03:37,150
+la demanda, hasta sus límites; fijar
+
+72
+00:03:37,162 --> 00:03:40,212
+un máximo no significa abrirlas todas
+inmediatamente.
+
+73
+00:03:41,100 --> 00:03:43,788
+También distinguimos cuánto esperamos para
+conectar,
+
+74
+00:03:44,000 --> 00:03:46,188
+para encontrar un servidor adecuado y para
+
+75
+00:03:46,200 --> 00:03:48,575
+recibir la confirmación de una escritura.
+
+76
+00:03:49,450 --> 00:03:50,962
+Son esperas diferentes.
+
+77
+00:03:51,838 --> 00:03:53,775
+Si vence un plazo, tendremos que
+
+78
+00:03:53,788 --> 00:03:55,800
+interpretar qué sabemos del resultado.
+
+79
+00:03:56,675 --> 00:03:58,850
+No podemos suponer automáticamente que
+
+80
+00:03:58,862 --> 00:04:00,138
+el cambio se ha deshecho.
+
+81
+00:04:01,000 --> 00:04:03,725
+Al terminar el programa, cerramos el
+cliente.
+
+82
+00:04:04,708 --> 00:04:07,820
+Vamos con una petición concreta: reservas
+hechas por
+
+83
+00:04:07,833 --> 00:04:09,946
+la web que tengan al menos tres noches.
+
+84
+00:04:10,820 --> 00:04:13,108
+El filtro expresa qué fichas buscamos.
+
+85
+00:04:13,983 --> 00:04:16,358
+La proyección indica qué datos queremos ver
+de
+
+86
+00:04:16,370 --> 00:04:19,620
+cada una: hotel, importe y noches, por
+ejemplo.
+
+87
+00:04:20,496 --> 00:04:23,733
+En Python escribimos estas condiciones con
+diccionarios,
+
+88
+00:04:23,946 --> 00:04:26,896
+conservando los operadores de MongoDB como
+cadenas.
+
+89
+00:04:27,758 --> 00:04:30,520
+Y recordamos que los valores verdadero,
+falso y
+
+90
+00:04:30,533 --> 00:04:33,320
+nulo se escriben de forma diferente a
+JavaScript.
+
+91
+00:04:34,183 --> 00:04:36,846
+Con los originales, esta consulta encuentra
+
+92
+00:04:36,858 --> 00:04:39,433
+tres reservas: Laredo, Potes y Noja.
+
+93
+00:04:40,296 --> 00:04:42,696
+Podemos contrastarlas con la consulta manual
+
+94
+00:04:42,708 --> 00:04:44,983
+del apartado dos punto seis para comprobar
+
+95
+00:04:44,996 --> 00:04:47,370
+que hemos traducido bien la pregunta.
+
+96
+00:04:48,233 --> 00:04:50,846
+Cuando usamos find, recibimos un cursor.
+
+97
+00:04:51,720 --> 00:04:54,046
+Imaginad que el archivo entrega las fichas
+
+98
+00:04:54,058 --> 00:04:56,396
+por lotes y nosotros las vamos revisando.
+
+99
+00:04:57,270 --> 00:05:00,120
+Al recorrer el cursor obtenemos los
+documentos; no
+
+100
+00:05:00,133 --> 00:05:02,708
+necesitamos traer todo de golpe a una lista.
+
+101
+00:05:03,570 --> 00:05:05,996
+Esto importa cuando el resultado es grande.
+
+102
+00:05:06,908 --> 00:05:09,470
+Convertir el cursor completo en una lista, o
+
+103
+00:05:09,483 --> 00:05:12,933
+exportarlo entero como texto, puede consumir
+mucha memoria.
+
+104
+00:05:13,808 --> 00:05:16,670
+Además, algunos valores de BSON, como fechas
+e
+
+105
+00:05:16,683 --> 00:05:21,383
+identificadores, necesitan una conversión
+apropiada para representarse en JSON.
+
+106
+00:05:22,246 --> 00:05:24,296
+El apartado utiliza las herramientas de
+
+107
+00:05:24,308 --> 00:05:26,520
+BSON y limita el ejemplo de exportación.
+
+108
+00:05:27,408 --> 00:05:29,283
+Consultar pocos campos y pocas
+
+109
+00:05:29,296 --> 00:05:31,208
+filas es una decisión consciente.
+
+110
+00:05:32,083 --> 00:05:34,496
+Para elaborar el parte usamos una
+agregación,
+
+111
+00:05:34,670 --> 00:05:36,896
+una cadena de trabajo con varias etapas.
+
+112
+00:05:37,783 --> 00:05:40,646
+Primero podemos seleccionar las reservas que
+interesan.
+
+113
+00:05:41,520 --> 00:05:43,046
+Después reunimos las de cada
+
+114
+00:05:43,058 --> 00:05:44,608
+hotel y sumamos sus noches.
+
+115
+00:05:45,470 --> 00:05:47,458
+Finalmente ordenamos el resumen.
+
+116
+00:05:48,320 --> 00:05:51,283
+Es parecido a separar fichas, formar
+montones por
+
+117
+00:05:51,296 --> 00:05:53,633
+sede y escribir los totales en una hoja.
+
+118
+00:05:54,508 --> 00:05:57,533
+Aquí lo hace MongoDB y Python recibe el
+resultado.
+
+119
+00:05:58,408 --> 00:06:01,558
+Hay un detalle importante: sumar el campo
+noches acumula
+
+120
+00:06:01,570 --> 00:06:05,258
+estancias, mientras que sumar uno por
+documento cuenta reservas.
+
+121
+00:06:06,146 --> 00:06:07,983
+Las dos operaciones son útiles,
+
+122
+00:06:08,208 --> 00:06:10,208
+pero responden a preguntas distintas.
+
+123
+00:06:11,083 --> 00:06:13,120
+Antes de elegirlas, debemos tener
+
+124
+00:06:13,133 --> 00:06:14,946
+claro qué quiere conocer gerencia.
+
+125
+00:06:15,808 --> 00:06:18,596
+El parte completo devuelve cuarenta y seis
+noches,
+
+126
+00:06:18,720 --> 00:06:21,783
+repartidas entre los seis hoteles, con once
+en Laredo.
+
+127
+00:06:22,658 --> 00:06:25,170
+Sin embargo, uno de los ejemplos del
+apartado
+
+128
+00:06:25,183 --> 00:06:27,620
+filtra los canales web y agencias en línea.
+
+129
+00:06:28,496 --> 00:06:30,696
+Ese resultado suma treinta noches.
+
+130
+00:06:31,558 --> 00:06:34,670
+La diferencia es correcta: hemos cambiado la
+pregunta.
+
+131
+00:06:35,546 --> 00:06:37,670
+También debemos cuidar las unidades.
+
+132
+00:06:38,546 --> 00:06:40,246
+La media del campo importe es un
+
+133
+00:06:40,258 --> 00:06:43,270
+importe medio por reserva incluida, no un
+precio
+
+134
+00:06:43,283 --> 00:06:45,420
+medio por noche ni un cobro confirmado.
+
+135
+00:06:46,296 --> 00:06:49,470
+Y sumar noches reservadas tampoco calcula un
+porcentaje
+
+136
+00:06:49,483 --> 00:06:53,270
+de ocupación: para eso necesitaríamos
+capacidad y calendario.
+
+137
+00:06:54,146 --> 00:06:57,658
+Un número correcto necesita una explicación
+igual de correcta.
+
+138
+00:06:58,520 --> 00:07:00,620
+Supongamos ahora que gerencia pide las
+
+139
+00:07:00,633 --> 00:07:02,820
+dos reservas de mayor importe de Potes.
+
+140
+00:07:03,720 --> 00:07:06,496
+Sus importes originales son ciento
+veinticuatro,
+
+141
+00:07:06,646 --> 00:07:08,946
+cuatrocientos noventa y doscientos ochenta.
+
+142
+00:07:09,808 --> 00:07:12,846
+Primero filtramos Potes, después ordenamos
+de mayor
+
+143
+00:07:12,858 --> 00:07:14,670
+a menor y, al final, nos quedamos
+
+144
+00:07:14,683 --> 00:07:17,796
+con dos: cuatrocientos noventa y doscientos
+ochenta.
+
+145
+00:07:18,658 --> 00:07:21,170
+Si limitamos antes de ordenar, podríamos
+
+146
+00:07:21,183 --> 00:07:23,246
+descartar una reserva que debía entrar.
+
+147
+00:07:24,133 --> 00:07:26,558
+Podemos expresar la consulta con un cursor o
+
+148
+00:07:26,570 --> 00:07:29,558
+con un pipeline, manteniendo las mismas
+condiciones.
+
+149
+00:07:30,433 --> 00:07:33,546
+Si hay empates, añadimos un criterio de
+desempate.
+
+150
+00:07:34,420 --> 00:07:37,508
+Y para pasar páginas con muchos resultados,
+tendremos
+
+151
+00:07:37,520 --> 00:07:39,946
+que revisar también el coste de saltar
+filas.
+
+152
+00:07:40,808 --> 00:07:43,270
+Hay otra trampa fácil de entender con papel.
+
+153
+00:07:44,158 --> 00:07:45,946
+Tenemos tres fichas de reservas de
+
+154
+00:07:45,958 --> 00:07:48,220
+Laredo y dos opiniones sobre ese hotel.
+
+155
+00:07:49,083 --> 00:07:50,970
+Si adjuntamos una copia de las dos
+
+156
+00:07:50,983 --> 00:07:54,008
+opiniones a cada reserva, veremos seis
+asociaciones,
+
+157
+00:07:54,233 --> 00:07:57,283
+pero siguen existiendo solo dos opiniones
+diferentes.
+
+158
+00:07:58,158 --> 00:08:00,070
+El cruce del ejemplo usa el nombre
+
+159
+00:08:00,083 --> 00:08:02,946
+del hotel; no identifica una estancia
+concreta.
+
+160
+00:08:03,808 --> 00:08:05,746
+Algo parecido ocurre al separar los
+
+161
+00:08:05,758 --> 00:08:07,970
+extras de una reserva en varias filas.
+
+162
+00:08:08,833 --> 00:08:11,058
+Si después sumamos el importe de cada fila
+
+163
+00:08:11,070 --> 00:08:14,283
+sin ajustar el cálculo, podemos contarlo
+varias veces.
+
+164
+00:08:15,146 --> 00:08:17,658
+Por eso, tras cada etapa, nos preguntamos
+
+165
+00:08:17,670 --> 00:08:20,208
+qué representa ahora un documento del
+resultado.
+
+166
+00:08:21,196 --> 00:08:22,634
+Hasta aquí hemos leído.
+
+167
+00:08:23,508 --> 00:08:26,058
+Para practicar escrituras cambiamos a la
+copia de
+
+168
+00:08:26,071 --> 00:08:28,846
+ejercicios y comprobamos su nombre antes de
+empezar.
+
+169
+00:08:29,746 --> 00:08:32,421
+Podemos insertar una reserva que incluya el
+campo
+
+170
+00:08:32,434 --> 00:08:35,371
+mascota, aunque las fichas antiguas no lo
+tengan.
+
+171
+00:08:36,246 --> 00:08:38,421
+Guardamos el identificador que devuelve la
+
+172
+00:08:38,434 --> 00:08:41,508
+inserción y consultamos esa reserva para
+verificarla.
+
+173
+00:08:42,396 --> 00:08:46,371
+Si otra colección necesita señalarla,
+conservamos exactamente el
+
+174
+00:08:46,384 --> 00:08:48,471
+valor y el tipo de ese identificador.
+
+175
+00:08:49,358 --> 00:08:52,808
+La flexibilidad del documento permite
+incorporar información,
+
+176
+00:08:53,046 --> 00:08:55,896
+pero debemos revisar cómo reaccionan los
+validadores y
+
+177
+00:08:55,908 --> 00:08:58,296
+los programas lectores cuando falta un
+campo.
+
+178
+00:08:59,158 --> 00:09:00,696
+Y volvemos a comprobar que los
+
+179
+00:09:00,708 --> 00:09:03,384
+originales siguen intactos para generar el
+parte.
+
+180
+00:09:04,284 --> 00:09:06,446
+Imaginad que pedimos marcar una reserva
+
+181
+00:09:06,458 --> 00:09:08,471
+como revisada y ya estaba marcada.
+
+182
+00:09:09,346 --> 00:09:11,096
+El filtro encuentra una ficha,
+
+183
+00:09:11,234 --> 00:09:12,758
+pero no hace falta cambiarla.
+
+184
+00:09:13,621 --> 00:09:15,334
+Eso explica un resultado con
+
+185
+00:09:15,346 --> 00:09:17,721
+una coincidencia y cero modificaciones.
+
+186
+00:09:18,584 --> 00:09:20,521
+No es automáticamente un error.
+
+187
+00:09:21,396 --> 00:09:24,284
+Para cambiar campos utilizamos operadores
+como set o
+
+188
+00:09:24,296 --> 00:09:28,146
+incremento; reemplazar el documento completo
+es otra operación.
+
+189
+00:09:29,008 --> 00:09:31,634
+También interpretamos el significado de los
+datos:
+
+190
+00:09:31,796 --> 00:09:35,058
+un importe negativo merece revisión, no
+convertirlo
+
+191
+00:09:35,071 --> 00:09:36,858
+a cero sin saber por qué aparece.
+
+192
+00:09:37,734 --> 00:09:40,408
+Y al practicar el borrado usamos el
+identificador
+
+193
+00:09:40,421 --> 00:09:44,021
+del alta que acabamos de crear, comprobando
+cuántos documentos
+
+194
+00:09:44,034 --> 00:09:46,796
+desaparecen y conservando el resto de la
+colección.
+
+195
+00:09:47,684 --> 00:09:49,621
+Enviar varias órdenes en un sobre
+
+196
+00:09:49,634 --> 00:09:51,396
+puede ahorrar viajes al archivo.
+
+197
+00:09:52,258 --> 00:09:53,896
+Esa es una forma sencilla de
+
+198
+00:09:53,908 --> 00:09:55,896
+imaginar una escritura por lotes.
+
+199
+00:09:56,758 --> 00:09:58,521
+Pero el sobre no garantiza que todas
+
+200
+00:09:58,534 --> 00:10:00,758
+las órdenes se apliquen juntas o ninguna.
+
+201
+00:10:01,646 --> 00:10:03,371
+Si aparece un error, algunas
+
+202
+00:10:03,384 --> 00:10:05,346
+anteriores pueden haber quedado hechas.
+
+203
+00:10:06,221 --> 00:10:08,134
+Por eso revisamos el resultado.
+
+204
+00:10:09,008 --> 00:10:11,158
+Una clave duplicada indica un conflicto
+
+205
+00:10:11,171 --> 00:10:13,771
+con un identificador o índice único; no
+
+206
+00:10:13,784 --> 00:10:16,071
+encontrar servidor es un problema diferente.
+
+207
+00:10:16,946 --> 00:10:20,608
+Mostramos mensajes comprensibles y evitamos
+ocultar el fallo.
+
+208
+00:10:21,471 --> 00:10:23,708
+Si no sabemos si una escritura terminó,
+
+209
+00:10:23,846 --> 00:10:26,884
+comprobamos su identificador antes de
+repetirla, para
+
+210
+00:10:26,896 --> 00:10:29,271
+no crear una segunda reserva por accidente.
+
+211
+00:10:30,146 --> 00:10:32,571
+Volvamos ahora al conjunto de réplicas.
+
+212
+00:10:33,446 --> 00:10:35,558
+Las decisiones del apartado anterior
+
+213
+00:10:35,571 --> 00:10:37,934
+siguen existiendo cuando usamos Python.
+
+214
+00:10:38,808 --> 00:10:41,434
+La preferencia de lectura ayuda a
+seleccionar dónde
+
+215
+00:10:41,446 --> 00:10:44,534
+consultamos; las condiciones de lectura
+definen qué
+
+216
+00:10:44,546 --> 00:10:47,121
+datos son visibles; y la confirmación de
+
+217
+00:10:47,134 --> 00:10:50,358
+escritura establece cuándo damos el cambio
+por confirmado.
+
+218
+00:10:51,221 --> 00:10:54,496
+Imaginad que una reserva ya tiene
+confirmación mayoritaria,
+
+219
+00:10:54,746 --> 00:10:57,658
+pero el secundario elegido todavía no la ha
+aplicado.
+
+220
+00:10:58,546 --> 00:11:00,821
+Esa lectura podría no encontrarla aún.
+
+221
+00:11:01,696 --> 00:11:03,584
+Mayoría no significa todos.
+
+222
+00:11:04,458 --> 00:11:06,808
+Además, pedir lecturas a un secundario
+
+223
+00:11:06,821 --> 00:11:09,258
+no le permite aceptar escrituras ordinarias.
+
+224
+00:11:10,121 --> 00:11:13,308
+El ejemplo utiliza documentos de prueba
+identificados para
+
+225
+00:11:13,321 --> 00:11:16,296
+observar estas diferencias sin tocar el
+parte original.
+
+226
+00:11:16,484 --> 00:11:18,634
+Para que el cliente encuentre a los miembros
+
+227
+00:11:18,646 --> 00:11:21,784
+del conjunto, también importa desde dónde se
+ejecuta.
+
+228
+00:11:22,646 --> 00:11:24,834
+Los nombres del laboratorio se resuelven
+
+229
+00:11:24,846 --> 00:11:26,208
+dentro de su red de Docker.
+
+230
+00:11:27,121 --> 00:11:29,884
+Por eso el apartado propone ejecutar estas
+pruebas
+
+231
+00:11:29,896 --> 00:11:32,621
+desde un contenedor de Python conectado a
+esa red.
+
+232
+00:11:33,484 --> 00:11:36,496
+Dentro de ese contenedor, localhost señala
+al propio
+
+233
+00:11:36,508 --> 00:11:39,108
+cliente, no al servidor MongoDB de al lado.
+
+234
+00:11:39,971 --> 00:11:41,996
+Es como preguntar por la habitación de al
+
+235
+00:11:42,008 --> 00:11:45,458
+lado usando una dirección que solo significa
+esta habitación.
+
+236
+00:11:46,334 --> 00:11:49,271
+Seguir la conexión correspondiente evita
+confundir un
+
+237
+00:11:49,284 --> 00:11:50,846
+problema de nombres o de red con
+
+238
+00:11:50,858 --> 00:11:53,521
+un problema de consultas o de documentos.
+
+239
+00:11:54,396 --> 00:11:57,121
+Veamos la ampliación con un ejemplo
+cotidiano.
+
+240
+00:11:58,021 --> 00:11:59,884
+Solo queda una plaza de parking.
+
+241
+00:12:00,758 --> 00:12:03,158
+Para reservarla tenemos que actualizar el
+papel
+
+242
+00:12:03,171 --> 00:12:05,258
+del cupo y escribir la nueva reserva.
+
+243
+00:12:06,146 --> 00:12:08,058
+Si descontamos la plaza pero falla
+
+244
+00:12:08,071 --> 00:12:10,358
+la reserva, el libro queda incoherente.
+
+245
+00:12:11,234 --> 00:12:13,608
+Si creamos la reserva sin descontar cupo,
+
+246
+00:12:13,746 --> 00:12:15,958
+podemos ofrecer la misma plaza otra vez.
+
+247
+00:12:16,821 --> 00:12:19,096
+Queremos confirmar los dos cambios juntos,
+
+248
+00:12:19,258 --> 00:12:21,708
+o descartarlos juntos si la operación
+aborta.
+
+249
+00:12:22,571 --> 00:12:25,071
+Para eso usamos una transacción explícita.
+
+250
+00:12:25,971 --> 00:12:28,171
+Una actualización de un solo documento
+
+251
+00:12:28,184 --> 00:12:31,584
+ya es atómica; aquí coordinamos documentos
+diferentes.
+
+252
+00:12:32,458 --> 00:12:35,621
+El ejercicio se ejecuta sobre el conjunto de
+réplicas,
+
+253
+00:12:35,858 --> 00:12:39,846
+porque el servidor independiente no admite
+esta transacción multidocumento.
+
+254
+00:12:40,828 --> 00:12:43,290
+La transacción no adivina las reglas del
+hotel.
+
+255
+00:12:44,166 --> 00:12:46,528
+Primero intentamos descontar una plaza solo
+
+256
+00:12:46,540 --> 00:12:47,766
+si queda al menos una.
+
+257
+00:12:48,653 --> 00:12:50,716
+Después comprobamos que realmente se
+
+258
+00:12:50,728 --> 00:12:52,690
+ha modificado el documento esperado.
+
+259
+00:12:53,566 --> 00:12:56,190
+Si no había cupo, el resultado puede indicar
+
+260
+00:12:56,203 --> 00:12:58,878
+cero cambios sin provocar una excepción
+técnica.
+
+261
+00:12:59,753 --> 00:13:01,453
+El programa debe interpretar esa
+
+262
+00:13:01,466 --> 00:13:03,403
+situación y rechazar la reserva.
+
+263
+00:13:04,290 --> 00:13:06,828
+Si hay plaza, continúa con la inserción.
+
+264
+00:13:07,703 --> 00:13:11,228
+Todas las operaciones participantes utilizan
+la misma sesión.
+
+265
+00:13:12,090 --> 00:13:14,203
+Así la regla queda expresada de forma
+
+266
+00:13:14,216 --> 00:13:17,078
+concreta: no puede confirmarse la reserva si
+
+267
+00:13:17,090 --> 00:13:19,203
+no se ha conseguido descontar su plaza.
+
+268
+00:13:20,078 --> 00:13:22,466
+La garantía técnica necesita acompañarse
+
+269
+00:13:22,478 --> 00:13:24,278
+de una comprobación del negocio.
+
+270
+00:13:25,140 --> 00:13:26,653
+Ahora hay que demostrarlo.
+
+271
+00:13:27,528 --> 00:13:30,490
+En una base nueva, la primera ejecución
+consigue la
+
+272
+00:13:30,503 --> 00:13:33,753
+única plaza: queda una reserva y cero plazas
+libres.
+
+273
+00:13:34,616 --> 00:13:36,266
+La segunda debe rechazar otra
+
+274
+00:13:36,278 --> 00:13:38,203
+reserva y conservar ese estado.
+
+275
+00:13:39,078 --> 00:13:41,390
+Pero esa segunda prueba no demuestra todavía
+
+276
+00:13:41,403 --> 00:13:43,090
+qué ocurre si falla la inserción
+
+277
+00:13:43,103 --> 00:13:45,978
+después del descuento, porque se detiene
+antes.
+
+278
+00:13:46,853 --> 00:13:49,640
+Para comprobar el aborto, el apartado ofrece
+
+279
+00:13:49,653 --> 00:13:51,728
+un programa independiente que provoca una
+
+280
+00:13:51,740 --> 00:13:54,128
+clave duplicada en una base temporal propia.
+
+281
+00:13:55,016 --> 00:13:57,778
+Entonces deben conservarse la plaza
+disponible
+
+282
+00:13:57,790 --> 00:13:59,516
+y la reserva que ya existía.
+
+283
+00:14:00,403 --> 00:14:02,228
+No reponemos cupo en medio de una
+
+284
+00:14:02,240 --> 00:14:04,803
+prueba ni confundimos un resultado esperado
+con
+
+285
+00:14:04,816 --> 00:14:07,566
+una observación que aún no hemos realizado.
+
+286
+00:14:08,440 --> 00:14:10,716
+Hay un último detalle en las transacciones:
+
+287
+00:14:10,940 --> 00:14:13,040
+la función que contiene las operaciones
+
+288
+00:14:13,053 --> 00:14:15,916
+puede ejecutarse otra vez ante determinados
+errores.
+
+289
+00:14:16,803 --> 00:14:19,278
+Por eso preparamos el identificador fuera de
+esa
+
+290
+00:14:19,290 --> 00:14:21,940
+función y lo conservamos durante los
+reintentos.
+
+291
+00:14:22,803 --> 00:14:25,228
+Tampoco enviamos dentro un correo que
+pudiera
+
+292
+00:14:25,240 --> 00:14:28,490
+repetirse: abortar MongoDB no borra un
+mensaje ya
+
+293
+00:14:28,503 --> 00:14:30,928
+enviado ni anula un cargo bancario externo.
+
+294
+00:14:31,840 --> 00:14:33,978
+Además, volver a arrancar el programa
+
+295
+00:14:33,990 --> 00:14:36,103
+del ejemplo genera otro identificador.
+
+296
+00:14:36,978 --> 00:14:39,266
+Si el resultado anterior quedó incierto,
+
+297
+00:14:39,490 --> 00:14:42,678
+primero consultamos el identificador que
+habíamos guardado.
+
+298
+00:14:43,540 --> 00:14:46,640
+Los reintentos del driver ayudan, pero no
+diseñan por
+
+299
+00:14:46,653 --> 00:14:50,316
+nosotros un proceso de reservas sin
+duplicados entre ejecuciones.
+
+300
+00:14:51,190 --> 00:14:52,728
+La otra ampliación abre una
+
+301
+00:14:52,740 --> 00:14:54,716
+ventana para gerencia mediante Flask.
+
+302
+00:14:55,603 --> 00:14:57,716
+Volvemos al servidor que conserva los
+
+303
+00:14:57,728 --> 00:15:00,116
+originales y comprobamos de nuevo el parte.
+
+304
+00:15:01,016 --> 00:15:04,503
+MongoDB calcula las noches por hotel; Flask
+recibe esas
+
+305
+00:15:04,516 --> 00:15:07,203
+filas y una plantilla las presenta en el
+navegador.
+
+306
+00:15:08,078 --> 00:15:11,290
+La aplicación reutiliza su cliente dentro de
+cada proceso,
+
+307
+00:15:11,528 --> 00:15:13,953
+en lugar de abrir uno nuevo para cada
+petición.
+
+308
+00:15:14,816 --> 00:15:17,478
+Aunque la dirección de ejemplo se llame
+ocupación,
+
+309
+00:15:17,628 --> 00:15:20,078
+lo que mostramos son noches reservadas, con
+
+310
+00:15:20,090 --> 00:15:22,328
+sus seis hoteles y cuarenta y seis noches.
+
+311
+00:15:23,190 --> 00:15:25,440
+Tener una página correcta demuestra que
+hemos
+
+312
+00:15:25,453 --> 00:15:27,978
+conectado esas piezas; no demuestra por
+
+313
+00:15:27,990 --> 00:15:30,478
+sí solo rendimiento con millones de
+documentos.
+
+314
+00:15:31,340 --> 00:15:34,353
+Al preparar la entrega, acompañamos el
+código con
+
+315
+00:15:34,366 --> 00:15:38,078
+una explicación breve: qué intentamos
+comprobar, qué servidor y
+
+316
+00:15:38,090 --> 00:15:41,503
+base utilizamos, qué esperábamos y qué
+ocurrió realmente.
+
+317
+00:15:42,378 --> 00:15:45,278
+El parte obtenido desde Python demuestra que
+enviamos
+
+318
+00:15:45,290 --> 00:15:48,140
+una agregación al motor y contrastamos su
+resultado.
+
+319
+00:15:49,016 --> 00:15:51,853
+No sustituye la prueba de computación
+distribuida del
+
+320
+00:15:51,866 --> 00:15:54,353
+apartado dos punto cuatro, ni la prueba
+
+321
+00:15:54,366 --> 00:15:56,803
+de caída y recuperación del dos punto ocho.
+
+322
+00:15:57,653 --> 00:16:00,966
+Del mismo modo, una transacción demuestra
+una garantía de
+
+323
+00:16:00,978 --> 00:16:04,516
+atomicidad, no que el servicio sobreviva a
+cualquier fallo.
+
+324
+00:16:05,390 --> 00:16:08,278
+Separar estas evidencias nos permite
+explicar lo que
+
+325
+00:16:08,290 --> 00:16:10,528
+hemos aprendido con precisión y sin atribuir
+
+326
+00:16:10,540 --> 00:16:13,078
+al programa más de lo que hemos observado.
+
+327
+00:16:13,940 --> 00:16:15,540
+No hace falta abordar todas
+
+328
+00:16:15,553 --> 00:16:16,616
+las piezas a la vez.
+
+329
+00:16:17,490 --> 00:16:20,766
+Empezad comprobando el acceso y las cifras
+originales.
+
+330
+00:16:21,628 --> 00:16:24,240
+Después traducid una consulta, recorred su
+
+331
+00:16:24,253 --> 00:16:25,778
+cursor y generad el parte.
+
+332
+00:16:26,653 --> 00:16:29,016
+Cuando eso funcione, pasad a la copia para
+
+333
+00:16:29,028 --> 00:16:33,390
+practicar altas, cambios, borrados concretos
+y errores comprensibles.
+
+334
+00:16:34,266 --> 00:16:37,090
+Las preferencias de lectura y las
+transacciones tienen
+
+335
+00:16:37,103 --> 00:16:40,078
+sus propios requisitos, y Flask es otra
+ampliación.
+
+336
+00:16:40,940 --> 00:16:43,503
+Al terminar, cerrad los clientes y detened
+
+337
+00:16:43,516 --> 00:16:46,628
+el laboratorio correspondiente sin eliminar
+sus volúmenes.
+
+338
+00:16:47,490 --> 00:16:49,840
+La autoevaluación os ayudará a detectar qué
+
+339
+00:16:49,853 --> 00:16:52,640
+concepto necesita otra lectura antes de
+continuar.
+
+340
+00:16:53,528 --> 00:16:55,503
+Lo importante es poder explicar por
+
+341
+00:16:55,516 --> 00:16:57,166
+qué el resultado tiene sentido.
+
+342
+00:16:58,156 --> 00:17:00,568
+Con esto cerramos el recorrido del apartado.
+
+343
+00:17:01,444 --> 00:17:04,006
+Hemos pasado de guardar documentos y
+organizar
+
+344
+00:17:04,018 --> 00:17:06,944
+sus relaciones a utilizarlos desde una
+aplicación.
+
+345
+00:17:07,806 --> 00:17:11,156
+PyMongo permite pedir información,
+modificarla y
+
+346
+00:17:11,168 --> 00:17:13,656
+recibir resultados, pero somos nosotros
+
+347
+00:17:13,668 --> 00:17:16,069
+quienes damos significado a esas respuestas.
+
+348
+00:17:16,994 --> 00:17:19,118
+Volved a la primera pregunta de gerencia:
+
+349
+00:17:19,319 --> 00:17:21,694
+si los originales no han cambiado, el
+
+350
+00:17:21,706 --> 00:17:23,893
+parte debe seguir mostrando once noches en
+
+351
+00:17:23,906 --> 00:17:25,731
+Laredo y cuarenta y seis en total.
+
+352
+00:17:26,594 --> 00:17:29,256
+Y si una operación cambia algo, debemos
+poder
+
+353
+00:17:29,268 --> 00:17:31,844
+explicar qué cambió, dónde y con qué
+garantía.
+
+354
+00:17:32,694 --> 00:17:34,431
+Esa forma de trabajar nos prepara
+
+355
+00:17:34,444 --> 00:17:36,368
+para la práctica integradora que cierra la
+
+356
+00:17:36,381 --> 00:17:38,418
+unidad con otro conjunto de datos.
