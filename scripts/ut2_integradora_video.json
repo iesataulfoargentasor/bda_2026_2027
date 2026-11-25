@@ -1,0 +1,203 @@
+[
+  {
+    "title": "Dos necesidades del hotel, un mismo encargo",
+    "label": "El cierre tiene una hora de entrega; recepción sigue atendiendo reservas.",
+    "active": 0, "kind": "timeline",
+    "takeaway": "El informe del cierre y la reserva en vivo necesitan operaciones distintas.",
+    "narration": "Imaginad el hotel al final del día. Finanzas cierra a las once de la noche y gerencia espera el informe a las ocho de la mañana. Mientras tanto, recepción sigue trabajando: alguien quiere localizar su reserva y cambiar la hora de llegada. La práctica integradora une esas dos necesidades. Tenemos que preparar un cierre comprobado y mantener un servicio que consulta y modifica reservas. Además, vamos a observar qué ocurre cuando falla un miembro y qué aporta ampliar el sistema. No empezamos desde cero: reunimos las decisiones y las herramientas que hemos trabajado durante toda la unidad."
+  },
+  {
+    "title": "De diseñar la solución a ponerla a prueba",
+    "label": "Recuperamos de la UT1 el cruce de reservas y pagos y la comprobación del informe.",
+    "active": 0, "kind": "three",
+    "cards": [["UT1", "Elegimos el recorrido de los datos y validamos el informe."], ["Talleres de UT2", "Practicamos almacenamiento, cálculo, copias y consultas."], ["Integradora", "Conectamos las piezas y defendemos lo que observamos."]],
+    "takeaway": "Una elección de diseño se defiende con datos y pruebas.",
+    "narration": "En la práctica de Pentaho aprendimos dos controles que siguen siendo esenciales. Para informar de lo cobrado había que relacionar reservas y pagos por su identificador, y antes de publicar había que contrastar los resultados. Ahora aplicaremos esos controles después de repartir el cálculo. El histórico del cierre conserva los datos de partida, mientras que recepción trabaja con información que puede seguir cambiando. Pensad en un archivador cerrado para preparar el informe y un mostrador que continúa atendiendo. Ambos pertenecen al mismo negocio, pero una modificación posterior del mostrador no debe reescribir el histórico utilizado para aquel cierre."
+  },
+  {
+    "title": "Cinco ideas que tendrás que demostrar",
+    "label": "Los criterios del RA2 se concretan en decisiones y resultados observables.",
+    "active": 0, "kind": "criteria",
+    "takeaway": "Una captura necesita la operación que la produjo y una interpretación.",
+    "narration": "El encargo recorre cinco ideas. Primero, justificar dónde guardamos cada dato según su volumen y su uso. Segundo, comprobar un cálculo distribuido. Tercero, observar la respuesta ante un fallo concreto. Cuarto, conservar información para responder más adelante a otra pregunta. Y quinto, mostrar qué cambia al añadir un módulo. No basta con una fotografía de varios contenedores encendidos. Necesitamos saber qué operación se ha ejecutado, qué resultado esperábamos y qué resultado apareció. Si una propiedad no puede observarse en nuestro entorno, indicamos ese límite y la prueba pendiente. Así distinguimos una propuesta de diseño de una comprobación realizada."
+  },
+  {
+    "title": "Aquí comenzamos con otro conjunto de datos",
+    "label": "Perfil aula · Semilla 2026 · Santander, Laredo, Comillas y Potes.",
+    "active": 0, "kind": "four",
+    "items": [["Reservas", "3.000.000", "Histórico y recepción"], ["Cobros", "2.639.775", "Importes cobrados"], ["Opiniones", "1.000.000", "Texto y valoración"], ["Sensores", "15.000.000", "Lecturas de zona"]],
+    "takeaway": "Los totales de los talleres pequeños no sirven como referencia de este lote.",
+    "narration": "Los datos de esta práctica son ficticios y diferentes de los talleres pequeños. El perfil de aula contiene tres millones de reservas, sus cobros correspondientes, un millón de opiniones y quince millones de lecturas de sensores. Trabajamos con Santander, Laredo, Comillas y Potes. El generador utiliza la semilla dos mil veintiséis y proporciona unos totales de referencia reproducibles. Por tanto, aquí no buscamos las cuarenta y seis noches del ejercicio de MongoDB ni las sesenta y dos del taller de Hadoop. Cada conjunto tiene su propio significado y sus propias cifras. Identificar correctamente la entrada es el primer paso para comprobar cualquier resultado."
+  },
+  {
+    "title": "El reloj del negocio y el alcance del laboratorio",
+    "label": "El fichero de referencia suma el lote histórico completo, con registros de varios meses.",
+    "active": 0, "kind": "two",
+    "cards": [["Negocio", "Cierre a las 23:00 e informe comprobado a las 8:00."], ["Laboratorio", "Se procesa todo el lote generado; no se aplica un filtro de ayer."]],
+    "takeaway": "Anota perfil, semilla, alcance y fecha de generación.",
+    "narration": "Conviene aclarar una diferencia antes de calcular. El relato del hotel fija el cierre a las once y la entrega a las ocho. Sin embargo, el generador del laboratorio entrega un lote histórico completo, con registros de varios meses. Los totales de referencia suman todo ese lote. Si aplicamos un filtro de ayer, habremos cambiado la pregunta y ya no podremos comparar directamente con esos totales. Por eso anotamos el perfil, la semilla, el alcance histórico completo y la fecha de generación. Además, el fichero de cobros no incluye la hora del pago: no debemos atribuirle un dato temporal que no contiene."
+  },
+  {
+    "title": "Tu repositorio es el cuaderno de la práctica",
+    "label": "Crea bda-ut2-hotel desde la plantilla, dentro de tu propia cuenta.",
+    "active": 0, "kind": "three",
+    "cards": [["Diseño", "Explica la combinación elegida y la función de cada pieza."], ["Evidencias", "Un archivo por bloque recoge las pruebas y sus resultados."], ["Scripts y avances", "Conserva los programas y una nota de cada sesión."]],
+    "takeaway": "GitHub conserva el expediente y los programas; el clúster se ejecuta en tu entorno.",
+    "narration": "Antes de montar las piezas, preparad vuestro cuaderno de trabajo. Cada alumno crea un repositorio desde la plantilla enlazada, eligiendo su propia cuenta como propietaria y el nombre indicado. La plantilla trae el generador, los totales, un archivo para la combinación tecnológica y una evidencia por bloque. Esa combinación empieza vacía porque la decisión os corresponde a vosotros. GitHub guarda el expediente y los programas; no ejecuta el clúster. Si el repositorio es privado, comprobad que el profesor tiene acceso antes de la evaluación. Así el trabajo queda organizado desde el principio y puede revisarse sin depender de vuestra pantalla."
+  },
+  {
+    "title": "Un gigabyte de entrada ocupa más cuando se trabaja",
+    "label": "Bruto del perfil aula: 1.037.243.783 bytes, aproximadamente 1,037 GB.",
+    "active": 0, "kind": "flow",
+    "steps": [["Entrada", "Bruto generado", "Medir los bytes"], ["Almacenamiento", "Copias e índices", "Prever su espacio"], ["Procesamiento", "Temporales y salidas", "Dejar margen libre"]],
+    "takeaway": "Planifica el disco para todo el recorrido, no solo para la primera carpeta.",
+    "narration": "El perfil de aula ocupa algo más de un gigabyte en bruto. Ese tamaño no representa todo el disco que necesitaremos. Imaginad que guardamos cajas en un almacén: además de las cajas originales, pueden hacer falta copias, estanterías de trabajo y espacio para preparar los pedidos. En nuestro caso aparecen réplicas, índices, archivos temporales y salidas del cálculo. Medimos la entrada y estimamos el conjunto antes de cargarlo. El perfil de cinco a diez gigabytes es una ampliación que depende del equipo y de las indicaciones previas del profesor. Para el recorrido ordinario seguimos el perfil de aula anunciado."
+  },
+  {
+    "title": "Bloque 1 · Elegir dos almacenes con sentido",
+    "label": "La elección parte de la operación: recorrer el histórico o cambiar una reserva.",
+    "active": 0, "kind": "two",
+    "cards": [["Histórico", "Guarda los conjuntos para recorrerlos y generar el cierre."], ["Recepción", "Localiza y modifica una reserva concreta durante la atención."]],
+    "takeaway": "La combinación debe permitir probar un fallo e incorporar un módulo.",
+    "narration": "En el primer bloque elegimos dónde va cada cosa. El histórico necesita conservar los conjuntos y permitir recorrerlos para preparar el cierre. Recepción necesita encontrar y modificar una reserva concreta. Una combinación posible es HDFS con MapReduce para el histórico y MongoDB con réplicas para el mostrador. También se admiten otras herramientas justificadas. Lo importante es explicar la función de cada pieza y cómo permitirá las pruebas previstas. Un único proceso sin copias no demuestra tolerancia a la caída de un miembro. Tampoco necesitamos añadir herramientas solo por acumular nombres: cada componente debe responder a una necesidad del encargo."
+  },
+  {
+    "title": "Cuatro salidas para el panel de gerencia",
+    "label": "Las reglas de inclusión y las unidades se fijan antes de sumar.",
+    "active": 1, "kind": "four",
+    "items": [["Por hotel", "Noches", "Reservas confirmadas"], ["Por hotel", "Cobrado", "Tras cruzar los datos"], ["Por canal", "Cancelaciones", "Reservas canceladas"], ["Por hotel", "Lecturas", "Filas de sensores"]],
+    "takeaway": "Una lectura de sensor cuenta como una observación, sea cual sea su valor.",
+    "narration": "El panel necesita cuatro salidas, y cada una tiene una regla precisa. Sumamos las noches de las reservas confirmadas por hotel. Sumamos el dinero cobrado por hotel después de relacionar los cobros con sus reservas. Contamos las reservas canceladas por canal. Y contamos las filas de sensores de cada hotel. En esa última salida una lectura cuenta como una observación, con independencia del valor que registre. No estamos sumando temperaturas. El archivo de totales esperados recoge esas reglas y cifras. Antes de interpretar tiempos o fallos, comprobamos que nuestras cuatro salidas responden exactamente a esas preguntas."
+  },
+  {
+    "title": "El precio de una reserva no demuestra lo cobrado",
+    "label": "Mini ejemplo ficticio para entender el cruce; no son los totales del lote.",
+    "active": 1, "kind": "join",
+    "takeaway": "La unión usa id_reserva; el total monetario suma cobrado.",
+    "narration": "Veámoslo con una ficha pequeña, inventada solo para explicar la idea. Una reserva de Laredo tiene un importe de ciento ochenta euros. Su registro de cobro indica ciento sesenta. Para informar de lo cobrado utilizamos ciento sesenta, no el precio de la reserva. El identificador permite relacionar ambos papeles y saber a qué hotel pertenece ese cobro. En el lote de la práctica hay un cobro por cada reserva confirmada; las canceladas no tienen esa fila. Este control viene de Pentaho y sigue siendo necesario aunque ahora el trabajo se reparta entre varios procesos. Cambiar de herramienta no cambia el significado de la suma."
+  },
+  {
+    "title": "Cargar, leer y contrastar antes de continuar",
+    "label": "Guardar un fichero no demuestra que el motor interprete bien sus campos.",
+    "active": 1, "kind": "flow",
+    "steps": [["Generar", "Perfil aula", "Semilla 2026"], ["Cargar", "Formato y campos", "Lector identificado"], ["Contrastar", "Filas y totales", "Referencia publicada"]],
+    "takeaway": "Si hay diferencias, revisa la entrada, la regla y la agrupación.",
+    "narration": "Después de generar los archivos, medimos y cargamos los datos. Pero colocar un fichero en HDFS o en un almacén de objetos no demuestra que el motor lo entienda. Hay que identificar el formato, los campos, los tipos necesarios y el programa que los lee. Contrastamos los recuentos con la referencia y comprobamos las reglas del cálculo. Si algo difiere, investigamos la entrada, los filtros y la agrupación. No cambiamos los totales esperados para hacer coincidir una salida incorrecta. Este paso evita dedicar horas a medir un sistema que está procesando columnas equivocadas o un conjunto diferente del previsto."
+  },
+  {
+    "title": "Bloque 2 · Primero una referencia local",
+    "label": "La misma entrada, el mismo alcance y las mismas cuatro preguntas.",
+    "active": 1, "kind": "flow",
+    "steps": [["Histórico", "Lote completo", "Conservar la entrada"], ["Cálculo local", "Cuatro salidas", "Guardar resultados"], ["Contrato", "Totales esperados", "Comprobar coincidencia"]],
+    "takeaway": "El cálculo local proporciona una referencia para revisar el reparto.",
+    "narration": "En el segundo bloque calculamos primero las cuatro salidas con una herramienta local sobre el mismo lote. Guardamos esos resultados y los contrastamos con el archivo de referencia. Pensad en resolver una cuenta por un camino sencillo antes de repartir el trabajo entre varias personas. Esa primera respuesta nos servirá para revisar la segunda. Después ejecutaremos el cálculo en el motor distribuido sin cambiar la pregunta ni el alcance. Si una configuración produce cifras distintas, la comparación de tiempos deja de ser válida. Antes de preguntar cuál termina más rápido, necesitamos saber que ambas están resolviendo correctamente el mismo problema."
+  },
+  {
+    "title": "Repartir el trabajo y reunir un resultado correcto",
+    "label": "Observa tareas o etapas y los nodos que realmente las ejecutan.",
+    "active": 1, "kind": "three",
+    "cards": [["Dividir", "Los trabajadores reciben partes del trabajo."], ["Combinar", "Se reúnen los datos o subtotales necesarios."], ["Comprobar", "Las cuatro salidas coinciden con la referencia local."]],
+    "takeaway": "Varios procesos encendidos no bastan: muestra dónde se ejecutó el trabajo.",
+    "narration": "Repartir el cálculo se parece a distribuir varios montones de fichas entre compañeros y reunir después sus resultados. Esa reunión también cuesta tiempo y puede requerir mover datos. En la práctica observamos las tareas o etapas y los nodos que las ejecutan. No deducimos que hubo reparto únicamente porque se vean varios procesos encendidos. Comparamos una configuración con un trabajador y otra con dos, o su equivalente en la tecnología elegida. En ambos casos el total debe conservarse. Si una ejecución tarda más al añadir un trabajador, tendremos que explicar los costes de arranque, comunicación o combinación que hemos observado."
+  },
+  {
+    "title": "Medir sin convertir una ejecución en una promesa",
+    "label": "Ejemplo didáctico con tiempos inventados; no son medidas del laboratorio.",
+    "active": 1, "kind": "measurement",
+    "takeaway": "Haz un calentamiento y tres medidas por configuración; compara las medianas.",
+    "narration": "Para comparar con algo de criterio hacemos una ejecución de calentamiento, que queda fuera de la mediana, y después tres medidas por configuración. Con tiempos inventados de doce, diez y once segundos, ordenamos diez, once y doce: la mediana es once. Si otra configuración registra nueve, trece y diez, su mediana es diez. Es solo un ejemplo para entender el procedimiento; vosotros entregaréis las medidas reales de vuestro entorno. Conservad entrada, pregunta y condiciones comparables, y anotad recursos y versiones. Dos trabajadores no prometen tardar la mitad. El resultado debe explicar tanto una mejora como su ausencia."
+  },
+  {
+    "title": "La misma pregunta en un segundo motor",
+    "label": "Repite una de las preguntas, aunque el ensayo sea acotado.",
+    "active": 1, "kind": "two",
+    "cards": [["Primera ejecución", "Pregunta, entrada y alcance claramente identificados."], ["Segundo motor", "Misma pregunta y mismo corte; resultado contrastado."]],
+    "takeaway": "Si acotas el ensayo, compara ambos resultados sobre ese mismo corte.",
+    "narration": "El bloque de cálculo incluye repetir una de las preguntas en un segundo motor. No hace falta reconstruir todo el proyecto para este contraste, pero sí dejar claro qué entrada y qué alcance se utilizan. Si acotamos el ensayo, necesitamos la referencia del mismo corte, no enfrentar una muestra con el total completo. La coincidencia ayuda a comprobar que entendemos el cálculo y que no depende de memorizar una consulta de un producto concreto. Conservamos la operación y el resultado de ambas rutas. Una cifra parecida no es suficiente cuando la pregunta exige un recuento o una suma exactos."
+  },
+  {
+    "title": "Bloque 3 · Detener un miembro del histórico",
+    "label": "Elige un fallo que el diseño declare soportar y anota qué servicio pruebas.",
+    "active": 2, "kind": "flow",
+    "steps": [["Antes", "Estado y copias", "Lectura comprobada"], ["Interrupción", "Un miembro", "Observar el efecto"], ["Recuperación", "Datos y servicio", "Tiempo registrado"]],
+    "takeaway": "Identifica qué sigue disponible y qué queda interrumpido.",
+    "narration": "En el tercer bloque probamos el histórico. Elegimos un miembro concreto, por ejemplo un nodo que conserva bloques o una copia de los archivos. Antes de detenerlo anotamos el estado y comprobamos una lectura. Después interrumpimos solo ese miembro y observamos si el cierre puede seguir leyendo o qué parte queda detenida. Finalmente recuperamos el servicio y registramos el tiempo y el estado de los datos. Es como retirar una estantería prevista en el plan de contingencia y comprobar si las copias permiten seguir trabajando. La conclusión debe nombrar el fallo exacto, el efecto observado y las condiciones de recuperación."
+  },
+  {
+    "title": "Una prueba pequeña tiene un alcance concreto",
+    "label": "Copias efectivas y máquinas independientes responden a fallos diferentes.",
+    "active": 2, "kind": "two",
+    "cards": [["Un solo DataNode", "No permite observar recuperación desde otra copia de bloques."], ["Un solo ordenador", "Detener un contenedor no demuestra resistencia a perder el equipo."]],
+    "takeaway": "Distingue lo observado, lo previsto en el diseño y lo que queda pendiente.",
+    "narration": "Aquí conviene ser honestos con el alcance del laboratorio. Si solo tenemos un nodo de datos, no podemos afirmar que hemos recuperado un bloque desde otra copia que no existe. Y si todos los contenedores viven en el mismo ordenador, parar uno demuestra la respuesta a la caída de ese proceso, no a perder el ordenador entero. Si falta el entorno necesario, dejamos constancia de la limitación y de la prueba pendiente con el docente. No rellenamos esa ausencia con cifras inventadas. Describir con precisión lo que sí hemos observado hace que el expediente sea más útil y que su conclusión pueda revisarse."
+  },
+  {
+    "title": "Bloque 4 · Atender una reserva en recepción",
+    "label": "El modelo se elige a partir de la consulta y del cambio que necesita el mostrador.",
+    "active": 2, "kind": "three",
+    "cards": [["Localizar", "Identifica la reserva que recepción necesita abrir."], ["Modificar", "Guarda un cambio o incorpora un campo justificado."], ["Conservar", "Las reservas anteriores siguen siendo legibles."]],
+    "takeaway": "El cambio de recepción se conserva separado del histórico del informe.",
+    "narration": "Pasamos al cuarto bloque, el mostrador. Modelamos una reserva para poder encontrarla y modificarla de acuerdo con la necesidad de recepción. Podemos incorporar una hora de llegada o un campo que indique si viene una mascota. Después comprobamos que ese cambio convive con las reservas anteriores y que los programas siguen pudiendo leerlas. Si usamos documentos, recuperamos las decisiones de modelado y las comprobaciones de Python de los últimos apartados. Si elegimos otro modelo, explicamos la operación equivalente. Guardamos el antes y el después de una reserva identificada, sin reescribir el histórico que sirvió como entrada al informe."
+  },
+  {
+    "title": "Comprobar las copias del mostrador",
+    "label": "La prueba de recepción complementa la del histórico cuando son sistemas distintos.",
+    "active": 2, "kind": "flow",
+    "steps": [["Guardar", "Reserva identificada", "Confirmación anotada"], ["Detener", "Un miembro", "Lecturas y esperas"], ["Volver a leer", "Reserva modificada", "Estado comprobado"]],
+    "takeaway": "Conserva las opciones de lectura y de confirmación utilizadas por el cliente.",
+    "narration": "Ahora levantamos las copias previstas para recepción y probamos la caída de un miembro que no sea el único lugar con datos. Conservamos las opciones de lectura y de confirmación que utiliza el cliente. Guardamos un cambio, detenemos el miembro elegido y comprobamos qué operación continúa, cuál espera y qué ocurre al recuperar el servicio. Después volvemos a leer la reserva modificada. Las garantías se explican con esas condiciones, no con la palabra réplica por sí sola. Además, si el histórico y recepción utilizan sistemas distintos, esta prueba del mostrador no sustituye la caída del nodo de ficheros del bloque anterior."
+  },
+  {
+    "title": "Bloque 5 · Añadir un módulo que se pueda observar",
+    "label": "El recurso nuevo debe formar parte de tu diseño para el hotel.",
+    "active": 2, "kind": "three",
+    "cards": [["Antes", "Registra recursos, ubicación y resultado de referencia."], ["Ampliación", "Incorpora el nodo, trabajador o partición elegidos."], ["Después", "Repite la pregunta y explica qué capacidad ha cambiado."]],
+    "takeaway": "El recurso añadido cambia el sistema; el total correcto de negocio se conserva.",
+    "narration": "En el quinto bloque añadimos un módulo real: otro nodo de almacenamiento, otro trabajador o una partición, según el diseño elegido. Mostramos que se incorpora al sistema y repetimos una pregunta ya contrastada. El total de negocio debe seguir siendo el mismo. Lo que cambia puede ser el espacio disponible, el paralelismo, el reparto o una función concreta. Añadir un nodo no garantiza acelerar el cierre, así que explicamos qué capacidad aporta realmente. Cuando el equipo no admite la ampliación, seguimos la observación común indicada por el docente y hacemos la interpretación individual, relacionando ese recurso con nuestro diseño del hotel."
+  },
+  {
+    "title": "Bloque 6 · Una pregunta que llega después",
+    "label": "Reutiliza el histórico conservado y contrasta el nuevo resultado.",
+    "active": 2, "kind": "three",
+    "cards": [["Pregunta", "¿Cuánto se cobró por reservas web de Laredo en julio?"], ["Periodo", "Julio se refiere al campo fecha de la reserva."], ["Contraste", "Otro cálculo sobre el mismo corte verifica el total."]],
+    "takeaway": "Conservar datos permite nuevos usos si también conservas su significado.",
+    "narration": "El sexto bloque empieza con una petición posterior. Por ejemplo, gerencia quiere saber cuánto se cobró por las reservas web de Laredo cuya fecha de reserva cae en julio. No es una pregunta sobre la fecha del pago, que este fichero no contiene. Utilizamos el histórico ya guardado, aplicamos las condiciones y contrastamos el resultado con un cálculo independiente sobre el mismo corte. También podría plantearse una pregunta sobre sensores que superan un umbral. La idea es demostrar que conservar información, junto con sus campos, unidades y metadatos, permite responder a necesidades nuevas sin alterar los datos originales."
+  },
+  {
+    "title": "Una réplica y una copia de seguridad no hacen lo mismo",
+    "label": "El último bloque también distingue continuidad y recuperación de una versión anterior.",
+    "active": 2, "kind": "backup",
+    "takeaway": "Indica qué has probado y qué queda solo diseñado.",
+    "narration": "Para terminar las pruebas, distinguimos réplica y copia de seguridad. Imaginad dos compañeros que mantienen al día la misma carpeta. Si uno borra por error una ficha y el otro reproduce ese cambio, ambos pueden acabar sin ella. Eso explica por qué una réplica puede propagar también un error. Una copia de seguridad conserva una versión anterior desde la que podríamos recuperar la información. El enunciado permite explicar la diferencia apoyándose en una prueba pequeña. Si hacemos esa demostración, usamos datos de ensayo identificados y comprobamos la recuperación. En el expediente dejamos claro qué mecanismo hemos probado y cuál permanece únicamente como diseño."
+  },
+  {
+    "title": "El expediente cuenta lo que hiciste y lo que significa",
+    "label": "Usa la misma secuencia para cada criterio y cada prueba.",
+    "active": 3, "kind": "evidence",
+    "takeaway": "La salida literal y la explicación deben permitir revisar tu conclusión.",
+    "narration": "Cada prueba se documenta con cuatro piezas, siempre en el mismo orden. Primero, la predicción: qué esperamos que ocurra y cuál es el total de referencia. Segundo, la operación: el comando o programa, su versión y el nodo donde se ejecuta. Tercero, la salida literal, recortada cuando sea larga pero suficiente para comprobarla. Y cuarto, la interpretación: qué demuestra, qué límite tiene y qué no podemos concluir. Anotamos también las ayudas recibidas, incluida la inteligencia artificial. Una consulta generada puede ayudar, pero debemos poder repetirla y explicar por qué su resultado coincide o por qué aparece una diferencia."
+  },
+  {
+    "title": "Seis bloques para organizar unas veinte horas",
+    "label": "Las horas son orientativas; Moodle concreta el calendario de las sesiones.",
+    "active": 3, "kind": "hours",
+    "takeaway": "Cierra cada sesión con una evidencia revisada y una nota de avance.",
+    "narration": "El recorrido se organiza en unas veinte horas. Tres para separar los almacenes, cinco para el cierre repartido, dos para el fallo del histórico, cinco para recepción con copias, tres para crecer y dos para la pregunta posterior. Son tiempos orientativos; el calendario concreto lo fija el profesor en Moodle. Conviene avanzar por bloques y dejar escrita la evidencia cuando todavía recordamos las condiciones del experimento. Al cerrar cada sesión usamos la plantilla de avances y registramos un cambio con un mensaje reconocible. Así podemos retomar el trabajo sabiendo qué está comprobado, qué falta y cuál será el siguiente paso."
+  },
+  {
+    "title": "Entregar una versión que el profesor pueda revisar",
+    "label": "En Moodle: URL del repositorio e identificador completo del commit publicado.",
+    "active": 3, "kind": "two",
+    "cards": [["En GitHub", "Diseño, scripts, totales de referencia, evidencias y avances."], ["En el equipo", "Bruto generado y salidas grandes, durante el plazo indicado."]],
+    "takeaway": "Comprueba en el navegador que la versión entregada está publicada y es accesible.",
+    "narration": "La entrega identifica una versión concreta del trabajo. En Moodle ponemos la dirección del repositorio y el identificador completo del commit que queremos que se evalúe. Comprobamos en el navegador que ese commit está publicado y que el profesor puede acceder. Un cambio guardado solo en el portátil todavía no está entregado. Al repositorio subimos la combinación elegida, los scripts, los totales de referencia, los extractos de evidencia y los avances. El bruto generado y las salidas grandes permanecen en el equipo durante el plazo indicado. Tampoco publicamos contraseñas. La carpeta compartida debe contener lo necesario para revisar y reproducir las comprobaciones."
+  },
+  {
+    "title": "Explicar el sistema con tus propias pruebas",
+    "label": "Dónde está el dato, cómo se calcula, qué fallo se prueba y cómo se amplía.",
+    "active": 3, "kind": "three",
+    "cards": [["Decisión", "Cada almacén responde a una necesidad del hotel."], ["Comprobación", "Los resultados se contrastan y los fallos se observan."], ["Explicación", "Cada conclusión conserva sus condiciones y sus límites."]],
+    "takeaway": "La autoevaluación repasa conceptos; el expediente demuestra el trabajo realizado.",
+    "narration": "Al acabar, deberíais poder explicar el sistema a otro grupo sin limitaros a enumerar herramientas. Dónde queda cada dato, cómo obtenemos el cierre, qué cifras hemos contrastado, qué miembro hemos detenido y qué módulo hemos añadido. Si volvemos al hotel del principio, la respuesta incluye tanto el panel de gerencia como la reserva que recepción necesita modificar. Las pruebas muestran qué funciona y bajo qué condiciones. Ese es el hilo que une la unidad: elegir con un motivo, comprobar el comportamiento y explicar el resultado. Después podéis utilizar la autoevaluación para repasar conceptos; el expediente conserva la evidencia del trabajo realizado."
+  }
+]

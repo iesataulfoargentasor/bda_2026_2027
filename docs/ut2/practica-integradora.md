@@ -19,6 +19,19 @@ Los apartados [2.1](por-que-almacenamiento.md) a [2.9](pymongo.md) siguen siendo
 
     **Ampliación:** perfil de 5 a 10 GB, una segunda máquina física u otro motor. Su detalle adicional solo se exige si el profesor lo anuncia antes (véase [cómo trabajar la unidad](index.md#como-trabajar-la-unidad)).
 
+## Vídeo introductorio
+
+Finanzas prepara el cierre y recepción sigue atendiendo reservas: ¿cómo conectamos lo aprendido para responder a las dos necesidades? Este vídeo recorre los seis bloques de la práctica, explica qué datos y totales debéis utilizar y muestra cómo comprobar el cálculo repartido, los fallos y la ampliación del sistema. También orienta sobre las evidencias y la entrega en Moodle. Los pequeños ejemplos de importes y tiempos se identifican como ilustraciones, para distinguirlos de las medidas que obtendréis en vuestro laboratorio. **Duración aproximada de 17 minutos y 58 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/practica-integradora-portada.jpg" aria-label="Práctica integradora de la UT2. El cierre y la recepción del hotel, paso a paso" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/practica-integradora.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/practica-integradora.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/practica-integradora.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/practica-integradora.es.srt){target="_blank" rel="noopener"}
+
 ## El encargo
 
 Recepción registra operaciones en **Santander**, **Laredo**, **Comillas** y **Potes**. Finanzas cierra a las **23:00**. Gerencia abre el panel a las **8:00** del día siguiente y necesita el cierre ya comprobado. Mientras tanto, recepción tiene que localizar una reserva y modificarla sin esperar a ese panel.
