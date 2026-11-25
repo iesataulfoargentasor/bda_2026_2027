@@ -17,6 +17,21 @@ En el taller de [formatos de la UT1](../ut1/formatos.md) leísteis registros con
 
     **Ampliación:** Atlas, copias y restauración, operadores menos frecuentes y análisis de índices. Las entregas evaluables se concretan en Moodle.
 
+## Vídeo introductorio
+
+Buscamos las reservas de Laredo que incluyen parking y usamos la imagen de un armario con carpetas y fichas para entender MongoDB. Con los datos de la práctica distinguimos filtros y proyecciones, campos ausentes, listas y fechas. Después aprendemos a identificar una reserva, modificarla en una copia y comprobar qué ha cambiado. Cerramos con las ideas de atomicidad, índices y recuperación. **Duración de 15 minutos y 18 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/mongodb-explicado-portada.jpg" aria-label="MongoDB. Consultar y modificar las reservas del hotel con resultados comprobados" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/mongodb-explicado.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/mongodb-explicado.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/mongodb-explicado.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/mongodb-explicado.es.srt){target="_blank" rel="noopener"}
+
+## De la ficha del hotel a las consultas
+
 Trabajaremos con **15 reservas y 6 opiniones**. Es un juego de datos distinto del CSV de Hadoop. Los documentos de reservas suman 46 noches entre seis hoteles, incluidos Noja y Reinosa. El fichero carece de identificador de negocio y de nombre de titular en cada reserva. Para cambiar una ficha concreta usaréis su `_id` en la copia de ejercicios. Para comprobar el importe cobrado haría falta la fuente de pagos.
 
 [MongoDB](https://www.mongodb.com/) es la NoSQL **documental** del aula. Los documentos se basan en JSON; por dentro el motor guarda **BSON**. El nombre viene de *humongous*: gigantesco.
