@@ -1,0 +1,1108 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:02.112
+Imaginad el hotel al final del día.
+
+00:00:02.988 --> 00:00:04.612
+Finanzas cierra a las once de
+
+00:00:04.625 --> 00:00:06.612
+la noche y gerencia espera el informe
+
+00:00:06.625 --> 00:00:07.875
+a las ocho de la mañana.
+
+00:00:08.862 --> 00:00:12.875
+Mientras tanto, recepción sigue trabajando: alguien quiere localizar
+
+00:00:12.888 --> 00:00:15.088
+su reserva y cambiar la hora de llegada.
+
+00:00:15.950 --> 00:00:18.975
+La práctica integradora une esas dos necesidades.
+
+00:00:19.850 --> 00:00:22.375
+Tenemos que preparar un cierre comprobado y mantener
+
+00:00:22.388 --> 00:00:24.962
+un servicio que consulta y modifica reservas.
+
+00:00:25.838 --> 00:00:28.712
+Además, vamos a observar qué ocurre cuando falla
+
+00:00:28.725 --> 00:00:30.900
+un miembro y qué aporta ampliar el sistema.
+
+00:00:31.775 --> 00:00:34.788
+No empezamos desde cero: reunimos las decisiones y
+
+00:00:34.800 --> 00:00:37.862
+las herramientas que hemos trabajado durante toda la unidad.
+
+00:00:38.725 --> 00:00:40.612
+En la práctica de Pentaho aprendimos
+
+00:00:40.625 --> 00:00:43.088
+dos controles que siguen siendo esenciales.
+
+00:00:43.962 --> 00:00:46.362
+Para informar de lo cobrado había que relacionar
+
+00:00:46.375 --> 00:00:48.838
+reservas y pagos por su identificador, y
+
+00:00:48.850 --> 00:00:51.650
+antes de publicar había que contrastar los resultados.
+
+00:00:52.512 --> 00:00:56.175
+Ahora aplicaremos esos controles después de repartir el cálculo.
+
+00:00:57.050 --> 00:00:59.012
+El histórico del cierre conserva los
+
+00:00:59.025 --> 00:01:01.775
+datos de partida, mientras que recepción trabaja
+
+00:01:01.788 --> 00:01:04.062
+con información que puede seguir cambiando.
+
+00:01:04.938 --> 00:01:07.312
+Pensad en un archivador cerrado para preparar el
+
+00:01:07.325 --> 00:01:09.988
+informe y un mostrador que continúa atendiendo.
+
+00:01:10.850 --> 00:01:13.512
+Ambos pertenecen al mismo negocio, pero una
+
+00:01:13.525 --> 00:01:15.900
+modificación posterior del mostrador no debe
+
+00:01:15.912 --> 00:01:18.638
+reescribir el histórico utilizado para aquel cierre.
+
+00:01:19.512 --> 00:01:21.550
+El encargo recorre cinco ideas.
+
+00:01:22.425 --> 00:01:25.062
+Primero, justificar dónde guardamos cada dato
+
+00:01:25.075 --> 00:01:26.638
+según su volumen y su uso.
+
+00:01:27.500 --> 00:01:30.162
+Segundo, comprobar un cálculo distribuido.
+
+00:01:31.038 --> 00:01:34.350
+Tercero, observar la respuesta ante un fallo concreto.
+
+00:01:35.225 --> 00:01:37.838
+Cuarto, conservar información para responder
+
+00:01:37.850 --> 00:01:39.500
+más adelante a otra pregunta.
+
+00:01:40.362 --> 00:01:43.175
+Y quinto, mostrar qué cambia al añadir un módulo.
+
+00:01:44.038 --> 00:01:47.625
+No basta con una fotografía de varios contenedores encendidos.
+
+00:01:48.488 --> 00:01:51.200
+Necesitamos saber qué operación se ha ejecutado,
+
+00:01:51.375 --> 00:01:54.125
+qué resultado esperábamos y qué resultado apareció.
+
+00:01:54.988 --> 00:01:57.412
+Si una propiedad no puede observarse en nuestro
+
+00:01:57.425 --> 00:02:00.500
+entorno, indicamos ese límite y la prueba pendiente.
+
+00:02:01.375 --> 00:02:03.175
+Así distinguimos una propuesta de
+
+00:02:03.188 --> 00:02:05.388
+diseño de una comprobación realizada.
+
+00:02:06.275 --> 00:02:07.962
+Los datos de esta práctica son
+
+00:02:07.975 --> 00:02:10.562
+ficticios y diferentes de los talleres pequeños.
+
+00:02:11.462 --> 00:02:13.750
+El perfil de aula contiene tres millones de
+
+00:02:13.762 --> 00:02:16.938
+reservas, sus cobros correspondientes, un millón de
+
+00:02:16.950 --> 00:02:19.850
+opiniones y quince millones de lecturas de sensores.
+
+00:02:20.725 --> 00:02:23.975
+Trabajamos con Santander, Laredo, Comillas y Potes.
+
+00:02:24.862 --> 00:02:27.650
+El generador utiliza la semilla dos mil veintiséis
+
+00:02:27.662 --> 00:02:30.750
+y proporciona unos totales de referencia reproducibles.
+
+00:02:31.612 --> 00:02:34.138
+Por tanto, aquí no buscamos las cuarenta y
+
+00:02:34.150 --> 00:02:36.338
+seis noches del ejercicio de MongoDB ni
+
+00:02:36.350 --> 00:02:38.225
+las sesenta y dos del taller de Hadoop.
+
+00:02:39.100 --> 00:02:40.700
+Cada conjunto tiene su propio
+
+00:02:40.712 --> 00:02:42.688
+significado y sus propias cifras.
+
+00:02:43.562 --> 00:02:45.888
+Identificar correctamente la entrada es el
+
+00:02:45.900 --> 00:02:48.412
+primer paso para comprobar cualquier resultado.
+
+00:02:49.275 --> 00:02:51.912
+Conviene aclarar una diferencia antes de calcular.
+
+00:02:52.788 --> 00:02:54.725
+El relato del hotel fija el cierre a
+
+00:02:54.738 --> 00:02:56.612
+las once y la entrega a las ocho.
+
+00:02:57.488 --> 00:03:00.388
+Sin embargo, el generador del laboratorio entrega un
+
+00:03:00.400 --> 00:03:03.600
+lote histórico completo, con registros de varios meses.
+
+00:03:04.462 --> 00:03:07.212
+Los totales de referencia suman todo ese lote.
+
+00:03:08.112 --> 00:03:09.838
+Si aplicamos un filtro de ayer,
+
+00:03:10.038 --> 00:03:11.938
+habremos cambiado la pregunta y ya no
+
+00:03:11.950 --> 00:03:14.612
+podremos comparar directamente con esos totales.
+
+00:03:15.488 --> 00:03:18.088
+Por eso anotamos el perfil, la semilla, el
+
+00:03:18.100 --> 00:03:20.925
+alcance histórico completo y la fecha de generación.
+
+00:03:21.812 --> 00:03:24.162
+Además, el fichero de cobros no incluye
+
+00:03:24.175 --> 00:03:25.762
+la hora del pago: no debemos
+
+00:03:25.775 --> 00:03:28.075
+atribuirle un dato temporal que no contiene.
+
+00:03:28.938 --> 00:03:30.525
+Antes de montar las piezas,
+
+00:03:30.700 --> 00:03:32.638
+preparad vuestro cuaderno de trabajo.
+
+00:03:33.500 --> 00:03:35.562
+Cada alumno crea un repositorio desde
+
+00:03:35.575 --> 00:03:38.500
+la plantilla enlazada, eligiendo su propia cuenta
+
+00:03:38.512 --> 00:03:40.638
+como propietaria y el nombre indicado.
+
+00:03:41.512 --> 00:03:45.038
+La plantilla trae el generador, los totales, un archivo
+
+00:03:45.050 --> 00:03:48.212
+para la combinación tecnológica y una evidencia por bloque.
+
+00:03:49.100 --> 00:03:51.300
+Esa combinación empieza vacía porque la
+
+00:03:51.312 --> 00:03:53.262
+decisión os corresponde a vosotros.
+
+00:03:54.188 --> 00:03:56.075
+GitHub guarda el expediente y los
+
+00:03:56.088 --> 00:03:58.200
+programas; no ejecuta el clúster.
+
+00:03:59.062 --> 00:04:01.600
+Si el repositorio es privado, comprobad que el
+
+00:04:01.612 --> 00:04:04.112
+profesor tiene acceso antes de la evaluación.
+
+00:04:04.975 --> 00:04:07.725
+Así el trabajo queda organizado desde el principio
+
+00:04:07.738 --> 00:04:10.475
+y puede revisarse sin depender de vuestra pantalla.
+
+00:04:11.476 --> 00:04:13.164
+El perfil de aula ocupa algo
+
+00:04:13.176 --> 00:04:14.726
+más de un gigabyte en bruto.
+
+00:04:15.588 --> 00:04:18.914
+Ese tamaño no representa todo el disco que necesitaremos.
+
+00:04:19.813 --> 00:04:22.851
+Imaginad que guardamos cajas en un almacén: además
+
+00:04:22.864 --> 00:04:26.888
+de las cajas originales, pueden hacer falta copias, estanterías
+
+00:04:26.901 --> 00:04:29.438
+de trabajo y espacio para preparar los pedidos.
+
+00:04:30.301 --> 00:04:32.964
+En nuestro caso aparecen réplicas, índices,
+
+00:04:33.101 --> 00:04:35.514
+archivos temporales y salidas del cálculo.
+
+00:04:36.376 --> 00:04:38.176
+Medimos la entrada y estimamos
+
+00:04:38.188 --> 00:04:39.888
+el conjunto antes de cargarlo.
+
+00:04:40.764 --> 00:04:42.801
+El perfil de cinco a diez gigabytes
+
+00:04:42.814 --> 00:04:44.914
+es una ampliación que depende del equipo
+
+00:04:44.926 --> 00:04:47.188
+y de las indicaciones previas del profesor.
+
+00:04:47.351 --> 00:04:49.276
+Para el recorrido ordinario seguimos
+
+00:04:49.288 --> 00:04:50.864
+el perfil de aula anunciado.
+
+00:04:51.738 --> 00:04:54.438
+En el primer bloque elegimos dónde va cada cosa.
+
+00:04:55.314 --> 00:04:57.938
+El histórico necesita conservar los conjuntos
+
+00:04:57.951 --> 00:05:00.376
+y permitir recorrerlos para preparar el cierre.
+
+00:05:01.264 --> 00:05:05.001
+Recepción necesita encontrar y modificar una reserva concreta.
+
+00:05:05.864 --> 00:05:09.351
+Una combinación posible es HDFS con MapReduce para
+
+00:05:09.364 --> 00:05:12.338
+el histórico y MongoDB con réplicas para el mostrador.
+
+00:05:12.501 --> 00:05:15.314
+También se admiten otras herramientas justificadas.
+
+00:05:16.188 --> 00:05:18.564
+Lo importante es explicar la función de cada
+
+00:05:18.576 --> 00:05:21.101
+pieza y cómo permitirá las pruebas previstas.
+
+00:05:21.976 --> 00:05:24.214
+Un único proceso sin copias no demuestra
+
+00:05:24.226 --> 00:05:26.114
+tolerancia a la caída de un miembro.
+
+00:05:26.976 --> 00:05:30.664
+Tampoco necesitamos añadir herramientas solo por acumular nombres:
+
+00:05:30.876 --> 00:05:34.076
+cada componente debe responder a una necesidad del encargo.
+
+00:05:34.938 --> 00:05:37.164
+El panel necesita cuatro salidas, y
+
+00:05:37.176 --> 00:05:39.014
+cada una tiene una regla precisa.
+
+00:05:39.864 --> 00:05:42.988
+Sumamos las noches de las reservas confirmadas por hotel.
+
+00:05:43.851 --> 00:05:46.151
+Sumamos el dinero cobrado por hotel después
+
+00:05:46.164 --> 00:05:48.376
+de relacionar los cobros con sus reservas.
+
+00:05:49.251 --> 00:05:51.738
+Contamos las reservas canceladas por canal.
+
+00:05:52.601 --> 00:05:55.226
+Y contamos las filas de sensores de cada hotel.
+
+00:05:56.088 --> 00:05:58.676
+En esa última salida una lectura cuenta como
+
+00:05:58.688 --> 00:06:02.026
+una observación, con independencia del valor que registre.
+
+00:06:02.888 --> 00:06:04.838
+No estamos sumando temperaturas.
+
+00:06:05.764 --> 00:06:07.576
+El archivo de totales esperados
+
+00:06:07.588 --> 00:06:09.351
+recoge esas reglas y cifras.
+
+00:06:10.201 --> 00:06:13.301
+Antes de interpretar tiempos o fallos, comprobamos que
+
+00:06:13.314 --> 00:06:16.814
+nuestras cuatro salidas responden exactamente a esas preguntas.
+
+00:06:17.688 --> 00:06:20.201
+Veámoslo con una ficha pequeña, inventada
+
+00:06:20.214 --> 00:06:21.776
+solo para explicar la idea.
+
+00:06:22.688 --> 00:06:24.251
+Una reserva de Laredo tiene un
+
+00:06:24.264 --> 00:06:26.101
+importe de ciento ochenta euros.
+
+00:06:27.014 --> 00:06:29.664
+Su registro de cobro indica ciento sesenta.
+
+00:06:30.514 --> 00:06:32.826
+Para informar de lo cobrado utilizamos ciento
+
+00:06:32.838 --> 00:06:34.951
+sesenta, no el precio de la reserva.
+
+00:06:35.814 --> 00:06:38.764
+El identificador permite relacionar ambos papeles y
+
+00:06:38.776 --> 00:06:40.914
+saber a qué hotel pertenece ese cobro.
+
+00:06:41.776 --> 00:06:43.076
+En el lote de la práctica
+
+00:06:43.088 --> 00:06:45.201
+hay un cobro por cada reserva confirmada;
+
+00:06:45.388 --> 00:06:47.314
+las canceladas no tienen esa fila.
+
+00:06:48.164 --> 00:06:51.001
+Este control viene de Pentaho y sigue siendo necesario
+
+00:06:51.014 --> 00:06:54.064
+aunque ahora el trabajo se reparta entre varios procesos.
+
+00:06:54.938 --> 00:06:56.601
+Cambiar de herramienta no cambia
+
+00:06:56.614 --> 00:06:58.038
+el significado de la suma.
+
+00:06:58.914 --> 00:07:00.726
+Después de generar los archivos,
+
+00:07:00.838 --> 00:07:02.601
+medimos y cargamos los datos.
+
+00:07:03.464 --> 00:07:05.738
+Pero colocar un fichero en HDFS
+
+00:07:05.751 --> 00:07:07.226
+o en un almacén de objetos no
+
+00:07:07.238 --> 00:07:08.964
+demuestra que el motor lo entienda.
+
+00:07:09.851 --> 00:07:12.638
+Hay que identificar el formato, los campos, los
+
+00:07:12.651 --> 00:07:14.988
+tipos necesarios y el programa que los lee.
+
+00:07:15.901 --> 00:07:18.276
+Contrastamos los recuentos con la referencia
+
+00:07:18.288 --> 00:07:20.238
+y comprobamos las reglas del cálculo.
+
+00:07:21.114 --> 00:07:23.588
+Si algo difiere, investigamos la entrada,
+
+00:07:23.714 --> 00:07:25.301
+los filtros y la agrupación.
+
+00:07:26.164 --> 00:07:28.338
+No cambiamos los totales esperados para
+
+00:07:28.351 --> 00:07:30.426
+hacer coincidir una salida incorrecta.
+
+00:07:31.288 --> 00:07:33.338
+Este paso evita dedicar horas a medir
+
+00:07:33.351 --> 00:07:35.438
+un sistema que está procesando columnas
+
+00:07:35.451 --> 00:07:38.664
+equivocadas o un conjunto diferente del previsto.
+
+00:07:39.526 --> 00:07:42.151
+En el segundo bloque calculamos primero las cuatro
+
+00:07:42.164 --> 00:07:44.988
+salidas con una herramienta local sobre el mismo lote.
+
+00:07:45.876 --> 00:07:48.501
+Guardamos esos resultados y los contrastamos
+
+00:07:48.514 --> 00:07:50.088
+con el archivo de referencia.
+
+00:07:50.988 --> 00:07:53.264
+Pensad en resolver una cuenta por un camino
+
+00:07:53.276 --> 00:07:56.601
+sencillo antes de repartir el trabajo entre varias personas.
+
+00:07:57.476 --> 00:08:00.688
+Esa primera respuesta nos servirá para revisar la segunda.
+
+00:08:01.564 --> 00:08:04.701
+Después ejecutaremos el cálculo en el motor distribuido
+
+00:08:04.714 --> 00:08:06.814
+sin cambiar la pregunta ni el alcance.
+
+00:08:07.676 --> 00:08:10.751
+Si una configuración produce cifras distintas, la
+
+00:08:10.764 --> 00:08:13.026
+comparación de tiempos deja de ser válida.
+
+00:08:13.888 --> 00:08:17.176
+Antes de preguntar cuál termina más rápido, necesitamos
+
+00:08:17.188 --> 00:08:20.564
+saber que ambas están resolviendo correctamente el mismo problema.
+
+00:08:21.532 --> 00:08:24.820
+Repartir el cálculo se parece a distribuir varios montones
+
+00:08:24.832 --> 00:08:28.220
+de fichas entre compañeros y reunir después sus resultados.
+
+00:08:28.382 --> 00:08:30.357
+Esa reunión también cuesta tiempo
+
+00:08:30.370 --> 00:08:31.970
+y puede requerir mover datos.
+
+00:08:32.832 --> 00:08:34.907
+En la práctica observamos las tareas o
+
+00:08:34.920 --> 00:08:36.982
+etapas y los nodos que las ejecutan.
+
+00:08:37.857 --> 00:08:40.170
+No deducimos que hubo reparto únicamente
+
+00:08:40.182 --> 00:08:42.532
+porque se vean varios procesos encendidos.
+
+00:08:43.394 --> 00:08:46.294
+Comparamos una configuración con un trabajador y otra
+
+00:08:46.307 --> 00:08:49.244
+con dos, o su equivalente en la tecnología elegida.
+
+00:08:50.107 --> 00:08:52.657
+En ambos casos el total debe conservarse.
+
+00:08:53.520 --> 00:08:55.607
+Si una ejecución tarda más al añadir
+
+00:08:55.620 --> 00:08:58.382
+un trabajador, tendremos que explicar los costes de
+
+00:08:58.394 --> 00:09:01.870
+arranque, comunicación o combinación que hemos observado.
+
+00:09:02.732 --> 00:09:05.107
+Para comparar con algo de criterio hacemos una
+
+00:09:05.120 --> 00:09:07.532
+ejecución de calentamiento, que queda fuera de
+
+00:09:07.544 --> 00:09:10.857
+la mediana, y después tres medidas por configuración.
+
+00:09:11.732 --> 00:09:14.807
+Con tiempos inventados de doce, diez y once segundos,
+
+00:09:14.944 --> 00:09:18.007
+ordenamos diez, once y doce: la mediana es once.
+
+00:09:18.882 --> 00:09:21.544
+Si otra configuración registra nueve, trece
+
+00:09:21.557 --> 00:09:23.232
+y diez, su mediana es diez.
+
+00:09:24.107 --> 00:09:26.657
+Es solo un ejemplo para entender el procedimiento;
+
+00:09:26.932 --> 00:09:30.070
+vosotros entregaréis las medidas reales de vuestro entorno.
+
+00:09:30.970 --> 00:09:34.194
+Conservad entrada, pregunta y condiciones comparables,
+
+00:09:34.344 --> 00:09:36.244
+y anotad recursos y versiones.
+
+00:09:37.120 --> 00:09:39.607
+Dos trabajadores no prometen tardar la mitad.
+
+00:09:40.470 --> 00:09:42.432
+El resultado debe explicar tanto
+
+00:09:42.444 --> 00:09:44.157
+una mejora como su ausencia.
+
+00:09:45.044 --> 00:09:47.307
+El bloque de cálculo incluye repetir una
+
+00:09:47.320 --> 00:09:49.320
+de las preguntas en un segundo motor.
+
+00:09:50.170 --> 00:09:52.470
+No hace falta reconstruir todo el proyecto
+
+00:09:52.482 --> 00:09:54.807
+para este contraste, pero sí dejar claro
+
+00:09:54.820 --> 00:09:56.907
+qué entrada y qué alcance se utilizan.
+
+00:09:57.782 --> 00:10:01.170
+Si acotamos el ensayo, necesitamos la referencia del mismo
+
+00:10:01.182 --> 00:10:04.520
+corte, no enfrentar una muestra con el total completo.
+
+00:10:05.382 --> 00:10:08.044
+La coincidencia ayuda a comprobar que entendemos
+
+00:10:08.057 --> 00:10:09.544
+el cálculo y que no depende de
+
+00:10:09.557 --> 00:10:12.582
+memorizar una consulta de un producto concreto.
+
+00:10:13.444 --> 00:10:16.620
+Conservamos la operación y el resultado de ambas rutas.
+
+00:10:17.494 --> 00:10:19.894
+Una cifra parecida no es suficiente cuando la
+
+00:10:19.907 --> 00:10:22.757
+pregunta exige un recuento o una suma exactos.
+
+00:10:23.620 --> 00:10:25.920
+En el tercer bloque probamos el histórico.
+
+00:10:26.782 --> 00:10:29.582
+Elegimos un miembro concreto, por ejemplo un nodo
+
+00:10:29.594 --> 00:10:32.220
+que conserva bloques o una copia de los archivos.
+
+00:10:33.082 --> 00:10:34.744
+Antes de detenerlo anotamos el
+
+00:10:34.757 --> 00:10:36.570
+estado y comprobamos una lectura.
+
+00:10:37.432 --> 00:10:40.507
+Después interrumpimos solo ese miembro y observamos si el
+
+00:10:40.520 --> 00:10:43.282
+cierre puede seguir leyendo o qué parte queda detenida.
+
+00:10:44.170 --> 00:10:47.107
+Finalmente recuperamos el servicio y registramos el
+
+00:10:47.120 --> 00:10:48.870
+tiempo y el estado de los datos.
+
+00:10:49.732 --> 00:10:51.882
+Es como retirar una estantería prevista
+
+00:10:51.894 --> 00:10:53.870
+en el plan de contingencia y comprobar
+
+00:10:53.882 --> 00:10:56.194
+si las copias permiten seguir trabajando.
+
+00:10:56.394 --> 00:10:59.107
+La conclusión debe nombrar el fallo exacto, el
+
+00:10:59.120 --> 00:11:01.957
+efecto observado y las condiciones de recuperación.
+
+00:11:02.820 --> 00:11:05.870
+Aquí conviene ser honestos con el alcance del laboratorio.
+
+00:11:06.732 --> 00:11:08.620
+Si solo tenemos un nodo de datos,
+
+00:11:08.794 --> 00:11:11.032
+no podemos afirmar que hemos recuperado un
+
+00:11:11.044 --> 00:11:13.070
+bloque desde otra copia que no existe.
+
+00:11:13.944 --> 00:11:16.270
+Y si todos los contenedores viven en el mismo
+
+00:11:16.282 --> 00:11:19.207
+ordenador, parar uno demuestra la respuesta a la caída
+
+00:11:19.220 --> 00:11:21.920
+de ese proceso, no a perder el ordenador entero.
+
+00:11:22.782 --> 00:11:25.994
+Si falta el entorno necesario, dejamos constancia de la
+
+00:11:26.007 --> 00:11:28.632
+limitación y de la prueba pendiente con el docente.
+
+00:11:29.520 --> 00:11:32.507
+No rellenamos esa ausencia con cifras inventadas.
+
+00:11:33.394 --> 00:11:35.407
+Describir con precisión lo que sí hemos
+
+00:11:35.420 --> 00:11:37.544
+observado hace que el expediente sea más
+
+00:11:37.557 --> 00:11:39.782
+útil y que su conclusión pueda revisarse.
+
+00:11:39.957 --> 00:11:42.232
+Pasamos al cuarto bloque, el mostrador.
+
+00:11:43.107 --> 00:11:46.382
+Modelamos una reserva para poder encontrarla y modificarla
+
+00:11:46.394 --> 00:11:48.532
+de acuerdo con la necesidad de recepción.
+
+00:11:49.444 --> 00:11:51.794
+Podemos incorporar una hora de llegada o un
+
+00:11:51.807 --> 00:11:53.957
+campo que indique si viene una mascota.
+
+00:11:54.832 --> 00:11:57.470
+Después comprobamos que ese cambio convive con las
+
+00:11:57.482 --> 00:12:00.907
+reservas anteriores y que los programas siguen pudiendo leerlas.
+
+00:12:01.770 --> 00:12:05.520
+Si usamos documentos, recuperamos las decisiones de modelado
+
+00:12:05.532 --> 00:12:08.632
+y las comprobaciones de Python de los últimos apartados.
+
+00:12:09.494 --> 00:12:13.220
+Si elegimos otro modelo, explicamos la operación equivalente.
+
+00:12:14.094 --> 00:12:15.957
+Guardamos el antes y el después de
+
+00:12:15.970 --> 00:12:18.644
+una reserva identificada, sin reescribir el
+
+00:12:18.657 --> 00:12:21.057
+histórico que sirvió como entrada al informe.
+
+00:12:22.036 --> 00:12:24.974
+Ahora levantamos las copias previstas para recepción
+
+00:12:24.986 --> 00:12:26.774
+y probamos la caída de un miembro que
+
+00:12:26.786 --> 00:12:29.011
+no sea el único lugar con datos.
+
+00:12:29.924 --> 00:12:31.924
+Conservamos las opciones de lectura y
+
+00:12:31.936 --> 00:12:34.198
+de confirmación que utiliza el cliente.
+
+00:12:35.086 --> 00:12:37.961
+Guardamos un cambio, detenemos el miembro elegido
+
+00:12:37.974 --> 00:12:40.836
+y comprobamos qué operación continúa, cuál espera
+
+00:12:40.848 --> 00:12:42.824
+y qué ocurre al recuperar el servicio.
+
+00:12:43.686 --> 00:12:46.386
+Después volvemos a leer la reserva modificada.
+
+00:12:47.274 --> 00:12:50.286
+Las garantías se explican con esas condiciones, no
+
+00:12:50.298 --> 00:12:52.174
+con la palabra réplica por sí sola.
+
+00:12:53.024 --> 00:12:56.211
+Además, si el histórico y recepción utilizan sistemas
+
+00:12:56.224 --> 00:12:59.336
+distintos, esta prueba del mostrador no sustituye la
+
+00:12:59.348 --> 00:13:01.774
+caída del nodo de ficheros del bloque anterior.
+
+00:13:02.661 --> 00:13:04.736
+En el quinto bloque añadimos un módulo
+
+00:13:04.748 --> 00:13:07.774
+real: otro nodo de almacenamiento, otro trabajador
+
+00:13:07.786 --> 00:13:10.611
+o una partición, según el diseño elegido.
+
+00:13:11.486 --> 00:13:13.536
+Mostramos que se incorpora al sistema
+
+00:13:13.548 --> 00:13:15.811
+y repetimos una pregunta ya contrastada.
+
+00:13:16.686 --> 00:13:19.424
+El total de negocio debe seguir siendo el mismo.
+
+00:13:20.286 --> 00:13:22.674
+Lo que cambia puede ser el espacio disponible,
+
+00:13:22.798 --> 00:13:25.886
+el paralelismo, el reparto o una función concreta.
+
+00:13:26.748 --> 00:13:29.236
+Añadir un nodo no garantiza acelerar el cierre,
+
+00:13:29.548 --> 00:13:32.398
+así que explicamos qué capacidad aporta realmente.
+
+00:13:33.261 --> 00:13:35.348
+Cuando el equipo no admite la ampliación,
+
+00:13:35.561 --> 00:13:37.974
+seguimos la observación común indicada por el
+
+00:13:37.986 --> 00:13:41.574
+docente y hacemos la interpretación individual, relacionando
+
+00:13:41.586 --> 00:13:43.724
+ese recurso con nuestro diseño del hotel.
+
+00:13:44.586 --> 00:13:47.486
+El sexto bloque empieza con una petición posterior.
+
+00:13:48.361 --> 00:13:50.998
+Por ejemplo, gerencia quiere saber cuánto se
+
+00:13:51.011 --> 00:13:52.824
+cobró por las reservas web de Laredo
+
+00:13:52.836 --> 00:13:54.924
+cuya fecha de reserva cae en julio.
+
+00:13:55.798 --> 00:13:57.536
+No es una pregunta sobre la fecha
+
+00:13:57.548 --> 00:13:59.736
+del pago, que este fichero no contiene.
+
+00:14:00.611 --> 00:14:03.786
+Utilizamos el histórico ya guardado, aplicamos las
+
+00:14:03.798 --> 00:14:06.136
+condiciones y contrastamos el resultado con
+
+00:14:06.148 --> 00:14:08.586
+un cálculo independiente sobre el mismo corte.
+
+00:14:09.474 --> 00:14:11.886
+También podría plantearse una pregunta sobre
+
+00:14:11.898 --> 00:14:13.648
+sensores que superan un umbral.
+
+00:14:14.536 --> 00:14:17.711
+La idea es demostrar que conservar información, junto
+
+00:14:17.724 --> 00:14:21.148
+con sus campos, unidades y metadatos, permite responder
+
+00:14:21.161 --> 00:14:24.174
+a necesidades nuevas sin alterar los datos originales.
+
+00:14:25.036 --> 00:14:27.211
+Para terminar las pruebas, distinguimos
+
+00:14:27.224 --> 00:14:28.898
+réplica y copia de seguridad.
+
+00:14:29.786 --> 00:14:31.848
+Imaginad dos compañeros que mantienen
+
+00:14:31.861 --> 00:14:33.211
+al día la misma carpeta.
+
+00:14:34.086 --> 00:14:36.098
+Si uno borra por error una ficha y el
+
+00:14:36.111 --> 00:14:39.311
+otro reproduce ese cambio, ambos pueden acabar sin ella.
+
+00:14:40.248 --> 00:14:42.048
+Eso explica por qué una réplica
+
+00:14:42.061 --> 00:14:43.661
+puede propagar también un error.
+
+00:14:44.524 --> 00:14:47.511
+Una copia de seguridad conserva una versión anterior
+
+00:14:47.524 --> 00:14:50.098
+desde la que podríamos recuperar la información.
+
+00:14:50.998 --> 00:14:53.448
+El enunciado permite explicar la diferencia
+
+00:14:53.461 --> 00:14:55.374
+apoyándose en una prueba pequeña.
+
+00:14:56.248 --> 00:14:58.798
+Si hacemos esa demostración, usamos datos
+
+00:14:58.811 --> 00:15:01.886
+de ensayo identificados y comprobamos la recuperación.
+
+00:15:02.761 --> 00:15:05.486
+En el expediente dejamos claro qué mecanismo hemos
+
+00:15:05.498 --> 00:15:08.311
+probado y cuál permanece únicamente como diseño.
+
+00:15:09.174 --> 00:15:10.986
+Cada prueba se documenta con cuatro
+
+00:15:10.998 --> 00:15:13.098
+piezas, siempre en el mismo orden.
+
+00:15:13.961 --> 00:15:16.761
+Primero, la predicción: qué esperamos que ocurra
+
+00:15:16.774 --> 00:15:18.548
+y cuál es el total de referencia.
+
+00:15:19.424 --> 00:15:22.486
+Segundo, la operación: el comando o programa, su
+
+00:15:22.498 --> 00:15:24.548
+versión y el nodo donde se ejecuta.
+
+00:15:25.411 --> 00:15:28.174
+Tercero, la salida literal, recortada cuando
+
+00:15:28.186 --> 00:15:30.598
+sea larga pero suficiente para comprobarla.
+
+00:15:31.461 --> 00:15:34.324
+Y cuarto, la interpretación: qué demuestra, qué
+
+00:15:34.336 --> 00:15:36.436
+límite tiene y qué no podemos concluir.
+
+00:15:37.311 --> 00:15:38.848
+Anotamos también las ayudas
+
+00:15:38.861 --> 00:15:41.786
+recibidas, incluida la inteligencia artificial.
+
+00:15:42.661 --> 00:15:45.524
+Una consulta generada puede ayudar, pero debemos
+
+00:15:45.536 --> 00:15:48.124
+poder repetirla y explicar por qué su resultado
+
+00:15:48.136 --> 00:15:50.461
+coincide o por qué aparece una diferencia.
+
+00:15:51.374 --> 00:15:54.098
+El recorrido se organiza en unas veinte horas.
+
+00:15:54.961 --> 00:15:57.548
+Tres para separar los almacenes, cinco para el
+
+00:15:57.561 --> 00:15:59.586
+cierre repartido, dos para el fallo del
+
+00:15:59.598 --> 00:16:02.811
+histórico, cinco para recepción con copias, tres
+
+00:16:02.824 --> 00:16:05.061
+para crecer y dos para la pregunta posterior.
+
+00:16:05.936 --> 00:16:08.886
+Son tiempos orientativos; el calendario concreto
+
+00:16:08.898 --> 00:16:10.486
+lo fija el profesor en Moodle.
+
+00:16:11.348 --> 00:16:13.836
+Conviene avanzar por bloques y dejar escrita la
+
+00:16:13.848 --> 00:16:17.624
+evidencia cuando todavía recordamos las condiciones del experimento.
+
+00:16:17.798 --> 00:16:20.148
+Al cerrar cada sesión usamos la plantilla de
+
+00:16:20.161 --> 00:16:23.611
+avances y registramos un cambio con un mensaje reconocible.
+
+00:16:24.486 --> 00:16:27.074
+Así podemos retomar el trabajo sabiendo qué está
+
+00:16:27.086 --> 00:16:29.924
+comprobado, qué falta y cuál será el siguiente paso.
+
+00:16:30.892 --> 00:16:33.992
+La entrega identifica una versión concreta del trabajo.
+
+00:16:34.842 --> 00:16:37.567
+En Moodle ponemos la dirección del repositorio y el
+
+00:16:37.580 --> 00:16:40.692
+identificador completo del commit que queremos que se evalúe.
+
+00:16:41.580 --> 00:16:44.030
+Comprobamos en el navegador que ese commit está
+
+00:16:44.042 --> 00:16:46.242
+publicado y que el profesor puede acceder.
+
+00:16:47.104 --> 00:16:48.667
+Un cambio guardado solo en el
+
+00:16:48.680 --> 00:16:50.717
+portátil todavía no está entregado.
+
+00:16:51.580 --> 00:16:54.254
+Al repositorio subimos la combinación elegida,
+
+00:16:54.392 --> 00:16:57.142
+los scripts, los totales de referencia, los
+
+00:16:57.154 --> 00:16:59.292
+extractos de evidencia y los avances.
+
+00:17:00.167 --> 00:17:02.942
+El bruto generado y las salidas grandes permanecen
+
+00:17:02.954 --> 00:17:04.979
+en el equipo durante el plazo indicado.
+
+00:17:05.854 --> 00:17:07.842
+Tampoco publicamos contraseñas.
+
+00:17:08.717 --> 00:17:10.817
+La carpeta compartida debe contener lo
+
+00:17:10.830 --> 00:17:13.917
+necesario para revisar y reproducir las comprobaciones.
+
+00:17:14.792 --> 00:17:17.530
+Al acabar, deberíais poder explicar el sistema a
+
+00:17:17.542 --> 00:17:20.204
+otro grupo sin limitaros a enumerar herramientas.
+
+00:17:21.080 --> 00:17:23.417
+Dónde queda cada dato, cómo obtenemos el
+
+00:17:23.430 --> 00:17:26.354
+cierre, qué cifras hemos contrastado, qué miembro
+
+00:17:26.367 --> 00:17:28.630
+hemos detenido y qué módulo hemos añadido.
+
+00:17:29.504 --> 00:17:31.867
+Si volvemos al hotel del principio, la
+
+00:17:31.880 --> 00:17:34.217
+respuesta incluye tanto el panel de gerencia
+
+00:17:34.230 --> 00:17:36.904
+como la reserva que recepción necesita modificar.
+
+00:17:37.780 --> 00:17:40.942
+Las pruebas muestran qué funciona y bajo qué condiciones.
+
+00:17:41.830 --> 00:17:43.030
+Ese es el hilo que une
+
+00:17:43.042 --> 00:17:45.604
+la unidad: elegir con un motivo, comprobar
+
+00:17:45.617 --> 00:17:47.942
+el comportamiento y explicar el resultado.
+
+00:17:48.804 --> 00:17:52.442
+Después podéis utilizar la autoevaluación para repasar conceptos;
+
+00:17:52.717 --> 00:17:56.104
+el expediente conserva la evidencia del trabajo realizado.
