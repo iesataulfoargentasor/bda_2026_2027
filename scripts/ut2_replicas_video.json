@@ -1,0 +1,213 @@
+[
+  {
+    "title": "Guardamos una reserva… y el primario se detiene",
+    "label": "Volvemos al hotel: dos noches en Laredo, importe 124.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["Antes del fallo", "Una reserva queda guardada con una confirmación conocida."], ["Después del fallo", "Otro compañero necesita abrir esa ficha."], ["La siguiente operación", "Recepción también necesita registrar una reserva nueva."]],
+    "takeaway": "Comprobaremos qué dato se conserva y cuándo vuelve a ser posible escribir.",
+    "narration": "Ya hemos decidido cómo organizar las fichas del hotel. Ahora imaginad que una recepcionista guarda una reserva de dos noches en Laredo y el proceso que acepta las escrituras se detiene. Su compañero necesita abrir esa reserva y registrar la siguiente. ¿Podrá hacerlo? En la unidad uno hablamos de qué debería ocurrir si fallaba un nodo. Aquí vamos a convertir aquella idea en comprobaciones: qué dato permanece, quién puede escribir ahora y qué sucede cuando vuelve el miembro detenido. Para entenderlo, primero distinguiremos dos tareas que suelen confundirse: hacer copias y repartir los datos."
+  },
+  {
+    "title": "Copiar la carpeta o repartir el archivo",
+    "label": "Replicación y particionado cumplen funciones diferentes y pueden combinarse.",
+    "active": 0,
+    "kind": "copiesparts",
+    "takeaway": "La réplica conserva el mismo conjunto; el particionado distribuye partes diferentes.",
+    "narration": "Pensemos en un archivador de reservas. Replicar se parece a tener varias copias de la misma carpeta, para que otra pueda servirnos si falla una. Particionar se parece a repartir el archivo en secciones: cada grupo conserva una parte distinta. En un sistema real podemos combinar las dos ideas, haciendo varias copias de cada sección. Tener más copias no significa disponer de más datos diferentes, y repartir información tampoco garantiza por sí solo que sobreviva a un fallo. Primero debemos saber qué problema intentamos resolver: recuperación del servicio, capacidad, carga o varias necesidades a la vez."
+  },
+  {
+    "title": "Tres mostradores, el mismo conjunto de reservas",
+    "label": "Laredo, Potes y Noja son nombres de miembros del conjunto hotelrs.",
+    "active": 0,
+    "kind": "replicas",
+    "takeaway": "Cada miembro conserva todas las reservas del conjunto, también las de otros hoteles.",
+    "narration": "En el laboratorio llamamos Laredo, Potes y Noja a los tres miembros del conjunto. Esos nombres no indican qué reservas guarda cada uno. Los tres conservan el mismo conjunto de documentos: una reserva de Potes también estará en las copias de Laredo y Noja. En cada momento uno ejerce de primario y los otros siguen sus cambios. El cargo se consulta en el estado del conjunto; no se deduce del nombre del contenedor. Laredo tiene una prioridad mayor en esta configuración, pero eso no significa que siempre pueda o deba ser el primario."
+  },
+  {
+    "title": "Quién escribe, quién copia y quién solo vota",
+    "label": "La práctica utiliza tres miembros con datos; no incorpora un árbitro.",
+    "active": 0,
+    "kind": "three",
+    "cards": [["Primario", "Acepta las escrituras ordinarias del conjunto."], ["Secundario", "Replica cambios y puede atender lecturas permitidas."], ["Árbitro", "Participa en elecciones, pero no guarda los datos."]],
+    "takeaway": "Pedir leer a un secundario no lo convierte en un servidor que acepte escrituras.",
+    "narration": "Imaginad que solo un mostrador tiene el bolígrafo autorizado para modificar la carpeta. Ese es el primario. Los secundarios siguen sus cambios y pueden atender lecturas cuando el cliente lo solicita, aunque quizá vayan algo por detrás. Cambiar la preferencia de lectura no les entrega el bolígrafo: una escritura directa a un secundario debe rechazarse. Existe también la figura del árbitro, que participa en las votaciones sin guardar reservas. Puede aportar un voto, pero no una copia desde la que recuperar información. Por eso, en esta práctica utilizamos tres miembros que sí almacenan datos."
+  },
+  {
+    "title": "El oplog es un diario con una ventana limitada",
+    "label": "Los secundarios siguen el historial de operaciones para ponerse al día.",
+    "active": 0,
+    "kind": "journal",
+    "takeaway": "Los borrados también se replican: el diario y las réplicas no sustituyen un backup.",
+    "narration": "Para mantener las copias, el primario registra operaciones en un diario llamado oplog. Los secundarios siguen ese historial y aplican los cambios, de forma asíncrona. No es una copia nocturna de toda la base. El diario tiene una ventana limitada que depende de su capacidad y del ritmo de operaciones. Si un secundario vuelve demasiado tarde y ya faltan los cambios que necesita, puede requerir una sincronización inicial. Además, un borrado equivocado también puede llegar a las copias. Tener réplicas y conservar una copia de seguridad permiten afrontar problemas distintos; necesitamos distinguirlos."
+  },
+  {
+    "title": "La mayoría se calcula sobre los votantes configurados",
+    "label": "Más de la mitad: dos de tres, tres de cuatro.",
+    "active": 0,
+    "kind": "majorities",
+    "takeaway": "Los miembros sin voto no entran en el cálculo; también hace falta un candidato elegible.",
+    "narration": "Cuando hace falta elegir un primario, importa la mayoría de los miembros votantes que están configurados. Con tres votantes hacen falta dos; con cuatro hacen falta tres. No contamos únicamente a los que responden hoy. Añadir un cuarto votante, por tanto, no permite perder dos y seguir teniendo mayoría. Un miembro sin voto conserva datos, pero no entra en ese cálculo. Además de reunir votos, necesitamos un candidato elegible y suficientemente actualizado. Es parecido a una reunión con un mínimo de asistentes: no podemos rebajar ese mínimo simplemente porque algunos no hayan llegado."
+  },
+  {
+    "title": "Si solo queda uno, no puede decidir por todos",
+    "label": "Un miembro de un conjunto de tres no forma la mayoría necesaria.",
+    "active": 0,
+    "kind": "isolated",
+    "takeaway": "Alta disponibilidad admite una pausa y depende del fallo y de la configuración.",
+    "narration": "Si un miembro de nuestro conjunto deja de responder, los otros dos pueden elegir un primario cuando se cumplen las condiciones necesarias. Si quedan incomunicados dos y solo responde uno, ese miembro no puede declararse mayoría por su cuenta. Las escrituras ordinarias se detienen hasta recuperar las condiciones del conjunto. Durante una elección también puede haber una pausa. Alta disponibilidad no significa que cualquier fallo sea invisible ni que la recuperación dure siempre lo mismo. En la práctica anotaremos los tiempos observados y las condiciones, sin convertir una medición de aula en una promesa universal."
+  },
+  {
+    "title": "Qué confirmación esperamos antes de decir «guardado»",
+    "label": "Write concern: ejemplo de nuestro conjunto de tres miembros con datos y voto.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["w: 0", "El cliente no espera confirmación de la escritura."], ["w: 1", "El primario confirma; puede faltar la copia en otro miembro."], ["w: majority", "Se exige confirmación mayoritaria: aquí, dos de tres."]],
+    "takeaway": "Mayoría no significa todas las copias ni confirma por sí sola un cobro externo.",
+    "narration": "Antes de decir al huésped que algo está guardado, debemos saber qué confirmación hemos pedido. Con la primera opción no esperamos confirmación. Con la segunda confirma el primario, aunque otro miembro todavía no tenga el cambio. Con mayoría, en este conjunto de tres miembros con datos y voto, exigimos la confirmación mayoritaria de dos. No hace falta esperar a los tres. Las condiciones de persistencia también dependen de la configuración correspondiente. Y ninguna de estas opciones confirma por sí sola un cobro en una pasarela externa: estamos describiendo la escritura en la base de datos."
+  },
+  {
+    "title": "Una escritura que solo llegó al antiguo primario",
+    "label": "Ejemplo de riesgo con w: 1 antes de que otro miembro replique el cambio.",
+    "active": 1,
+    "kind": "rollback",
+    "takeaway": "La confirmación mayoritaria protege frente al rollback habitual de esta elección.",
+    "narration": "Imaginad que Laredo confirma una reserva sin esperar mayoría y se detiene antes de que otra copia la reciba. Si Potes gana la elección, esa reserva no estará en el historial que continúa el conjunto. Cuando vuelva Laredo, puede tener que deshacer el cambio que solo existía en su copia. Eso se llama rollback. Una escritura confirmada con mayoría en esta configuración está protegida frente a ese retroceso habitual de la elección. La garantía no cubre cualquier destrucción de discos ni los errores de una aplicación. Por eso siempre relacionamos la confirmación con el fallo que estamos estudiando."
+  },
+  {
+    "title": "Tres preguntas para tres opciones diferentes",
+    "label": "Lugar de lectura, visibilidad y confirmación se configuran por separado.",
+    "active": 1,
+    "kind": "controls",
+    "takeaway": "Elegir un secundario para leer no decide las otras dos garantías.",
+    "narration": "Vamos a separar tres preguntas. Primera: ¿a qué miembro enviamos la lectura? Eso lo decide la preferencia de lectura. Segunda: ¿qué datos puede observar esa lectura? Eso corresponde al nivel de lectura. Tercera: ¿qué confirmación esperamos al escribir? Eso corresponde al nivel de escritura. Son decisiones relacionadas, pero distintas. Podemos elegir un secundario para un informe que admite retraso, sin que esa elección garantice la versión más reciente. Tampoco basta con apuntar al primario para prometer cualquier garantía de consistencia. Debemos explicar juntas las opciones y la necesidad concreta de la aplicación."
+  },
+  {
+    "title": "Una copia puede seguir mostrando el estado anterior",
+    "label": "Confirmación mayoritaria y aplicación del cambio en todos los secundarios son distintas.",
+    "active": 1,
+    "kind": "lag",
+    "takeaway": "Read concern majority permite datos confirmados, pero no promete la versión más reciente.",
+    "narration": "Supongamos que el primario y un secundario ya han recibido el cambio, pero Noja aún no lo ha aplicado. La escritura puede estar confirmada con mayoría y una lectura en Noja seguir mostrando el estado anterior. Incluso una lectura de datos confirmados mayoritariamente puede estar atrasada: confirmado no significa necesariamente último. Elegir el miembro de menor latencia tampoco equivale a elegir el más actualizado. Si la aplicación necesita leer sus propias escrituras y respetar el orden de las operaciones, hay que estudiar sesiones causalmente consistentes y sus opciones. No debemos deducir que una reserva desapareció por una única lectura atrasada."
+  },
+  {
+    "title": "Se agotó la espera: ¿se escribió o no?",
+    "label": "Un error de wtimeout puede dejar un resultado incierto para el cliente.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["El cliente espera", "No recibe a tiempo la confirmación solicitada."], ["La base puede haber escrito", "El timeout no deshace automáticamente lo aplicado."], ["Antes de repetir", "Comprobar el identificador y evitar una operación duplicada."]],
+    "takeaway": "Una lectura atrasada y vacía no resuelve por sí sola la incertidumbre.",
+    "narration": "Imaginad que enviamos una operación y la confirmación no llega a tiempo. Es parecido a perder la respuesta de una llamada: no sabemos automáticamente si la otra persona terminó lo que le pedimos. El tiempo de espera limita cuánto aguardamos la confirmación; no deshace una escritura ya aplicada. Antes de repetir una operación de negocio, necesitamos comprobar su identificador con un procedimiento adecuado y diseñar el reintento para evitar duplicados. Una lectura vacía en una copia atrasada no basta para resolverlo. No confirmado y deshecho significan cosas distintas, especialmente cuando hay dinero o disponibilidad de por medio."
+  },
+  {
+    "title": "Preparar el conjunto sin mezclar los laboratorios",
+    "label": "MongoDB 7 · conjunto hotelrs · base hotel_replica_lab.",
+    "active": 1,
+    "kind": "three",
+    "cards": [["Antes de arrancar", "Detener hotel-mongo de 2.6: comparte el puerto 27017."], ["Conjunto de réplicas", "Comprobar tres miembros sanos y quién es primario."], ["Datos de prueba", "Usar hotel_replica_lab e identificadores reconocibles."]],
+    "takeaway": "Detener un servicio conserva su volumen; cambiar de práctica no exige borrar datos.",
+    "narration": "Para el laboratorio utilizaremos un conjunto propio y una base de pruebas independiente. Antes de arrancarlo, seguimos las instrucciones para detener el servidor del apartado anterior, porque comparte un puerto. Detenerlo conserva su volumen; no necesitamos borrar los datos para cambiar de ejercicio. Después comprobamos el nombre del conjunto, la versión, la base y el estado de los tres miembros. Que un contenedor esté encendido no demuestra que el servidor esté listo. La primera reserva de prueba tiene un identificador fijo: si repetimos una inserción y aparece duplicado, consultamos qué existe antes de concluir que la operación falló."
+  },
+  {
+    "title": "Ceder el cargo y detener el proceso",
+    "label": "Son dos experimentos diferentes; empezamos con el conjunto sano.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["rs.stepDown(60)", "Cede temporalmente el cargo de primario; el proceso sigue en marcha."], ["Detener el servicio", "El proceso se para y después debe arrancarse de nuevo."]],
+    "takeaway": "Comprobad el primario actual antes de provocar el relevo o la parada.",
+    "narration": "Hay dos pruebas que debemos distinguir. En un relevo controlado, el primario cede temporalmente el cargo, pero el proceso continúa funcionando. En una parada, detenemos el proceso que en ese momento es primario y después tendremos que arrancarlo de nuevo. No elegimos el nombre de memoria: comprobamos primero quién tiene el cargo. Antes de cada experimento verificamos que el conjunto esté sano y que la reserva previa haya recibido la confirmación mayoritaria. Así podremos interpretar lo que sucede y no mezclar una caída nueva con un problema que ya estaba presente."
+  },
+  {
+    "title": "La recuperación se demuestra leyendo y escribiendo",
+    "label": "Comprobamos contenido, nueva operación y reincorporación del miembro detenido.",
+    "active": 1,
+    "kind": "recovery",
+    "takeaway": "Registrad las horas observadas; la frecuencia de comprobación limita la precisión.",
+    "narration": "Después de la parada buscamos el nuevo primario. Allí leemos la reserva anterior y comprobamos sus dos noches y su importe de ciento veinticuatro. A continuación registramos otra reserva identificada, con una noche e importe noventa, y exigimos mayoría. No basta con ver un rótulo que diga primario: necesitamos demostrar que el dato previo sigue disponible y que una escritura nueva se confirma. Finalmente arrancamos el miembro detenido y comprobamos que se reincorpora y conserva ambas reservas. Anotamos las horas observadas, recordando que revisar cada pocos segundos no mide cada instante de la interrupción."
+  },
+  {
+    "title": "Conectarse al conjunto y conectarse a un miembro",
+    "label": "Una inspección directa sirve para observar; el descubrimiento permite seguir los cambios de cargo.",
+    "active": 1,
+    "kind": "two",
+    "cards": [["Conexión directa", "Inspecciona un miembro concreto; no aporta failover del cliente."], ["Cliente del conjunto", "Descubre miembros y primario mediante direcciones accesibles."]],
+    "takeaway": "Reconectar a mano no demuestra que la aplicación cambie automáticamente de primario.",
+    "narration": "También importa desde dónde nos conectamos. Una conexión directa permite inspeccionar un miembro, pero no ofrece por sí sola el cambio automático a otro primario. Para probar ese comportamiento del cliente, debemos conectarlo al conjunto y hacer que pueda resolver las direcciones anunciadas por sus miembros. En el laboratorio, los nombres de Docker se resuelven dentro de su red; publicar puertos en Windows no cambia esos nombres. Si nosotros abrimos manualmente una consola en el nuevo primario, hemos comprobado recuperación del servicio. Todavía no hemos demostrado que la aplicación se reconecte automáticamente."
+  },
+  {
+    "title": "Tres copias de 100 GB siguen siendo 100 GB lógicos",
+    "label": "La réplica añade copias y trabajo; no suma partes diferentes del conjunto.",
+    "active": 2,
+    "kind": "capacity",
+    "takeaway": "El particionado reparte documentos; cada parte puede tener sus propias réplicas.",
+    "narration": "Ahora pensemos en capacidad. Si cada uno de los tres miembros conserva los mismos cien gigabytes, tenemos cien gigabytes de datos lógicos con tres copias. No son trescientos gigabytes de información diferente. Las copias, los índices y los registros consumen espacio adicional. Además, las escrituras ordinarias del conjunto siguen entrando por su primario. Si necesitamos repartir carga, primero revisamos consultas, índices y recursos. El particionado es una alternativa cuando podemos distribuir los documentos de forma útil. Añadir máquinas no hace más rápida cualquier operación: también introduce coordinación y movimiento de información."
+  },
+  {
+    "title": "Sharding: una centralita y varias secciones del archivo",
+    "label": "La aplicación habla con mongos; los shards guardan las partes y config conserva el mapa.",
+    "active": 2,
+    "kind": "architecture",
+    "takeaway": "Cada shard replica su parte. Mongos encamina operaciones y no guarda las reservas.",
+    "narration": "Imaginad que recepción llama a una centralita que sabe en qué sección del archivo buscar. En MongoDB esa centralita es mongos. Los servidores de configuración conservan el mapa de rangos y los shards guardan las partes de los datos. Cada shard es, a su vez, un conjunto de réplicas de su propia parte. La aplicación trabaja a través del router, que encamina las operaciones, pero no almacena las reservas. Los nombres Trasmiera y Liébana son etiquetas del laboratorio: no hacen que cada reserva vaya automáticamente a la comarca de su nombre. El reparto depende de la clave elegida."
+  },
+  {
+    "title": "Elegir una clave también decide cómo se busca",
+    "label": "Estudiamos valores distintos, concentración de escrituras y consultas frecuentes.",
+    "active": 2,
+    "kind": "three",
+    "cards": [["hotel", "Pocos valores; muchas altas de Laredo pueden concentrar carga."], ["Fecha creciente", "Si las altas se acumulan al final, pueden cargar el último rango."], ["_id con hash", "Puede repartir altas; buscar solo por hotel puede visitar todos los shards."]],
+    "takeaway": "El hash del mismo valor sigue siendo el mismo: no divide las reservas de un único hotel.",
+    "narration": "La clave de partición determina cómo se reparten los documentos y qué búsquedas pueden dirigirse a una parte concreta. Si casi todas las reservas son de Laredo, usar solo hotel puede concentrar la carga. Aplicar hash a ese mismo nombre no lo arregla: el mismo valor produce el mismo hash. Una fecha creciente también puede concentrar altas en el último rango, si ese es el patrón de llegada. El hash de identificadores distintos puede repartirlas mejor, pero una consulta solo por hotel puede necesitar visitar todos los shards. Buscamos equilibrio entre distribuir escrituras y localizar datos."
+  },
+  {
+    "title": "Añadir un shard es incorporarlo al conjunto de trabajo",
+    "label": "El registro muestra el paso de un shard a dos; arrancar procesos no basta.",
+    "active": 2,
+    "kind": "register",
+    "takeaway": "Registrar un shard y moverle datos son pasos distintos; el reparto se comprueba después.",
+    "narration": "Tener procesos arrancados no significa que ya formen parte del clúster particionado. Por eso registramos la lista antes y después de incorporar un shard y conservamos el paso de uno a dos. El segundo añade otro grupo de almacenamiento y ejecución. Sus miembros replican su parte; no representan varias partes lógicas nuevas. Después comprobamos qué datos recibe y cómo cambia la ubicación. Si todos los procesos siguen en el mismo ordenador, no hemos añadido otro disco físico ni demostrado una mejora de rendimiento. Para afirmar que una operación acelera necesitamos medirla bajo condiciones comparables."
+  },
+  {
+    "title": "Dividir un rango y moverlo son dos acciones",
+    "label": "Analogía: poner un separador en una carpeta y trasladar una sección a otro archivo.",
+    "active": 2,
+    "kind": "splitmove",
+    "takeaway": "SplitAt establece un límite; moveChunk solicita cambiar la ubicación del rango.",
+    "narration": "Poner un separador en una carpeta no la traslada a otro armario. Del mismo modo, dividir un rango crea un límite, mientras que moverlo cambia su ubicación. En la práctica inspeccionamos primero dónde está, usamos el corte indicado por Potes y elegimos un destino diferente para observar el movimiento. Si el corte ya existe, no lo repetimos. Con solo quince documentos, el balanceador puede no mover datos automáticamente, así que hacemos una prueba controlada. Los nombres de los shards no deciden el contenido del rango. Después del traslado tendremos que demostrar que las fichas siguen siendo las mismas."
+  },
+  {
+    "title": "Cambiar de sitio sin cambiar la información",
+    "label": "Referencia del laboratorio: 15 documentos y 46 noches reservadas.",
+    "active": 3,
+    "kind": "conservation",
+    "takeaway": "Se comparan documentos completos, identificadores y tipos, además de noches por hotel.",
+    "narration": "Las colecciones de comparación parten de quince reservas que suman cuarenta y seis noches. Son los datos de MongoDB, distintos de los del laboratorio de Hadoop. Antes y después del movimiento comprobamos los documentos completos, sus identificadores, sus tipos y las noches de cada hotel. Igualar únicamente el total podría ocultar una pérdida compensada por una repetición en otro lugar. El apartado incluye un comprobador de solo lectura para contrastar las copias con la referencia. La distribución nos dice dónde están los datos; esta comparación nos dice si conservamos su contenido. Son evidencias diferentes y ambas importan."
+  },
+  {
+    "title": "Qué debe observar cada alumno",
+    "label": "La instalación individual de sharding es opcional; la observación y el análisis son comunes.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Réplicas · criterio c)", "Fallo, elección, dato conservado, nueva escritura y recuperación."], ["Particiones · criterio e)", "Shards registrados, origen y destino del rango, datos conservados."], ["Explicación propia", "Qué cambió, qué se comprobó y qué no se ha medido."]],
+    "takeaway": "Las evidencias se recogen al ejecutar la práctica o seguir la demostración docente.",
+    "narration": "El vídeo nos ayuda a entender qué observar, pero la evidencia requiere seguir las operaciones del laboratorio. En réplicas documentamos el fallo, la elección, la lectura previa, la escritura nueva y la recuperación. Para particionado, la instalación individual es opcional, pero la observación y el análisis son comunes: podéis ejecutar la secuencia o seguir la demostración del profesor. Conservad las listas de shards, las ubicaciones y las comprobaciones de contenido. Si una prueba no funciona, queda pendiente de repetirla o verla en otra demostración. Un dibujo aclara la idea, pero no demuestra que una operación haya ocurrido."
+  },
+  {
+    "title": "Qué fallos cubre realmente nuestro laboratorio",
+    "label": "El conjunto de réplicas y el laboratorio reducido de sharding tienen límites diferentes.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Réplicas: 3 miembros", "Prueba de caída de un proceso bajo las condiciones del conjunto."], ["Shards: 2 votantes", "Se necesitan ambos; perder uno impide mantener la mayoría."], ["Puntos de fallo", "Un solo config, un router y el mismo ordenador limitan la disponibilidad."]],
+    "takeaway": "Tres contenedores en un ordenador no sobreviven por sí solos a perder ese ordenador.",
+    "narration": "Por último, seamos precisos sobre lo que hemos probado. El conjunto de tres miembros permite estudiar la caída de un proceso bajo las condiciones observadas. El laboratorio reducido de sharding utiliza dos votantes por shard: necesita ambos y pierde la mayoría si cae uno. También tiene un único servidor de configuración y un solo router. Y todos los contenedores dependen del mismo ordenador. Para estudiar alta disponibilidad completa tendríamos que revisar réplicas, configuración, routers y separación física. Ver varios contenedores funcionando no demuestra que podamos perder el ordenador y seguir atendiendo reservas."
+  },
+  {
+    "title": "Copias para recuperarse, partes para repartir",
+    "label": "El modelo de 2.7 sigue importando cuando cambiamos la distribución.",
+    "active": 3,
+    "kind": "three",
+    "cards": [["Recuperarse", "Qué fallo ocurrió y qué confirmación tenía el dato."], ["Repartir", "Qué clave y qué recursos permiten distribuir las operaciones."], ["Comprobar", "Ubicación, contenido conservado y comportamiento del cliente."]],
+    "takeaway": "En 2.9 trabajaremos con MongoDB desde Python para obtener resultados del hotel.",
+    "narration": "Quedaos con estas ideas: replicar conserva copias del mismo conjunto; particionar distribuye partes, que también pueden tener sus propias réplicas. Para explicar una recuperación debemos indicar qué falló, qué confirmación tenía el dato y qué lectura y escritura volvieron a funcionar. Para explicar una ampliación mostramos qué recurso se incorporó, dónde quedaron los datos y qué se conserva. Las opciones del cliente y el modelo documental siguen importando: repartir una ficha incorrecta no corrige su significado. En el siguiente apartado utilizaremos Python para trabajar con MongoDB y preparar resultados del hotel con comprobaciones claras."
+  }
+]

@@ -1,0 +1,1021 @@
+WEBVTT
+
+00:00:00.100 --> 00:00:02.950
+Ya hemos decidido cómo organizar las fichas del hotel.
+
+00:00:03.825 --> 00:00:06.562
+Ahora imaginad que una recepcionista guarda una
+
+00:00:06.575 --> 00:00:08.512
+reserva de dos noches en Laredo y el
+
+00:00:08.525 --> 00:00:11.638
+proceso que acepta las escrituras se detiene.
+
+00:00:12.525 --> 00:00:14.400
+Su compañero necesita abrir esa
+
+00:00:14.412 --> 00:00:16.388
+reserva y registrar la siguiente.
+
+00:00:17.262 --> 00:00:18.175
+¿Podrá hacerlo?
+
+00:00:19.050 --> 00:00:20.575
+En la unidad uno hablamos de
+
+00:00:20.588 --> 00:00:22.675
+qué debería ocurrir si fallaba un nodo.
+
+00:00:23.538 --> 00:00:26.538
+Aquí vamos a convertir aquella idea en comprobaciones:
+
+00:00:26.675 --> 00:00:29.262
+qué dato permanece, quién puede escribir ahora
+
+00:00:29.275 --> 00:00:31.625
+y qué sucede cuando vuelve el miembro detenido.
+
+00:00:32.487 --> 00:00:35.850
+Para entenderlo, primero distinguiremos dos tareas que suelen
+
+00:00:35.862 --> 00:00:38.838
+confundirse: hacer copias y repartir los datos.
+
+00:00:39.712 --> 00:00:41.900
+Pensemos en un archivador de reservas.
+
+00:00:42.775 --> 00:00:44.638
+Replicar se parece a tener varias
+
+00:00:44.650 --> 00:00:46.712
+copias de la misma carpeta, para que
+
+00:00:46.725 --> 00:00:48.600
+otra pueda servirnos si falla una.
+
+00:00:49.475 --> 00:00:51.888
+Particionar se parece a repartir el archivo en
+
+00:00:51.900 --> 00:00:54.975
+secciones: cada grupo conserva una parte distinta.
+
+00:00:55.838 --> 00:00:58.188
+En un sistema real podemos combinar las dos
+
+00:00:58.200 --> 00:01:00.988
+ideas, haciendo varias copias de cada sección.
+
+00:01:01.850 --> 00:01:04.325
+Tener más copias no significa disponer de más
+
+00:01:04.338 --> 00:01:08.012
+datos diferentes, y repartir información tampoco garantiza
+
+00:01:08.025 --> 00:01:10.000
+por sí solo que sobreviva a un fallo.
+
+00:01:10.862 --> 00:01:14.638
+Primero debemos saber qué problema intentamos resolver: recuperación del
+
+00:01:14.650 --> 00:01:18.375
+servicio, capacidad, carga o varias necesidades a la vez.
+
+00:01:19.250 --> 00:01:21.775
+En el laboratorio llamamos Laredo, Potes y
+
+00:01:21.788 --> 00:01:23.875
+Noja a los tres miembros del conjunto.
+
+00:01:24.738 --> 00:01:27.838
+Esos nombres no indican qué reservas guarda cada uno.
+
+00:01:28.725 --> 00:01:30.862
+Los tres conservan el mismo conjunto de
+
+00:01:30.875 --> 00:01:33.775
+documentos: una reserva de Potes también estará
+
+00:01:33.788 --> 00:01:35.462
+en las copias de Laredo y Noja.
+
+00:01:36.350 --> 00:01:37.950
+En cada momento uno ejerce de
+
+00:01:37.962 --> 00:01:40.162
+primario y los otros siguen sus cambios.
+
+00:01:41.025 --> 00:01:42.988
+El cargo se consulta en el estado del
+
+00:01:43.000 --> 00:01:45.700
+conjunto; no se deduce del nombre del contenedor.
+
+00:01:46.562 --> 00:01:48.662
+Laredo tiene una prioridad mayor en esta
+
+00:01:48.675 --> 00:01:51.162
+configuración, pero eso no significa que
+
+00:01:51.175 --> 00:01:53.175
+siempre pueda o deba ser el primario.
+
+00:01:54.038 --> 00:01:55.950
+Imaginad que solo un mostrador tiene
+
+00:01:55.962 --> 00:01:58.762
+el bolígrafo autorizado para modificar la carpeta.
+
+00:01:59.650 --> 00:02:00.962
+Ese es el primario.
+
+00:02:01.838 --> 00:02:04.175
+Los secundarios siguen sus cambios y pueden
+
+00:02:04.188 --> 00:02:06.088
+atender lecturas cuando el cliente lo
+
+00:02:06.100 --> 00:02:08.912
+solicita, aunque quizá vayan algo por detrás.
+
+00:02:09.788 --> 00:02:12.388
+Cambiar la preferencia de lectura no les entrega el
+
+00:02:12.400 --> 00:02:16.525
+bolígrafo: una escritura directa a un secundario debe rechazarse.
+
+00:02:17.412 --> 00:02:19.725
+Existe también la figura del árbitro, que
+
+00:02:19.738 --> 00:02:22.475
+participa en las votaciones sin guardar reservas.
+
+00:02:23.338 --> 00:02:25.000
+Puede aportar un voto, pero no
+
+00:02:25.012 --> 00:02:27.388
+una copia desde la que recuperar información.
+
+00:02:28.250 --> 00:02:30.438
+Por eso, en esta práctica utilizamos
+
+00:02:30.450 --> 00:02:32.525
+tres miembros que sí almacenan datos.
+
+00:02:33.388 --> 00:02:35.512
+Para mantener las copias, el primario
+
+00:02:35.525 --> 00:02:38.162
+registra operaciones en un diario llamado oplog.
+
+00:02:39.038 --> 00:02:41.075
+Los secundarios siguen ese historial y
+
+00:02:41.088 --> 00:02:43.500
+aplican los cambios, de forma asíncrona.
+
+00:02:44.375 --> 00:02:46.800
+No es una copia nocturna de toda la base.
+
+00:02:47.675 --> 00:02:50.225
+El diario tiene una ventana limitada que depende
+
+00:02:50.238 --> 00:02:52.588
+de su capacidad y del ritmo de operaciones.
+
+00:02:53.500 --> 00:02:56.425
+Si un secundario vuelve demasiado tarde y ya faltan
+
+00:02:56.438 --> 00:03:00.338
+los cambios que necesita, puede requerir una sincronización inicial.
+
+00:03:01.212 --> 00:03:03.362
+Además, un borrado equivocado también
+
+00:03:03.375 --> 00:03:04.725
+puede llegar a las copias.
+
+00:03:05.600 --> 00:03:07.700
+Tener réplicas y conservar una copia de
+
+00:03:07.712 --> 00:03:12.362
+seguridad permiten afrontar problemas distintos; necesitamos distinguirlos.
+
+00:03:13.238 --> 00:03:15.862
+Cuando hace falta elegir un primario, importa la
+
+00:03:15.875 --> 00:03:18.900
+mayoría de los miembros votantes que están configurados.
+
+00:03:19.762 --> 00:03:21.750
+Con tres votantes hacen falta dos;
+
+00:03:21.950 --> 00:03:23.525
+con cuatro hacen falta tres.
+
+00:03:24.400 --> 00:03:26.988
+No contamos únicamente a los que responden hoy.
+
+00:03:27.850 --> 00:03:30.250
+Añadir un cuarto votante, por tanto, no
+
+00:03:30.262 --> 00:03:32.800
+permite perder dos y seguir teniendo mayoría.
+
+00:03:33.662 --> 00:03:35.675
+Un miembro sin voto conserva datos,
+
+00:03:35.825 --> 00:03:37.450
+pero no entra en ese cálculo.
+
+00:03:38.312 --> 00:03:40.750
+Además de reunir votos, necesitamos un
+
+00:03:40.762 --> 00:03:43.612
+candidato elegible y suficientemente actualizado.
+
+00:03:44.475 --> 00:03:46.238
+Es parecido a una reunión con un
+
+00:03:46.250 --> 00:03:49.025
+mínimo de asistentes: no podemos rebajar ese
+
+00:03:49.038 --> 00:03:51.650
+mínimo simplemente porque algunos no hayan llegado.
+
+00:03:52.612 --> 00:03:54.587
+Si un miembro de nuestro conjunto deja
+
+00:03:54.600 --> 00:03:57.100
+de responder, los otros dos pueden elegir un
+
+00:03:57.112 --> 00:04:00.050
+primario cuando se cumplen las condiciones necesarias.
+
+00:04:00.924 --> 00:04:03.637
+Si quedan incomunicados dos y solo responde uno,
+
+00:04:03.837 --> 00:04:06.724
+ese miembro no puede declararse mayoría por su cuenta.
+
+00:04:07.587 --> 00:04:09.937
+Las escrituras ordinarias se detienen hasta
+
+00:04:09.950 --> 00:04:12.074
+recuperar las condiciones del conjunto.
+
+00:04:12.962 --> 00:04:15.737
+Durante una elección también puede haber una pausa.
+
+00:04:16.599 --> 00:04:19.712
+Alta disponibilidad no significa que cualquier fallo sea
+
+00:04:19.724 --> 00:04:22.574
+invisible ni que la recuperación dure siempre lo mismo.
+
+00:04:23.437 --> 00:04:25.987
+En la práctica anotaremos los tiempos observados
+
+00:04:26.000 --> 00:04:28.150
+y las condiciones, sin convertir una
+
+00:04:28.162 --> 00:04:30.537
+medición de aula en una promesa universal.
+
+00:04:31.424 --> 00:04:33.437
+Antes de decir al huésped que algo está
+
+00:04:33.450 --> 00:04:36.412
+guardado, debemos saber qué confirmación hemos pedido.
+
+00:04:37.287 --> 00:04:39.900
+Con la primera opción no esperamos confirmación.
+
+00:04:40.762 --> 00:04:43.124
+Con la segunda confirma el primario, aunque
+
+00:04:43.137 --> 00:04:45.250
+otro miembro todavía no tenga el cambio.
+
+00:04:46.112 --> 00:04:48.974
+Con mayoría, en este conjunto de tres miembros con
+
+00:04:48.987 --> 00:04:52.624
+datos y voto, exigimos la confirmación mayoritaria de dos.
+
+00:04:53.500 --> 00:04:55.374
+No hace falta esperar a los tres.
+
+00:04:56.250 --> 00:04:58.450
+Las condiciones de persistencia también
+
+00:04:58.462 --> 00:05:00.887
+dependen de la configuración correspondiente.
+
+00:05:01.762 --> 00:05:04.137
+Y ninguna de estas opciones confirma por sí
+
+00:05:04.150 --> 00:05:07.174
+sola un cobro en una pasarela externa: estamos
+
+00:05:07.187 --> 00:05:09.612
+describiendo la escritura en la base de datos.
+
+00:05:10.500 --> 00:05:12.800
+Imaginad que Laredo confirma una reserva
+
+00:05:12.812 --> 00:05:14.937
+sin esperar mayoría y se detiene antes
+
+00:05:14.950 --> 00:05:16.462
+de que otra copia la reciba.
+
+00:05:17.350 --> 00:05:19.837
+Si Potes gana la elección, esa reserva no
+
+00:05:19.850 --> 00:05:22.324
+estará en el historial que continúa el conjunto.
+
+00:05:23.187 --> 00:05:25.700
+Cuando vuelva Laredo, puede tener que deshacer el
+
+00:05:25.712 --> 00:05:27.862
+cambio que solo existía en su copia.
+
+00:05:28.737 --> 00:05:30.124
+Eso se llama rollback.
+
+00:05:31.000 --> 00:05:34.600
+Una escritura confirmada con mayoría en esta configuración está
+
+00:05:34.612 --> 00:05:38.300
+protegida frente a ese retroceso habitual de la elección.
+
+00:05:39.162 --> 00:05:41.450
+La garantía no cubre cualquier destrucción de
+
+00:05:41.462 --> 00:05:43.774
+discos ni los errores de una aplicación.
+
+00:05:44.662 --> 00:05:47.100
+Por eso siempre relacionamos la confirmación
+
+00:05:47.112 --> 00:05:49.062
+con el fallo que estamos estudiando.
+
+00:05:49.937 --> 00:05:51.824
+Vamos a separar tres preguntas.
+
+00:05:52.774 --> 00:05:55.200
+Primera: ¿a qué miembro enviamos la lectura?
+
+00:05:56.062 --> 00:05:58.262
+Eso lo decide la preferencia de lectura.
+
+00:05:59.124 --> 00:06:01.912
+Segunda: ¿qué datos puede observar esa lectura?
+
+00:06:02.774 --> 00:06:04.837
+Eso corresponde al nivel de lectura.
+
+00:06:05.700 --> 00:06:08.500
+Tercera: ¿qué confirmación esperamos al escribir?
+
+00:06:09.374 --> 00:06:11.574
+Eso corresponde al nivel de escritura.
+
+00:06:12.437 --> 00:06:15.262
+Son decisiones relacionadas, pero distintas.
+
+00:06:16.150 --> 00:06:18.062
+Podemos elegir un secundario para un
+
+00:06:18.074 --> 00:06:20.562
+informe que admite retraso, sin que esa
+
+00:06:20.574 --> 00:06:22.937
+elección garantice la versión más reciente.
+
+00:06:23.812 --> 00:06:25.800
+Tampoco basta con apuntar al primario
+
+00:06:25.812 --> 00:06:28.374
+para prometer cualquier garantía de consistencia.
+
+00:06:29.274 --> 00:06:31.524
+Debemos explicar juntas las opciones y
+
+00:06:31.537 --> 00:06:33.662
+la necesidad concreta de la aplicación.
+
+00:06:34.574 --> 00:06:36.237
+Supongamos que el primario y un
+
+00:06:36.250 --> 00:06:38.550
+secundario ya han recibido el cambio, pero
+
+00:06:38.562 --> 00:06:40.062
+Noja aún no lo ha aplicado.
+
+00:06:40.937 --> 00:06:43.737
+La escritura puede estar confirmada con mayoría y
+
+00:06:43.750 --> 00:06:46.624
+una lectura en Noja seguir mostrando el estado anterior.
+
+00:06:47.500 --> 00:06:51.024
+Incluso una lectura de datos confirmados mayoritariamente puede
+
+00:06:51.037 --> 00:06:55.012
+estar atrasada: confirmado no significa necesariamente último.
+
+00:06:55.887 --> 00:06:57.800
+Elegir el miembro de menor latencia
+
+00:06:57.812 --> 00:07:00.287
+tampoco equivale a elegir el más actualizado.
+
+00:07:01.162 --> 00:07:04.162
+Si la aplicación necesita leer sus propias escrituras
+
+00:07:04.174 --> 00:07:06.724
+y respetar el orden de las operaciones, hay
+
+00:07:06.737 --> 00:07:10.300
+que estudiar sesiones causalmente consistentes y sus opciones.
+
+00:07:11.162 --> 00:07:13.074
+No debemos deducir que una reserva
+
+00:07:13.087 --> 00:07:15.500
+desapareció por una única lectura atrasada.
+
+00:07:16.374 --> 00:07:18.337
+Imaginad que enviamos una operación y
+
+00:07:18.350 --> 00:07:20.224
+la confirmación no llega a tiempo.
+
+00:07:21.100 --> 00:07:23.037
+Es parecido a perder la respuesta de
+
+00:07:23.050 --> 00:07:25.974
+una llamada: no sabemos automáticamente si la
+
+00:07:25.987 --> 00:07:28.012
+otra persona terminó lo que le pedimos.
+
+00:07:28.887 --> 00:07:31.374
+El tiempo de espera limita cuánto aguardamos la
+
+00:07:31.387 --> 00:07:34.462
+confirmación; no deshace una escritura ya aplicada.
+
+00:07:35.337 --> 00:07:37.624
+Antes de repetir una operación de negocio,
+
+00:07:37.812 --> 00:07:41.574
+necesitamos comprobar su identificador con un procedimiento adecuado
+
+00:07:41.587 --> 00:07:44.087
+y diseñar el reintento para evitar duplicados.
+
+00:07:44.250 --> 00:07:45.987
+Una lectura vacía en una copia
+
+00:07:46.000 --> 00:07:47.962
+atrasada no basta para resolverlo.
+
+00:07:48.837 --> 00:07:53.037
+No confirmado y deshecho significan cosas distintas, especialmente
+
+00:07:53.050 --> 00:07:55.524
+cuando hay dinero o disponibilidad de por medio.
+
+00:07:56.500 --> 00:07:58.938
+Para el laboratorio utilizaremos un conjunto
+
+00:07:58.950 --> 00:08:01.288
+propio y una base de pruebas independiente.
+
+00:08:02.188 --> 00:08:05.388
+Antes de arrancarlo, seguimos las instrucciones para detener
+
+00:08:05.400 --> 00:08:08.800
+el servidor del apartado anterior, porque comparte un puerto.
+
+00:08:09.662 --> 00:08:12.488
+Detenerlo conserva su volumen; no necesitamos
+
+00:08:12.500 --> 00:08:14.800
+borrar los datos para cambiar de ejercicio.
+
+00:08:15.675 --> 00:08:18.762
+Después comprobamos el nombre del conjunto, la versión,
+
+00:08:18.900 --> 00:08:21.012
+la base y el estado de los tres miembros.
+
+00:08:21.900 --> 00:08:23.800
+Que un contenedor esté encendido no
+
+00:08:23.812 --> 00:08:25.750
+demuestra que el servidor esté listo.
+
+00:08:26.600 --> 00:08:29.700
+La primera reserva de prueba tiene un identificador fijo:
+
+00:08:29.862 --> 00:08:33.562
+si repetimos una inserción y aparece duplicado, consultamos
+
+00:08:33.575 --> 00:08:36.237
+qué existe antes de concluir que la operación falló.
+
+00:08:37.112 --> 00:08:39.088
+Hay dos pruebas que debemos distinguir.
+
+00:08:39.962 --> 00:08:43.150
+En un relevo controlado, el primario cede temporalmente
+
+00:08:43.162 --> 00:08:45.912
+el cargo, pero el proceso continúa funcionando.
+
+00:08:46.775 --> 00:08:48.888
+En una parada, detenemos el proceso
+
+00:08:48.900 --> 00:08:50.500
+que en ese momento es primario y
+
+00:08:50.512 --> 00:08:52.638
+después tendremos que arrancarlo de nuevo.
+
+00:08:53.500 --> 00:08:55.412
+No elegimos el nombre de memoria:
+
+00:08:55.588 --> 00:08:57.612
+comprobamos primero quién tiene el cargo.
+
+00:08:58.475 --> 00:09:00.750
+Antes de cada experimento verificamos que el
+
+00:09:00.762 --> 00:09:02.250
+conjunto esté sano y que la
+
+00:09:02.262 --> 00:09:05.962
+reserva previa haya recibido la confirmación mayoritaria.
+
+00:09:06.838 --> 00:09:08.900
+Así podremos interpretar lo que sucede
+
+00:09:08.912 --> 00:09:10.575
+y no mezclar una caída nueva con
+
+00:09:10.588 --> 00:09:12.462
+un problema que ya estaba presente.
+
+00:09:13.350 --> 00:09:15.925
+Después de la parada buscamos el nuevo primario.
+
+00:09:16.775 --> 00:09:19.512
+Allí leemos la reserva anterior y comprobamos sus
+
+00:09:19.525 --> 00:09:22.088
+dos noches y su importe de ciento veinticuatro.
+
+00:09:22.962 --> 00:09:26.688
+A continuación registramos otra reserva identificada, con una
+
+00:09:26.700 --> 00:09:29.562
+noche e importe noventa, y exigimos mayoría.
+
+00:09:30.438 --> 00:09:32.288
+No basta con ver un rótulo que diga
+
+00:09:32.300 --> 00:09:35.838
+primario: necesitamos demostrar que el dato previo sigue
+
+00:09:35.850 --> 00:09:38.675
+disponible y que una escritura nueva se confirma.
+
+00:09:39.550 --> 00:09:42.550
+Finalmente arrancamos el miembro detenido y comprobamos
+
+00:09:42.562 --> 00:09:45.175
+que se reincorpora y conserva ambas reservas.
+
+00:09:46.025 --> 00:09:49.575
+Anotamos las horas observadas, recordando que revisar cada
+
+00:09:49.588 --> 00:09:52.475
+pocos segundos no mide cada instante de la interrupción.
+
+00:09:53.325 --> 00:09:55.675
+También importa desde dónde nos conectamos.
+
+00:09:56.562 --> 00:09:59.012
+Una conexión directa permite inspeccionar un
+
+00:09:59.025 --> 00:10:01.150
+miembro, pero no ofrece por sí sola
+
+00:10:01.162 --> 00:10:03.250
+el cambio automático a otro primario.
+
+00:10:04.125 --> 00:10:07.162
+Para probar ese comportamiento del cliente, debemos
+
+00:10:07.175 --> 00:10:09.225
+conectarlo al conjunto y hacer que pueda
+
+00:10:09.238 --> 00:10:12.062
+resolver las direcciones anunciadas por sus miembros.
+
+00:10:12.938 --> 00:10:15.100
+En el laboratorio, los nombres de Docker
+
+00:10:15.112 --> 00:10:17.450
+se resuelven dentro de su red; publicar
+
+00:10:17.462 --> 00:10:20.012
+puertos en Windows no cambia esos nombres.
+
+00:10:20.900 --> 00:10:23.638
+Si nosotros abrimos manualmente una consola en el
+
+00:10:23.650 --> 00:10:27.025
+nuevo primario, hemos comprobado recuperación del servicio.
+
+00:10:27.888 --> 00:10:29.475
+Todavía no hemos demostrado que
+
+00:10:29.488 --> 00:10:31.938
+la aplicación se reconecte automáticamente.
+
+00:10:32.825 --> 00:10:34.600
+Ahora pensemos en capacidad.
+
+00:10:35.475 --> 00:10:37.100
+Si cada uno de los tres miembros
+
+00:10:37.112 --> 00:10:40.000
+conserva los mismos cien gigabytes, tenemos cien
+
+00:10:40.012 --> 00:10:42.450
+gigabytes de datos lógicos con tres copias.
+
+00:10:43.312 --> 00:10:46.388
+No son trescientos gigabytes de información diferente.
+
+00:10:47.262 --> 00:10:49.000
+Las copias, los índices y
+
+00:10:49.012 --> 00:10:51.375
+los registros consumen espacio adicional.
+
+00:10:52.262 --> 00:10:55.138
+Además, las escrituras ordinarias del conjunto
+
+00:10:55.150 --> 00:10:56.912
+siguen entrando por su primario.
+
+00:10:57.775 --> 00:11:00.175
+Si necesitamos repartir carga, primero
+
+00:11:00.188 --> 00:11:02.888
+revisamos consultas, índices y recursos.
+
+00:11:03.750 --> 00:11:06.075
+El particionado es una alternativa cuando
+
+00:11:06.088 --> 00:11:08.712
+podemos distribuir los documentos de forma útil.
+
+00:11:09.575 --> 00:11:12.550
+Añadir máquinas no hace más rápida cualquier operación:
+
+00:11:12.750 --> 00:11:16.012
+también introduce coordinación y movimiento de información.
+
+00:11:16.875 --> 00:11:19.538
+Imaginad que recepción llama a una centralita que
+
+00:11:19.550 --> 00:11:21.588
+sabe en qué sección del archivo buscar.
+
+00:11:22.462 --> 00:11:24.850
+En MongoDB esa centralita es mongos.
+
+00:11:25.738 --> 00:11:29.050
+Los servidores de configuración conservan el mapa de rangos
+
+00:11:29.062 --> 00:11:31.475
+y los shards guardan las partes de los datos.
+
+00:11:32.338 --> 00:11:34.050
+Cada shard es, a su vez, un
+
+00:11:34.062 --> 00:11:36.238
+conjunto de réplicas de su propia parte.
+
+00:11:37.112 --> 00:11:39.850
+La aplicación trabaja a través del router, que
+
+00:11:39.862 --> 00:11:43.100
+encamina las operaciones, pero no almacena las reservas.
+
+00:11:43.975 --> 00:11:46.375
+Los nombres Trasmiera y Liébana son etiquetas
+
+00:11:46.388 --> 00:11:49.138
+del laboratorio: no hacen que cada reserva vaya
+
+00:11:49.150 --> 00:11:51.388
+automáticamente a la comarca de su nombre.
+
+00:11:52.262 --> 00:11:54.538
+El reparto depende de la clave elegida.
+
+00:11:55.588 --> 00:11:57.563
+La clave de partición determina cómo
+
+00:11:57.576 --> 00:11:59.663
+se reparten los documentos y qué búsquedas
+
+00:11:59.676 --> 00:12:01.813
+pueden dirigirse a una parte concreta.
+
+00:12:01.988 --> 00:12:04.138
+Si casi todas las reservas son de Laredo,
+
+00:12:04.288 --> 00:12:06.613
+usar solo hotel puede concentrar la carga.
+
+00:12:07.500 --> 00:12:09.626
+Aplicar hash a ese mismo nombre no lo
+
+00:12:09.638 --> 00:12:12.326
+arregla: el mismo valor produce el mismo hash.
+
+00:12:13.188 --> 00:12:16.150
+Una fecha creciente también puede concentrar altas en el
+
+00:12:16.163 --> 00:12:18.838
+último rango, si ese es el patrón de llegada.
+
+00:12:19.738 --> 00:12:22.826
+El hash de identificadores distintos puede repartirlas
+
+00:12:22.838 --> 00:12:25.050
+mejor, pero una consulta solo por
+
+00:12:25.063 --> 00:12:27.638
+hotel puede necesitar visitar todos los shards.
+
+00:12:28.526 --> 00:12:30.526
+Buscamos equilibrio entre distribuir
+
+00:12:30.538 --> 00:12:32.400
+escrituras y localizar datos.
+
+00:12:33.263 --> 00:12:35.688
+Tener procesos arrancados no significa que
+
+00:12:35.700 --> 00:12:38.013
+ya formen parte del clúster particionado.
+
+00:12:38.900 --> 00:12:40.900
+Por eso registramos la lista antes y
+
+00:12:40.913 --> 00:12:42.488
+después de incorporar un shard y
+
+00:12:42.500 --> 00:12:44.500
+conservamos el paso de uno a dos.
+
+00:12:45.363 --> 00:12:48.738
+El segundo añade otro grupo de almacenamiento y ejecución.
+
+00:12:49.588 --> 00:12:51.588
+Sus miembros replican su parte; no
+
+00:12:51.600 --> 00:12:53.988
+representan varias partes lógicas nuevas.
+
+00:12:54.850 --> 00:12:56.938
+Después comprobamos qué datos recibe
+
+00:12:56.950 --> 00:12:58.488
+y cómo cambia la ubicación.
+
+00:12:59.350 --> 00:13:01.150
+Si todos los procesos siguen en el
+
+00:13:01.163 --> 00:13:03.900
+mismo ordenador, no hemos añadido otro disco
+
+00:13:03.913 --> 00:13:06.500
+físico ni demostrado una mejora de rendimiento.
+
+00:13:07.363 --> 00:13:09.300
+Para afirmar que una operación acelera
+
+00:13:09.313 --> 00:13:12.238
+necesitamos medirla bajo condiciones comparables.
+
+00:13:13.113 --> 00:13:14.850
+Poner un separador en una carpeta
+
+00:13:14.863 --> 00:13:16.588
+no la traslada a otro armario.
+
+00:13:17.463 --> 00:13:19.826
+Del mismo modo, dividir un rango crea un
+
+00:13:19.838 --> 00:13:22.663
+límite, mientras que moverlo cambia su ubicación.
+
+00:13:23.526 --> 00:13:26.188
+En la práctica inspeccionamos primero dónde está,
+
+00:13:26.463 --> 00:13:29.188
+usamos el corte indicado por Potes y elegimos
+
+00:13:29.200 --> 00:13:31.788
+un destino diferente para observar el movimiento.
+
+00:13:32.650 --> 00:13:35.213
+Si el corte ya existe, no lo repetimos.
+
+00:13:36.126 --> 00:13:39.063
+Con solo quince documentos, el balanceador puede no
+
+00:13:39.076 --> 00:13:43.150
+mover datos automáticamente, así que hacemos una prueba controlada.
+
+00:13:44.026 --> 00:13:45.463
+Los nombres de los shards no
+
+00:13:45.476 --> 00:13:47.176
+deciden el contenido del rango.
+
+00:13:48.038 --> 00:13:50.376
+Después del traslado tendremos que demostrar
+
+00:13:50.388 --> 00:13:52.526
+que las fichas siguen siendo las mismas.
+
+00:13:53.463 --> 00:13:56.000
+Las colecciones de comparación parten de quince
+
+00:13:56.013 --> 00:13:58.350
+reservas que suman cuarenta y seis noches.
+
+00:13:59.238 --> 00:14:01.438
+Son los datos de MongoDB, distintos
+
+00:14:01.450 --> 00:14:03.026
+de los del laboratorio de Hadoop.
+
+00:14:03.900 --> 00:14:06.188
+Antes y después del movimiento comprobamos
+
+00:14:06.200 --> 00:14:09.738
+los documentos completos, sus identificadores, sus tipos
+
+00:14:09.750 --> 00:14:11.163
+y las noches de cada hotel.
+
+00:14:12.038 --> 00:14:15.176
+Igualar únicamente el total podría ocultar una pérdida
+
+00:14:15.188 --> 00:14:17.638
+compensada por una repetición en otro lugar.
+
+00:14:18.526 --> 00:14:21.326
+El apartado incluye un comprobador de solo lectura
+
+00:14:21.338 --> 00:14:23.726
+para contrastar las copias con la referencia.
+
+00:14:24.613 --> 00:14:27.200
+La distribución nos dice dónde están los datos;
+
+00:14:27.363 --> 00:14:30.300
+esta comparación nos dice si conservamos su contenido.
+
+00:14:31.176 --> 00:14:33.788
+Son evidencias diferentes y ambas importan.
+
+00:14:34.663 --> 00:14:37.063
+El vídeo nos ayuda a entender qué observar,
+
+00:14:37.300 --> 00:14:40.650
+pero la evidencia requiere seguir las operaciones del laboratorio.
+
+00:14:41.513 --> 00:14:44.563
+En réplicas documentamos el fallo, la elección, la
+
+00:14:44.576 --> 00:14:47.588
+lectura previa, la escritura nueva y la recuperación.
+
+00:14:48.438 --> 00:14:52.026
+Para particionado, la instalación individual es opcional, pero
+
+00:14:52.038 --> 00:14:55.500
+la observación y el análisis son comunes: podéis ejecutar
+
+00:14:55.513 --> 00:14:58.276
+la secuencia o seguir la demostración del profesor.
+
+00:14:59.150 --> 00:15:01.338
+Conservad las listas de shards, las
+
+00:15:01.350 --> 00:15:03.913
+ubicaciones y las comprobaciones de contenido.
+
+00:15:04.800 --> 00:15:07.200
+Si una prueba no funciona, queda pendiente
+
+00:15:07.213 --> 00:15:09.626
+de repetirla o verla en otra demostración.
+
+00:15:10.500 --> 00:15:12.413
+Un dibujo aclara la idea, pero
+
+00:15:12.426 --> 00:15:14.813
+no demuestra que una operación haya ocurrido.
+
+00:15:15.676 --> 00:15:18.863
+Por último, seamos precisos sobre lo que hemos probado.
+
+00:15:19.726 --> 00:15:22.338
+El conjunto de tres miembros permite estudiar la
+
+00:15:22.350 --> 00:15:25.326
+caída de un proceso bajo las condiciones observadas.
+
+00:15:26.200 --> 00:15:28.576
+El laboratorio reducido de sharding utiliza
+
+00:15:28.588 --> 00:15:31.250
+dos votantes por shard: necesita ambos y
+
+00:15:31.263 --> 00:15:32.900
+pierde la mayoría si cae uno.
+
+00:15:33.776 --> 00:15:35.526
+También tiene un único servidor de
+
+00:15:35.538 --> 00:15:37.450
+configuración y un solo router.
+
+00:15:38.313 --> 00:15:41.238
+Y todos los contenedores dependen del mismo ordenador.
+
+00:15:42.100 --> 00:15:45.113
+Para estudiar alta disponibilidad completa tendríamos que
+
+00:15:45.126 --> 00:15:49.313
+revisar réplicas, configuración, routers y separación física.
+
+00:15:50.176 --> 00:15:53.413
+Ver varios contenedores funcionando no demuestra que podamos
+
+00:15:53.426 --> 00:15:56.100
+perder el ordenador y seguir atendiendo reservas.
+
+00:15:57.076 --> 00:16:00.076
+Quedaos con estas ideas: replicar conserva copias
+
+00:16:00.088 --> 00:16:03.188
+del mismo conjunto; particionar distribuye partes,
+
+00:16:03.426 --> 00:16:05.801
+que también pueden tener sus propias réplicas.
+
+00:16:06.676 --> 00:16:09.251
+Para explicar una recuperación debemos indicar qué
+
+00:16:09.264 --> 00:16:11.664
+falló, qué confirmación tenía el dato y
+
+00:16:11.676 --> 00:16:14.101
+qué lectura y escritura volvieron a funcionar.
+
+00:16:14.964 --> 00:16:17.776
+Para explicar una ampliación mostramos qué recurso se
+
+00:16:17.788 --> 00:16:20.764
+incorporó, dónde quedaron los datos y qué se conserva.
+
+00:16:21.614 --> 00:16:24.626
+Las opciones del cliente y el modelo documental siguen
+
+00:16:24.638 --> 00:16:28.826
+importando: repartir una ficha incorrecta no corrige su significado.
+
+00:16:29.701 --> 00:16:32.938
+En el siguiente apartado utilizaremos Python para trabajar con
+
+00:16:32.951 --> 00:16:37.088
+MongoDB y preparar resultados del hotel con comprobaciones claras.

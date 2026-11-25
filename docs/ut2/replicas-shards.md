@@ -17,6 +17,21 @@ Una recepcionista acaba de guardar una reserva de dos noches en Laredo. El proce
 
     **Evidencia común de e):** observar registro de shards y movimiento de un rango, ejecutándolo o siguiendo una demostración docente. La instalación individual del laboratorio de particionado es opcional; sus conjuntos reducidos no ofrecen alta disponibilidad completa. Las entregas se concretan en Moodle.
 
+## Vídeo introductorio
+
+Recepción guarda una reserva y el primario se detiene: ¿qué dato permanece y cuándo podemos volver a escribir? Tres mostradores con la misma carpeta nos ayudan a entender las réplicas, el diario de cambios, las mayorías y las confirmaciones. Después repartimos el archivo en secciones para explicar los shards, la clave de partición y la diferencia entre dividir y mover un rango. Terminamos comprobando que se conservan las reservas y delimitando qué fallos cubre cada laboratorio. **Duración aproximada de 16 minutos y 39 segundos.**
+
+<video controls playsinline preload="metadata" poster="../../assets/ut2/replicas-particiones-portada.jpg" aria-label="Réplicas y particiones. Recuperar el servicio y repartir las reservas del hotel" style="width: 100%; max-width: 960px; height: auto; border-radius: 12px;">
+  <source src="../../assets/ut2/replicas-particiones.mp4" type="video/mp4">
+  Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
+</video>
+
+La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+
+[Descargar el vídeo](../assets/ut2/replicas-particiones.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/replicas-particiones.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/replicas-particiones.es.srt){target="_blank" rel="noopener"}
+
+## De las fichas a la recuperación y el reparto
+
 Si deja de responder el primario, otro miembro puede asumir su función cuando hay mayoría, un candidato elegible y los datos necesarios. Puede haber una pausa. El objetivo del criterio **c)** es provocar un fallo concreto y comprobar la recuperación; no afirmar que un cobro externo se completa por disponer de réplicas.
 
 Si capacidad o carga superan lo que ofrece el diseño actual, revisamos consultas, índices, recursos y distribución. El particionado permite repartir documentos entre shards; añadir uno es una posible ampliación del criterio **e)**, pero su efecto depende de la clave, las consultas y el balanceo. Más nodos no implican automáticamente más velocidad.
