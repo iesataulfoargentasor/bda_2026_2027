@@ -1,5 +1,4 @@
 POR QUÉ BIG DATA Y LAS CINCO V
-Voz sintética: Ximena (español de España). Narración continua.
 
 Volvamos a nuestros hoteles. Al principio, un ordenador puede ser suficiente para gestionar los datos. Pero llegan más reservas, sensores y registros de la web. ¿Necesitamos ya Big Data? No necesariamente. Primero hay que comprobar si el sistema sigue trabajando bien, a tiempo y con un coste razonable. Si deja de hacerlo, toca replantear cómo guardamos y procesamos la información.
 

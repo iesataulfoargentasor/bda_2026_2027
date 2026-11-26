@@ -48,7 +48,7 @@ async def main():
  style='FontName=Segoe UI,FontSize=13,PrimaryColour=&H00FFFFFF,OutlineColour=&H00432D14,BorderStyle=1,Outline=1,Shadow=0,Alignment=2,MarginV=20'
  print('Montando imágenes y subtítulos sobre la narración continua.',flush=True)
  base.run(['-f','concat','-safe','0','-i','imagenes.txt','-i','narracion.mp3','-vf',f"fps=25,subtitles=subtitulos.srt:force_style='{style}'",'-af','loudnorm=I=-18:TP=-1.5:LRA=11,apad','-t',str(end),'-c:v','libx264','-preset','fast','-tune','stillimage','-crf','23','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','-movflags','+faststart',str(OUT/f'{NAME}.mp4')])
- (OUT/f'{NAME}.txt').write_text('EL CASO HOTELERO EN POCAS PALABRAS\nVoz sintética: Ximena (español de España). Narración continua.\n\n'+'\n\n'.join(NARRATIONS),encoding='utf-8')
+ (OUT/f'{NAME}.txt').write_text('EL CASO HOTELERO EN POCAS PALABRAS\n\n'+'\n\n'.join(NARRATIONS),encoding='utf-8')
  (OUT/f'{NAME}.es.vtt').write_text('WEBVTT\n\n'+'\n\n'.join(f'{base.stamp(a,".")} --> {base.stamp(b,".")}\n{t}' for a,b,t in cues)+'\n',encoding='utf-8')
  print(f'Completado: {end:.2f} s. {len(words)} palabras, {len(cues)} subtítulos.',flush=True)
 if __name__=='__main__':asyncio.run(main())

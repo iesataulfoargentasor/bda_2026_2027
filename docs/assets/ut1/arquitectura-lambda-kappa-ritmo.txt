@@ -1,5 +1,4 @@
 ARQUITECTURA: DEL COBRO DE ANA AL PANEL
-Voz sintética: Ximena (español de España). Narración continua.
 
 Ana ya ha pagado su estancia en Laredo. A la mañana siguiente, la directora ve el importe total cobrado por el hotel. ¿Qué ha ocurrido entre esos dos momentos? Ya conocemos el almacenamiento y el procesamiento. Ahora vamos a unir las piezas: quién recoge los datos, quién los prepara, quién los presenta y cómo comprobamos que todo funciona. Eso es diseñar una arquitectura: organizar la colaboración para conseguir un resultado fiable.
 

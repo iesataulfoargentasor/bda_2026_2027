@@ -1,5 +1,4 @@
 PROCESAMIENTO: UN DÍA EN EL HOTEL
-Voz sintética: Ximena (español de España). Narración continua.
 
 En el vídeo anterior seguimos dónde se guardaba la reserva de Ana. Ahora vamos a ver qué hacemos con esos datos. Ana llega al hotel, recepción registra su pago y, por la noche, ese cobro se incorpora al informe de dirección. Mientras tanto, los sensores siguen enviando señales. Acompañaremos este día para entender qué significa procesar: realizar operaciones y transformar datos en resultados que alguien necesita.
 

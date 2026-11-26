@@ -149,7 +149,7 @@ async def main():
     run(['-f','concat','-safe','0','-i','concat.txt','-c','copy','-movflags','+faststart',str(OUT/'caso-hotel-resumen.mp4')])
     write_srt(allcues,OUT/'caso-hotel-resumen.es.srt')
     (OUT/'caso-hotel-resumen.es.vtt').write_text('WEBVTT\n\n'+'\n\n'.join(f'{stamp(a,".")} --> {stamp(b,".")}\n{t}' for a,b,t in allcues)+'\n',encoding='utf-8')
-    (OUT/'caso-hotel-resumen.txt').write_text('EL CASO HOTELERO DE CANTABRIA\nVídeo de apoyo · BDA · IES Ataúlfo Argenta\nNarración con voz sintética en español. Ejemplos ficticios.\nFuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut1/caso-hotel/\n\n'+'\n\n'.join(stamp(c['inicio'],'.')[:8]+' · '+s['title']+'\n'+s['narration'] for c,s in zip(chapters,SCENES)),encoding='utf-8')
+    (OUT/'caso-hotel-resumen.txt').write_text('EL CASO HOTELERO DE CANTABRIA\nVídeo de apoyo · BDA · IES Ataúlfo Argenta\nEjemplos ficticios.\nFuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut1/caso-hotel/\n\n'+'\n\n'.join(stamp(c['inicio'],'.')[:8]+' · '+s['title']+'\n'+s['narration'] for c,s in zip(chapters,SCENES)),encoding='utf-8')
     render(SCENES[0],0).save(OUT/'caso-hotel-resumen-portada.jpg',quality=92)
     (BUILD/'chapters.json').write_text(json.dumps(chapters,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f'TERMINADO: {offset:.2f} segundos; {(OUT/"caso-hotel-resumen.mp4").stat().st_size/1024/1024:.1f} MiB',flush=True)

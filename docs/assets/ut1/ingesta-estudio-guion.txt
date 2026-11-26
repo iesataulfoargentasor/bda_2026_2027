@@ -1,6 +1,6 @@
 # 1.6 Ingesta de datos
 
-Guion revisado para narración. Voz sintética: Álvaro, español de España.
+Guion revisado para narración.
 
 Fuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut1/ingesta/
 

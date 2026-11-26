@@ -1,5 +1,4 @@
 CLÚSTERES DE COMPUTADORAS
-Voz sintética: Ximena (español de España). Narración continua.
 
 Volvamos al hotel. La directora espera su informe a las ocho, pero el cálculo de madrugada empieza a llegar tarde. ¿Compramos más ordenadores? Antes hay que medir qué está pasando: quizá falta memoria, quizá leer los datos tarda demasiado. Un clúster puede ayudar, pero solo si responde al problema que tenemos.
 

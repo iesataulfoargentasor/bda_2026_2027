@@ -204,7 +204,7 @@ async def main():
     transcript = (
         f"{TRANSCRIPT_TITLE}\n"
         "BDA · IES Ataúlfo Argenta\n"
-        "Voz sintética Ximena, español de España. Ejemplos ficticios.\n"
+        "Ejemplos ficticios.\n"
         f"Fuente: {SOURCE_URL}\n\n"
     )
     transcript += "\n\n".join(

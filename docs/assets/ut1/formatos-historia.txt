@@ -1,5 +1,4 @@
 FORMATOS: LA RESERVA DE ANA CAMBIA DE REPRESENTACIÓN
-Voz sintética: Ximena (español de España). Narración continua.
 
 Ana ha reservado tres noches en Laredo. En el apartado anterior aprendimos a reunir su reserva y su cobro. Ahora el recorrido continúa: necesitamos enviar datos entre programas, guardar el histórico y preparar el informe de la mañana. La información puede ser la misma, pero no conviene representarla siempre de la misma manera. Un formato decide cómo se escriben esos datos para que otro programa los recupere. Vamos a seguir la reserva de Ana y elegir el formato cuando aparezca cada necesidad.
 
