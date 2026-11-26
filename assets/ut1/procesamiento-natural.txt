@@ -1,5 +1,4 @@
 PROCESAMIENTO: UN DÍA EN EL HOTEL
-Voz sintética: Ximena (español de España). Narración continua.
 
 En el vídeo anterior acompañamos la reserva de Ana y vimos dónde guardar sus datos. Ahora vamos a continuar la historia. Ana llega a recepción, paga su estancia y sigue con su día. Más tarde, ese cobro ayudará a preparar el informe de dirección. Al mismo tiempo, los sensores del hotel seguirán enviando señales. En todos esos momentos se procesan datos, pero no se hace el mismo trabajo ni se espera el mismo tiempo. Vamos a recorrerlos despacio para entender qué cambia en cada caso.
 

@@ -1,6 +1,6 @@
 UT2 · 2.6 · MONGODB: CONSULTAR, MODIFICAR Y COMPROBAR
 BDA · IES Ataúlfo Argenta
-Voz sintética Ximena, español de España. Ejemplos ficticios.
+Ejemplos ficticios.
 Fuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/mongodb/
 
 00:00:00 · MongoDB: de la ficha a la pregunta

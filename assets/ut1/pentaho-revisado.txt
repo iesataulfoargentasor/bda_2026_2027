@@ -1,5 +1,4 @@
 PENTAHO: DEL DATO AL INFORME DEL HOTEL
-Voz sintética: Ximena (español de España). Narración continua.
 
 Volvamos al hotel de Laredo. Ana ha reservado y pagado su estancia. Ya sabemos cómo recoger esos datos, conservarlos y elegir su formato. Ahora vamos a construir el proceso que los convierte en un informe. La directora quiere conocer el importe cobrado y el número de reservas por hotel y canal. No va a abrir nuestra herramienta de trabajo: necesita un fichero claro. Pentaho nos permitirá dibujar los pasos que preparan ese resultado. Seguiremos una jornada de trabajo, desde las primeras comprobaciones hasta la ejecución de madrugada, para entender qué hace cada pieza y por qué la necesitamos.
 

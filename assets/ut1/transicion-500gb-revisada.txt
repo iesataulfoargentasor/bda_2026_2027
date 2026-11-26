@@ -1,5 +1,4 @@
 TRANSICIÓN A LA UT2: 500 GB Y UN PORTÁTIL
-Voz sintética: Ximena (español de España). Narración continua.
 
 Imaginad que habéis terminado la práctica de Pentaho. El informe del hotel sale bien, lo habéis comprobado y sabéis qué hacer cuando falta una entrada. Un tiempo después, la directora os plantea otra petición: quiere una estadística del histórico, que ahora ocupa quinientos gigabytes. Los datos están en la red de la empresa y vosotros tenéis un portátil. ¿Podemos resolverlo con lo que ya sabemos? Esta actividad empieza ahí. No vais a descargar ese archivo ni a montar un clúster hoy. Vais a proponer una solución y explicar qué condiciones necesita para funcionar.
 

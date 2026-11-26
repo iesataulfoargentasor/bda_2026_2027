@@ -1,5 +1,4 @@
 POR QUÉ BIG DATA: DEL COBRO DE ANA A LAS CINCO Vs
-Voz sintética: Ximena (español de España). Narración continua.
 
 Ana reserva una habitación en Laredo y paga su estancia. Recepción ve la reserva y el sistema de pagos confirma el cobro. A la mañana siguiente, dirección quiere saber cuánto se ha cobrado en cada hotel. Parece una pregunta sencilla, pero obliga a reunir datos, relacionarlos y comprobarlos. Vamos a seguir ese cobro hasta el informe. Por el camino entenderemos cuándo aparece un problema de Big Data y para qué sirven las cinco uves. No como una lista para memorizar, sino como preguntas que ayudan a diseñar.
 

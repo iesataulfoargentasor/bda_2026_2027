@@ -1,5 +1,4 @@
 PRÁCTICA INTEGRADORA: QUÉ HACER Y QUÉ ENTREGAR
-Voz sintética: Ximena (español de España). Narración continua.
 
 Imaginad que la directora del hotel os llama después de los talleres. Ya sabéis leer, unir y resumir datos con Pentaho. Ahora os pide una solución completa: conocer lo cobrado por hotel y canal, revisar las reservas que no tienen un pago asociado y poder repetir el procedimiento con confianza. Ese sigue siendo nuestro encargo. Pero vamos a dar un paso más: cada uno recibirá sus datos, construirá la solución en el aula y guardará sus avances en GitHub. Al final, se sentará con el profesor para explicarla. Vamos con calma. Primero veremos qué construimos; después, cómo lo entregamos y cómo se valorará. El enunciado os acompañará con los pasos concretos.
 

@@ -1,6 +1,6 @@
 UT2 · 2.9 · MONGODB Y PYTHON: DEL PARTE A LA APLICACIÓN
 BDA · IES Ataúlfo Argenta
-Voz sintética Ximena, español de España. Ejemplos ficticios.
+Ejemplos ficticios.
 Fuente: https://iesataulfoargentasor.github.io/bda_2026_2027/ut2/pymongo/
 
 00:00:00 · El mismo parte, ahora desde Python

@@ -1,5 +1,4 @@
 INGESTA: EL VIAJE DE LA RESERVA Y EL COBRO DE ANA
-Voz sintética: Ximena (español de España). Narración continua.
 
 Volvamos al hotel de Laredo. Ana ha reservado por la web y acaba de pagar su estancia. Para ella todo forma parte de la misma operación. Sin embargo, la reserva está en el programa del hotel y el cobro está en el sistema de pagos. ¿Cómo conseguimos que esos dos datos lleguen al informe de la directora? Ese es nuestro punto de partida. La ingesta incorpora información que ya existe a otro destino. Vamos a acompañarla desde el origen, sin interrumpir a recepción, y veremos qué hace falta para convertir lo recibido en un resultado fiable.
 

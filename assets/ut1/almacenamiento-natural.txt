@@ -1,5 +1,4 @@
 ALMACENAMIENTO: EL RECORRIDO DE LA RESERVA DE ANA
-Voz sintética: Ximena (español de España). Narración continua.
 
 Vamos a acompañar otra vez a Ana, que ha reservado dos noches en Laredo. Mientras prepara su llegada, recepción necesita consultar la reserva y registrar los pagos. Más adelante, dirección querrá estudiar los resultados del hotel y marketing revisará sus campañas. Fijaos: partimos de la misma reserva, pero cada persona necesita utilizarla de una manera. Por eso vamos a seguir su recorrido, sin empezar por una lista de tecnologías. En cada paso nos preguntaremos qué necesitamos guardar, para qué lo necesitamos y qué debe ocurrir si algo falla.
 
