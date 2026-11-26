@@ -21,7 +21,7 @@ Empieza por este vídeo para conocer el problema del hotel, seguir la reserva de
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+El vídeo incluye subtítulos visibles.
 
 [Descargar el vídeo](../assets/ut1/caso-hotel-natural.mp4) · [Leer la transcripción](../assets/ut1/caso-hotel-natural.txt) · [Descargar los subtítulos](../assets/ut1/caso-hotel-natural.es.srt)
 

@@ -27,7 +27,7 @@ Esta guía continúa la historia de la práctica de Pentaho: el histórico crece
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa el enunciado: la actividad pide una propuesta razonada, sin descargar 500 GB ni instalar un clúster.
+El vídeo incluye subtítulos visibles. Complementa el enunciado: la actividad pide una propuesta razonada, sin descargar 500 GB ni instalar un clúster.
 
 [Descargar el vídeo](../assets/ut1/transicion-500gb-revisada.mp4) · [Leer la transcripción](../assets/ut1/transicion-500gb-revisada.txt) · [Descargar los subtítulos](../assets/ut1/transicion-500gb-revisada.es.srt)
 

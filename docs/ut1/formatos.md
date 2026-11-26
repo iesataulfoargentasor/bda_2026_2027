@@ -24,7 +24,7 @@ Sigue la reserva de Ana para comprender cómo elegimos la representación de los
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
+El vídeo incluye subtítulos visibles. Complementa las explicaciones y las prácticas del apartado.
 
 [Descargar el vídeo](../assets/ut1/formatos-natural.mp4) · [Leer la transcripción](../assets/ut1/formatos-natural.txt) · [Descargar los subtítulos](../assets/ut1/formatos-natural.es.srt)
 

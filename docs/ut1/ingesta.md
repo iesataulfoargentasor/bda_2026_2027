@@ -42,7 +42,7 @@ Sigue la reserva y el cobro de Ana para comprender cómo recogemos datos de dist
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las prácticas del apartado.
+El vídeo incluye subtítulos visibles. Complementa las explicaciones y las prácticas del apartado.
 
 [Descargar el vídeo](../assets/ut1/ingesta-fluida-corregida.mp4) · [Leer la transcripción](../assets/ut1/ingesta-fluida-corregida.txt) · [Descargar los subtítulos](../assets/ut1/ingesta-fluida-corregida.es.srt)
 

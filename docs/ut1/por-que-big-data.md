@@ -24,7 +24,7 @@ Sigue el cobro de Ana hasta el informe de gerencia para comprender cuándo neces
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Complementa las explicaciones y las actividades del apartado.
+El vídeo incluye subtítulos visibles. Complementa las explicaciones y las actividades del apartado.
 
 [Descargar el vídeo](../assets/ut1/bigdata-historia.mp4) · [Leer la transcripción](../assets/ut1/bigdata-historia.txt) · [Descargar los subtítulos](../assets/ut1/bigdata-historia.es.srt)
 

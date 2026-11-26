@@ -24,7 +24,7 @@ Sigue el cobro de Ana para comprender cómo colaboran las capas de la arquitectu
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español.
+El vídeo incluye subtítulos visibles.
 
 [Descargar el vídeo](../assets/ut1/arquitectura-revisada.mp4) · [Leer la transcripción](../assets/ut1/arquitectura-revisada.txt) · [Descargar los subtítulos](../assets/ut1/arquitectura-revisada.es.srt)
 

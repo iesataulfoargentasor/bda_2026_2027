@@ -25,7 +25,7 @@ Antes de empezar, mira esta guía del encargo del hotel: explica los paquetes pe
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-El vídeo incluye subtítulos visibles y narración con voz sintética en español. Esta versión incorpora los datos personalizados, el trabajo en el aula, los avances por sesión, la entrega en GitHub y la defensa individual. Aclara también qué fallos impiden iniciar la publicación y por qué un error durante las copias puede dejar las salidas parcialmente actualizadas. Complementa las instrucciones de los apartados 2, 7, 9 y 10; consultad en Moodle las fechas de entrega.
+El vídeo incluye subtítulos visibles. Esta versión incorpora los datos personalizados, el trabajo en el aula, los avances por sesión, la entrega en GitHub y la defensa individual. Aclara también qué fallos impiden iniciar la publicación y por qué un error durante las copias puede dejar las salidas parcialmente actualizadas. Complementa las instrucciones de los apartados 2, 7, 9 y 10; consultad en Moodle las fechas de entrega.
 
 [Descargar el vídeo](../assets/ut1/practica-pentaho-revisada.mp4) · [Leer la transcripción](../assets/ut1/practica-pentaho-revisada.txt) · [Descargar los subtítulos](../assets/ut1/practica-pentaho-revisada.es.srt)
 
