@@ -26,7 +26,7 @@ El hotel acumula datos y el informe debe llegar a las ocho. Esta explicación re
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-La narración utiliza la voz sintética Ximena, en español de España, como los vídeos de la UT1. Los subtítulos están visibles en la imagen. Podéis pausar los cálculos y consultar la transcripción con las marcas de tiempo.
+Los subtítulos están visibles en la imagen. Podéis pausar los cálculos y consultar la transcripción con las marcas de tiempo.
 
 [Descargar el vídeo](../assets/ut2/por-que-almacenamiento.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/por-que-almacenamiento.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/por-que-almacenamiento.es.srt){target="_blank" rel="noopener"}
 

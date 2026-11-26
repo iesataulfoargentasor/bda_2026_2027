@@ -26,7 +26,7 @@ Buscamos las reservas de Laredo que incluyen parking y usamos la imagen de un ar
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
+Los subtítulos están visibles en la imagen. Podéis pausar los ejemplos y consultar la transcripción con las marcas de tiempo.
 
 [Descargar el vídeo](../assets/ut2/mongodb-explicado.mp4){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/mongodb-explicado.txt){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/mongodb-explicado.es.srt){target="_blank" rel="noopener"}
 

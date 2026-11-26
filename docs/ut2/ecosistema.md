@@ -26,7 +26,7 @@ Seguimos una reserva de Laredo para entender qué guarda HDFS, cómo administra 
   Tu navegador no permite reproducir este vídeo. Puedes descargarlo en el enlace siguiente.
 </video>
 
-La narración utiliza la voz sintética Ximena, en español de España, con una explicación conversacional y pausas naturales. Los subtítulos están visibles en la imagen. Podéis pausar el ejemplo y consultar la transcripción con las marcas de tiempo.
+Los subtítulos están visibles en la imagen. Podéis pausar el ejemplo y consultar la transcripción con las marcas de tiempo.
 
 [Descargar el vídeo](../assets/ut2/ecosistema-hadoop.mp4?v=voz-natural-20261124){target="_blank" rel="noopener"} · [Leer la transcripción](../assets/ut2/ecosistema-hadoop.txt?v=voz-natural-20261124){target="_blank" rel="noopener"} · [Descargar los subtítulos](../assets/ut2/ecosistema-hadoop.es.srt?v=voz-natural-20261124){target="_blank" rel="noopener"}
 
